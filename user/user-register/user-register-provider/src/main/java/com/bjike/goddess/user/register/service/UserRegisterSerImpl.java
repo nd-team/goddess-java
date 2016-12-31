@@ -1,9 +1,8 @@
 package com.bjike.goddess.user.register.service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bjike.goddess.user.register.dto.UserRegisterDto;
 import com.dounine.corgi.security.PasswordHash;
-import com.dounine.corgi.spring.rpc.Reference;
-import com.dounine.corgi.spring.rpc.Service;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.user.common.entity.User;
 import com.bjike.goddess.user.common.enums.MemberType;
@@ -17,6 +16,7 @@ import com.bjike.goddess.user.common.utils.authCode.AuthCodeGenerate;
 import com.bjike.goddess.user.common.utils.regex.Validator;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.image.BufferedImage;
@@ -66,21 +66,8 @@ public class UserRegisterSerImpl implements IUserRegisterSer {
     @Override
     @Transactional
     public Boolean existUsername(String username) throws SerException {
-        User user1 = new User();
-        user1.setUsername("ligui55");
-        user1.setPassword("11111");
-        user1.setAge(11);
-        user1.setPhone("13535032913");
-        user1.setMemberType(MemberType.BRONZE);
-        user1.setNickname("777222");
-        user1.setUserType(UserType.CUSTOMER);
-        user1.setAccessTime(LocalDateTime.now());
-        user1.setEmail("xinaml@qqqq.com");
-        user1 = userSer.save(user1);
-//        User user = userSer.findByUsername(username);
-        System.out.println("保存ID:"+user1.getId());
-//        userSer.findByUsername("nihao");
-        return null != user1;
+        User user = userSer.findByUsername(username);
+        return null != user;
 
     }
 

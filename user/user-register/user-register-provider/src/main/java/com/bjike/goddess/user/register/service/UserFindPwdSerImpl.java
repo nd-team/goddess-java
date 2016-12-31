@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.register.service;
 
-import com.dounine.corgi.spring.rpc.Reference;
-import com.dounine.corgi.spring.rpc.Service;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.user.common.entity.User;
 import com.bjike.goddess.user.common.service.IUserSer;
@@ -10,6 +9,7 @@ import com.bjike.goddess.user.common.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.common.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.common.session.phonecode.PhoneCodeSession;
 import com.bjike.goddess.user.common.utils.authCode.AuthCodeGenerate;
+import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;

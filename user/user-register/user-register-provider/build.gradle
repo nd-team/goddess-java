@@ -2,7 +2,7 @@ apply from: '../../../config.gradle'
 
 dependencies {
 //    compile("com.bjike.ndshop:user-register-api:1.0")
-    compile "com.dounine.corgi:jta:1.0"
+    compile group: 'com.alibaba', name: 'dubbo', version: '2.5.4-SNAPSHOT'
     compile project(":user:user-register:user-register-api")
 
 }

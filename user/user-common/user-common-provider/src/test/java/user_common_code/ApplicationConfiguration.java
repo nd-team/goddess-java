@@ -1,11 +1,7 @@
 package user_common_code;
 
-import com.dounine.corgi.rpc.spring.RpcApplicationConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
@@ -20,11 +16,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource("classpath:config.properties")
+@ImportResource({"classpath:dubbo-demo-provider.xml"})
 @ComponentScan(basePackages = {"user_common_code","com.bjike.goddess.user.common"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-public class ApplicationConfiguration extends RpcApplicationConfiguration{
+public class ApplicationConfiguration{
 
 }
 

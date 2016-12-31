@@ -20,7 +20,7 @@ import user_register_code.ApplicationConfiguration;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationConfiguration.class)
-public class JunitTest extends AbstractJUnit4SpringContextTests {
+public class JunitTest{
 
     /**
      * 基础增删改查，批量操作等
@@ -28,12 +28,6 @@ public class JunitTest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     private IUserRegisterSer userRegisterSer;
-
-
-    @Before
-    public void initContext() {
-        ApplicationContext.setApplicationContext(super.applicationContext);
-    }
 
 
     @Test

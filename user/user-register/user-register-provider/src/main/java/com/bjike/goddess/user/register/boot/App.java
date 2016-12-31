@@ -1,10 +1,7 @@
 package com.bjike.goddess.user.register.boot;
 
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -19,7 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactoryBean",basePackages = {"org.ndshop.user.common.dao"})
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
-@PropertySource({"classpath:config.properties", "classpath:corgi.properties"})
+@PropertySource({"classpath:config.properties"})
+@ImportResource({"classpath:dubbo-demo-consumer.xml"})
 @ComponentScan(basePackages = {"user_register_code", "com.bjike.goddess.user.common", "com.bjike.goddess.user.register"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,

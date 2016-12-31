@@ -1,8 +1,7 @@
 apply from: '../../../config.gradle'
 
 dependencies {
-    compile group: 'com.dounine.corgi', name: 'rpc', version: "$rpc_version"
-    compile group: 'com.dounine.corgi', name: 'jta', version: "$rpc_version"
+    compile group: 'com.alibaba', name: 'dubbo', version: '2.5.4-SNAPSHOT'
 //    compile("com.bjike.ndshop:user-common-api:1.0")
     compile project(":user:user-common:user-common-api")
 }
