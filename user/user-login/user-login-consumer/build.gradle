@@ -1,0 +1,22 @@
+apply plugin: 'spring-boot'
+apply plugin: 'java'
+
+dependencies {
+//    compile project(":user:user-login:user-login-api"){
+//    }
+    compile (group: 'com.dounine.corgi', name: 'rpc', version: "$rpc_version"){
+//        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+//        exclude group: 'log4j', module: 'log4j'
+    }
+    compile("org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE")
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
