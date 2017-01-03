@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.common;
 
 import com.bjike.goddess.user.common.boot.App;
-import com.dounine.corgi.context.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

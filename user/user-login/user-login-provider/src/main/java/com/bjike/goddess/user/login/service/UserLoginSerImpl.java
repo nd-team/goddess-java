@@ -1,10 +1,8 @@
 package com.bjike.goddess.user.login.service;
 
 
+import com.bjike.goddess.dbs.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.login.dto.UserLoginDto;
-import com.dounine.corgi.security.PasswordHash;
-import com.dounine.corgi.spring.rpc.Reference;
-import com.dounine.corgi.spring.rpc.Service;
 import org.apache.commons.lang3.StringUtils;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.user.common.entity.User;
@@ -15,6 +13,7 @@ import com.bjike.goddess.user.common.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.common.session.validcorrect.TokenUtils;
 import com.bjike.goddess.user.common.session.validcorrect.UserSession;
 import com.bjike.goddess.user.common.session.validfail.ValidErrSession;
+import org.springframework.stereotype.Service;
 
 /**
  * @Author: [liguiqin]
@@ -26,7 +25,6 @@ import com.bjike.goddess.user.common.session.validfail.ValidErrSession;
 @Service
 public class UserLoginSerImpl implements IUserLoginSer {
 
-    @Reference
     private IUserSer userSer;
 
 

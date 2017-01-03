@@ -1,8 +1,5 @@
 package com.bjike.goddess.dbs.jpa.entity;
 
-import com.dounine.corgi.validation.Del;
-import com.dounine.corgi.validation.Edit;
-import com.dounine.corgi.validation.Get;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,7 +25,7 @@ public abstract class BaseEntity implements Serializable{
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", nullable = false,length = 36)
-    @NotBlank(message = "user id not blank",groups = {Del.class, Edit.class, Get.class})
+    @NotBlank(message = "user id not blank")
     protected String id;//entityｉｄ
 
     public String getId() {

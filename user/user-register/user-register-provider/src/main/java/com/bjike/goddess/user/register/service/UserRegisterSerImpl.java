@@ -1,12 +1,10 @@
 package com.bjike.goddess.user.register.service;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.bjike.goddess.dbs.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.register.dto.UserRegisterDto;
-import com.dounine.corgi.security.PasswordHash;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.user.common.entity.User;
-import com.bjike.goddess.user.common.enums.MemberType;
-import com.bjike.goddess.user.common.enums.UserType;
 import com.bjike.goddess.user.common.service.IUserSer;
 import com.bjike.goddess.user.common.session.authcode.AuthCode;
 import com.bjike.goddess.user.common.session.authcode.AuthCodeSession;
@@ -156,6 +154,5 @@ public class UserRegisterSerImpl implements IUserRegisterSer {
             throw new SerException(e.getMessage());
         }
     }
-
 
 }

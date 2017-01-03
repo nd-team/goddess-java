@@ -1,6 +1,6 @@
 package com.bjike.goddess.user.common.session.validcorrect;
 
-import com.dounine.corgi.utils.IpUtils;
+import com.bjike.goddess.dbs.jpa.utils.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;

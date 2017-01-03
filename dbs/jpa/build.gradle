@@ -1,7 +1,7 @@
 apply from: '../../config.gradle'
 
 dependencies {
-    compile group: 'com.dounine.corgi', name: 'common', version: "$common_version"
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
     compile "org.hibernate:hibernate-validator:$hibernate_validator_version"
     compile "commons-io:commons-io:$commons_io_version"
     compile "org.apache.commons:commons-lang3:$commons_version"

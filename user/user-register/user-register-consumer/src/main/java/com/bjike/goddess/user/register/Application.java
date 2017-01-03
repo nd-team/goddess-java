@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.register;
 
-import com.bjike.goddess.user.register.exception.MyHanException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,7 +28,7 @@ public class Application extends WebMvcConfigurerAdapter{
 
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        exceptionResolvers.add(new MyHanException());//unified exception handling
+//        exceptionResolvers.add(new MyHanException());//unified exception handling
     }
 
 }

@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.login;
 
 import com.bjike.goddess.user.login.boot.App;
-import com.dounine.corgi.context.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -16,7 +15,6 @@ public class Application {
         LOGGER.info("sso-provider starting...");
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(App.class);
-        ApplicationContext.setApplicationContext(context);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         try {
             countDownLatch.await();

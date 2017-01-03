@@ -1,13 +1,11 @@
 package com.bjike.goddess.user.register;
 
-import com.dounine.corgi.context.ApplicationContext;
 import com.bjike.goddess.user.register.boot.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @Author: [liguiqin]

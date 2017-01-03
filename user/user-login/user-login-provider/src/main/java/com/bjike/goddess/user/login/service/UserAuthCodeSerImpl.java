@@ -1,12 +1,12 @@
 package com.bjike.goddess.user.login.service;
 
-import com.dounine.corgi.spring.rpc.Service;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.user.common.session.authcode.AuthCode;
 import com.bjike.goddess.user.common.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.common.session.validfail.ValidErr;
 import com.bjike.goddess.user.common.session.validfail.ValidErrSession;
 import com.bjike.goddess.user.common.utils.authCode.AuthCodeGenerate;
+import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
