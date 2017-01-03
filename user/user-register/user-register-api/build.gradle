@@ -1,7 +1,6 @@
 apply from: '../../../config.gradle'
 
 dependencies {
-    compile("com.dounine.corgi:rpc:1.0")
     compile project(":user:user-common:user-common-api")
 
 }

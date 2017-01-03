@@ -2,7 +2,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'java'
 
 dependencies {
-    compile group: 'com.dounine.corgi', name: 'rpc', version: "$rpc_version"
     compile("org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE")
 }
 

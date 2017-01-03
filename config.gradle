@@ -32,8 +32,6 @@ allprojects {
 
     ext {
         common_version='1.0'
-        rpc_version='1.0'
-
         junit_version = '4.12'
         commons_version = '3.4'
         slf4j_version = '1.7.19'
