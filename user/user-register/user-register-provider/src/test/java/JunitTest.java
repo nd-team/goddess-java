@@ -1,5 +1,3 @@
-import com.dounine.corgi.context.ApplicationContext;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
@@ -7,7 +5,6 @@ import com.bjike.goddess.user.register.dto.UserRegisterDto;
 import com.bjike.goddess.user.register.service.IUserRegisterSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user_register_code.ApplicationConfiguration;
 
