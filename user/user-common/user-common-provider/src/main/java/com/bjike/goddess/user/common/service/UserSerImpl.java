@@ -7,6 +7,7 @@ import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.dbs.jpa.service.ServiceImpl;
 import com.bjike.goddess.user.common.dao.IUserRep;
 import com.bjike.goddess.user.common.entity.User;
+import org.bytesoft.compensable.Compensable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,6 +27,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class UserSerImpl extends ServiceImpl<User, UserDto> implements IUserSer {
+
     @Autowired
     private IUserRep userRep;
 

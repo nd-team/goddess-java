@@ -1,6 +1,7 @@
 package com.bjike.goddess.dbs.jpa.boot.initializer;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.xa.DruidXADataSource;
 import com.bjike.goddess.dbs.jpa.boot.Constant;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,48 +34,48 @@ public class Components {
     private JpaCache jpaCache;
     @Autowired
     private EntityToScan packagesToScan;
-
-    /**
-     * 数据源配置
-     *
-     * @param env 　配置文件实体
-     * @return
-     */
-    @Bean
-    public DataSource getDruid(Environment env) {
-        DruidDataSource dds = new DruidDataSource();
-        dds.setDriverClassName(env.getProperty("db.driver"));
-        dds.setUrl(env.getProperty("db.url"));
-        dds.setUsername(env.getProperty("db.username"));
-        dds.setPassword(env.getProperty("db.password"));
-        return dds;
-    }
-
-    /**
-     * 实体类管理工厂
-     *
-     * @param localContainerEntityManagerFactoryBean
-     * @return
-     */
-    @Bean
+//
+//    /**
+//     * 数据源配置
+//     *
+//     * @param env 　配置文件实体
+//     * @return
+//     */
+//    @Bean("myDataSource")
+//    public DataSource getDataSource(Environment env) {
+//        DruidDataSource dds = new DruidDataSource();
+//        dds.setDriverClassName(env.getProperty("db.driver"));
+//        dds.setUrl(env.getProperty("db.url"));
+//        dds.setUsername(env.getProperty("db.username"));
+//        dds.setPassword(env.getProperty("db.password"));
+//        return dds;
+//    }
+//
+//    /**
+//     * 实体类管理工厂
+//     *
+//     * @param localContainerEntityManagerFactoryBean
+//     * @return
+//     */
+    @Bean("entityManagerFactory")
     public EntityManagerFactory entityManagerFactory(LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean) {
         return localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
     }
 
-    @Bean
+    @Bean("jpaVendorAdapter")
     public JpaVendorAdapter hibernateJpaVendorAdapter(){
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setShowSql(true);
         hibernateJpaVendorAdapter.setGenerateDdl(true);
         return hibernateJpaVendorAdapter;
     }
-
-    /**
-     * 实体管理器
-     *
-     * @return
-     */
-
+//
+//    /**
+//     * 实体管理器
+//     *
+//     * @return
+//     */
+//
     @Bean
     public LocalContainerEntityManagerFactoryBean getLCEMF(DataSource dataSource,JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean lcemf = new LocalContainerEntityManagerFactoryBean();
@@ -84,18 +85,18 @@ public class Components {
         lcemf.setPackagesToScan(packages);
         return lcemf;
     }
-
-//    /**
-//     * 事务管理器
-//     *
-//     * @return
-//     */
-    @Bean(name = "transactionManager")
-    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-        return jpaTransactionManager;
-    }
+//
+////    /**
+////     * 事务管理器
+////     *
+////     * @return
+////     */
+////    @Bean(name = "transactionManager")
+////    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
+////        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+////        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
+////        return jpaTransactionManager;
+////    }
 
 
     /**
@@ -103,7 +104,7 @@ public class Components {
      *
      * @return
      */
-    @Bean
+    @Bean("cacheManager")
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         List<Cache> caches = new ArrayList<>();

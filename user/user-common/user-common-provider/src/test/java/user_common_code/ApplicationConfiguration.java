@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource("classpath:config.properties")
-@ImportResource({"classpath:dubbo-demo-provider.xml"})
+@ImportResource({"classpath:application.xml"})
 @ComponentScan(basePackages = {"user_common_code","com.bjike.goddess.user.common"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,

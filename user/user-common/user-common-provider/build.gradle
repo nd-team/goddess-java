@@ -2,7 +2,8 @@ apply from: '../../../config.gradle'
 
 dependencies {
     compile group: 'com.alibaba', name: 'dubbo', version: '2.5.4-SNAPSHOT'
-    compile group: 'org.bytesoft', name: 'bytetcc-supports', version: '0.3.0-RC2'
+    compile group: 'org.bytesoft', name: 'bytetcc-supports', version: '0.3.0-RC3'
+    compile 'commons-dbcp:commons-dbcp:1.4'
     compile group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.9'
     compile group: 'com.github.sgroschupf', name: 'zkclient', version: '0.1'
     compile group: 'com.101tec', name: 'zkclient', version: '0.10'
