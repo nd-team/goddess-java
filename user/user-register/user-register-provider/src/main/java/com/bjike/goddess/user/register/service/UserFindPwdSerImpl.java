@@ -21,7 +21,6 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-@Service
 public class UserFindPwdSerImpl implements IUserFindPwdSer {
     @Reference
     IUserSer userSer;

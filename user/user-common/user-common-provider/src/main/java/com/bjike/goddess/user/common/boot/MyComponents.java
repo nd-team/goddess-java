@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 @Component
 public class MyComponents extends Components implements EntityToScan{
 
-    @Bean
+    @Bean("myDataSource")
     public DataSource getDataSource(Environment env) {
         DruidDataSource dds = new DruidDataSource();
         dds.setDriverClassName(env.getProperty("db.driver"));
@@ -32,7 +32,7 @@ public class MyComponents extends Components implements EntityToScan{
         return dds;
     }
 
-//    @Bean(name = "transactionManager")
+//    @Bean(name = "jpaTransactionManager")
 //    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
 //        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
 //        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);

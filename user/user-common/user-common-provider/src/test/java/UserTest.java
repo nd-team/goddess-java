@@ -1,4 +1,4 @@
-import com.dounine.corgi.security.PasswordHash;
+import com.bjike.goddess.dbs.jpa.utils.PasswordHash;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.bjike.goddess.dbs.jpa.exception.SerException;

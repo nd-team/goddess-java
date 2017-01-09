@@ -12,12 +12,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [org.ndshop]
  */
 @Configuration
-@EnableAspectJAutoProxy
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.common.dao"})
-@EnableTransactionManagement(proxyTargetClass = true)
-@EnableCaching
+//@EnableAspectJAutoProxy
+//@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.common.dao"})
+//@EnableCaching
 @PropertySource({"classpath:config.properties"})
-@ImportResource({"classpath:dubbo-demo-consumer.xml"})
+@ImportResource({"classpath:application.xml"})
 @ComponentScan(basePackages = {"user_register_code","com.bjike.goddess.user.common","com.bjike.goddess.user.register"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,

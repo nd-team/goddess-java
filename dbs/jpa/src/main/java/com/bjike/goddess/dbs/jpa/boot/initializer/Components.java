@@ -10,12 +10,14 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -34,29 +36,13 @@ public class Components {
     private JpaCache jpaCache;
     @Autowired
     private EntityToScan packagesToScan;
-//
-//    /**
-//     * 数据源配置
-//     *
-//     * @param env 　配置文件实体
-//     * @return
-//     */
-//    @Bean("myDataSource")
-//    public DataSource getDataSource(Environment env) {
-//        DruidDataSource dds = new DruidDataSource();
-//        dds.setDriverClassName(env.getProperty("db.driver"));
-//        dds.setUrl(env.getProperty("db.url"));
-//        dds.setUsername(env.getProperty("db.username"));
-//        dds.setPassword(env.getProperty("db.password"));
-//        return dds;
-//    }
-//
-//    /**
-//     * 实体类管理工厂
-//     *
-//     * @param localContainerEntityManagerFactoryBean
-//     * @return
-//     */
+
+    /**
+     * 实体类管理工厂
+     *
+     * @param localContainerEntityManagerFactoryBean
+     * @return
+     */
     @Bean("entityManagerFactory")
     public EntityManagerFactory entityManagerFactory(LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean) {
         return localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
@@ -69,13 +55,12 @@ public class Components {
         hibernateJpaVendorAdapter.setGenerateDdl(true);
         return hibernateJpaVendorAdapter;
     }
-//
-//    /**
-//     * 实体管理器
-//     *
-//     * @return
-//     */
-//
+
+    /**
+     * 实体管理器
+     *
+     * @return
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean getLCEMF(DataSource dataSource,JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean lcemf = new LocalContainerEntityManagerFactoryBean();
@@ -85,18 +70,6 @@ public class Components {
         lcemf.setPackagesToScan(packages);
         return lcemf;
     }
-//
-////    /**
-////     * 事务管理器
-////     *
-////     * @return
-////     */
-////    @Bean(name = "transactionManager")
-////    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
-////        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-////        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-////        return jpaTransactionManager;
-////    }
 
 
     /**

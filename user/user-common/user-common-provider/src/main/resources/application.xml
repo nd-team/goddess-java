@@ -28,4 +28,11 @@
 	<import resource="classpath:bytetcc.xml" />
 	<import resource="dubbo-provider.xml" />
 
+	<!--<bean id="dataSource" class="org.bytesoft.bytejta.supports.jdbc.LocalXADataSource">-->
+		<!--<property name="dataSource" ref="myDataSource" />-->
+	<!--</bean>-->
+
+	<!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+	<!--</bean>-->
 </beans>

@@ -13,13 +13,19 @@ public class MoneySerConfirm extends ServiceImpl<Money,MoneyDto> implements IMon
 
 	@Override
 	@Transactional(rollbackFor = SerException.class)
-	public void add(String id, int money) throws SerException {
-		System.out.printf("帐号:"+id+"加了 % 钱", money);
+	public void addMoney(String account, Integer money) throws SerException {
+		System.out.printf("帐号:"+account+"加了 "+money+" 钱");
 	}
 
 	@Override
 	@Transactional(rollbackFor = SerException.class)
-	public void remove(String id, int money) throws SerException {
-		System.out.printf("帐号:"+id+"减了 % 钱", money);
+	public void removeMoney(String account, Integer money) throws SerException {
+		System.out.printf("帐号:"+account+"减了 "+money+" 钱");
+	}
+
+	@Override
+	@Transactional(rollbackFor = SerException.class)
+	public void addAccount(String account,Integer moneyCou) throws SerException {
+		System.out.printf("帐号:"+account+"新增, 余额: "+moneyCou);
 	}
 }

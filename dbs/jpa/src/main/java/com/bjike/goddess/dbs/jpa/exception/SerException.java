@@ -1,5 +1,7 @@
 package com.bjike.goddess.dbs.jpa.exception;
 
+import java.io.Serializable;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
@@ -7,7 +9,7 @@ package com.bjike.goddess.dbs.jpa.exception;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-public class SerException extends Throwable {
+public class SerException extends Exception implements Serializable {
 
     public SerException() {
         super();

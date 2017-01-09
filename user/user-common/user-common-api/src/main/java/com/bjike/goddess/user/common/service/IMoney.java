@@ -10,8 +10,9 @@ import com.bjike.goddess.user.common.entity.Money;
  */
 public interface IMoney extends IService<Money,MoneyDto>{
 
-    void add(String id,int money) throws SerException;
+    void addMoney(String account,Integer money) throws SerException;
 
-    void remove(String id,int money) throws SerException;
+    void removeMoney(String account,Integer money) throws SerException;
 
+    void addAccount(String account,Integer moneyCou) throws SerException;
 }

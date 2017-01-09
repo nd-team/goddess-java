@@ -12,16 +12,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-@Configuration
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactoryBean",basePackages = {"org.ndshop.user.common.dao"})
-@EnableTransactionManagement(proxyTargetClass = true)
-@EnableCaching
-@PropertySource({"classpath:config.properties"})
-@ImportResource({"classpath:dubbo-demo-consumer.xml"})
-@ComponentScan(basePackages = {"user_register_code", "com.bjike.goddess.user.common", "com.bjike.goddess.user.register"},
-        excludeFilters = {@ComponentScan.Filter(
-                type = FilterType.ANNOTATION,
-                value = {Configuration.class})})
+//@Configuration
+//@EnableJpaRepositories(basePackages = {"org.ndshop.user.common.dao"})
+//@EnableTransactionManagement(proxyTargetClass = true)
+//@EnableCaching
+//@PropertySource({"classpath:config.properties"})
+//@ImportResource({"classpath:application.xml"})
+//@ComponentScan(basePackages = {"user_register_code", "com.bjike.goddess.user.common", "com.bjike.goddess.user.register"},
+//        excludeFilters = {@ComponentScan.Filter(
+//                type = FilterType.ANNOTATION,
+//                value = {Configuration.class})})
 public class App {
 
 

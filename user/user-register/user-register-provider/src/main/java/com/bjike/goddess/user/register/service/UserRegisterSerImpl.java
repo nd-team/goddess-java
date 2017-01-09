@@ -28,8 +28,6 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-@CacheConfig(cacheNames = "userSerCache")
-@Service
 public class UserRegisterSerImpl implements IUserRegisterSer {
 
     @Reference
