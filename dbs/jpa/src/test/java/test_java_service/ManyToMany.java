@@ -1,8 +1,8 @@
 package test_java_service;
 
+import com.bjike.goddess.dbs.common.exception.SerException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

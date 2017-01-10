@@ -1,8 +1,8 @@
 package com.bjike.goddess.user.common.session.validcorrect;
 
-import org.apache.commons.lang3.StringUtils;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
+import com.bjike.goddess.dbs.common.exception.SerException;
 import com.bjike.goddess.user.common.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -31,7 +31,9 @@ allprojects {
     }
 
     ext {
-        common_version='1.0'
+        dubbo_version = '2.5.4-SNAPSHOT'
+        tcc_version = '1.1.5'
+        common_version = '1.0'
         junit_version = '4.12'
         commons_version = '3.4'
         slf4j_version = '1.7.19'
@@ -59,9 +61,9 @@ allprojects {
         mysql_connector_version = '6.0.4'
         spring_jdbc_version = '4.3.3.RELEASE'
         hibernate_annotations_version = '3.5.6-Final'
-        hibernate_commons_version='5.0.1.Final'
-        druid_version ='1.0.26'
-        hibernate_jpa_version='1.0.0.Final'
-        hibernate_ehcache_version='5.2.2.Final'
+        hibernate_commons_version = '5.0.1.Final'
+        druid_version = '1.0.26'
+        hibernate_jpa_version = '1.0.0.Final'
+        hibernate_ehcache_version = '5.2.2.Final'
     }
 }

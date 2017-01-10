@@ -1,14 +1,14 @@
 rootProject.name = 'goddess'
 
 //#dbs
+include ':dbs:common'
 include ':dbs:jpa'
 //include ':dbs:mongo'
 //include ':dbs:redis'
-//#user
-//common
 include ':user:user-common:user-common-api'
 include ':user:user-common:user-common-consumer'
 include ':user:user-common:user-common-provider'
+//#user
 //user login
 include ':user:user-login:user-login-api'
 include ':user:user-login:user-login-consumer'

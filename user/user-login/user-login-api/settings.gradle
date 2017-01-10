@@ -1,5 +1,5 @@
 rootProject.name = 'user-login-api'
 
-include ':user:user-common:user-common-api'
-project(':user-common-api').projectDir = new File(settingsDir, '../../../user-common-api')
+include ':user:user-jpa:user-jpa-api'
+project(':user-jpa-api').projectDir = new File(settingsDir, '../../../user-jpa-api')
 

@@ -1,9 +1,10 @@
 apply from: '../../../config.gradle'
 
 dependencies {
-    compile group: 'com.alibaba', name: 'dubbo', version: '2.5.4-SNAPSHOT'
-    compile group: 'com.101tec', name: 'zkclient', version: '0.10'
     compile project(":user:user-register:user-register-api")
-//    compile project(":user:user-common:user-common-api")
+    compile project(":dbs:jpa")
+
+
+    compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
 
 }

@@ -1,6 +1,6 @@
 package com.bjike.goddess.user.common.service;
 
-import com.bjike.goddess.dbs.jpa.service.IService;
+import com.bjike.goddess.dbs.common.service.IService;
 import com.bjike.goddess.user.common.dto.PositionDto;
 import com.bjike.goddess.user.common.entity.Position;
 

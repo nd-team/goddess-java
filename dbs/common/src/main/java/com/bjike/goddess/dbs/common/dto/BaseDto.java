@@ -1,4 +1,4 @@
-package com.bjike.goddess.dbs.jpa.dto;
+package com.bjike.goddess.dbs.common.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;

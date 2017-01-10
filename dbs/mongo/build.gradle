@@ -1,7 +1,7 @@
 apply from: '../../config.gradle'
 
 dependencies {
-    compile group: 'com.dounine.corgi', name: 'common', version: "$common_version"
+    compile group: 'com.dounine.corgi', name: 'jpa', version: "$common_version"
     compile "org.springframework.data:spring-data-mongodb:$spring_data_mongodb_version"
     compile "org.hibernate:hibernate-validator:$hibernate_validator_version"
     compile "commons-io:commons-io:$commons_io_version"

@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.common.service;
 
-import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.dbs.jpa.service.IService;
+import com.bjike.goddess.dbs.common.exception.SerException;
+import com.bjike.goddess.dbs.common.service.IService;
 import com.bjike.goddess.user.common.dto.MoneyDto;
 import com.bjike.goddess.user.common.entity.Money;
 import org.mengyun.tcctransaction.api.TransactionContext;

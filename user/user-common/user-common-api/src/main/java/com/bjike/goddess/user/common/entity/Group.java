@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.common.entity;
 
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
-import com.bjike.goddess.dbs.jpa.enums.Status;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user_group")
-public class Group extends BaseEntity{
+public class Group extends BaseEntity {
 
     @Column(unique = true,nullable = false)
     private String name; //组名

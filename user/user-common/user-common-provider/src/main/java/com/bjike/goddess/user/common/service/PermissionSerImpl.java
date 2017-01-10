@@ -1,14 +1,14 @@
 package com.bjike.goddess.user.common.service;
 
 
+import com.bjike.goddess.dbs.common.dto.Restrict;
+import com.bjike.goddess.dbs.common.exception.SerException;
+import com.bjike.goddess.dbs.jpa.service.ServiceImpl;
 import com.bjike.goddess.user.common.dto.PermissionDto;
 import com.bjike.goddess.user.common.entity.Permission;
 import com.bjike.goddess.user.common.entity.Role;
-import org.apache.commons.lang3.StringUtils;
-import com.bjike.goddess.dbs.jpa.dto.Restrict;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.dbs.jpa.service.ServiceImpl;
 import com.bjike.goddess.user.common.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

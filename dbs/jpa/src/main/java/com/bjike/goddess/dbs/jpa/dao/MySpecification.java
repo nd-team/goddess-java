@@ -1,12 +1,12 @@
 package com.bjike.goddess.dbs.jpa.dao;
 
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
-import com.bjike.goddess.dbs.jpa.enums.RestrictionType;
-import com.bjike.goddess.dbs.jpa.exception.RepException;
+import com.bjike.goddess.dbs.common.dto.BaseDto;
+import com.bjike.goddess.dbs.common.dto.Condition;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.enums.RepExceptionType;
+import com.bjike.goddess.dbs.common.enums.RestrictionType;
+import com.bjike.goddess.dbs.common.exception.RepException;
 import com.bjike.goddess.dbs.jpa.utils.PrimitiveUtil;
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
-import com.bjike.goddess.dbs.jpa.dto.Condition;
-import com.bjike.goddess.dbs.jpa.enums.RepExceptionType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +41,7 @@ public class MySpecification<BE extends BaseEntity, BD extends BaseDto> implemen
 
 
     @Override
-    public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+    public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb) throws RepException {
         List<Predicate> preList = null;
         try {
             preList = initPredicates(dto, root, cb);

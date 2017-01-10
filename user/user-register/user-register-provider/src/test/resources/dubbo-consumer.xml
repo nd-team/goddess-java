@@ -14,7 +14,7 @@
 	<dubbo:protocol name="dubbo" port="30881" />
 	<dubbo:registry address="localhost:2181" protocol="zookeeper" />
 
-	<!--<dubbo:service id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" group="org.bytesoft.bytetcc"-->
+	<!--<dubbo:service id="remoteMoney" interface="com.bjike.goddess.user.jpa.service.IMoney" group="org.bytesoft.bytetcc"-->
 				   <!--filter="compensable" loadbalance="compensable" cluster="failfast" retries="0" />-->
 
 	<dubbo:reference id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" />

@@ -2,8 +2,8 @@ apply from: '../../../config.gradle'
 
 
 dependencies {
-    compile project(":dbs:jpa")
-    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:'1.1.5'
-    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+    compile project(":dbs:common")
 
+    compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
+    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:"$tcc_version"
 }

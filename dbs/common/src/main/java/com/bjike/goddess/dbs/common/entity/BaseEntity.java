@@ -1,10 +1,9 @@
-package com.bjike.goddess.dbs.jpa.entity;
+package com.bjike.goddess.dbs.common.entity;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -7,28 +7,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.IOException;
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.bjike.goddess.user.common",
+@ComponentScan(basePackages = "com.bjike.goddess.user.common.action",
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-public class Application extends WebMvcConfigurerAdapter{
+//@ImportResource({"classpath:application.xml"})
+public class Application{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-
-	public static void main(String[] args){
-        LOGGER.info("sso-consumer starting...");
+	public static void main(String[] args) throws IOException {
 		SpringApplication.run(Application.class,args);
+		System.in.read();
 	}
-
-    @Override
-    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-    }
 
 }
 

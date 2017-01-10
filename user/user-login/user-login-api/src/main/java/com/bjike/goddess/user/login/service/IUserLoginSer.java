@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.login.service;
 
-import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.dbs.jpa.service.IService;
+import com.bjike.goddess.dbs.common.exception.SerException;
+import com.bjike.goddess.dbs.common.service.IService;
 import com.bjike.goddess.user.common.dto.UserDto;
 import com.bjike.goddess.user.common.entity.User;
 import com.bjike.goddess.user.login.dto.UserLoginDto;

@@ -1,7 +1,7 @@
 package test_java_service.code.dto;
 
 
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
+import com.bjike.goddess.dbs.common.dto.BaseDto;
 
 /**
  * Created by lgq on 16-10-13.

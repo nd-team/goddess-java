@@ -1,9 +1,9 @@
-package com.bjike.goddess.dbs.jpa.service;
+package com.bjike.goddess.dbs.common.service;
 
 
-import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.dto.BaseDto;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.exception.SerException;
 
 import java.util.Collection;
 import java.util.List;

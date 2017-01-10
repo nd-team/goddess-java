@@ -1,4 +1,4 @@
-rootProject.name = 'user-common-api'
+rootProject.name = 'user-jpa-api'
 
 
 include ':dbs:jpa'

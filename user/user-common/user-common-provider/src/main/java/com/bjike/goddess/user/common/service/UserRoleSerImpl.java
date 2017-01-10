@@ -1,9 +1,9 @@
 package com.bjike.goddess.user.common.service;
 
 
-import com.bjike.goddess.dbs.jpa.dto.Restrict;
-import com.bjike.goddess.dbs.jpa.enums.Status;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
+import com.bjike.goddess.dbs.common.dto.Restrict;
+import com.bjike.goddess.dbs.common.enums.Status;
+import com.bjike.goddess.dbs.common.exception.SerException;
 import com.bjike.goddess.dbs.jpa.service.ServiceImpl;
 import com.bjike.goddess.user.common.dto.UserRoleDto;
 import com.bjike.goddess.user.common.entity.UserRole;
@@ -30,7 +30,7 @@ public class UserRoleSerImpl extends ServiceImpl<UserRole, UserRoleDto> implemen
     public List<UserRole> findByUserId(String userId) throws SerException {
         UserRoleDto dto = new UserRoleDto();
         dto.getConditions().add(Restrict.eq("user.id",userId));
-        dto.getConditions().add(Restrict.eq("role.status",Status.THAW));
+        dto.getConditions().add(Restrict.eq("role.status", Status.THAW));
         return findByCis(dto);
     }
 }

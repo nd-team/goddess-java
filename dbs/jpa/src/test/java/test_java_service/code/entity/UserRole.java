@@ -1,7 +1,8 @@
 package test_java_service.code.entity;
 
 
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
+
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
 
 import javax.persistence.*;
 

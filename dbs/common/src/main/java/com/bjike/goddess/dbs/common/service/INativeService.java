@@ -1,6 +1,7 @@
-package com.bjike.goddess.dbs.jpa.service;
+package com.bjike.goddess.dbs.common.service;
 
-import com.bjike.goddess.dbs.jpa.exception.SerException;
+
+import com.bjike.goddess.dbs.common.exception.SerException;
 
 import java.util.List;
 

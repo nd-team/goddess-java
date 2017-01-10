@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * @ProjectName: [ ISSP智能服务共享平台 ]
- * @Package: [ oa.common.mails ]
+ * @Package: [ oa.jpa.mails ]
  * @Author: [ liguiqin ]
  * @CreateTime: [ 2016年2月23日 下午5:24:28 ]
  * @Copy: [ bjike.com ]

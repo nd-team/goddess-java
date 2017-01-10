@@ -1,13 +1,8 @@
 package com.bjike.goddess.user.register.boot;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.bjike.goddess.dbs.jpa.boot.initializer.Components;
 import com.bjike.goddess.dbs.jpa.boot.initializer.EntityToScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
 
 /**
  * @Author: [liguiqin]
@@ -21,6 +16,6 @@ public class MyComponents extends Components implements EntityToScan {
 
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.user.common.entity"};
+        return new String[]{"com.bjike.goddess.user.jpa.entity"};
     }
 }

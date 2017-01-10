@@ -1,7 +1,7 @@
 package com.bjike.goddess.dbs.jpa.dao;
 
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.dto.BaseDto;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

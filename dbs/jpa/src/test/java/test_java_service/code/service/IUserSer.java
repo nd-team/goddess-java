@@ -2,7 +2,7 @@ package test_java_service.code.service;
 
 
 import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.dbs.jpa.service.IService;
+import com.bjike.goddess.dbs.common.service.IService;
 import org.springframework.cache.annotation.Cacheable;
 import test_java_service.code.dto.UserDto;
 import test_java_service.code.entity.User;

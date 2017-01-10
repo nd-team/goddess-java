@@ -1,9 +1,9 @@
+import com.bjike.goddess.dbs.common.exception.SerException;
+import com.bjike.goddess.user.register.dto.UserRegisterDto;
+import com.bjike.goddess.user.register.service.IUserRegisterSer;
 import com.bjike.goddess.user.register.service.TestMoneySer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
-import com.bjike.goddess.user.register.dto.UserRegisterDto;
-import com.bjike.goddess.user.register.service.IUserRegisterSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

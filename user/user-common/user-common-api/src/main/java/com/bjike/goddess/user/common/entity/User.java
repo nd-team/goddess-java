@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.common.entity;
 
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
-import com.bjike.goddess.dbs.jpa.enums.Status;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.enums.Status;
 import com.bjike.goddess.user.common.enums.LoginStatus;
 import com.bjike.goddess.user.common.enums.MemberType;
 import com.bjike.goddess.user.common.enums.SexType;

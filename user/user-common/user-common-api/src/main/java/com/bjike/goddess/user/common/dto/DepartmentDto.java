@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.common.dto;
 
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
+
+import com.bjike.goddess.dbs.common.dto.BaseDto;
 
 /**
  * @Author: [liguiqin]

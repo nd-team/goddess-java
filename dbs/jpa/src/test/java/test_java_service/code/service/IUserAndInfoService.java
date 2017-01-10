@@ -1,6 +1,6 @@
 package test_java_service.code.service;
 
-import com.bjike.goddess.dbs.jpa.service.INativeService;
+import com.bjike.goddess.dbs.common.service.INativeService;
 
 /**
  * @Author: [liguiqin]

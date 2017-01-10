@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.common.entity;
 
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
-import com.bjike.goddess.dbs.jpa.enums.Status;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.enums.Status;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class Permission extends BaseEntity {
     @Column(unique = true)
     private String resource;//认证资源
     private String description;//描述
-    private Status status=Status.THAW; //状态
+    private Status status= Status.THAW; //状态
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(columnDefinition = "dateTime")//指定数据库类型
     private LocalDateTime createTime;

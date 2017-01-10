@@ -1,10 +1,5 @@
 package com.bjike.goddess.dbs.jpa.boot.initializer;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]

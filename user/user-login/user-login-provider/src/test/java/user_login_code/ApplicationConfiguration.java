@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [org.ndshop]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"org.ndshop.user.common.dao"})
+@EnableJpaRepositories(basePackages = {"org.ndshop.user.jpa.dao"})
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties","classpath:corgi.properties"})

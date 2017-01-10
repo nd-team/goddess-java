@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-//@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.common.dao"})
+//@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.jpa.dao"})
 //@EnableCaching
 @EnableTransactionManagement
 @PropertySource({"classpath:config.properties"})

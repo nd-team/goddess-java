@@ -2,10 +2,7 @@ package com.bjike.goddess.user.common.dao;
 
 import com.bjike.goddess.dbs.jpa.dao.MyRep;
 import com.bjike.goddess.user.common.dto.MoneyDto;
-import com.bjike.goddess.user.common.dto.UserDto;
 import com.bjike.goddess.user.common.entity.Money;
-import com.bjike.goddess.user.common.entity.User;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @Author: [liguiqin]

@@ -1,12 +1,13 @@
 package com.bjike.goddess.dbs.jpa.service;
 
+import com.bjike.goddess.dbs.common.dto.BaseDto;
+import com.bjike.goddess.dbs.common.entity.BaseEntity;
+import com.bjike.goddess.dbs.common.exception.RepException;
+import com.bjike.goddess.dbs.common.exception.SerException;
+import com.bjike.goddess.dbs.common.service.IService;
 import com.bjike.goddess.dbs.jpa.constant.FinalCommons;
-import com.bjike.goddess.dbs.jpa.exception.RepException;
-import com.bjike.goddess.dbs.jpa.exception.SerException;
 import com.bjike.goddess.dbs.jpa.dao.MyRep;
 import com.bjike.goddess.dbs.jpa.dao.MySpecification;
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
-import com.bjike.goddess.dbs.jpa.entity.BaseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

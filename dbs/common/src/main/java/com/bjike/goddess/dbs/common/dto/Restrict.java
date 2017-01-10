@@ -1,6 +1,7 @@
-package com.bjike.goddess.dbs.jpa.dto;
+package com.bjike.goddess.dbs.common.dto;
 
-import com.bjike.goddess.dbs.jpa.enums.RestrictionType;
+
+import com.bjike.goddess.dbs.common.enums.RestrictionType;
 
 /**
  * @Author: [liguiqin]

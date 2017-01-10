@@ -1,5 +1,6 @@
 package com.bjike.goddess.user.common.dao;
 
+
 import com.bjike.goddess.dbs.jpa.dao.MyRep;
 import com.bjike.goddess.user.common.dto.DepartmentDto;
 import com.bjike.goddess.user.common.entity.Department;

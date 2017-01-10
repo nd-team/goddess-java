@@ -1,4 +1,4 @@
-package com.bjike.goddess.dbs.jpa.enums;
+package com.bjike.goddess.dbs.common.enums;
 
 
 /**

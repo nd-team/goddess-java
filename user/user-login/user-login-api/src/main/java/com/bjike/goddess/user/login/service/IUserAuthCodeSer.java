@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.login.service;
 
-import com.bjike.goddess.dbs.jpa.exception.SerException;
+
+import com.bjike.goddess.dbs.common.exception.SerException;
 
 import java.awt.image.BufferedImage;
 

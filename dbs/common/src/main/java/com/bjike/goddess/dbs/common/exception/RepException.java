@@ -1,7 +1,7 @@
-package com.bjike.goddess.dbs.jpa.exception;
+package com.bjike.goddess.dbs.common.exception;
 
 
-import com.bjike.goddess.dbs.jpa.enums.RepExceptionType;
+import com.bjike.goddess.dbs.common.enums.RepExceptionType;
 
 /**
  * @Author: [liguiqin]

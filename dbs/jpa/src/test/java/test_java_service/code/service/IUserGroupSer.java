@@ -1,6 +1,6 @@
 package test_java_service.code.service;
 
-import com.bjike.goddess.dbs.jpa.service.IService;
+import com.bjike.goddess.dbs.common.service.IService;
 import test_java_service.code.dto.UserGroupDto;
 import test_java_service.code.entity.UserGroup;
 

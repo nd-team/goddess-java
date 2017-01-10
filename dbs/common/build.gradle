@@ -1,0 +1,13 @@
+apply from: '../../config.gradle'
+
+dependencies {
+    compile "org.hibernate:hibernate-validator:$hibernate_validator_version"
+    compile "com.alibaba:fastjson:$fastjson_version"
+    compile "commons-io:commons-io:$commons_io_version"
+    compile "org.apache.commons:commons-lang3:$commons_version"
+    compile "org.hibernate:hibernate-entitymanager:$hibernate_version"
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernate_jpa_version"
+    compile "org.hibernate:hibernate-ehcache:$hibernate_ehcache_version"
+
+
+}

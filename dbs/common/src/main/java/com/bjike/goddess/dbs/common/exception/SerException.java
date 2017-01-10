@@ -1,4 +1,4 @@
-package com.bjike.goddess.dbs.jpa.exception;
+package com.bjike.goddess.dbs.common.exception;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-public class SerException extends Exception implements Serializable {
+public class SerException extends Exception {
 
     public SerException() {
         super();

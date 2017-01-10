@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.login.dto;
 
-import com.bjike.goddess.dbs.jpa.dto.BaseDto;
+
+import com.bjike.goddess.dbs.common.dto.BaseDto;
 
 /**
  * @Author: [liguiqin]
@@ -9,7 +10,7 @@ import com.bjike.goddess.dbs.jpa.dto.BaseDto;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-public class UserLoginDto extends BaseDto{
+public class UserLoginDto extends BaseDto {
 
     private String token; //登陆令牌
 
