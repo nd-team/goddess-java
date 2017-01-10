@@ -25,8 +25,32 @@
 	http://code.alibabatech.com/schema/dubbo
 	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<import resource="classpath:bytetcc.xml" />
+	<import resource="classpath:tcc-transaction.xml" />
 	<import resource="dubbo-provider.xml" />
+
+	<bean id="transactionRepository" class="org.mengyun.tcctransaction.repository.RedisTransactionRepository">
+		<property name="keyPrefix" value="tcc_ut_"/>
+		<property name="jedisPool" ref="jedisPool"/>
+	</bean>
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="1000"/>
+		<property name="maxWaitMillis" value="1000"/>
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig"/>
+		<constructor-arg index="1" value="127.0.0.1"/>
+		<constructor-arg index="2" value="6379" type="int"/>
+		<constructor-arg index="3" value="1000" type="int"/>
+		<!--<constructor-arg index="4" value="${redis.password}"/>-->
+	</bean>
+
+	<bean class="org.mengyun.tcctransaction.spring.recover.DefaultRecoverConfig">
+		<property name="maxRetryCount" value="30"/>
+		<property name="recoverDuration" value="120"/>
+		<property name="cronExpression" value="0 */1 * * * ?"/>
+	</bean>
 
 	<!--<bean id="dataSource" class="org.bytesoft.bytejta.supports.jdbc.LocalXADataSource">-->
 		<!--<property name="dataSource" ref="myDataSource" />-->

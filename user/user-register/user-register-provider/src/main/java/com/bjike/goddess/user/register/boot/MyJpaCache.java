@@ -16,6 +16,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
+@Component
 public class MyJpaCache implements JpaCache {
     @Override
     public List<Cache> initCaches() {

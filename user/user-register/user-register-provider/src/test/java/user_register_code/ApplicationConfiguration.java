@@ -12,9 +12,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [org.ndshop]
  */
 @Configuration
-//@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 //@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.common.dao"})
 //@EnableCaching
+@EnableTransactionManagement
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
 @ComponentScan(basePackages = {"user_register_code","com.bjike.goddess.user.common","com.bjike.goddess.user.register"},

@@ -1,5 +1,4 @@
-import com.bjike.goddess.user.common.entity.Money;
-import com.bjike.goddess.user.register.service.impl.TestMoneySer;
+import com.bjike.goddess.user.register.service.TestMoneySer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.bjike.goddess.dbs.jpa.exception.SerException;
@@ -26,29 +25,18 @@ public class JunitTest{
      */
 
     private IUserRegisterSer userRegisterSer;
+
     @Autowired
     private TestMoneySer moneySer;
 
     @Test
     public void testMoneyAdd(){
-        Money money = new Money();
-        money.setAccount("123");
         try {
-            moneySer.addMoney(money,100);
+            moneySer.addMoney("123",100);
         } catch (SerException e) {
             e.printStackTrace();
         }
     }
-
-    @Test
-    public void testMoneyAccountAdd(){
-        try {
-            moneySer.addAccount("123",new Integer(100));
-        } catch (SerException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     public void existUsername() throws SerException {

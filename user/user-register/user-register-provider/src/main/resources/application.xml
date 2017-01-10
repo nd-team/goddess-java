@@ -25,7 +25,7 @@
 	http://code.alibabatech.com/schema/dubbo
 	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<import resource="classpath:bytetcc.xml" />
+	<import resource="classpath:tcc-transaction.xml" />
 	<import resource="classpath:dubbo-consumer.xml" />
 
 </beans>

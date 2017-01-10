@@ -16,9 +16,6 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:service interface="com.bjike.goddess.user.common.service.IMoney" ref="moneySer" group="org.bytesoft.bytetcc"
-				   filter="compensable" loadbalance="compensable" cluster="failfast" retries="0" />
-
-
+	<dubbo:service interface="com.bjike.goddess.user.common.service.IMoney" ref="moneySer"/>
 
 </beans>

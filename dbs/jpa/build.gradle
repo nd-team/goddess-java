@@ -13,6 +13,7 @@ dependencies {
     compile "org.springframework:spring-jdbc:$spring_jdbc_version"
     compile "org.hibernate:hibernate-entitymanager:$hibernate_version"
     compile "com.alibaba:druid:$druid_version"
+    compile "com.101tec:zkclient:0.10"
     compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernate_jpa_version"
     compile "org.hibernate:hibernate-ehcache:$hibernate_ehcache_version"
 

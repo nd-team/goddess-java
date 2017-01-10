@@ -16,6 +16,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
@@ -36,6 +37,23 @@ public class Components {
     private JpaCache jpaCache;
     @Autowired
     private EntityToScan packagesToScan;
+
+    @Bean
+    public DataSource getDataSource(Environment env) {
+        DruidDataSource dds = new DruidDataSource();
+        dds.setDriverClassName(env.getProperty("db.driver"));
+        dds.setUrl(env.getProperty("db.url"));
+        dds.setUsername(env.getProperty("db.username"));
+        dds.setPassword(env.getProperty("db.password"));
+        return dds;
+    }
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
+        return jpaTransactionManager;
+    }
 
     /**
      * 实体类管理工厂

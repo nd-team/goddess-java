@@ -17,15 +17,8 @@
 	<!--<dubbo:service id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" group="org.bytesoft.bytetcc"-->
 				   <!--filter="compensable" loadbalance="compensable" cluster="failfast" retries="0" />-->
 
-	<dubbo:reference id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" group="org.bytesoft.bytetcc"
-					 filter="compensable" loadbalance="compensable" cluster="failfast" retries="0" />
+	<dubbo:reference id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" />
 
-	<dubbo:service interface="com.bjike.goddess.user.register.service.ITestMoneySer"
-				   ref="testMoneySer"
-				   group="org.bytesoft.bytetcc"
-				   filter="compensable"
-				   loadbalance="compensable"
-				   cluster="failfast"
-				   retries="0"/>
+	<!--<dubbo:service interface="com.bjike.goddess.user.register.service.ITestMoneySer" ref="testMoneySer"/>-->
 
 </beans>

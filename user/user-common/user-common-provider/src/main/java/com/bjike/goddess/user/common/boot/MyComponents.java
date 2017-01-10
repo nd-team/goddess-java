@@ -22,23 +22,6 @@ import javax.sql.DataSource;
 @Component
 public class MyComponents extends Components implements EntityToScan{
 
-    @Bean("myDataSource")
-    public DataSource getDataSource(Environment env) {
-        DruidDataSource dds = new DruidDataSource();
-        dds.setDriverClassName(env.getProperty("db.driver"));
-        dds.setUrl(env.getProperty("db.url"));
-        dds.setUsername(env.getProperty("db.username"));
-        dds.setPassword(env.getProperty("db.password"));
-        return dds;
-    }
-
-//    @Bean(name = "jpaTransactionManager")
-//    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
-//        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-//        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-//        return jpaTransactionManager;
-//    }
-
     @Override
     public String[] entityScan() {
         return new String[]{"com.bjike.goddess.user.common.entity"};

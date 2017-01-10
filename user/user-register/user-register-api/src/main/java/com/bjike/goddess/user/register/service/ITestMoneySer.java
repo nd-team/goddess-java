@@ -8,8 +8,6 @@ import com.bjike.goddess.user.common.entity.Money;
  */
 public interface ITestMoneySer {
 
-    void addMoney(Money money,Integer moneyCou) throws SerException;
-
-    void addAccount(String account,Integer moneyCou) throws SerException;
+    void addMoney(String account,Integer moneyCou) throws SerException;
 
 }
