@@ -27,8 +27,8 @@ public class MoneySer extends ServiceImpl<Money, MoneyDto> implements IMoney {
         MoneyDto moneyDto = new MoneyDto();
         moneyDto.getConditions().add(Restrict.eq("account", account));
         Money newMoney = super.findOne(moneyDto);
-        if(null==newMoney){
-            throw new SerException(account+" 帐户不存在");
+        if (null == newMoney) {
+            throw new SerException(account + " 帐户不存在");
         }
         newMoney.setMoney(newMoney.getMoney() + money);
         update(newMoney);
@@ -36,21 +36,21 @@ public class MoneySer extends ServiceImpl<Money, MoneyDto> implements IMoney {
 
     @Transactional(rollbackFor = SerException.class)
     public void addMoneyConfirm(TransactionContext transactionContext, String account, Integer money) throws SerException {
-
+        System.out.println("帐户:" + account + " 已经成功增加:" + money + " 钱.");
     }
 
     @Transactional(rollbackFor = SerException.class)
-    public void addMoneyCancel(TransactionContext transactionContext,String account, Integer money) throws SerException {
-        //正常对数据进行减少操作
+    public void addMoneyCancel(TransactionContext transactionContext, String account, Integer money) throws SerException {
+        //正常对增加数据进行恢复操作
         MoneyDto moneyDto = new MoneyDto();
         moneyDto.getConditions().add(Restrict.eq("account", account));
         Money newMoney = super.findOne(moneyDto);
-        if(null==newMoney){
-            throw new SerException(account+" 帐户不存在");
+        if (null == newMoney) {
+            throw new SerException(account + " 帐户不存在");
         }
-        if(newMoney.getMoney()>money){
-            newMoney.setMoney(newMoney.getMoney() - money);
-        }else{
+        if (newMoney.getMoney() > money) {
+            newMoney.setMoney(newMoney.getMoney() - money);//对增加的金额进行删除恢复
+        } else {
             throw new SerException("帐号金额不足.");
         }
         update(newMoney);

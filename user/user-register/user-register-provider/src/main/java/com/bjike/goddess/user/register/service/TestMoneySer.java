@@ -17,12 +17,12 @@ import javax.annotation.Resource;
 public class TestMoneySer implements ITestMoneySer {
 
     @Autowired
-    IMoney iMoney;
+    private IMoney iMoney;
 
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addMoneyConfirm",cancelMethod = "addMoneyCancel")
     public void addMoney(String account,Integer moneyCou) throws SerException {
-        iMoney.addMoney(null,account,moneyCou);
+        iMoney.addMoney(null,account,moneyCou);//调用远程服务
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -32,6 +32,7 @@ public class TestMoneySer implements ITestMoneySer {
 
     @Transactional(rollbackFor = SerException.class)
     public void addMoneyCancel(String account,Integer moneyCou) throws SerException {
+
     }
 
 }

@@ -30,7 +30,7 @@ public class JunitTest{
     private TestMoneySer moneySer;
 
     @Test
-    public void testMoneyAdd(){
+    public void testMoneyAdd(){//对帐户进行金额增加操作，没有帐户会异常，并进行回滚
         try {
             moneySer.addMoney("123",100);
         } catch (SerException e) {
