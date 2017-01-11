@@ -13,8 +13,4 @@
 	<dubbo:protocol name="dubbo" port="30881" />
 	<dubbo:registry address="localhost:2181" protocol="zookeeper" />
 
-	<dubbo:service id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" />
-
-
-
 </beans>

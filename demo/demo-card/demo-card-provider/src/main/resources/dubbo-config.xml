@@ -17,5 +17,5 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--<dubbo:service interface="com.bjike.goddess.card.service.CardAPI" ref="cardSer"/>-->
-	<dubbo:reference id="ticketAPI" interface="com.bjike.goddess.six.service.TicketAPI" />
+	<dubbo:reference id="ticketAPI" interface="com.bjike.goddess.ticket.service.TicketAPI" />
 </beans>

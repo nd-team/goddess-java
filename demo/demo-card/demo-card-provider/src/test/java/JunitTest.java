@@ -1,6 +1,11 @@
 import com.bjike.goddess.card.config.AppRoot;
+import com.bjike.goddess.card.dto.CardDTO;
+import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.card.service.CardAPI;
+import com.bjike.goddess.dbs.common.dto.Condition;
+import com.bjike.goddess.dbs.common.enums.RestrictionType;
 import com.bjike.goddess.dbs.common.exception.SerException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +21,25 @@ public class JunitTest {
     @Autowired
     private CardAPI cardAPI;
 
+    @Before
+    public void initCard(){//自动初始新帐户
+        CardDTO cardDTO = new CardDTO();
+        cardDTO.getConditions().add(new Condition("account","123", RestrictionType.EQ));
+        try {
+            Card card = cardAPI.findOne(cardDTO);
+            if(null==card){
+                cardAPI.save(new Card("123","123",1000L));
+                System.out.println("自动初始化帐户:123,密码:123,余额:1000");
+            }
+        } catch (SerException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testBuyTicket(){//对帐户进行金额增加操作，没有帐户会异常，并进行回滚
         try {
-            cardAPI.buyTicketForCard(null,"account123","abc123","D306-2-2D");
+            cardAPI.buyTicketForCard(null,"123","123","D306-2-2D");
         } catch (SerException e) {
             e.printStackTrace();
         }

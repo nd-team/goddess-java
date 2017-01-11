@@ -33,6 +33,7 @@ allprojects {
     ext {
         dubbo_version = '2.5.4-SNAPSHOT'
         tcc_version = '1.1.5'
+        spring_boot_version = '1.4.3.RELEASE'
         common_version = '1.0'
         junit_version = '4.12'
         commons_version = '3.4'

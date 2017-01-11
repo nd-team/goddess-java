@@ -2,7 +2,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'java'
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web:1.4.3.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
 }
 
 buildscript {
@@ -11,6 +11,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }

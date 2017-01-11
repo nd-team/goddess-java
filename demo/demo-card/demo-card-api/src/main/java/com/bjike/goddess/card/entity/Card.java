@@ -14,6 +14,13 @@ public class Card extends BaseEntity {
 	private String password;
 	private Long money;
 
+	public Card(){}
+	public Card(String account,String password,Long money){
+		this.account = account;
+		this.password = password;
+		this.money = money;
+	}
+
 
 	public String getAccount() {
 		return account;
