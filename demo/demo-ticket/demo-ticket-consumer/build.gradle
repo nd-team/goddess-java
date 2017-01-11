@@ -1,0 +1,17 @@
+apply plugin: 'spring-boot'
+apply plugin: 'java'
+
+dependencies {
+	compile project(":demo:demo-ticket:demo-ticket-api")
+    compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+    }
+}
