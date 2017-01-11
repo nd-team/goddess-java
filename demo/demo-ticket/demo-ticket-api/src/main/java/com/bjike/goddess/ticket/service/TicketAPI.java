@@ -16,7 +16,7 @@ public interface TicketAPI extends IService<Ticket, TicketDTO> {
 	
 	/**
 	 * 购票
-	 * @param txContent 分布式事务预留字段(必需)
+	 * @param txContext 分布式事务预留字段(必需)
 	 * @param account 12306帐户
 	 * @param password 12306密码
 	 * @param position 座位号
@@ -27,6 +27,7 @@ public interface TicketAPI extends IService<Ticket, TicketDTO> {
 
 	/**
 	 * 退票
+	 * @param txContext 分布式事务预留字段(必需)
 	 * @param account 12306帐户
 	 * @param password 12306密码
 	 * @param position 座位号
