@@ -1,0 +1,5 @@
+rootProject.name = 'demo-12306-api'
+
+
+include ':dbs:jpa'
+project('dbs:jpa').projectDir = new File(settingsDir, '../../jpa')

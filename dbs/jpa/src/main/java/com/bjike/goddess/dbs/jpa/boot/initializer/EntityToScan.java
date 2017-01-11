@@ -1,5 +1,7 @@
 package com.bjike.goddess.dbs.jpa.boot.initializer;
 
+import javax.enterprise.inject.Default;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
@@ -7,14 +9,14 @@ package com.bjike.goddess.dbs.jpa.boot.initializer;
  * @Version: [1.0.0]
  * @Copy: [org.ndshop]
  */
-public interface EntityToScan {
-    /**
-     *
-     */
+public interface EntityToScan<T> {
+
     /**
      * 扫描　返回值包　Entity
      *
      * @return　扫描包
      */
-    String[] entityScan();
+    default String[] entityScan(){
+    	return null;
+    }
 }

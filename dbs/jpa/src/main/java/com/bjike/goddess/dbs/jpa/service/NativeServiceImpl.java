@@ -2,7 +2,6 @@ package com.bjike.goddess.dbs.jpa.service;
 
 import com.bjike.goddess.dbs.common.exception.SerException;
 import com.bjike.goddess.dbs.common.service.INativeService;
-import com.bjike.goddess.dbs.jpa.constant.FinalCommons;
 import com.bjike.goddess.dbs.jpa.utils.CharacterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 

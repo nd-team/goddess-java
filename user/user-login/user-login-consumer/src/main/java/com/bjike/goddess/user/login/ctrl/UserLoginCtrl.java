@@ -19,17 +19,17 @@ public class UserLoginCtrl {
 //
 //    /**
 //     * 登录
-//     * @param dto
+//     * @param com.bjike.goddess.card.dto
 //     * @param request
 //     * @param response
 //     * @return
 //     */
 //    @GetMapping("login")
-//    public ResponseText login(UserLoginDto dto, HttpServletRequest request, HttpServletResponse response){
+//    public ResponseText login(UserLoginDto com.bjike.goddess.card.dto, HttpServletRequest request, HttpServletResponse response){
 //        try {
-//            String token = userLoginSer.login(dto);
+//            String token = userLoginSer.login(com.bjike.goddess.card.dto);
 //            if(StringUtils.isNotBlank(token)){
-//                handlerRememberMe(dto,request,response);
+//                handlerRememberMe(com.bjike.goddess.card.dto,request,response);
 //                tokenToCookie(token,request,response);
 //            }
 //            return new ResponseText(token);
@@ -57,15 +57,15 @@ public class UserLoginCtrl {
 //    /**
 //     * 处理记住账号密码
 //     *
-//     * @param dto
+//     * @param com.bjike.goddess.card.dto
 //     */
-//    private void handlerRememberMe(UserLoginDto dto,HttpServletRequest request,HttpServletResponse response) {
-//        if (dto.isRememberMe()) {
-//            Cookie cookie = new Cookie("account", dto.getAccount());
+//    private void handlerRememberMe(UserLoginDto com.bjike.goddess.card.dto,HttpServletRequest request,HttpServletResponse response) {
+//        if (com.bjike.goddess.card.dto.isRememberMe()) {
+//            Cookie cookie = new Cookie("account", com.bjike.goddess.card.dto.getAccount());
 //            cookie.setMaxAge(100);
 //            CookieOperate.addCookie(cookie,response);
 //        } else {
-//            CookieOperate.removeCookieByName(dto.getAccount(),request,response);
+//            CookieOperate.removeCookieByName(com.bjike.goddess.card.dto.getAccount(),request,response);
 //        }
 //    }
 //

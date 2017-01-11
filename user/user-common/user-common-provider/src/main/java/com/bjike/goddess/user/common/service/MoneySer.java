@@ -28,7 +28,12 @@ public class MoneySer extends ServiceImpl<Money, MoneyDto> implements IMoney {
             throw new SerException(account + " 帐户不存在");
         }
         newMoney.setMoney(newMoney.getMoney() + money);
-        update(newMoney);
+        super.update(newMoney);
+
+        Money money1 = new Money();
+        money1.setAccount("bbbb");
+        money1.setMoney(100);
+//        super.save(money1);
     }
 
     @Transactional(rollbackFor = SerException.class)

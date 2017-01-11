@@ -1,0 +1,10 @@
+apply from: '../../../config.gradle'
+
+dependencies {
+    compile project(":demo:demo-12306:demo-12306-api")
+    compile project(":demo:demo-card:demo-card-api")
+    compile project(":dbs:jpa")
+
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+}

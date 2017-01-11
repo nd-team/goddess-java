@@ -8,7 +8,7 @@ dependencies {
     compile "org.springframework.data:spring-data-jpa:$spring_jpa_version"
     compile group:'org.springframework',name:'spring-test',version:"$spring_version"
     compile "mysql:mysql-connector-java:$mysql_connector_version"
-    compile "org.springframework:spring-jdbc:$spring_jdbc_version"
+    compile "org.springframework:spring-jdbc:$spring_version"
     compile "com.alibaba:druid:$druid_version"
     compile "com.101tec:zkclient:0.10"
 

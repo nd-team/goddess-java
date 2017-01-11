@@ -3,15 +3,11 @@ package com.bjike.goddess.dbs.common.exception;
 
 import com.bjike.goddess.dbs.common.enums.RepExceptionType;
 
-/**
- * @Author: [liguiqin]
- * @Date: [2016-11-23 15:47]
- * @Description: [dao层异自定义常]
- * @Version: [1.0.0]
- * @Copy: [org.ndshop]
- */
+
 public class RepException extends RuntimeException {
-    private RepExceptionType type = RepExceptionType.UNDEFINE;
+	private static final long serialVersionUID = 71512318732946788L;
+
+	private RepExceptionType type = RepExceptionType.UNDEFINE;
 
     private RepException repException;
 

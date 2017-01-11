@@ -3,6 +3,15 @@ rootProject.name = 'goddess'
 //#dbs
 include ':dbs:common'
 include ':dbs:jpa'
+//$demo
+include ':demo:demo-12306:demo-12306-api'
+include ':demo:demo-12306:demo-12306-consumer'
+include ':demo:demo-12306:demo-12306-provider'
+
+include ':demo:demo-card:demo-card-api'
+include ':demo:demo-card:demo-card-consumer'
+include ':demo:demo-card:demo-card-provider'
+//#demo
 //include ':dbs:mongo'
 //include ':dbs:redis'
 include ':user:user-common:user-common-api'

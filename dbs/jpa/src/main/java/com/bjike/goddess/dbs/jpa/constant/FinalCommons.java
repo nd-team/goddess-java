@@ -26,4 +26,5 @@ public class FinalCommons {
     public static final String ADMIN = "admin";
     public static final String KEY = "key";
     public static final String VAL = "val";
+
 }

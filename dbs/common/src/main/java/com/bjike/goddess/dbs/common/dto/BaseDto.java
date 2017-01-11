@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class BaseDto extends PageDto implements Serializable {
     private static final long serialVersionUID = -3558525794931360478L;
-    private Map<String,String> sorts=new HashMap<>(0); //排序字段 (有排序字段默认排序) "username" "desc"
+    private Map<String,String> sorts = new HashMap<>(0); //排序字段 (有排序字段默认排序) "username" "desc"
     private List<Condition> conditions = new ArrayList<Condition>(0);// 类搜索条件
 
     public Map<String, String> getSorts() {

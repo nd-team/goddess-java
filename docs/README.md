@@ -2,13 +2,13 @@
 ---
  ##包名规则：
  PackName(包名) : 包名全部小写，连续的单词只是简单地连接起来，
-不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.user.common.service`
+不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.user.common.com.bjike.goddess.card.service`
 
 1. - action(控制器) 以 **ctrl** 结束 com.bjike.goddess.user.ctrl
-2. - service(业务逻辑) 以 **service** 结束 com.bjike.goddess.user.service
+2. - com.bjike.goddess.card.service(业务逻辑) 以 **com.bjike.goddess.card.service** 结束 com.bjike.goddess.user.com.bjike.goddess.card.service
 3. - dao(数据层)以 **dao** 结束 com.bjike.goddess.user.dao
-4. - entity(实体)以 **entity** 结束 com.bjike.goddess.user.entity
-5. - dto(数据传输)以 **dto** 结束 com.bjike.goddess.user.dto
+4. - com.bjike.goddess.card.entity(实体)以 **com.bjike.goddess.card.entity** 结束 com.bjike.goddess.user.com.bjike.goddess.card.entity
+5. - com.bjike.goddess.card.dto(数据传输)以 **com.bjike.goddess.card.dto** 结束 com.bjike.goddess.user.com.bjike.goddess.card.dto
 
 ## 类命名规则:
   ClassName(类名) : 大写开头驼峰式，命名时应该使其简洁而又具有描述性 `UserDetail`

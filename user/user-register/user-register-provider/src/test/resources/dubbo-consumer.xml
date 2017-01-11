@@ -14,11 +14,11 @@
 	<dubbo:protocol name="dubbo" port="30881" />
 	<dubbo:registry address="localhost:2181" protocol="zookeeper" />
 
-	<!--<dubbo:service id="remoteMoney" interface="com.bjike.goddess.user.jpa.service.IMoney" group="org.bytesoft.bytetcc"-->
+	<!--<dubbo:com.bjike.goddess.card.service id="remoteMoney" interface="com.bjike.goddess.user.jpa.com.bjike.goddess.card.service.IMoney" group="org.bytesoft.bytetcc"-->
 				   <!--filter="compensable" loadbalance="compensable" cluster="failfast" retries="0" />-->
 
 	<dubbo:reference id="remoteMoney" interface="com.bjike.goddess.user.common.service.IMoney" />
 
-	<!--<dubbo:service interface="com.bjike.goddess.user.register.service.ITestMoneySer" ref="testMoneySer"/>-->
+	<!--<dubbo:com.bjike.goddess.card.service interface="com.bjike.goddess.user.register.com.bjike.goddess.card.service.ITestMoneySer" ref="testMoneySer"/>-->
 
 </beans>

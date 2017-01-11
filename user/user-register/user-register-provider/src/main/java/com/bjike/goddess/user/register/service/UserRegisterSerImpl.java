@@ -96,7 +96,7 @@ public class UserRegisterSerImpl implements IUserRegisterSer {
     @Override
     public void verifyCodeAndReg(UserRegisterDto dto) throws SerException {
 
-//        if (dto.getPassword().equals(dto.getRePassword())) {
+//        if (com.bjike.goddess.card.dto.getPassword().equals(com.bjike.goddess.card.dto.getRePassword())) {
 //            if (!Validator.isPassword(dto.getPassword())) {
 //                throw new SerException("密码过于简单");
 //            }

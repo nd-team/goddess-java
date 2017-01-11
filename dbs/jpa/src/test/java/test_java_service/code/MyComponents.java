@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 public class MyComponents extends Components implements EntityToScan{
     @Override
     public String[] entityScan() {
-        return new String[]{"test_java_service.code.entity"};
+        return new String[]{"test_java_service.code.com.bjike.goddess.card.entity"};
     }
 }

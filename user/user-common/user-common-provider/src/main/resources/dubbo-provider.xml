@@ -17,5 +17,4 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<dubbo:service interface="com.bjike.goddess.user.common.service.IMoney" ref="moneySer"/>
-
 </beans>
