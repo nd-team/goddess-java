@@ -29,11 +29,6 @@ public class MoneySer extends ServiceImpl<Money, MoneyDto> implements IMoney {
         }
         newMoney.setMoney(newMoney.getMoney() + money);
         super.update(newMoney);
-
-        Money money1 = new Money();
-        money1.setAccount("bbbb");
-        money1.setMoney(100);
-//        super.save(money1);
     }
 
     @Transactional(rollbackFor = SerException.class)
