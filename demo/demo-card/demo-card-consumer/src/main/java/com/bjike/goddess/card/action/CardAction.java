@@ -5,12 +5,14 @@ import com.bjike.goddess.dbs.common.exception.ActException;
 import com.bjike.goddess.dbs.common.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by huanghuanlai on 2017/1/10.
  */
-@RestController("demo/card")
+@RestController
+@RequestMapping("demo/card")
 public class CardAction {
 
     @Autowired
