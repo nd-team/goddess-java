@@ -12,7 +12,7 @@ import com.bjike.goddess.ticket.service.TicketAPI;
  * Created by huanghuanlai on 2017/1/10.
  */
 @RestController("demo/ticket")
-public class UserAct {
+public class TicketAct {
 	
 	@Autowired
 	private TicketAPI ticketAPI;

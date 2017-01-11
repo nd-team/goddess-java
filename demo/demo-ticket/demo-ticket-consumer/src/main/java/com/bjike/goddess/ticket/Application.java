@@ -14,7 +14,7 @@ import java.io.IOException;
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-@ImportResource({"classpath:application.xml"})
+@ImportResource({"classpath:app.xml"})
 public class Application{
 
 	public static void main(String[] args) throws IOException {

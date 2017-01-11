@@ -46,7 +46,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         String message = ticketApi.buyTicket(null, account, password, position);
         card.setMoney(card.getMoney() - 100);//减掉帐户余额
         super.update(card);//更新
-        return "";
+        return "购买成功";
     }
 
     @Transactional(rollbackFor = SerException.class)

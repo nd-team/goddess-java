@@ -1,16 +1,35 @@
-apply plugin: 'spring-boot'
-apply plugin: 'java'
-
-dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
-}
-
 buildscript {
     repositories {
-        mavenLocal()
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'demo-card-consumer'
+    version =  '1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+dependencies {
+    compile project(":demo:demo-card:demo-card-api")
+
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+

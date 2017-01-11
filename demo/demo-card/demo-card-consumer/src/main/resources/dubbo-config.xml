@@ -14,5 +14,5 @@
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:reference id="ticketAPI" interface="com.bjike.goddess.ticket.service.TicketAPI" />
+	<dubbo:reference id="ticketAPI" interface="com.bjike.goddess.card.service.CardAPI" />
 </beans>
