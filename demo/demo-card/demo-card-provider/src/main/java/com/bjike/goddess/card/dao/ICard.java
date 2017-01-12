@@ -2,10 +2,10 @@ package com.bjike.goddess.card.dao;
 
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.dbs.jpa.dao.MyRep;
+import com.bjike.goddess.common.jpa.dao.JpaRep;
 
 
-public interface ICard extends MyRep<Card, CardDTO> {
+public interface ICard extends JpaRep<Card, CardDTO> {
 	
     /**
      * 此处使用的是spring-data-jpa接口,不需要对接口进行实现,jpa可根据命名自动进行数据的查询

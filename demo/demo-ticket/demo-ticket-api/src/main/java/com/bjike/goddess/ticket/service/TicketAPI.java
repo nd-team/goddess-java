@@ -1,11 +1,10 @@
 package com.bjike.goddess.ticket.service;
 
-import org.mengyun.tcctransaction.api.TransactionContext;
-
-import com.bjike.goddess.dbs.common.exception.SerException;
-import com.bjike.goddess.dbs.common.service.IService;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.IService;
 import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
+import org.mengyun.tcctransaction.api.TransactionContext;
 
 /**
  * 购票接口

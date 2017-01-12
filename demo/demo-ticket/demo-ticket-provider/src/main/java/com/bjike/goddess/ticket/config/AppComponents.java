@@ -1,7 +1,7 @@
 package com.bjike.goddess.ticket.config;
 
-import com.bjike.goddess.dbs.jpa.boot.initializer.Components;
-import com.bjike.goddess.dbs.jpa.boot.initializer.EntityToScan;
+import com.bjike.goddess.common.jpa.boot.JpaComponents;
+import com.bjike.goddess.common.jpa.boot.EntityToScan;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @Copy: [org.ndshop]
  */
 @Component
-public class AppComponents extends Components implements EntityToScan<AppRoot>{
+public class AppComponents extends JpaComponents implements EntityToScan<AppRoot> {
 
     @Override
     public String[] entityScan() {

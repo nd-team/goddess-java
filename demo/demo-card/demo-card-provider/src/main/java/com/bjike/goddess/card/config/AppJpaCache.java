@@ -1,7 +1,7 @@
 package com.bjike.goddess.card.config;
 
 
-import com.bjike.goddess.dbs.jpa.boot.initializer.JpaCache;
+import com.bjike.goddess.common.jpa.boot.JpaCache;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.stereotype.Component;

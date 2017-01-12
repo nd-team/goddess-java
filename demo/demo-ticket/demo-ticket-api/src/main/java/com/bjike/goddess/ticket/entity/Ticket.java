@@ -1,11 +1,11 @@
 package com.bjike.goddess.ticket.entity;
 
-import java.time.LocalDateTime;
+import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
-import com.bjike.goddess.dbs.common.entity.BaseEntity;
 
 @Entity
 @Table(name = "demo_ticket")

@@ -1,10 +1,10 @@
 package com.bjike.goddess.card.entity;
 
-import com.bjike.goddess.dbs.common.entity.BaseEntity;
+
+import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "demo_card")

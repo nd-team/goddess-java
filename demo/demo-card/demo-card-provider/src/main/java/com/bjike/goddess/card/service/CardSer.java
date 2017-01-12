@@ -2,10 +2,10 @@ package com.bjike.goddess.card.service;
 
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.dbs.common.dto.Condition;
-import com.bjike.goddess.dbs.common.enums.RestrictionType;
-import com.bjike.goddess.dbs.common.exception.SerException;
-import com.bjike.goddess.dbs.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.api.dto.Condition;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.RestrictionType;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.ticket.service.TicketAPI;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;

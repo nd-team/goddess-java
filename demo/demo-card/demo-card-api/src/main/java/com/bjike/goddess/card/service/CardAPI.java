@@ -2,8 +2,8 @@ package com.bjike.goddess.card.service;
 
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.dbs.common.exception.SerException;
-import com.bjike.goddess.dbs.common.service.IService;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.IService;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
 /**

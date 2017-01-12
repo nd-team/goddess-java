@@ -1,0 +1,6 @@
+apply from: '../../config.gradle'
+
+dependencies {
+    compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
+    compile "com.101tec:zkclient:0.10"
+}

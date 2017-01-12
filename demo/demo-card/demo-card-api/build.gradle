@@ -2,9 +2,6 @@ apply from: '../../../config.gradle'
 
 
 dependencies {
-    compile project(":dbs:common")
+    compile project(":common:common-api")
 
-    compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
-    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:"$tcc_version"
-    compile "com.101tec:zkclient:0.10"
 }

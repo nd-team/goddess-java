@@ -26,10 +26,12 @@ targetCompatibility = 1.8
 
 
 dependencies {
+    compile(project(":common:common-consumer")){
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
     compile project(":demo:demo-ticket:demo-ticket-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 
