@@ -4,6 +4,7 @@ dependencies {
     compile project(":common:common-api")
 
     compile "commons-io:commons-io:$commons_io_version"
+    compile group: 'mysql', name: 'mysql-connector-java', version: "$mysql_connector_version"
     compile "org.springframework:spring-context:$spring_version"
     compile "org.springframework.data:spring-data-jpa:$spring_jpa_version"
     compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernate_jpa_version"
