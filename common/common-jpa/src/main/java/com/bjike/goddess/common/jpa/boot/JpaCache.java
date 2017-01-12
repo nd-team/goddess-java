@@ -11,7 +11,7 @@ import java.util.List;
  * @Date: [2016-11-23 15:47]
  * @Description: [缓存接口，配置自己模块的缓存]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public interface JpaCache {
     default List<Cache> initCaches() {

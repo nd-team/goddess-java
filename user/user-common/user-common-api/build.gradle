@@ -1,9 +1,0 @@
-apply from: '../../../config.gradle'
-
-
-dependencies {
-    compile project(":dbs:common")
-
-    compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
-    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:"$tcc_version"
-}

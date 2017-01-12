@@ -26,7 +26,7 @@ import java.util.List;
  * @Date: [2016-11-23 15:47]
  * @Description: [配置项扫描类]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class JpaComponents {
     @Autowired

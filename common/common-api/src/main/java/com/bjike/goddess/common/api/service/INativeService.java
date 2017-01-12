@@ -10,7 +10,7 @@ import java.util.List;
  * @Date: [2016-12-27 15:47]
  * @Description: [原生sql查询接口]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public interface INativeService<BE> {
 

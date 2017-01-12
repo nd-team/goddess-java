@@ -1,8 +1,0 @@
-apply from: '../../../config.gradle'
-
-dependencies {
-    compile project(":user:user-common:user-common-api")
-
-    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:"$tcc_version"
-
-}

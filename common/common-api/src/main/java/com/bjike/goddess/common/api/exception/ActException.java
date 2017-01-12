@@ -2,7 +2,11 @@ package com.bjike.goddess.common.api.exception;
 
 
 /**
- * 请求检查异常
+ * @Author: [liguiqin]
+ * @Date: [2016-11-23 15:47]
+ * @Description: [请求检查异常]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
 public class ActException extends Exception {
 

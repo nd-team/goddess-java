@@ -12,7 +12,7 @@ import java.time.LocalTime;
  * @Date: [2016-11-23 15:47]
  * @Description: [基础类型转换工具类]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class PrimitiveUtil {
     public static final Class[] PRIMITIVES = new Class[]{

@@ -8,7 +8,7 @@ import com.bjike.goddess.common.api.type.RestrictionType;
  * @Date: [2016-11-23 15:47]
  * @Description: [查询条件传输]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class Condition {
     /**

@@ -6,7 +6,7 @@ package com.bjike.goddess.common.api.type;
  * @Date: [2016-11-23 15:47]
  * @Description: [jpa数据类型映射]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public enum DataType {
     STRING(0),

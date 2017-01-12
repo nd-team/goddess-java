@@ -1,8 +1,6 @@
 package com.bjike.goddess.card;
 
 import com.bjike.goddess.card.config.AppRoot;
-import com.bjike.goddess.card.service.CardAPI;
-import com.bjike.goddess.dbs.common.exception.SerException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ package com.bjike.goddess.common.jpa.utils;
  * @Date: [2016-12-27 15:13]
  * @Description: []
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class CharacterUtil {
 

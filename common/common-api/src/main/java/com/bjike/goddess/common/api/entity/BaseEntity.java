@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Date: [2016-11-23 15:47]
  * @Description: [基础实体类，所有entity继承该类]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 @Entity
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)

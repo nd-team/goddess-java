@@ -5,7 +5,7 @@ package com.bjike.goddess.common.api.type;
  * @Date: [2016-11-23 15:47]
  * @Description: [jpa dao查询错误类型]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public enum RepExceptionType {
     UNDEFINE, //未定义错误

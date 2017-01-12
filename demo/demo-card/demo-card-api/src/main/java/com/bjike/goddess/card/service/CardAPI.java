@@ -3,7 +3,7 @@ package com.bjike.goddess.card.service;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.IService;
+import com.bjike.goddess.common.api.service.SerAPI;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
 /**
@@ -11,7 +11,7 @@ import org.mengyun.tcctransaction.api.TransactionContext;
  *
  * @author huanghuanlai
  */
-public interface CardAPI extends IService<Card, CardDTO> {
+public interface CardAPI extends SerAPI<Card, CardDTO> {
 
     /**
      * 初始化一张卡

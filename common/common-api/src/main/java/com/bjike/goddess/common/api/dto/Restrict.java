@@ -8,7 +8,7 @@ import com.bjike.goddess.common.api.type.RestrictionType;
  * @Date: [2016-12-26 08:44]
  * @Description: [限定表达式]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class Restrict {
     private Restrict() {

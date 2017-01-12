@@ -1,7 +1,7 @@
 package com.bjike.goddess.ticket.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.IService;
+import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -11,7 +11,7 @@ import org.mengyun.tcctransaction.api.TransactionContext;
  * @author huanghuanlai
  *
  */
-public interface TicketAPI extends IService<Ticket, TicketDTO> {
+public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
 	
 	/**
 	 * 购票

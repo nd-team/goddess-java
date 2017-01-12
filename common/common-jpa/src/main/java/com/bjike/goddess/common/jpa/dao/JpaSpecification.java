@@ -1,6 +1,6 @@
 package com.bjike.goddess.common.jpa.dao;
 
-import com.bjike.goddess.common.api.dto.BaseDto;
+import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.exception.QueryException;
@@ -28,9 +28,9 @@ import java.util.regex.Pattern;
  * @Date: [2016-11-23 15:47]
  * @Description: [jpa 高级查询，高级查询条件拼装分页，排序等]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
-public class JpaSpecification<BE extends BaseEntity, BD extends BaseDto> implements Specification<BE> {
+public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> implements Specification<BE> {
 
     private static final Pattern PATTERN = Pattern.compile("\\[[a-zA-Z0-9]+\\]");
 

@@ -5,7 +5,7 @@ package com.bjike.goddess.common.api.type;
  * @Date: [2016-11-23 15:47]
  * @Description: [简单的数据状态]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public enum Status {
     THAW(0)//解冻(正常)

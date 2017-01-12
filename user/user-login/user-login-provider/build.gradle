@@ -1,6 +1,0 @@
-apply from: '../../../config.gradle'
-
-dependencies {
-    compile project(":user:user-login:user-login-api")
-    compile project(":dbs:jpa")
-}

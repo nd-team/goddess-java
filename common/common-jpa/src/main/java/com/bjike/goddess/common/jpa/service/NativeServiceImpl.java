@@ -18,7 +18,7 @@ import java.util.List;
  * @Date: [2016-12-27 15:47]
  * @Description: [原生sql查询请继承该实现类]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class NativeServiceImpl<BE> implements INativeService {
     @Autowired

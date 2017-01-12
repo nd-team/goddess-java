@@ -1,10 +1,10 @@
 package com.bjike.goddess.common.jpa.service;
 
-import com.bjike.goddess.common.api.dto.BaseDto;
+import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.exception.RepException;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.IService;
+import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.common.jpa.constant.FinalCommons;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.common.jpa.dao.JpaSpecification;
@@ -26,9 +26,9 @@ import java.util.stream.Stream;
  * @Date: [2016-11-23 15:47]
  * @Description: [基础的业务查询s实现]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
-public class ServiceImpl<BE extends BaseEntity, BD extends BaseDto> extends FinalCommons implements IService<BE, BD> {
+public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD> {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
 

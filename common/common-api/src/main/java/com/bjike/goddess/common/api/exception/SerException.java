@@ -1,7 +1,11 @@
 package com.bjike.goddess.common.api.exception;
 
 /**
- * 业务检测异常
+ * @Author: [liguiqin]
+ * @Date: [2016-11-23 15:47]
+ * @Description: [业务检测异常]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
 public class SerException extends Exception {
 
