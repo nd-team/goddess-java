@@ -11,5 +11,5 @@ import org.springframework.stereotype.Component;
  * @Copy: [org.ndshop]
  */
 @Component
-public class AppEntityToScan<T> extends EntityToScanImpl<AppRoot> {
+public class AppEntityToScan extends EntityToScanImpl<AppRoot> {
 }
