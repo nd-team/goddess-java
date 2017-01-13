@@ -9,17 +9,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user_common_code.ApplicationConfiguration;
+import user_common_code.AppConfig;
 
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-28 15:37]
  * @Description: [用户登录日志测试]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ApplicationConfiguration.class)
+@ContextConfiguration(classes = AppConfig.class)
 public class UserLoginLogTest {
 
     @Autowired

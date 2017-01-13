@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [entity扫描类]
+ * @Description: [继承扫描jpa]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 @Component
 public class AppComponents extends JpaComponents {

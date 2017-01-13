@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 /**
  * @Author: [liguiqin]
  * @Date: [2017-01-11 17:15]
- * @Description: []
+ * @Description: [扫描entity]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 @Component
 public class AppEntityToScan extends EntityToScanImpl<AppRoot> {

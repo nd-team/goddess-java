@@ -2,6 +2,7 @@ package com.bjike.goddess.user.dto;
 
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import com.bjike.goddess.user.enums.LoginType;
 
 /**
  * @Author: [liguiqin]
@@ -23,6 +24,8 @@ public class UserLoginDTO extends BaseDTO {
     private boolean rememberMe;//记住我
 
     private String authCode; //验证码
+
+    private LoginType loginType; //登录类型
 
     public String getToken() {
         return token;
@@ -70,5 +73,13 @@ public class UserLoginDTO extends BaseDTO {
 
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
+    }
+
+    public LoginType getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(LoginType loginType) {
+        this.loginType = loginType;
     }
 }

@@ -1,8 +1,6 @@
 package com.bjike.goddess.user.utils.email;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: [liguiqin]
@@ -17,13 +15,13 @@ public class Email {
     private String host;//邮箱服务器
     private String sender;//发送人
     private String senderName;//发送人名称（默认）
-    private List<String> receiver;//接收人
     private String subject;//发送主题
     private String content;//发送内容
-    private Map<String, String> imgMap;//发送图片地址
-    private List<String> appendixPath;//发送附件地址
-    private List<String> cc_address;//抄送人人
-    private List<String> bcc_address;//密送人
+    private List<String> receiver = new ArrayList<>(0);//接收人
+    private Map<String, String> imgMap =null;//发送图片地址
+    private List<String> appendixPath = null;//发送附件地址
+    private List<String> cc_address =null;//抄送人人
+    private List<String> bcc_address = null;//密送人
 
     private Email(){
 

@@ -12,16 +12,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [org.ndshop]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.jpa.dao"})
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.user.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
-@PropertySource("classpath:config.properties")
+@PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"user_common_code","com.bjike.goddess.user"},
+@ComponentScan(basePackages = {"com.bjike.goddess.user"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-public class ApplicationConfiguration{
+public class AppConfig {
 
 }
 

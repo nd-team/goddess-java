@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CookieOperate {
 
-
     public static void addCookie(Cookie cookie, HttpServletResponse response) {
         if (null != cookie) {
             response.addCookie(cookie);
@@ -26,7 +25,6 @@ public class CookieOperate {
         if (null != cookies) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
-                    cookie.setValue(null);
                     cookie.setMaxAge(0);// 立即销毁cookie
                     response.addCookie(cookie);
                     break;

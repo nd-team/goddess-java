@@ -3,6 +3,7 @@ package com.bjike.goddess.user.service;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.dto.UserRegisterDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.session.authcode.AuthCode;
@@ -10,7 +11,6 @@ import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.session.phonecode.PhoneCodeSession;
 import com.bjike.goddess.user.utils.authCode.AuthCodeGenerate;
-import com.bjike.goddess.user.utils.regex.Validator;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 

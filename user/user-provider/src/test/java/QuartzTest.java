@@ -6,7 +6,7 @@ import java.util.TimerTask;
 /**
  * @Author: [liguiqin]
  * @Date: [2016-12-01 11:42]
- * @Description: []
+ * @Description: [session 定时检测测试]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
