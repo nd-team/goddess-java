@@ -1,8 +1,10 @@
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.IUserSer;
+import com.bjike.goddess.user.service.UserAPI;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +33,21 @@ public class QueryTest {
      */
 
     @Autowired
-    private IUserSer userSer;
+    private UserAPI userAPI;
 
 
 
-    public void init() throws SerException {
-        if (null == userSer.findByUsername("liguiqin")) {
+    @Before
+    public void init() throws Exception {
+        if (null == userAPI.findByUsername("liguiqin")) {
             User user = new User();
             user.setUsername("liguiqin");
-            user.setPassword("123456");
+            user.setPassword(PasswordHash.createHash("123456"));
             user.setAge(55);
+            user.setPhone("13457910241");
             user.setNickname("xiaoming");
-            userSer.save(user);
+            user.setEmployeeNumber("111111");
+            userAPI.save(user);
         }
     }
 
@@ -55,7 +60,6 @@ public class QueryTest {
         UserDTO dto = new UserDTO();
         Double[] money = new Double[]{1.11,99.00};
         LocalDateTime[] accessTime = new LocalDateTime[]{LocalDateTime.now().minusDays(100),LocalDateTime.now()};
-        dto.getConditions().add(Restrict.between("money",money)); //数值范围查询
         dto.getConditions().add(Restrict.between("accessTime",accessTime)); //时间范围查询
         dto.getConditions().add(Restrict.like("username","li")); //模糊查询
         dto.getConditions().add(Restrict.eq("username","liguiqin"));//匹配查询
@@ -63,7 +67,7 @@ public class QueryTest {
         dto.getConditions().add(Restrict.eq("group.name","项目组"));//连接查询
         dto.getSorts().put("username","desc"); //正排序
         dto.getSorts().put("group.name","asc");//倒排序
-        List<User> users = userSer.findByCis(dto);
+        List<User> users = userAPI.findByCis(dto);
     }
 
     @Test
@@ -72,7 +76,7 @@ public class QueryTest {
                 " b.address from user a " +
                 "left join user_detail b on a.id = b.user_id";
         String[] fields = new String[]{"username","password","address"};
-        List<User> users =  userSer.findBySql(sql,User.class,fields);
+        List<User> users =  userAPI.findBySql(sql,User.class,fields);
         for(User info:users){
             System.out.println(info.getId());
         }
@@ -86,7 +90,7 @@ public class QueryTest {
     @Test
     @Transactional
     public void findAll() throws SerException {
-        List<User> users = userSer.findAll();
+        List<User> users = userAPI.findAll();
         if (null != users && users.size() > 0) {
             for (User u : users) {
                 System.out.println(u.getUsername());
@@ -101,7 +105,7 @@ public class QueryTest {
     @Test
     public void findByPage() throws SerException {
         UserDTO dto = new UserDTO();
-        List<User> users = userSer.findByPage(dto);
+        List<User> users = userAPI.findByPage(dto);
         if (null != users && users.size() > 0) {
             for (User u : users) {
                 System.out.println(u.getUsername());

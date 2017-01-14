@@ -14,20 +14,13 @@ import java.util.Set;
  * @Copy: [org.ndshop]
  */
 public class Subject {
-    private String jid ; //会话id
     private User user ;//登录用户
     private boolean remember; //是否记住我
     private String ip;
     private Set<LoginType> loginTypes = new HashSet(0); //已登录类型
     private Set<String> permissions = new HashSet<>(0);//拥有权限
 
-    public String getJid() {
-        return jid;
-    }
 
-    public void setJid(String jid) {
-        this.jid = jid;
-    }
 
     public User getUser() {
         return user;

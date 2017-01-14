@@ -72,6 +72,7 @@ public class ValidErrSession {
     public static void remove(String account) {
         if (StringUtils.isNotBlank(account)) {
             VALID_ERR_SESSIONS.remove(account);
+            return;
         }
         throw ACCOUNT_NOT_NULL;
     }

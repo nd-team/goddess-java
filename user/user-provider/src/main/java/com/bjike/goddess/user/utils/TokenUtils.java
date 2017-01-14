@@ -13,11 +13,11 @@ import java.util.UUID;
  * @Copy: [com.bjike]
  */
 public final class TokenUtils {
-    private static final int TOKEN_LEN = 4;
-    private static final int UUID_SIZE = 12;
+    private static final int TOKEN_LEN = 3;
+    private static final int UUID_SIZE = 10;
     private static final int TIME_SIZE = 13;
     private static final int UUID_INDEX = 1;
-    private static final int TIME_INDEX = 3;
+    private static final int TIME_INDEX = 2;
     private static final String POINT = ".";
 
     private TokenUtils(){}

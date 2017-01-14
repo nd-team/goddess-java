@@ -2,12 +2,12 @@
 ---
  ##包名规则：
  PackName(包名) : 包名全部小写，连续的单词只是简单地连接起来，
-不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.user.common.com.bjike.goddess.card.service`
+不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.card.service`
 
-1. - action(控制器) 以 **ctrl** 结束 com.bjike.goddess.user.ctrl
-2. - com.bjike.goddess.card.service(业务逻辑) 以 **com.bjike.goddess.card.service** 结束 com.bjike.goddess.user.com.bjike.goddess.card.service
+1. - action(控制器) 以 **action** 结束 com.bjike.goddess.user.action
+2. - com.bjike.goddess.card.service(业务逻辑) 以 **com.bjike.goddess.card.service** 结束 com.bjike.goddess.user.service
 3. - dao(数据层)以 **dao** 结束 com.bjike.goddess.user.dao
-4. - com.bjike.goddess.card.entity(实体)以 **com.bjike.goddess.card.entity** 结束 com.bjike.goddess.user.com.bjike.goddess.card.entity
+4. - com.bjike.goddess.card.entity(实体)以 **com.bjike.goddess.card.entity** 结束 com.bjike.goddess.user.entity
 5. - com.bjike.goddess.card.dto(数据传输)以 **com.bjike.goddess.card.dto** 结束 com.bjike.goddess.user.com.bjike.goddess.card.dto
 
 ## 类命名规则:
@@ -15,21 +15,24 @@
   
 
 1. Service(业务逻辑层)
-    - 异常类以 **SerException** 结束 `CustomSerException`
-    - 接口类以大写 **I** 开头 以**Ser**结束 `IUserDetailSer`
-    - 接口实现类以 **SerImpl** 结束 `UserDetailSerImpl`
+    - 抛出异常 **SerException**  `SerException`
+    - 接口类以**API**结束 `UserDetailAPI`
+    - 接口实现类以 **Ser** 结束 `UserDetailSer`
 
 2. Dao（数据控制层）
-    - 异常类以 **RepException** 结束 `CustomRepException`
-    - 接口类以大写**I** 开头 以**Rep**结束  `IUserDetailRep`
+    - 抛出异常 **RepException**  `RepException`
+    - 接口类以大写**I** 开头 以**Rep**结束  `UserDetailRep`
     - 接口实现类以 **RepImpl** 结束 `UserDetailRepImpl`
 
 3. Test（测试用例）
     - 测试类以 **Test** 结束 `UserDetailTest`
-4. Ctrl（控制器）
-    - 控制器类以 **Ctrl** 结束 `UserCtrl`
-5. Dto（数据传输）
-    - 控制器类以 **Dto** 结束 `UserDto`
+4. Atc（控制器）
+    - 控制器类以 **Atc** 结束 `UserAtc`
+    - 抛出异常 **ActException**  `ActException`
+    - 返回值统一使用 **ActResult**  `ActResult`
+
+5. DTO（数据传输）
+    - 控制器类以 **DTO** 结束 `UserDTO`
     
 ## 方法命名规则:
  MethodName(方法名)：第一个单词应是动词，并且首字母小写，其它每个单词首字母大写 ,

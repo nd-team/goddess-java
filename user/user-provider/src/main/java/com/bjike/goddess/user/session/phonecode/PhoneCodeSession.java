@@ -50,9 +50,11 @@ public class PhoneCodeSession {
     public static void put(String phone, PhoneCode phoneCode) {
         if (StringUtils.isNotBlank(phone)) {
             if(PHONE_CODE_SESSIONS.containsKey(phone)){
-                PHONE_CODE_SESSIONS.remove(phone);
+                PHONE_CODE_SESSIONS.get(phone).setCode(phoneCode.getCode());
+            }else {
+                PHONE_CODE_SESSIONS.put(phone, phoneCode);
             }
-            PHONE_CODE_SESSIONS.put(phone, phoneCode);
+
         } else {
             throw ACCOUNT_NOT_NULL;
         }
@@ -75,6 +77,7 @@ public class PhoneCodeSession {
     public static void remove(String phone) {
         if (StringUtils.isNotBlank(phone)) {
             PHONE_CODE_SESSIONS.remove(phone);
+            return;
         }
         throw ACCOUNT_NOT_NULL;
     }

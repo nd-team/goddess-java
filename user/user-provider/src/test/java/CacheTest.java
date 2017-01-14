@@ -1,7 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.IUserSer;
+import com.bjike.goddess.user.service.UserAPI;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import java.util.List;
 public class CacheTest {
 
     @Autowired
-    private IUserSer userSer;
+    private UserAPI userAPI;
     @Autowired
     CacheManager cacheManager;
     private List<Cache> caches = new ArrayList<>();
@@ -48,11 +48,11 @@ public class CacheTest {
      */
     @Test
     public void isSameObject() throws SerException {
-        User user1 = userSer.findByUsername("liguiqin");
-        User user2 = userSer.findByUsername("liguiqin");
+        User user1 = userAPI.findByUsername("liguiqin");
+        User user2 = userAPI.findByUsername("liguiqin");
 
         assert (user1 == user2); //对象相同
-        User user3 = userSer.findByPhone("13457910241"); //通过号码查询(第一次查询，不是缓存对象，不相同)
+        User user3 = userAPI.findByPhone("13457910241"); //通过号码查询(第一次查询，不是缓存对象，不相同)
         assert (user2 != user3);
 
     }
@@ -78,7 +78,7 @@ public class CacheTest {
             e.printStackTrace();
         }
 
-        userSer.save(users);
+        userAPI.save(users);
 
     }
 

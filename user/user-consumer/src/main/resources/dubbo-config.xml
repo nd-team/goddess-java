@@ -13,6 +13,10 @@
 	<dubbo:application name="${dubbo.application.name}" />
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
-	<dubbo:reference id="userAuthCodeSer" interface="com.bjike.goddess.user.service.IUserAuthCodeSer" />
-	<dubbo:reference id="userLoginSer" interface="com.bjike.goddess.user.service.IUserLoginSer" />
+	<dubbo:reference id="userAuthCodeAPI" interface="com.bjike.goddess.user.service.UserAuthCodeAPI" />
+	<dubbo:reference id="userAPI" interface="com.bjike.goddess.user.service.UserAPI" />
+	<dubbo:reference id="userLoginAPI" interface="com.bjike.goddess.user.service.UserLoginAPI" />
+	<dubbo:reference id="userRegisterAPI" interface="com.bjike.goddess.user.service.UserRegisterAPI" />
+	<dubbo:reference id="userFindPwdAPI" interface="com.bjike.goddess.user.service.UserFindPwdAPI" />
+
 </beans>
