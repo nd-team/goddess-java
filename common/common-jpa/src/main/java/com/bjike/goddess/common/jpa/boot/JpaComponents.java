@@ -19,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 
 /**
@@ -82,8 +83,12 @@ public class JpaComponents {
         lcemf.setJpaVendorAdapter(jpaVendorAdapter);
         String[] packages = ArrayUtils.add(packagesToScan.entityScan(), Constant.SCAN_APP_PACKAGES);
         lcemf.setPackagesToScan(packages);
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.cache.region.factory_class","org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        lcemf.setJpaProperties(properties);
         return lcemf;
     }
+
 
 
     /**

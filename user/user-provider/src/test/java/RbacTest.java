@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import user_common_code.ApplicationConfiguration;
+import user_common_code.AppConfig;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.Set;
  * @Copy: [com.bjike]
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ApplicationConfiguration.class)
+@ContextConfiguration(classes = AppConfig.class)
 public class RbacTest {
     @Autowired
     private IUserSer userSer;

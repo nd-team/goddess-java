@@ -9,6 +9,8 @@ dependencies {
     compile group: 'org.springframework.data', name: 'spring-data-jpa', version: "$spring_jpa_version"
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: "$hibernate_jpa_version"
     compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commons_version"
-    compile group: 'org.springframework', name: 'spring-jdbc', version: "$spring_version"
     compile group: 'com.alibaba', name: 'druid', version: "$druid_version"
+    compile "org.hibernate:hibernate-ehcache:$hibernate_ehcache_version"
+
+
 }

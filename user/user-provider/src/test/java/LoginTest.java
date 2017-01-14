@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import user_common_code.ApplicationConfiguration;
+import user_common_code.AppConfig;
 
 /**
  * @Author: [liguiqin]
@@ -16,7 +16,7 @@ import user_common_code.ApplicationConfiguration;
  * @Copy: [com.bjike]
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ApplicationConfiguration.class)
+@ContextConfiguration(classes = AppConfig.class)
 public class LoginTest{
 
     /**

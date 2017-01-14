@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.common.jpa.constant.FinalCommons;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.common.jpa.dao.JpaSpecification;
+import com.bjike.goddess.common.jpa.utils.CharacterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
 
 /**
  * @Author: [liguiqin]
@@ -31,8 +38,9 @@ import java.util.stream.Stream;
 public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD> {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
+    public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    @Autowired
+    @Autowired(required=false)
     protected JpaRep<BE, BD> rep;
     @Autowired
     protected EntityManager entityManager;
@@ -200,5 +208,70 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
         return obj != null ? obj.toString() : null;
     }
+
+    @Override
+    public List<BE> findBySql(String sql, Class clazz, String[] fields)throws SerException {
+        Query nativeQuery = entityManager.createNativeQuery(sql);
+        List<Object> resultList = nativeQuery.getResultList();
+        List<BE> list = new ArrayList<>(resultList.size());
+        Method[] all_methods = clazz.getMethods();
+        List<Method> methods = new ArrayList<>();
+        for (Method m : all_methods) {
+            if (m.getName().indexOf("set") != -1) {
+                methods.add(m);
+            }
+        }
+        //解析查询结果
+        try {
+            for (int i = 0; i < resultList.size(); i++) {
+                Object[] arr_obj = (Object[]) resultList.get(i);
+                Object obj = clazz.newInstance();
+                for (int j = 0; j < fields.length; j++) {
+                    for (Method m : methods) {
+                        if (m.getName().indexOf(CharacterUtil.upperCaseFirst(fields[j])) != -1) {
+                            m.invoke(obj, convertDataType(arr_obj[j]));
+                            break;
+                        }
+                    }
+                }
+                list.add((BE)obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    /**
+     * 数据库类型转换
+     *
+     * @param obj
+     * @return
+     */
+    private Object convertDataType(Object obj) {
+        if (null != obj) {
+            String simpleName = obj.getClass().getSimpleName();
+            String val = obj.toString();
+            switch (simpleName) {
+                case "Float":
+                    obj = Float.parseFloat(val);
+                    break;
+                case "Double":
+                    obj = Double.parseDouble(val);
+                    break;
+                case "Integer":
+                    obj = Integer.parseInt(val);
+                    break;
+                case "Timestamp":
+                    val = val.substring(0, val.length() - 2);
+                    obj = LocalDateTime.parse(val, FORMAT);
+                    break;
+
+            }
+        }
+        return obj;
+    }
+
 
 }

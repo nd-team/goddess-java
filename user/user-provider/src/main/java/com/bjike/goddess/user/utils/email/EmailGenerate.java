@@ -1,6 +1,6 @@
 package com.bjike.goddess.user.utils.email;
 
-import com.bjike.goddess.user.utils.regex.Validator;
+import com.bjike.goddess.common.utils.regex.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;

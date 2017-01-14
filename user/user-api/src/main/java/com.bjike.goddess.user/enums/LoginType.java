@@ -9,7 +9,7 @@ package com.bjike.goddess.user.enums;
  * @Copy: [com.bjike]
  */
 public enum LoginType {
-    APP(1),//app
+    MOBILE(1),//app
     PC(2),//pc
     NONE(0),//未识别
     ;

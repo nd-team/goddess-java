@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.utils.regex;
+package com.bjike.goddess.common.utils.regex;
 
 import java.util.regex.Pattern;
 

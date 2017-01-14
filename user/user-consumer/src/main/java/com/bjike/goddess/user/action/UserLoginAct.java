@@ -3,7 +3,9 @@ package com.bjike.goddess.user.action;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.dto.UserLoginDTO;
+import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.service.IUserLoginSer;
+import com.bjike.goddess.user.utils.CheckMobile;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +40,14 @@ public class UserLoginAct {
     @GetMapping("login")
     public String login(UserLoginDTO dto, HttpServletRequest request, HttpServletResponse response)throws ActException {
         try {
+            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+            LoginType type = LoginType.PC;
+            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
+               type = LoginType.MOBILE;
+            }
+            dto.setLoginType(type);
             String token = userLoginSer.login(dto);
             if(StringUtils.isNotBlank(token)){
-                handlerRememberMe(dto,request,response);
                 tokenToCookie(token,request,response);
             }
             return token;
@@ -63,23 +70,6 @@ public class UserLoginAct {
         }
     }
 
-
-
-    /**
-     * 处理记住账号密码
-     *
-     * @param dto
-     */
-    private void handlerRememberMe(UserLoginDTO dto,HttpServletRequest request,HttpServletResponse response) {
-        if (dto.isRememberMe()) {
-            Cookie cookie = new Cookie("account", dto.getAccount());
-            cookie.setMaxAge(100);
-//            CookieOperate
-        } else {
-//            CookieOperate.removeCookieByName(dto.getAccount(),request,response);
-        }
-    }
-
     /**
      * 把token 写入 cookie
      * @param token
@@ -87,9 +77,16 @@ public class UserLoginAct {
      * @param response
      */
     private void tokenToCookie(String token, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie c : cookies) {
+            if (c.getName().equals("token")) {
+                c.setMaxAge(0);
+            }
+        }
+
         Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(100);
-//        CookieOperate.addCookie(cookie, response);
+        cookie.setMaxAge(60 * 60 * 24);// 立即销毁cookie
+        response.addCookie(cookie);
     }
 
 

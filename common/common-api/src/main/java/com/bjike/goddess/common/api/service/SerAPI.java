@@ -213,4 +213,8 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
         return null;
     }
 
+    default  public List<BE> findBySql (String sql, Class clazz, String[] fields)throws SerException{
+        return null;
+    }
+
 }

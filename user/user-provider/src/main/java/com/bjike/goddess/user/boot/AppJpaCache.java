@@ -15,7 +15,7 @@ import java.util.List;
  * @Date: [2016-11-23 15:47]
  * @Description: [自定义缓存添加]
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 @Component
 public class AppJpaCache implements JpaCache {
