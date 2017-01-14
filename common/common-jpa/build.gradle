@@ -3,12 +3,12 @@ apply from: '../../config.gradle'
 dependencies {
     compile project(":common:common-api")
 
-    compile "commons-io:commons-io:$commons_io_version"
+    compile group: 'commons-io', name: 'commons-io', version: "$commons_io_version"
     compile group: 'mysql', name: 'mysql-connector-java', version: "$mysql_connector_version"
-    compile "org.springframework:spring-context:$spring_version"
-    compile "org.springframework.data:spring-data-jpa:$spring_jpa_version"
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernate_jpa_version"
-    compile "org.apache.commons:commons-lang3:$commons_version"
-    compile "org.springframework:spring-jdbc:$spring_version"
-    compile "com.alibaba:druid:$druid_version"
+    compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: "$spring_jpa_version"
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: "$hibernate_jpa_version"
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commons_version"
+    compile group: 'org.springframework', name: 'spring-jdbc', version: "$spring_version"
+    compile group: 'com.alibaba', name: 'druid', version: "$druid_version"
 }

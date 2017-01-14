@@ -3,7 +3,7 @@ apply from: '../../config.gradle'
 dependencies {
 
     compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
-    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version:"$tcc_version"
+    compile group: 'org.mengyun', name: 'tcc-transaction-spring', version: "$tcc_version"
     compile group: 'org.springframework', name: 'spring-test', version: "$spring_version"
-    compile "com.101tec:zkclient:0.10"
+    compile group: 'com.101tec', name: 'zkclient', version: "$zkclient_version"
 }

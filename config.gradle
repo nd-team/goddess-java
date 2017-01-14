@@ -31,6 +31,7 @@ allprojects {
     }
 
     ext {
+        zkclient_version = '0.10'
         dubbo_version = '2.5.4-SNAPSHOT'
         tcc_version = '1.1.5'
         spring_boot_version = '1.4.3.RELEASE'
@@ -50,7 +51,7 @@ allprojects {
         lucene_version = '6.0.0'
         hibernate_validator_version = '5.2.4.Final'
         javax_validation_version = '1.1.0.Final'
-        aspectjrt_version = '1.8.9'
+        aspectjrt_version = '1.8.10'
         httpclient_version = '4.5.2'
         logback_version = '1.1.7'
         spring_data_mongodb_version = '1.9.4.RELEASE'

@@ -2,6 +2,7 @@ package com.bjike.goddess.card.entity;
 
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 @Table(name = "demo_card")
 public class Card extends BaseEntity {
 
+	@NotBlank(message = "帐号不能为空")
 	private String account;
 	private String password;
 	private Long money;
