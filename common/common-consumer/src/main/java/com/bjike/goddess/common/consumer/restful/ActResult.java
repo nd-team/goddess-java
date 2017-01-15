@@ -11,16 +11,25 @@ public class ActResult implements Result {
     private String msg;
     private Object data;
 
-    public ActResult(){}
-    public ActResult(String msg){
+    public ActResult() {
+    }
+
+    public ActResult(String msg) {
         this.msg = msg;
     }
-    public ActResult(int code,String msg){
+
+    public ActResult(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-    public ActResult(int code,String msg,Object data){
-        this.code =  code;
+
+    public ActResult(String msg, Object data) {
+        this.msg = msg;
+        this.data = data;
+    }
+
+    public ActResult(int code, String msg, Object data) {
+        this.code = code;
         this.msg = msg;
         this.data = data;
     }
@@ -60,12 +69,16 @@ public class ActResult implements Result {
         sb.append("\"msg\":\"");
         sb.append(msg);
         sb.append("\"");
-        if(null!=data){
+        if (null != data) {
             sb.append(",\"data\":\"");
             sb.append(JSON.toJSONString(data));
             sb.append("\"");
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    public static ActResult initialize(Object data) {
+        return new ActResult(null, data);
     }
 }

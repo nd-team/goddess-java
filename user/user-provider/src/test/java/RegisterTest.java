@@ -1,6 +1,6 @@
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.user.dto.UserRegisterDTO;
-import com.bjike.goddess.user.service.IUserRegisterSer;
+import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
+import com.bjike.goddess.user.service.UserRegisterAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,59 +16,40 @@ import user_common_code.AppConfig;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
-public class RegisterTest{
+public class RegisterTest {
 
     /**
      * 基础增删改查，批量操作等
      */
 
-    private IUserRegisterSer userRegisterSer;
-
+    private UserRegisterAPI userRegisterAPI;
 
 
     @Test
     public void existUsername() throws SerException {
-        boolean users = userRegisterSer.existUsername("liguiqin");
-        System.out.println(users);
-    }
-
-    @Test
-    public void existPhone() throws SerException {
-        boolean users = userRegisterSer.existPhone("13457910241");
+        boolean users = userRegisterAPI.existUsername("liguiqin");
         System.out.println(users);
     }
 
     @Test
     public void sendCodeToPhone() throws SerException {
-        UserRegisterDTO dto = new UserRegisterDTO();
-        dto.setPhone("123456");
-        userRegisterSer.sendCodeToPhone(dto);
+        String phone = "123456";
+        userRegisterAPI.verifyAndSendCode(phone);
     }
 
     @Test
     public void verifyCodeAndReg() throws SerException {
         UserRegisterDTO dto = new UserRegisterDTO();
         dto.setPhoneCode("123");
-        userRegisterSer.verifyCodeAndReg(dto);
+        userRegisterAPI.verifyCodeAndReg(dto);
     }
 
     @Test
     public void saveUser() throws SerException {
         UserRegisterDTO dto = new UserRegisterDTO();
         dto.setPhoneCode("123");
-        userRegisterSer.verifyCodeAndReg(dto);
+        userRegisterAPI.verifyCodeAndReg(dto);
     }
-
-
-    @Test
-    public void generateRegAuthCode() throws SerException {
-        userRegisterSer.generateRegAuthCode("123456789");
-        System.out.println("111");
-    }
-
-
-
-
 
 
 }

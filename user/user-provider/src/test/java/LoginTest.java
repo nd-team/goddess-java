@@ -1,6 +1,6 @@
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.user.dto.UserLoginDTO;
-import com.bjike.goddess.user.service.IUserLoginSer;
+import com.bjike.goddess.user.dto.ext.UserLoginDTO;
+import com.bjike.goddess.user.service.UserLoginAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class LoginTest{
      */
 
     @Autowired
-    private IUserLoginSer userLoginSer;
+    private UserLoginAPI userLoginAPI;
 
 
     @Test
@@ -32,7 +32,7 @@ public class LoginTest{
         UserLoginDTO dto = new UserLoginDTO();
         dto.setAccount("liguiqin0");
         dto.setPassword("123456");
-        userLoginSer.login(dto);
+        userLoginAPI.login(dto);
     }
 
 }

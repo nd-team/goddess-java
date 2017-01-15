@@ -2,8 +2,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.enums.LoginType;
-import com.bjike.goddess.user.service.IUserLoginLogSer;
-import com.bjike.goddess.user.service.IUserSer;
+import com.bjike.goddess.user.service.UserLoginLogAPI;
+import com.bjike.goddess.user.service.UserAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +23,21 @@ import user_common_code.AppConfig;
 public class UserLoginLogTest {
 
     @Autowired
-    private IUserSer userSer;
+    private UserAPI userAPI;
 
     @Autowired
-    private IUserLoginLogSer userLoginLogSer;
+    private UserLoginLogAPI userLoginLogAPI;
 
     @Test
     public void addLoginLog() throws SerException {
-        User user = userSer.findByUsername("liguiqin");
+        User user = userAPI.findByUsername("liguiqin");
         UserLoginLog loginLog = new UserLoginLog();
         loginLog.setLoginAddress("广州20");
         loginLog.setLoginIp("192.168.1.1");
-        loginLog.setLoginType(LoginType.APP);
+        loginLog.setLoginType(LoginType.MOBILE);
         loginLog.setUser(user);
         loginLog.setId("111111");
-        userLoginLogSer.save(loginLog);
+        userLoginLogAPI.save(loginLog);
 
     }
 }

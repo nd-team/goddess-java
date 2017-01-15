@@ -26,17 +26,17 @@ import java.util.Set;
 @ContextConfiguration(classes = AppConfig.class)
 public class RbacTest {
     @Autowired
-    private IUserSer userSer;
+    private UserAPI userAPI;
     @Autowired
-    private IRoleSer roleSer;
+    private RoleAPI roleAPI;
     @Autowired
-    private IUserRoleSer userRoleSer;
+    private UserRoleAPI userRoleAPI;
     @Autowired
-    private IPermissionSer permissionSer;
+    private PermissionAPI permissionAPI;
     @Autowired
-    private IDepartmentSer departmentSer;
+    private DepartmentAPI departmentAPI;
     @Autowired
-    private IGroupSer groupSer;
+    private GroupAPI groupAPI;
 
     /**
      * 添加角色
@@ -52,7 +52,7 @@ public class RbacTest {
         child.setName("子角色１");
         child.setDescription("无描述");
         child.setParent(root);
-        roleSer.save(child);
+        roleAPI.save(child);
     }
 
     /**
@@ -62,12 +62,12 @@ public class RbacTest {
      */
     @Test
     public void addUserRole() throws SerException {
-        Role role = roleSer.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
-        User user = userSer.findByPhone("18097910240");
+        Role role = roleAPI.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
+        User user = userAPI.findByPhone("18097910240");
         UserRole userRole = new UserRole();
         userRole.setRole(role);
         userRole.setUser(user);
-        userRoleSer.save(userRole);
+        userRoleAPI.save(userRole);
     }
 
     /**
@@ -86,7 +86,7 @@ public class RbacTest {
         child.setResource("/service");
         child.setName("用户资源");
         child.setParent(root);
-        permissionSer.save(child);
+        permissionAPI.save(child);
     }
 
     /**
@@ -97,7 +97,7 @@ public class RbacTest {
     @Transactional
     @Test
     public void findUserRole() throws SerException {
-        List<UserRole> userRoles = userRoleSer.findAll();
+        List<UserRole> userRoles = userRoleAPI.findAll();
         if (null != userRoles) {
             for (UserRole userRole : userRoles) {
                 userRole.getRole().getPermissionList().size();
@@ -114,11 +114,11 @@ public class RbacTest {
     @Test
     public void addRolePermission() throws SerException {
 
-        Role role = roleSer.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
+        Role role = roleAPI.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
         if (null != role) {
-            List<Permission> permissions_list = permissionSer.findAll();
+            List<Permission> permissions_list = permissionAPI.findAll();
             role.setPermissionList(permissions_list);
-            roleSer.update(role);
+            roleAPI.update(role);
         }
     }
 
@@ -131,12 +131,12 @@ public class RbacTest {
     @Test
     public void updatePermissions() throws SerException {
 
-        Permission permissions = permissionSer.findById("72ae9d8f-9a25-45c1-b068-4387b2667b31"); //儿子
+        Permission permissions = permissionAPI.findById("72ae9d8f-9a25-45c1-b068-4387b2667b31"); //儿子
         Permission permission = permissions;
         Permission parent = new Permission();
         parent.setId("99ae9d8f-9a25-45c1-b068-4387b2667b33");//更改父节点为孙节点测试
         permission.setParent(parent);
-        permissionSer.update(permission);
+        permissionAPI.update(permission);
         System.out.println(permission);
     }
 
@@ -150,7 +150,7 @@ public class RbacTest {
     @Test
     public void findAllPermissionByUserId() throws SerException {
 
-        Set<Permission> permissions = permissionSer.findAllByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
+        Set<Permission> permissions = permissionAPI.findAllByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
         System.out.println(permissions);
     }
 
@@ -162,7 +162,7 @@ public class RbacTest {
     @Test
     public void findRoleByUserId() throws SerException {
 
-        Set<Role> roles = roleSer.findRoleByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
+        Set<Role> roles = roleAPI.findRoleByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
         System.out.println(roles);
     }
 
@@ -174,7 +174,7 @@ public class RbacTest {
     @Test
     public void findChildByRoleId() throws SerException {
 
-        Set<Role> roles = roleSer.findChildByRoleId("939aa9a9-4b5e-4542-80ea-de7374a25b5c");
+        Set<Role> roles = roleAPI.findChildByRoleId("939aa9a9-4b5e-4542-80ea-de7374a25b5c");
         System.out.println(roles);
     }
 
@@ -197,7 +197,7 @@ public class RbacTest {
         role.setName("d11aa");
         department.setRoleList(Arrays.asList(role));
         department.setCreateTime(LocalDateTime.now());
-        departmentSer.save(department);
+        departmentAPI.save(department);
     }
 
 

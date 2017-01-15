@@ -1,7 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.IUserSer;
+import com.bjike.goddess.user.service.UserAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.List;
 public class UserTest {
 
     @Autowired
-    private IUserSer userSer;
+    private UserAPI userAPI;
     @Autowired
     CacheManager cacheManager;
 
@@ -35,7 +35,7 @@ public class UserTest {
      */
     @Test
     public void findAll() throws SerException {
-        List<User> users = userSer.findAll();
+        List<User> users = userAPI.findAll();
         System.out.println(users);
     }
 
@@ -46,7 +46,7 @@ public class UserTest {
      */
     @Test
     public void verifyByAccountNumber() throws SerException {
-        System.out.println(null != userSer.findByAccountNumber("liguiqin"));
+        System.out.println(null != userAPI.findByAccountNumber("liguiqin"));
 
     }
 
@@ -66,7 +66,7 @@ public class UserTest {
             e.printStackTrace();
         }
 
-        userSer.save(users);
+        userAPI.save(users);
 
     }
 

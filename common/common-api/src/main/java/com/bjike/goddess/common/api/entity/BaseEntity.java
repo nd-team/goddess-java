@@ -1,7 +1,5 @@
 package com.bjike.goddess.common.api.entity;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,8 +15,6 @@ import java.io.Serializable;
  */
 @Entity
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region ="queryCache" )
 public abstract class BaseEntity implements Serializable{
     @Id
     @GeneratedValue(generator = "uuid2")

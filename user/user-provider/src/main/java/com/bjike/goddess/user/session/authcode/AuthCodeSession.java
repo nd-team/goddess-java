@@ -47,9 +47,10 @@ public class AuthCodeSession {
     public static void put(String account, AuthCode authCode) {
         if (StringUtils.isNotBlank(account)) {
             if(AUTH_CODE_SESSIONS.containsKey(account)){
-                AUTH_CODE_SESSIONS.remove(account);
+                AUTH_CODE_SESSIONS.get(account).setCode(authCode.getCode());
+            }else {
+                AUTH_CODE_SESSIONS.put(account, authCode);
             }
-            AUTH_CODE_SESSIONS.put(account, authCode);
         } else {
             throw ACCOUNT_NOT_NULL;
         }
@@ -73,6 +74,7 @@ public class AuthCodeSession {
     public static void remove(String account) {
         if (StringUtils.isNotBlank(account)) {
             AUTH_CODE_SESSIONS.remove(account);
+            return;
         }
         throw ACCOUNT_NOT_NULL;
     }
