@@ -2,9 +2,12 @@ package com.bjike.goddess.card.service;
 
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
+import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import org.mengyun.tcctransaction.api.TransactionContext;
+
+import javax.validation.Valid;
 
 /**
  * 购票接口
@@ -43,4 +46,6 @@ public interface CardAPI extends SerAPI<Card, CardDTO> {
      * @throws SerException 常规业务异常
      */
     void threeBuyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException;
+
+    Card query(@Valid Card card) throws QueryException;
 }

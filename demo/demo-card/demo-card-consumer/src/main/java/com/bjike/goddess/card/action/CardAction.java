@@ -2,7 +2,6 @@ package com.bjike.goddess.card.action;
 
 import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.card.service.CardAPI;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
@@ -24,12 +23,18 @@ public class CardAction{
     private CardAPI cardAPI;
 
     @GetMapping("buy")
-    public ActResult buy(@Validated(value = {EDIT.class}) Card card, BindingResult bindingResult) throws ActException {
+    public ActResult buy(@Validated Card card, BindingResult bindingResult) throws ActException {
         try {
             String message = cardAPI.buyTicketForCard(null,card.getAccount(),card.getPassword(),"adf");
             return new ActResult(message);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    @GetMapping("query")
+    public ActResult test(Card card, BindingResult bindingResult) throws ActException {
+        Card message = cardAPI.query(null);
+        return new ActResult(message.getAccount());
     }
 }

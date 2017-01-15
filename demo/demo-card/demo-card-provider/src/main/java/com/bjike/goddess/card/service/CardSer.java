@@ -3,6 +3,7 @@ package com.bjike.goddess.card.service;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.common.api.dto.Condition;
+import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -76,6 +77,15 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
     @Transactional(rollbackFor = SerException.class)
     public void threeBuyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException {
 
+    }
+
+    @Override
+    public Card query(Card card) throws QueryException {
+        Card card1 = new Card();
+        card1.setAccount("123");
+        card1.setPassword("123");
+        card1.setMoney(1000L);
+        return card1;
     }
 
 
