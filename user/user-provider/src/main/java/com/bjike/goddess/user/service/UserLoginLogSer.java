@@ -23,7 +23,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service
+@Service("userLoginLogAPI")
 public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> implements UserLoginLogAPI {
 
     /**
@@ -37,7 +37,7 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     @Override
     public UserLoginLog save(UserLoginLog loginLog) throws SerException {
         UserLoginLogDTO dto = new UserLoginLogDTO();
-        dto.getConditions().add(Restrict.eq("user.id",loginLog.getUser().getId()));
+       dto.getConditions().add(Restrict.eq("user.id",loginLog.getUser().getId()));
         dto.getSorts().put("loginTime",DESC);
         List<UserLoginLog> loginLogs = findByCis(dto);
         if (null != loginLogs && loginLogs.size() >= 5) {
@@ -65,5 +65,12 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
         dto.getConditions().add(Restrict.eq("user.id",userId));
         dto.getSorts().put("loginTime",DESC);
         return findByCis(dto);
+    }
+
+    @Override
+    public List<UserLoginLog> findAll() throws SerException {
+        List<UserLoginLog> logs = super.findAll();
+        System.out.println(logs);
+        return logs;
     }
 }

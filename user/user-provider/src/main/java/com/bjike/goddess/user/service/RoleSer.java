@@ -27,7 +27,7 @@ import java.util.Set;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service
+@Service("roleAPI")
 public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
 
     @Autowired

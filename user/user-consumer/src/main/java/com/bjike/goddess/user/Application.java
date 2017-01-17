@@ -15,7 +15,7 @@ import java.io.IOException;
 				type = FilterType.ANNOTATION,
 				value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
-public class Application{
+public class Application {
 
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(Application.class,args);

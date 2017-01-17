@@ -37,6 +37,8 @@ public class RbacTest {
     private DepartmentAPI departmentAPI;
     @Autowired
     private GroupAPI groupAPI;
+    @Autowired
+    private PositionAPI positionAPI;
 
     /**
      * 添加角色
@@ -53,6 +55,22 @@ public class RbacTest {
         child.setDescription("无描述");
         child.setParent(root);
         roleAPI.save(child);
+    }
+
+    @Test
+    public void addGroup() throws SerException {
+        Group g = new Group();
+        g.setName("项目组");
+        g.setDescription("no");
+        groupAPI.save(g);
+    }
+
+    @Test
+    public void addPosition() throws SerException {
+        Position p = new Position();
+        p.setName("职位");
+        p.setDescription("no");
+        positionAPI.save(p);
     }
 
     /**

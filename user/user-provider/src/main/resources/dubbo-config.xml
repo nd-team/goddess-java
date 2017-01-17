@@ -17,8 +17,11 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginSer" />
+	<dubbo:service interface="com.bjike.goddess.user.service.RoleAPI" ref="roleAPI"/>
+	<dubbo:service interface="com.bjike.goddess.user.service.DepartmentAPI" ref="departmentAPI"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserAPI" ref="userAPI"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserLoginAPI" ref="userLoginAPI"/>
+	<dubbo:service interface="com.bjike.goddess.user.service.UserLoginLogAPI" ref="userLoginLogAPI"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserRegisterAPI" ref="userRegisterAPI"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserAuthCodeAPI" ref="userAuthCodeAPI"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserFindPwdAPI" ref="userFindPwdAPI"/>

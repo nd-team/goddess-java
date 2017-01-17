@@ -49,7 +49,7 @@ public class UserFindPwdSer implements UserFindPwdAPI {
             PhoneCodeSession.put(user.getPhone(), phoneCode);
             return true;
         } else {
-            return false;
+            throw  new SerException();
         }
     }
 

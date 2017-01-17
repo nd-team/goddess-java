@@ -62,7 +62,6 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
             boolean isPhone = Validator.isPhone(phone);
             if (isPhone) {
                 user = userRep.findByPhone(phone);
-
             } else {
                 throw new SerException("手机格式不正确");
             }

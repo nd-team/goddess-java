@@ -4,6 +4,8 @@ package com.bjike.goddess.user.dto.ext;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.user.enums.LoginType;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2016-11-24 09:37]
@@ -17,8 +19,9 @@ public class UserLoginDTO extends BaseDTO {
 
     private String ip; //登陆ip
 
+    @NotNull(message = "帐号不能为空")
     private String account;//登陆账号 email，phone，username
-
+    @NotNull(message = "密码不能为空")
     private String password;
 
     private boolean rememberMe;//记住我
@@ -26,7 +29,6 @@ public class UserLoginDTO extends BaseDTO {
     private String authCode; //验证码
 
     private LoginType loginType; //登录类型
-    private String jid; //会话id
 
     public String getToken() {
         return token;
@@ -84,11 +86,4 @@ public class UserLoginDTO extends BaseDTO {
         this.loginType = loginType;
     }
 
-    public String getJid() {
-        return jid;
-    }
-
-    public void setJid(String jid) {
-        this.jid = jid;
-    }
 }
