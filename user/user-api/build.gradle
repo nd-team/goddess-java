@@ -2,4 +2,7 @@ apply from: '../../config.gradle'
 dependencies {
     compile project(":common:common-api")
 
+    compile project(":common:common-utils")
+
+
 }

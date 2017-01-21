@@ -6,6 +6,7 @@ import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.session.phonecode.PhoneCodeSession;
+import com.bjike.goddess.user.sto.UserSTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("userFindPwdAPI")
+@Service("userFindPwdSer")
 public class UserFindPwdSer implements UserFindPwdAPI {
     @Autowired
     private UserAPI userAPI;
@@ -42,7 +43,8 @@ public class UserFindPwdSer implements UserFindPwdAPI {
 
     @Override
     public Boolean sendCodeByNickname(String nickname) throws SerException {
-        User user = userAPI.findByNickname(nickname);
+        User user =null;
+        UserSTO vo = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode phoneCode = new PhoneCode();
             phoneCode.setCode("123456");
@@ -55,7 +57,8 @@ public class UserFindPwdSer implements UserFindPwdAPI {
 
     @Override
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
-        User user = userAPI.findByNickname(nickname);
+        User user =null;
+        UserSTO vo = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode code = PhoneCodeSession.get(user.getPhone());
             if (null == code && !phoneCode.equalsIgnoreCase(code.getCode())) {

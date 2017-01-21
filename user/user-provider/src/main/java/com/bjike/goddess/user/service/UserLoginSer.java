@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.ext.UserLoginDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.enums.LoginStatus;
 import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.validcorrect.Subject;
@@ -27,7 +26,7 @@ import java.util.Map;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service("userLoginAPI")
+@Service("userLoginSer")
 public class UserLoginSer implements UserLoginAPI {
 
     @Autowired
@@ -38,12 +37,10 @@ public class UserLoginSer implements UserLoginAPI {
     public Boolean verify(String token) throws SerException {
         if (TokenUtils.verify(token)) {//token 可能来自不同ip，不同客户端
             User user = UserSession.getUser(token);
-            if (null != user && user.getLoginStatus().equals(LoginStatus.LOGIN)) {
                 return true;
-            }
-            return false;
+
         }
-        throw new SerException("token无效");
+        return false;
     }
 
     @Override
@@ -85,30 +82,37 @@ public class UserLoginSer implements UserLoginAPI {
                 if (null != entity) { //已登录过
                     token = entity.getKey();
                     Subject subject = entity.getValue();
-                    if (subject.getLoginTypes().contains(dto.getLoginType())) {  //已存在登录类型
+                    if(subject.getLoginType().equals(dto.getLoginType())){
                         return token;
-                    } else { //添加新的登录类型
-                        subject.getLoginTypes().add(dto.getLoginType());
-                        return token;
+                    }else {
+                        token = createToken( persistUser,  dto, account);
+                        return  token;
                     }
+
                 } else {
-                    token = TokenUtils.create("192.168.0.148", persistUser.getUsername());
-                    Subject subject = new Subject();
-                    subject.setUser(persistUser);
-                    subject.getLoginTypes().add(dto.getLoginType());
-                    subject.setIp(dto.getIp());
-                    subject.setRemember(dto.isRememberMe());
-                    UserSession.put(token, subject);
-                    ValidErrSession.remove(account);//删除密码验证错误次数统计
+                    token = createToken( persistUser,  dto, account);
+                    return token;
                 }
-                return token;
             } else { //密码错误
                 ValidErrSession.putValidErr(account);
+                return null;
             }
 
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+
+    }
+
+    private String  createToken(User persistUser, UserLoginDTO dto,String account){
+        String token = TokenUtils.create("192.168.0.148", persistUser.getUsername());
+        Subject subject = new Subject();
+        subject.setUser(persistUser);
+        subject.setLoginType(dto.getLoginType());
+        subject.setIp(dto.getIp());
+        subject.setRemember(dto.isRememberMe());
+        UserSession.put(token, subject);
+        ValidErrSession.remove(account);//删除密码验证错误次数统计
         return token;
     }
 
@@ -136,7 +140,7 @@ public class UserLoginSer implements UserLoginAPI {
     public Boolean loginOut(String token) throws SerException {
         User user = UserSession.getUser(token);
         if (null != user) {
-            user.setLoginStatus(LoginStatus.LOGINOUT);
+//            user.setLoginStatus(LoginStatus.LOGINOUT);
         }
         return true;
     }

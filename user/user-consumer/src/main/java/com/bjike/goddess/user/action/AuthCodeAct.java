@@ -8,6 +8,7 @@ import com.bjike.goddess.user.service.UserAuthCodeAPI;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +38,8 @@ public class AuthCodeAct {
      * @return
      * @throws SerException
      */
-    @GetMapping("showAuthCode")
-    public ActResult showAuthCode(String account) throws ActException {
+    @GetMapping("showAuthCode/{account}")
+    public ActResult showAuthCode(@PathVariable String account) throws ActException {
         RpcContext.getContext().setAttachment("userToken", "1111");
         try {
             Boolean needCode = userAuthCodeSer.showAuthCode(account);
@@ -57,8 +58,8 @@ public class AuthCodeAct {
      * @return
      * @throws SerException
      */
-    @GetMapping("generateCode")
-    public void generateCode(String account, HttpServletResponse response) throws ActException {
+    @GetMapping("generateCode/{account}")
+    public void generateCode(@PathVariable String account, HttpServletResponse response) throws ActException {
         response.setContentType("image/jpeg");
         response.setDateHeader("expries", -1);
         response.setHeader("Cache-Control", "no-cache");

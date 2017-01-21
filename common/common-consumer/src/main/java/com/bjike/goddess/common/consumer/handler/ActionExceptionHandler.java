@@ -33,6 +33,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         }else{
             httpServletResponse.setStatus(EXCEPTION_STATUS);
             actResult.setCode(EXCEPTION_CODE);
+            LOGGER.error(e.getMessage());
         }
         actResult.setMsg(e.getMessage());
         try {

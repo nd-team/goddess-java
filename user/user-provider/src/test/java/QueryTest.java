@@ -4,7 +4,6 @@ import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserAPI;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +36,12 @@ public class QueryTest {
 
 
 
-    @Before
+    @Test
     public void init() throws Exception {
         if (null == userAPI.findByUsername("liguiqin")) {
             User user = new User();
             user.setUsername("liguiqin");
             user.setPassword(PasswordHash.createHash("123456"));
-            user.setAge(55);
             user.setPhone("13457910241");
             user.setNickname("xiaoming");
             user.setEmployeeNumber("111111");
@@ -63,10 +61,10 @@ public class QueryTest {
         dto.getConditions().add(Restrict.between("accessTime",accessTime)); //时间范围查询
         dto.getConditions().add(Restrict.like("username","li")); //模糊查询
         dto.getConditions().add(Restrict.eq("username","liguiqin"));//匹配查询
-        dto.getConditions().add(Restrict.in("age",new Integer[]{11,22,33}));//in查询
-        dto.getConditions().add(Restrict.eq("group.name","项目组"));//连接查询
-        dto.getSorts().put("username","desc"); //正排序
-        dto.getSorts().put("group.name","asc");//倒排序
+//        dto.getConditions().add(Restrict.in("age",new Integer[]{11,22,33}));//in查询
+//        dto.getConditions().add(Restrict.eq("group.name","项目组"));//连接查询
+        dto.getSorts().add("username=desc"); //正排序
+//        dto.getSorts().add("group.name=asc");//倒排序
         List<User> users = userAPI.findByCis(dto);
     }
 

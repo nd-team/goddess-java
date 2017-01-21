@@ -87,17 +87,6 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
 
 
     /**
-     * 根据条件询对象列表数量
-     *
-     * @param dto
-     * @return
-     * @throws SerException
-     */
-    default Long countByCis(BD dto) throws SerException {
-        return null;
-    }
-
-    /**
      * 通过id查询某个对象
      *
      * @param id
@@ -135,7 +124,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
      * @param id
      * @throws SerException
      */
-    default void remove(String id) throws SerException {
+    default void delete(String id) throws SerException {
 
     }
 
@@ -145,7 +134,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
      * @param entity
      * @throws SerException
      */
-    default void remove(BE entity) throws SerException {
+    default void delete(BE entity) throws SerException {
 
     }
 
@@ -155,7 +144,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
      * @param entities
      * @throws SerException
      */
-    default void remove(Collection<BE> entities) throws SerException {
+    default void delete(Collection<BE> entities) throws SerException {
 
     }
 
@@ -166,7 +155,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
      * @param entity
      * @throws SerException
      */
-    default void update(BE entity) throws SerException {
+    default void modify(BE entity) throws SerException {
 
     }
 
@@ -176,7 +165,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
      * @param entities
      * @throws SerException
      */
-    default void update(Collection<BE> entities) throws SerException {
+    default void modify(Collection<BE> entities) throws SerException {
 
     }
 
@@ -213,7 +202,7 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
         return null;
     }
 
-    default  public List<BE> findBySql (String sql, Class clazz, String[] fields)throws SerException{
+    default  List<BE> findBySql (String sql, Class clazz, String[] fields)throws SerException{
         return null;
     }
 

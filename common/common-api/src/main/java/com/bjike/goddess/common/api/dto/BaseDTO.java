@@ -2,9 +2,7 @@ package com.bjike.goddess.common.api.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: [liguiqin]
@@ -15,14 +13,18 @@ import java.util.Map;
  */
 public class BaseDTO extends PageDTO implements Serializable {
     private static final long serialVersionUID = -3558525794931360478L;
-    private Map<String,String> sorts = new HashMap<>(0); //排序字段 (有排序字段默认排序) "username" "desc"
+    private List<String> sorts = new ArrayList<>(0); //排序字段 (有排序字段默认排序) "username=desc" 不指定 username (默认使用desc)
     private List<Condition> conditions = new ArrayList<Condition>(0);// 类搜索条件
 
-    public Map<String, String> getSorts() {
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public List<String> getSorts() {
         return sorts;
     }
 
-    public void setSorts(Map<String, String> sorts) {
+    public void setSorts(List<String> sorts) {
         this.sorts = sorts;
     }
 

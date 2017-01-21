@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 @CacheConfig(cacheNames = "userSerCache")
-@Service
+@Service("userRoleSer")
 public class UserRoleSer extends ServiceImpl<UserRole, UserRoleDTO> implements UserRoleAPI {
 
     @Cacheable

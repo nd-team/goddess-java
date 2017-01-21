@@ -2,12 +2,7 @@ package com.bjike.goddess.user.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.user.enums.LoginStatus;
-import com.bjike.goddess.user.enums.MemberType;
-import com.bjike.goddess.user.enums.SexType;
-import com.bjike.goddess.user.enums.UserType;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,39 +38,10 @@ public class User extends BaseEntity {
     @Column(unique = true,nullable = false)
     private String employeeNumber;
 
-    @Column(columnDefinition = "INT(1)")//指定数据库类型
-    private SexType sex = SexType.NONE;//性别
-
-    @Range(min = 0, max = 120)
-    private Integer age;//年龄
-
-    @Column(columnDefinition = "INT(1)", nullable = false)
-    private MemberType memberType = MemberType.REGISTERED; //会员类型
-
-    @Column(columnDefinition = "INT(1)", nullable = false)
-    private UserType userType = UserType.CUSTOMER;
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime accessTime = LocalDateTime.now(); //链接时间
 
     private LocalDateTime createTime ;//创建时间
 
     private Status status = Status.THAW;//用户状态
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id") //所在部门
-    private Department department;
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
-    private Group group;//所在用户组
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "position_id")
-    private Position position;//职位
-
-    @Transient
-    private LoginStatus loginStatus = LoginStatus.LOGINOUT; //记录用户登录状态
 
 
     public String getUsername() {
@@ -126,46 +92,6 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
-    public SexType getSex() {
-        return sex;
-    }
-
-    public void setSex(SexType sex) {
-        this.sex = sex;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public MemberType getMemberType() {
-        return memberType;
-    }
-
-    public void setMemberType(MemberType memberType) {
-        this.memberType = memberType;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
-    public LocalDateTime getAccessTime() {
-        return accessTime;
-    }
-
-    public void setAccessTime(LocalDateTime accessTime) {
-        this.accessTime = accessTime;
-    }
-
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -182,14 +108,6 @@ public class User extends BaseEntity {
         this.status = status;
     }
 
-    public LoginStatus getLoginStatus() {
-        return loginStatus;
-    }
-
-    public void setLoginStatus(LoginStatus loginStatus) {
-        this.loginStatus = loginStatus;
-    }
-
     public String getEmployeeNumber() {
         return employeeNumber;
     }
@@ -198,27 +116,4 @@ public class User extends BaseEntity {
         this.employeeNumber = employeeNumber;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
 }

@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -241,20 +240,28 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
      * @return
      */
     public PageRequest getPageRequest(BD dto) {
-        PageRequest pageRequest = null;
+        PageRequest pageRequest;
         Sort sort = null;
-        if (dto.getSorts() != null && dto.getSorts().size() > 0) {
-            for (Map.Entry<String, String> entry : dto.getSorts().entrySet()) {
+        List<String> _sorts = dto.getSorts();
+        if (_sorts != null && _sorts.size() > 0) {
+            String field;
+            String order=null;
+            for (String sorts : _sorts) {
+                String[] _sort = sorts.split("=");
+                if( _sort.length>1){
+                    order= _sort[1];
+                }
+                field = _sort[0];
                 Sort.Direction dct = null;
-                if (entry.getValue().equalsIgnoreCase("asc")) {
+                if (null!=order && order.equalsIgnoreCase("asc")) {
                     dct = Sort.Direction.ASC;
                 } else {
                     dct = Sort.Direction.DESC;
                 }
-                if (null != sort) {
-                    sort.and(new Sort(dct, entry.getKey()));
+                if (null == sort) {
+                    sort = new Sort(dct,field);
                 } else {
-                    sort = new Sort(dct, entry.getKey());
+                    sort = sort.and(new Sort(dct, field));
                 }
             }
             pageRequest = new PageRequest(dto.getPage(), dto.getLimit(), sort); //分页带排序

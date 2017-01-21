@@ -3,9 +3,10 @@ package com.bjike.goddess.user.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -25,11 +26,6 @@ public class Group extends BaseEntity {
     @Column(columnDefinition = "dateTime")
     private LocalDateTime createTime; //创建时间
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinTable(name="user_group_role",joinColumns={@JoinColumn(name="group_id",nullable = false)},
-            inverseJoinColumns={@JoinColumn(name="role_id",nullable = false)})
-    private List<Role> roleList; //用户组拥有角色
-
     public String getName() {
         return name;
     }
@@ -44,14 +40,6 @@ public class Group extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
     }
 
     public Status getStatus() {

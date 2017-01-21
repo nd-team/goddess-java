@@ -34,7 +34,7 @@ public class SessionQuartz  {
             @Override
             public void run() {
                 for (Map.Entry<String, Subject> entry : sessions.entrySet()) {
-                    if ( entry.getValue().getUser().getAccessTime().plusMinutes(INVALID_TIME).isBefore(LocalDateTime.now())) {
+                    if ( entry.getValue().getAccessTime().plusMinutes(INVALID_TIME).isBefore(LocalDateTime.now())) {
                         CONSOLE.info("remove token:" + entry.getKey());
                         sessions.remove(entry.getKey());
                     }

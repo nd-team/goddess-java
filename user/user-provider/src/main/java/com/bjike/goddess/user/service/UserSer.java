@@ -1,5 +1,6 @@
 package com.bjike.goddess.user.service;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,13 +9,17 @@ import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.sto.UserSTO;
+import com.bjike.goddess.user.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,37 +31,62 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service("userAPI")
+@Service("userSer")
 public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
 
     @Autowired
     private UserRep userRep;
 
+    @Autowired
+    private UserDetailAPI userDetailAPI;
+
     @Cacheable
     @Override
-    public List<User> findAll() throws SerException {
-        return super.findAll();
+    public List<UserSTO> list() throws SerException {
+        List<User> users = super.findAll();
+        List<UserSTO> userVOs = new ArrayList<>(users.size());
+        for(User user :users){
+            UserSTO vo = new UserSTO();
+            BeanUtils.copyProperties(user,vo);
+            userVOs.add(vo);
+        }
+        return userVOs;
     }
 
     @Override
     @Transactional
-    public User save(User entity) throws SerException {
-        return userRep.save(entity);
+    public UserSTO add(User entity) throws SerException {
+        UserSTO vo = new UserSTO();
+        BeanUtils.copyProperties(entity,vo);
+        return vo;
     }
 
     @Override
-    public User findByUsername(String username) throws SerException {
-        return userRep.findByUsername(username);
+    public UserSTO findByUsername(String username) throws SerException {
+        UserSTO vo = new UserSTO();
+        User user = userRep.findByUsername(username);
+//        BeanUtils.copyProperties(user,vo);
+        return vo;
     }
 
     @Cacheable
     @Override
-    public User findByNickname(String nickname) throws SerException {
-        return userRep.findByUsername(nickname);
+    public UserSTO findByNickname(String nickname) throws SerException {
+        UserSTO vo = new UserSTO();
+        User user = userRep.findByNickname(nickname);
+        if(null!=user){
+            BeanUtils.copyProperties(user,vo);
+        }
+        return vo;
+
     }
 
+    @Cacheable
     @Override
-    public User findByPhone(String phone) throws SerException {
+    public UserSTO findByPhone( String phone) throws SerException {
+       String token =  RpcContext.getContext().getAttachment("userToken");
+        User user1 = UserUtils.currentUser(token);
+        UserSTO vo = new UserSTO();
         User user = null;
         if (StringUtils.isNotBlank(phone)) {
             boolean isPhone = Validator.isPhone(phone);
@@ -68,7 +98,8 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
         } else {
             throw new SerException("手机号不能为空");
         }
-        return user;
+        BeanUtils.copyProperties(user,vo);
+        return vo;
     }
 
     @Cacheable

@@ -1,7 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserAPI;
+import com.bjike.goddess.user.service.UserDetailAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user_common_code.AppConfig;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,23 +49,13 @@ public class UserTest {
 
     }
 
-    @Test
-    public void add() throws SerException {
-        List<User> users = new ArrayList<>();
-        try {
-            for (int i = 0; i < 5; i++) {
-                User user = new User();
-                user.setUsername("l8hqw_test" + i);
-                user.setPassword(PasswordHash.createHash("1234567"));
-                user.setPhone("1809791024" + i);
-                user.setEmployeeNumber("1111111"+i);
-                users.add(user);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    private UserDetailAPI userDetailAPI;
 
-        userAPI.save(users);
+    @Test
+    public void addUserDetails() throws SerException {
+
+        userDetailAPI.add();
 
     }
 

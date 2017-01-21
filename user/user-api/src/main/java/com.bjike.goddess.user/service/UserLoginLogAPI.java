@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
+import com.bjike.goddess.user.sto.UserLoginLogSTO;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface UserLoginLogAPI extends SerAPI<UserLoginLog,UserLoginLogDTO> {
      * @param userId
      * @return
      */
-    default List<UserLoginLog> findByUserId(String userId)throws SerException {
+    default List<UserLoginLogSTO> findByUserId(String userId)throws SerException {
         return null;
     }
 

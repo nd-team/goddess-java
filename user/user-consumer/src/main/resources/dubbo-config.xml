@@ -13,13 +13,14 @@
 	<dubbo:application name="${dubbo.application.name}" />
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
-	<dubbo:reference id="roleAPI" interface="com.bjike.goddess.user.service.RoleAPI" />
-	<dubbo:reference id="departmentAPI" interface="com.bjike.goddess.user.service.DepartmentAPI" />
-	<dubbo:reference id="userAuthCodeAPI" interface="com.bjike.goddess.user.service.UserAuthCodeAPI" />
-	<dubbo:reference id="userAPI" interface="com.bjike.goddess.user.service.UserAPI" />
-	<dubbo:reference id="userLoginAPI" interface="com.bjike.goddess.user.service.UserLoginAPI" />
-	<dubbo:reference id="userLoginLogAPI" interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
-	<dubbo:reference id="userRegisterAPI" interface="com.bjike.goddess.user.service.UserRegisterAPI" />
-	<dubbo:reference id="userFindPwdAPI" interface="com.bjike.goddess.user.service.UserFindPwdAPI" />
+	<dubbo:reference id="roleSer" interface="com.bjike.goddess.user.service.RoleAPI" />
+	<dubbo:reference id="userDetailSer" interface="com.bjike.goddess.user.service.UserDetailAPI" />
+	<dubbo:reference id="departmentSer" interface="com.bjike.goddess.user.service.DepartmentAPI" />
+	<dubbo:reference id="userAuthCodeSer" interface="com.bjike.goddess.user.service.UserAuthCodeAPI" />
+	<dubbo:reference id="userSer" interface="com.bjike.goddess.user.service.UserAPI" />
+	<dubbo:reference id="userLoginSer" interface="com.bjike.goddess.user.service.UserLoginAPI" />
+	<dubbo:reference id="userLoginLogSer" interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
+	<dubbo:reference id="userRegisterSer" interface="com.bjike.goddess.user.service.UserRegisterAPI" />
+	<dubbo:reference id="userFindPwdSer" interface="com.bjike.goddess.user.service.UserFindPwdAPI" />
 
 </beans>

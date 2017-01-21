@@ -29,6 +29,7 @@ compile(project(":common:common-consumer")){
 }
     compile project(":common:common-api")
     compile project(":user:user-api")
+    compile project(":common:common-utils")
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

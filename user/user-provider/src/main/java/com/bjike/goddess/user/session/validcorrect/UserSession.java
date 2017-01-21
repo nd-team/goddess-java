@@ -41,7 +41,7 @@ public final class UserSession {
      */
     public static void put(String token, Subject subject) {
         if (StringUtils.isNotBlank(token)) {
-            subject.getUser().setAccessTime(LocalDateTime.now());
+            subject.setAccessTime(LocalDateTime.now());
             USER_SESSIONS.put(token, subject);
         } else {
             throw TOKEN_NOT_NULL;
@@ -63,19 +63,18 @@ public final class UserSession {
         }
     }
 
-    /**
-     * 根据令牌删除用户会话信息
-     *
-     * @param token 登录令牌
-     * @return 是否删除成功
-     */
+
     public static User getUser(String token) {
         if (StringUtils.isNotBlank(token)) {
-            return USER_SESSIONS.get(token).getUser();
+            Subject subject = USER_SESSIONS.get(token);
+            if (null != subject) {
+                subject.setAccessTime(LocalDateTime.now());
+                return subject.getUser();
+            }
+            return null;
         }
         throw TOKEN_NOT_NULL;
     }
-
 
     public static Map.Entry<String, Subject> getByUserId(String user_id) {
         if (StringUtils.isNotBlank(user_id)) {
@@ -91,15 +90,13 @@ public final class UserSession {
     }
 
 
-    /**
-     * 根据令牌删除用户会话信息
-     *
-     * @param token 登录令牌
-     * @return 是否删除成功
-     */
     public static Subject get(String token) {
         if (StringUtils.isNotBlank(token)) {
-            return USER_SESSIONS.get(token);
+            Subject subject = USER_SESSIONS.get(token);
+            if (null != subject) {
+                subject.setAccessTime(LocalDateTime.now());
+            }
+            return subject;
         }
         throw TOKEN_NOT_NULL;
     }

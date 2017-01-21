@@ -20,7 +20,6 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@LoginAuth
 @RestController
 @RequestMapping("user/role")
 public class RoleAct {
@@ -28,7 +27,7 @@ public class RoleAct {
     @Autowired
     private RoleAPI roleAPI;
 
-
+    @LoginAuth
     @GetMapping("list")
     public ActResult list() throws ActException {
         try {

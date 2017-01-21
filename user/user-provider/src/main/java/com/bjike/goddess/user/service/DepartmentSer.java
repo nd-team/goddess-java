@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service("departmentAPI")
+@Service("departmentSer")
 public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implements DepartmentAPI {
+
+
 
 }

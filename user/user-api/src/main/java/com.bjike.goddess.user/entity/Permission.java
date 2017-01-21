@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -29,9 +28,6 @@ public class Permission extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Permission parent;
-
-    @ManyToMany(mappedBy="permissionList",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Role> roleList ;
 
     public String getName() {
         return name;
@@ -79,13 +75,5 @@ public class Permission extends BaseEntity {
 
     public void setParent(Permission parent) {
         this.parent = parent;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
     }
 }

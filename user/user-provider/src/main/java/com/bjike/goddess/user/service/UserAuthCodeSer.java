@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("userAuthCodeAPI")
+@Service("userAuthCodeSer")
 public class UserAuthCodeSer implements UserAuthCodeAPI {
 
     @Override

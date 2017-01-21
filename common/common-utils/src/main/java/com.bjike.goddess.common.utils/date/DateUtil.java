@@ -48,4 +48,14 @@ public class DateUtil {
         return LocalTime.parse(time, TIME);
     }
 
+    public static String timeToString(LocalTime time) {
+        return time.format(TIME);
+    }
+    public static String datetimeToString(LocalDateTime dateTime) {
+        return dateTime.format(DATETIME);
+    }
+    public static String dateToString(LocalDate date) {
+        return date.format(DATE);
+    }
+
 }

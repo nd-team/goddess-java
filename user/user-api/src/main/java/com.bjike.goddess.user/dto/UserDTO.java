@@ -11,4 +11,5 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class UserDTO extends BaseDTO {
+
 }

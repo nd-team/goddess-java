@@ -9,11 +9,16 @@ import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.session.phonecode.PhoneCodeSession;
+import com.bjike.goddess.user.sto.UserSTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * @Author: [liguiqin]
@@ -23,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service("userRegisterAPI")
+@Service("userRegisterSer")
 public class UserRegisterSer implements UserRegisterAPI {
 
     @Autowired
@@ -33,8 +38,8 @@ public class UserRegisterSer implements UserRegisterAPI {
     @Cacheable
     @Override
     public Boolean existUsername(String username) throws SerException {
-        User user = userAPI.findByUsername(username);
-        return null != user;
+        UserSTO vo = userAPI.findByUsername(username);
+        return null != vo;
 
     }
 
@@ -60,30 +65,34 @@ public class UserRegisterSer implements UserRegisterAPI {
 
         if (dto.getPassword().equals(dto.getRePassword())) {
             if (!Validator.isPassword(dto.getPassword())) {
-                throw new SerException("密码过于简单");
+                throw new SerException("密码过于简单！");
             }
         } else {
-            throw new SerException("输入密码不一致");
+            throw new SerException("输入密码不一致！");
         }
         AuthCode authCode = AuthCodeSession.get(dto.getPhone());
 
-        if (null == authCode && !dto.getAuthCode().equalsIgnoreCase(authCode.getCode())) {
-            throw new SerException("验证码错误");
+        if (null != authCode && !dto.getAuthCode().equalsIgnoreCase(authCode.getCode())) {
+            throw new SerException("验证码错误！");
         }
+        if(StringUtils.isNotBlank(dto.getPhoneCode())){
+            //通过手机号码获得系统生成的验证码对象
+            PhoneCode phoneCode = PhoneCodeSession.get(dto.getPhone());
+            if (null != phoneCode) {
+                if (phoneCode.getCode().equalsIgnoreCase(dto.getPhoneCode())) { //验证成功
+                    saveUserByDto(dto);
+                    PhoneCodeSession.remove(dto.getPhone());
+                } else {
+                    throw new SerException("手机验证码不正确！");
+                }
 
-        //通过手机号码获得系统生成的验证码对象
-        PhoneCode phoneCode = PhoneCodeSession.get(dto.getPhone());
-        if (null != phoneCode) {
-            if (phoneCode.getCode().equalsIgnoreCase(dto.getPhoneCode())) {
-                saveUserByDto(dto);
-                PhoneCodeSession.remove(dto.getPhone());
             } else {
-                throw new SerException("验证码不正确");
+                throw new SerException("手机验证码已过期！");
             }
-
-        } else {
-            throw new SerException("验证码已过期");
+        }else {
+            throw new SerException("手机验证码为空！");
         }
+
 
 
     }
@@ -100,6 +109,8 @@ public class UserRegisterSer implements UserRegisterAPI {
             user.setUsername(dto.getUsername());
             user.setPassword(PasswordHash.createHash(dto.getPassword()));
             user.setPhone(dto.getPhone());
+            user.setCreateTime(LocalDateTime.now());
+            user.setEmployeeNumber("ike"+new Random().nextInt(999));
             userAPI.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());

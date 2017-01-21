@@ -24,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 
@@ -68,6 +67,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     public BE findOne(BD dto) throws SerException {
         JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
         List<BE> list = rep.findAll(JpaSpecification);
+        if(null != list && list.size()>1){
+            throw new SerException("find two and more data!");
+        }
         return null != list && list.size() > 0 ? list.get(0) : null;
     }
 
@@ -84,18 +86,25 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
         if (null != dto.getSorts() && dto.getSorts().size() > 0) { //排序
             Sort sort = null;
-            Map<String, String> _sorts = dto.getSorts();
-            for (Map.Entry<String, String> entry : _sorts.entrySet()) {
-                Sort.Direction dct = null;
-                if (entry.getValue().equalsIgnoreCase("asc")) {
+            String field;
+            String order=null;
+            List<String> _sorts = dto.getSorts();
+            for (String sorts : _sorts) {
+                String[] _sort = sorts.split("=");
+                field = _sort[0];
+                if( _sort.length>1){
+                     order= _sort[1];
+                }
+                Sort.Direction dct;
+                if (null!=order && order.equalsIgnoreCase("asc")) {
                     dct = Sort.Direction.ASC;
                 } else {
                     dct = Sort.Direction.DESC;
                 }
                 if (null == sort) {
-                    sort = new Sort(dct, entry.getKey());
+                    sort = new Sort(dct,field);
                 } else {
-                    sort = sort.and(new Sort(dct, entry.getKey()));
+                    sort = sort.and(new Sort(dct, field));
                 }
             }
             return rep.findAll(JpaSpecification, sort);
@@ -104,11 +113,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return rep.findAll(JpaSpecification);
     }
 
-    @Override
-    public Long countByCis(BD dto) throws SerException {
-        JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
-        return rep.count(JpaSpecification);
-    }
 
     @Override
     public BE findById(String id) throws SerException {
@@ -129,31 +133,31 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Transactional
     @Override
-    public void remove(String id) throws SerException {
+    public void delete(String id) throws SerException {
         rep.delete(id);
     }
 
     @Transactional
     @Override
-    public void remove(BE entity) throws SerException {
+    public void delete(BE entity) throws SerException {
         rep.delete(entity);
     }
 
     @Transactional
     @Override
-    public void remove(Collection<BE> entities) {
+    public void delete(Collection<BE> entities) {
         rep.deleteInBatch(entities);
     }
 
     @Transactional
     @Override
-    public void update(BE entity) throws SerException {
+    public void modify(BE entity) throws SerException {
         rep.saveAndFlush(entity);
     }
 
     @Transactional
     @Override
-    public void update(Collection<BE> entities) throws SerException {
+    public void modify(Collection<BE> entities) throws SerException {
         Stream<BE> stream = entities.stream();
         stream.forEach(entity -> {
             rep.saveAndFlush(entity);
@@ -166,26 +170,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return rep.exists(id);
     }
 
-    private SerException repExceptionHandler(RepException e) {
-        String msg = "";
-        switch (e.getType()) {
-            case NOT_FIND_FIELD:
-                msg = "非法查询";
-                break;
-            case ERROR_ARGUMENTS:
-                msg = "参数不匹配";
-                break;
-            case ERROR_PARSE_DATE:
-                msg = "时间类型转换错误,字段类型不匹配";
-                break;
-            case ERROR_NUMBER_FORMAT:
-                msg = "整形转换错误,字段类型不匹配";
-                break;
-            default:
-                msg = e.getMessage();
-        }
-        return new SerException(msg);
-    }
 
     @Override
     public String findByMaxField(String field, Class clazz) throws SerException {
@@ -195,7 +179,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         jpql.append(") FROM ");
         jpql.append(clazz.getSimpleName());
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
-        return obj != null ? obj.toString() : "0";
+        return obj != null ? obj.toString() : null;
     }
 
     @Override
@@ -273,5 +257,25 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return obj;
     }
 
+    private SerException repExceptionHandler(RepException e) {
+        String msg = "";
+        switch (e.getType()) {
+            case NOT_FIND_FIELD:
+                msg = "非法查询";
+                break;
+            case ERROR_ARGUMENTS:
+                msg = "参数不匹配";
+                break;
+            case ERROR_PARSE_DATE:
+                msg = "时间类型转换错误,字段类型不匹配";
+                break;
+            case ERROR_NUMBER_FORMAT:
+                msg = "整形转换错误,字段类型不匹配";
+                break;
+            default:
+                msg = e.getMessage();
+        }
+        return new SerException(msg);
+    }
 
 }

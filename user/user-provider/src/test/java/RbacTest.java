@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import user_common_code.AppConfig;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -81,7 +80,8 @@ public class RbacTest {
     @Test
     public void addUserRole() throws SerException {
         Role role = roleAPI.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
-        User user = userAPI.findByPhone("18097910240");
+        User user = null;
+        userAPI.findByPhone("18097910240");
         UserRole userRole = new UserRole();
         userRole.setRole(role);
         userRole.setUser(user);
@@ -118,7 +118,6 @@ public class RbacTest {
         List<UserRole> userRoles = userRoleAPI.findAll();
         if (null != userRoles) {
             for (UserRole userRole : userRoles) {
-                userRole.getRole().getPermissionList().size();
                 System.out.println(userRole);
             }
         }
@@ -135,8 +134,7 @@ public class RbacTest {
         Role role = roleAPI.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
         if (null != role) {
             List<Permission> permissions_list = permissionAPI.findAll();
-            role.setPermissionList(permissions_list);
-            roleAPI.update(role);
+            roleAPI.modify(role);
         }
     }
 
@@ -154,7 +152,7 @@ public class RbacTest {
         Permission parent = new Permission();
         parent.setId("99ae9d8f-9a25-45c1-b068-4387b2667b33");//更改父节点为孙节点测试
         permission.setParent(parent);
-        permissionAPI.update(permission);
+        permissionAPI.modify(permission);
         System.out.println(permission);
     }
 
@@ -213,7 +211,6 @@ public class RbacTest {
         role.setDescription("1d11无描述");
         role.setCreateTime(LocalDateTime.now());
         role.setName("d11aa");
-        department.setRoleList(Arrays.asList(role));
         department.setCreateTime(LocalDateTime.now());
         departmentAPI.save(department);
     }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @Copy: [com.bjike]
  */
 @CacheConfig(cacheNames = "userSerCache")
-@Service
+@Service("groupSer")
 public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
 
 }

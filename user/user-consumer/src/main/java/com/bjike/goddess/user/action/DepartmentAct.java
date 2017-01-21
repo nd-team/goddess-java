@@ -6,6 +6,7 @@ import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.service.DepartmentAPI;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@LoginAuth
+
 @RestController
 @RequestMapping("user/department")
 public class DepartmentAct {
@@ -28,7 +29,7 @@ public class DepartmentAct {
     @Autowired
     private DepartmentAPI departmentAPI;
 
-
+    @LoginAuth
     @GetMapping("list")
     public ActResult list() throws ActException {
         try {

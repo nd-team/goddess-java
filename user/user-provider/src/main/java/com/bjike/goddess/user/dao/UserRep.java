@@ -50,6 +50,6 @@ public interface UserRep extends JpaRep<User, UserDTO> {
      * @param phone 手机
      * @return
      */
-    @Cacheable("userDaoCache")
+//    @Cacheable("userDaoCache")
     User findByPhone(String phone);
 }

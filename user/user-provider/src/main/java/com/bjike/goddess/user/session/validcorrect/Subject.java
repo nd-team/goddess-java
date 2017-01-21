@@ -3,8 +3,7 @@ package com.bjike.goddess.user.session.validcorrect;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.LoginType;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 /**
  * @Author: [liguiqin]
@@ -17,10 +16,8 @@ public class Subject {
     private User user ;//登录用户
     private boolean remember; //是否记住我
     private String ip;
-    private Set<LoginType> loginTypes = new HashSet(0); //已登录类型
-    private Set<String> permissions = new HashSet<>(0);//拥有权限
-
-
+    private LoginType loginType; //已登录类型
+    private LocalDateTime accessTime;
 
     public User getUser() {
         return user;
@@ -38,27 +35,27 @@ public class Subject {
         this.remember = remember;
     }
 
-    public Set getLoginTypes() {
-        return loginTypes;
-    }
-
-    public void setLoginTypes(Set loginTypes) {
-        this.loginTypes = loginTypes;
-    }
-
-    public Set<String> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Set<String> permissions) {
-        this.permissions = permissions;
-    }
-
     public String getIp() {
         return ip;
     }
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public LoginType getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(LoginType loginType) {
+        this.loginType = loginType;
+    }
+
+    public LocalDateTime getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(LocalDateTime accessTime) {
+        this.accessTime = accessTime;
     }
 }

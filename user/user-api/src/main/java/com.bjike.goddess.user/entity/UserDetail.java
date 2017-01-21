@@ -2,6 +2,9 @@ package com.bjike.goddess.user.entity;
 
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.user.enums.SexType;
+import com.bjike.goddess.user.enums.UserType;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 
@@ -16,29 +19,57 @@ import javax.persistence.*;
 @Table(name = "user_detail")
 public class UserDetail extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",nullable = false,unique = true)
-    private User user;
+    @Column(columnDefinition = "INT(1)")//指定数据库类型
+    private SexType sex = SexType.NONE;//性别
+    @Range(min = 0, max = 120)
+    private Integer age;//年龄
+    @Column(columnDefinition = "INT(1)", nullable = false)
+    private UserType userType = UserType.CUSTOMER;
 
     private String address;//地址
     private String realName;//真实姓名
     private String birthday;//出生年月
-    private String domicile;//居住地
-    private String hometown;//家乡
-    private Double growthValue; //成长值
     private String idCard;//身份证
-    private String educationLevel;//教育程度
-    private String job; //职业
 
-    @Column(columnDefinition = "TINYINT(1)")
-    private Boolean maritalStatus;//婚姻状态
 
-    public User getUser() {
-        return user;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",nullable = false,unique = true)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id") //所在部门
+    private Department department;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private Group group;//所在用户组
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "position_id")
+    private Position position;//职位
+
+    public SexType getSex() {
+        return sex;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSex(SexType sex) {
+        this.sex = sex;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public String getAddress() {
@@ -65,30 +96,6 @@ public class UserDetail extends BaseEntity {
         this.birthday = birthday;
     }
 
-    public String getDomicile() {
-        return domicile;
-    }
-
-    public void setDomicile(String domicile) {
-        this.domicile = domicile;
-    }
-
-    public String getHometown() {
-        return hometown;
-    }
-
-    public void setHometown(String hometown) {
-        this.hometown = hometown;
-    }
-
-    public Double getGrowthValue() {
-        return growthValue;
-    }
-
-    public void setGrowthValue(Double growthValue) {
-        this.growthValue = growthValue;
-    }
-
     public String getIdCard() {
         return idCard;
     }
@@ -97,27 +104,35 @@ public class UserDetail extends BaseEntity {
         this.idCard = idCard;
     }
 
-    public String getEducationLevel() {
-        return educationLevel;
+    public User getUser() {
+        return user;
     }
 
-    public void setEducationLevel(String educationLevel) {
-        this.educationLevel = educationLevel;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getJob() {
-        return job;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
-    public Boolean getMaritalStatus() {
-        return maritalStatus;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setMaritalStatus(Boolean maritalStatus) {
-        this.maritalStatus = maritalStatus;
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

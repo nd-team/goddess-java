@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -29,17 +28,6 @@ public class Role extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Role parent;//父角色
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-     @JoinTable(name="user_role_permission",joinColumns={@JoinColumn(name="role_id",nullable = false)},
-            inverseJoinColumns={@JoinColumn(name="permission_id",nullable = false)})
-    private List<Permission> permissionList; //角色拥有的权限资源
-
-    @ManyToMany(mappedBy="roleList",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Group> groupList;//所属用户组
-
-    @ManyToMany(mappedBy="roleList",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Department> departmentList;//所属部门
-
     public String getName() {
         return name;
     }
@@ -54,14 +42,6 @@ public class Role extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Role getParent() {
-        return parent;
-    }
-
-    public void setParent(Role parent) {
-        this.parent = parent;
     }
 
     public Status getStatus() {
@@ -80,27 +60,11 @@ public class Role extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public List<Permission> getPermissionList() {
-        return permissionList;
+    public Role getParent() {
+        return parent;
     }
 
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
-    }
-
-    public List<Group> getGroupList() {
-        return groupList;
-    }
-
-    public void setGroupList(List<Group> groupList) {
-        this.groupList = groupList;
-    }
-
-    public List<Department> getDepartmentList() {
-        return departmentList;
-    }
-
-    public void setDepartmentList(List<Department> departmentList) {
-        this.departmentList = departmentList;
+    public void setParent(Role parent) {
+        this.parent = parent;
     }
 }
