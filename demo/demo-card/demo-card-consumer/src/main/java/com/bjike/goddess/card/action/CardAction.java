@@ -22,6 +22,13 @@ public class CardAction{
     @Autowired
     private CardAPI cardAPI;
 
+    /**
+     *
+     * @param card
+     * @param bindingResult
+     * @return
+     * @throws ActException
+     */
     @GetMapping("buy")
     public ActResult buy(@Validated Card card, BindingResult bindingResult) throws ActException {
         try {

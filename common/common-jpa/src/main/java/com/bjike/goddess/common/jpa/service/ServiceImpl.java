@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +35,7 @@ import java.util.stream.Stream;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD> {
+public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD>,Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
     public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
