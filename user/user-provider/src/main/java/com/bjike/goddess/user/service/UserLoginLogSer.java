@@ -5,12 +5,11 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanUtils;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.sto.UserLoginLogSTO;
 import com.bjike.goddess.user.utils.UserUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,17 +73,10 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
         List<UserLoginLogSTO> loginLogSTOs = new ArrayList<>();
         for(UserLoginLog loginLog: loginLogs){
             UserLoginLogSTO sto = new UserLoginLogSTO();
-            BeanUtils.copyProperties(loginLog,sto);
+           BeanUtils.copyProperties(loginLog,sto);
             loginLogSTOs.add(sto);
         }
-        List<UserLoginLogSTO> stos1 = new ArrayList<>();
-        UserLoginLogSTO sto = new UserLoginLogSTO();
-        sto.setId("111");
-        sto.setLoginType(LoginType.MOBILE);
-        sto.setLoginTime(LocalDateTime.now());
-        sto.setLoginIp("192.168.1.0");
-        stos1.add(sto);
-        return stos1;
+        return loginLogSTOs;
     }
 
     @Override

@@ -1,6 +1,8 @@
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.enums.LoginType;
+import com.bjike.goddess.user.service.UserAPI;
 import com.bjike.goddess.user.service.UserLoginLogAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +27,18 @@ public class UserLoginLogTest {
 
     @Autowired
     private UserLoginLogAPI userLoginLogAPI;
+    @Autowired
+    private UserAPI userAPI;
 
     @Test
     public void addLoginLog() throws SerException {
         UserLoginLog loginLog = new UserLoginLog();
-        loginLog.setLoginAddress("广州20");
+        loginLog.setLoginAddress("20");
         loginLog.setLoginIp("192.168.1.1");
         loginLog.setLoginType(LoginType.MOBILE);
         loginLog.setId("111111");
+        User user = userAPI.findByAccountNumber("liguiqin");
+        loginLog.setUser(user);
         userLoginLogAPI.save(loginLog);
 
     }
@@ -40,7 +46,7 @@ public class UserLoginLogTest {
     @Test
     public void find() throws SerException {
 
-       List<UserLoginLog> logs =  userLoginLogAPI.findAll();
+        List<UserLoginLog> logs = userLoginLogAPI.findAll();
         System.out.println(logs);
 
     }

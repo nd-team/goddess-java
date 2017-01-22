@@ -38,7 +38,6 @@ public class QueryTest {
 
     @Test
     public void init() throws Exception {
-        if (null == userAPI.findByUsername("liguiqin")) {
             User user = new User();
             user.setUsername("liguiqin");
             user.setPassword(PasswordHash.createHash("123456"));
@@ -46,7 +45,7 @@ public class QueryTest {
             user.setNickname("xiaoming");
             user.setEmployeeNumber("111111");
             userAPI.save(user);
-        }
+
     }
 
 

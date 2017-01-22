@@ -1,9 +1,6 @@
-package com.bjike.goddess.user;
+package com.bjike.goddess.common.utils.bean;
 
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.enums.LoginType;
-import com.bjike.goddess.user.sto.UserLoginLogSTO;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,14 +10,14 @@ import java.time.LocalTime;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-01-21 14:04]
- * @Description: []
+ * @Date: [2017-01-22 14:39 ]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class BeanUtils {
 
-    public static void copyProperties(Object source, Object target){
+    public static void copyProperties(Object source, Object target)  {
         try {
             handleClazz(source, target);
         } catch (Exception e) {
@@ -32,13 +29,13 @@ public class BeanUtils {
         try {
             handleClazz(source, target, excludes);
         } catch (Exception e) {
-            e.printStackTrace();
+           e.printStackTrace();
         }
 
     }
 
 
-    private static void handleClazz(Object source, Object target, String... excludes) throws Exception {
+    private static void handleClazz(Object source, Object target, String... excludes) throws Exception  {
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
         boolean first =true;
@@ -111,14 +108,4 @@ public class BeanUtils {
         return val;
     }
 
-    public static void main(String[] args) throws Exception {
-        UserLoginLog source = new UserLoginLog();
-        source.setId("1212");
-        source.setLoginIp("192.168.1");
-        source.setLoginTime(LocalDateTime.now());
-        source.setLoginType(LoginType.MOBILE);
-        UserLoginLogSTO target = new UserLoginLogSTO();
-        BeanUtils.copyProperties(source, target,"id");
-        System.out.println(target);
-    }
 }
