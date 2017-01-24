@@ -7,6 +7,7 @@ import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserFindPwdAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,8 +51,8 @@ public class FindPwdAct {
      * @throws ActException
      */
 
-    @GetMapping("sendCode")
-    public ActResult sendCode(String nickName) throws ActException {
+    @GetMapping("sendCode/{nickName}")
+    public ActResult sendCode(@PathVariable String nickName) throws ActException {
         try {
             Boolean result = userFindPwdSer.sendCodeByNickname(nickName);
             return ActResult.initialize(result);

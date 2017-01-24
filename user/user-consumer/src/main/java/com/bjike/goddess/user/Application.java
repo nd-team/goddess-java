@@ -9,6 +9,9 @@ import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 
+/**
+ * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
+ */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.user.action","com.bjike.goddess.common.consumer"},
 		excludeFilters = {@ComponentScan.Filter(

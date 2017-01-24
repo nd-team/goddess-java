@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user_common_code.AppConfig;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,10 +34,11 @@ public class UserLoginLogTest {
     @Test
     public void addLoginLog() throws SerException {
         UserLoginLog loginLog = new UserLoginLog();
-        loginLog.setLoginAddress("20");
+        loginLog.setLoginAddress("20a地区");
         loginLog.setLoginIp("192.168.1.1");
         loginLog.setLoginType(LoginType.MOBILE);
-        loginLog.setId("111111");
+        loginLog.setId("11s1111");
+        loginLog.setLoginTime(LocalDateTime.now());
         User user = userAPI.findByAccountNumber("liguiqin");
         loginLog.setUser(user);
         userLoginLogAPI.save(loginLog);

@@ -5,17 +5,15 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.utils.bean.BeanUtils;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.sto.UserLoginLogSTO;
-import com.bjike.goddess.user.utils.UserUtils;
+import com.bjike.goddess.user.utils.UserUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,12 +39,14 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     @Override
     public UserLoginLog save(UserLoginLog loginLog) throws SerException {
         UserLoginLogDTO dto = new UserLoginLogDTO();
-       dto.getConditions().add(Restrict.eq("user.id",loginLog.getUser().getId()));
+        String token = RpcContext.getContext().getAttachment("userToken");
+        UserUtil.currentUser(token);
+        dto.getConditions().add(Restrict.eq("user.id", UserUtil.currentUser(token).getId()));
         dto.getSorts().add("loginTime=DESC");
         List<UserLoginLog> loginLogs = findByCis(dto);
         if (null != loginLogs && loginLogs.size() >= 5) {
             UserLoginLog old_log = loginLogs.get(4); //更新最旧的数据为最新的
-            BeanUtils.copyProperties(loginLog, old_log, "id"); //复制属性忽略id
+            BeanTransform.copyProperties(loginLog, old_log, "id"); //复制属性忽略id
             super.modify(old_log);
             return old_log;
         } else {
@@ -63,19 +63,15 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     }
 
     @Override
-    public List<UserLoginLogSTO> findByUserId(String userId) throws SerException {
+    public List<UserLoginLogSTO> findByCurrentUser( ) throws SerException {
         String token = RpcContext.getContext().getAttachment("userToken");
-        userId = UserUtils.currentUser(token).getId();
+        String userId = UserUtil.currentUser(token).getId();
         UserLoginLogDTO dto = new UserLoginLogDTO();
         dto.getConditions().add(Restrict.eq("user.id",userId));
         dto.getSorts().add("loginTime=DESC");
         List<UserLoginLog> loginLogs = findByCis(dto);
-        List<UserLoginLogSTO> loginLogSTOs = new ArrayList<>();
-        for(UserLoginLog loginLog: loginLogs){
-            UserLoginLogSTO sto = new UserLoginLogSTO();
-           BeanUtils.copyProperties(loginLog,sto);
-            loginLogSTOs.add(sto);
-        }
+        BeanTransform beanTransform = new BeanTransform();
+        List<UserLoginLogSTO> loginLogSTOs =beanTransform.copyProperties(loginLogs,UserLoginLogSTO.class) ;
         return loginLogSTOs;
     }
 
@@ -85,4 +81,5 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
         System.out.println(logs);
         return logs;
     }
+
 }

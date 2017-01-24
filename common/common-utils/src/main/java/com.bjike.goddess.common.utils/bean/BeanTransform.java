@@ -1,5 +1,6 @@
 package com.bjike.goddess.common.utils.bean;
 
+
 import com.bjike.goddess.common.utils.date.DateUtil;
 
 import java.lang.reflect.Field;
@@ -7,17 +8,69 @@ import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-01-22 14:39 ]
- * @Description: [ ]
+ * @Date: [2017-01-24 15:47]
+ * @Description: 对象转换业务工具]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BeanUtils {
+public class BeanTransform<SOURCE, TARGET> {
 
-    public static void copyProperties(Object source, Object target)  {
+    /**
+     * 复制列表对象属性
+     *
+     * @param sources 转换实体源列表
+     * @param target  目标实体源对象
+     * @return List<TARGET>
+     */
+    public List<TARGET> copyProperties(List<SOURCE> sources, Class target)  {
+        List<TARGET> targets = new ArrayList<>(sources.size());
+        try {
+            for (SOURCE source : sources) {
+                Object o_target = target.newInstance();
+                copyProperties(source, o_target);
+                targets.add((TARGET) o_target);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return targets;
+    }
+
+    /**
+     * 复制列表对象属性
+     *
+     * @param sources  转换对象源列表
+     * @param target   目标对象源对象
+     * @param excludes 过滤字段
+     * @return List<TARGET>
+     */
+    public List<TARGET> copyProperties(List<SOURCE> sources, Class target, String... excludes) {
+        List<TARGET> targets = new ArrayList<>(sources.size());
+        try {
+            for (SOURCE source : sources) {
+                Object o_target = target.newInstance();
+                copyProperties(source, o_target, excludes);
+                targets.add((TARGET) o_target);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return targets;
+    }
+
+
+    /**
+     * 对象属性复制
+     *
+     * @param source 源对象
+     * @param target 目标对象
+     */
+    public static void copyProperties(Object source, Object target) {
         try {
             handleClazz(source, target);
         } catch (Exception e) {
@@ -25,29 +78,36 @@ public class BeanUtils {
         }
     }
 
+    /**
+     * 对象属性复制
+     *
+     * @param source   源对象
+     * @param target   目标对象
+     * @param excludes 过滤字段
+     */
     public static void copyProperties(Object source, Object target, String... excludes) {
         try {
             handleClazz(source, target, excludes);
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
 
 
-    private static void handleClazz(Object source, Object target, String... excludes) throws Exception  {
+    private static void handleClazz(Object source, Object target, String... excludes) throws Exception {
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
-        boolean first =true;
+        boolean first = true;
         while (null != t_clazz) { //目标类父类
-            if(!first){
+            if (!first) {
                 s_clazz = s_clazz.getSuperclass();
                 t_clazz = t_clazz.getSuperclass();
                 if (Object.class.equals(t_clazz) || null == t_clazz) {
                     break;
                 }
             }
-            first =false;
+            first = false;
             Field[] s_fields = s_clazz.getDeclaredFields();
             Field[] t_fields = t_clazz.getDeclaredFields();
             Method[] methods = t_clazz.getDeclaredMethods();
@@ -59,7 +119,9 @@ public class BeanUtils {
                         break;
                     }
                 }
-                if(has_ex){break;}
+                if (has_ex) {
+                    break;
+                }
 
                 for (Field s_field : s_fields) {
                     if (t_field.getName().equals(s_field.getName())) {
@@ -107,5 +169,6 @@ public class BeanUtils {
         }
         return val;
     }
+
 
 }

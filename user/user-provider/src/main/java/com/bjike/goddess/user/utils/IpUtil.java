@@ -7,7 +7,7 @@ package com.bjike.goddess.user.utils;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class IpUtils {
+public class IpUtil {
     public static long ipToLong(String sip) {
         long[] ip = new long[4];
         int[] pos = new int[3];

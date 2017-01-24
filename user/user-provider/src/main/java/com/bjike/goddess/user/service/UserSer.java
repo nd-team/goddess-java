@@ -1,16 +1,15 @@
 package com.bjike.goddess.user.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.sto.UserSTO;
-import com.bjike.goddess.user.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,9 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     public List<UserSTO> list() throws SerException {
         List<User> users = super.findAll();
         List<UserSTO> userVOs = new ArrayList<>(users.size());
-        for(User user :users){
+        for (User user : users) {
             UserSTO vo = new UserSTO();
-            BeanUtils.copyProperties(user,vo);
+            BeanUtils.copyProperties(user, vo);
             userVOs.add(vo);
         }
         return userVOs;
@@ -57,7 +56,7 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     @Transactional
     public UserSTO add(User entity) throws SerException {
         UserSTO vo = new UserSTO();
-        BeanUtils.copyProperties(entity,vo);
+        BeanUtils.copyProperties(entity, vo);
         return vo;
     }
 
@@ -65,7 +64,11 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     public UserSTO findByUsername(String username) throws SerException {
         UserSTO vo = new UserSTO();
         User user = userRep.findByUsername(username);
-//        BeanUtils.copyProperties(user,vo);
+        if (null != user) {
+            BeanUtils.copyProperties(user, vo);
+        }else {
+            vo = null;
+        }
         return vo;
     }
 
@@ -74,8 +77,8 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     public UserSTO findByNickname(String nickname) throws SerException {
         UserSTO vo = new UserSTO();
         User user = userRep.findByNickname(nickname);
-        if(null!=user){
-            BeanUtils.copyProperties(user,vo);
+        if (null != user) {
+            BeanUtils.copyProperties(user, vo);
         }
         return vo;
 
@@ -83,10 +86,8 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
 
     @Cacheable
     @Override
-    public UserSTO findByPhone( String phone) throws SerException {
-       String token =  RpcContext.getContext().getAttachment("userToken");
-        User user1 = UserUtils.currentUser(token);
-        UserSTO vo = new UserSTO();
+    public UserSTO findByPhone(String phone) throws SerException {
+
         User user = null;
         if (StringUtils.isNotBlank(phone)) {
             boolean isPhone = Validator.isPhone(phone);
@@ -98,8 +99,12 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
         } else {
             throw new SerException("手机号不能为空");
         }
-        BeanUtils.copyProperties(user,vo);
-        return vo;
+        if (null != user) {
+            UserSTO vo = new UserSTO();
+            BeanTransform.copyProperties(user, vo);
+            return vo;
+        }
+        return null;
     }
 
     @Cacheable

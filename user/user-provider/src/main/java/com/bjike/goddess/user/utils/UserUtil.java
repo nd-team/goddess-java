@@ -12,7 +12,7 @@ import com.bjike.goddess.user.session.validcorrect.UserSession;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserUtils {
+public class UserUtil {
 
     public static User currentUser(String token)throws SerException {
         Subject subject = UserSession.get(token);

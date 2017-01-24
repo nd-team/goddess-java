@@ -40,7 +40,6 @@ public class AuthCodeAct {
      */
     @GetMapping("showAuthCode/{account}")
     public ActResult showAuthCode(@PathVariable String account) throws ActException {
-        RpcContext.getContext().setAttachment("userToken", "1111");
         try {
             Boolean needCode = userAuthCodeSer.showAuthCode(account);
             return  ActResult.initialize(needCode);

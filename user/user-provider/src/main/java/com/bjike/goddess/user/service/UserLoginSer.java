@@ -10,7 +10,7 @@ import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.validcorrect.Subject;
 import com.bjike.goddess.user.session.validcorrect.UserSession;
 import com.bjike.goddess.user.session.validfail.ValidErrSession;
-import com.bjike.goddess.user.utils.TokenUtils;
+import com.bjike.goddess.user.utils.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -35,7 +35,7 @@ public class UserLoginSer implements UserLoginAPI {
 
     @Override
     public Boolean verify(String token) throws SerException {
-        if (TokenUtils.verify(token)) {//token 可能来自不同ip，不同客户端
+        if (TokenUtil.verify(token)) {//token 可能来自不同ip，不同客户端
             User user = UserSession.getUser(token);
                 return true;
 
@@ -105,7 +105,7 @@ public class UserLoginSer implements UserLoginAPI {
     }
 
     private String  createToken(User persistUser, UserLoginDTO dto,String account){
-        String token = TokenUtils.create("192.168.0.148", persistUser.getUsername());
+        String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
         Subject subject = new Subject();
         subject.setUser(persistUser);
         subject.setLoginType(dto.getLoginType());

@@ -21,7 +21,7 @@ public class UserLoginLog extends BaseEntity {
     private LocalDateTime loginTime;//    登录时间
     private String loginAddress;// 登录地点
     private String loginIp;// ip地址
-    @Column(columnDefinition = "INT(1)")
+    @Column(columnDefinition = "INT(1)" )
     private LoginType loginType;// 登录方式
 
 

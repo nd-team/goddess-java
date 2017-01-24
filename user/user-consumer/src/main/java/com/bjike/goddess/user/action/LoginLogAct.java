@@ -1,5 +1,6 @@
 package com.bjike.goddess.user.action;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
@@ -32,8 +33,7 @@ public class LoginLogAct {
     @GetMapping("logs")
     public ActResult logs() throws ActException {
         try {
-            String userId = "ec11d79e-9117-47db-a5c8-84800f413043";
-            List<UserLoginLogSTO> loginLogs = userLoginLogAPI.findByUserId(userId);
+            List<UserLoginLogSTO> loginLogs = userLoginLogAPI.findByCurrentUser();
             return ActResult.initialize(loginLogs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -14,7 +14,11 @@ import java.time.LocalTime;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class PrimitiveUtil {
+public class
+
+
+
+PrimitiveUtil {
     public static final Class[] PRIMITIVES = new Class[]{
             String.class,
             Integer.class,

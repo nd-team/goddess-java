@@ -46,7 +46,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         }
         String message = ticketApi.buyTicket(null, account, password, position);
         card.setMoney(card.getMoney() - 100);//减掉帐户余额
-        super.update(card);//更新
+        super.modify(card);//更新
         return "购买成功";
     }
 
@@ -68,7 +68,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         }
         ticketApi.outTicket(null, account, password, position);//退票
         card.setMoney(card.getMoney() + 100);//加回帐户余额
-        super.update(card);//更新
+        super.modify(card);//更新
         System.out.println("银行卡购票取消");
         return null;
     }
