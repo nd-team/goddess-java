@@ -120,7 +120,7 @@ public class BeanTransform<SOURCE, TARGET> {
                     }
                 }
                 if (has_ex) {
-                    break;
+                    continue;
                 }
 
                 for (Field s_field : s_fields) {

@@ -1,5 +1,11 @@
 ##命名规范
 ---
+##模块名规则：
+     modelName(模块名全部小写，应见名知意，尽量简单不宜冗长)
+1.  **api(核心依赖代码)** 模块名-api : user-api
+1.  **consumer(消费者)** 模块名-consumer : user-consumer
+1.  **provider(生产者)** 模块名-provider : user-provider
+    
  ##包名规则：
  PackName(包名) : 包名全部小写，连续的单词只是简单地连接起来，
 不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.card.service`
@@ -34,6 +40,10 @@
 5. DTO（数据传输）
     - 控制器类以 **DTO** 结束 `UserDTO`
     
+
+6. STO（业务数据传输）
+    - 控制器类以 **STO** 结束 `UserSTO`    
+    
 ## 方法命名规则:
  MethodName(方法名)：第一个单词应是动词，并且首字母小写，其它每个单词首字母大写 ,
     小写开头驼峰式`findByName()`， `openFile()`, `addAccount()`... 
@@ -58,6 +68,37 @@
      - 而数组应该总是用下面的方式来命名：`String[] names` 或 `Byte[] bytes`
 
 4. 类属性及形参不允许或者尽量避免使用使用基础属性类型，应用包装类型（`Integer`、`Boolean`、`String`、`Long`、`Double`、`Float`、`Short`、`Character`）
+
+
+    
+## 配置文件说明:
+
+ 全局应用配置文件，api,生产者,消费者
+ 1. 全局: **config.gradle** 应用使用到的jar包版本以及环境依赖版本配置
+     - **settings.gradle** 各大小模块的导入
+     - **.gitignore** git 提交忽略配置
+     - **docs/Mapping.java** 对象关系映射配置demo
+     
+ 2. api: 
+  - **settings.gradle** 模块项目名配置
+  - **build.gradle** 依赖jar包配置（任何模块api都依赖common-api）   
+  
+ 3. consumer：
+  - **settings.gradle** 模块项目名配置
+  - **build.gradle** 依赖jar包配置（任何consumer模块都依赖common-consumer,且依赖自身模块api）  
+  - **resources**:
+    - **dubbo.properties** 配置应用发布名称,广播地址,端口及端口名,远程调用超时时间
+    - **dubbo-config.xml** 配置所用到的业务接口注入
+        
+   
+ 4. provider: 
+  - **settings.gradle**  模块项目名配置
+  - **build.gradle** 依赖jar包配置（任何模块provider都依赖common-provider,common-jpa,且依赖自身模块api）   
+  - **resources**:
+      - **dubbo.properties** 配置应用发布名称,广播地址,端口及端口名,远程调用超时时间
+      - **config.properties** 数据库连接等常用配置
+      - **dubbo-config.xml** 配置所用到的业务以及业务依赖接口
+
 
 
 ## 注释规则:
@@ -96,6 +137,3 @@
     
     
     }
-    
-
- 

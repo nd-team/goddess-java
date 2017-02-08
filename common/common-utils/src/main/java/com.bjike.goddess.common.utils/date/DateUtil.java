@@ -48,12 +48,27 @@ public class DateUtil {
         return LocalTime.parse(time, TIME);
     }
 
+    /**
+     * 时间转相应字符串
+     * @param time
+     * @return
+     */
     public static String timeToString(LocalTime time) {
         return time.format(TIME);
     }
+    /**
+     * 日期时间转相应字符串
+     * @param dateTime
+     * @return
+     */
     public static String datetimeToString(LocalDateTime dateTime) {
         return dateTime.format(DATETIME);
     }
+    /**
+     * 日期转相应字符串
+     * @param date
+     * @return
+     */
     public static String dateToString(LocalDate date) {
         return date.format(DATE);
     }
