@@ -1,5 +1,6 @@
 package com.bjike.goddess.user.utils;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.session.validcorrect.Subject;
@@ -14,18 +15,25 @@ import com.bjike.goddess.user.session.validcorrect.UserSession;
  */
 public class UserUtil {
 
-    public static User currentUser(String token)throws SerException {
-        Subject subject = UserSession.get(token);
-        if (null != subject){
-            return subject.getUser();
+    public static User currentUser() throws SerException {
+        Object token = RpcContext.getContext().getAttachment("userToken");
+        if (null != token) {
+            Subject subject = UserSession.get(token.toString());
+            if (null != subject) {
+                return subject.getUser();
+            }
         }
-         throw new  SerException("登录已过期");
-    }
-    public static Boolean isLogin(String token) throws SerException {
-        Subject subject = UserSession.get(token);
-        return null!=subject;
+        throw new SerException("登录已过期");
     }
 
+    public static Boolean isLogin() throws SerException {
+        Object token = RpcContext.getContext().getAttachment("userToken");
+        if (null != token) {
+            return null != UserSession.get(token.toString());
+        }
+        return false;
+
+    }
 
 
 }

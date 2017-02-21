@@ -2,6 +2,7 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.entity.User;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -38,8 +41,8 @@ public class UserRegisterSer implements UserRegisterAPI {
     @Cacheable
     @Override
     public Boolean existUsername(String username) throws SerException {
-        UserSTO vo = userAPI.findByUsername(username);
-        return null != vo;
+        UserSTO sto = userAPI.findByUsername(username);
+        return null != sto;
 
     }
 
@@ -80,7 +83,7 @@ public class UserRegisterSer implements UserRegisterAPI {
             PhoneCode phoneCode = PhoneCodeSession.get(dto.getPhone());
             if (null != phoneCode) {
                 if (phoneCode.getCode().equalsIgnoreCase(dto.getPhoneCode())) { //验证成功
-                    saveUserByDto(dto);
+                    saveUserByDTO(dto);
                     PhoneCodeSession.remove(dto.getPhone());
                 } else {
                     throw new SerException("手机验证码不正确！");
@@ -103,7 +106,7 @@ public class UserRegisterSer implements UserRegisterAPI {
      * @param dto
      * @throws SerException
      */
-    private void saveUserByDto(UserRegisterDTO dto) throws SerException {
+    private void saveUserByDTO(UserRegisterDTO dto) throws SerException {
         try {
             User user = new User();
             user.setUsername(dto.getUsername());
@@ -116,5 +119,20 @@ public class UserRegisterSer implements UserRegisterAPI {
             throw new SerException(e.getMessage());
         }
     }
+
+//    public static void main(String[] args) {
+//        User user = new User();
+//        user.setNickname("111");
+//        user.setId("1");
+//        User user2 = new User();
+//        user2.setNickname("222");
+//        user2.setId("1");
+//        UserSTO sto = new UserSTO();
+//        List<User> users = new ArrayList<>();
+//        users.add(user);
+//        users.add(user2);
+//        UserSTO userSTO2 = BeanTransform.copyProperties(user,UserSTO.class);
+//        System.out.println(userSTO2);
+//    }
 
 }

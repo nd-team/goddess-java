@@ -7,13 +7,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.sto.UserLoginLogSTO;
+import com.bjike.goddess.user.sto.UserSTO;
 import com.bjike.goddess.user.utils.UserUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,9 +42,8 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     @Override
     public UserLoginLog save(UserLoginLog loginLog) throws SerException {
         UserLoginLogDTO dto = new UserLoginLogDTO();
-        String token = RpcContext.getContext().getAttachment("userToken");
-        UserUtil.currentUser(token);
-        dto.getConditions().add(Restrict.eq("user.id", UserUtil.currentUser(token).getId()));
+        UserUtil.currentUser();
+        dto.getConditions().add(Restrict.eq("user.id", UserUtil.currentUser().getId()));
         dto.getSorts().add("loginTime=DESC");
         List<UserLoginLog> loginLogs = findByCis(dto);
         if (null != loginLogs && loginLogs.size() >= 5) {
@@ -64,14 +66,12 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
 
     @Override
     public List<UserLoginLogSTO> findByCurrentUser( ) throws SerException {
-        String token = RpcContext.getContext().getAttachment("userToken");
-        String userId = UserUtil.currentUser(token).getId();
+        String userId = UserUtil.currentUser().getId();
         UserLoginLogDTO dto = new UserLoginLogDTO();
         dto.getConditions().add(Restrict.eq("user.id",userId));
         dto.getSorts().add("loginTime=DESC");
         List<UserLoginLog> loginLogs = findByCis(dto);
-        BeanTransform beanTransform = new BeanTransform();
-        List<UserLoginLogSTO> loginLogSTOs =beanTransform.copyProperties(loginLogs,UserLoginLogSTO.class) ;
+        List<UserLoginLogSTO> loginLogSTOs =BeanTransform.copyProperties(loginLogs,UserLoginLogSTO.class) ;
         return loginLogSTOs;
     }
 

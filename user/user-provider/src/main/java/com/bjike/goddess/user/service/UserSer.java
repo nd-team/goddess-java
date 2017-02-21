@@ -1,5 +1,6 @@
 package com.bjike.goddess.user.service;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,6 +11,7 @@ import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.sto.UserSTO;
+import com.bjike.goddess.user.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,52 +45,35 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     @Override
     public List<UserSTO> list() throws SerException {
         List<User> users = super.findAll();
-        List<UserSTO> userVOs = new ArrayList<>(users.size());
-        for (User user : users) {
-            UserSTO vo = new UserSTO();
-            BeanUtils.copyProperties(user, vo);
-            userVOs.add(vo);
-        }
-        return userVOs;
+        List<UserSTO> userSTOS = BeanTransform.copyProperties(users, UserSTO.class);
+        return userSTOS;
     }
 
     @Override
     @Transactional
     public UserSTO add(User entity) throws SerException {
-        UserSTO vo = new UserSTO();
-        BeanUtils.copyProperties(entity, vo);
-        return vo;
+        return BeanTransform.copyProperties(entity, UserSTO.class);
     }
 
     @Override
     public UserSTO findByUsername(String username) throws SerException {
-        UserSTO vo = new UserSTO();
         User user = userRep.findByUsername(username);
-        if (null != user) {
-            BeanUtils.copyProperties(user, vo);
-        }else {
-            vo = null;
-        }
-        return vo;
+        return BeanTransform.copyProperties(user, UserSTO.class);
     }
 
     @Cacheable
     @Override
     public UserSTO findByNickname(String nickname) throws SerException {
-        UserSTO vo = new UserSTO();
         User user = userRep.findByNickname(nickname);
-        if (null != user) {
-            BeanUtils.copyProperties(user, vo);
-        }
-        return vo;
+        return BeanTransform.copyProperties(user, UserSTO.class);
 
     }
 
     @Cacheable
     @Override
     public UserSTO findByPhone(String phone) throws SerException {
-
         User user = null;
+        UserSTO sto = null;
         if (StringUtils.isNotBlank(phone)) {
             boolean isPhone = Validator.isPhone(phone);
             if (isPhone) {
@@ -99,12 +84,9 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
         } else {
             throw new SerException("手机号不能为空");
         }
-        if (null != user) {
-            UserSTO vo = new UserSTO();
-            BeanTransform.copyProperties(user, vo);
-            return vo;
-        }
-        return null;
+
+        return BeanTransform.copyProperties(user, UserSTO.class);
+
     }
 
     @Cacheable

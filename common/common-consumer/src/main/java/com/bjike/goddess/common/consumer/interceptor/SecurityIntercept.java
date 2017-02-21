@@ -36,7 +36,7 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
                 if(StringUtils.isNotBlank(token)){
                     return  true;
                 }else {
-                    handlerNotLogin(response);
+                    handlerNotHasLogin(response);
                     return  false;
                 }
         }
@@ -48,7 +48,7 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
             if(StringUtils.isNotBlank(token)){
                 return  true;
             }else {
-                handlerNotLogin(response);
+                handlerNotHasLogin(response);
                 return  false;
             }
         }
@@ -75,7 +75,7 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
      * @param response
      * @throws IOException
      */
-    private void handlerNotLogin(HttpServletResponse response) throws IOException {
+    private void handlerNotHasLogin(HttpServletResponse response) throws IOException {
             response.setContentType("text/html; charset=UTF-8"); //转码
             PrintWriter out = response.getWriter();
             out.flush();

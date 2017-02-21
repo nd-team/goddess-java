@@ -44,7 +44,7 @@ public class UserFindPwdSer implements UserFindPwdAPI {
     @Override
     public Boolean sendCodeByNickname(String nickname) throws SerException {
         User user =null;
-        UserSTO vo = userAPI.findByNickname(nickname);
+        UserSTO sto = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode phoneCode = new PhoneCode();
             phoneCode.setCode("123456");
@@ -58,7 +58,7 @@ public class UserFindPwdSer implements UserFindPwdAPI {
     @Override
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
         User user =null;
-        UserSTO vo = userAPI.findByNickname(nickname);
+        UserSTO sto = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode code = PhoneCodeSession.get(user.getPhone());
             if (null == code && !phoneCode.equalsIgnoreCase(code.getCode())) {

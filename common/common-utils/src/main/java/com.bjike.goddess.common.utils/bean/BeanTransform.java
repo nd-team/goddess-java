@@ -3,6 +3,7 @@ package com.bjike.goddess.common.utils.bean;
 
 import com.bjike.goddess.common.utils.date.DateUtil;
 
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -14,54 +15,111 @@ import java.util.List;
 /**
  * @Author: [liguiqin]
  * @Date: [2017-01-24 15:47]
- * @Description: 对象转换业务工具]
+ * @Description: 对象转换业务工具, 时间类型会相应转换成字符串类型, 请确保目标源包含同名字符串类型属性]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BeanTransform<SOURCE, TARGET> {
+public class BeanTransform {
+    private BeanTransform() {
+    }
+
 
     /**
      * 复制列表对象属性
      *
      * @param sources 转换实体源列表
-     * @param target  目标实体源对象
-     * @return List<TARGET>
+     * @param target  目标类
+     * @return List<TARGET> 目标实体列表
      */
-    public List<TARGET> copyProperties(List<SOURCE> sources, Class target)  {
-        List<TARGET> targets = new ArrayList<>(sources.size());
-        try {
-            for (SOURCE source : sources) {
-                Object o_target = target.newInstance();
-                copyProperties(source, o_target);
-                targets.add((TARGET) o_target);
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(List<SOURCE> sources, Class target) {
+        List<TARGET> targets = null;
+        if (null != sources && sources.size() > 0) {
+            targets = new ArrayList<>(sources.size());
+            try {
+                for (SOURCE source : sources) {
+                    Object o_target = target.newInstance();
+                    copyProperties(source, o_target);
+                    targets.add((TARGET) o_target);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
         return targets;
     }
+
 
     /**
      * 复制列表对象属性
      *
      * @param sources  转换对象源列表
-     * @param target   目标对象源对象
+     * @param target   目标类
      * @param excludes 过滤字段
-     * @return List<TARGET>
+     * @return List<TARGET>目标对象列表
      */
-    public List<TARGET> copyProperties(List<SOURCE> sources, Class target, String... excludes) {
-        List<TARGET> targets = new ArrayList<>(sources.size());
-        try {
-            for (SOURCE source : sources) {
-                Object o_target = target.newInstance();
-                copyProperties(source, o_target, excludes);
-                targets.add((TARGET) o_target);
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(List<SOURCE> sources, Class target, String... excludes) {
+        List<TARGET> targets = null;
+        if (null != sources && sources.size() > 0) {
+            targets = new ArrayList<>(sources.size());
+            try {
+                for (SOURCE source : sources) {
+                    Object o_target = target.newInstance();
+                    copyProperties(source, o_target, excludes);
+                    targets.add((TARGET) o_target);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return targets;
     }
+
+    /**
+     *
+     * @param source 源对象
+     * @param target 目标类
+     * @param <TARGET> 目标对象
+     * @param excludes 过滤属性
+     * @return
+     */
+    public static <TARGET> TARGET copyProperties(Object source, Class target, String... excludes) {
+        if (null != source) {
+            try {
+                Object o_target = target.newInstance();
+                copyProperties(source, o_target,excludes);
+                return (TARGET) o_target;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+
+    }
+
+
+    /**
+     *
+     * @param source 源对象
+     * @param target 目标类
+     * @param <TARGET> 目标对象
+     * @return
+     */
+    public static <TARGET> TARGET copyProperties(Object source, Class target) {
+        if (null != source) {
+            try {
+                Object o_target = target.newInstance();
+                copyProperties(source, o_target);
+                return (TARGET) o_target;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+
+    }
+
 
 
     /**
