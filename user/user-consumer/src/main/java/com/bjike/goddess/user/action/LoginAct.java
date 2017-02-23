@@ -9,14 +9,16 @@ import com.bjike.goddess.user.service.UserLoginAPI;
 import com.bjike.goddess.user.utils.CheckMobile;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 用户登录
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 15:47]
- * @Description: [用户登录]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -34,7 +36,7 @@ public class LoginAct {
      * @param request
      * @return
      */
-    @GetMapping("login")
+    @PostMapping("login")
     public ActResult login(UserLoginDTO dto, HttpServletRequest request) throws ActException {
         try {
             String userAgent = request.getHeader("USER-AGENT").toLowerCase();
@@ -44,7 +46,7 @@ public class LoginAct {
             }
             dto.setLoginType(type);
             String token = userLoginSer.login(dto);
-            return  ActResult.initialize(token);
+            return ActResult.initialize(token);
 
         } catch (SerException e) {
             throw new ActException(e.getMessage());

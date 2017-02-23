@@ -4,20 +4,40 @@ package com.bjike.goddess.user.dto.ext;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
+ * 用户注册数据传输
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 用户注册数据传输]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class UserRegisterDTO extends BaseDTO {
 
-    private String username; //注册用名
-    private String password;//注册密码
-    private String rePassword;//重复密码
-    private String phone; //注册手机
-    private String phoneCode;//手机验证码
-    private String authCode;//验证码
+    /**
+     * 注册用名
+     */
+    private String username;
+    /**
+     * 注册密码
+     */
+    private String password;
+    /**
+     * 重复密码
+     */
+    private String rePassword;
+    /**
+     * 注册手机
+     */
+    private String phone;
+    /**
+     * 手机验证码
+     */
+    private String phoneCode;
+    /**
+     * 验证码
+     */
+    private String authCode;
 
     public String getUsername() {
         return username;

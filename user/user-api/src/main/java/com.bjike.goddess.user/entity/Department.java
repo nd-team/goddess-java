@@ -6,24 +6,38 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 部门
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-24 10:16]
- * @Description: [部门]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 @Entity
 @Table(name = "user_department")
 public class Department extends BaseEntity {
-    @Column(unique = true,nullable = false)
-    private String name;//部门名
-    private String description; //描述
+    /**
+     * 部门名
+     */
+    @Column(unique = true, nullable = false)
+    private String name;
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 创建时间
+     */
     @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime; //创建时间
+    private LocalDateTime createTime;
 
+    /**
+     * 上级部门
+     */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Department parent; //上级部门
+    private Department parent;
 
     public String getName() {
         return name;

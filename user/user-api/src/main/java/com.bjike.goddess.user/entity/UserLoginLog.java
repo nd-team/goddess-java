@@ -7,9 +7,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 用户登陆日志
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户登陆日志]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -17,16 +19,30 @@ import java.time.LocalDateTime;
 @Table(name = "user_login_log")
 public class UserLoginLog extends BaseEntity {
 
+    /**
+     * 登录时间
+     */
     @OrderBy(value = "loginTime desc ")
-    private LocalDateTime loginTime;//    登录时间
-    private String loginAddress;// 登录地点
-    private String loginIp;// ip地址
-    @Column(columnDefinition = "INT(1)" )
-    private LoginType loginType;// 登录方式
+    private LocalDateTime loginTime;
+    /**
+     * 登录地点
+     */
+    private String loginAddress;
+    /**
+     * ip地址
+     */
+    private String loginIp;
+    /**
+     * 登录方式
+     */
+    @Column(columnDefinition = "INT(1)")
+    private LoginType loginType;
 
-
-    @ManyToOne(cascade = {CascadeType.ALL},  fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    /**
+     * 用户关联
+     */
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public LocalDateTime getLoginTime() {

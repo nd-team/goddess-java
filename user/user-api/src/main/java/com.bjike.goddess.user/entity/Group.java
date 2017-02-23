@@ -9,9 +9,11 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
+ * 用户组
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 09:09]
- * @Description: [用户组]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -19,12 +21,24 @@ import java.time.LocalDateTime;
 @Table(name = "user_group")
 public class Group extends BaseEntity {
 
-    @Column(unique = true,nullable = false)
-    private String name; //组名
-    private String description; //描述
-    private Status status; //状态
+    /**
+     * 组名
+     */
+    @Column(unique = true, nullable = false)
+    private String name;
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 状态
+     */
+    private Status status;
     @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime; //创建时间
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
     public String getName() {
         return name;

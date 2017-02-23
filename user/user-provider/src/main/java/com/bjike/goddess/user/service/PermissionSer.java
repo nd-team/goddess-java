@@ -8,9 +8,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 /**
+ * 权限认证业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [权限认证业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

@@ -8,9 +8,11 @@ import java.util.Random;
 
 
 /**
+ * 验证码生产工具
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 验证码生产工具]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -19,7 +21,6 @@ public class AuthCodeGenerate {
     public static final int HEIGHT = 40;
 
     /**
-     *
      * @return 生成的图片流及随机验证码数字
      */
     public static Map<String, BufferedImage> build() {

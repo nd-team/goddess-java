@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.action;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
@@ -19,9 +18,11 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 验证码
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 17:28]
- * @Description: [验证码]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -42,7 +43,7 @@ public class AuthCodeAct {
     public ActResult showAuthCode(@PathVariable String account) throws ActException {
         try {
             Boolean needCode = userAuthCodeSer.showAuthCode(account);
-            return  ActResult.initialize(needCode);
+            return ActResult.initialize(needCode);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

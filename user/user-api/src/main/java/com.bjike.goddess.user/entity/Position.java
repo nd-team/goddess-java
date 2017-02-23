@@ -8,9 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 职位
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 11:06]
- * @Description: [职位]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -18,13 +20,27 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_position")
 public class Position extends BaseEntity {
-    @Column(unique = true,nullable = false)
-    private String name; //职位名
-    private String description; //描述
-    private Status status; //状态
+    /**
+     * 职位名
+     */
+    @Column(unique = true, nullable = false)
+    private String name;
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 状态
+     */
+    private Status status;
+    /**
+     * 创建时间
+     */
     @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime; //创建时间
-
+    private LocalDateTime createTime;
+    /**
+     * 父节点
+     */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Position parent;

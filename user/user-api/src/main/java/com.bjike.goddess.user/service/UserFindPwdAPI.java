@@ -3,6 +3,7 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.sto.UserSimpleSTO;
 
 /**
  * @Author: [liguiqin]
@@ -22,7 +23,7 @@ public interface UserFindPwdAPI {
      * @return
      * @throws SerException
      */
-    User verifyAccount(String account, String authCode) throws SerException;
+    UserSimpleSTO verifyAccount(String account, String authCode) throws SerException;
 
 
     /**

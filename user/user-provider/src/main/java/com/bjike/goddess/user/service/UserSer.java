@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -11,23 +10,22 @@ import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.sto.UserSTO;
-import com.bjike.goddess.user.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
+ * 用户业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 用户业务实现]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -73,7 +71,6 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
     @Override
     public UserSTO findByPhone(String phone) throws SerException {
         User user = null;
-        UserSTO sto = null;
         if (StringUtils.isNotBlank(phone)) {
             boolean isPhone = Validator.isPhone(phone);
             if (isPhone) {

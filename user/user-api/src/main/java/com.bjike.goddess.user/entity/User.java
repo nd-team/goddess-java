@@ -8,40 +8,61 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 用户
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
-
+    /**
+     * 登录用户名
+     */
     @Column(unique = true, length = 16, nullable = false)
-    private String username; //登录用户名
+    private String username;
 
+    /**
+     * 登录手机(注册验证手机)
+     */
     @Column(unique = true, length = 11, nullable = false)
-    private String phone;//登录手机(注册验证手机)
-
+    private String phone;
+    /**
+     * 登录邮箱
+     */
     @Email
-    private String email;//登录邮箱
-
+    private String email;
+    /**
+     * 登陆密码
+     */
     @Column(nullable = false)
-    private String password; //登陆密码
-
-    private String headSculpture;//头像
-
+    private String password;
+    /**
+     * 头像
+     */
+    private String headSculpture;
+    /**
+     * 昵称
+     */
     @Column(unique = true)
-    private String nickname; //昵称
-
-    @Column(unique = true,nullable = false)
+    private String nickname;
+    /**
+     * 员工编号
+     */
+    @Column(unique = true, nullable = false)
     private String employeeNumber;
 
-
-    private LocalDateTime createTime ;//创建时间
-
-    private Status status = Status.THAW;//用户状态
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 用户状态
+     */
+    private Status status = Status.THAW;
 
 
     public String getUsername() {

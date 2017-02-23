@@ -8,25 +8,42 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 用户角色
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户角色]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 @Entity
 @Table(name = "user_role")
 public class Role extends BaseEntity {
+    /**
+     * 角色名
+     */
     @Column(unique = true)
-    private String name;//角色名
-    private String description;//描述
-    private Status status;//状态
+    private String name;
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 状态
+     */
+    private Status status;
+    /**
+     * 创建时间
+     */
     @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime ; //创建时间
+    private LocalDateTime createTime;
 
+    /**
+     * 父角色
+     */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Role parent;//父角色
+    private Role parent;
 
     public String getName() {
         return name;

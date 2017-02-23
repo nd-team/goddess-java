@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.sto.BaseSTO;
 import com.bjike.goddess.user.enums.LoginType;
 
 /**
+ * 用户登录日志业务数据传输
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-21 11:16]
  * @Description: []
@@ -11,10 +13,22 @@ import com.bjike.goddess.user.enums.LoginType;
  * @Copy: [com.bjike]
  */
 public class UserLoginLogSTO extends BaseSTO {
-    private String loginTime;//    登录时间
-    private String loginAddress;// 登录地点
-    private String loginIp;// ip地址
-    private LoginType loginType;// 登录方式
+    /**
+     * 登录时间
+     */
+    private String loginTime;
+    /**
+     * 登录地点
+     */
+    private String loginAddress;
+    /**
+     * ip地址
+     */
+    private String loginIp;
+    /**
+     * 登录方式
+     */
+    private LoginType loginType;
 
     public String getLoginTime() {
         return loginTime;

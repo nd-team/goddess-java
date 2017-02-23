@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
+ * 用户登陆业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-24 09:37]
- * @Description: [用户登陆业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -37,7 +39,7 @@ public class UserLoginSer implements UserLoginAPI {
     public Boolean verify(String token) throws SerException {
         if (TokenUtil.verify(token)) {//token 可能来自不同ip，不同客户端
             User user = UserSession.getUser(token);
-                return true;
+            return true;
 
         }
         return false;
@@ -82,15 +84,15 @@ public class UserLoginSer implements UserLoginAPI {
                 if (null != entity) { //已登录过
                     token = entity.getKey();
                     Subject subject = entity.getValue();
-                    if(subject.getLoginType().equals(dto.getLoginType())){
+                    if (subject.getLoginType().equals(dto.getLoginType())) {
                         return token;
-                    }else {
-                        token = createToken( persistUser,  dto, account);
-                        return  token;
+                    } else {
+                        token = createToken(persistUser, dto);
+                        return token;
                     }
 
                 } else {
-                    token = createToken( persistUser,  dto, account);
+                    token = createToken(persistUser, dto);
                     return token;
                 }
             } else { //密码错误
@@ -104,7 +106,7 @@ public class UserLoginSer implements UserLoginAPI {
 
     }
 
-    private String  createToken(User persistUser, UserLoginDTO dto,String account){
+    private String createToken(User persistUser, UserLoginDTO dto) {
         String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
         Subject subject = new Subject();
         subject.setUser(persistUser);
@@ -112,7 +114,7 @@ public class UserLoginSer implements UserLoginAPI {
         subject.setIp(dto.getIp());
         subject.setRemember(dto.isRememberMe());
         UserSession.put(token, subject);
-        ValidErrSession.remove(account);//删除密码验证错误次数统计
+        ValidErrSession.remove(dto.getAccount());//删除密码验证错误次数统计
         return token;
     }
 

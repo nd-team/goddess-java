@@ -4,6 +4,7 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.dto.GroupDTO;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -12,6 +13,7 @@ import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.entity.Group;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
+import com.bjike.goddess.user.sto.UserDetailSTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
+ * 部门业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 15:47]
- * @Description: [部门业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -39,7 +43,7 @@ public class UserDetailSer extends ServiceImpl<UserDetail, UserDetailDTO> implem
 
     @Transactional
     @Override
-    public UserDetail add() throws SerException {
+    public UserDetailSTO add() throws SerException {
         UserDTO dto = new UserDTO();
         dto.getConditions().add(Restrict.eq("phone", "13457910241"));
         User user = userAPI.findOne(dto);
@@ -55,6 +59,6 @@ public class UserDetailSer extends ServiceImpl<UserDetail, UserDetailDTO> implem
         Group group = groupAPI.findOne(groupDTO);
         userDetail.setGroup(group);
         super.save(userDetail);
-        return userDetail;
+        return BeanTransform.copyProperties(userDetail, UserDetailSTO.class);
     }
 }

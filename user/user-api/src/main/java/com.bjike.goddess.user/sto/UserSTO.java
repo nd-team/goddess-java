@@ -3,18 +3,35 @@ package com.bjike.goddess.user.sto;
 import com.bjike.goddess.common.api.sto.BaseSTO;
 
 /**
+ * 用户业务传送对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-18 15:25]
- * @Description: [用户业务传送对象]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class UserSTO extends BaseSTO {
+    /**
+     * 用户名
+     */
     private String username;
-    private String phone;//登录手机(注册验证手机)
-    private String email;//登录邮箱
-    private String headSculpture;//头像
-    private String nickname; //昵称
+    /**
+     * 登录手机(注册验证手机)
+     */
+    private String phone;
+    /**
+     * 登录邮箱
+     */
+    private String email;
+    /**
+     * 头像
+     */
+    private String headSculpture;
+    /**
+     * 昵称
+     */
+    private String nickname;
 
     public String getUsername() {
         return username;

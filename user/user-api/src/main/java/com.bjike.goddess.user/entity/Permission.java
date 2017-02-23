@@ -8,24 +8,44 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * 资源认证
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [资源认证]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 @Entity
 @Table(name = "user_permission")
 public class Permission extends BaseEntity {
-    private String name;//认证名
+    /**
+     * 认证名
+     */
+    private String name;
     @Column(unique = true)
-    private String resource;//认证资源
-    private String description;//描述
-    private Status status= Status.THAW; //状态
-
+    /**
+     * 认证资源
+     */
+    private String resource;
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 状态
+     */
+    private Status status = Status.THAW;
+    /**
+     * 创建时间
+     */
     @Column(columnDefinition = "dateTime")//指定数据库类型
     private LocalDateTime createTime;
+    /**
+     * 父节点
+     */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
     @JoinColumn(name = "parent_id")
     private Permission parent;
 

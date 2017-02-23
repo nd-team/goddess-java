@@ -6,12 +6,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.service.UserRegisterAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
+ * 用户注册
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 09:46]
- * @Description: [用户注册]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -22,7 +27,7 @@ public class RegisterAct {
     private UserRegisterAPI registerSer;
 
     @PostMapping("register")
-    public ActResult register(UserRegisterDTO dto) throws ActException {
+    public ActResult register(@Valid UserRegisterDTO dto, BindingResult result) throws ActException {
         try {
             registerSer.verifyCodeAndReg(dto);
         } catch (SerException e) {
@@ -34,18 +39,19 @@ public class RegisterAct {
 
     /**
      * 验证手机号码并发生验证码到手机
+     *
      * @param phone
      * @return
      * @throws ActException
      */
     @GetMapping("verifyPhone/{phone}")
-    public ActResult sendCodeToPhone(@PathVariable  String phone) throws ActException {
+    public ActResult sendCodeToPhone(@PathVariable String phone) throws ActException {
         try {
             registerSer.verifyAndSendCode(phone);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-        return  ActResult.initialize(Boolean.TRUE);
+        return ActResult.initialize(Boolean.TRUE);
     }
 
 }

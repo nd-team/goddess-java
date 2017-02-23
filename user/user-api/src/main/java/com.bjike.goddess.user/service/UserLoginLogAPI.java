@@ -21,7 +21,7 @@ public interface UserLoginLogAPI extends SerAPI<UserLoginLog,UserLoginLogDTO> {
      * 获取用户登录日志，默认前5条（最多保存也是5条）
      * @return
      */
-    default List<UserLoginLogSTO> findByCurrentUser()throws SerException {
+    default List<UserLoginLogSTO> findLogByCurrentUser()throws SerException {
         return null;
     }
 

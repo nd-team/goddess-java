@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 /**
+ * 用户验证码业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-26 09:36]
- * @Description: [用户验证码业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -30,19 +32,19 @@ public class UserAuthCodeSer implements UserAuthCodeAPI {
     }
 
 
-
     /**
      * 保存验证码到session
+     *
      * @param account
      * @param code
      */
-    public void handleAuthCode(String account,String code){
+    public void handleAuthCode(String account, String code) {
         AuthCode authCode = AuthCodeSession.get(account);
-        if(null==authCode){
+        if (null == authCode) {
             AuthCode auth = new AuthCode();
             auth.setCode(code);
-            AuthCodeSession.put(account,auth);
-        }else {
+            AuthCodeSession.put(account, auth);
+        } else {
             authCode.setCode(code);
             authCode.setCreateTime(LocalDateTime.now());
         }

@@ -1,29 +1,27 @@
 package com.bjike.goddess.user.service;
 
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.sto.UserLoginLogSTO;
-import com.bjike.goddess.user.sto.UserSTO;
 import com.bjike.goddess.user.utils.UserUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
+ * 用户登录注册业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-28 14:47]
- * @Description: [用户登录注册业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -65,14 +63,13 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     }
 
     @Override
-    public List<UserLoginLogSTO> findByCurrentUser( ) throws SerException {
+    public List<UserLoginLogSTO> findLogByCurrentUser() throws SerException {
         String userId = UserUtil.currentUser().getId();
         UserLoginLogDTO dto = new UserLoginLogDTO();
-        dto.getConditions().add(Restrict.eq("user.id",userId));
+        dto.getConditions().add(Restrict.eq("user.id", userId));
         dto.getSorts().add("loginTime=DESC");
         List<UserLoginLog> loginLogs = findByCis(dto);
-        List<UserLoginLogSTO> loginLogSTOs =BeanTransform.copyProperties(loginLogs,UserLoginLogSTO.class) ;
-        return loginLogSTOs;
+        return BeanTransform.copyProperties(loginLogs, UserLoginLogSTO.class);
     }
 
     @Override

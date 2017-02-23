@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.action;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
@@ -15,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 用户日志操作
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 15:47]
- * @Description: [用户操作]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -33,7 +34,7 @@ public class LoginLogAct {
     @GetMapping("logs")
     public ActResult logs() throws ActException {
         try {
-            List<UserLoginLogSTO> loginLogs = userLoginLogAPI.findByCurrentUser();
+            List<UserLoginLogSTO> loginLogs = userLoginLogAPI.findLogByCurrentUser();
             return ActResult.initialize(loginLogs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

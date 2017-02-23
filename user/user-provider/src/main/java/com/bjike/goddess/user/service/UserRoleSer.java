@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * 用户角色业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户角色业务实现]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -29,7 +31,7 @@ public class UserRoleSer extends ServiceImpl<UserRole, UserRoleDTO> implements U
     @Override
     public List<UserRole> findByUserId(String userId) throws SerException {
         UserRoleDTO dto = new UserRoleDTO();
-        dto.getConditions().add(Restrict.eq("user.id",userId));
+        dto.getConditions().add(Restrict.eq("user.id", userId));
         dto.getConditions().add(Restrict.eq("role.status", Status.THAW));
         return findByCis(dto);
     }

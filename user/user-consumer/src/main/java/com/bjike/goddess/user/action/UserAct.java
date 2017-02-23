@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 用户操作
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 15:47]
- * @Description: [用户操作]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -25,8 +27,6 @@ public class UserAct {
     @Autowired
     private UserAPI userAPI;
 
-    //13457910241
-
     @GetMapping("existPhone/{phone}")
     public ActResult existPhone(@PathVariable String phone, UserDTO dto) throws ActException {
         try {
@@ -36,6 +36,7 @@ public class UserAct {
             throw new ActException(e.getMessage());
         }
     }
+
     @GetMapping("existUsername/{username}")
     public ActResult existUsername(@PathVariable String username) throws ActException {
 

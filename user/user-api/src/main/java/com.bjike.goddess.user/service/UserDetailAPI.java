@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.entity.UserDetail;
+import com.bjike.goddess.user.sto.UserDetailSTO;
 
 /**
  * @Author: [liguiqin]
@@ -14,7 +15,7 @@ import com.bjike.goddess.user.entity.UserDetail;
  */
 public interface UserDetailAPI extends SerAPI<UserDetail, UserDetailDTO> {
 
-    default UserDetail add()throws SerException{
+    default UserDetailSTO add()throws SerException{
         return null;
     }
 }

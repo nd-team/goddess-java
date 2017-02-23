@@ -9,9 +9,11 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 
 /**
+ * 用户详情
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户详情]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -20,33 +22,62 @@ import javax.persistence.*;
 public class UserDetail extends BaseEntity {
 
     @Column(columnDefinition = "INT(1)")//指定数据库类型
-    private SexType sex = SexType.NONE;//性别
+    /**
+     * 性别
+     */
+    private SexType sex = SexType.NONE;
+    /**
+     * 年龄
+     */
     @Range(min = 0, max = 120)
-    private Integer age;//年龄
+    private Integer age;
+    /**
+     * 用户类型
+     */
     @Column(columnDefinition = "INT(1)", nullable = false)
     private UserType userType = UserType.CUSTOMER;
-
-    private String address;//地址
-    private String realName;//真实姓名
-    private String birthday;//出生年月
-    private String idCard;//身份证
+    /**
+     * 地址
+     */
+    private String address;
+    /**
+     * 真实姓名
+     */
+    private String realName;
+    /**
+     * 出生年月
+     */
+    private String birthday;
+    /**
+     * 身份证
+     */
+    private String idCard;
 
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",nullable = false,unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id") //所在部门
+    /**
+     * 所在部门
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
     private Department department;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    /**
+     * 所在用户组
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
-    private Group group;//所在用户组
+    private Group group;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    /**
+     * 职位
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "position_id")
-    private Position position;//职位
+    private Position position;
 
     public SexType getSex() {
         return sex;

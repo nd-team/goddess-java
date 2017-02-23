@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * 用户注册业务实现
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 用户注册业务实现]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -78,7 +80,7 @@ public class UserRegisterSer implements UserRegisterAPI {
         if (null != authCode && !dto.getAuthCode().equalsIgnoreCase(authCode.getCode())) {
             throw new SerException("验证码错误！");
         }
-        if(StringUtils.isNotBlank(dto.getPhoneCode())){
+        if (StringUtils.isNotBlank(dto.getPhoneCode())) {
             //通过手机号码获得系统生成的验证码对象
             PhoneCode phoneCode = PhoneCodeSession.get(dto.getPhone());
             if (null != phoneCode) {
@@ -90,12 +92,11 @@ public class UserRegisterSer implements UserRegisterAPI {
                 }
 
             } else {
-                throw new SerException("手机验证码已过期！");
+//                throw new SerException("手机验证码已过期！");
             }
-        }else {
+        } else {
             throw new SerException("手机验证码为空！");
         }
-
 
 
     }
@@ -113,7 +114,7 @@ public class UserRegisterSer implements UserRegisterAPI {
             user.setPassword(PasswordHash.createHash(dto.getPassword()));
             user.setPhone(dto.getPhone());
             user.setCreateTime(LocalDateTime.now());
-            user.setEmployeeNumber("ike"+new Random().nextInt(999));
+            user.setEmployeeNumber("ike" + new Random().nextInt(999999));
             userAPI.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
