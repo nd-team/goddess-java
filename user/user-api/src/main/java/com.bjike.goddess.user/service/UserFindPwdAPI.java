@@ -6,9 +6,11 @@ import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.sto.UserSimpleSTO;
 
 /**
+ * 用户找回密码接口
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 用户找回密码接口]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

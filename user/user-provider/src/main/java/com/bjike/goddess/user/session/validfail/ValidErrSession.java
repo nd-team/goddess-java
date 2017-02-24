@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 密码验证错误记录会话管理
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-25 17:40]
- * @Description: [密码验证错误记录会话管理]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -37,7 +39,7 @@ public class ValidErrSession {
      */
     public static ValidErr get(String account) {
         if (StringUtils.isNotBlank(account)) {
-            return  VALID_ERR_SESSIONS.get(account);
+            return VALID_ERR_SESSIONS.get(account);
         } else {
             throw ACCOUNT_NOT_NULL;
         }
@@ -53,11 +55,11 @@ public class ValidErrSession {
             if (VALID_ERR_SESSIONS.containsKey(account)) {
                 ValidErr validErr = VALID_ERR_SESSIONS.get(account);
                 validErr.setCount(validErr.getCount() + 1);
-            }else{
+            } else {
                 ValidErr validErr = new ValidErr();
                 validErr.setCount(1);
                 validErr.setCreateTime(LocalDateTime.now());
-                VALID_ERR_SESSIONS.put(account,validErr );
+                VALID_ERR_SESSIONS.put(account, validErr);
             }
         } else {
             throw ACCOUNT_NOT_NULL;

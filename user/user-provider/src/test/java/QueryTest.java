@@ -17,9 +17,11 @@ import java.util.List;
 
 
 /**
+ * 查询测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-01 11:42]
- * @Description: [查询测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -35,16 +37,15 @@ public class QueryTest {
     private UserAPI userAPI;
 
 
-
     @Test
     public void init() throws Exception {
-            User user = new User();
-            user.setUsername("liguiqin");
-            user.setPassword(PasswordHash.createHash("123456"));
-            user.setPhone("13457910241");
-            user.setNickname("xiaoming");
-            user.setEmployeeNumber("111111");
-            userAPI.save(user);
+        User user = new User();
+        user.setUsername("liguiqin");
+        user.setPassword(PasswordHash.createHash("123456"));
+        user.setPhone("13457910241");
+        user.setNickname("xiaoming");
+        user.setEmployeeNumber("111111");
+        userAPI.save(user);
 
     }
 
@@ -55,11 +56,11 @@ public class QueryTest {
     @Test
     public void findByCis() throws SerException {
         UserDTO dto = new UserDTO();
-        Double[] money = new Double[]{1.11,99.00};
-        LocalDateTime[] accessTime = new LocalDateTime[]{LocalDateTime.now().minusDays(100),LocalDateTime.now()};
-        dto.getConditions().add(Restrict.between("accessTime",accessTime)); //时间范围查询
-        dto.getConditions().add(Restrict.like("username","li")); //模糊查询
-        dto.getConditions().add(Restrict.eq("username","liguiqin"));//匹配查询
+        Double[] money = new Double[]{1.11, 99.00};
+        LocalDateTime[] accessTime = new LocalDateTime[]{LocalDateTime.now().minusDays(100), LocalDateTime.now()};
+        dto.getConditions().add(Restrict.between("accessTime", accessTime)); //时间范围查询
+        dto.getConditions().add(Restrict.like("username", "li")); //模糊查询
+        dto.getConditions().add(Restrict.eq("username", "liguiqin"));//匹配查询
 //        dto.getConditions().add(Restrict.in("age",new Integer[]{11,22,33}));//in查询
 //        dto.getConditions().add(Restrict.eq("group.name","项目组"));//连接查询
         dto.getSorts().add("username=desc"); //正排序
@@ -69,16 +70,15 @@ public class QueryTest {
 
     @Test
     public void findBySql() throws SerException {
-       String sql = "select  a.username,a.password," +
+        String sql = "select  a.username,a.password," +
                 " b.address from user a " +
                 "left join user_detail b on a.id = b.user_id";
-        String[] fields = new String[]{"username","password","address"};
-        List<User> users =  userAPI.findBySql(sql,User.class,fields);
-        for(User info:users){
+        String[] fields = new String[]{"username", "password", "address"};
+        List<User> users = userAPI.findBySql(sql, User.class, fields);
+        for (User info : users) {
             System.out.println(info.getId());
         }
     }
-
 
 
     /**

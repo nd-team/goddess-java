@@ -7,6 +7,8 @@ import com.bjike.goddess.user.session.validcorrect.Subject;
 import com.bjike.goddess.user.session.validcorrect.UserSession;
 
 /**
+ * 用户工具类
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-20 10:33]
  * @Description: []

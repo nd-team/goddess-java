@@ -5,14 +5,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 邮件发送工具
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-29 17:47]
- * @Description: [邮件发送工具]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class EmailUtil {
     private static Logger CONSOLE = LoggerFactory.getLogger(EmailUtil.class);
+
     public static void SendMail(Email em) throws Exception {
         if (StringUtils.isBlank(em.getContent()) ||
                 (null == em.getReceiver() && em.getReceiver().size() == 0)

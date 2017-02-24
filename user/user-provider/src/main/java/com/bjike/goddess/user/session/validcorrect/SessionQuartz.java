@@ -9,18 +9,29 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
+ * 用户登陆session保存
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 用户登陆session保存]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SessionQuartz  {
+public class SessionQuartz {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(SessionQuartz.class);
-    private final static int INVALID_TIME = 60*24;//session key失效时间 1天
-    private final static int START = 0;//设置执行开始时间
-    private final static int INTERVAL = 3000;//设置间隔执行时间 单位/毫秒
+    /**
+     * session key失效时间 1天
+     */
+    private final static int INVALID_TIME = 60 * 24;
+    /**
+     * 设置执行开始时间
+     */
+    private final static int START = 0;
+    /**
+     * 设置间隔执行时间 单位/毫秒
+     */
+    private final static int INTERVAL = 3000;
     private Map<String, Subject> sessions;
 
     public SessionQuartz(Map<String, Subject> sessions) {
@@ -34,7 +45,7 @@ public class SessionQuartz  {
             @Override
             public void run() {
                 for (Map.Entry<String, Subject> entry : sessions.entrySet()) {
-                    if ( entry.getValue().getAccessTime().plusMinutes(INVALID_TIME).isBefore(LocalDateTime.now())) {
+                    if (entry.getValue().getAccessTime().plusMinutes(INVALID_TIME).isBefore(LocalDateTime.now())) {
                         CONSOLE.info("remove token:" + entry.getKey());
                         sessions.remove(entry.getKey());
                     }

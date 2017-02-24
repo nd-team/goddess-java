@@ -1,9 +1,11 @@
 package com.bjike.goddess.user.utils;
 
 /**
+ * ip地址转换工具
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-27 17:02]
- * @Description: [ip地址转换工具]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -29,9 +31,9 @@ public class IpUtil {
         sb.append(".");
         sb.append(String.valueOf((longIp & 0x00FFFFFF) >>> 16));
         sb.append(".");
-        sb.append(String.valueOf((longIp&0x0000FFFF)>>>8));
+        sb.append(String.valueOf((longIp & 0x0000FFFF) >>> 8));
         sb.append(".");
-        sb.append(String.valueOf(longIp&0x000000FF));
+        sb.append(String.valueOf(longIp & 0x000000FF));
         return sb.toString();
     }
 

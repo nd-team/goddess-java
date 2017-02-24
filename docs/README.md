@@ -103,26 +103,45 @@
 
 ## 注释规则:
  准确的描述类、方法、类属性、局部变量、常量的作用，简单明了，避免冗长却解释不清
+  - **settings.gradle**  模板配置
+        file - setting - 输入 template 搜索 - 进入 file and code template -
+        选择File Header 粘贴一下代码
+     /**
+      * @Author: [liguiqin]
+      * @Date: [${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}]
+      * @Description: [ ]
+      * @Version: [1.0.0]
+      * @Copy: [com.bjike]
+      */
 
     
     1：类注释
     /**
+    *用户实体
+    *
     * @Author: [liguiqin]
     * @Date: [2016-11-23 15:47]
-    * @Description: [用户实体]
+    * @Description: []
     * @Version: [1.0.0]
     * @Copy: [com.bjike.goddess]
     */
     public class User(){
     
         2：类属性注释：
-        private String username; //登录用户名
+        /**
+        *登录用户名
+        */
+        private String username; 
     
+         /**
+          *登录手机(注册验证手机)
+          */
+        private String phone;
     
-        private String phone;//登录手机(注册验证手机)
-    
-    
-        private String email;//登录邮箱
+        /**
+         *登录邮箱
+          */
+        private String email;
     
         3：类方法注释：
         /**

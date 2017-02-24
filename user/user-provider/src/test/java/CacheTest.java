@@ -17,9 +17,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 用户业务测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户业务测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -34,7 +36,7 @@ public class CacheTest {
     private List<Cache> caches = new ArrayList<>();
 
     @Before
-    public void allCaches(){
+    public void allCaches() {
         Collection<String> cacheNames = cacheManager.getCacheNames();
         for (String name : cacheNames) {
             Cache cache = cacheManager.getCache(name);
@@ -56,9 +58,10 @@ public class CacheTest {
 //        assert (user2 != user3);
 
     }
+
     @Test
     public void allCache() throws SerException {
-        for(Cache cache : caches){
+        for (Cache cache : caches) {
             System.out.println(cache.getNativeCache());
         }
 

@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
+ * 配置项扫描
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 15:47]
- * @Description: [配置项扫描]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -22,6 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-public class AppRoot{
+public class AppRoot {
 
 }

@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 验证码管理会话
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-28 09:28]
- * @Description: [验证码管理会话]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -46,9 +48,9 @@ public class AuthCodeSession {
      */
     public static void put(String account, AuthCode authCode) {
         if (StringUtils.isNotBlank(account)) {
-            if(AUTH_CODE_SESSIONS.containsKey(account)){
+            if (AUTH_CODE_SESSIONS.containsKey(account)) {
                 AUTH_CODE_SESSIONS.get(account).setCode(authCode.getCode());
-            }else {
+            } else {
                 AUTH_CODE_SESSIONS.put(account, authCode);
             }
         } else {

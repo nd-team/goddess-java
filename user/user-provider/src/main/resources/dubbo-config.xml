@@ -16,9 +16,8 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.UserDetailAPI" />
-
+	<!--以下业配置为消费者(user-consumer)所依赖的需注入的,凡是消费者远程注入的业务接口,都必须在此配置声明
+	另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 	<dubbo:service interface="com.bjike.goddess.user.service.RoleAPI" ref="roleSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserDetailAPI" ref="userDetailSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.DepartmentAPI" ref="departmentSer"/>
@@ -28,5 +27,10 @@
 	<dubbo:service interface="com.bjike.goddess.user.service.UserRegisterAPI" ref="userRegisterSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserAuthCodeAPI" ref="userAuthCodeSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserFindPwdAPI" ref="userFindPwdSer"/>
+
+	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+	否则不需要配置-->
+	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.UserDetailAPI" />
 
 </beans>

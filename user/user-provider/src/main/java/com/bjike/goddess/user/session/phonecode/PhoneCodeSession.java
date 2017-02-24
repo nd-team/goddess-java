@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 手机验证码管理会话
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-28 09:28]
- * @Description: [手机验证码管理会话]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -36,7 +38,7 @@ public class PhoneCodeSession {
      */
     public static PhoneCode get(String phone) {
         if (StringUtils.isNotBlank(phone)) {
-            return  PHONE_CODE_SESSIONS.get(phone);
+            return PHONE_CODE_SESSIONS.get(phone);
         } else {
             throw ACCOUNT_NOT_NULL;
         }
@@ -49,9 +51,9 @@ public class PhoneCodeSession {
      */
     public static void put(String phone, PhoneCode phoneCode) {
         if (StringUtils.isNotBlank(phone)) {
-            if(PHONE_CODE_SESSIONS.containsKey(phone)){
+            if (PHONE_CODE_SESSIONS.containsKey(phone)) {
                 PHONE_CODE_SESSIONS.get(phone).setCode(phoneCode.getCode());
-            }else {
+            } else {
                 PHONE_CODE_SESSIONS.put(phone, phoneCode);
             }
 

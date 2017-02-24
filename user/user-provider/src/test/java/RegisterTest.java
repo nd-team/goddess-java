@@ -8,9 +8,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import user_common_code.AppConfig;
 
 /**
+ * 用户注册业务测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户注册业务测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

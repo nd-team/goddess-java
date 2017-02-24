@@ -15,9 +15,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * 用户登录日志测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-28 15:37]
- * @Description: [用户登录日志测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

@@ -3,17 +3,26 @@ package com.bjike.goddess.user.session.phonecode;
 import java.time.LocalDateTime;
 
 
-/**
+/**手机验证码定时失效辅助工具实体
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: 手机验证码定时失效辅助工具实体]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class PhoneCode {
-    private LocalDateTime createTime = LocalDateTime.now(); //创建时间
-    private Integer invalidTime; //设置独立的失效时间(分钟)
-    private String code; //验证码
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime = LocalDateTime.now();
+    /**
+     * 设置独立的失效时间(分钟)
+     */
+    private Integer invalidTime;
+    /**
+     * 验证码
+     */
+    private String code;
 
     public LocalDateTime getCreateTime() {
         return createTime;

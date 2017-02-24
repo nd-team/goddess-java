@@ -6,9 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.UUID;
 
 /**
+ * token生成工具
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: token生成工具]
+ * @Description: ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -20,18 +22,20 @@ public final class TokenUtil {
     private static final int TIME_INDEX = 2;
     private static final String POINT = ".";
 
-    private TokenUtil(){}
+    private TokenUtil() {
+    }
 
     /**
      * 根据IP地址与用户名生成token令牌
-     * @param ip 地扯
+     *
+     * @param ip       地扯
      * @param username 用户名
      * @return token令牌(ip反转.uuid后.用户名哈希.生成时间)
      */
-    public static String create(String ip,String username){
+    public static String create(String ip, String username) {
         long lip = IpUtil.ipToLong(ip);
         String uuid = UUID.randomUUID().toString();
-        StringBuffer token = new StringBuffer(uuid.replace("-",""));
+        StringBuffer token = new StringBuffer(uuid.replace("-", ""));
         token.append(POINT);
         token.append(String.valueOf(lip));
         token.append(POINT);
@@ -40,18 +44,18 @@ public final class TokenUtil {
     }
 
     public static boolean verify(String token) {
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return false;
         }
         String[] tokens = token.split("\\.");
         boolean valid = true;
-        if(tokens.length!=TOKEN_LEN){
+        if (tokens.length != TOKEN_LEN) {
             valid = false;
-        }else if(tokens[UUID_INDEX].length()!=UUID_SIZE){//uuid 长度
+        } else if (tokens[UUID_INDEX].length() != UUID_SIZE) {//uuid 长度
             valid = false;
-        }else if(tokens[TIME_INDEX].length()!=TIME_SIZE){//时间长度
+        } else if (tokens[TIME_INDEX].length() != TIME_SIZE) {//时间长度
             valid = false;
-        }else{
+        } else {
             valid = true;
         }
         return valid;

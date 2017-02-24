@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 邮件生成类
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-30 09:35]
- * @Description: [邮件生成类]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

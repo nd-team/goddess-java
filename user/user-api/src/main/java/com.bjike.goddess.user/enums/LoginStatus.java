@@ -8,6 +8,12 @@ package com.bjike.goddess.user.enums;
  * @Copy: [com.bjike]
  */
 public enum LoginStatus {
-    LOGIN, //登陆中，
-    LOGINOUT,;//退出登录
+    /**
+     * 登陆中
+     */
+    LOGIN,
+    /**
+     * 退出登录
+     */
+    LOGINOUT,;
 }

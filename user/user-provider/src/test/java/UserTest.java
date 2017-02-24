@@ -13,9 +13,11 @@ import user_common_code.AppConfig;
 import java.util.List;
 
 /**
+ * 用户业务测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [用户业务测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

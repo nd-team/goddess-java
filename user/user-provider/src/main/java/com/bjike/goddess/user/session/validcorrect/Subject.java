@@ -10,13 +10,25 @@ import java.time.LocalDateTime;
  * @Date: [2017-01-07 10:20]
  * @Description: []
  * @Version: [1.0.0]
- * @Copy: [org.ndshop]
+ * @Copy: [com.bjike]
  */
 public class Subject {
-    private User user ;//登录用户
-    private boolean remember; //是否记住我
+    /**
+     * 登录用户
+     */
+    private User user ;
+    /**
+     * 是否记住我
+     */
+    private boolean remember;
     private String ip;
-    private LoginType loginType; //已登录类型
+    /**
+     * 已登录类型
+     */
+    private LoginType loginType;
+    /**
+     * 上次连接时间
+     */
     private LocalDateTime accessTime;
 
     public User getUser() {

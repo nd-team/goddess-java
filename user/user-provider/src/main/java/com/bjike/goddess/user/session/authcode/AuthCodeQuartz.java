@@ -10,17 +10,28 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 验证码定时器
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-25 17:41]
- * @Description: [验证码定时器]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class AuthCodeQuartz {
     private static final Logger CONSOLE = LoggerFactory.getLogger(AuthCodeQuartz.class);
-    private final static int INVALID_TIME = 3;//session key失效时间 3分钟
-    private final static int START = 0;//设置执行开始时间
-    private final static int INTERVAL = 5000;//设置间隔执行时间 单位/毫秒
+    /**
+     * session key失效时间 3分钟
+     */
+    private final static int INVALID_TIME = 3;
+    /**
+     * 设置执行开始时间
+     */
+    private final static int START = 0;
+    /**
+     * 设置间隔执行时间 单位/毫秒
+     */
+    private final static int INTERVAL = 5000;
     private static Map<String, AuthCode> authCodeSession = new ConcurrentHashMap<>(0);
 
     public AuthCodeQuartz(Map<String, AuthCode> authCodeSession) {
@@ -44,7 +55,7 @@ public class AuthCodeQuartz {
 
     }
 
-    public static  Map<String, AuthCode> session() {
+    public static Map<String, AuthCode> session() {
         return authCodeSession;
     }
 

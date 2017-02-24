@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 部门业务接口
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 15:47]
- * @Description: [部门业务接口]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

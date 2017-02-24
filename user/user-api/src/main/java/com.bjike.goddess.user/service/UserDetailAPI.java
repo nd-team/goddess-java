@@ -7,15 +7,17 @@ import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.sto.UserDetailSTO;
 
 /**
+ * 部门业务接口
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-28 15:47]
- * @Description: [部门业务接口]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public interface UserDetailAPI extends SerAPI<UserDetail, UserDetailDTO> {
 
-    default UserDetailSTO add()throws SerException{
+    default UserDetailSTO add() throws SerException {
         return null;
     }
 }

@@ -4,9 +4,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
+ * session 定时检测测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-01 11:42]
- * @Description: [session 定时检测测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

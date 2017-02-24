@@ -3,27 +3,65 @@ package com.bjike.goddess.user.utils.email;
 import java.util.*;
 
 /**
+ * 邮件发送工具实体
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-29 17:47]
- * @Description: [邮件发送工具实体]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class Email {
-    private String username;//登录服务器用户名
-    private String password;//登录服务器密码
-    private String host;//邮箱服务器
-    private String sender;//发送人
-    private String senderName;//发送人名称（默认）
-    private String subject;//发送主题
-    private String content;//发送内容
-    private List<String> receiver = new ArrayList<>(0);//接收人
-    private Map<String, String> imgMap =null;//发送图片地址
-    private List<String> appendixPath = null;//发送附件地址
-    private List<String> cc_address =null;//抄送人人
-    private List<String> bcc_address = null;//密送人
+    /**
+     * 登录服务器用户名
+     */
+    private String username;
+    /**
+     * 登录服务器密码
+     */
+    private String password;
+    /**
+     * 邮箱服务器
+     */
+    private String host;
+    /**
+     * 发送人
+     */
+    private String sender;
+    /**
+     * 发送人名称（默认）
+     */
+    private String senderName;
+    /**
+     * 发送主题
+     */
+    private String subject;
+    /**
+     * 发送内容
+     */
+    private String content;
+    /**
+     * 接收人
+     */
+    private List<String> receiver = new ArrayList<>(0);
+    /**
+     * 发送图片地址
+     */
+    private Map<String, String> imgMap = null;
+    /**
+     * 发送附件地址
+     */
+    private List<String> appendixPath = null;
+    /**
+     * 抄送人人
+     */
+    private List<String> cc_address = null;
+    /**
+     * 密送人
+     */
+    private List<String> bcc_address = null;
 
-    private Email(){
+    private Email() {
 
     }
 

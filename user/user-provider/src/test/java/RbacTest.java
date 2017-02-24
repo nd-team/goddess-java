@@ -15,9 +15,11 @@ import java.util.Set;
 
 
 /**
+ * 权限认证业务测试
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [权限认证业务测试]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
