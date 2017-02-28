@@ -41,7 +41,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
 
 
     @Override
-    public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb){
+    public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List<Predicate> preList = null;
 
         try {
@@ -74,7 +74,12 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
             for (Condition model : conditions) {
                 Boolean isOrPre = false; //是否为or查询
                 Predicate predicate = null;
-                Class clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
+                Class clazz = null;
+                if (null != model.getValue()) {
+                    clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
+                } else {
+                    clazz = String.class;
+                }
                 String field = model.getField(); //字段
 
                 RestrictionType type = model.getRestrict();
@@ -245,21 +250,21 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
         List<String> _sorts = dto.getSorts();
         if (_sorts != null && _sorts.size() > 0) {
             String field;
-            String order=null;
+            String order = null;
             for (String sorts : _sorts) {
                 String[] _sort = sorts.split("=");
-                if( _sort.length>1){
-                    order= _sort[1];
+                if (_sort.length > 1) {
+                    order = _sort[1];
                 }
                 field = _sort[0];
                 Sort.Direction dct = null;
-                if (null!=order && order.equalsIgnoreCase("asc")) {
+                if (null != order && order.equalsIgnoreCase("asc")) {
                     dct = Sort.Direction.ASC;
                 } else {
                     dct = Sort.Direction.DESC;
                 }
                 if (null == sort) {
-                    sort = new Sort(dct,field);
+                    sort = new Sort(dct, field);
                 } else {
                     sort = sort.and(new Sort(dct, field));
                 }

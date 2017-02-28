@@ -1,10 +1,12 @@
 package com.bjike.goddess.user.service;
 
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.ext.UserLoginDTO;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.validcorrect.Subject;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -33,6 +36,9 @@ public class UserLoginSer implements UserLoginAPI {
 
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private UserLoginLogAPI userLoginLogAPI;
+
 
 
     @Override
@@ -60,6 +66,13 @@ public class UserLoginSer implements UserLoginAPI {
                     ValidErrSession.remove(account); //清除密码输错会话
                     AuthCodeSession.remove(account);//清除验证码
                     //记录登录日志
+                    UserLoginLog loginLog = new UserLoginLog();
+                    loginLog.setUser(user);
+                    loginLog.setLoginIp(dto.getIp());
+                    loginLog.setLoginTime(LocalDateTime.now());
+                    loginLog.setLoginType(dto.getLoginType());
+                    loginLog.setLoginAddress("not has address");
+                    userLoginLogAPI.saveLoginLog(loginLog);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
@@ -69,6 +82,7 @@ public class UserLoginSer implements UserLoginAPI {
         }
         return token;
     }
+
 
     /**
      * 验证登陆密码

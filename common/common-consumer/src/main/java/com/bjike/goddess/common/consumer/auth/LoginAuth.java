@@ -3,9 +3,11 @@ package com.bjike.goddess.common.consumer.auth;
 import java.lang.annotation.*;
 
 /**
+ * 登录安全认证
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-15 09:59]
- * @Description: [登录安全认证]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

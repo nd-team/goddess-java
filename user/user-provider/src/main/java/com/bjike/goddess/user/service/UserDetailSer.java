@@ -6,13 +6,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.DepartmentDTO;
-import com.bjike.goddess.user.dto.GroupDTO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserDetailDTO;
+import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.Department;
-import com.bjike.goddess.user.entity.Group;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
+import com.bjike.goddess.user.service.rbac.GroupAPI;
 import com.bjike.goddess.user.sto.UserDetailSTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -59,6 +60,6 @@ public class UserDetailSer extends ServiceImpl<UserDetail, UserDetailDTO> implem
         Group group = groupAPI.findOne(groupDTO);
         userDetail.setGroup(group);
         super.save(userDetail);
-        return BeanTransform.copyProperties(userDetail, UserDetailSTO.class);
+        return BeanTransform.copyProperties(userDetail,UserDetailSTO.class);
     }
 }

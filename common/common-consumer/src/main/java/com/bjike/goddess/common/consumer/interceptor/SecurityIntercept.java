@@ -19,9 +19,11 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 /**
+ * 登录安全拦截(仅检测是否有携带token,用token获取用户的时候再进行token有无效判定)
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 14:34]
- * @Description: [登录安全拦截]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
@@ -33,23 +35,23 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = handlerToken(request);
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-                if(StringUtils.isNotBlank(token)){
-                    return  true;
-                }else {
-                    handlerNotHasLogin(response);
-                    return  false;
-                }
+            if (StringUtils.isNotBlank(token)) {
+                return true;
+            } else {
+                handlerNotHasLogin(response);
+                return false;
+            }
         }
 
         final Method method = ((HandlerMethod) handler).getMethod();
         final Class<?> clazz = method.getDeclaringClass();
         //该类或者方法上是否有登录安全认证注解
         if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
-            if(StringUtils.isNotBlank(token)){
-                return  true;
-            }else {
+            if (StringUtils.isNotBlank(token)) {
+                return true;
+            } else {
                 handlerNotHasLogin(response);
-                return  false;
+                return false;
             }
         }
         return true;
@@ -57,14 +59,15 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
 
     /**
      * 处理用户token
+     *
      * @param request
      * @return
      */
-    private String handlerToken(HttpServletRequest request){
+    private String handlerToken(HttpServletRequest request) {
         Object token = request.getParameter("userToken");
-        if(null!=token){
+        if (null != token) {
             RpcContext.getContext().setAttachment("userToken", String.valueOf(token));
-            LOGGER.info("token:"+token);
+            LOGGER.info("token:" + token);
             return String.valueOf(token);
         }
         return null;
@@ -72,23 +75,24 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
 
     /**
      * 未登录处理
+     *
      * @param response
      * @throws IOException
      */
     private void handlerNotHasLogin(HttpServletResponse response) throws IOException {
-            response.setContentType("text/html; charset=UTF-8"); //转码
-            PrintWriter out = response.getWriter();
-            out.flush();
-            response.setStatus(200);
-            ActResult result = new ActResult();
-            result.setMsg("请先登录，再进行操作！");
-            result.setCode(403);
-            out.println(JSON.toJSONString(result));
+        response.setContentType("text/html; charset=UTF-8"); //转码
+        PrintWriter out = response.getWriter();
+        out.flush();
+        response.setStatus(200);
+        ActResult result = new ActResult();
+        result.setMsg("请先登录，再进行操作！");
+        result.setCode(403);
+        out.println(JSON.toJSONString(result));
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
-       //调用完UserFilter才会调用此方法
+        //调用完UserFilter才会调用此方法
     }
 
     @Override

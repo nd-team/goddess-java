@@ -18,7 +18,10 @@
 
 	<!--以下业配置为消费者(user-consumer)所依赖的需注入的,凡是消费者远程注入的业务接口,都必须在此配置声明
 	另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-	<dubbo:service interface="com.bjike.goddess.user.service.RoleAPI" ref="roleSer"/>
+	<dubbo:service interface="com.bjike.goddess.user.service.rbac.RoleAPI" ref="roleSer"/>
+	<dubbo:service interface="com.bjike.goddess.user.service.rbac.GroupAPI" ref="groupSer"/>
+	<dubbo:service interface="com.bjike.goddess.user.service.rbac.PermissionAPI" ref="permissionSer"/>
+
 	<dubbo:service interface="com.bjike.goddess.user.service.UserDetailAPI" ref="userDetailSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.DepartmentAPI" ref="departmentSer"/>
 	<dubbo:service interface="com.bjike.goddess.user.service.UserAPI" ref="userSer"/>
@@ -31,6 +34,11 @@
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
 	<dubbo:reference interface="com.bjike.goddess.user.service.UserDetailAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.UserRoleAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.GroupUserAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.GroupRoleAPI" />
+	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.RolePermissionAPI" />
 
 </beans>

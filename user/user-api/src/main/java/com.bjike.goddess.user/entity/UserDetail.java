@@ -2,6 +2,7 @@ package com.bjike.goddess.user.entity;
 
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.enums.SexType;
 import com.bjike.goddess.user.enums.UserType;
 import org.hibernate.validator.constraints.Range;

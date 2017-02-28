@@ -1,5 +1,9 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.entity.*;
+import com.bjike.goddess.user.entity.rbac.Group;
+import com.bjike.goddess.user.entity.rbac.Permission;
+import com.bjike.goddess.user.entity.rbac.Role;
+import com.bjike.goddess.user.entity.rbac.UserRole;
 import com.bjike.goddess.user.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

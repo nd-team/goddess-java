@@ -27,8 +27,14 @@ public class UserAct {
     @Autowired
     private UserAPI userAPI;
 
+    /**
+     * 手机号码是否存在
+     * @param phone 手机号码
+     * @return
+     * @throws ActException
+     */
     @GetMapping("existPhone/{phone}")
-    public ActResult existPhone(@PathVariable String phone, UserDTO dto) throws ActException {
+    public ActResult existPhone(@PathVariable String phone) throws ActException {
         try {
             Boolean result = (null != userAPI.findByPhone(phone));
             return ActResult.initialize(result);
@@ -37,6 +43,12 @@ public class UserAct {
         }
     }
 
+    /**
+     * 用户名是否存在
+     * @param username 用户名
+     * @return
+     * @throws ActException
+     */
     @GetMapping("existUsername/{username}")
     public ActResult existUsername(@PathVariable String username) throws ActException {
 

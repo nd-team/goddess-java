@@ -83,7 +83,7 @@ public class BeanTransform {
      * @param excludes 过滤属性
      * @return
      */
-    public static <TARGET> TARGET copyProperties(Object source, Class target, String... excludes) {
+    public static <TARGET,SOURCE> TARGET copyProperties(SOURCE source, Class target, String... excludes) {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();
@@ -105,7 +105,7 @@ public class BeanTransform {
      * @param <TARGET> 目标对象
      * @return
      */
-    public static <TARGET> TARGET copyProperties(Object source, Class target) {
+    public static <TARGET,SOURCE> TARGET copyProperties(SOURCE source, Class target) {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();

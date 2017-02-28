@@ -45,7 +45,7 @@ public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketA
 		ticketDTO.getConditions().add(new Condition("position", position, RestrictionType.EQ));
 		Ticket ticket = super.findOne(ticketDTO);
 		if (null != ticket) {
-			super.remove(ticket);
+			super.delete(ticket);
 			System.out.println("购票事务回滚成功.");
 		} else {
 			System.out.println("购票事务回滚失败.");

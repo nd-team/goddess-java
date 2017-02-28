@@ -21,6 +21,9 @@ public class Subject {
      * 是否记住我
      */
     private boolean remember;
+    /**
+     * 登录ip
+     */
     private String ip;
     /**
      * 已登录类型

@@ -18,6 +18,14 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface UserLoginLogAPI extends SerAPI<UserLoginLog, UserLoginLogDTO> {
+    /**
+     * 保存登录日志
+     * @param loginLog
+     * @throws SerException
+     */
+    default void saveLoginLog(UserLoginLog loginLog) throws SerException{
+
+    };
 
     /**
      * 获取用户登录日志，默认前5条（最多保存也是5条）

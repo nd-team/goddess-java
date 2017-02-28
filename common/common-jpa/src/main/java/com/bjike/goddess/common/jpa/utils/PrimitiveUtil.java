@@ -33,6 +33,7 @@ PrimitiveUtil {
     };
 
     public static Class switchType(Object value) {
+
         Class clazz = null;
         String typeName = value.getClass().getSimpleName();
         Boolean array = false;

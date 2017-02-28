@@ -17,6 +17,12 @@ import com.bjike.goddess.user.session.validcorrect.UserSession;
  */
 public class UserUtil {
 
+    /**
+     * 获取当前登录用户
+     *
+     * @return
+     * @throws SerException
+     */
     public static User currentUser() throws SerException {
         Object token = RpcContext.getContext().getAttachment("userToken");
         if (null != token) {
@@ -24,10 +30,37 @@ public class UserUtil {
             if (null != subject) {
                 return subject.getUser();
             }
+            throw new SerException("登录已过期!");
         }
-        throw new SerException("登录已过期");
+        throw new SerException("用户未登录!");
     }
 
+    /**
+     * 通过userToken获取当前登录用户
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    public static User currentUser(Object userToken) throws SerException {
+        if (null == userToken) {
+            throw new SerException("用户未登录!");
+        } else {
+            Subject subject = UserSession.get(userToken.toString());
+            if (null != subject) {
+                return subject.getUser();
+            }
+            throw new SerException("登录已过期!");
+        }
+
+    }
+
+    /**
+     * 用户是否已登录
+     *
+     * @return
+     * @throws SerException
+     */
     public static Boolean isLogin() throws SerException {
         Object token = RpcContext.getContext().getAttachment("userToken");
         if (null != token) {

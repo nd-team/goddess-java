@@ -32,7 +32,7 @@ public class LoginAct {
     /**
      * 登录
      *
-     * @param dto
+     * @param dto 登录用户传输数据对象
      * @param request
      * @return
      */

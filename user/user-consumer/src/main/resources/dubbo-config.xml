@@ -13,8 +13,8 @@
 	<dubbo:application name="${dubbo.application.name}" />
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
+
 	<!--以下配置为控制器注入的业务接口,所有控制器用到的业务接口都需在此配置,该配置跟提供者应该是对应的-->
-	<dubbo:reference id="roleSer" interface="com.bjike.goddess.user.service.RoleAPI" />
 	<dubbo:reference id="userDetailSer" interface="com.bjike.goddess.user.service.UserDetailAPI" />
 	<dubbo:reference id="departmentSer" interface="com.bjike.goddess.user.service.DepartmentAPI" />
 	<dubbo:reference id="userAuthCodeSer" interface="com.bjike.goddess.user.service.UserAuthCodeAPI" />
@@ -23,5 +23,10 @@
 	<dubbo:reference id="userLoginLogSer" interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
 	<dubbo:reference id="userRegisterSer" interface="com.bjike.goddess.user.service.UserRegisterAPI" />
 	<dubbo:reference id="userFindPwdSer" interface="com.bjike.goddess.user.service.UserFindPwdAPI" />
+
+	<dubbo:reference id="groupSer" interface="com.bjike.goddess.user.service.rbac.GroupAPI" />
+	<dubbo:reference id="roleSer" interface="com.bjike.goddess.user.service.rbac.RoleAPI" />
+	<dubbo:reference id="permissionSer" interface="com.bjike.goddess.user.service.rbac.PermissionAPI" />
+
 
 </beans>

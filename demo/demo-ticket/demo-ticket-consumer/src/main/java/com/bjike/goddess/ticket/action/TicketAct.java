@@ -17,7 +17,15 @@ public class TicketAct {
 	
 	@Autowired
 	private TicketAPI ticketAPI;
-	
+
+	/**
+	 *
+	 * @param account 账号
+	 * @param password 密码
+	 * @param position 座位号
+	 * @return
+	 * @throws ActException
+	 */
     @GetMapping("buy")
     public String buy(String account,String password,String position) throws ActException {
     	try {

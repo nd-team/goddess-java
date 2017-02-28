@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class FindPwdAct {
 
     @Autowired
-    private UserFindPwdAPI userFindPwdSer;
+    private UserFindPwdAPI userFindPwdAPI;
 
     /**
      * 验证码验证
      *
-     * @param account
-     * @param authCode
+     * @param account 账号(email,username,phone)
+     * @param authCode 验证码
      * @return 简单的用户信息
      * @throws ActException
      */
     @GetMapping("verifyAccount")
     public ActResult verifyAccount(String account, String authCode) throws ActException {
         try {
-            UserSimpleSTO simpleSTO = userFindPwdSer.verifyAccount(account, authCode);
+            UserSimpleSTO simpleSTO = userFindPwdAPI.verifyAccount(account, authCode);
             return ActResult.initialize(simpleSTO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -49,7 +49,7 @@ public class FindPwdAct {
     /**
      * 通过昵称发送手机验证码到手机
      *
-     * @param nickName
+     * @param nickName 昵称
      * @return
      * @throws ActException
      */
@@ -57,7 +57,7 @@ public class FindPwdAct {
     @GetMapping("sendCode/{nickName}")
     public ActResult sendCode(@PathVariable String nickName) throws ActException {
         try {
-            Boolean result = userFindPwdSer.sendCodeByNickname(nickName);
+            Boolean result = userFindPwdAPI.sendCodeByNickname(nickName);
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

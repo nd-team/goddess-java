@@ -26,6 +26,13 @@ public class RegisterAct {
     @Autowired
     private UserRegisterAPI registerSer;
 
+    /**
+     *
+     * @param dto 注册用户传输对象
+     * @param result
+     * @return
+     * @throws ActException
+     */
     @PostMapping("register")
     public ActResult register(@Valid UserRegisterDTO dto, BindingResult result) throws ActException {
         try {
@@ -40,7 +47,7 @@ public class RegisterAct {
     /**
      * 验证手机号码并发生验证码到手机
      *
-     * @param phone
+     * @param phone 手机号码
      * @return
      * @throws ActException
      */
