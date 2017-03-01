@@ -29,6 +29,10 @@ public class Permission extends BaseEntity {
      */
     private String description;
     /**
+     * 请求资源
+     */
+    private String resource;
+    /**
      * 状态
      */
     private Status status = Status.THAW;
@@ -36,12 +40,11 @@ public class Permission extends BaseEntity {
      * 创建时间
      */
     @Column(columnDefinition = "dateTime")//指定数据库类型
-    private LocalDateTime createTime;
+    private LocalDateTime createTime = LocalDateTime.now();
     /**
      * 父节点
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-
     @JoinColumn(name = "parent_id")
     private Permission parent;
 
@@ -84,5 +87,13 @@ public class Permission extends BaseEntity {
 
     public void setParent(Permission parent) {
         this.parent = parent;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 }

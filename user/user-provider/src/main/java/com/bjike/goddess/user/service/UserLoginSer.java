@@ -42,18 +42,7 @@ public class UserLoginSer implements UserLoginAPI {
 
 
     @Override
-    public Boolean verify(String token) throws SerException {
-        if (TokenUtil.verify(token)) {//token 可能来自不同ip，不同客户端
-            User user = UserSession.getUser(token);
-            return true;
-
-        }
-        return false;
-    }
-
-    @Override
     public String login(UserLoginDTO dto) throws SerException {
-
         String token = null;
         String account = dto.getAccount();
         dto.setIp("192.168.0.1");
@@ -65,6 +54,13 @@ public class UserLoginSer implements UserLoginAPI {
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
                     ValidErrSession.remove(account); //清除密码输错会话
                     AuthCodeSession.remove(account);//清除验证码
+                    //存入session
+                    Subject subject = new Subject();
+                    subject.setAccessTime(LocalDateTime.now());
+                    subject.setIp(dto.getIp());
+                    subject.setLoginType(dto.getLoginType());
+                    subject.setUser(user);
+                    UserSession.put(token,subject);
                     //记录登录日志
                     UserLoginLog loginLog = new UserLoginLog();
                     loginLog.setUser(user);
@@ -120,6 +116,12 @@ public class UserLoginSer implements UserLoginAPI {
 
     }
 
+    /**
+     * 创建 token 令牌
+     * @param persistUser
+     * @param dto
+     * @return
+     */
     private String createToken(User persistUser, UserLoginDTO dto) {
         String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
         Subject subject = new Subject();

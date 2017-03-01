@@ -5,8 +5,11 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
+import com.bjike.goddess.user.sto.DepartmentSTO;
+import com.bjike.goddess.user.sto.rbac.GroupSTO;
 import com.bjike.goddess.user.sto.rbac.GroupTreeSTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -59,5 +62,10 @@ public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
             throw new SerException("该节点存在子节点,请先删除子节点!");
         }
         super.delete(id);
+    }
+
+    @Override
+    public GroupSTO saveGroup(Group group) throws SerException {
+        return BeanTransform.copyProperties(super.save(group),DepartmentSTO.class);
     }
 }

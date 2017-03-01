@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @CacheConfig(cacheNames = "TicketSerCache")
 @Service("ticketSer")
 public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketAPI {
+
+
 
 	@Override
 	@Transactional(rollbackFor = SerException.class)

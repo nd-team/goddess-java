@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
+import com.bjike.goddess.user.sto.rbac.GroupSTO;
 import com.bjike.goddess.user.sto.rbac.GroupTreeSTO;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public interface GroupAPI extends SerAPI<Group, GroupDTO> {
      * @return
      */
     default List<GroupTreeSTO> treeData(String id)throws SerException{
+        return null;
+    }
+
+    default GroupSTO saveGroup (Group group) throws SerException{
         return null;
     }
 

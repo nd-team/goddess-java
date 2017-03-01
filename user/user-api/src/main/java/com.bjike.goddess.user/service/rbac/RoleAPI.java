@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.rbac.RoleDTO;
 import com.bjike.goddess.user.entity.rbac.Role;
+import com.bjike.goddess.user.sto.rbac.RoleSTO;
 import com.bjike.goddess.user.sto.rbac.RoleTreeSTO;
 
 import java.util.List;
@@ -25,6 +26,11 @@ public interface RoleAPI extends SerAPI<Role, RoleDTO> {
      */
     default List<RoleTreeSTO> treeData(String id)throws SerException{
         return null;
+    }
+
+
+    default RoleSTO saveRole(Role role) throws SerException {
+       return  null;
     }
 
 }

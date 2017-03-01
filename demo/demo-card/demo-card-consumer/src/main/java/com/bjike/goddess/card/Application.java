@@ -29,7 +29,7 @@ public class Application{
 
 
 	public static void main(String[] args) throws IOException {
-		initJapi();
+//		initJapi();
 		SpringApplication.run(Application.class,args);
 		System.in.read();
 	}

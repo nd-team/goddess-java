@@ -109,6 +109,16 @@ public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
     }
 
     /**
+     * 保存对象
+     *
+     * @param entity
+     * @throws SerException
+     */
+    default void saveEntity(BE entity) throws SerException {
+    }
+
+
+    /**
      * 保存对象列表
      *
      * @param entities

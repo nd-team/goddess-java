@@ -2,9 +2,11 @@ package com.bjike.goddess.common.consumer.interceptor;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.session.Session;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,27 +37,32 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = handlerToken(request);
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            if (StringUtils.isNotBlank(token)) {
-                return true;
-            } else {
-                handlerNotHasLogin(response);
-                return false;
-            }
+            return validateLogin(token, response);
         }
 
         final Method method = ((HandlerMethod) handler).getMethod();
         final Class<?> clazz = method.getDeclaringClass();
         //该类或者方法上是否有登录安全认证注解
         if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
-            if (StringUtils.isNotBlank(token)) {
-                return true;
-            } else {
-                handlerNotHasLogin(response);
-                return false;
-            }
+            return validateLogin(token, response);
         }
         return true;
     }
+
+    private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
+        if (StringUtils.isNotBlank(token)) {
+            if (Session.CURRENT_USER.contains(token)) {
+                return true;
+            } else {
+                handlerNotHasLogin(response, "登录已失效，请登录再进行操作！");
+                return false;
+            }
+        } else {
+            handlerNotHasLogin(response, "请先登录，再进行操作！");
+            return false;
+        }
+    }
+
 
     /**
      * 处理用户token
@@ -79,13 +86,13 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
      * @param response
      * @throws IOException
      */
-    private void handlerNotHasLogin(HttpServletResponse response) throws IOException {
+    private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
         response.setContentType("text/html; charset=UTF-8"); //转码
         PrintWriter out = response.getWriter();
         out.flush();
         response.setStatus(200);
         ActResult result = new ActResult();
-        result.setMsg("请先登录，再进行操作！");
+        result.setMsg(msg);
         result.setCode(403);
         out.println(JSON.toJSONString(result));
     }

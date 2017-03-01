@@ -16,6 +16,11 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:reference validation="true" id="ticketAPI" interface="com.bjike.goddess.ticket.service.TicketAPI" />
+	<!--自身模块接口引入-->
 	<dubbo:service interface="com.bjike.goddess.card.service.CardAPI" ref="cardSer" />
+
+	<!--引入用户(或其他)模块业务接口-->
+	<dubbo:reference validation="true" id="ticketAPI" interface="com.bjike.goddess.ticket.service.TicketAPI" />
+	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.service.UserAPI" />
+
 </beans>

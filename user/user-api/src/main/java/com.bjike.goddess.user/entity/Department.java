@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class Department extends BaseEntity {
      * 创建时间
      */
     @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime;
+    private LocalDateTime createTime = LocalDateTime.now();
 
     /**
      * 上级部门
@@ -38,6 +39,11 @@ public class Department extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Department parent;
+
+    /**
+     * 状态
+     */
+    private Status status = Status.THAW;
 
     public String getName() {
         return name;
@@ -69,5 +75,13 @@ public class Department extends BaseEntity {
 
     public void setParent(Department parent) {
         this.parent = parent;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

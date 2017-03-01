@@ -17,14 +17,6 @@ import com.bjike.goddess.user.entity.User;
  */
 public interface UserLoginAPI extends SerAPI<User, UserDTO> {
 
-    /**
-     * 验证是否已登陆
-     *
-     * @param token 登录用户唯一令牌
-     * @return
-     * @throws SerException
-     */
-    Boolean verify(String token) throws SerException;
 
     /**
      * 登录

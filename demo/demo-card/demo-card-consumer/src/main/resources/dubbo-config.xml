@@ -15,4 +15,5 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<dubbo:reference validation="true" id="ticketAPI" interface="com.bjike.goddess.card.service.CardAPI"/>
+	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.service.UserAPI"/>
 </beans>

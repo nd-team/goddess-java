@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class BeanTransform {
      * @param target  目标类
      * @return List<TARGET> 目标实体列表
      */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(List<SOURCE> sources, Class target) {
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target) {
         List<TARGET> targets = null;
         if (null != sources && sources.size() > 0) {
             targets = new ArrayList<>(sources.size());
@@ -58,7 +59,7 @@ public class BeanTransform {
      * @param excludes 过滤字段
      * @return List<TARGET>目标对象列表
      */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(List<SOURCE> sources, Class target, String... excludes) {
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes) {
         List<TARGET> targets = null;
         if (null != sources && sources.size() > 0) {
             targets = new ArrayList<>(sources.size());

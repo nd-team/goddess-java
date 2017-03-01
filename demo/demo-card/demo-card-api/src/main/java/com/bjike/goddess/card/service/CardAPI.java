@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.service.SerAPI;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 购票接口
@@ -16,13 +17,22 @@ import javax.validation.Valid;
  */
 public interface CardAPI extends SerAPI<Card, CardDTO> {
 
+
+    default String finUserNickname(String nickname) throws SerException {
+        return null;
+    }
+
     /**
      * 初始化一张卡
      *
      * @param account  帐户
      * @param password 密码
      */
-    void initCard(String account, String password) throws SerException;
+    default void initCard(String account, String password) throws SerException {
+
+    }
+
+    ;
 
     /**
      * 自己人购票
@@ -34,7 +44,9 @@ public interface CardAPI extends SerAPI<Card, CardDTO> {
      * @return 购票信息
      * @throws SerException 常规业务异常
      */
-    String buyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException;
+    default String buyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException {
+        return null;
+    }
 
     /**
      * 第三方购票
@@ -45,7 +57,11 @@ public interface CardAPI extends SerAPI<Card, CardDTO> {
      * @param position  座位号
      * @throws SerException 常规业务异常
      */
-    void threeBuyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException;
+    default void threeBuyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException {
 
-    Card query(@Valid Card card) throws QueryException;
+    }
+
+    default Card query(@Valid Card card) throws QueryException {
+        return null;
+    }
 }

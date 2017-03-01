@@ -5,8 +5,10 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.rbac.RoleDTO;
 import com.bjike.goddess.user.entity.rbac.Role;
+import com.bjike.goddess.user.sto.rbac.RoleSTO;
 import com.bjike.goddess.user.sto.rbac.RoleTreeSTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -48,5 +50,21 @@ public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
             roleTreeSTOS.add(sto);
         });
         return roleTreeSTOS;
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        RoleDTO dto = new RoleDTO();
+        dto.getConditions().add(Restrict.eq("parent.id", id));
+        List<Role> children = findByCis(dto);
+        if (null != children && children.size() > 0) {
+            throw new SerException("该记录存在子节点数据,请先删除子节点!");
+        }
+        super.delete(id);
+    }
+
+    @Override
+    public RoleSTO saveRole(Role role) throws SerException {
+        return BeanTransform.copyProperties(super.save(role), RoleSTO.class);
     }
 }

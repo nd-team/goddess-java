@@ -1,8 +1,11 @@
 package com.bjike.goddess.user.service.rbac;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.dto.rbac.PermissionDTO;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.sto.rbac.PermissionSTO;
 import com.bjike.goddess.user.sto.rbac.PermissionTreeSTO;
@@ -53,5 +56,7 @@ public interface PermissionAPI extends SerAPI<Permission, PermissionDTO> {
         return null;
     }
 
-
+    default PermissionDTO savePermission(Permission permission) throws SerException {
+        return null;
+    }
 }

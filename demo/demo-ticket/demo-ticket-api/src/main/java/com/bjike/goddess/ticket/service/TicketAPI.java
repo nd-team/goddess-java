@@ -6,12 +6,15 @@ import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
+import java.util.List;
+
 /**
  * 购票接口
  * @author huanghuanlai
  *
  */
 public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
+
 	
 	/**
 	 * 购票
@@ -22,7 +25,9 @@ public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
 	 * @return 购票信息
 	 * @throws SerException 常规业务异常
 	 */
-	String buyTicket(TransactionContext txContext,String account,String password,String position) throws SerException;
+	default String buyTicket(TransactionContext txContext,String account,String password,String position) throws SerException{
+		return null;
+	}
 
 	/**
 	 * 退票
@@ -32,5 +37,7 @@ public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
 	 * @param position 座位号
 	 * @throws SerException 常规业务异常
 	 */
-	void outTicket(TransactionContext txContext,String account,String password,String position) throws SerException;
+	default void outTicket(TransactionContext txContext,String account,String password,String position) throws SerException{
+
+	}
 }

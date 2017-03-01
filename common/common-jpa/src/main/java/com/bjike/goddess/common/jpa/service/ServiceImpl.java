@@ -35,12 +35,12 @@ import java.util.stream.Stream;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD>,Serializable {
+public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD>, Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
     public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     protected JpaRep<BE, BD> rep;
     @Autowired
     protected EntityManager entityManager;
@@ -68,7 +68,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     public BE findOne(BD dto) throws SerException {
         JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
         List<BE> list = rep.findAll(JpaSpecification);
-        if(null != list && list.size()>1){
+        if (null != list && list.size() > 1) {
             throw new SerException("find two and more data!");
         }
         return null != list && list.size() > 0 ? list.get(0) : null;
@@ -88,22 +88,22 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         if (null != dto.getSorts() && dto.getSorts().size() > 0) { //排序
             Sort sort = null;
             String field;
-            String order=null;
+            String order = null;
             List<String> _sorts = dto.getSorts();
             for (String sorts : _sorts) {
                 String[] _sort = sorts.split("=");
                 field = _sort[0];
-                if( _sort.length>1){
-                     order= _sort[1];
+                if (_sort.length > 1) {
+                    order = _sort[1];
                 }
                 Sort.Direction dct;
-                if (null!=order && order.equalsIgnoreCase("asc")) {
+                if (null != order && order.equalsIgnoreCase("asc")) {
                     dct = Sort.Direction.ASC;
                 } else {
                     dct = Sort.Direction.DESC;
                 }
                 if (null == sort) {
-                    sort = new Sort(dct,field);
+                    sort = new Sort(dct, field);
                 } else {
                     sort = sort.and(new Sort(dct, field));
                 }
@@ -128,9 +128,16 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Transactional
     @Override
+    public void saveEntity(BE entity) throws SerException {
+        rep.save(entity);
+    }
+
+    @Transactional
+    @Override
     public void save(Collection<BE> entities) throws SerException {
         rep.save(entities);
     }
+
 
     @Transactional
     @Override
@@ -195,7 +202,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     }
 
     @Override
-    public List<BE> findBySql(String sql, Class clazz, String[] fields)throws SerException {
+    public List<BE> findBySql(String sql, Class clazz, String[] fields) throws SerException {
         Query nativeQuery = entityManager.createNativeQuery(sql);
         List<Object> resultList = nativeQuery.getResultList();
         List<BE> list = new ArrayList<>(resultList.size());
@@ -219,7 +226,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         }
                     }
                 }
-                list.add((BE)obj);
+                list.add((BE) obj);
             }
         } catch (Exception e) {
             e.printStackTrace();

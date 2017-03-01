@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.sto.BaseSTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentSTO extends BaseSTO {
+public class DepartmentTreeSTO extends BaseSTO {
     /**
      * 部门名
      */
@@ -20,6 +20,8 @@ public class DepartmentSTO extends BaseSTO {
      * 描述
      */
     private String description;
+
+    private  boolean parent ;
 
 
     public String getName() {
@@ -38,4 +40,11 @@ public class DepartmentSTO extends BaseSTO {
         this.description = description;
     }
 
+    public boolean isParent() {
+        return parent;
+    }
+
+    public void setParent(boolean parent) {
+        this.parent = parent;
+    }
 }

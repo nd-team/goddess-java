@@ -73,9 +73,7 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
                 permissions.add(rolePermission.getPermission());
             });
         }
-        List<Permission> permissions_list = new ArrayList<>();
-        permissions_list.addAll(permissions);
-        return BeanTransform.copyProperties(permissions_list, PermissionSTO.class);
+        return BeanTransform.copyProperties(permissions, PermissionSTO.class);
     }
 
     @Override
@@ -109,5 +107,21 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
         });
 
         return permissionTreeSTOS;
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        PermissionDTO dto = new PermissionDTO();
+        dto.getConditions().add(Restrict.eq("parent.id",id));
+        List<Permission> children = findByCis(dto);
+        if(null!=children && children.size()>0){
+            throw new SerException("该记录存在子节点数据,请先删除子节点!");
+        }
+        super.delete(id);
+    }
+
+    @Override
+    public PermissionDTO savePermission(Permission permission) throws SerException {
+        return BeanTransform.copyProperties(super.save(permission),PermissionSTO.class);
     }
 }

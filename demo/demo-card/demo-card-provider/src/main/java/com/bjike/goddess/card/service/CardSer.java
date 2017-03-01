@@ -8,6 +8,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.ticket.service.TicketAPI;
+import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.service.UserAPI;
+import com.bjike.goddess.user.sto.UserSTO;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +18,25 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CacheConfig(cacheNames = "CardSerCache")
 @Service("cardSer")
 public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
 
     @Autowired
     private TicketAPI ticketApi;
+
+    @Autowired
+    private UserAPI userAPI;
+
+    @Override
+    public String finUserNickname(String nickname)throws SerException {
+        //转换成业务传输数据传递,防止暴露且屏蔽没有必要的数据(直接返回User实体会出现实例化错误)
+        UserSTO userSTO = userAPI.findByNickname(nickname);
+        return userSTO.getNickname();
+    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
