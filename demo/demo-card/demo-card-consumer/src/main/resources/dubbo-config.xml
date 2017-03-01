@@ -13,7 +13,7 @@
 	<dubbo:application name="${dubbo.application.name}" />
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
-
+	<!--注册 用户(或其他)模块业务接口-->
 	<dubbo:reference validation="true" id="ticketAPI" interface="com.bjike.goddess.card.service.CardAPI"/>
 	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.service.UserAPI"/>
 </beans>
