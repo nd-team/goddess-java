@@ -1,6 +1,6 @@
-package com.bjike.goddess.user.sto;
+package com.bjike.goddess.user.bo;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
  * 用户业务传送对象
@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.sto.BaseSTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserSTO extends BaseSTO {
+public class UserBO extends BaseBO {
     /**
      * 用户名
      */

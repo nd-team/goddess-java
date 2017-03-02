@@ -1,6 +1,6 @@
-package com.bjike.goddess.user.sto.rbac;
+package com.bjike.goddess.user.bo.rbac;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 
 /**
@@ -10,7 +10,7 @@ import com.bjike.goddess.common.api.sto.BaseSTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupTreeSTO extends BaseSTO {
+public class GroupTreeBO extends BaseBO {
     private String name;
     private boolean parent;
 

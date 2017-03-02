@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.entity.UserDetail;
-import com.bjike.goddess.user.sto.UserDetailSTO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 
 /**
  * 部门业务接口
@@ -17,7 +17,7 @@ import com.bjike.goddess.user.sto.UserDetailSTO;
  */
 public interface UserDetailAPI extends SerAPI<UserDetail, UserDetailDTO> {
 
-    default UserDetailSTO add() throws SerException {
+    default UserDetailBO add() throws SerException {
         return null;
     }
 }

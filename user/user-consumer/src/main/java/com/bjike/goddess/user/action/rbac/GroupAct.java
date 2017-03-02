@@ -23,6 +23,13 @@ public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
 
+    /**
+     * 异步获取组树结构,逐层加载,参考ztree
+     *
+     * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
+     * @return 树结构数据
+     * @throws ActException
+     */
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
@@ -32,6 +39,13 @@ public class GroupAct {
         }
     }
 
+    /**
+     * 添加组
+     *
+     * @param group 新的组信息
+     * @return 持久化的组信息
+     * @throws ActException
+     */
     @PostMapping("add")
     public ActResult add(Group group) throws ActException {
         try {
@@ -41,7 +55,14 @@ public class GroupAct {
         }
     }
 
-    @PostMapping("delete/{id}")
+    /**
+     * 通过id删除组(如该节点存在子节点,先删除子节点)
+     *
+     * @param id 组唯一标示
+     * @return
+     * @throws ActException
+     */
+    @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
             groupAPI.delete(id);

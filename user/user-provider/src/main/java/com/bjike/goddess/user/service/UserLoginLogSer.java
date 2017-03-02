@@ -6,10 +6,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.session.validcorrect.UserSession;
-import com.bjike.goddess.user.sto.UserLoginLogSTO;
+import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.utils.UserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,12 +66,12 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
     }
 
     @Override
-    public List<UserLoginLogSTO> findLogByCurrentUser() throws SerException {
+    public List<UserLoginLogBO> findLogByCurrentUser() throws SerException {
         String userId = UserUtil.currentUser().getId();
         UserLoginLogDTO dto = new UserLoginLogDTO();
         dto.getConditions().add(Restrict.eq("user.id", userId));
         dto.getSorts().add("loginTime=DESC");
-        return BeanTransform.copyProperties(super.findByCis(dto), UserLoginLogSTO.class);
+        return BeanTransform.copyProperties(super.findByCis(dto), UserLoginLogBO.class);
     }
 
     @Override

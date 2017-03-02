@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginAct {
 
     @Autowired
-    private UserLoginAPI userLoginSer;
+    private UserLoginAPI userLoginAPI;
 
     /**
      * 登录
@@ -45,7 +45,7 @@ public class LoginAct {
                 type = LoginType.MOBILE;
             }
             dto.setLoginType(type);
-            String token = userLoginSer.login(dto);
+            String token = userLoginAPI.login(dto);
             return ActResult.initialize(token);
 
         } catch (SerException e) {

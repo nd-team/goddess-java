@@ -24,6 +24,13 @@ public class PermissionAct {
     @Autowired
     private PermissionAPI permissionAPI;
 
+    /**
+     * 异步获取权限资源树结构,逐层加载,参考ztree
+     *
+     * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
+     * @return 树结构数据
+     * @throws ActException
+     */
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
@@ -33,6 +40,13 @@ public class PermissionAct {
         }
     }
 
+    /**
+     * 添加资源
+     *
+     * @param permission 新的资源信息
+     * @return 持久化的的资源信息
+     * @throws ActException
+     */
     @PostMapping("add")
     public ActResult add(Permission permission) throws ActException {
         try {
@@ -42,7 +56,14 @@ public class PermissionAct {
         }
     }
 
-    @PostMapping("delete/{id}")
+    /**
+     * 通过id删除权限资源(如该节点存在子节点,先删除子节点)
+     *
+     * @param id 权限资源唯一标示
+     * @return
+     * @throws ActException
+     */
+    @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
             permissionAPI.delete(id);

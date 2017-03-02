@@ -14,7 +14,7 @@ import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.service.rbac.GroupAPI;
-import com.bjike.goddess.user.sto.UserDetailSTO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class UserDetailSer extends ServiceImpl<UserDetail, UserDetailDTO> implem
 
     @Transactional
     @Override
-    public UserDetailSTO add() throws SerException {
+    public UserDetailBO add() throws SerException {
         UserDTO dto = new UserDTO();
         dto.getConditions().add(Restrict.eq("phone", "13457910241"));
         User user = userAPI.findOne(dto);
@@ -60,6 +60,6 @@ public class UserDetailSer extends ServiceImpl<UserDetail, UserDetailDTO> implem
         Group group = groupAPI.findOne(groupDTO);
         userDetail.setGroup(group);
         super.save(userDetail);
-        return BeanTransform.copyProperties(userDetail,UserDetailSTO.class);
+        return BeanTransform.copyProperties(userDetail,UserDetailBO.class);
     }
 }

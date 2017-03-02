@@ -1,13 +1,13 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.session.phonecode.PhoneCodeSession;
-import com.bjike.goddess.user.sto.UserSTO;
-import com.bjike.goddess.user.sto.UserSimpleSTO;
+import com.bjike.goddess.user.bo.UserSimpleBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class UserFindPwdSer implements UserFindPwdAPI {
 
 
     @Override
-    public UserSimpleSTO verifyAccount(String account, String authCode) throws SerException {
+    public UserSimpleBO verifyAccount(String account, String authCode) throws SerException {
         User user = userAPI.findByAccountNumber(account);
         if (null == user) {
             throw new SerException("用户不存在");
@@ -36,18 +36,18 @@ public class UserFindPwdSer implements UserFindPwdAPI {
         if (null == auth && !auth.getCode().equalsIgnoreCase(authCode)) {
             throw new SerException("验证码不正确");
         }
-        UserSimpleSTO simpleSTO = new UserSimpleSTO();
-        simpleSTO.setNickname(user.getNickname());
+        UserSimpleBO simpleBO = new UserSimpleBO();
+        simpleBO.setNickname(user.getNickname());
         String phone = user.getPhone();
         phone = phone.substring(0, 3) + "*****" + phone.substring(8, phone.length());
-        simpleSTO.setPhone(phone);
-        return simpleSTO;
+        simpleBO.setPhone(phone);
+        return simpleBO;
     }
 
     @Override
     public Boolean sendCodeByNickname(String nickname) throws SerException {
         User user = null;
-        UserSTO sto = userAPI.findByNickname(nickname);
+        UserBO bo = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode phoneCode = new PhoneCode();
             phoneCode.setCode("123456");
@@ -61,7 +61,7 @@ public class UserFindPwdSer implements UserFindPwdAPI {
     @Override
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
         User user = null;
-        UserSTO sto = userAPI.findByNickname(nickname);
+        UserBO bo = userAPI.findByNickname(nickname);
         if (null != user) {
             PhoneCode code = PhoneCodeSession.get(user.getPhone());
             if (null == code && !phoneCode.equalsIgnoreCase(code.getCode())) {

@@ -2,7 +2,6 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.entity.User;
@@ -10,7 +9,7 @@ import com.bjike.goddess.user.session.authcode.AuthCode;
 import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.phonecode.PhoneCode;
 import com.bjike.goddess.user.session.phonecode.PhoneCodeSession;
-import com.bjike.goddess.user.sto.UserSTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -43,8 +40,8 @@ public class UserRegisterSer implements UserRegisterAPI {
     @Cacheable
     @Override
     public Boolean existUsername(String username) throws SerException {
-        UserSTO sto = userAPI.findByUsername(username);
-        return null != sto;
+        UserBO bo = userAPI.findByUsername(username);
+        return null != bo;
 
     }
 
@@ -128,11 +125,11 @@ public class UserRegisterSer implements UserRegisterAPI {
 //        User user2 = new User();
 //        user2.setNickname("222");
 //        user2.setId("1");
-//        UserSTO sto = new UserSTO();
+//        UserBO bo = new UserBO();
 //        List<User> users = new ArrayList<>();
 //        users.add(user);
 //        users.add(user2);
-//        UserSTO userSTO2 = BeanTransform.copyProperties(user,UserSTO.class);
+//        UserBO userSTO2 = BeanTransform.copyProperties(user,UserBO.class);
 //        System.out.println(userSTO2);
 //    }
 

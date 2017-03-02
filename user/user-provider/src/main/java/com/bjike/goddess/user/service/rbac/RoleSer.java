@@ -8,8 +8,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.rbac.RoleDTO;
 import com.bjike.goddess.user.entity.rbac.Role;
-import com.bjike.goddess.user.sto.rbac.RoleSTO;
-import com.bjike.goddess.user.sto.rbac.RoleTreeSTO;
+import com.bjike.goddess.user.bo.rbac.RoleBO;
+import com.bjike.goddess.user.bo.rbac.RoleTreeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ import java.util.List;
 @Service("roleSer")
 public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
     @Override
-    public List<RoleTreeSTO> treeData(String id) throws SerException {
+    public List<RoleTreeBO> treeData(String id) throws SerException {
         RoleDTO dto = new RoleDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -41,15 +41,15 @@ public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Role> roles = super.findByCis(dto);
-        List<RoleTreeSTO> roleTreeSTOS = new ArrayList<>(roles.size());
+        List<RoleTreeBO> roleTreeBOS = new ArrayList<>(roles.size());
         roles.stream().forEach(role -> {
-            RoleTreeSTO sto = new RoleTreeSTO();
-            sto.setName(role.getName());
-            sto.setId(role.getId());
-            sto.setParent(null == role.getParent());
-            roleTreeSTOS.add(sto);
+            RoleTreeBO bo = new RoleTreeBO();
+            bo.setName(role.getName());
+            bo.setId(role.getId());
+            bo.setParent(null == role.getParent());
+            roleTreeBOS.add(bo);
         });
-        return roleTreeSTOS;
+        return roleTreeBOS;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
     }
 
     @Override
-    public RoleSTO saveRole(Role role) throws SerException {
-        return BeanTransform.copyProperties(super.save(role), RoleSTO.class);
+    public RoleBO saveRole(Role role) throws SerException {
+        return BeanTransform.copyProperties(super.save(role), RoleBO.class);
     }
 }

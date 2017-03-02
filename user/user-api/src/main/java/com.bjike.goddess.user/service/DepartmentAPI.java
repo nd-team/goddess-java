@@ -4,8 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
-import com.bjike.goddess.user.sto.DepartmentSTO;
-import com.bjike.goddess.user.sto.DepartmentTreeSTO;
+import com.bjike.goddess.user.bo.DepartmentBO;
+import com.bjike.goddess.user.bo.DepartmentTreeBO;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface DepartmentAPI extends SerAPI<Department, DepartmentDTO> {
-    default List<DepartmentTreeSTO> treeData(String id) throws SerException {
+    default List<DepartmentTreeBO> treeData(String id) throws SerException {
         return null;
     }
 
-    default DepartmentSTO saveDepartment(Department entity) throws SerException{
+    default DepartmentBO saveDepartment(Department entity) throws SerException{
         return null;
     }
 

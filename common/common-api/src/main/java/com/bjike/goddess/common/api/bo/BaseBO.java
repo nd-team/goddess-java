@@ -1,15 +1,17 @@
-package com.bjike.goddess.common.api.sto;
+package com.bjike.goddess.common.api.bo;
 
 import java.io.Serializable;
 
 /**
+ * business object
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-18 15:59]
  * @Description: [业务转换传输基础对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BaseSTO implements Serializable{
+public class BaseBO implements Serializable {
     private String id;
 
     public String getId() {

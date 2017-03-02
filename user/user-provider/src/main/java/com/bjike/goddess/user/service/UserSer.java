@@ -6,10 +6,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.sto.UserSTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -41,35 +41,35 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
 
     @Cacheable
     @Override
-    public List<UserSTO> list() throws SerException {
+    public List<UserBO> list() throws SerException {
         List<User> users = super.findAll();
-        List<UserSTO> userSTOS = BeanTransform.copyProperties(users, UserSTO.class);
-        return userSTOS;
+        List<UserBO> userBOS = BeanTransform.copyProperties(users, UserBO.class);
+        return userBOS;
     }
 
     @Override
     @Transactional
-    public UserSTO add(User entity) throws SerException {
-        return BeanTransform.copyProperties(entity, UserSTO.class);
+    public UserBO add(User entity) throws SerException {
+        return BeanTransform.copyProperties(entity, UserBO.class);
     }
 
     @Override
-    public UserSTO findByUsername(String username) throws SerException {
+    public UserBO findByUsername(String username) throws SerException {
         User user = userRep.findByUsername(username);
-        return BeanTransform.copyProperties(user, UserSTO.class);
+        return BeanTransform.copyProperties(user, UserBO.class);
     }
 
     @Cacheable
     @Override
-    public UserSTO findByNickname(String nickname) throws SerException {
+    public UserBO findByNickname(String nickname) throws SerException {
         User user = userRep.findByNickname(nickname);
-        return BeanTransform.copyProperties(user, UserSTO.class);
+        return BeanTransform.copyProperties(user, UserBO.class);
 
     }
 
     @Cacheable
     @Override
-    public UserSTO findByPhone(String phone) throws SerException {
+    public UserBO findByPhone(String phone) throws SerException {
         User user = null;
         if (StringUtils.isNotBlank(phone)) {
             boolean isPhone = Validator.isPhone(phone);
@@ -82,7 +82,7 @@ public class UserSer extends ServiceImpl<User, UserDTO> implements UserAPI {
             throw new SerException("手机号不能为空");
         }
 
-        return BeanTransform.copyProperties(user, UserSTO.class);
+        return BeanTransform.copyProperties(user, UserBO.class);
 
     }
 

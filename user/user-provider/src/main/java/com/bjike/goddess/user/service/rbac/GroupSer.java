@@ -8,9 +8,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
-import com.bjike.goddess.user.sto.DepartmentSTO;
-import com.bjike.goddess.user.sto.rbac.GroupSTO;
-import com.bjike.goddess.user.sto.rbac.GroupTreeSTO;
+import com.bjike.goddess.user.bo.DepartmentBO;
+import com.bjike.goddess.user.bo.rbac.GroupBO;
+import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ import java.util.List;
 @Service("groupSer")
 public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
     @Override
-    public List<GroupTreeSTO> treeData(String id) throws SerException {
+    public List<GroupTreeBO> treeData(String id) throws SerException {
         GroupDTO dto = new GroupDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -42,15 +42,15 @@ public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Group> groups = super.findByCis(dto);
-        List<GroupTreeSTO> groupTreeSTOS = new ArrayList<>(groups.size());
+        List<GroupTreeBO> groupTreeBOS = new ArrayList<>(groups.size());
         groups.stream().forEach(group -> {
-            GroupTreeSTO sto = new GroupTreeSTO();
-            sto.setName(group.getName());
-            sto.setId(group.getId());
-            sto.setParent(null == group.getParent());
-            groupTreeSTOS.add(sto);
+            GroupTreeBO bo = new GroupTreeBO();
+            bo.setName(group.getName());
+            bo.setId(group.getId());
+            bo.setParent(null == group.getParent());
+            groupTreeBOS.add(bo);
         });
-        return groupTreeSTOS;
+        return groupTreeBOS;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
     }
 
     @Override
-    public GroupSTO saveGroup(Group group) throws SerException {
-        return BeanTransform.copyProperties(super.save(group),DepartmentSTO.class);
+    public GroupBO saveGroup(Group group) throws SerException {
+        return BeanTransform.copyProperties(super.save(group),DepartmentBO.class);
     }
 }

@@ -2,8 +2,7 @@ package com.bjike.goddess.user.service;
 
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.sto.UserSimpleSTO;
+import com.bjike.goddess.user.bo.UserSimpleBO;
 
 /**
  * 用户找回密码接口
@@ -25,7 +24,7 @@ public interface UserFindPwdAPI {
      * @return
      * @throws SerException
      */
-    UserSimpleSTO verifyAccount(String account, String authCode) throws SerException;
+    UserSimpleBO verifyAccount(String account, String authCode) throws SerException;
 
 
     /**

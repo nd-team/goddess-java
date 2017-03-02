@@ -1,6 +1,6 @@
-package com.bjike.goddess.user.sto;
+package com.bjike.goddess.user.bo;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.user.enums.LoginType;
 
 /**
@@ -12,7 +12,7 @@ import com.bjike.goddess.user.enums.LoginType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserLoginLogSTO extends BaseSTO {
+public class UserLoginLogBO extends BaseBO {
     /**
      * 登录时间
      */

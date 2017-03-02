@@ -1,19 +1,18 @@
-package com.bjike.goddess.user.sto;
+package com.bjike.goddess.user.vo;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.vo.BaseVO;
 import com.bjike.goddess.user.enums.SexType;
 import com.bjike.goddess.user.enums.UserType;
 
 /**
- * 用户详情业务数据传输
- *
  * @Author: [liguiqin]
- * @Date: [2017-02-23 14:49]
+ * @Date: [2017-03-02 09:17]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserDetailSTO extends BaseSTO {
+public class UserDetailVO  extends BaseVO{
+
 
     /**
      * 性别
@@ -35,14 +34,6 @@ public class UserDetailSTO extends BaseSTO {
      * 真实姓名
      */
     private String realName;
-    /**
-     * 出生年月
-     */
-    private String birthday;
-    /**
-     * 身份证
-     */
-    private String idCard;
 
     public SexType getSex() {
         return sex;
@@ -82,21 +73,5 @@ public class UserDetailSTO extends BaseSTO {
 
     public void setRealName(String realName) {
         this.realName = realName;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
     }
 }

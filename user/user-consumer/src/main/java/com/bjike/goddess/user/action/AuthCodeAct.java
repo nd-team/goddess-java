@@ -35,14 +35,14 @@ public class AuthCodeAct {
      * 显示验证码（登录是否需要验证码）
      *
      * @param account 账号(email,username,phone)
-     * @return 是否需要验证码
+     * @return true代表需要要验证,false代表不需要验证码
      * @throws SerException
      */
     @GetMapping("showAuthCode/{account}")
-    public ActResult showAuthCode(@PathVariable  String account) throws ActException {
+    public ActResult showAuthCode(@PathVariable String account) throws ActException {
         try {
             Boolean needCode = userAuthCodeSer.showAuthCode(account);
-            return  ActResult.initialize(needCode);
+            return ActResult.initialize(needCode);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -52,9 +52,9 @@ public class AuthCodeAct {
     /**
      * 生成验证码 （登录/找回密码/注册）
      *
-     * @param account 账号(email,username,phone)
+     * @param account  账号(email,username,phone)
      * @param response
-     * @return
+     * @return 验证码图片流
      * @throws SerException
      */
     @GetMapping("generateCode/{account}")

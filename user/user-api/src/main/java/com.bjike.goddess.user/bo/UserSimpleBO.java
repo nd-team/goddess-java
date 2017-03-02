@@ -1,6 +1,6 @@
-package com.bjike.goddess.user.sto;
+package com.bjike.goddess.user.bo;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
  * 简单的用户业务传送
@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.sto.BaseSTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserSimpleSTO extends BaseSTO {
+public class UserSimpleBO extends BaseBO {
     /**
      * 登录手机(注册验证手机)
      */

@@ -5,9 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.service.UserLoginLogAPI;
-import com.bjike.goddess.user.sto.UserLoginLogSTO;
+import com.bjike.goddess.user.bo.UserLoginLogBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,11 +31,16 @@ public class LoginLogAct {
     private UserLoginLogAPI userLoginLogAPI;
 
 
+    /**
+     * 根据获取用户的日志信息
+     * @return
+     * @throws ActException
+     */
     @LoginAuth
-    @GetMapping("logs")
-    public ActResult logs() throws ActException {
+    @GetMapping("{id}/logs")
+    public ActResult logs(@PathVariable String id) throws ActException {
         try {
-            List<UserLoginLogSTO> loginLogs = userLoginLogAPI.findLogByCurrentUser();
+            List<UserLoginLogBO> loginLogs = userLoginLogAPI.findLogByCurrentUser();
             return ActResult.initialize(loginLogs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

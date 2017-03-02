@@ -3,9 +3,8 @@ package com.bjike.goddess.user.action;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserFindPwdAPI;
-import com.bjike.goddess.user.sto.UserSimpleSTO;
+import com.bjike.goddess.user.bo.UserSimpleBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +38,8 @@ public class FindPwdAct {
     @GetMapping("verifyAccount")
     public ActResult verifyAccount(String account, String authCode) throws ActException {
         try {
-            UserSimpleSTO simpleSTO = userFindPwdAPI.verifyAccount(account, authCode);
-            return ActResult.initialize(simpleSTO);
+            UserSimpleBO simpleBO = userFindPwdAPI.verifyAccount(account, authCode);
+            return ActResult.initialize(simpleBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

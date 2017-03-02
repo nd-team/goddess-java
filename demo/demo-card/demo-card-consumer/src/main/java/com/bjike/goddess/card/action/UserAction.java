@@ -30,7 +30,7 @@ public class UserAction {
      * @return
      * @throws ActException
      */
-    @GetMapping("findByNickbame/{nickname}")
+    @GetMapping("nickname/{nickname}")
     public ActResult findUserNickname(@PathVariable String nickname) throws ActException {
         try {
             return ActResult.initialize(cardAPI.finUserNickname(nickname));
@@ -44,7 +44,7 @@ public class UserAction {
      * @return
      * @throws ActException
      */
-    @GetMapping("findByPhone/{phone}")
+    @GetMapping("phone/{phone}")
     public ActResult queryPhone(@PathVariable String phone) throws ActException {
         try {
             return ActResult.initialize(userAPI.findByPhone(phone));

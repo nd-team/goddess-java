@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * data transfer object
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
  * @Description: [基础数据传输，所有dto继承该类]

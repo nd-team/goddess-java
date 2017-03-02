@@ -8,8 +8,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
-import com.bjike.goddess.user.sto.DepartmentSTO;
-import com.bjike.goddess.user.sto.DepartmentTreeSTO;
+import com.bjike.goddess.user.bo.DepartmentBO;
+import com.bjike.goddess.user.bo.DepartmentTreeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implem
 
 
     @Override
-    public List<DepartmentTreeSTO> treeData(String id) throws SerException {
+    public List<DepartmentTreeBO> treeData(String id) throws SerException {
         DepartmentDTO dto = new DepartmentDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -43,15 +43,15 @@ public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implem
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Department> departments = super.findByCis(dto);
-        List<DepartmentTreeSTO> departmentTreeSTOS = new ArrayList<>(departments.size());
+        List<DepartmentTreeBO> departmentTreeBOS = new ArrayList<>(departments.size());
         departments.stream().forEach(permission -> {
-            DepartmentTreeSTO sto = new DepartmentTreeSTO();
-            sto.setName(permission.getName());
-            sto.setId(permission.getId());
-            sto.setParent(null == permission.getParent());
-            departmentTreeSTOS.add(sto);
+            DepartmentTreeBO bo = new DepartmentTreeBO();
+            bo.setName(permission.getName());
+            bo.setId(permission.getId());
+            bo.setParent(null == permission.getParent());
+            departmentTreeBOS.add(bo);
         });
-        return departmentTreeSTOS;
+        return departmentTreeBOS;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implem
     }
 
     @Override
-    public DepartmentSTO saveDepartment(Department entity) throws SerException {
-        return BeanTransform.copyProperties(super.save(entity),DepartmentSTO.class);
+    public DepartmentBO saveDepartment(Department entity) throws SerException {
+        return BeanTransform.copyProperties(super.save(entity),DepartmentBO.class);
     }
 }

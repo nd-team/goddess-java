@@ -1,6 +1,6 @@
-package com.bjike.goddess.user.sto.rbac;
+package com.bjike.goddess.user.bo.rbac;
 
-import com.bjike.goddess.common.api.sto.BaseSTO;
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
 /**
@@ -10,10 +10,10 @@ import com.bjike.goddess.common.api.type.Status;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupSTO extends BaseSTO{
+public class RoleBO extends BaseBO {
 
     /**
-     * 组名
+     * 角色名
      */
     private String name;
     /**

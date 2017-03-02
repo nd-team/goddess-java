@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.sto.UserSTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import java.util.List;
  */
 public interface UserAPI extends SerAPI<User, UserDTO> {
 
-    default List<UserSTO> list() throws SerException {
+    default List<UserBO> list() throws SerException {
         return null;
     }
 
-    default UserSTO add(User entity) throws SerException {
+    default UserBO add(User entity) throws SerException {
         return null;
     }
 
@@ -34,7 +34,7 @@ public interface UserAPI extends SerAPI<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default UserSTO findByUsername(String username) throws SerException {
+    default UserBO findByUsername(String username) throws SerException {
         return null;
     }
 
@@ -45,7 +45,7 @@ public interface UserAPI extends SerAPI<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default UserSTO findByNickname(String nickname) throws SerException {
+    default UserBO findByNickname(String nickname) throws SerException {
         return null;
     }
 
@@ -56,7 +56,7 @@ public interface UserAPI extends SerAPI<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default UserSTO findByPhone(String phone) throws SerException {
+    default UserBO findByPhone(String phone) throws SerException {
         return null;
     }
 

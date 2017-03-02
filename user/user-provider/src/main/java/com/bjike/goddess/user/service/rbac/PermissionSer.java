@@ -8,8 +8,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.dto.rbac.PermissionDTO;
 import com.bjike.goddess.user.entity.rbac.*;
-import com.bjike.goddess.user.sto.rbac.PermissionSTO;
-import com.bjike.goddess.user.sto.rbac.PermissionTreeSTO;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
+import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -42,7 +42,7 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
     private RolePermissionAPI rolePermissionAPI;
 
     @Override
-    public List<PermissionSTO> findByUserId(String userId) throws SerException {
+    public List<PermissionBO> findByUserId(String userId) throws SerException {
         //通过角色(用户角色,组角色)查询其拥有的权限
         Set<String> role_ids = new HashSet<>();
         List<UserRole> userRoles = userRoleAPI.findByUserId(userId);
@@ -73,21 +73,21 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
                 permissions.add(rolePermission.getPermission());
             });
         }
-        return BeanTransform.copyProperties(permissions, PermissionSTO.class);
+        return BeanTransform.copyProperties(permissions, PermissionBO.class);
     }
 
     @Override
-    public List<PermissionSTO> findByRoleId(String roleId) throws SerException {
+    public List<PermissionBO> findByRoleId(String roleId) throws SerException {
         List<RolePermission> rolePermissions = rolePermissionAPI.findByRoleIds(roleId);
         Set<Permission> permissions = new HashSet<>();
         rolePermissions.stream().forEach(rolePermission -> {
             permissions.add(rolePermission.getPermission());
         });
-        return BeanTransform.copyProperties(permissions, PermissionSTO.class);
+        return BeanTransform.copyProperties(permissions, PermissionBO.class);
     }
 
     @Override
-    public List<PermissionTreeSTO> treeData(String id) throws SerException {
+    public List<PermissionTreeBO> treeData(String id) throws SerException {
         PermissionDTO dto = new PermissionDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -97,16 +97,16 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Permission> permissions = super.findByCis(dto);
-        List<PermissionTreeSTO> permissionTreeSTOS = new ArrayList<>(permissions.size());
+        List<PermissionTreeBO> permissionTreeBOS = new ArrayList<>(permissions.size());
         permissions.stream().forEach(permission -> {
-            PermissionTreeSTO sto = new PermissionTreeSTO();
-            sto.setName(permission.getName());
-            sto.setId(permission.getId());
-            sto.setParent(null == permission.getParent());
-            permissionTreeSTOS.add(sto);
+            PermissionTreeBO bo = new PermissionTreeBO();
+            bo.setName(permission.getName());
+            bo.setId(permission.getId());
+            bo.setParent(null == permission.getParent());
+            permissionTreeBOS.add(bo);
         });
 
-        return permissionTreeSTOS;
+        return permissionTreeBOS;
     }
 
     @Override
@@ -122,6 +122,6 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
 
     @Override
     public PermissionDTO savePermission(Permission permission) throws SerException {
-        return BeanTransform.copyProperties(super.save(permission),PermissionSTO.class);
+        return BeanTransform.copyProperties(super.save(permission),PermissionBO.class);
     }
 }
