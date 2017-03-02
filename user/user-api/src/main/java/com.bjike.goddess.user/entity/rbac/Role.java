@@ -35,7 +35,7 @@ public class Role extends BaseEntity {
     /**
      * 创建时间
      */
-    @Column(columnDefinition = "dateTime")
+    @Column(columnDefinition = "dateTime",nullable = false)
     private LocalDateTime createTime  = LocalDateTime.now();
 
     /**

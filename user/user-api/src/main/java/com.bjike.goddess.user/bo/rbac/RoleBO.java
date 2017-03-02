@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
 /**
+ * 角色业务传输
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-01 11:38]
  * @Description: [ ]
@@ -23,7 +25,7 @@ public class RoleBO extends BaseBO {
     /**
      * 状态
      */
-    private Status status ;
+    private Status status;
     /**
      * 创建时间
      */

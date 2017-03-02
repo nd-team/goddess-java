@@ -3,11 +3,16 @@ package com.bjike.goddess.user.action.rbac;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.rbac.RoleBO;
 import com.bjike.goddess.user.entity.rbac.Role;
 import com.bjike.goddess.user.service.rbac.PermissionAPI;
 import com.bjike.goddess.user.service.rbac.RoleAPI;
+import com.bjike.goddess.user.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 角色操作
@@ -34,7 +39,8 @@ public class RoleAct {
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
-            return ActResult.initialize(roleAPI.treeData(id));
+            List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id),RoleVO.class);
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -43,14 +49,14 @@ public class RoleAct {
     /**
      * 添加角色
      *
-     * @param role 新的角色信息
+     * @param bo 新的角色信息
      * @return 持久化的角色信息
      * @throws ActException
      */
     @PostMapping("add")
-    public ActResult add(Role role) throws ActException {
+    public ActResult add(RoleBO bo) throws ActException {
         try {
-            return ActResult.initialize(roleAPI.saveRole(role));
+            return ActResult.initialize(roleAPI.saveByBO(bo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

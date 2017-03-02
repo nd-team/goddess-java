@@ -4,7 +4,7 @@ package com.bjike.goddess.user.bo.rbac;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 资源认证
+ * 资源认证业务传输
  *
  * @Author: [liguiqin]
  * @Date: [2017-02-28 10:12]

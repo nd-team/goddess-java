@@ -10,6 +10,7 @@ import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
+import com.bjike.goddess.user.vo.DepartmentVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,10 @@ public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implem
     }
 
     @Override
-    public DepartmentBO saveDepartment(Department entity) throws SerException {
-        return BeanTransform.copyProperties(super.save(entity),DepartmentBO.class);
+    public DepartmentBO saveByBO(DepartmentBO bo) throws SerException {
+        Department department = BeanTransform.copyProperties(bo, Department.class, true);
+        super.save(department);
+        bo.setId(department.getId());//复制id
+        return bo;
     }
 }

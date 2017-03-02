@@ -29,7 +29,7 @@ public interface GroupAPI extends SerAPI<Group, GroupDTO> {
         return null;
     }
 
-    default GroupBO saveGroup (Group group) throws SerException{
+    default GroupBO saveByBO (GroupBO bo) throws SerException{
         return null;
     }
 

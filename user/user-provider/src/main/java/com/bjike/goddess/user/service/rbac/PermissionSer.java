@@ -6,10 +6,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.dto.rbac.PermissionDTO;
-import com.bjike.goddess.user.entity.rbac.*;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
+import com.bjike.goddess.user.dto.rbac.PermissionDTO;
+import com.bjike.goddess.user.entity.rbac.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -112,16 +112,19 @@ public class PermissionSer extends ServiceImpl<Permission, PermissionDTO> implem
     @Override
     public void delete(String id) throws SerException {
         PermissionDTO dto = new PermissionDTO();
-        dto.getConditions().add(Restrict.eq("parent.id",id));
+        dto.getConditions().add(Restrict.eq("parent.id", id));
         List<Permission> children = findByCis(dto);
-        if(null!=children && children.size()>0){
+        if (null != children && children.size() > 0) {
             throw new SerException("该记录存在子节点数据,请先删除子节点!");
         }
         super.delete(id);
     }
 
     @Override
-    public PermissionDTO savePermission(Permission permission) throws SerException {
-        return BeanTransform.copyProperties(super.save(permission),PermissionBO.class);
+    public PermissionBO saveByBO(PermissionBO bo) throws SerException {
+        Permission permission = BeanTransform.copyProperties(bo, Permission.class, true);
+        super.save(permission);
+        bo.setId(permission.getId());//复制id
+        return bo;
     }
 }

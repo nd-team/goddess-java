@@ -3,10 +3,16 @@ package com.bjike.goddess.user.action;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.user.bo.DepartmentBO;
+import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.service.DepartmentAPI;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
+import com.bjike.goddess.user.vo.DepartmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -40,28 +46,29 @@ public class DepartmentAct {
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
-            List<DepartmentTreeBO> departments = departmentAPI.treeData(id);
-            return ActResult.initialize(departments);
+            List<DepartmentVO> vos = BeanTransform.copyProperties(departmentAPI.treeData(id), DepartmentVO.class);
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加部门
      *
-     * @param department 新的部门信息
+     * @param bo 部门bo信息
      * @return 持久化的部门信息
      * @throws ActException
      */
     @PostMapping("add")
-    public ActResult add(Department department) throws ActException {
+    public ActResult add(DepartmentBO bo) throws ActException {
         try {
-            department.setCreateTime(LocalDateTime.now());
-            return ActResult.initialize(departmentAPI.save(department));
+            return ActResult.initialize(departmentAPI.saveByBO(bo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 通过id删除部门(如该节点存在子节点,先删除子节点)
      *

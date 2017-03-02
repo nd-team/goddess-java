@@ -3,7 +3,7 @@ package com.bjike.goddess.user.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 部门业务传送对象
+ * 部门树业务传送对象
  *
  * @Author: [liguiqin]
  * @Date: [2017-01-18 15:25]

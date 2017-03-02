@@ -6,6 +6,7 @@ import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
+import com.bjike.goddess.user.vo.DepartmentVO;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface DepartmentAPI extends SerAPI<Department, DepartmentDTO> {
         return null;
     }
 
-    default DepartmentBO saveDepartment(Department entity) throws SerException{
+    default DepartmentBO saveByBO(DepartmentBO bo) throws SerException{
         return null;
     }
 

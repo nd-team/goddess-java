@@ -32,10 +32,10 @@ public class Group extends BaseEntity {
      * 状态
      */
     private Status status = Status.THAW;
-    @Column(columnDefinition = "dateTime")
     /**
      * 创建时间
      */
+    @Column(columnDefinition = "dateTime",nullable = false)
     private LocalDateTime createTime ;
 
     /**

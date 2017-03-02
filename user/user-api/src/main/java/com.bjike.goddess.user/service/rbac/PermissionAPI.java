@@ -52,7 +52,7 @@ public interface PermissionAPI extends SerAPI<Permission, PermissionDTO> {
         return null;
     }
 
-    default PermissionDTO savePermission(Permission permission) throws SerException {
+    default PermissionBO saveByBO(PermissionBO bo) throws SerException {
         return null;
     }
 }

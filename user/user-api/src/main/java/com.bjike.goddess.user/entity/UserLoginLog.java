@@ -23,7 +23,8 @@ public class UserLoginLog extends BaseEntity {
      * 登录时间
      */
     @OrderBy(value = "loginTime desc ")
-    private LocalDateTime loginTime = LocalDateTime.now();
+    @Column(columnDefinition = "dateTime",nullable = false)
+    private LocalDateTime loginTime ;
     /**
      * 登录地点
      */

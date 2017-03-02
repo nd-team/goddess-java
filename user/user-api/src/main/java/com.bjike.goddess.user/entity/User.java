@@ -58,7 +58,8 @@ public class User extends BaseEntity {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime = LocalDateTime.now();
+    @Column(columnDefinition = "dateTime",nullable = false)
+    private LocalDateTime createTime;
     /**
      * 用户状态
      */

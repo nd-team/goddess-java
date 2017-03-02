@@ -6,50 +6,32 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 /**
+ * 对象转换业务工具, 时间类型会相应转换成字符串类型, 请确保目标源包含同名字符串类型属性
+ * 因远程调用不允许出现(LocalDateTime,LocalDate,LocalTime)等类型,时间类型必须转换成字符串(默认)
+ * 同样的,保存实体的时候也不能直接出现时间类型,handlerDate参数为true时会把字符串转换成相应时间类型
+ *
  * @Author: [liguiqin]
  * @Date: [2017-01-24 15:47]
- * @Description: 对象转换业务工具, 时间类型会相应转换成字符串类型, 请确保目标源包含同名字符串类型属性]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public class BeanTransform {
+    private static final Type[] DATE_TYPES = new Type[]{LocalDateTime.class, LocalDate.class, LocalTime.class};
+
     private BeanTransform() {
+
     }
-
-
-    /**
-     * 复制列表对象属性
-     *
-     * @param sources 转换实体源列表
-     * @param target  目标类
-     * @return List<TARGET> 目标实体列表
-     */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target) {
-        List<TARGET> targets = null;
-        if (null != sources && sources.size() > 0) {
-            targets = new ArrayList<>(sources.size());
-            try {
-                for (SOURCE source : sources) {
-                    Object o_target = target.newInstance();
-                    copyProperties(source, o_target);
-                    targets.add((TARGET) o_target);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return targets;
-    }
-
 
     /**
      * 复制列表对象属性
@@ -60,35 +42,36 @@ public class BeanTransform {
      * @return List<TARGET>目标对象列表
      */
     public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes) {
-        List<TARGET> targets = null;
-        if (null != sources && sources.size() > 0) {
-            targets = new ArrayList<>(sources.size());
-            try {
-                for (SOURCE source : sources) {
-                    Object o_target = target.newInstance();
-                    copyProperties(source, o_target, excludes);
-                    targets.add((TARGET) o_target);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return targets;
+        return copyList(sources, target, false, excludes);
+
     }
 
     /**
+     * 复制列表对象属性
      *
-     * @param source 源对象
-     * @param target 目标类
+     * @param sources     转换对象源列表
+     * @param target      目标类
+     * @param excludes    过滤字段
+     * @param handlerDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @return List<TARGET>目标对象列表
+     */
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, boolean handlerDate, String... excludes) {
+        return copyList(sources, target, handlerDate, excludes);
+
+    }
+
+    /**
+     * @param source   源对象
+     * @param target   目标类
      * @param <TARGET> 目标对象
      * @param excludes 过滤属性
      * @return
      */
-    public static <TARGET,SOURCE> TARGET copyProperties(SOURCE source, Class target, String... excludes) {
+    public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, String... excludes) {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();
-                copyProperties(source, o_target,excludes);
+                copyProperties(source, o_target, excludes);
                 return (TARGET) o_target;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -98,44 +81,6 @@ public class BeanTransform {
 
     }
 
-
-    /**
-     *
-     * @param source 源对象
-     * @param target 目标类
-     * @param <TARGET> 目标对象
-     * @return
-     */
-    public static <TARGET,SOURCE> TARGET copyProperties(SOURCE source, Class target) {
-        if (null != source) {
-            try {
-                Object o_target = target.newInstance();
-                copyProperties(source, o_target);
-                return (TARGET) o_target;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-
-    }
-
-
-
-    /**
-     * 对象属性复制
-     *
-     * @param source 源对象
-     * @param target 目标对象
-     */
-    public static void copyProperties(Object source, Object target) {
-        try {
-            handleClazz(source, target);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 对象属性复制
@@ -146,7 +91,7 @@ public class BeanTransform {
      */
     public static void copyProperties(Object source, Object target, String... excludes) {
         try {
-            handleClazz(source, target, excludes);
+            handlerClazz(source, target, excludes);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +99,87 @@ public class BeanTransform {
     }
 
 
-    private static void handleClazz(Object source, Object target, String... excludes) throws Exception {
+    /**
+     * 该方法会判定包含合法日期的字符串并转换到相应属性
+     * 对象属性复制
+     * 是否处理字符串转换日期
+     *
+     * @param source      源对象
+     * @param target      目标对象
+     * @param handlerDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @param excludes    过滤字段
+     */
+    public static void copyProperties(Object source, Object target, boolean handlerDate, String... excludes) {
+        try {
+            handlerClazz(source, target, handlerDate, excludes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * @param source   源对象
+     * @param target   目标类
+     * @param <TARGET> 目标对象
+     * @param excludes 过滤属性
+     * @return
+     */
+    public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, boolean handlerDate, String... excludes) {
+        if (null != source) {
+            try {
+                Object o_target = target.newInstance();
+                copyProperties(source, o_target, handlerDate, excludes);
+                return (TARGET) o_target;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+
+    }
+
+
+    /**
+     * 复制列表对象属性
+     */
+    private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, Class target, boolean handlerDate, String... excludes) {
+        List<TARGET> targets = null;
+        if (null != sources && sources.size() > 0) {
+            targets = new ArrayList<>(sources.size());
+            try {
+                for (SOURCE source : sources) {
+                    Object o_target = target.newInstance();
+                    copyProperties(source, o_target, handlerDate, excludes);
+                    targets.add((TARGET) o_target);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return targets;
+    }
+
+
+    private static void handlerClazz(Object source, Object target, boolean handlerDate, String... excludes) throws Exception {
+        handlerCopyFields(source, target, handlerDate, excludes);
+    }
+
+    private static void handlerClazz(Object source, Object target, String... excludes) throws Exception {
+        handlerCopyFields(source, target, false, excludes);
+    }
+
+
+    /**
+     * 处理反射类及复制熟悉
+     *
+     * @param source      源
+     * @param target      目标
+     * @param handlerDate 是否处理日期
+     * @param excludes    过滤熟悉
+     * @throws Exception
+     */
+    private static void handlerCopyFields(Object source, Object target, boolean handlerDate, String... excludes) throws Exception {
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
         boolean first = true;
@@ -167,32 +192,43 @@ public class BeanTransform {
                 }
             }
             first = false;
-            Field[] s_fields = s_clazz.getDeclaredFields();
-            Field[] t_fields = t_clazz.getDeclaredFields();
+            Field[] s_fields = s_clazz.getDeclaredFields(); //源对象属性
+            Field[] t_fields = t_clazz.getDeclaredFields();//目标对象属性
             Method[] methods = t_clazz.getDeclaredMethods();
             for (Field t_field : t_fields) {
                 boolean has_ex = false;
-                for (String exclude : excludes) {
-                    if (exclude.equals(t_field.getName())) {
-                        has_ex = true;
-                        break;
+                if (null != excludes && excludes.length > 0) {
+                    for (String exclude : excludes) {
+                        if (exclude.equals(t_field.getName())) {
+                            has_ex = true;
+                            break;
+                        }
                     }
-                }
-                if (has_ex) {
-                    continue;
+                    if (has_ex) {
+                        continue;
+                    }
                 }
 
                 for (Field s_field : s_fields) {
-                    if (t_field.getName().equals(s_field.getName())) {
+                    if (t_field.getName().equals(s_field.getName())) { //同名属性
                         t_field.setAccessible(true);
                         s_field.setAccessible(true);
                         Object s_val = s_field.get(source);
                         if (null == s_val) {
                             break;
                         }
-                        s_val = convertType(s_field.getType().getSimpleName(), s_val);
+                        if (!handlerDate) { //处理字符串转日期
+                            s_val = convertStringType(s_field.getType(), s_val);
+                        } else {
+                            for (Type type : DATE_TYPES) {
+                                if (type.equals(t_field.getType())) {
+                                    s_val = convertDateType(type, s_val);
+                                    break;
+                                }
+                            }
+                        }
                         String methodName = "set" + upperCaseFirst(t_field.getName());
-                        for (Method m : methods) {
+                        for (Method m : methods) { //找到相应方法
                             if (m.getName().equals(methodName)) {
                                 m.invoke(target, s_val);
                                 break;
@@ -214,17 +250,38 @@ public class BeanTransform {
         return val;
     }
 
-    private static Object convertType(String simpleName, Object val) {
-        switch (simpleName) {
-            case "LocalDateTime":
-                val = String.valueOf(DateUtil.datetimeToString((LocalDateTime) val));
-                break;
-            case "LocalDate":
-                val = String.valueOf(DateUtil.dateToString((LocalDate) val));
-                break;
-            case "LocalTime":
-                val = String.valueOf(DateUtil.timeToString((LocalTime) val));
-                break;
+    /**
+     * 时间转换成字符串
+     *
+     * @param type
+     * @param val
+     * @return
+     */
+    private static Object convertStringType(Type type, Object val) {
+        if (type.equals(LocalDateTime.class)) {
+            val = String.valueOf(DateUtil.dateToString((LocalDateTime) val));
+        } else if (type.equals(LocalDate.class)) {
+            val = String.valueOf(DateUtil.dateToString((LocalDate) val));
+        } else if (type.equals(LocalTime.class)) {
+            val = String.valueOf(DateUtil.dateToString((LocalTime) val));
+        }
+        return val;
+    }
+
+    /**
+     * 字符串转换成时间
+     *
+     * @param type
+     * @param val
+     * @return
+     */
+    private static Object convertDateType(Type type, Object val) {
+        if (type.equals(LocalDateTime.class)) {
+            val = DateUtil.parseDateTime(String.valueOf(val));
+        } else if (type.equals(LocalDate.class)) {
+            val = DateUtil.parseDate(String.valueOf(val));
+        } else if (type.equals(LocalTime.class)) {
+            val = DateUtil.parseTime(String.valueOf(val));
         }
         return val;
     }

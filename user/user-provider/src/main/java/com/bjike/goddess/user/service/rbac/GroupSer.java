@@ -65,7 +65,10 @@ public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
     }
 
     @Override
-    public GroupBO saveGroup(Group group) throws SerException {
-        return BeanTransform.copyProperties(super.save(group),DepartmentBO.class);
+    public GroupBO saveByBO(GroupBO bo) throws SerException {
+        Group group = BeanTransform.copyProperties(bo, Group.class, true);
+        super.save(group);
+        bo.setId(group.getId());//复制id
+        return bo;
     }
 }

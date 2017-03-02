@@ -64,7 +64,10 @@ public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
     }
 
     @Override
-    public RoleBO saveRole(Role role) throws SerException {
-        return BeanTransform.copyProperties(super.save(role), RoleBO.class);
+    public RoleBO saveByBO(RoleBO bo) throws SerException {
+        Role role = BeanTransform.copyProperties(bo, Role.class, true);
+        super.save(role);
+        bo.setId(role.getId());//复制id
+        return bo;
     }
 }

@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 
 
 /**
+ * 组树结构数据业务传输
+ *
  * @Author: [liguiqin]
  * @Date: [2017-02-28 10:12]
  * @Description: [ ]

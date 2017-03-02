@@ -33,6 +33,8 @@ public class UserBO extends BaseBO {
      */
     private String nickname;
 
+    private String createTime;
+
     public String getUsername() {
         return username;
     }
@@ -71,5 +73,13 @@ public class UserBO extends BaseBO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

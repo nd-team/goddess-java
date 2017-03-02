@@ -12,15 +12,17 @@ package com.bjike.goddess.user.enums;
  */
 public enum LoginType {
     /**
-     * app
+     * app移动端
      */
     MOBILE(1),
+    /**
+     * pc端
+     */
     PC(2),
     /**
      * 未识别
      */
-    NONE(0),
-    ;
+    NONE(0),;
 
     private int code;
 

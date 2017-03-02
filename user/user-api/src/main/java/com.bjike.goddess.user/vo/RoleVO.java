@@ -1,31 +1,24 @@
-package com.bjike.goddess.user.bo.rbac;
+package com.bjike.goddess.user.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.common.api.vo.BaseVO;
 
 /**
- * 组业务传输
- *
  * @Author: [liguiqin]
- * @Date: [2017-03-01 11:38]
+ * @Date: [2017-03-02 17:01]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupBO extends BaseBO {
-
+public class RoleVO extends BaseVO {
     /**
-     * 组名
+     * 部门名
      */
     private String name;
+
     /**
      * 描述
      */
     private String description;
-    /**
-     * 状态
-     */
-    private Status status;
     /**
      * 创建时间
      */
@@ -45,14 +38,6 @@ public class GroupBO extends BaseBO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getCreateTime() {

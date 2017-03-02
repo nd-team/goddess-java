@@ -29,7 +29,7 @@ public interface RoleAPI extends SerAPI<Role, RoleDTO> {
     }
 
 
-    default RoleBO saveRole(Role role) throws SerException {
+    default RoleBO saveByBO(RoleBO bo) throws SerException {
        return  null;
     }
 

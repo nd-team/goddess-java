@@ -1,5 +1,5 @@
 import com.bjike.goddess.user.entity.rbac.Group;
-import com.bjike.goddess.user.service.GroupAPI;
+import com.bjike.goddess.user.service.rbac.GroupAPI;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

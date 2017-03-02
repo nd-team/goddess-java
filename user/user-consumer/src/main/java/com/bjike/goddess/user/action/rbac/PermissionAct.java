@@ -3,11 +3,16 @@ package com.bjike.goddess.user.action.rbac;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.service.rbac.PermissionAPI;
 import com.bjike.goddess.user.service.rbac.RoleAPI;
+import com.bjike.goddess.user.vo.PermissionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 权限资源操作
@@ -34,7 +39,8 @@ public class PermissionAct {
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
-            return ActResult.initialize(permissionAPI.treeData(id));
+            List<PermissionVO> vos = BeanTransform.copyProperties(permissionAPI.treeData(id), PermissionVO.class);
+            return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -43,14 +49,14 @@ public class PermissionAct {
     /**
      * 添加资源
      *
-     * @param permission 新的资源信息
+     * @param bo 新的资源信息
      * @return 持久化的的资源信息
      * @throws ActException
      */
     @PostMapping("add")
-    public ActResult add(Permission permission) throws ActException {
+    public ActResult add(PermissionBO bo) throws ActException {
         try {
-            return ActResult.initialize(permissionAPI.savePermission(permission));
+            return ActResult.initialize(permissionAPI.saveByBO(bo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

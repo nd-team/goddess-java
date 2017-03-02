@@ -2,7 +2,7 @@ package com.bjike.goddess.user.bo.rbac;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-/**
+/**角色树
  * @Author: [liguiqin]
  * @Date: [2017-02-28 11:51]
  * @Description: [ ]

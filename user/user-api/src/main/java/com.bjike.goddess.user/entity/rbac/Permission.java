@@ -39,7 +39,7 @@ public class Permission extends BaseEntity {
     /**
      * 创建时间
      */
-    @Column(columnDefinition = "dateTime")//指定数据库类型
+    @Column(columnDefinition = "dateTime",nullable = false)
     private LocalDateTime createTime = LocalDateTime.now();
     /**
      * 父节点

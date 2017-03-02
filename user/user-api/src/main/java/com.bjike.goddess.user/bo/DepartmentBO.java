@@ -3,7 +3,7 @@ package com.bjike.goddess.user.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 部门业务传送对象
+ * 部门业务传输对象
  *
  * @Author: [liguiqin]
  * @Date: [2017-01-18 15:25]
@@ -20,6 +20,11 @@ public class DepartmentBO extends BaseBO {
      * 描述
      */
     private String description;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
 
     public String getName() {
@@ -38,4 +43,11 @@ public class DepartmentBO extends BaseBO {
         this.description = description;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 }

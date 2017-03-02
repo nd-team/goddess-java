@@ -36,8 +36,8 @@ public class Position extends BaseEntity {
     /**
      * 创建时间
      */
-    @Column(columnDefinition = "dateTime")
-    private LocalDateTime createTime = LocalDateTime.now();
+    @Column(columnDefinition = "dateTime",nullable = false)
+    private LocalDateTime createTime ;
     /**
      * 父节点
      */

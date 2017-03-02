@@ -1,5 +1,6 @@
 package com.bjike.goddess.common.utils.date;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -48,29 +49,22 @@ public class DateUtil {
         return LocalTime.parse(time, TIME);
     }
 
-    /**
-     * 时间转相应字符串
-     * @param time
-     * @return
-     */
-    public static String timeToString(LocalTime time) {
-        return time.format(TIME);
-    }
+
     /**
      * 日期时间转相应字符串
-     * @param dateTime
-     * @return
+     *
+     * @param date (LocalDate,LocalTime,LocalDateTime)
+     * @return String
      */
-    public static String datetimeToString(LocalDateTime dateTime) {
-        return dateTime.format(DATETIME);
+    public static <DATE> String dateToString(DATE date) {
+        if (date.getClass().equals(LocalDate.class)) {
+            return ((LocalDate) date).format(DATE);
+        } else if (date.getClass().equals(LocalDateTime.class)) {
+            return ((LocalDateTime) date).format(DATETIME);
+        } else {
+            return ((LocalTime) date).format(TIME);
+        }
     }
-    /**
-     * 日期转相应字符串
-     * @param date
-     * @return
-     */
-    public static String dateToString(LocalDate date) {
-        return date.format(DATE);
-    }
+
 
 }

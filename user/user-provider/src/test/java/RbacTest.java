@@ -1,10 +1,15 @@
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.entity.*;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.entity.rbac.Role;
 import com.bjike.goddess.user.entity.rbac.UserRole;
 import com.bjike.goddess.user.service.*;
+import com.bjike.goddess.user.service.rbac.GroupAPI;
+import com.bjike.goddess.user.service.rbac.PermissionAPI;
+import com.bjike.goddess.user.service.rbac.RoleAPI;
+import com.bjike.goddess.user.service.rbac.UserRoleAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,33 +177,11 @@ public class RbacTest {
     @Test
     public void findAllPermissionByUserId() throws SerException {
 
-        Set<Permission> permissions = permissionAPI.findAllByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
+        List<PermissionBO> permissions = permissionAPI.findByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
         System.out.println(permissions);
     }
 
-    /**
-     * 查询用户所拥有角色
-     *
-     * @throws SerException
-     */
-    @Test
-    public void findRoleByUserId() throws SerException {
 
-        Set<Role> roles = roleAPI.findRoleByUserId("672551a4-4082-4d3f-9314-26851153b3c3");
-        System.out.println(roles);
-    }
-
-    /**
-     * 通过角色查询其子角色
-     *
-     * @throws SerException
-     */
-    @Test
-    public void findChildByRoleId() throws SerException {
-
-        Set<Role> roles = roleAPI.findChildByRoleId("939aa9a9-4b5e-4542-80ea-de7374a25b5c");
-        System.out.println(roles);
-    }
 
     /**
      * 添加部门角色
