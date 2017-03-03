@@ -202,10 +202,10 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     }
 
     @Override
-    public List<BE> findBySql(String sql, Class clazz, String[] fields) throws SerException {
+    public <T> List<T> findBySql(String sql, Class clazz, String[] fields) throws SerException {
         Query nativeQuery = entityManager.createNativeQuery(sql);
         List<Object> resultList = nativeQuery.getResultList();
-        List<BE> list = new ArrayList<>(resultList.size());
+        List<T> list = new ArrayList<>(resultList.size());
         Method[] all_methods = clazz.getMethods();
         List<Method> methods = new ArrayList<>();
         for (Method m : all_methods) {
@@ -226,7 +226,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         }
                     }
                 }
-                list.add((BE) obj);
+                list.add((T) obj);
             }
         } catch (Exception e) {
             e.printStackTrace();
