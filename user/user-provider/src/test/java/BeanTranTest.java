@@ -28,7 +28,7 @@ public class BeanTranTest {
     @Test
     public void BOTransformEntity() {
         UserBO bo = new UserBO();
-        bo.setCreateTime(DateUtil.datetimeToString(LocalDateTime.now()));
+        bo.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
         bo.setPhone("1332");
         bo.setUsername("liguiqin");
         User user = BeanTransform.copyProperties(bo, User.class, true);

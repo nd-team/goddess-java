@@ -2,6 +2,7 @@ package com.bjike.goddess.ticket.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.ticket.bo.TicketBO;
 import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -10,34 +11,37 @@ import java.util.List;
 
 /**
  * 购票接口
- * @author huanghuanlai
  *
+ * @author huanghuanlai
  */
 public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
 
-	
-	/**
-	 * 购票
-	 * @param txContext 分布式事务预留字段(必需)
-	 * @param account 12306帐户
-	 * @param password 12306密码
-	 * @param position 座位号
-	 * @return 购票信息
-	 * @throws SerException 常规业务异常
-	 */
-	default String buyTicket(TransactionContext txContext,String account,String password,String position) throws SerException{
-		return null;
-	}
+    /**
+     * 创建车票
+     *
+     * @param ticketBOS
+     */
+    default List<TicketBO> createTicket(List<TicketBO> ticketBOS)throws SerException {
+        return null;
+    }
 
-	/**
-	 * 退票
-	 * @param txContext 分布式事务预留字段(必需)
-	 * @param account 12306帐户
-	 * @param password 12306密码
-	 * @param position 座位号
-	 * @throws SerException 常规业务异常
-	 */
-	default void outTicket(TransactionContext txContext,String account,String password,String position) throws SerException{
 
-	}
+    /**
+     * 查询余票
+     *
+     */
+    default List<TicketBO> queryTicket()throws SerException {
+        return null;
+    }
+
+    /**
+     * 用户购票
+     *@param account 购买账号
+     *@param position 购买座位
+     */
+    default String buyTicket(TransactionContext txContext,String account,String position)throws SerException {
+        return null;
+    }
+
+
 }

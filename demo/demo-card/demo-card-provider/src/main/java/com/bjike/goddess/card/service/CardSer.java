@@ -1,15 +1,16 @@
 package com.bjike.goddess.card.service;
 
+import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.common.api.dto.Condition;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.ticket.bo.TicketBO;
+import com.bjike.goddess.ticket.entity.Ticket;
 import com.bjike.goddess.ticket.service.TicketAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.service.UserAPI;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,88 +18,68 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@CacheConfig(cacheNames = "CardSerCache")
+import java.time.LocalDateTime;
+
 @Service("cardSer")
 public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
 
     @Autowired
     private TicketAPI ticketApi;
 
-    @Autowired
-    private UserAPI userAPI;
-
-    @Override
-    public String finUserNickname(String nickname)throws SerException {
-        //转换成业务传输数据传递,防止暴露且屏蔽没有必要的数据(直接返回User实体会出现实例化错误)
-        UserBO userSTO = userAPI.findByNickname(nickname);
-        return userSTO.getNickname();
-    }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void initCard(String account, String password) throws SerException{
+    public CardBO initCard(String account, String password) throws SerException{
         Card card = new Card();
         card.setAccount(account);
         card.setPassword(password);
+        card.setCreateTime(LocalDateTime.now());
         super.save(card);
+        return  BeanTransform.copyProperties(card,CardBO.class);
     }
+
+
 
     @Override
-    @Transactional(rollbackFor = SerException.class)
-    @Compensable(confirmMethod = "buyTicketForCardConfirm", cancelMethod = "buyTicketForCardCancel")
-    public String buyTicketForCard(TransactionContext txContext,String account, String password, String position) throws SerException {
-        System.out.println("银行卡购票尝试");
-        CardDTO cardDTO = new CardDTO();
-        cardDTO.getConditions().add(new Condition("account", account, RestrictionType.EQ));
-        cardDTO.getConditions().add(new Condition("password", password, RestrictionType.EQ));
-
-        Card card = super.findOne(cardDTO);
-        if (null == card) {
-            throw new SerException("帐号或密码错误");
-        }
-        String message = ticketApi.buyTicket(null, account, password, position);
-        card.setMoney(card.getMoney() - 100);//减掉帐户余额
-        super.modify(card);//更新
-        return "购买成功";
+    public CardBO findByAccount(String account) throws SerException {
+        CardDTO dto = new CardDTO();
+        dto.getConditions().add(Restrict.eq("account",account));
+        CardBO bo = BeanTransform.copyProperties(super.findOne(dto),CardBO.class);
+        return bo;
     }
 
     @Transactional(rollbackFor = SerException.class)
-    public String buyTicketForCardConfirm(TransactionContext txContext,String account, String password, String position) throws SerException {
-        System.out.println("银行卡购票确认");
+    @Compensable(confirmMethod = "buyTicketConfirm", cancelMethod = "buyTicketCancel")
+    @Override
+    public String buyTicket(TransactionContext txContext, String account, String position) throws SerException {
+        CardDTO dto = new CardDTO();
+        dto.getConditions().add(Restrict.eq("account",account));
+        Card card = findOne(dto);
+        card.setMoney(card.getMoney()-140);//减掉帐户余额
+        super.modify(card);
+        ticketApi.buyTicket(txContext,account,position);
+        return "购票成功";
+    }
+
+
+    @Transactional(rollbackFor = SerException.class)
+    public String buyTicketConfirm(TransactionContext txContext,String account,String position) throws SerException {
+        System.out.println("购票确认");
         return null;
     }
 
     @Transactional(rollbackFor = SerException.class)
-    public String buyTicketForCardCancel(TransactionContext txContext,String account, String password, String position) throws SerException {
-        CardDTO cardDTO = new CardDTO();
-        cardDTO.getConditions().add(new Condition("account", account, RestrictionType.EQ));
-        cardDTO.getConditions().add(new Condition("password", password, RestrictionType.EQ));
-
-        Card card = super.findOne(cardDTO);
+    public String buyTicketCancel(TransactionContext txContext,String account,  String position) throws SerException {
+        CardDTO dto = new CardDTO();
+        dto.getConditions().add(Restrict.eq("account",account));
+        Card card = findOne(dto);
         if (null == card) {
             throw new SerException("帐号或密码错误");
         }
-        ticketApi.outTicket(null, account, password, position);//退票
-        card.setMoney(card.getMoney() + 100);//加回帐户余额
+        ticketApi.ticketCancel(null, account, position);//退票
+        card.setMoney(card.getMoney() + 140);//加回帐户余额
         super.modify(card);//更新
-        System.out.println("银行卡购票取消");
+        System.out.println("购票取消");
         return null;
     }
-
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void threeBuyTicketForCard(TransactionContext txContext, String account, String password, String position) throws SerException {
-
-    }
-
-    @Override
-    public Card query(Card card) throws QueryException {
-        Card card1 = new Card();
-        card1.setAccount("123");
-        card1.setPassword("123");
-        card1.setMoney(1000L);
-        return card1;
-    }
-
-
 }

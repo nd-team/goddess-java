@@ -6,15 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-
+/**
+ * 车票实体
+ */
 @Entity
 @Table(name = "demo_ticket")
 public class Ticket extends BaseEntity {
-
-	/**
-	 * 身份证
-	 */
-	private String owner;//动车票所属者
+	private String account;//购买人账号
 	/**
 	 * 座位号 D3608-2-2D
 	 */
@@ -28,42 +26,48 @@ public class Ticket extends BaseEntity {
 	 */
 	private Integer money;
 	/**
-	 * 购票转帐卡号
+	 * 票号
 	 */
-	private String card;
-	
-	public String getOwner() {
-		return owner;
+	private String number;
+
+	public String getAccount() {
+		return account;
 	}
-	public void setOwner(String owner) {
-		this.owner = owner;
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
+
 	public String getPosition() {
 		return position;
 	}
+
 	public void setPosition(String position) {
 		this.position = position;
 	}
+
 	public LocalDateTime getOffTime() {
 		return offTime;
 	}
+
 	public void setOffTime(LocalDateTime offTime) {
 		this.offTime = offTime;
 	}
+
 	public Integer getMoney() {
 		return money;
 	}
+
 	public void setMoney(Integer money) {
 		this.money = money;
 	}
-	public String getCard() {
-		return card;
+
+	public String getNumber() {
+		return number;
 	}
-	public void setCard(String card) {
-		this.card = card;
+
+	public void setNumber(String number) {
+		this.number = number;
 	}
-	
-	
-	
 	
 }

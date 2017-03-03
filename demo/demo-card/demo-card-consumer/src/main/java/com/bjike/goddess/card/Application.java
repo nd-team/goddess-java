@@ -16,20 +16,10 @@ import java.io.IOException;
                 value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
 public class Application{
-//
-//	public static void initJapi(){
-//		try {
-//			FileUtil.UPLOAD_REQUEST = new HttpPost("http://localhost:8080/interfaceapidoc/upload");
-//			ApplicationClient.startClient("demo-card-consumer","/home/ike/java/github/goddess-java/demo/demo-card/demo-card-consumer/src/main/java/com/bjike/goddess/card/action","com.bjike.goddess.card.action",Application.class);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 
 
 	public static void main(String[] args) throws IOException {
-//		initJapi();
+
 		SpringApplication.run(Application.class,args);
 		System.in.read();
 	}
