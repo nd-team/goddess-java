@@ -23,11 +23,14 @@ import java.io.IOException;
 public class Application{
 
 	public static void japi(){
-		JapiClient.setProjectJavaPath("/home/lgq/github/goddess-java/demo/demo-card/demo-card-consumer/src/main/java");
+		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");
+		JapiClient.setpostfixPath("/src/main/java");
+		JapiClient.setProjectJavaPath("demo/demo-card/demo-card-consumer");
 		JapiClient.setActionReletivePath("com/bjike/goddess/card/action");
 		JapiClient.setIncludeProjectJavaPath(new String[]{
-				"/home/lgq/github/goddess-java/demo/demo-card/demo-card-api/src/main/java",
-				"/home/lgq/github/goddess-java/common/common-consumer/src/main/java"
+				"demo/demo-card/demo-card-api",
+				"common/common-consumer",
+				"common/common-api"
 		});
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});
 		JapiClient.setUseCache(false);//

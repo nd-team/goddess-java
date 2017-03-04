@@ -2,9 +2,10 @@ package com.bjike.goddess.user.action;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.service.UserAPI;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("{version}/user")
 public class UserAct {
 
     @Autowired
@@ -30,11 +31,11 @@ public class UserAct {
     /**
      * 手机号码是否存在
      * @param phone 手机号码
-     * @return
-     * @throws ActException
+     * @return xxx
      */
+    @ApiVersion(1)
     @GetMapping("existPhone/{phone}")
-    public ActResult existPhone(@PathVariable String phone) throws ActException {
+    public Result existPhone(@PathVariable String phone) throws ActException {
         try {
             Boolean result = (null != userAPI.findByPhone(phone));
             return ActResult.initialize(result);
@@ -47,10 +48,10 @@ public class UserAct {
      * 用户名是否存在
      * @param username 用户名
      * @return
-     * @throws ActException
      */
+    @ApiVersion(1)
     @GetMapping("existUsername/{username}")
-    public ActResult existUsername(@PathVariable String username) throws ActException {
+    public Result existUsername(@PathVariable String username) throws ActException {
 
         try {
             Boolean result = (null != userAPI.findByUsername(username));

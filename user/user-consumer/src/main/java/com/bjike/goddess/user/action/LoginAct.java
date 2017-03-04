@@ -2,11 +2,13 @@ package com.bjike.goddess.user.action;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.dto.ext.UserLoginDTO;
 import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.service.UserLoginAPI;
 import com.bjike.goddess.user.utils.CheckMobile;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("{version}/user")
 public class LoginAct {
 
     @Autowired
@@ -36,8 +38,9 @@ public class LoginAct {
      * @param request
      * @return
      */
+    @ApiVersion(1)
     @PostMapping("login")
-    public ActResult login(UserLoginDTO dto, HttpServletRequest request) throws ActException {
+    public Result login(UserLoginDTO dto, HttpServletRequest request) throws ActException {
         try {
             String userAgent = request.getHeader("USER-AGENT").toLowerCase();
             LoginType type = LoginType.PC;

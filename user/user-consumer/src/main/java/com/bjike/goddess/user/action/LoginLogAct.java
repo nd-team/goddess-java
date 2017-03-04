@@ -2,10 +2,12 @@ package com.bjike.goddess.user.action;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.user.service.UserLoginLogAPI;
 import com.bjike.goddess.user.bo.UserLoginLogBO;
+import com.bjike.goddess.user.service.UserLoginLogAPI;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("{version}/user")
 public class LoginLogAct {
 
     @Autowired
@@ -36,9 +38,10 @@ public class LoginLogAct {
      * @return
      * @throws ActException
      */
+    @ApiVersion(1)
     @LoginAuth
     @GetMapping("{id}/logs")
-    public ActResult logs(@PathVariable String id) throws ActException {
+    public Result logs(@PathVariable String id) throws ActException {
         try {
             List<UserLoginLogBO> loginLogs = userLoginLogAPI.findLogByCurrentUser();
             return ActResult.initialize(loginLogs);

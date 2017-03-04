@@ -2,9 +2,11 @@ package com.bjike.goddess.user.action;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.service.UserRegisterAPI;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +23,20 @@ import javax.validation.Valid;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("{version}/user")
 public class RegisterAct {
     @Autowired
     private UserRegisterAPI registerSer;
 
     /**
-     *
-     * @param dto 注册用户传输对象
+     * @param dto    注册用户传输对象
      * @param result
      * @return
      * @throws ActException
      */
+    @ApiVersion(1)
     @PostMapping("register")
-    public ActResult register(@Valid UserRegisterDTO dto, BindingResult result) throws ActException {
+    public Result register(@Valid UserRegisterDTO dto, BindingResult result) throws ActException {
         try {
             registerSer.verifyCodeAndReg(dto);
         } catch (SerException e) {
@@ -51,8 +53,9 @@ public class RegisterAct {
      * @return
      * @throws ActException
      */
+    @ApiVersion(1)
     @GetMapping("verifyPhone/{phone}")
-    public ActResult sendCodeToPhone(@PathVariable String phone) throws ActException {
+    public Result sendCodeToPhone(@PathVariable String phone) throws ActException {
         try {
             registerSer.verifyAndSendCode(phone);
         } catch (SerException e) {

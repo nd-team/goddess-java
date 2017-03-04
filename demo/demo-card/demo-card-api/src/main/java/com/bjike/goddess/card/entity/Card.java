@@ -2,6 +2,7 @@ package com.bjike.goddess.card.entity;
 
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ public class Card extends BaseEntity {
     /**
      * 卡号
      */
-    @NotNull(message = "卡号不能为空")
+    @NotBlank(message = "卡号不能为空")
     private String account;
     /**
      * 密码

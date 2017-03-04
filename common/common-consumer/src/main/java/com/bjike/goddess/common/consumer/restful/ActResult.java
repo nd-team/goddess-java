@@ -79,6 +79,6 @@ public class ActResult implements Result {
     }
 
     public static ActResult initialize(Object data) {
-        return new ActResult("success",data);
+        return new ActResult(null,data);
     }
 }

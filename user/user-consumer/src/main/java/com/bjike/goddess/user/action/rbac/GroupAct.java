@@ -5,13 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
-import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.service.rbac.GroupAPI;
 import com.bjike.goddess.user.vo.GroupVO;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/group")
+@RequestMapping("{version}/rbac/group")
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
@@ -34,12 +33,12 @@ public class GroupAct {
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
      * @return 树结构数据
-     * @throws ActException
      */
+    @ApiVersion(1)
     @GetMapping("treeData")
     public ActResult treeData(String id) throws ActException {
         try {
-            List<GroupVO> vos =  BeanTransform.copyProperties(groupAPI.treeData(id),GroupVO.class);
+            List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -51,8 +50,8 @@ public class GroupAct {
      *
      * @param bo 新的组信息
      * @return 持久化的组信息
-     * @throws ActException
      */
+    @ApiVersion(1)
     @PostMapping("add")
     public ActResult add(GroupBO bo) throws ActException {
         try {
@@ -67,8 +66,8 @@ public class GroupAct {
      *
      * @param id 组唯一标示
      * @return
-     * @throws ActException
      */
+    @ApiVersion(1)
     @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {

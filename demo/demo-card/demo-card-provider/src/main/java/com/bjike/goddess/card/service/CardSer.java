@@ -33,7 +33,6 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         Card card = new Card();
         card.setAccount(account);
         card.setPassword(password);
-        card.setCreateTime(LocalDateTime.now());
         super.save(card);
         return  BeanTransform.copyProperties(card,CardBO.class);
     }

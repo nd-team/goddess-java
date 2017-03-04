@@ -1,19 +1,22 @@
 package com.bjike.goddess.user.action;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.service.UserAuthCodeAPI;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
@@ -26,7 +29,7 @@ import java.util.Map;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("authCode")
+@RequestMapping("{version}/authCode")
 public class AuthCodeAct {
     @Autowired
     private UserAuthCodeAPI userAuthCodeSer;
@@ -36,10 +39,10 @@ public class AuthCodeAct {
      *
      * @param account 账号(email,username,phone)
      * @return true代表需要要验证,false代表不需要验证码
-     * @throws SerException
      */
+    @ApiVersion(1)
     @GetMapping("showAuthCode/{account}")
-    public ActResult showAuthCode(@PathVariable String account) throws ActException {
+    public Result showAuthCode(@PathVariable String account) throws ActException {
         try {
             Boolean needCode = userAuthCodeSer.showAuthCode(account);
             return ActResult.initialize(needCode);
@@ -55,8 +58,8 @@ public class AuthCodeAct {
      * @param account  账号(email,username,phone)
      * @param response
      * @return 验证码图片流
-     * @throws SerException
      */
+    @ApiVersion(1)
     @GetMapping("generateCode/{account}")
     public void generateCode(@PathVariable String account, HttpServletResponse response) throws ActException {
         response.setContentType("image/jpeg");

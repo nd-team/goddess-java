@@ -6,6 +6,7 @@ import com.bjike.goddess.card.service.CardAPI;
 import com.bjike.goddess.card.vo.CardVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.dounine.japi.common.springmvc.ApiVersion;
@@ -15,12 +16,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * asdfasdfasdf
+ * 卡业务
  * Created by huanghuanlai on 2017/1/10.
  */
 @RestController
 @RequestMapping("{version}/demo/card")
-public class CardAction {
+public class CardAct {
 
     @Autowired
     private CardAPI cardAPI;
@@ -34,7 +35,7 @@ public class CardAction {
      */
     @ApiVersion(1)
     @PostMapping("register")
-    public ActResult register(String account, String password) throws ActException {
+    public Result register(String account, String password) throws ActException {
         try {
             CardBO bo = cardAPI.initCard(account, password);
             CardVO vo = BeanTransform.copyProperties(bo, CardVO.class);
@@ -49,10 +50,11 @@ public class CardAction {
      * 通过卡号查找卡信息
      *
      * @param account 账号
-     * @throws ActException
+     * @deprecated 已过期
      */
-    @GetMapping("/{account}")
-    public ActResult findByAccount(@PathVariable String account) throws ActException {
+    @ApiVersion(1)
+    @GetMapping("{account}")
+    public Result findByAccount(@PathVariable String account) throws ActException {
         try {
             CardBO bo = cardAPI.findByAccount(account);
             CardVO vo = BeanTransform.copyProperties(bo, CardVO.class);
