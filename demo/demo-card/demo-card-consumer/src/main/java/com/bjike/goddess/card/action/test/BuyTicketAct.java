@@ -1,4 +1,4 @@
-package com.bjike.goddess.card.action;
+package com.bjike.goddess.card.action.test;
 
 import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.card.service.CardAPI;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * asdfklasdlkfj
  * @Author: [liguiqin]
  * @Date: [2017-03-03 11:38]
  * @Description: [ ]
@@ -43,6 +44,16 @@ public class BuyTicketAct {
     public ActResult buy(@Validated Card card, BindingResult bindingResult, @PathVariable String position) throws ActException {
         try {
             String message = cardAPI.buyTicket(null, card.getAccount(), position);
+            return new ActResult(message);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    @PostMapping("cancel/{position}")
+    public ActResult cancel(@Validated Card card, BindingResult bindingResult, @PathVariable String position) throws ActException {
+        try {
+            String message = cardAPI.cancelTicket(null, card.getAccount(), position);
             return new ActResult(message);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

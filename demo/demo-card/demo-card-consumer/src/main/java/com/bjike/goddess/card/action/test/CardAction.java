@@ -1,4 +1,4 @@
-package com.bjike.goddess.card.action;
+package com.bjike.goddess.card.action.test;
 
 import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.entity.Card;
@@ -8,16 +8,18 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * asdfasdfasdf
  * Created by huanghuanlai on 2017/1/10.
  */
 @RestController
-@RequestMapping("demo/card")
+@RequestMapping("{version}/demo/card")
 public class CardAction {
 
     @Autowired
@@ -28,9 +30,9 @@ public class CardAction {
      *
      * @param account  账号
      * @param password 密码
-     * @return 新的卡
-     * @throws ActException
+     * @return class Card
      */
+    @ApiVersion(1)
     @PostMapping("register")
     public ActResult register(String account, String password) throws ActException {
         try {
@@ -47,7 +49,6 @@ public class CardAction {
      * 通过卡号查找卡信息
      *
      * @param account 账号
-     * @return
      * @throws ActException
      */
     @GetMapping("/{account}")

@@ -49,7 +49,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
     }
 
     @Transactional(rollbackFor = SerException.class)
-    @Compensable(confirmMethod = "buyTicketConfirm", cancelMethod = "buyTicketCancel")
+    @Compensable(confirmMethod = "buyTicketConfirm", cancelMethod = "buyTicketRollback")
     @Override
     public String buyTicket(TransactionContext txContext, String account, String position) throws SerException {
         CardDTO dto = new CardDTO();
@@ -69,7 +69,16 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
     }
 
     @Transactional(rollbackFor = SerException.class)
-    public String buyTicketCancel(TransactionContext txContext,String account,  String position) throws SerException {
+    public String buyTicketRollback(TransactionContext txContext,String account,  String position) throws SerException {
+        cancelTicket(txContext,account,position);
+        return null;
+    }
+
+
+    @Transactional(rollbackFor = SerException.class)
+    @Compensable(confirmMethod = "cancelTicketConfirm", cancelMethod = "cancelTicketCancel")
+    @Override
+    public String cancelTicket(TransactionContext txContext, String account, String position) throws SerException {
         CardDTO dto = new CardDTO();
         dto.getConditions().add(Restrict.eq("account",account));
         Card card = findOne(dto);
@@ -80,6 +89,6 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         card.setMoney(card.getMoney() + 140);//加回帐户余额
         super.modify(card);//更新
         System.out.println("购票取消");
-        return null;
+        return "取消成功";
     }
 }

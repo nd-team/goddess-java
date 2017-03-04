@@ -29,11 +29,37 @@ public interface CardAPI extends SerAPI<Card, CardDTO> {
         return null;
     }
 
+    /**
+     * 通过卡号查找卡新
+     * @param account
+     * @return
+     * @throws SerException
+     */
     default CardBO findByAccount(String account) throws SerException {
         return null;
     }
 
+    /**
+     * 购票
+     * @param txContext
+     * @param account 购买账号
+     * @param position 座位
+     * @return
+     * @throws SerException
+     */
     default String buyTicket(TransactionContext txContext, String account,String position)throws SerException{
+        return null;
+    }
+
+    /**
+     * 退票
+     * @param txContext
+     * @param account 购买账号
+     * @param position 座位
+     * @return
+     * @throws SerException
+     */
+    default String cancelTicket(TransactionContext txContext, String account,String position)throws SerException{
         return null;
     }
 

@@ -42,6 +42,14 @@ public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
     default String buyTicket(TransactionContext txContext,String account,String position)throws SerException {
         return null;
     }
+ /**
+     * 购票取消
+     *@param account 购买账号
+     *@param position 购买座位
+     */
+    default String ticketCancel(TransactionContext txContext,String account,String position)throws SerException {
+        return null;
+    }
 
 
 }

@@ -61,18 +61,44 @@ public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketA
 
     @Transactional(rollbackFor = SerException.class)
     public String buyTicketCancel(TransactionContext txContext, String account, String position) throws SerException {
-        System.out.println("购票事务回滚中...");
+        ticketCancel(txContext, account, position);
+        return null;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Compensable(confirmMethod = "ticketCancelConfirm", cancelMethod = "ticketCancelRollback")
+    @Override
+    public String ticketCancel(TransactionContext txContext, String account, String position) throws SerException {
         TicketDTO dto = new TicketDTO();
         dto.getConditions().add(Restrict.eq("position", position));
         Ticket ticket = super.findOne(dto);
         if (null != ticket) {
             ticket.setAccount(null);
             super.modify(ticket); //退回座位
-            System.out.println("购票事务回滚成功.");
         } else {
-            System.out.println("购票事务回滚失败.");
+            System.out.println("退票失败.");
         }
+        return "退票成功";
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String ticketCancelConfirm(TransactionContext txContext, String account, String position) throws SerException {
+        System.out.println("退票成功");
         return null;
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String ticketCancelRollback(TransactionContext txContext, String account, String position) throws SerException {
+        TicketDTO dto = new TicketDTO();
+        dto.getConditions().add(Restrict.eq("position", position));
+        Ticket ticket = super.findOne(dto);
+        if (null != ticket) {
+            ticket.setAccount(account);
+            super.modify(ticket); //退回座位
+        }
+        System.out.println("退票失败");
+        return null;
+    }
+
 
 }
