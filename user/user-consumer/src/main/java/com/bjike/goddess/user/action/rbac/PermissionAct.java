@@ -71,7 +71,7 @@ public class PermissionAct {
     @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
-            permissionAPI.delete(id);
+            permissionAPI.remove(id);
             return new ActResult("delete is success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

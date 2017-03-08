@@ -75,7 +75,7 @@ public class DepartmentAct {
     @DeleteMapping("delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            departmentAPI.delete(id);
+            departmentAPI.remove(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

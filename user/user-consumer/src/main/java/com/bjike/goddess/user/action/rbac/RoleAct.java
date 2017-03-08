@@ -71,7 +71,7 @@ public class RoleAct {
     @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
-            roleAPI.delete(id);
+            roleAPI.remove(id);
             return new ActResult("delete is success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

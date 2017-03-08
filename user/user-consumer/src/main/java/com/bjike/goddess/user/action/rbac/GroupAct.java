@@ -71,7 +71,7 @@ public class GroupAct {
     @DeleteMapping("delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
-            groupAPI.delete(id);
+            groupAPI.remove(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
