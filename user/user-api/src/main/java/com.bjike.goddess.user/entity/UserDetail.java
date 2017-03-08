@@ -26,7 +26,7 @@ public class UserDetail extends BaseEntity {
     /**
      * 性别
      */
-    private SexType sex = SexType.NONE;
+    private SexType sex ;
     /**
      * 年龄
      */
@@ -36,7 +36,7 @@ public class UserDetail extends BaseEntity {
      * 用户类型
      */
     @Column(columnDefinition = "INT(1)", nullable = false)
-    private UserType userType = UserType.CUSTOMER;
+    private UserType userType ;
     /**
      * 地址
      */

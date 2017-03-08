@@ -29,10 +29,7 @@ public class Card extends BaseEntity {
      * 余额
      */
     private Long money;
-    /**
-     * 卡创建时间
-     */
-    private LocalDateTime createTime;
+
 
     public Card() {
     }
@@ -68,11 +65,4 @@ public class Card extends BaseEntity {
         this.money = money;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

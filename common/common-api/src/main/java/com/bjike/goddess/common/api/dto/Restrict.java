@@ -3,14 +3,18 @@ package com.bjike.goddess.common.api.dto;
 
 import com.bjike.goddess.common.api.type.RestrictionType;
 
+import java.io.Serializable;
+
 /**
+ * 限定表达式
+ *
  * @Author: [liguiqin]
  * @Date: [2016-12-26 08:44]
- * @Description: [限定表达式]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class Restrict {
+public class Restrict implements Serializable {
     private Restrict() {
     }
 

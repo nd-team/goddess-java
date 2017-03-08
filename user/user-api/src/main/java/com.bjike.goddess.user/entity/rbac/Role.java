@@ -31,12 +31,8 @@ public class Role extends BaseEntity {
     /**
      * 状态
      */
-    private Status status =Status.THAW;
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime createTime  = LocalDateTime.now();
+    private Status status ;
+
 
     /**
      * 父角色

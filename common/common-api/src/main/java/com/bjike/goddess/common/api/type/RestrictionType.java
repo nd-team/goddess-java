@@ -1,9 +1,11 @@
 package com.bjike.goddess.common.api.type;
 
 /**
+ * jpa映射条件类型
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [jpa映射条件]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

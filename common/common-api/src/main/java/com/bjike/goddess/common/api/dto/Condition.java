@@ -3,14 +3,18 @@ package com.bjike.goddess.common.api.dto;
 
 import com.bjike.goddess.common.api.type.RestrictionType;
 
+import java.io.Serializable;
+
 /**
+ * 查询条件传输
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [查询条件传输]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class Condition {
+public class Condition implements Serializable {
     /**
      * field（字段） 包含 "." 则默认会设置成左连接，左连接set 集合 命名必须未Set结束
      * 如：Set<User>userSet List<User>userList
@@ -21,6 +25,7 @@ public class Condition {
 
     private Condition() {
     }
+
     public Condition(String field, Object value, RestrictionType restrict) {
         this.field = field;
         this.value = value;

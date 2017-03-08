@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 部门
@@ -27,11 +26,6 @@ public class Department extends BaseEntity {
      * 描述
      */
     private String description;
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime createTime ;
 
     /**
      * 上级部门
@@ -59,14 +53,6 @@ public class Department extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public Department getParent() {

@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 资源认证
@@ -35,12 +34,8 @@ public class Permission extends BaseEntity {
     /**
      * 状态
      */
-    private Status status = Status.THAW;
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime createTime = LocalDateTime.now();
+    private Status status ;
+
     /**
      * 父节点
      */
@@ -71,14 +66,6 @@ public class Permission extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public Permission getParent() {

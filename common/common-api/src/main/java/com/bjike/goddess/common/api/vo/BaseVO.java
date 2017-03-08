@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Copy: [com.bjike]
  */
 public abstract class BaseVO implements Serializable {
-    private String id;
+    protected String id;
 
     public String getId() {
         return id;

@@ -12,7 +12,10 @@ import java.io.Serializable;
  * @Copy: [com.bjike]
  */
 public abstract  class BaseBO implements Serializable {
-    private String id;
+    /**
+     * 数据行id
+     */
+    protected String id;
 
     public String getId() {
         return id;

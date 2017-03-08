@@ -40,8 +40,9 @@ public class BeanTransform {
      * @param target   目标类
      * @param excludes 过滤字段
      * @return List<TARGET>目标对象列表
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes) {
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes){
         return copyList(sources, target, false, excludes);
 
     }
@@ -54,6 +55,7 @@ public class BeanTransform {
      * @param excludes    过滤字段
      * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
      * @return List<TARGET>目标对象列表
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, boolean convertDate, String... excludes) {
         return copyList(sources, target, convertDate, excludes);
@@ -65,7 +67,8 @@ public class BeanTransform {
      * @param target   目标类
      * @param <TARGET> 目标对象
      * @param excludes 过滤属性
-     * @return
+     * @return 目标对象
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, String... excludes) {
         if (null != source) {
@@ -74,7 +77,7 @@ public class BeanTransform {
                 copyProperties(source, o_target, excludes);
                 return (TARGET) o_target;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
         return null;
@@ -88,12 +91,13 @@ public class BeanTransform {
      * @param source   源对象
      * @param target   目标对象
      * @param excludes 过滤字段
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static void copyProperties(Object source, Object target, String... excludes) {
         try {
             handlerClazz(source, target, excludes);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
 
     }
@@ -108,12 +112,13 @@ public class BeanTransform {
      * @param target      目标对象
      * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
      * @param excludes    过滤字段
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static void copyProperties(Object source, Object target, boolean convertDate, String... excludes) {
         try {
             handlerClazz(source, target, convertDate, excludes);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -123,6 +128,7 @@ public class BeanTransform {
      * @param target   目标类
      * @param <TARGET> 目标对象
      * @param excludes 过滤属性
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      * @return
      */
     public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, boolean convertDate, String... excludes) {
@@ -132,7 +138,7 @@ public class BeanTransform {
                 copyProperties(source, o_target, convertDate, excludes);
                 return (TARGET) o_target;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
         return null;
@@ -154,7 +160,7 @@ public class BeanTransform {
                     targets.add((TARGET) o_target);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
         return targets;

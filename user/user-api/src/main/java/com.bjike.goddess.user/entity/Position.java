@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 职位
@@ -32,12 +31,8 @@ public class Position extends BaseEntity {
     /**
      * 状态
      */
-    private Status status = Status.THAW;
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime createTime ;
+    private Status status ;
+
     /**
      * 父节点
      */
@@ -70,13 +65,6 @@ public class Position extends BaseEntity {
         this.status = status;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 
     public Position getParent() {
         return parent;

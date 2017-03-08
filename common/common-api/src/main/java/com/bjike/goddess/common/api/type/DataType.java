@@ -9,17 +9,17 @@ package com.bjike.goddess.common.api.type;
  * @Copy: [com.bjike]
  */
 public enum DataType {
-    STRING(0),
-    INT(1),
-    FLOAT(2),
-    CHAR(3),
-    DOUBLE(4),
-    BOOLEAN(5),
-    LONG(6),
-    LOCALDATE(7),
-    LOCALTIME(8),
-    LOCALDATETIME(9),
-    ENUM(10);
+    STRING(0), //字符串类型
+    INT(1), //整型
+    FLOAT(2), //浮点型
+    CHAR(3), //单字符型
+    DOUBLE(4),//双精度浮点型
+    BOOLEAN(5),//逻辑型
+    LONG(6),//长整形
+    LOCALDATE(7),//日期
+    LOCALTIME(8),//时间
+    LOCALDATETIME(9), //时间类型
+    ENUM(10);//枚舉
     private int code;
 
     DataType(int code) {

@@ -4,9 +4,11 @@ package com.bjike.goddess.common.api.exception;
 import com.bjike.goddess.common.api.type.RepExceptionType;
 
 /**
+ * 检查异常
+ *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [检查异常]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */

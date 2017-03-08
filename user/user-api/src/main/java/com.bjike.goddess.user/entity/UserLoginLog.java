@@ -37,7 +37,7 @@ public class UserLoginLog extends BaseEntity {
      * 登录方式
      */
     @Column(columnDefinition = "INT(1)")
-    private LoginType loginType = LoginType.NONE;
+    private LoginType loginType ;
 
     /**
      * 用户关联

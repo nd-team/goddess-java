@@ -4,8 +4,9 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 用户
@@ -56,14 +57,9 @@ public class User extends BaseEntity {
     private String employeeNumber;
 
     /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime createTime;
-    /**
      * 用户状态
      */
-    private Status status = Status.THAW;
+    private Status status;
 
 
     public String getUsername() {
@@ -112,14 +108,6 @@ public class User extends BaseEntity {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public Status getStatus() {

@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Author: [liguiqin]
@@ -16,6 +17,9 @@ import java.io.Serializable;
 @Entity
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
 public abstract class BaseEntity implements Serializable{
+    /**
+     * 数据行id
+     */
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -23,11 +27,39 @@ public abstract class BaseEntity implements Serializable{
     @NotBlank(message = "编号不能为空",groups = {EDIT.class,DEL.class})
     protected String id;
 
+    /**
+     * 数据创建时间
+     */
+    @Column(columnDefinition = "dateTime",nullable = false)
+    protected LocalDateTime createTime;
+
+    /**
+     * 上次修改时间
+     */
+    @Column(columnDefinition = "timestamp",nullable = false)
+    protected LocalDateTime modifyTime ;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -6,17 +6,24 @@ import java.util.List;
 
 /**
  * data transfer object
+ * 基础数据传输，所有dto继承该类
  *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]
- * @Description: [基础数据传输，所有dto继承该类]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public abstract class BaseDTO extends PageDTO implements Serializable {
     private static final long serialVersionUID = -3558525794931360478L;
-    private List<String> sorts = new ArrayList<>(0); //排序字段 (有排序字段默认排序) "username=desc" 不指定 username (默认使用desc)
-    private List<Condition> conditions = new ArrayList<Condition>(0);// 类搜索条件
+    /**
+     * 排序字段 (有排序字段默认排序) "username=desc" 不指定 username (默认使用desc)
+     */
+    protected List<String> sorts = new ArrayList<>(0);
+    /**
+     * 类搜索条件
+     */
+    protected List<Condition> conditions = new ArrayList<Condition>(0);
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
