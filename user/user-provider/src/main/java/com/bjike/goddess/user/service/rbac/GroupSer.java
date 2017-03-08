@@ -54,14 +54,14 @@ public class GroupSer extends ServiceImpl<Group, GroupDTO> implements GroupAPI {
     }
 
     @Override
-    public void delete(String id) throws SerException {
+    public void remove(String id) throws SerException {
         GroupDTO dto = new GroupDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id)); //查找根节点
         List<Group> children = super.findByCis(dto);
         if (null != children && children.size() > 0) {
             throw new SerException("该节点存在子节点,请先删除子节点!");
         }
-        super.delete(id);
+        super.remove(id);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class JunitTest {
     @Test
     public void testBuyTicket(){//对帐户进行金额增加操作，没有帐户会异常，并进行回滚
         try {
-            cardAPI.buyTicketForCard(null,"123","123","D306-2-2D");
+            cardAPI.buyTicket(null,"123","123");
         } catch (SerException e) {
             e.printStackTrace();
         }

@@ -74,7 +74,7 @@ public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketA
         Ticket ticket = super.findOne(dto);
         if (null != ticket) {
             ticket.setAccount(null);
-            super.modify(ticket); //退回座位
+            super.update(ticket); //退回座位
         } else {
             System.out.println("退票失败.");
         }
@@ -94,7 +94,7 @@ public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketA
         Ticket ticket = super.findOne(dto);
         if (null != ticket) {
             ticket.setAccount(account);
-            super.modify(ticket); //退回座位
+            super.update(ticket); //退回座位
         }
         System.out.println("退票失败");
         return null;

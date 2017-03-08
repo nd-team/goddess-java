@@ -10,7 +10,6 @@ import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
-import com.bjike.goddess.user.vo.DepartmentVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -56,14 +55,14 @@ public class DepartmentSer extends ServiceImpl<Department, DepartmentDTO> implem
     }
 
     @Override
-    public void delete(String id) throws SerException {
+    public void remove(String id) throws SerException {
         DepartmentDTO dto = new DepartmentDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
         List<Department> children = findByCis(dto);
         if (null != children && children.size() > 0) {
             throw new SerException("该记录存在子节点数据,请先删除子节点!");
         }
-        super.delete(id);
+        super.remove(id);
     }
 
     @Override

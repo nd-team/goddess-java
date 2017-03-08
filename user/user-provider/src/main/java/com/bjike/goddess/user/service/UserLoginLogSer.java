@@ -50,7 +50,7 @@ public class UserLoginLogSer extends ServiceImpl<UserLoginLog, UserLoginLogDTO> 
         if (null != loginLogs && loginLogs.size() >= 5) {
             UserLoginLog old_log = loginLogs.get(4); //更新最旧的数据为最新的
             BeanUtils.copyProperties(loginLog, old_log, "id"); //复制属性忽略id
-            super.modify(old_log);
+            super.update(old_log);
         } else {
             loginLog.setUser(userAPI.findById(loginLog.getUser().getId()));
             super.save(loginLog);

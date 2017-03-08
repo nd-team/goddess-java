@@ -126,11 +126,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return rep.save(entity);
     }
 
-    @Transactional
-    @Override
-    public void saveEntity(BE entity) throws SerException {
-        rep.save(entity);
-    }
+
 
     @Transactional
     @Override
@@ -141,31 +137,31 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Transactional
     @Override
-    public void delete(String id) throws SerException {
+    public void remove(String id) throws SerException {
         rep.delete(id);
     }
 
     @Transactional
     @Override
-    public void delete(BE entity) throws SerException {
+    public void remove(BE entity) throws SerException {
         rep.delete(entity);
     }
 
     @Transactional
     @Override
-    public void delete(Collection<BE> entities) {
+    public void remove(Collection<BE> entities) {
         rep.deleteInBatch(entities);
     }
 
     @Transactional
     @Override
-    public void modify(BE entity) throws SerException {
+    public void update(BE entity) throws SerException {
         rep.saveAndFlush(entity);
     }
 
     @Transactional
     @Override
-    public void modify(Collection<BE> entities) throws SerException {
+    public void update(Collection<BE> entities) throws SerException {
         Stream<BE> stream = entities.stream();
         stream.forEach(entity -> {
             rep.saveAndFlush(entity);

@@ -8,13 +8,14 @@
     
  ##包名规则：
  PackName(包名) : 包名全部小写，连续的单词只是简单地连接起来，
-不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.card.service`
+不使用下划线顶级域名.模块名.小模块名.各组件的目录名 `com.bjike.goddess.user.service`
 
 1. - action(控制器) 以 **action** 结束 com.bjike.goddess.user.action
-2. - com.bjike.goddess.card.service(业务逻辑) 以 **com.bjike.goddess.card.service** 结束 com.bjike.goddess.user.service
-3. - dao(数据层)以 **dao** 结束 com.bjike.goddess.user.dao
-4. - com.bjike.goddess.card.entity(实体)以 **com.bjike.goddess.card.entity** 结束 com.bjike.goddess.user.entity
-5. - com.bjike.goddess.card.dto(数据传输)以 **com.bjike.goddess.card.dto** 结束 com.bjike.goddess.user.com.bjike.goddess.card.dto
+2. - service(业务逻辑) 以 **service** 结束 com.bjike.goddess.user.service
+3. - dao(数据层) 以 **dao** 结束 com.bjike.goddess.user.dao
+4. - entity(实体) 以 **entity** 结束 com.bjike.goddess.user.entity
+5. - dto(数据传输) 以 **dto** 结束 com.bjike.goddess.user.dto
+5. - vo(数据层展示传输) 以 **vo** 结束 com.bjike.goddess.user.vo
 
 ## 类命名规则:
   ClassName(类名) : 大写开头驼峰式，命名时应该使其简洁而又具有描述性 `UserDetail`
@@ -27,22 +28,31 @@
 
 2. Dao（数据控制层）
     - 抛出异常 **RepException**  `RepException`
-    - 接口类以大写**I** 开头 以**Rep**结束  `UserDetailRep`
-    - 接口实现类以 **RepImpl** 结束 `UserDetailRepImpl`
+    - 接口类以大写**I** 开头 以**Rep**结束  `UserDetailRep` (无需实现类)
 
 3. Test（测试用例）
     - 测试类以 **Test** 结束 `UserDetailTest`
+    
 4. Atc（控制器）
     - 控制器类以 **Atc** 结束 `UserAtc`
     - 抛出异常 **ActException**  `ActException`
-    - 返回值统一使用 **ActResult**  `ActResult`
+    - 返回值统一使用 **Result**  `Result`
 
-5. DTO（数据传输）
-    - 控制器类以 **DTO** 结束 `UserDTO`
+5. DTO（data transfer object 数据传输）
+    - 数据传输类以 **DTO** 结束 `UserDTO`
     
 
-6. BO（业务数据传输）
-    - 控制器类以 **BO** 结束 `UserBO`    
+6. BO（business object 业务数据传输）
+    - 控制器类以 **BO** 结束 `UserBO`  
+    
+7. VO（view object 数据展示传输）    
+    - 控制器类以 **VO** 结束 `UserVO` 
+    
+8. 抽象类命名使用 Abstract 或 Base 开头(如BaseDTO,BaseVO) ,异常类命名使用 Exception 结尾 ; 测试类
+   命名以它要测试的类的名称开始,以 Test 结尾
+   
+9. 枚举类名建议带上 Enum 后缀,枚举成员名称需要全大写,单词间用下划线隔开(构造方法被默认强制是私有)
+     
     
 ## 方法命名规则:
  MethodName(方法名)：第一个单词应是动词，并且首字母小写，其它每个单词首字母大写 ,
@@ -53,23 +63,32 @@
 3.   - 其他层方法避免以这个5个单词开头，以免造成误解。
 4.   - Service方法，根据方法的行为命名，只描述方法的意义，见名知意，避免命名上的冲突即可。
 5.   - Web层方法最好是贴近web的语言，如**register**，**login**，**logout**等方法。
+6.   - 接口类中的方法和属性不要加任何修饰符号 (public 也不要加 ) ,保持代码的简洁性,并加上有效的 Javadoc 注释。
+     (Dao,Service方法)- 命名参考
+        - 获取单个对象的方法用 get 做前缀。
+        - 获取多个对象的方法用 list 做前缀。
+        - 获取统计值的方法用 count 做前缀。
+        - 插入的方法用 save 做前缀。
+        - 修改的方法用 update 做前缀。
 
 ## 变量、常量命名规则:
+ 杜绝完全不规范的缩写,避免望文不知义.(AbstractClass “缩写”命名成 AbsClass;condition “缩写”命名成 condi ,此类 随意缩写严重降低了代码的可阅读性。)
  除了能见名知意，命名简写尽量少用,且不允许出现中文及拼音以及JAVA中的关键字命名。
 
-1. - constantName(常量名) ：全部大写，多个单词以下划线分开`CONSTANT_CASE`
+1. - constantName(常量名) ：全部大写，多个单词以下划线分开 力求语义表达完整清楚,不要嫌名字长。`CONSTANT_CASE` 
 
-2. - 非常量字段：类属性名，参数名，局部变量名  首字母小写，
-     其它每个单词的首字母大写小写开头驼峰式`userDetail`
+2. - 非常量字段：类属性名，参数名，局部变量名  首字母小写， 其它每个单词的首字母大写小写开头驼峰式`userDetail`
+   - 类中布尔类型的变量,都不要加 is  
 
 3. - 约定变量:　　所谓约定变量，是指那些使用后即可抛弃的临时变量
      - 通常**i**、**j**、**k**、**m**和n代表整型变量；**c**、**d**和**e**代表字符型变量
      - 循环计数变量通常采用字母 **i**，**j**，**k** 或者 **count**。
-     - 而数组应该总是用下面的方式来命名：`String[] names` 或 `Byte[] bytes`
+     - 而数组应该总是用下面的方式来命名：`String[] names` 或 `Byte[] bytes`(,中括号是数组类型的一部分,数组定义如下: String[] args , 不能用 String args[] )
 
 4. 类属性及形参不允许或者尽量避免使用使用基础属性类型，应用包装类型（`Integer`、`Boolean`、`String`、`Long`、`Double`、`Float`、`Short`、`Character`）
 
 5. 关于行参,数量不能太多,一般不超过最多4~5个,超过一定数量,封装数据传输实体传输(dto)
+
     
 ## 配置文件说明:
 
@@ -99,7 +118,8 @@
       - **config.properties** 数据库连接等常用配置
       - **dubbo-config.xml** 配置所用到的业务以及业务依赖接口
 
-
+## 数据库 :
+    
 
 ## 注释规则:
  准确的描述类、方法、类属性、局部变量、常量的作用，简单明了，避免冗长却解释不清
@@ -147,7 +167,7 @@
         /**
          * 通过用户名查询用户
          * @param username 用户名
-         * @return 用户
+         * @return class user
          * @throws SerException
          */
          User findByUsername(String username) throws SerException {

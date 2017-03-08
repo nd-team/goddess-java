@@ -13,7 +13,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BaseDTO extends PageDTO implements Serializable {
+public abstract class BaseDTO extends PageDTO implements Serializable {
     private static final long serialVersionUID = -3558525794931360478L;
     private List<String> sorts = new ArrayList<>(0); //排序字段 (有排序字段默认排序) "username=desc" 不指定 username (默认使用desc)
     private List<Condition> conditions = new ArrayList<Condition>(0);// 类搜索条件

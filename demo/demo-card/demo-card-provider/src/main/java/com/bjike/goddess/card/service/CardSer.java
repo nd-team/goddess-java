@@ -55,7 +55,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         dto.getConditions().add(Restrict.eq("account",account));
         Card card = findOne(dto);
         card.setMoney(card.getMoney()-140);//减掉帐户余额
-        super.modify(card);
+        super.update(card);
         ticketApi.buyTicket(txContext,account,position);
         return "购票成功";
     }
@@ -86,7 +86,7 @@ public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
         }
         ticketApi.ticketCancel(null, account, position);//退票
         card.setMoney(card.getMoney() + 140);//加回帐户余额
-        super.modify(card);//更新
+        super.update(card);//更新
         System.out.println("购票取消");
         return "取消成功";
     }

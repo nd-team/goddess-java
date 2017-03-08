@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 对象转换业务工具, 时间类型会相应转换成字符串类型, 请确保目标源包含同名字符串类型属性
  * 因远程调用不允许出现(LocalDateTime,LocalDate,LocalTime)等类型,时间类型必须转换成字符串(默认)
- * 同样的,保存实体的时候也不能直接出现时间类型,handlerDate参数为true时会把字符串转换成相应时间类型
+ * 同样的,保存实体的时候也不能直接出现时间类型,convertDate参数为true时会把字符串转换成相应时间类型
  *
  * @Author: [liguiqin]
  * @Date: [2017-01-24 15:47]
@@ -52,11 +52,11 @@ public class BeanTransform {
      * @param sources     转换对象源列表
      * @param target      目标类
      * @param excludes    过滤字段
-     * @param handlerDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
      * @return List<TARGET>目标对象列表
      */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, boolean handlerDate, String... excludes) {
-        return copyList(sources, target, handlerDate, excludes);
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, boolean convertDate, String... excludes) {
+        return copyList(sources, target, convertDate, excludes);
 
     }
 
@@ -106,12 +106,12 @@ public class BeanTransform {
      *
      * @param source      源对象
      * @param target      目标对象
-     * @param handlerDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
      * @param excludes    过滤字段
      */
-    public static void copyProperties(Object source, Object target, boolean handlerDate, String... excludes) {
+    public static void copyProperties(Object source, Object target, boolean convertDate, String... excludes) {
         try {
-            handlerClazz(source, target, handlerDate, excludes);
+            handlerClazz(source, target, convertDate, excludes);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,11 +125,11 @@ public class BeanTransform {
      * @param excludes 过滤属性
      * @return
      */
-    public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, boolean handlerDate, String... excludes) {
+    public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, boolean convertDate, String... excludes) {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();
-                copyProperties(source, o_target, handlerDate, excludes);
+                copyProperties(source, o_target, convertDate, excludes);
                 return (TARGET) o_target;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,14 +143,14 @@ public class BeanTransform {
     /**
      * 复制列表对象属性
      */
-    private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, Class target, boolean handlerDate, String... excludes) {
+    private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, Class target, boolean convertDate, String... excludes) {
         List<TARGET> targets = null;
         if (null != sources && sources.size() > 0) {
             targets = new ArrayList<>(sources.size());
             try {
                 for (SOURCE source : sources) {
                     Object o_target = target.newInstance();
-                    copyProperties(source, o_target, handlerDate, excludes);
+                    copyProperties(source, o_target, convertDate, excludes);
                     targets.add((TARGET) o_target);
                 }
             } catch (Exception e) {
@@ -161,8 +161,8 @@ public class BeanTransform {
     }
 
 
-    private static void handlerClazz(Object source, Object target, boolean handlerDate, String... excludes) throws Exception {
-        handlerCopyFields(source, target, handlerDate, excludes);
+    private static void handlerClazz(Object source, Object target, boolean convertDate, String... excludes) throws Exception {
+        handlerCopyFields(source, target, convertDate, excludes);
     }
 
     private static void handlerClazz(Object source, Object target, String... excludes) throws Exception {
@@ -175,11 +175,11 @@ public class BeanTransform {
      *
      * @param source      源
      * @param target      目标
-     * @param handlerDate 是否处理日期
+     * @param convertDate 是否处理日期
      * @param excludes    过滤熟悉
      * @throws Exception
      */
-    private static void handlerCopyFields(Object source, Object target, boolean handlerDate, String... excludes) throws Exception {
+    private static void handlerCopyFields(Object source, Object target, boolean convertDate, String... excludes) throws Exception {
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
         boolean first = true;
@@ -217,7 +217,7 @@ public class BeanTransform {
                         if (null == s_val) {
                             break;
                         }
-                        if (!handlerDate) { //处理字符串转日期
+                        if (!convertDate) { //处理字符串转日期
                             s_val = convertStringType(s_field.getType(), s_val);
                         } else {
                             for (Type type : DATE_TYPES) {

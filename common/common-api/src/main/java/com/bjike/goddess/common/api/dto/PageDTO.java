@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class PageDTO implements Serializable{
+public abstract class PageDTO implements Serializable{
     private Integer limit = 10;//每显示数量
     private Integer page = 1;//当前页
 

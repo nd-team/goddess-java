@@ -145,7 +145,7 @@ public class RbacTest {
         Role role = roleAPI.findById("524fa88b-086f-4d9c-b962-4c6a3810a454");
         if (null != role) {
             List<Permission> permissions_list = permissionAPI.findAll();
-            roleAPI.modify(role);
+            roleAPI.update(role);
         }
     }
 
@@ -163,7 +163,7 @@ public class RbacTest {
         Permission parent = new Permission();
         parent.setId("99ae9d8f-9a25-45c1-b068-4387b2667b33");//更改父节点为孙节点测试
         permission.setParent(parent);
-        permissionAPI.modify(permission);
+        permissionAPI.update(permission);
         System.out.println(permission);
     }
 

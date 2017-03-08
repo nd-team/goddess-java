@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BaseBO implements Serializable {
+public abstract  class BaseBO implements Serializable {
     private String id;
 
     public String getId() {

@@ -53,14 +53,14 @@ public class RoleSer extends ServiceImpl<Role, RoleDTO> implements RoleAPI {
     }
 
     @Override
-    public void delete(String id) throws SerException {
+    public void remove(String id) throws SerException {
         RoleDTO dto = new RoleDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
         List<Role> children = findByCis(dto);
         if (null != children && children.size() > 0) {
             throw new SerException("该记录存在子节点数据,请先删除子节点!");
         }
-        super.delete(id);
+        super.remove(id);
     }
 
     @Override
