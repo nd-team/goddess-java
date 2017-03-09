@@ -1,9 +1,12 @@
 package com.bjike.goddess.common.consumer.config;
 
 import com.bjike.goddess.common.consumer.interceptor.SecurityIntercept;
+import com.dounine.japi.common.springmvc.CustomRequestMappingHandlerMapping;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * @Author: [liguiqin]
@@ -22,4 +25,5 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(new SecurityIntercept()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
+
 }
