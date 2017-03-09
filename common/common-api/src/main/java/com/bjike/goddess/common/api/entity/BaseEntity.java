@@ -23,20 +23,20 @@ public abstract class BaseEntity implements Serializable{
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", nullable = false,length = 36)
+    @Column(name = "id", nullable = false,length = 36,updatable = false,insertable = false)
     @NotBlank(message = "编号不能为空",groups = {EDIT.class,DEL.class})
     protected String id;
 
     /**
      * 数据创建时间
      */
-    @Column(columnDefinition = "dateTime",nullable = false)
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间'", insertable = false,nullable = false)
     protected LocalDateTime createTime;
 
     /**
      * 上次修改时间
      */
-    @Column(columnDefinition = "timestamp",nullable = false)
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '上次修改时间' ",insertable = false,nullable = false)
     protected LocalDateTime modifyTime ;
 
     public String getId() {

@@ -1,5 +1,7 @@
+import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
@@ -40,11 +42,11 @@ public class QueryTest {
     @Test
     public void init() throws Exception {
         User user = new User();
-        user.setUsername("liguiqin");
-        user.setPassword(PasswordHash.createHash("123456"));
-        user.setPhone("13457910241");
-        user.setNickname("xiaoming");
-        user.setEmployeeNumber("111111");
+        user.setUsername("liguiqin8");
+        user.setPassword(PasswordHash.createHash("123458"));
+        user.setPhone("13457910248");
+        user.setNickname("xiaoming8");
+        user.setEmployeeNumber("1111128");
         userAPI.save(user);
 
     }
@@ -60,6 +62,7 @@ public class QueryTest {
         LocalDateTime[] accessTime = new LocalDateTime[]{LocalDateTime.now().minusDays(100), LocalDateTime.now()};
         dto.getConditions().add(Restrict.between("accessTime", accessTime)); //时间范围查询
         dto.getConditions().add(Restrict.like("username", "li")); //模糊查询
+        dto.getConditions().add(Restrict.like("status", Status.valueOf("THAW"))); //模糊查询
         dto.getConditions().add(Restrict.eq("username", "liguiqin"));//匹配查询
 //        dto.getConditions().add(Restrict.in("age",new Integer[]{11,22,33}));//in查询
 //        dto.getConditions().add(Restrict.eq("group.name","项目组"));//连接查询
@@ -110,6 +113,19 @@ public class QueryTest {
         }
 
     }
+
+
+    @Test
+    public void update() throws SerException {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("username","liguiqin8"));
+        User user = userAPI.findOne(dto);
+        user.setModifyTime(LocalDateTime.now());
+        userAPI.update(user);
+
+    }
+
+
 
 
 }

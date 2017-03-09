@@ -22,22 +22,26 @@ public class Position extends BaseEntity {
     /**
      * 职位名
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '职位名' ")
     private String name;
     /**
      * 描述
      */
+    @Column(columnDefinition = " VARCHAR(255) COMMENT '职位描述' ")
+
     private String description;
     /**
      * 状态
      */
-    private Status status ;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '职位状态'", nullable = false, insertable = false)
+
+    private Status status;
 
     /**
      * 父节点
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '父职位' ")
     private Position parent;
 
 

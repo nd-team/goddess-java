@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.vo;
 
-import com.bjike.goddess.common.api.vo.BaseVO;
 import com.bjike.goddess.user.enums.SexType;
 import com.bjike.goddess.user.enums.UserType;
 
@@ -11,7 +10,7 @@ import com.bjike.goddess.user.enums.UserType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserDetailVO  extends BaseVO{
+public class UserDetailVO   {
 
 
     /**

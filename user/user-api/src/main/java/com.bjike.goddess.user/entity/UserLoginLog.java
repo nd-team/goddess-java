@@ -23,27 +23,29 @@ public class UserLoginLog extends BaseEntity {
      * 登录时间
      */
     @OrderBy(value = "loginTime desc ")
-    @Column(columnDefinition = "dateTime",nullable = false)
-    private LocalDateTime loginTime ;
+    @Column(columnDefinition = "DATETIME  DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间'  ", nullable = false)
+    private LocalDateTime loginTime;
     /**
      * 登录地点
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '登录地点' ")
     private String loginAddress;
     /**
      * ip地址
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '登录ip' ")
     private String loginIp;
     /**
      * 登录方式
      */
-    @Column(columnDefinition = "INT(1)")
-    private LoginType loginType ;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '登录方式'", nullable = false, insertable = false)
+    private LoginType loginType;
 
     /**
      * 用户关联
      */
     @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '所属用户' ")
     private User user;
 
     public LocalDateTime getLoginTime() {
