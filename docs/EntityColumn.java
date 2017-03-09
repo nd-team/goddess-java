@@ -2,8 +2,9 @@
  * 实体对象映射列属性配置说明
  1. 每个映射对象必须继承自 BaseEntity
  2. 每个映射对象必须有相应的生成数据库注释 comment(用columnDefinition标识必须指定数据类型(varchar),有长度的数据类型指明长度,不明确长度暂用255)
- 3. 任何字段数值非负数 必须为 unsigned 类型
- 4. columnDefinition 标识内应与数据库关键字规范一致全部大写
+ 3. columnDefinition 标识内应与数据库关键字规范一致全部大写
+ 4. 任何字段数值非负数 必须为 unsigned 类型
+ unsigned 类型有:
       TINYINT           1 字节    (-128，127)                                    (0，255) 小整数值
 
         SMALLINT        2 字节    (-32 768，32 767)                           (0，65 535) 大整数值
