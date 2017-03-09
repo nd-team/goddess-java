@@ -59,6 +59,7 @@ public class User extends BaseEntity {
     /**
      * 用户状态
      */
+    @Column(columnDefinition = "int(1) default 0",nullable = false,updatable = false,insertable = false)
     private Status status;
 
 
