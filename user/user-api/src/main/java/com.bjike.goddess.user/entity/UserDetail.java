@@ -8,6 +8,7 @@ import com.bjike.goddess.user.enums.UserType;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * 用户详情
@@ -22,62 +23,67 @@ import javax.persistence.*;
 @Table(name = "user_detail")
 public class UserDetail extends BaseEntity {
 
-    @Column(columnDefinition = "INT(1)")//指定数据库类型
     /**
      * 性别
      */
-    private SexType sex ;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户性别' ", nullable = false)
+    private SexType sex;
     /**
      * 年龄
      */
     @Range(min = 0, max = 120)
+    @Column(columnDefinition = "TINYINT COMMENT '年龄' ")
     private Integer age;
     /**
      * 用户类型
      */
-    @Column(columnDefinition = "INT(1)", nullable = false)
-    private UserType userType ;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户类型' ", nullable = false)
+    private UserType userType;
     /**
      * 地址
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '地址' ")
+
     private String address;
     /**
      * 真实姓名
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '真实姓名' ")
     private String realName;
     /**
      * 出生年月
      */
-    private String birthday;
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '出生年月' ")
+    private LocalDate birthday;
     /**
      * 身份证
      */
+    @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '身份证' ")
     private String idCard;
 
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true, columnDefinition = "VARCHAR(36) COMMENT '所属用户' ")
     private User user;
 
     /**
      * 所在部门
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", columnDefinition = "VARCHAR(36) COMMENT '所在部门' ")
     private Department department;
 
     /**
      * 所在用户组
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", columnDefinition = "VARCHAR(36) COMMENT '所在用户组' ")
     private Group group;
 
     /**
      * 职位
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "position_id")
+    @JoinColumn(name = "position_id", columnDefinition = "VARCHAR(36) COMMENT '职位' ")
     private Position position;
 
     public SexType getSex() {
@@ -120,11 +126,11 @@ public class UserDetail extends BaseEntity {
         this.realName = realName;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

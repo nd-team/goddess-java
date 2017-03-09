@@ -20,24 +20,26 @@ public class Department extends BaseEntity {
     /**
      * 部门名
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) comment '部门名' ")
     private String name;
     /**
      * 描述
      */
+    @Column(columnDefinition = "VARCHAR(255) comment '描述' ")
     private String description;
 
     /**
      * 上级部门
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '上级部门' ")
     private Department parent;
 
     /**
      * 状态
      */
-    private Status status = Status.THAW;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '部门状态' ", nullable = false, insertable = false)
+    private Status status;
 
     public String getName() {
         return name;

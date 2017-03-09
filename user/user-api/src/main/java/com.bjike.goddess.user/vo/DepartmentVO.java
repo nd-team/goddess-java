@@ -1,8 +1,6 @@
 package com.bjike.goddess.user.vo;
 
-import com.bjike.goddess.common.api.vo.BaseVO;
 
-import java.time.LocalDateTime;
 
 /**
  * @Author: [liguiqin]
@@ -11,7 +9,7 @@ import java.time.LocalDateTime;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentVO extends BaseVO {
+public class DepartmentVO   {
 
     /**
      * 部门名

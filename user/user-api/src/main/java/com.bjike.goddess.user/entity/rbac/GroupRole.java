@@ -16,12 +16,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "rbac_group_role")
 public class GroupRole extends BaseEntity {
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '组id' ")
     private Group group;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '角色id' ")
     private Role role;
 
     public Group getGroup() {

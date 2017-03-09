@@ -21,45 +21,48 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User extends BaseEntity {
     /**
-     * 登录用户名
+     * 用户名
      */
-    @Column(unique = true, length = 16, nullable = false)
+    @Column(unique = true, length = 16, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户名' ")
     private String username;
 
     /**
      * 登录手机(注册验证手机)
      */
-    @Column(unique = true, length = 11, nullable = false)
+    @Column(unique = true, length = 11, nullable = false, columnDefinition = "VARCHAR(11) COMMENT '手机号码' ")
     private String phone;
     /**
      * 登录邮箱
      */
+
     @Email
+    @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '用户邮箱'")
     private String email;
     /**
      * 登陆密码
      */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户密码'")
     private String password;
     /**
      * 头像
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '用户头像'")
     private String headSculpture;
     /**
      * 昵称
      */
-    @Column(unique = true)
+    @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '用户昵称'")
     private String nickname;
     /**
      * 员工编号
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户员工编号'")
     private String employeeNumber;
 
     /**
      * 用户状态
      */
-    @Column(columnDefinition = "int(1) default 0",nullable = false,updatable = false,insertable = false)
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
     private Status status;
 
 

@@ -21,22 +21,24 @@ public class Group extends BaseEntity {
     /**
      * 组名
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '组名' ")
     private String name;
     /**
      * 描述
      */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '组描述' ")
     private String description;
     /**
      * 状态
      */
-    private Status status ;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '组状态'", nullable = false, insertable = false)
+    private Status status;
 
     /**
      * 父角色
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '上级组' ")
     private Group parent;
 
     public String getName() {

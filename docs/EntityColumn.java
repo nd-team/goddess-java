@@ -1,8 +1,9 @@
 /**
  * 实体对象映射列属性配置说明
  1. 每个映射对象必须继承自 BaseEntity
- 2. 每个映射对象必须有相应的生成数据库注释 comment
+ 2. 每个映射对象必须有相应的生成数据库注释 comment(用columnDefinition标识必须指定数据类型(varchar),有长度的数据类型指明长度,不明确长度暂用255)
  3. 任何字段数值非负数 必须为 unsigned 类型
+
       TINYINT           1 字节    (-128，127)                                    (0，255) 小整数值
 
         SMALLINT        2 字节    (-32 768，32 767)                           (0，65 535) 大整数值
@@ -19,49 +20,49 @@ public class XXX extends BaseEntity{
     /**
      * 时间类型必须设置为对应的dateTime类型
      */
-    @Column(columnDefinition = "DATETIME comment '连接时间'")
+    @Column(columnDefinition = "DATETIME COMMENT '连接时间'")
     private LocalDateTime accessTime;
 
     /**
      * 整形 (unsigned tinyint 代表0-255 ,年龄不会超过255) //否则默认用int
      */
     @Range(min = 0, max = 20) //取范围
-    @Column(columnDefinition = "TINYINT comment '年龄'")
+    @Column(columnDefinition = "TINYINT COMMENT '年龄'")
     private Integer age;
 
     /**
      * 浮点型
      */
-    @Column(columnDefinition = " DECIMAL comment '身高'")
+    @Column(columnDefinition = " DECIMAL COMMENT '身高'")
     private Float height;
 
     /**
      * 双精浮点(precision=5, scale=2 保留两小数)
      */
-    @Column(columnDefinition = " DECIMAL(5,2) comment '重量'")
+    @Column(columnDefinition = " DECIMAL(5,2) COMMENT '重量'")
     private Double weight;
 
     /**
      * 枚举 (设置默认值 default 0 一定要带insertable = false)
      */
-    @Column(columnDefinition = "TINYINT(1) default 0 comment '用户状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(1) default 0 COMMENT '用户状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
      * 布尔类型 注意布尔类型命名
      */
-    @Column(name ="is_expired", columnDefinition = "TINYINT(1) default 0 comment '过期'", nullable = false, insertable = false)
+    @Column(name ="is_expired", columnDefinition = "TINYINT(1) default 0 COMMENT '过期'", nullable = false, insertable = false)
     private Boolean expired;
 
     /**
      * 字符串类型(默认varchar,最大为5000, 超过5000字符指定text类型)
      */
-    @Column(columnDefinition = "VARCHAR(12) comment '姓名'")
+    @Column(columnDefinition = "VARCHAR(12) COMMENT '姓名'")
     private String name;
     /**
      * date
      */
-    @Column(columnDefinition = "DATE  comment '日期'")
+    @Column(columnDefinition = "DATE  COMMENT '日期'")
     private LocalDate date;
 
 

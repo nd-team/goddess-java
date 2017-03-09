@@ -30,13 +30,13 @@ public abstract class BaseEntity implements Serializable{
     /**
      * 数据创建时间
      */
-    @Column(columnDefinition = "dateTime default CURRENT_TIMESTAMP comment '数据创建时间'", insertable = false,nullable = false)
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间'", insertable = false,nullable = false)
     protected LocalDateTime createTime;
 
     /**
      * 上次修改时间
      */
-    @Column(columnDefinition = "dateTime default CURRENT_TIMESTAMP comment '上次修改时间' ",insertable = false,nullable = false)
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '上次修改时间' ",insertable = false,nullable = false)
     protected LocalDateTime modifyTime ;
 
     public String getId() {

@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.vo;
 
-import com.bjike.goddess.common.api.vo.BaseVO;
 
 /**
  * @Author: [liguiqin]
@@ -9,7 +8,7 @@ import com.bjike.goddess.common.api.vo.BaseVO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class RoleVO extends BaseVO {
+public class RoleVO   {
     /**
      * 部门名
      */
