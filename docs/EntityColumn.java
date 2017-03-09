@@ -3,7 +3,7 @@
  1. 每个映射对象必须继承自 BaseEntity
  2. 每个映射对象必须有相应的生成数据库注释 comment(用columnDefinition标识必须指定数据类型(varchar),有长度的数据类型指明长度,不明确长度暂用255)
  3. 任何字段数值非负数 必须为 unsigned 类型
-
+ 4. columnDefinition 标识内应与数据库关键字规范一致全部大写
       TINYINT           1 字节    (-128，127)                                    (0，255) 小整数值
 
         SMALLINT        2 字节    (-32 768，32 767)                           (0，65 535) 大整数值
@@ -45,13 +45,13 @@ public class XXX extends BaseEntity{
     /**
      * 枚举 (设置默认值 default 0 一定要带insertable = false)
      */
-    @Column(columnDefinition = "TINYINT(1) default 0 COMMENT '用户状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
      * 布尔类型 注意布尔类型命名
      */
-    @Column(name ="is_expired", columnDefinition = "TINYINT(1) default 0 COMMENT '过期'", nullable = false, insertable = false)
+    @Column(name ="is_expired", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '过期'", nullable = false, insertable = false)
     private Boolean expired;
 
     /**
