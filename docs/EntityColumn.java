@@ -19,7 +19,7 @@ public class XXX extends BaseEntity{
     /**
      * 时间类型必须设置为对应的dateTime类型
      */
-    @Column(columnDefinition = "dateTime comment '连接时间'")
+    @Column(columnDefinition = "DATETIME comment '连接时间'")
     private LocalDateTime accessTime;
 
     /**
@@ -36,9 +36,9 @@ public class XXX extends BaseEntity{
     private Float height;
 
     /**
-     * 双精浮点(precision=5, scale=2 保留小数)
+     * 双精浮点(precision=5, scale=2 保留两小数)
      */
-    @Column(precision=5, scale =2,columnDefinition = " decimal comment '重量'")
+    @Column(columnDefinition = " DECIMAL(5,2) comment '重量'")
     private Double weight;
 
     /**
@@ -48,9 +48,9 @@ public class XXX extends BaseEntity{
     private Status status;
 
     /**
-     * 布尔类型
+     * 布尔类型 注意布尔类型命名
      */
-    @Column(columnDefinition = "TINYINT(1) default 0 comment '过期'", nullable = false, insertable = false)
+    @Column(name ="is_expired", columnDefinition = "TINYINT(1) default 0 comment '过期'", nullable = false, insertable = false)
     private Boolean expired;
 
     /**
