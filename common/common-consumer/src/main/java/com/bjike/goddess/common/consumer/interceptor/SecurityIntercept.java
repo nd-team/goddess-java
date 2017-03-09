@@ -2,10 +2,8 @@ package com.bjike.goddess.common.consumer.interceptor;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.session.Session;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -49,17 +47,8 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
     }
 
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
-        if (StringUtils.isNotBlank(token)) {
-            if (Session.CURRENT_USER.contains(token)) {
-                return true;
-            } else {
-                handlerNotHasLogin(response, "登录已失效，请登录再进行操作！");
-                return false;
-            }
-        } else {
-            handlerNotHasLogin(response, "请先登录，再进行操作！");
-            return false;
-        }
+
+            return true;
     }
 
 
