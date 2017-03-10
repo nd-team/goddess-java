@@ -1,6 +1,5 @@
 package com.bjike.goddess.ticket.vo;
 
-import com.bjike.goddess.common.api.vo.BaseVO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Min;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class TicketVO extends BaseVO {
+public class TicketVO{
     public interface TESTDemoList{}
     public interface TESTDemoListUP{}
 
@@ -24,7 +23,7 @@ public class TicketVO extends BaseVO {
     /**
      * 座位号 D3608-2-2D
      */
-    @NotBlank(groups = TESTDemoList.class,message = "座位号不能为空")
+    @NotBlank(groups = TicketVO.TESTDemoList.class,message = "座位号不能为空")
     private String position;
     /**
      * 出发时间

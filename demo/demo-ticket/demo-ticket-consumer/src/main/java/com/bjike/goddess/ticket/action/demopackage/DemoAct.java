@@ -21,7 +21,6 @@ public class DemoAct {
      * 获取列表
      * @param ticketVO 票信息
      * @param bindingResult
-     * @return class TicketVO
      * @deprecated yes
      * @throws ActException
      * @version v1
@@ -36,11 +35,25 @@ public class DemoAct {
      * @param ticketVO 票信息
      * @param bindingResult
      * @return class TicketVO
+     * @stable yes
      * @throws ActException
      * @version v2
      */
     @GetMapping("v2/list")
-    public Result listUp(@Validated({TicketVO.TESTDemoList.class}) TicketVO ticketVO, BindingResult bindingResult) throws ActException{
+    public Result list2(@Validated({TicketVO.TESTDemoList.class}) TicketVO ticketVO, BindingResult bindingResult) throws ActException{
+        return null;
+    }
+
+    /**
+     * 获取列表
+     * @param ticketVO 票信息
+     * @param bindingResult
+     * @return class TicketVO
+     * @throws ActException
+     * @version v3
+     */
+    @GetMapping("v3/list")
+    public Result list3(@Validated TicketVO ticketVO, BindingResult bindingResult) throws ActException{
         return null;
     }
 
