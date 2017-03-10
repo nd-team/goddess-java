@@ -1,4 +1,0 @@
-throws
-version
-return
-param

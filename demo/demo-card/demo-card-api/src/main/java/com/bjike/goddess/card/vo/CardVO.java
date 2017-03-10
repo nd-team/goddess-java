@@ -1,6 +1,5 @@
 package com.bjike.goddess.card.vo;
 
-import com.bjike.goddess.common.api.vo.BaseVO;
 
 /**
  * 视图封装对象
@@ -11,7 +10,7 @@ import com.bjike.goddess.common.api.vo.BaseVO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CardVO extends BaseVO {
+public class CardVO   {
     /**
      * 卡号
      */

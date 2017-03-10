@@ -28,6 +28,7 @@ public class CardAct {
      *
      * @param account  账号
      * @param password 密码
+     * @version v1         版本
      * @return class Card
      */
     @PostMapping("v1/register")
@@ -41,10 +42,9 @@ public class CardAct {
         }
 
     }
-
     /**
      * 通过卡号查找卡信息
-     *
+     * @version v1         版本
      * @param account 账号
      * @deprecated 已过期
      */

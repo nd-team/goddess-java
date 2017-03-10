@@ -36,6 +36,7 @@ public class BuyTicketAct {
      *
      * @param card          卡实体
      * @param position      座位号
+     * @version v1         版本
      * @param bindingResult
      */
     @PostMapping("v1/buy/{position}")
@@ -48,6 +49,14 @@ public class BuyTicketAct {
         }
     }
 
+    /**
+     * 取消购票
+     * @param card
+     * @param position
+     * @param bindingResult
+     * @version v1         版本
+     * @throws ActException
+     */
     @PostMapping("v1/cancel/{position}")
     public Result cancel(@Validated Card card, @PathVariable String position, BindingResult bindingResult) throws ActException {
         try {

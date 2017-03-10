@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @CacheConfig(cacheNames = "TicketSerCache")
+@Service
 public class TicketSerImpl extends ServiceImpl<Ticket, TicketDTO> implements TicketSer {
 
     @Override

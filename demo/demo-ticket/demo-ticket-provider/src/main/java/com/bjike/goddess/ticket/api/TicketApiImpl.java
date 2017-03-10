@@ -25,7 +25,7 @@ public class TicketApiImpl implements TicketAPI {
 
     @Override
     public List<TicketBO> createTicket(List<TicketBO> ticketBOS) throws SerException {
-        List<Ticket> tickets = BeanTransform.copyProperties(ticketBOS,Ticket.class);
+        List<Ticket> tickets = BeanTransform.copyProperties(ticketBOS,Ticket.class,true);
         ticketSer.createTicket(tickets);
         return ticketBOS;
     }

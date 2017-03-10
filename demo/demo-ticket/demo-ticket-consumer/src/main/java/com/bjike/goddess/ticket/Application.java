@@ -23,7 +23,7 @@ import java.io.IOException;
 public class Application{
 
 	public static void japi(){
-		JapiClient.setPrefixPath("/home/lake/github/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 
 		JapiClient.setProjectJavaPath("demo/demo-ticket/demo-ticket-consumer");//主项目位置

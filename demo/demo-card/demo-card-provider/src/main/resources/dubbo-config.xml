@@ -17,9 +17,9 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.card.service.CardSer" ref="cardSer" />
+	<dubbo:service interface="com.bjike.goddess.card.api.CardAPI" ref="cardApiImpl" />
 
 	<!--注册 车票(或其他)模块业务接口-->
-	<dubbo:reference validation="true" id="ticketAPI" interface="com.bjike.goddess.ticket.service.TicketSer" />
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.ticket.service.TicketSer" id="ticketApiImpl"/>
 
 </beans>
