@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.rbac.PermissionDTO;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
@@ -18,7 +18,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface PermissionAPI extends SerAPI<Permission, PermissionDTO> {
+public interface PermissionAPI extends Ser<Permission, PermissionDTO> {
 
 
     /**

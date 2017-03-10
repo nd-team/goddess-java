@@ -1,7 +1,7 @@
 package com.bjike.goddess.ticket.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.ticket.bo.TicketBO;
 import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
@@ -14,14 +14,14 @@ import java.util.List;
  *
  * @author huanghuanlai
  */
-public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
+public interface TicketSer extends Ser<Ticket, TicketDTO> {
 
     /**
      * 创建车票
      *
-     * @param ticketBOS
+     * @param tickets
      */
-    default List<TicketBO> createTicket(List<TicketBO> ticketBOS)throws SerException {
+    default List<Ticket> createTicket(List<Ticket> tickets)throws SerException {
         return null;
     }
 
@@ -30,7 +30,7 @@ public interface TicketAPI extends SerAPI<Ticket, TicketDTO> {
      * 查询余票
      *
      */
-    default List<TicketBO> queryTicket()throws SerException {
+    default List<Ticket> queryTicket()throws SerException {
         return null;
     }
 

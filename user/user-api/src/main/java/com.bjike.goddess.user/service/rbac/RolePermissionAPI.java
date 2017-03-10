@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.rbac.RolePermissionDTO;
 import com.bjike.goddess.user.entity.rbac.RolePermission;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface RolePermissionAPI extends SerAPI<RolePermission, RolePermissionDTO> {
+public interface RolePermissionAPI extends Ser<RolePermission, RolePermissionDTO> {
     /**
      * 通过角色id查询其权限资源
      * @param ids 角色id

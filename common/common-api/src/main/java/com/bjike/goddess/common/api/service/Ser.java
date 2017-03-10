@@ -15,7 +15,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface SerAPI<BE extends BaseEntity, BD extends BaseDTO> {
+public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
 
     /**
      * 查询所有数据

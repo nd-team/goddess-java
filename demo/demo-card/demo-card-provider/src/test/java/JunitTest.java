@@ -1,7 +1,7 @@
 import com.bjike.goddess.card.config.AppRoot;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.card.service.CardAPI;
+import com.bjike.goddess.card.service.CardSer;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.RestrictionType;
@@ -19,7 +19,7 @@ public class JunitTest {
 
 
     @Autowired
-    private CardAPI cardAPI;
+    private CardSer cardAPI;
 
     @Before
     public void initCard(){//自动初始新帐户

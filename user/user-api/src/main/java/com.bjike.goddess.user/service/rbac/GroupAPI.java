@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
@@ -18,7 +18,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface GroupAPI extends SerAPI<Group, GroupDTO> {
+public interface GroupAPI extends Ser<Group, GroupDTO> {
 
     /**
      * 逐层查询,逐层加载

@@ -6,8 +6,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.ticket.bo.TicketBO;
-import com.bjike.goddess.ticket.entity.Ticket;
-import com.bjike.goddess.ticket.service.TicketAPI;
+import com.bjike.goddess.ticket.service.TicketSer;
 import com.bjike.goddess.ticket.vo.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ import java.util.Map;
 public class TicketAct {
 
     @Autowired
-    private TicketAPI ticketAPI;
+    private TicketSer ticketAPI;
 
     /**
      * 初始化/创建车票

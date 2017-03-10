@@ -4,27 +4,21 @@ import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.common.api.dto.Restrict;
-import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.ticket.bo.TicketBO;
-import com.bjike.goddess.ticket.entity.Ticket;
-import com.bjike.goddess.ticket.service.TicketAPI;
+import com.bjike.goddess.ticket.service.TicketSer;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
-@Service("cardSer")
-public class CardSer extends ServiceImpl<Card, CardDTO> implements CardAPI {
+@Service
+public class CardSerImpl extends ServiceImpl<Card, CardDTO> implements CardSer {
 
     @Autowired
-    private TicketAPI ticketApi;
+    private TicketSer ticketApi;
 
 
     @Override

@@ -1,9 +1,7 @@
 package com.bjike.goddess.ticket.service;
 
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.ticket.bo.TicketBO;
@@ -15,26 +13,22 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @CacheConfig(cacheNames = "TicketSerCache")
-@Service("ticketSer")
-public class TicketSer extends ServiceImpl<Ticket, TicketDTO> implements TicketAPI {
+public class TicketSerImpl extends ServiceImpl<Ticket, TicketDTO> implements TicketSer {
 
     @Override
-    public List<TicketBO> createTicket(List<TicketBO> ticketBOS) throws SerException {
-        List<Ticket> tickets = BeanTransform.copyProperties(ticketBOS, Ticket.class, true);
+    public List<Ticket> createTicket(List<Ticket> tickets) throws SerException {
         super.save(tickets);
-        return ticketBOS;
+        return tickets;
     }
 
     @Override
-    public List<TicketBO> queryTicket() throws SerException {
+    public List<Ticket> queryTicket() throws SerException {
         TicketDTO dto = new TicketDTO();
         dto.getConditions().add(Restrict.isNull("account"));
-        List<TicketBO> bos = BeanTransform.copyProperties(super.findByCis(dto), TicketBO.class);
-        return bos;
+        return super.findByCis(dto);
     }
 
     @Override

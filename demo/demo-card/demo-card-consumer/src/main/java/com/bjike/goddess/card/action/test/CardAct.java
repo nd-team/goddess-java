@@ -1,18 +1,15 @@
 package com.bjike.goddess.card.action.test;
 
+import com.bjike.goddess.card.api.CardAPI;
 import com.bjike.goddess.card.bo.CardBO;
-import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.card.service.CardAPI;
+import com.bjike.goddess.card.service.CardSer;
 import com.bjike.goddess.card.vo.CardVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by huanghuanlai on 2017/1/10.
  */
 @RestController
-@RequestMapping("{version}/demo/card")
+@RequestMapping("demo/card")
 public class CardAct {
 
     @Autowired
@@ -33,8 +30,7 @@ public class CardAct {
      * @param password 密码
      * @return class Card
      */
-    @ApiVersion(1)
-    @PostMapping("register")
+    @PostMapping("v1/register")
     public Result register(String account, String password) throws ActException {
         try {
             CardBO bo = cardAPI.initCard(account, password);
@@ -52,8 +48,7 @@ public class CardAct {
      * @param account 账号
      * @deprecated 已过期
      */
-    @ApiVersion(1)
-    @GetMapping("{account}")
+    @GetMapping("v1/{account}")
     public Result findByAccount(@PathVariable String account) throws ActException {
         try {
             CardBO bo = cardAPI.findByAccount(account);

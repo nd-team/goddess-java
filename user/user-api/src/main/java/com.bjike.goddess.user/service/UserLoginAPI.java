@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.ext.UserLoginDTO;
 import com.bjike.goddess.user.entity.User;
@@ -15,7 +15,7 @@ import com.bjike.goddess.user.entity.User;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface UserLoginAPI extends SerAPI<User, UserDTO> {
+public interface UserLoginAPI extends Ser<User, UserDTO> {
 
 
     /**

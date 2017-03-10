@@ -1,12 +1,11 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
-import com.bjike.goddess.user.vo.DepartmentVO;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface DepartmentAPI extends SerAPI<Department, DepartmentDTO> {
+public interface DepartmentAPI extends Ser<Department, DepartmentDTO> {
     default List<DepartmentTreeBO> treeData(String id) throws SerException {
         return null;
     }

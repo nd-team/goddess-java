@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.exception.RepException;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.constant.FinalCommons;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.common.jpa.dao.JpaSpecification;
@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements SerAPI<BE, BD>, Serializable {
+public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements Ser<BE, BD>, Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
     public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.bo.UserBO;
@@ -17,7 +17,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface UserAPI extends SerAPI<User, UserDTO> {
+public interface UserAPI extends Ser<User, UserDTO> {
 
     default List<UserBO> list() throws SerException {
         return null;

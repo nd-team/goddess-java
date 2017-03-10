@@ -1,6 +1,6 @@
 package com.bjike.goddess.user.service;
 
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.PositionDTO;
 import com.bjike.goddess.user.entity.Position;
 
@@ -13,6 +13,6 @@ import com.bjike.goddess.user.entity.Position;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface PositionAPI extends SerAPI<Position, PositionDTO> {
+public interface PositionAPI extends Ser<Position, PositionDTO> {
 
 }

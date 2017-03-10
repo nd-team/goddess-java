@@ -3,12 +3,10 @@ package com.bjike.goddess.card.service;
 import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
-import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -16,7 +14,7 @@ import java.util.List;
  *
  * @author huanghuanlai
  */
-public interface CardAPI extends SerAPI<Card, CardDTO> {
+public interface CardSer extends Ser<Card, CardDTO> {
 
 
     /**

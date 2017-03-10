@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.SerAPI;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.bo.UserDetailBO;
@@ -15,7 +15,7 @@ import com.bjike.goddess.user.bo.UserDetailBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface UserDetailAPI extends SerAPI<UserDetail, UserDetailDTO> {
+public interface UserDetailAPI extends Ser<UserDetail, UserDetailDTO> {
 
     default UserDetailBO add() throws SerException {
         return null;
