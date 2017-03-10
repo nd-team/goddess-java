@@ -20,6 +20,6 @@
 	<dubbo:service interface="com.bjike.goddess.card.api.CardAPI" ref="cardApiImpl" />
 
 	<!--注册 车票(或其他)模块业务接口-->
-	<dubbo:reference validation="true"  interface="com.bjike.goddess.ticket.service.TicketSer" id="ticketApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.ticket.api.TicketAPI" id="ticketApiImpl"/>
 
 </beans>

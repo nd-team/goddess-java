@@ -1,5 +1,6 @@
 package com.bjike.goddess.ticket.service;
 
+import com.bjike.goddess.card.api.CardAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,6 +10,7 @@ import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +58,6 @@ public class TicketSerImpl extends ServiceImpl<Ticket, TicketDTO> implements Tic
 
     @Transactional(rollbackFor = SerException.class)
     public String buyTicketCancel(TransactionContext txContext, String account, String position) throws SerException {
-        ticketCancel(txContext, account, position);
         return null;
     }
 

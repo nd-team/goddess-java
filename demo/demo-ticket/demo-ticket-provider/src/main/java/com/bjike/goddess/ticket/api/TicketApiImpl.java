@@ -32,7 +32,7 @@ public class TicketApiImpl implements TicketAPI {
 
     @Override
     public List<TicketBO> queryTicket() throws SerException {
-        return BeanTransform.copyProperties(ticketSer.queryTicket(),Ticket.class);
+        return BeanTransform.copyProperties(ticketSer.queryTicket(),TicketBO.class);
     }
 
     @Override

@@ -20,4 +20,6 @@
 
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.card.api.CardAPI"  id="cardApiImpl"/>
 
+
+
 </beans>

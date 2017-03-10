@@ -2,13 +2,12 @@ package com.bjike.goddess.ticket.action.ticket;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.ticket.api.TicketAPI;
 import com.bjike.goddess.ticket.bo.TicketBO;
-import com.bjike.goddess.ticket.entity.Ticket;
-import com.bjike.goddess.ticket.service.TicketSer;
 import com.bjike.goddess.ticket.vo.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +34,11 @@ public class TicketAct {
     /**
      * 初始化创建车票
      *
-     * @return
      * @version v1
      * @throws ActException
      */
     @PostMapping("v1/createTicket")
-    public ActResult createTicket() throws ActException {
+    public Result createTicket() throws ActException {
         try {
             //初始化5张票
             List<TicketBO> ticketBOS = new ArrayList<>(5);
@@ -64,12 +62,11 @@ public class TicketAct {
 
     /**
      * 剩余车票
-     * @return
      * @version v1
      * @throws ActException
      */
     @GetMapping("v1/surplusTicket")
-    public ActResult surplusTicket() throws ActException {
+    public Result surplusTicket() throws ActException {
         try {
             List<TicketBO> bos = ticketAPI.queryTicket();
             List<TicketVO> vos = BeanTransform.copyProperties(bos, TicketVO.class);

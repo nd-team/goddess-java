@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.ticket.api.TicketAPI;
 import com.bjike.goddess.ticket.service.TicketSer;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardSerImpl extends ServiceImpl<Card, CardDTO> implements CardSer {
 
     @Autowired
-    private TicketSer ticketApi;
+    private TicketAPI ticketApi;
 
 
     @Override
@@ -27,6 +28,7 @@ public class CardSerImpl extends ServiceImpl<Card, CardDTO> implements CardSer {
         Card card = new Card();
         card.setAccount(account);
         card.setPassword(password);
+        card.setMoney(1000L);
         super.save(card);
         return  BeanTransform.copyProperties(card,CardBO.class);
     }
@@ -51,6 +53,7 @@ public class CardSerImpl extends ServiceImpl<Card, CardDTO> implements CardSer {
         card.setMoney(card.getMoney()-140);//减掉帐户余额
         super.update(card);
         ticketApi.buyTicket(txContext,account,position);
+
         return "购票成功";
     }
 
