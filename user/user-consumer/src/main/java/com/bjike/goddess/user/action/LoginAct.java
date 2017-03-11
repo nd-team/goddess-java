@@ -4,11 +4,11 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.user.dto.ext.UserLoginDTO;
+import com.bjike.goddess.user.api.UserLoginAPI;
 import com.bjike.goddess.user.enums.LoginType;
-import com.bjike.goddess.user.service.UserLoginAPI;
+import com.bjike.goddess.user.service.UserLoginSer;
+import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.CheckMobile;
-import com.dounine.japi.common.springmvc.ApiVersion;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/user")
+@RequestMapping("user")
 public class LoginAct {
 
     @Autowired
@@ -34,21 +34,21 @@ public class LoginAct {
     /**
      * 登录
      *
-     * @param dto 登录用户传输数据对象
+     * @param loginTO 登录用户传输数据对象
      * @param request
      * @return
+     * @version v1
      */
-    @ApiVersion(1)
-    @PostMapping("login")
-    public Result login(UserLoginDTO dto, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/login")
+    public Result login(UserLoginTO loginTO, HttpServletRequest request) throws ActException {
         try {
             String userAgent = request.getHeader("USER-AGENT").toLowerCase();
             LoginType type = LoginType.PC;
             if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
                 type = LoginType.MOBILE;
             }
-            dto.setLoginType(type);
-            String token = userLoginAPI.login(dto);
+            loginTO.setLoginType(type);
+            String token = userLoginAPI.login(loginTO);
             return ActResult.initialize(token);
 
         } catch (SerException e) {

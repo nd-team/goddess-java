@@ -17,27 +17,17 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--发布接口,供其他模块调用-->
-	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-	<dubbo:service interface="com.bjike.goddess.user.service.rbac.RoleAPI" ref="roleSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.rbac.GroupAPI" ref="groupSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.rbac.PermissionAPI" ref="permissionSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserDetailAPI" ref="userDetailSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.DepartmentAPI" ref="departmentSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserAPI" ref="userSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserLoginAPI" ref="userLoginSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserLoginLogAPI" ref="userLoginLogSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserRegisterAPI" ref="userRegisterSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserAuthCodeAPI" ref="userAuthCodeSer"/>
-	<dubbo:service interface="com.bjike.goddess.user.service.UserFindPwdAPI" ref="userFindPwdSer"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.RoleAPI" ref="roleApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupAPI" ref="groupApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserDetailAPI" ref="userDetailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.DepartmentAPI" ref="departmentApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAPI" ref="userApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginAPI" ref="userLoginApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
 
-	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
-	否则不需要配置-->
-	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.UserDetailAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.UserRoleAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.GroupUserAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.GroupRoleAPI" />
-	<dubbo:reference interface="com.bjike.goddess.user.service.rbac.RolePermissionAPI" />
+
 
 </beans>

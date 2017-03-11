@@ -1,6 +1,5 @@
 import com.bjike.goddess.user.entity.rbac.Group;
-import com.bjike.goddess.user.service.rbac.GroupAPI;
-import org.junit.Before;
+import com.bjike.goddess.user.service.rbac.GroupSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import java.util.List;
 @ContextConfiguration(classes = AppConfig.class)
 public class GroupTest {
     @Autowired
-    private GroupAPI groupAPI;
+    private GroupSer groupAPI;
 
 
     @Test

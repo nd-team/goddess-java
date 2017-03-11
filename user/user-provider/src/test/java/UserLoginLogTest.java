@@ -1,9 +1,10 @@
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.enums.LoginType;
-import com.bjike.goddess.user.service.UserAPI;
-import com.bjike.goddess.user.service.UserLoginLogAPI;
+import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.service.UserLoginLogSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ public class UserLoginLogTest {
 
 
     @Autowired
-    private UserLoginLogAPI userLoginLogAPI;
+    private UserLoginLogSer userLoginLogAPI;
     @Autowired
-    private UserAPI userAPI;
+    private UserSer userAPI;
 
     @Test
     public void addLoginLog() throws SerException {
@@ -41,9 +42,7 @@ public class UserLoginLogTest {
         loginLog.setLoginType(LoginType.MOBILE);
         loginLog.setId("11s1111");
         loginLog.setLoginTime(LocalDateTime.now());
-        User user = userAPI.findByAccountNumber("liguiqin");
-        loginLog.setUser(user);
-        userLoginLogAPI.save(loginLog);
+        UserBO userBO = userAPI.findByAccountNumber("liguiqin");
 
     }
 

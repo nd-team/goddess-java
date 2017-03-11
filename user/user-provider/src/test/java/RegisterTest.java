@@ -1,6 +1,6 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
-import com.bjike.goddess.user.service.UserRegisterAPI;
+import com.bjike.goddess.user.service.UserRegisterSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +24,7 @@ public class RegisterTest {
      * 基础增删改查，批量操作等
      */
 
-    private UserRegisterAPI userRegisterAPI;
+    private UserRegisterSer userRegisterAPI;
 
 
     @Test

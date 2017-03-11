@@ -4,9 +4,9 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.user.service.UserAuthCodeAPI;
+import com.bjike.goddess.user.api.UserAuthCodeAPI;
+import com.bjike.goddess.user.service.UserAuthCodeSer;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
-import com.dounine.japi.common.springmvc.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,22 +29,22 @@ import java.util.Map;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/authCode")
+@RequestMapping("authCode")
 public class AuthCodeAct {
     @Autowired
-    private UserAuthCodeAPI userAuthCodeSer;
+    private UserAuthCodeAPI userAuthCodeAPI;
 
     /**
      * 显示验证码（登录是否需要验证码）
      *
      * @param account 账号(email,username,phone)
-     * @return true代表需要要验证,false代表不需要验证码
+     * @return true代表需要要验证, false代表不需要验证码
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("showAuthCode/{account}")
+    @GetMapping("v1/showAuthCode/{account}")
     public Result showAuthCode(@PathVariable String account) throws ActException {
         try {
-            Boolean needCode = userAuthCodeSer.showAuthCode(account);
+            Boolean needCode = userAuthCodeAPI.showAuthCode(account);
             return ActResult.initialize(needCode);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -58,8 +58,8 @@ public class AuthCodeAct {
      * @param account  账号(email,username,phone)
      * @param response
      * @return 验证码图片流
+     * @version v1
      */
-    @ApiVersion(1)
     @GetMapping("generateCode/{account}")
     public void generateCode(@PathVariable String account, HttpServletResponse response) throws ActException {
         response.setContentType("image/jpeg");
@@ -76,7 +76,7 @@ public class AuthCodeAct {
             ImageIO.write(bufferedImage, "JPEG", response.getOutputStream());
             bufferedImage.flush();
 
-            userAuthCodeSer.handleAuthCode(account, code);
+            userAuthCodeAPI.handleAuthCode(account, code);
         } catch (IOException e) {
             throw new ActException(e.getMessage());
         } catch (SerException e) {

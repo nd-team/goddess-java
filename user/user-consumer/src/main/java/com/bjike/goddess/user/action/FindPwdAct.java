@@ -5,8 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.bo.UserSimpleBO;
-import com.bjike.goddess.user.service.UserFindPwdAPI;
-import com.dounine.japi.common.springmvc.ApiVersion;
+import com.bjike.goddess.user.service.UserFindPwdSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,21 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/findPwd")
+@RequestMapping("findPwd")
 public class FindPwdAct {
 
-    @Autowired
-    private UserFindPwdAPI userFindPwdAPI;
+    private UserFindPwdSer userFindPwdAPI;
 
     /**
      * 验证码验证
      *
-     * @param account 账号(email,username,phone)
+     * @param account  账号(email,username,phone)
      * @param authCode 验证码
      * @return 简单的用户信息
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("verifyAccount")
+    @GetMapping("v1/verifyAccount")
     public Result verifyAccount(String account, String authCode) throws ActException {
         try {
             UserSimpleBO simpleBO = userFindPwdAPI.verifyAccount(account, authCode);
@@ -51,10 +49,10 @@ public class FindPwdAct {
      * 通过昵称发送手机验证码到手机
      *
      * @param nickName 昵称
-     * @return
+     * @version v1
      */
 
-    @GetMapping("sendCode/{nickName}")
+    @GetMapping("v1/sendCode/{nickName}")
     public Result sendCode(@PathVariable String nickName) throws ActException {
         try {
             Boolean result = userFindPwdAPI.sendCodeByNickname(nickName);

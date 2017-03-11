@@ -1,11 +1,10 @@
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.UserAPI;
+import com.bjike.goddess.user.service.UserSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class QueryTest {
      */
 
     @Autowired
-    private UserAPI userAPI;
+    private UserSer userAPI;
 
 
     @Test

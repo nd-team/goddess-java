@@ -1,7 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.UserAPI;
-import com.bjike.goddess.user.service.UserDetailAPI;
+import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.service.UserDetailSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.List;
 public class UserTest {
 
     @Autowired
-    private UserAPI userAPI;
+    private UserSer userAPI;
     @Autowired
     CacheManager cacheManager;
 
@@ -52,7 +52,7 @@ public class UserTest {
     }
 
     @Autowired
-    private UserDetailAPI userDetailAPI;
+    private UserDetailSer userDetailAPI;
 
     @Test
     public void addUserDetails() throws SerException {

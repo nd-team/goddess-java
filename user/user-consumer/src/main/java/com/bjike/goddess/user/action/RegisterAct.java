@@ -4,9 +4,10 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.user.api.UserRegisterAPI;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
-import com.bjike.goddess.user.service.UserRegisterAPI;
-import com.dounine.japi.common.springmvc.ApiVersion;
+import com.bjike.goddess.user.service.UserRegisterSer;
+import com.bjike.goddess.user.to.UserRegisterTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,22 +24,21 @@ import javax.validation.Valid;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/user")
+@RequestMapping("user")
 public class RegisterAct {
     @Autowired
-    private UserRegisterAPI registerSer;
+    private UserRegisterAPI userRegisterAPI;
 
     /**
-     * @param dto    注册用户传输对象
+     * @param registerTO    注册用户传输对象
      * @param result
-     * @return
      * @throws ActException
+     * @version v1
      */
-    @ApiVersion(1)
-    @PostMapping("register")
-    public Result register(@Valid UserRegisterDTO dto, BindingResult result) throws ActException {
+    @PostMapping("v1/register")
+    public Result register(@Valid UserRegisterTO registerTO, BindingResult result) throws ActException {
         try {
-            registerSer.verifyCodeAndReg(dto);
+            userRegisterAPI.verifyCodeAndReg(registerTO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -50,14 +50,13 @@ public class RegisterAct {
      * 验证手机号码并发生验证码到手机
      *
      * @param phone 手机号码
-     * @return
      * @throws ActException
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("verifyPhone/{phone}")
+    @GetMapping("v1/verifyPhone/{phone}")
     public Result sendCodeToPhone(@PathVariable String phone) throws ActException {
         try {
-            registerSer.verifyAndSendCode(phone);
+            userRegisterAPI.verifyAndSendCode(phone);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
