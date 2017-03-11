@@ -25,3 +25,10 @@ include ':user:user-api'
 include ':user:user-consumer'
 include ':user:user-provider'
 
+//#staffentry
+include ':staffentry:staffentry-api'
+include ':staffentry:staffentry-consumer'
+include ':staffentry:staffentry-provider'
+
+
+
