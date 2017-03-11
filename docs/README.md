@@ -24,45 +24,57 @@
 
 5. - vo(数据层展示传输) 以 **vo** `结束 com.bjike.goddess.user.vo`
 
+5. - to(数据传递传输，无特殊查询的情况下用作请求参数对象) 以 **to** `结束 com.bjike.goddess.user.to`
+
 ## 类命名规约
   ClassName(类名) : 大写开头驼峰式，命名时应该使其简洁而又具有描述性 `UserDetail`
 
 1. Service(业务逻辑层)
     - 抛出异常 **SerException**  `SerException`
     
-    - 接口类以**API**结束 `UserDetailAPI`
+    - 接口类以**Ser**结束 `UserDetailSer`
     
-    - 接口实现类以 **Ser** 结束 `UserDetailSer`
+    - 接口实现类以 **SerImpl** 结束 `UserDetailSerImpl`
+    
+2. Api(对外提供服务接口)
+    - 抛出异常 **SerException**  `SerException`
+    
+    - 接口类以**API**结束 `UserAPI`
+    
+    - 接口实现类以 **ApiImpl** 结束 `UserApiImpl`
 
-2. Dao（数据控制层）
+3. Dao（数据控制层）
     - 抛出异常 **RepException**  `RepException`
     
     - 接口类以大写**I** 开头 以**Rep**结束  `UserDetailRep` (无需实现类)
 
-3. Test（测试用例）
+4. Test（测试用例）
     - 测试类以 **Test** 结束 `UserDetailTest`
     
-4. Atc（控制器）
+5. Atc（控制器）
     - 控制器类以 **Atc** 结束 `UserAtc`
     
     - 抛出异常 **ActException**  `ActException`
     
     - 返回值统一使用 **Result**  `Result`
 
-5. DTO（data transfer object 数据传输）
+6. DTO（data transfer object 数据传输）
     - 数据传输类以 **DTO** 结束 `UserDTO`
     
 
-6. BO（business object 业务数据传输）
+7. BO（business object 业务数据传输）
     - 控制器类以 **BO** 结束 `UserBO`  
     
-7. VO（view object 数据展示传输）    
+8. VO（value object 值对象数据展示传输）    
     - 控制器类以 **VO** 结束 `UserVO` 
     
-8. 抽象类命名使用 **Abstract** 或 **Base** 开头(如BaseDTO,BaseVO) ,异常类命名使用 **Exception** 结尾 ; 测试类
+9. TO（transfer object 转换对象数据传输）    无特殊查询的情况下用作请求参数对象，传递至service层，否则用DTO
+    - 控制器类以 **TO** 结束 `UserTO` 
+    
+10. 抽象类命名使用 **Abstract** 或 **Base** 开头(如BaseDTO,BaseVO) ,异常类命名使用 **Exception** 结尾 ; 测试类
    命名以它要测试的类的名称开始,以 **Test** 结尾
    
-9. 枚举类名建议带上 Enum 后缀,枚举成员名称需要全大写,单词间用下划线隔开(构造方法被默认强制是私有)
+11. 枚举类名建议带上 Enum 后缀,枚举成员名称需要全大写,单词间用下划线隔开(构造方法被默认强制是私有)
      
     
 ## 方法命名规约

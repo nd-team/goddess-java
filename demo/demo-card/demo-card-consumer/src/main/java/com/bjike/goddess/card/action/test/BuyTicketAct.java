@@ -2,10 +2,14 @@ package com.bjike.goddess.card.action.test;
 
 import com.bjike.goddess.card.api.CardAPI;
 import com.bjike.goddess.card.entity.Card;
+import com.bjike.goddess.card.to.CardTO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.ticket.vo.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -34,15 +38,15 @@ public class BuyTicketAct {
     /**
      * 通过卡号购票
      *
-     * @param card          卡实体
+     * @param cardTO          卡传输对象
      * @param position      座位号
      * @version v1         版本
      * @param bindingResult
      */
     @PostMapping("v1/buy/{position}")
-    public Result buy(@Validated Card card, @PathVariable String position, BindingResult bindingResult) throws ActException {
+    public Result buy(@Validated({ADD.class}) CardTO cardTO, @PathVariable String position, BindingResult bindingResult) throws ActException {
         try {
-            String message = cardAPI.buyTicket(null, card.getAccount(), position);
+            String message = cardAPI.buyTicket(null, cardTO.getAccount(), position);
             return new ActResult(message);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -51,16 +55,16 @@ public class BuyTicketAct {
 
     /**
      * 取消购票
-     * @param card
+     * @param cardTO 卡传输对象
      * @param position
      * @param bindingResult
      * @version v1         版本
      * @throws ActException
      */
     @PostMapping("v1/cancel/{position}")
-    public Result cancel(@Validated Card card, @PathVariable String position, BindingResult bindingResult) throws ActException {
+    public Result cancel(@Validated({ADD.class, EDIT.class}) CardTO cardTO, @PathVariable String position, BindingResult bindingResult) throws ActException {
         try {
-            String message = cardAPI.cancelTicket(null, card.getAccount(), position);
+            String message = cardAPI.cancelTicket(null, cardTO.getAccount(), position);
             return new ActResult(message);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

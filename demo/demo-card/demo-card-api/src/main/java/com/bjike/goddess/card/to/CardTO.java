@@ -1,44 +1,31 @@
-package com.bjike.goddess.card.entity;
+package com.bjike.goddess.card.to;
 
-
-import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.entity.ADD;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-
 /**
- * 实体对象
+ * @Author: [liguiqin]
+ * @Date: [2017-03-11 11:05]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-@Entity
-@Table(name = "demo_card")
-public class Card extends BaseEntity {
+public class CardTO {
 
     /**
      * 卡号
      */
+    @NotBlank(message = "卡号不能为空",groups = {ADD.class})
     private String account;
     /**
      * 密码
      */
+    @NotBlank(message = "密码不能为空",groups = {ADD.class})
     private String password;
     /**
      * 余额
      */
     private Long money;
-
-
-    public Card() {
-    }
-
-    public Card(String account, String password, Long money) {
-        this.account = account;
-        this.password = password;
-        this.money = money;
-    }
-
 
     public String getAccount() {
         return account;
@@ -52,16 +39,15 @@ public class Card extends BaseEntity {
         return password;
     }
 
-    public Long getMoney() {
-        return money;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getMoney() {
+        return money;
     }
 
     public void setMoney(Long money) {
         this.money = money;
     }
-
 }

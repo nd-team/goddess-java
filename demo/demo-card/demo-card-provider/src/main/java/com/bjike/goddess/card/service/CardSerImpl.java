@@ -3,6 +3,7 @@ package com.bjike.goddess.card.service;
 import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
+import com.bjike.goddess.card.to.CardTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -24,10 +25,8 @@ public class CardSerImpl extends ServiceImpl<Card, CardDTO> implements CardSer {
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public CardBO initCard(String account, String password) throws SerException{
-        Card card = new Card();
-        card.setAccount(account);
-        card.setPassword(password);
+    public CardBO initCard(CardTO cardTO) throws SerException{
+        Card card = BeanTransform.copyProperties(cardTO,Card.class);
         card.setMoney(1000L);
         super.save(card);
         return  BeanTransform.copyProperties(card,CardBO.class);

@@ -3,6 +3,7 @@ package com.bjike.goddess.card.service;
 import com.bjike.goddess.card.bo.CardBO;
 import com.bjike.goddess.card.dto.CardDTO;
 import com.bjike.goddess.card.entity.Card;
+import com.bjike.goddess.card.to.CardTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -20,10 +21,9 @@ public interface CardSer extends Ser<Card, CardDTO> {
     /**
      * 初始化一张卡
      *
-     * @param account  卡号
-     * @param password 密码
+     * @param cardTO  数据传输对象
      */
-    default CardBO initCard(String account, String password) throws SerException {
+    default CardBO initCard(CardTO cardTO) throws SerException {
         return null;
     }
 

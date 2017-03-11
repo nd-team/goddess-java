@@ -2,7 +2,7 @@ package com.bjike.goddess.card.action.test;
 
 import com.bjike.goddess.card.api.CardAPI;
 import com.bjike.goddess.card.bo.CardBO;
-import com.bjike.goddess.card.service.CardSer;
+import com.bjike.goddess.card.to.CardTO;
 import com.bjike.goddess.card.vo.CardVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,15 +27,13 @@ public class CardAct {
     /**
      * 注册一张卡
      *
-     * @param account  账号
-     * @param password 密码
      * @version v1         版本
      * @return class Card
      */
     @PostMapping("v1/register")
-    public Result register(String account, String password) throws ActException {
+    public Result register(@Validated CardTO cardTO) throws ActException {
         try {
-            CardBO bo = cardAPI.initCard(account, password);
+            CardBO bo = cardAPI.initCard(cardTO);
             CardVO vo = BeanTransform.copyProperties(bo, CardVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
