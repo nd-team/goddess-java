@@ -11,32 +11,30 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 10:11]
+ * @Date: [2017-03-13 09:17]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ActionCreate {
+public class BoCreate {
+
     public static void createModel(Map<String, String> cus, List<Model> models) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述");
+        String desc = cus.get("描述")+"业务传输对象";
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
         if (models != null && models.size() > 0) {
             size = models.size(); //属性字段长度
         }
 
+
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".action."+packageName+";\n\n")
-        .append("import com.bjike.goddess.common.api.exception.ActException;\n")
-        .append("import com.bjike.goddess.common.api.exception.SerException;\n")
-        .append("import com.bjike.goddess.common.consumer.restful.ActResult;\n")
-        .append("import org.springframework.beans.factory.annotation.Autowired;\n")
-        .append("import org.springframework.web.bind.annotation.*;\n")
-        .append("import javax.validation.Valid;\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".bo;\n\n")
+                .append("import com.bjike.goddess.common.api.bo.BaseBO;\n\n")
+                .append("import javax.persistence.Column;\n");
 
         //类描述
         sb.append( "/**\n")
@@ -47,16 +45,35 @@ public class ActionCreate {
                 .append("* @Version:\t\t[ v1.0.0 ]\n")
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
-        //类注解
-        /**
-         * @RestController
-         @RequestMapping("staffentry/entrybasicinfo")
-         */
-        sb.append("@RestController\n")
-                .append("@RequestMapping(\""+packageName+"/"+className.toLowerCase()+"\")\n");
         //类创建
-        sb.append("public class "+className+"Action { \n\n");
+        sb.append("public class "+className+"BO extends BaseBO { \n\n");
 
+        //拼接属性
+        for(int i =0 ;i<size;i++){
+            Model model = models.get(i);
+            sb.append("/**\n")
+                    .append("* "+model.getAnnotation().trim()+"\n")
+                    .append("*/\n");
+
+            sb.append(" private "+model.getType()+"  "+model.getFieldName()+"; ");
+            if( i==size-1 ){
+                sb.append("\n\n\n\n");
+            }else{
+                sb.append("\n\n");
+            }
+        }
+
+        //拼接get和set
+        for(int i =0 ;i<size;i++){
+            Model m = models.get(i);
+
+            sb.append(" public "+m.getType()+" get"+m.getSwapCaseName()+" () { \n")
+                    .append(" return "+m.getFieldName()+";\n")
+                    .append(" } \n")
+                    .append(" public void set"+m.getSwapCaseName()+" ("+m.getType()+" "+m.getFieldName()+" ) { \n")
+                    .append(" this."+m.getFieldName().trim() +" = "+m.getFieldName().trim()+" ; \n")
+                    .append(" } \n");
+        }
 
         //拼接类完成
         sb.append(" }");
@@ -64,9 +81,8 @@ public class ActionCreate {
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-consumer/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/action/")
-                .append(packageName.toLowerCase()+"/")
+                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
+                .append( packageName.toLowerCase()+"/bo/")
                 ;
 
         //文件创建
@@ -74,10 +90,9 @@ public class ActionCreate {
         //如果文件夹不存在则创建
         if  (!file .exists()  && !file .isDirectory())
         {
-            System.out.println("//不存在");
             file .mkdirs();
         }
-        filePath.append( className+"Action.java" );
+        filePath.append( className+"BO.java" );
         file = new File( filePath.toString() );
         try {
             FileWriter writer = new FileWriter(file);
@@ -86,7 +101,5 @@ public class ActionCreate {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
-

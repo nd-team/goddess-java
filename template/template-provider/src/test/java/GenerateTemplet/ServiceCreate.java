@@ -11,30 +11,28 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 10:32]
+ * @Date: [2017-03-13 09:59]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DaoCreate {
+public class ServiceCreate {
     public static void createModel(Map<String, String> cus, List<Model> models) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"持久化接口, 继承基类可使用ｊｐａ命名查询";
+        String desc = cus.get("描述")+"业务接口";
         LocalDateTime date = LocalDateTime.now();
-        int size = 0;
-        if (models != null && models.size() > 0) {
-            size = models.size(); //属性字段长度
-        }
+
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".dao;\n\n")
-        .append("import com.bjike.goddess.common.jpa.dao.JpaRep;\n")
-        .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n")
-        .append("import com.bjike.goddess."+packageName+".entity."+className+";\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".service;\n\n")
+                .append("import com.bjike.goddess.common.api.exception.SerException;\n")
+                .append("import com.bjike.goddess.common.api.service.Ser;\n")
+                .append("import com.bjike.goddess."+packageName+".entity."+className+";\n")
+                .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -46,7 +44,7 @@ public class DaoCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public interface I"+className+" extends JpaRep<"+className+" ,"+className+"DTO> { \n\n");
+        sb.append("public interface "+className+"Ser extends Ser<"+className+", "+className+"DTO> { \n\n");
 
 
         //拼接类完成
@@ -55,8 +53,8 @@ public class DaoCreate {
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-provider/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/dao/")
+                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
+                .append( packageName.toLowerCase()+"/service/")
                 ;
 
         //文件创建
@@ -64,10 +62,9 @@ public class DaoCreate {
         //如果文件夹不存在则创建
         if  (!file .exists()  && !file .isDirectory())
         {
-            System.out.println("//不存在");
             file .mkdirs();
         }
-        filePath.append( "I"+className+".java" );
+        filePath.append( className+"Ser.java" );
         file = new File( filePath.toString() );
         try {
             FileWriter writer = new FileWriter(file);

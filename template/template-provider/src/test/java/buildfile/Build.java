@@ -1,8 +1,8 @@
 package buildfile;
 
+
 import GenerateTemplet.*;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
+import GenerateTemplet.configBuild.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.commons.io.FileUtils;
 /**
  * @Author: [tanghaixiang]
  * @Date: [2017-03-11 16:39]
@@ -33,9 +33,10 @@ public class Build {
 
     }
 
+
     public static void main(String[] args) throws IOException {
         //获取输入文件路径
-        String inputPath = System.getProperty("user.dir") + "/staffentry/staffentry-provider/src/test/java/buildfile/input.txt";
+        String inputPath = System.getProperty("user.dir") + "/template/template-provider/src/test/java/buildfile/input.txt";
         System.err.println(inputPath);
         String fieldsString = null;
         List<String> lines = FileUtils.readLines(new File(inputPath),
@@ -64,10 +65,20 @@ public class Build {
 
         //创建ser interface 文件
         ServiceCreate.createModel(CUS,models);
+
+        //创建api build.gradle 配置文件
+        ApiBuildCreate.createConfig(CUS);
+        //创建api setting.gradle 配置文件
+        ApiSettingCreate.createConfig(CUS);
         System.out.println(CUS.get("模块名")+"-api src创建成功----------");
 
         //创建consumer action Java 文件
         ActionCreate.createModel(CUS,models);
+
+        //创建consumer build.gradle 文件
+        ConsumerBuildCreate.createConfig(CUS);
+        //创建consumer settings.gradle 文件
+        ConsumerSettingCreate.createConfig( CUS);
         System.out.println(CUS.get("模块名")+"-consumer action创建成功----------");
 
         //创建provider api
@@ -78,6 +89,11 @@ public class Build {
 
         //创建provider service java文件
         ProviderServiceCreate.createModel(CUS,models);
+
+        //创建provider build.gradle 文件
+        ProviderBuildCreate.createConfig(CUS);
+        //创建provider settings.gradle 文件
+        ProviderSettingCreate.createConfig( CUS);
         System.out.println(CUS.get("模块名")+"-provider src创建成功----------");
 
     }
@@ -139,25 +155,18 @@ public class Build {
                     }else {
                         packageName="/"+packageName;
                     }
-//                    modelTmp.binding("package", packageName.replace('/', '.').substring(1));
                     break;
                 case 1:
-//                    modelTmp.binding("author", desc[i].split("=")[1]);
                     break;
                 case 2:
                     className = desc[i].split("=")[1];
-//                    modelTmp.binding("clazz", className);
-//                    modelTmp.binding("lowClazz", ParseTmpUtil.getLowString(className));
                     break;
                 case 3:
-//                    modelTmp.binding("des", desc[i].split("=")[1]);
                     break;
                 default:
                     break;
             }
         }
-
-//        modelTmp.binding("path",ParseTmpUtil.jspPath); // 绑定jsp页面需引入js的路径
 
         return fieldsString.toString();
     }
@@ -182,6 +191,5 @@ public class Build {
             models.add(m);
         }
         System.out.println("");
-//        modelTmp.binding("list", models);
     }
 }

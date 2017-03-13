@@ -11,19 +11,19 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:17]
+ * @Date: [2017-03-13 09:37]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BoCreate {
+public class ToCreate {
 
     public static void createModel(Map<String, String> cus, List<Model> models) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"业务传输对象";
+        String desc = cus.get("描述");
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
         if (models != null && models.size() > 0) {
@@ -32,9 +32,8 @@ public class BoCreate {
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".bo;\n\n")
-                .append("import com.bjike.goddess.common.api.bo.BaseBO;\n\n")
-                .append("import javax.persistence.Column;\n");
+        sb.append("package com.bjike.goddess."+packageName+".to;\n\n")
+                .append("import com.bjike.goddess.common.api.to.BaseTO;\n");
 
         //类描述
         sb.append( "/**\n")
@@ -46,7 +45,8 @@ public class BoCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public class "+className+"BO extends BaseBO { \n\n");
+        sb.append("public class "+className+"TO extends BaseTO { \n\n");
+
 
         //拼接属性
         for(int i =0 ;i<size;i++){
@@ -82,7 +82,7 @@ public class BoCreate {
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/bo/")
+                .append( packageName.toLowerCase()+"/to/")
                 ;
 
         //文件创建
@@ -90,10 +90,9 @@ public class BoCreate {
         //如果文件夹不存在则创建
         if  (!file .exists()  && !file .isDirectory())
         {
-            System.out.println("//不存在");
             file .mkdirs();
         }
-        filePath.append( className+"BO.java" );
+        filePath.append( className+"TO.java" );
         file = new File( filePath.toString() );
         try {
             FileWriter writer = new FileWriter(file);
@@ -102,5 +101,6 @@ public class BoCreate {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

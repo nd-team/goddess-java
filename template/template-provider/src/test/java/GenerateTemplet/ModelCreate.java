@@ -1,7 +1,6 @@
 package GenerateTemplet;
 
 import buildfile.Model;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class ModelCreate {
 
 
-    public static void createModel(Map<String, String> cus ,List<Model> models){
+    public static void createModel(Map<String, String> cus, List<Model> models) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
@@ -28,39 +27,39 @@ public class ModelCreate {
         String desc = cus.get("描述");
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
-        if( models != null && models.size()>0 ){
+        if (models != null && models.size() > 0) {
             size = models.size(); //属性字段长度
         }
 
         StringBuilder sb = new StringBuilder("");
 
         //拼接报引入
-        sb.append("package com.bjike.goddess."+packageName+".entity;").append("\n\n")
-            .append("import com.bjike.goddess.common.api.entity.BaseEntity;\n")
-            .append("import javax.persistence.*;\n\n\n");
+        sb.append("package com.bjike.goddess." + packageName + ".entity;").append("\n\n")
+                .append("import com.bjike.goddess.common.api.entity.BaseEntity;\n")
+                .append("import javax.persistence.*;\n\n\n");
 
         //类描述
-        sb.append( "/**\n")
-                .append("* "+desc+"\n")
-                .append("* @Author:\t\t\t[ "+author+" ]\n")
-                .append("* @Date:\t\t\t[  "+date+" ]\n")
-                .append("* @Description:\t[ "+desc+" ]\n")
+        sb.append("/**\n")
+                .append("* " + desc + "\n")
+                .append("* @Author:\t\t\t[ " + author + " ]\n")
+                .append("* @Date:\t\t\t[  " + date + " ]\n")
+                .append("* @Description:\t[ " + desc + " ]\n")
                 .append("* @Version:\t\t[ v1.0.0 ]\n")
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
 
 
         //拼接实体注解
-        sb.append("@Entity\n" )
-                .append("@Table(name = \""+packageName+"_"+className.toLowerCase()+"\")\n");
+        sb.append("@Entity\n")
+                .append("@Table(name = \"" + packageName + "_" + className.toLowerCase() + "\")\n");
         //拼接类
-        sb.append("public class "+className+" extends BaseEntity { \n\n");
+        sb.append("public class " + className + " extends BaseEntity { \n\n");
 
         //拼接属性
-        for(int i =0 ;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Model model = models.get(i);
             sb.append("/**\n")
-                    .append("* "+model.getAnnotation().trim()+"\n")
+                    .append("* " + model.getAnnotation().trim() + "\n")
                     .append("*/\n");
 
             //@column 注解对应数据库类型
@@ -68,8 +67,8 @@ public class ModelCreate {
             String dbName = "";
             String defualtValue = "";
             String insertable = "";
-            switch ( model.getType().trim() ){
-                case "String" :
+            switch (model.getType().trim()) {
+                case "String":
                     dbType = "VARCHAR(255)";
                     dbName = model.getFieldName();
                     break;
@@ -87,30 +86,32 @@ public class ModelCreate {
                     break;
                 case "Boolean":
                     dbType = "TINYINT(1)";
-                    dbName = "is_"+model.getFieldName();
+                    dbName = "is_" + model.getFieldName();
                     defualtValue = "DEFAULT 0 ";
                     insertable = " , insertable = false ";
                     break;
-                default: dbType ="VARCHAR(255)" ;break;
+                default:
+                    dbType = "VARCHAR(255)";
+                    break;
             }
-            sb.append("@Column(name = \""+dbName+"\",nullable = false,columnDefinition = \""+dbType+"  "+defualtValue+" COMMENT '"+model.getAnnotation() +"'\" "+insertable+" ) \n" )
-                    .append(" private "+model.getType()+"  "+model.getFieldName()+"; ");
-            if( i==size-1 ){
+            sb.append("@Column(name = \"" + dbName + "\",nullable = false,columnDefinition = \"" + dbType + "  " + defualtValue + " COMMENT '" + model.getAnnotation() + "'\" " + insertable + " ) \n")
+                    .append(" private " + model.getType() + "  " + model.getFieldName() + "; ");
+            if (i == size - 1) {
                 sb.append("\n\n\n\n");
-            }else{
+            } else {
                 sb.append("\n\n");
             }
         }
 
         //拼接get和set
-        for(int i =0 ;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Model m = models.get(i);
 
-            sb.append(" public "+m.getType()+" get"+m.getSwapCaseName()+" () { \n")
-                    .append(" return "+m.getFieldName()+";\n")
+            sb.append(" public " + m.getType() + " get" + m.getSwapCaseName() + " () { \n")
+                    .append(" return " + m.getFieldName() + ";\n")
                     .append(" } \n")
-                    .append(" public void set"+m.getSwapCaseName()+" ("+m.getType()+" "+m.getFieldName()+" ) { \n")
-                    .append(" this."+m.getFieldName().trim() +" = "+m.getFieldName().trim()+" ; \n")
+                    .append(" public void set" + m.getSwapCaseName() + " (" + m.getType() + " " + m.getFieldName() + " ) { \n")
+                    .append(" this." + m.getFieldName().trim() + " = " + m.getFieldName().trim() + " ; \n")
                     .append(" } \n");
         }
 
@@ -118,25 +119,22 @@ public class ModelCreate {
         sb.append(" }");
 
         //文件创建路径
-        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
-                .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/entity/")
-                ;
+        StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/")
+                .append(packageName.toLowerCase() + "/")
+                .append(packageName.toLowerCase() + "-api/src/main/java/com/bjike/goddess/")
+                .append(packageName.toLowerCase() + "/entity/");
 
         //文件创建
-        File file = new File( filePath.toString() );
+        File file = new File(filePath.toString());
         //如果文件夹不存在则创建
-        if  (!file .exists()  && !file .isDirectory())
-        {
-            System.out.println("//不存在");
-            file .mkdirs();
+        if (!file.exists() && !file.isDirectory()) {
+            file.mkdirs();
         }
-        filePath.append( className+".java" );
-        file = new File( filePath.toString() );
+        filePath.append(className + ".java");
+        file = new File(filePath.toString());
         try {
             FileWriter writer = new FileWriter(file);
-            writer.write( sb.toString() ,0 ,sb.toString().length());
+            writer.write(sb.toString(), 0, sb.toString().length());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -11,19 +11,18 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:48]
+ * @Date: [2017-03-13 10:32]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class VoCreate {
-
+public class DaoCreate {
     public static void createModel(Map<String, String> cus, List<Model> models) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"表现层对象";
+        String desc = cus.get("描述")+"持久化接口, 继承基类可使用ｊｐａ命名查询";
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
         if (models != null && models.size() > 0) {
@@ -32,7 +31,10 @@ public class VoCreate {
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".vo;\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".dao;\n\n")
+        .append("import com.bjike.goddess.common.jpa.dao.JpaRep;\n")
+        .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n")
+        .append("import com.bjike.goddess."+packageName+".entity."+className+";\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -44,34 +46,8 @@ public class VoCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public class "+className+"VO { \n\n");
+        sb.append("public interface I"+className+" extends JpaRep<"+className+" ,"+className+"DTO> { \n\n");
 
-        //拼接属性
-        for(int i =0 ;i<size;i++){
-            Model model = models.get(i);
-            sb.append("/**\n")
-                    .append("* "+model.getAnnotation().trim()+"\n")
-                    .append("*/\n");
-
-            sb.append(" private "+model.getType()+"  "+model.getFieldName()+"; ");
-            if( i==size-1 ){
-                sb.append("\n\n\n\n");
-            }else{
-                sb.append("\n\n");
-            }
-        }
-
-        //拼接get和set
-        for(int i =0 ;i<size;i++){
-            Model m = models.get(i);
-
-            sb.append(" public "+m.getType()+" get"+m.getSwapCaseName()+" () { \n")
-                    .append(" return "+m.getFieldName()+";\n")
-                    .append(" } \n")
-                    .append(" public void set"+m.getSwapCaseName()+" ("+m.getType()+" "+m.getFieldName()+" ) { \n")
-                    .append(" this."+m.getFieldName().trim() +" = "+m.getFieldName().trim()+" ; \n")
-                    .append(" } \n");
-        }
 
         //拼接类完成
         sb.append(" }");
@@ -79,8 +55,8 @@ public class VoCreate {
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/vo/")
+                .append( packageName.toLowerCase()+"-provider/src/main/java/com/bjike/goddess/")
+                .append( packageName.toLowerCase()+"/dao/")
                 ;
 
         //文件创建
@@ -88,10 +64,9 @@ public class VoCreate {
         //如果文件夹不存在则创建
         if  (!file .exists()  && !file .isDirectory())
         {
-            System.out.println("//不存在");
             file .mkdirs();
         }
-        filePath.append( className+"VO.java" );
+        filePath.append( "I"+className+".java" );
         file = new File( filePath.toString() );
         try {
             FileWriter writer = new FileWriter(file);
@@ -101,5 +76,5 @@ public class VoCreate {
             e.printStackTrace();
         }
     }
-
 }
+

@@ -61,7 +61,6 @@ public class ProviderApiCreate {
         //如果文件夹不存在则创建
         if  (!file .exists()  && !file .isDirectory())
         {
-            System.out.println("//不存在");
             file .mkdirs();
         }
         filePath.append( className+"APiImpl.java" );
