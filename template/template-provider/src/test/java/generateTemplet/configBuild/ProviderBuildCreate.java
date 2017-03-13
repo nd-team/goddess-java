@@ -1,4 +1,4 @@
-package GenerateTemplet.configBuild;
+package generateTemplet.configBuild;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @Copy: [com.bjike]
  */
 public class ProviderBuildCreate {
-    public static void createConfig(Map<String, String> cus) {
+    public static void createConfig(Map<String, String> cus,String createOrDelete) {
         String packageName = cus.get("模块名");
 
         StringBuffer sb = new StringBuffer("");
@@ -38,12 +38,19 @@ public class ProviderBuildCreate {
         }
         filePath.append("build.gradle");
         file = new File(filePath.toString());
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write(sb.toString(), 0, sb.toString().length());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if( createOrDelete.equals("create")){
+
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write( sb.toString() ,0 ,sb.toString().length());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(createOrDelete.equals("delete")){
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
 }

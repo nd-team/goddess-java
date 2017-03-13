@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
  * 用户注册业务传输对象
@@ -10,5 +11,5 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class StaffEntryRegisterTO  {
+public class StaffEntryRegisterTO  extends BaseTO {
 }

@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -11,19 +11,19 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:17]
+ * @Date: [2017-03-13 09:48]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BoCreate {
+public class VoCreate {
 
-    public static void createModel(Map<String, String> cus, List<Model> models) {
+    public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"业务传输对象";
+        String desc = cus.get("描述")+"表现层对象";
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
         if (models != null && models.size() > 0) {
@@ -32,9 +32,7 @@ public class BoCreate {
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".bo;\n\n")
-                .append("import com.bjike.goddess.common.api.bo.BaseBO;\n\n")
-                .append("import javax.persistence.Column;\n");
+        sb.append("package com.bjike.goddess."+packageName+".vo;\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -46,7 +44,7 @@ public class BoCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public class "+className+"BO extends BaseBO { \n\n");
+        sb.append("public class "+className+"VO { \n\n");
 
         //拼接属性
         for(int i =0 ;i<size;i++){
@@ -82,7 +80,7 @@ public class BoCreate {
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/bo/")
+                .append( packageName.toLowerCase()+"/vo/")
                 ;
 
         //文件创建
@@ -92,14 +90,22 @@ public class BoCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"BO.java" );
+        filePath.append( className+"VO.java" );
         file = new File( filePath.toString() );
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write( sb.toString() ,0 ,sb.toString().length());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if( createOrDelete.equals("create")){
+
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write( sb.toString() ,0 ,sb.toString().length());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(createOrDelete.equals("delete")){
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
+
 }

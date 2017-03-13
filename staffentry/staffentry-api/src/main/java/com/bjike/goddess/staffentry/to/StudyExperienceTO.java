@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
 import java.util.List;
@@ -13,11 +14,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class StudyExperienceTO {
-    /**
-     * id
-     */
-    private String id ;
+public class StudyExperienceTO extends BaseTO {
+
     /**
      * 开始时间
      */
@@ -60,13 +58,6 @@ public class StudyExperienceTO {
      */
     private List<String> certificates;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getStartTime() {
         return startTime;

@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -11,28 +11,25 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:51]
+ * @Date: [2017-03-13 10:23]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ApiCreate {
-
-    public static void createModel(Map<String, String> cus, List<Model> models) {
+public class ProviderApiCreate {
+    public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"业务接口";
+        String desc = cus.get("描述")+"业务接口实现";
         LocalDateTime date = LocalDateTime.now();
-        int size = 0;
-        if (models != null && models.size() > 0) {
-            size = models.size(); //属性字段长度
-        }
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".api;\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".api;\n\n")
+        .append("import org.springframework.beans.factory.annotation.Autowired;\n")
+        .append("import org.springframework.stereotype.Service;\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -43,8 +40,10 @@ public class ApiCreate {
                 .append("* @Version:\t\t[ v1.0.0 ]\n")
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
+
+        sb.append("@Service(\""+className.substring(0,1).toLowerCase()+className.substring(1)+"APiImpl\")\n");
         //类创建
-        sb.append("public interface "+className+"API  { \n\n");
+        sb.append("public class "+className+"APiImpl implements "+className+"API  { \n\n");
 
 
         //拼接类完成
@@ -53,7 +52,7 @@ public class ApiCreate {
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
+                .append( packageName.toLowerCase()+"-provider/src/main/java/com/bjike/goddess/")
                 .append( packageName.toLowerCase()+"/api/")
                 ;
 
@@ -64,14 +63,22 @@ public class ApiCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"API.java" );
+        filePath.append( className+"APiImpl.java" );
         file = new File( filePath.toString() );
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write( sb.toString() ,0 ,sb.toString().length());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if( createOrDelete.equals("create")){
+
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write( sb.toString() ,0 ,sb.toString().length());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(createOrDelete.equals("delete")){
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
 }
+

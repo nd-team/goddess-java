@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
 import java.util.List;
@@ -13,12 +14,9 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FamilyMemberTO  {
+public class FamilyMemberTO  extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id ;
+
     /**
      * 称谓
      */
@@ -85,13 +83,6 @@ public class FamilyMemberTO  {
      */
     private List<String> phones;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

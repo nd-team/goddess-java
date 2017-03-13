@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DtoCreate {
 
-    public static void createModel(Map<String, String> cus, List<Model> models) {
+    public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
@@ -63,12 +63,19 @@ public class DtoCreate {
         }
         filePath.append( className+"DTO.java" );
         file = new File( filePath.toString() );
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write( sb.toString() ,0 ,sb.toString().length());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if( createOrDelete.equals("create")){
+
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write( sb.toString() ,0 ,sb.toString().length());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if(createOrDelete.equals("delete")){
+            if(file.exists()){
+                file.delete();
+            }
         }
 
     }
