@@ -1,4 +1,4 @@
-package GenerateTemplet.configBuild;
+package generateTemplet.configBuild;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,30 +7,33 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 12:12]
+ * @Date: [2017-03-13 11:47]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ProviderSettingCreate {
-    public static void createConfig(Map<String, String> cus,String createOrDelete) {
+public class ApiSettingCreate {
+
+    public static void createConfig(Map<String, String> cus,String createOrDelete){
         String packageName = cus.get("模块名");
 
         StringBuffer sb = new StringBuffer("");
-        sb.append("rootProject.name = '" + packageName + "-provider'\n");
+        sb.append("rootProject.name = '"+packageName+"-api'\n");
         //文件创建路径
-        StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/")
-                .append(packageName.toLowerCase() + "/")
-                .append(packageName.toLowerCase() + "-provider/");
+        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
+                .append(packageName.toLowerCase()+"/")
+                .append( packageName.toLowerCase()+"-api/")
+                ;
 
         //文件创建
-        File file = new File(filePath.toString());
+        File file = new File( filePath.toString() );
         //如果文件夹不存在则创建
-        if (!file.exists() && !file.isDirectory()) {
-            file.mkdirs();
+        if  (!file .exists()  && !file .isDirectory())
+        {
+            file .mkdirs();
         }
-        filePath.append("settings.gradle");
-        file = new File(filePath.toString());
+        filePath.append( "settings.gradle" );
+        file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 
             try {

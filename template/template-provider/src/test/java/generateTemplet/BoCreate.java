@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -11,19 +11,19 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:37]
+ * @Date: [2017-03-13 09:17]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ToCreate {
+public class BoCreate {
 
     public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述");
+        String desc = cus.get("描述")+"业务传输对象";
         LocalDateTime date = LocalDateTime.now();
         int size = 0;
         if (models != null && models.size() > 0) {
@@ -32,8 +32,9 @@ public class ToCreate {
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".to;\n\n")
-                .append("import com.bjike.goddess.common.api.to.BaseTO;\n");
+        sb.append("package com.bjike.goddess."+packageName+".bo;\n\n")
+                .append("import com.bjike.goddess.common.api.bo.BaseBO;\n\n")
+                .append("import javax.persistence.Column;\n");
 
         //类描述
         sb.append( "/**\n")
@@ -45,8 +46,7 @@ public class ToCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public class "+className+"TO extends BaseTO { \n\n");
-
+        sb.append("public class "+className+"BO extends BaseBO { \n\n");
 
         //拼接属性
         for(int i =0 ;i<size;i++){
@@ -82,7 +82,7 @@ public class ToCreate {
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/to/")
+                .append( packageName.toLowerCase()+"/bo/")
                 ;
 
         //文件创建
@@ -92,7 +92,7 @@ public class ToCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"TO.java" );
+        filePath.append( className+"BO.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 
@@ -108,6 +108,5 @@ public class ToCreate {
                 file.delete();
             }
         }
-
     }
 }

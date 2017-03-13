@@ -1,4 +1,4 @@
-package GenerateTemplet.configBuild;
+package generateTemplet.configBuild;
 
 import java.io.File;
 import java.io.FileWriter;

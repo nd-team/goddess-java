@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -82,6 +82,10 @@ public class ModelCreate {
                     break;
                 case "Double":
                     dbType = "DECIMAL(10,2)";
+                    dbName = model.getFieldName();
+                    break;
+                case "Float":
+                    dbType = "DECIMAL";
                     dbName = model.getFieldName();
                     break;
                 case "Boolean":

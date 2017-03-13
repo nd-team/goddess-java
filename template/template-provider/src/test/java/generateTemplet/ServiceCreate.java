@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -11,25 +11,28 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 10:23]
+ * @Date: [2017-03-13 09:59]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ProviderApiCreate {
+public class ServiceCreate {
     public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"业务接口实现";
+        String desc = cus.get("描述")+"业务接口";
         LocalDateTime date = LocalDateTime.now();
 
 
+
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".api;\n\n")
-        .append("import org.springframework.beans.factory.annotation.Autowired;\n")
-        .append("import org.springframework.stereotype.Service;\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".service;\n\n")
+                .append("import com.bjike.goddess.common.api.exception.SerException;\n")
+                .append("import com.bjike.goddess.common.api.service.Ser;\n")
+                .append("import com.bjike.goddess."+packageName+".entity."+className+";\n")
+                .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -40,10 +43,8 @@ public class ProviderApiCreate {
                 .append("* @Version:\t\t[ v1.0.0 ]\n")
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
-
-        sb.append("@Service(\""+className.substring(0,1).toLowerCase()+className.substring(1)+"APiImpl\")\n");
         //类创建
-        sb.append("public class "+className+"APiImpl implements "+className+"API  { \n\n");
+        sb.append("public interface "+className+"Ser extends Ser<"+className+", "+className+"DTO> { \n\n");
 
 
         //拼接类完成
@@ -52,8 +53,8 @@ public class ProviderApiCreate {
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
-                .append( packageName.toLowerCase()+"-provider/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/api/")
+                .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
+                .append( packageName.toLowerCase()+"/service/")
                 ;
 
         //文件创建
@@ -63,7 +64,7 @@ public class ProviderApiCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"APiImpl.java" );
+        filePath.append( className+"Ser.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 

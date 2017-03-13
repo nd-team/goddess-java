@@ -1,8 +1,8 @@
 package buildfile;
 
 
-import GenerateTemplet.*;
-import GenerateTemplet.configBuild.*;
+import generateTemplet.*;
+import generateTemplet.configBuild.*;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package GenerateTemplet;
+package generateTemplet;
 
 import buildfile.Model;
 
@@ -11,28 +11,29 @@ import java.util.Map;
 
 /**
  * @Author: [tanghaixiang]
- * @Date: [2017-03-13 09:59]
+ * @Date: [2017-03-13 09:37]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ServiceCreate {
+public class ToCreate {
+
     public static void createModel(Map<String, String> cus, List<Model> models,String createOrDelete) {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
         String author = cus.get("作者");
-        String desc = cus.get("描述")+"业务接口";
+        String desc = cus.get("描述");
         LocalDateTime date = LocalDateTime.now();
-
+        int size = 0;
+        if (models != null && models.size() > 0) {
+            size = models.size(); //属性字段长度
+        }
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".service;\n\n")
-                .append("import com.bjike.goddess.common.api.exception.SerException;\n")
-                .append("import com.bjike.goddess.common.api.service.Ser;\n")
-                .append("import com.bjike.goddess."+packageName+".entity."+className+";\n")
-                .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n\n");
+        sb.append("package com.bjike.goddess."+packageName+".to;\n\n")
+                .append("import com.bjike.goddess.common.api.to.BaseTO;\n");
 
         //类描述
         sb.append( "/**\n")
@@ -44,8 +45,35 @@ public class ServiceCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public interface "+className+"Ser extends Ser<"+className+", "+className+"DTO> { \n\n");
+        sb.append("public class "+className+"TO extends BaseTO { \n\n");
 
+
+        //拼接属性
+        for(int i =0 ;i<size;i++){
+            Model model = models.get(i);
+            sb.append("/**\n")
+                    .append("* "+model.getAnnotation().trim()+"\n")
+                    .append("*/\n");
+
+            sb.append(" private "+model.getType()+"  "+model.getFieldName()+"; ");
+            if( i==size-1 ){
+                sb.append("\n\n\n\n");
+            }else{
+                sb.append("\n\n");
+            }
+        }
+
+        //拼接get和set
+        for(int i =0 ;i<size;i++){
+            Model m = models.get(i);
+
+            sb.append(" public "+m.getType()+" get"+m.getSwapCaseName()+" () { \n")
+                    .append(" return "+m.getFieldName()+";\n")
+                    .append(" } \n")
+                    .append(" public void set"+m.getSwapCaseName()+" ("+m.getType()+" "+m.getFieldName()+" ) { \n")
+                    .append(" this."+m.getFieldName().trim() +" = "+m.getFieldName().trim()+" ; \n")
+                    .append(" } \n");
+        }
 
         //拼接类完成
         sb.append(" }");
@@ -54,7 +82,7 @@ public class ServiceCreate {
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
-                .append( packageName.toLowerCase()+"/service/")
+                .append( packageName.toLowerCase()+"/to/")
                 ;
 
         //文件创建
@@ -64,7 +92,7 @@ public class ServiceCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"Ser.java" );
+        filePath.append( className+"TO.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 
@@ -80,6 +108,6 @@ public class ServiceCreate {
                 file.delete();
             }
         }
+
     }
 }
-
