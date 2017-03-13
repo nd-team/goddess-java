@@ -22,13 +22,19 @@ public class DtoCreate {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
+        className = className.substring(className.lastIndexOf("/")+1,className.length());
         String author = cus.get("作者");
         String desc = cus.get("描述")+"数据传输对象";
         LocalDateTime date = LocalDateTime.now();
+        String relativePath = "";
+        if( cus.get("类名").contains("/")){
+            relativePath = cus.get("类名").substring( 0,cus.get("类名").lastIndexOf("/"));
+        }
+        String packageRelativePath = (relativePath.equals("")?"":"."+relativePath).replaceAll("/",".");
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".dto;\n\n")
+        sb.append("package com.bjike.goddess."+packageName+".dto"+packageRelativePath+";\n\n")
                 .append("import com.bjike.goddess.common.api.dto.BaseDTO;\n");
 
         //类描述
@@ -54,6 +60,10 @@ public class DtoCreate {
                 .append( packageName.toLowerCase()+"/dto/")
                 ;
 
+        //相对包路径
+        if(!relativePath.trim().equals("")){
+            filePath.append(relativePath+"/");
+        }
         //文件创建
         File file = new File( filePath.toString() );
         //如果文件夹不存在则创建

@@ -21,16 +21,18 @@ public class ActionCreate {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
+        className = className.substring(className.lastIndexOf("/")+1,className.length());
         String author = cus.get("作者");
         String desc = cus.get("描述");
-        LocalDateTime date = LocalDateTime.now();
-        int size = 0;
-        if (models != null && models.size() > 0) {
-            size = models.size(); //属性字段长度
+        String relativePath = "";
+        if( cus.get("类名").contains("/")){
+            relativePath = cus.get("类名").substring( 0,cus.get("类名").lastIndexOf("/"));
         }
+        LocalDateTime date = LocalDateTime.now();
+
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess." + packageName + ".action." + packageName + ";\n\n")
+        sb.append("package com.bjike.goddess." + packageName + ".action." + (packageName+(relativePath.equals("")?"":"."+relativePath)).replaceAll("/",".") + ";\n\n")
                 .append("import com.bjike.goddess.common.api.exception.ActException;\n")
                 .append("import com.bjike.goddess.common.api.exception.SerException;\n")
                 .append("import com.bjike.goddess.common.consumer.restful.ActResult;\n")
@@ -67,6 +69,11 @@ public class ActionCreate {
                 .append(packageName.toLowerCase() + "-consumer/src/main/java/com/bjike/goddess/")
                 .append(packageName.toLowerCase() + "/action/")
                 .append(packageName.toLowerCase() + "/");
+
+
+        if(!relativePath.trim().equals("")){
+            filePath.append(relativePath+"/");
+        }
 
         //文件创建
         File file = new File(filePath.toString());

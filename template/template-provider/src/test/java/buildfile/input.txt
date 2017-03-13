@@ -1,5 +1,5 @@
 模块名:haha
-类名:UserDetail
+类名:myuser/UserDetail
 作者:tanghaixiang
 描述:用户
 

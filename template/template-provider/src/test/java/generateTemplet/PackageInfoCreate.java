@@ -22,6 +22,7 @@ public class PackageInfoCreate {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
+        className = className.substring(className.lastIndexOf("/")+1,className.length());
         String author = cus.get("作者");
         String desc = cus.get("描述")+"业务接口";
         LocalDate date = LocalDate.now();
@@ -33,9 +34,17 @@ public class PackageInfoCreate {
                 .append(  " * "+desc+"\n" )
                 .append(  " * Created by "+author+" on "+ date+".\n" )
                 .append( " */\n");
-        sb.append("package com.bjike.goddess."+packageName+".action."+packageName+";\n");
+        sb.append("package com.bjike.goddess."+packageName+".action."+packageName);
+        //相对路径
+        String packageRelativePath = cus.get("类名");
+        if(packageRelativePath.lastIndexOf("/") != -1 ){
+            String temp = packageRelativePath.substring( 0,packageRelativePath.lastIndexOf("/")).replaceAll("/",".");
+            if(!temp.trim().equals("")){
+                sb.append("."+temp  );
+            }
+        }
+        sb.append(";\n");
 
-///home/ike/java/goddess-java/staffentry/staffentry-consumer/src/main/java/com/bjike/goddess/staffentry/action/staffentry/package-info.java
         //文件创建路径
         StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
                 .append(packageName.toLowerCase()+"/")
@@ -43,6 +52,11 @@ public class PackageInfoCreate {
                 .append( packageName.toLowerCase()+"/action/"+packageName+"/")
                 ;
 
+        //相对包路径
+        String relativePath = cus.get("类名");
+        if(relativePath.lastIndexOf("/") != -1){
+            filePath.append(relativePath.substring( 0,relativePath.lastIndexOf("/"))+"/");
+        }
         //文件创建
         File file = new File( filePath.toString() );
         //如果文件夹不存在则创建

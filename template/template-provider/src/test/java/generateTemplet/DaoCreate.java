@@ -21,20 +21,23 @@ public class DaoCreate {
 
         String packageName = cus.get("模块名");
         String className = cus.get("类名");
+        className = className.substring(className.lastIndexOf("/")+1,className.length());
         String author = cus.get("作者");
         String desc = cus.get("描述")+"持久化接口, 继承基类可使用ｊｐａ命名查询";
         LocalDateTime date = LocalDateTime.now();
-        int size = 0;
-        if (models != null && models.size() > 0) {
-            size = models.size(); //属性字段长度
+        String relativePath = "";
+        if( cus.get("类名").contains("/")){
+            relativePath = cus.get("类名").substring( 0,cus.get("类名").lastIndexOf("/"));
         }
+        String packageRelativePath = (relativePath.equals("")?"":"."+relativePath).replaceAll("/",".");
+
 
 
         StringBuilder sb = new StringBuilder("");
-        sb.append("package com.bjike.goddess."+packageName+".dao;\n\n")
+        sb.append("package com.bjike.goddess."+packageName+".dao"+packageRelativePath+";\n\n")
         .append("import com.bjike.goddess.common.jpa.dao.JpaRep;\n")
-        .append("import com.bjike.goddess."+packageName+".dto."+className+"DTO;\n")
-        .append("import com.bjike.goddess."+packageName+".entity."+className+";\n\n");
+        .append("import com.bjike.goddess."+packageName+".dto"+packageRelativePath+"."+className+"DTO;\n")
+        .append("import com.bjike.goddess."+packageName+".entity"+packageRelativePath+"."+className+";\n\n");
 
         //类描述
         sb.append( "/**\n")
@@ -59,6 +62,10 @@ public class DaoCreate {
                 .append( packageName.toLowerCase()+"/dao/")
                 ;
 
+        //相对包路径
+        if(!relativePath.trim().equals("")){
+            filePath.append(relativePath+"/");
+        }
         //文件创建
         File file = new File( filePath.toString() );
         //如果文件夹不存在则创建
