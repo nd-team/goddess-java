@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.bo.DepartmentBO;
+import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.service.DepartmentSer;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.user.vo.DepartmentVO;
@@ -60,7 +61,8 @@ public class DepartmentAct {
     @PostMapping("v1/add")
     public Result add(DepartmentTO departmentTO) throws ActException {
         try {
-            return ActResult.initialize(departmentAPI.save(departmentTO));
+            DepartmentVO vo = BeanTransform.copyProperties(departmentAPI.save(departmentTO),DepartmentVO.class);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -78,6 +80,21 @@ public class DepartmentAct {
         try {
             departmentAPI.remove(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 编辑部门信息
+     *
+     * @return
+     * @version v1
+     */
+    @PostMapping("v1/edit")
+    public Result edit(DepartmentTO departmentTO) throws ActException {
+        try {
+            departmentAPI.update(departmentTO);
+            return new ActResult("edit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

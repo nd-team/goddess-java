@@ -1,7 +1,11 @@
 package com.bjike.goddess.card.to;
 
+import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.io.Serializable;
 
 /**
  * @Author: [liguiqin]
@@ -10,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CardTO {
+public class CardTO extends BaseTO {
 
     /**
      * 卡号

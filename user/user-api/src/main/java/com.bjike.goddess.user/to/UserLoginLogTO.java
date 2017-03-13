@@ -1,6 +1,9 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.user.enums.LoginType;
+
+import java.io.Serializable;
 
 /**
  * @Author: [liguiqin]
@@ -9,9 +12,7 @@ import com.bjike.goddess.user.enums.LoginType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserLoginLogTO {
-
-    private String id;
+public class UserLoginLogTO extends BaseTO {
 
     /**
      * 登录时间
@@ -29,14 +30,6 @@ public class UserLoginLogTO {
      * 登录方式
      */
     private LoginType loginType;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getLoginTime() {
         return loginTime;

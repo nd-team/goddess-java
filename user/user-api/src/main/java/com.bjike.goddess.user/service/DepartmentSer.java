@@ -28,4 +28,9 @@ public interface DepartmentSer extends Ser<Department, DepartmentDTO> {
         return null;
     }
 
+
+    default void update(DepartmentTO departmentTO)throws SerException{
+
+    }
+
 }

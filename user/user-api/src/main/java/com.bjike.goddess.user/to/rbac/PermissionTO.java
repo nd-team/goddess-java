@@ -1,5 +1,9 @@
 package com.bjike.goddess.user.to.rbac;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
+import java.io.Serializable;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:00]
@@ -7,19 +11,10 @@ package com.bjike.goddess.user.to.rbac;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class PermissionTO {
+public class PermissionTO extends BaseTO {
 
-    private String id;
     private String name;
     private String resource;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

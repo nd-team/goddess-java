@@ -1,16 +1,14 @@
 package com.bjike.goddess.ticket.to;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.to.BaseTO;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
  * 车票实体
  */
 
-public class TicketTO {
+public class TicketTO extends BaseTO {
 	private String account;//购买人账号
 	/**
 	 * 座位号 D3608-2-2D

@@ -60,7 +60,7 @@ public class AuthCodeAct {
      * @return 验证码图片流
      * @version v1
      */
-    @GetMapping("generateCode/{account}")
+    @GetMapping("v1/generateCode/{account}")
     public void generateCode(@PathVariable String account, HttpServletResponse response) throws ActException {
         response.setContentType("image/jpeg");
         response.setDateHeader("expries", -1);

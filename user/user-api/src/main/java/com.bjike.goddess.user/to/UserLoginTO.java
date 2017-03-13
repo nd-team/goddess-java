@@ -1,8 +1,10 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.user.enums.LoginType;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @Author: [liguiqin]
@@ -11,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserLoginTO {
+public class UserLoginTO extends BaseTO {
 
     /**
      * 登陆令牌

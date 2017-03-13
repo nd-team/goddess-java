@@ -42,4 +42,9 @@ public class DepartmentApiImpl implements DepartmentAPI {
     public void remove(String id) throws SerException {
         departmentSer.remove(id);
     }
+
+    @Override
+    public void update(DepartmentTO departmentTO) throws SerException {
+        departmentSer.update(departmentTO);
+    }
 }

@@ -1,7 +1,10 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.user.enums.SexType;
 import com.bjike.goddess.user.enums.UserType;
+
+import java.io.Serializable;
 
 /**
  * @Author: [liguiqin]
@@ -10,7 +13,7 @@ import com.bjike.goddess.user.enums.UserType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserDetailTO {
+public class UserDetailTO extends BaseTO {
 
     /**
      * 性别

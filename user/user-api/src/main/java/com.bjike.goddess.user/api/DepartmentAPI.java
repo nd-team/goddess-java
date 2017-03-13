@@ -19,7 +19,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface DepartmentAPI  extends Ser<Department, DepartmentDTO> {
+public interface DepartmentAPI {
 
     /**
      * 逐层查询,逐层加载
@@ -47,5 +47,14 @@ public interface DepartmentAPI  extends Ser<Department, DepartmentDTO> {
      * @throws SerException
      */
     default void remove(String id) throws SerException {
+    }
+
+    /**
+     * 更新部门
+     * @param departmentTO
+     * @throws SerException
+     */
+    default void update(DepartmentTO departmentTO)throws SerException{
+
     }
 }

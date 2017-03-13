@@ -1,5 +1,9 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
+import java.io.Serializable;
+
 /**
  * 用户业务传送对象
  *
@@ -9,8 +13,7 @@ package com.bjike.goddess.user.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserTO {
-    private String id;
+public class UserTO extends BaseTO {
     /**
      * 用户名
      */
@@ -34,13 +37,6 @@ public class UserTO {
 
     private String createTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

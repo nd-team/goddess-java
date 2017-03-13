@@ -1,6 +1,9 @@
 package com.bjike.goddess.user.to.rbac;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import java.io.Serializable;
 
 /**
  * @Author: [liguiqin]
@@ -9,8 +12,7 @@ import com.bjike.goddess.common.api.type.Status;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class RoleTO {
-    private String id;
+public class RoleTO extends BaseTO {
     /**
      * 角色名
      */
@@ -28,13 +30,6 @@ public class RoleTO {
      */
     private String createTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

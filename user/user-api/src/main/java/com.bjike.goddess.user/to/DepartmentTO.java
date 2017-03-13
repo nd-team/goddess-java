@@ -1,6 +1,9 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import java.io.Serializable;
 
 /**
  * 部门业务传输
@@ -11,11 +14,8 @@ import com.bjike.goddess.common.api.type.Status;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentTO {
-    /**
-     * id
-     */
-    private String id;
+public class DepartmentTO extends BaseTO {
+
 
     /**
      * 组名
@@ -34,13 +34,6 @@ public class DepartmentTO {
      */
     private String createTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

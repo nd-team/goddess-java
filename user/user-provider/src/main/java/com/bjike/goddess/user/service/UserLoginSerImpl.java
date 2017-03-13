@@ -4,6 +4,7 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.UserLoginLogAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
@@ -12,6 +13,7 @@ import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 import com.bjike.goddess.user.session.validcorrect.Subject;
 import com.bjike.goddess.user.session.validcorrect.UserSession;
 import com.bjike.goddess.user.session.validfail.ValidErrSession;
+import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +40,7 @@ public class UserLoginSerImpl implements UserLoginSer {
     @Autowired
     private UserSer userAPI;
     @Autowired
-    private UserLoginLogSer userLoginLogAPI;
+    private UserLoginLogAPI userLoginLogAPI;
 
 
     @Override
@@ -69,7 +71,8 @@ public class UserLoginSerImpl implements UserLoginSer {
                     loginLog.setLoginTime(LocalDateTime.now());
                     loginLog.setLoginType(loginTO.getLoginType());
                     loginLog.setLoginAddress("not has address");
-                    userLoginLogAPI.saveLoginLog(loginLog);
+                     UserLoginLogTO loginLogTO = BeanTransform.copyProperties(loginLog,UserLoginLogTO.class);
+                    userLoginLogAPI.save(loginLogTO);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }

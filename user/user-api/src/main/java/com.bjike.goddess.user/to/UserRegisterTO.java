@@ -1,5 +1,9 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
+import java.io.Serializable;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2017-03-11 16:42]
@@ -7,7 +11,7 @@ package com.bjike.goddess.user.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserRegisterTO {
+public class UserRegisterTO extends BaseTO {
 
     /**
      * 注册用名
