@@ -30,7 +30,7 @@ public class RoleAct {
     /**
      * 获取角色树结构
      *
-     * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
+     * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @des 逐层加载,参考ztree
      * @version v1
      */
@@ -48,13 +48,14 @@ public class RoleAct {
      * 添加角色
      *
      * @param roleTO 新的角色信息
-     * @des 持久化的角色信息
      * @version v1
      */
     @PostMapping("v1/add")
     public ActResult add(RoleTO roleTO) throws ActException {
         try {
-            return ActResult.initialize(roleAPI.save(roleTO));
+            RoleVO vo = BeanTransform.copyProperties(roleAPI.save(roleTO),RoleVO.class);
+
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

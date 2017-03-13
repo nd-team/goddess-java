@@ -22,7 +22,7 @@ public enum LoginType {
     /**
      * 未识别
      */
-    NONE(0),;
+    NONE(0);
 
     private int code;
 
