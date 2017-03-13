@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
@@ -14,12 +15,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class WorkExperienceTO  {
+public class WorkExperienceTO  extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id ;
 
     /**
      * 开始时间
@@ -64,14 +61,6 @@ public class WorkExperienceTO  {
      *工作描述集合
      */
     private List<String> jobDescriptions;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getStartTime() {
         return startTime;

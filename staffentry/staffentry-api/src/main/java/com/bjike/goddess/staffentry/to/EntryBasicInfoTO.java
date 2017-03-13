@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
  * 入职基本信息业务传输对象
@@ -10,12 +11,8 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EntryBasicInfoTO  {
+public class EntryBasicInfoTO  extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id ;
     /**
      * 地区
      */
@@ -113,13 +110,6 @@ public class EntryBasicInfoTO  {
      */
     private Long entryCount;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getArea() {
         return area;

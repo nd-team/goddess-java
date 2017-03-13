@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
  * 薪资确认业务传输数据
@@ -10,12 +11,8 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SalaryConfirmRecordTO  {
+public class SalaryConfirmRecordTO  extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id ;
     /**
      *姓名
      */
@@ -109,13 +106,7 @@ public class SalaryConfirmRecordTO  {
      */
     private String archivePerson;
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

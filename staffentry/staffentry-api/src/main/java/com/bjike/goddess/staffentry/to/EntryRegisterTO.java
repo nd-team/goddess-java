@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
 
 import java.util.List;
 
@@ -12,12 +13,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EntryRegisterTO {
+public class EntryRegisterTO extends BaseTO {
 
-    /**
-     * id
-     */
-    private String id ;
     /**
      * 员工编号
      */
@@ -152,13 +149,6 @@ public class EntryRegisterTO {
      */
     private List<CredentialTO> credentialBOList ;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getEmpNumber() {
         return empNumber;
