@@ -5,6 +5,4 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":template:template-api")
     compile project(":common:common-utils")
-
-    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
 }

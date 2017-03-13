@@ -29,7 +29,7 @@ public class ProviderBuildCreate {
         //文件创建路径
         StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/")
                 .append(packageName.toLowerCase() + "/")
-                .append(packageName.toLowerCase() + "-consumer/");
+                .append(packageName.toLowerCase() + "-provider/");
 
         //文件创建
         File file = new File(filePath.toString());

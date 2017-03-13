@@ -3,6 +3,7 @@ package buildfile;
 
 import GenerateTemplet.*;
 import GenerateTemplet.configBuild.*;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
+
 /**
  * @Author: [tanghaixiang]
  * @Date: [2017-03-11 16:39]
@@ -33,8 +34,16 @@ public class Build {
 
     }
 
-
     public static void main(String[] args) throws IOException {
+
+        create();
+
+    }
+
+
+
+
+    public static void create() throws IOException {
         //获取输入文件路径
         String inputPath = System.getProperty("user.dir") + "/template/template-provider/src/test/java/buildfile/input.txt";
         System.err.println(inputPath);
@@ -43,7 +52,7 @@ public class Build {
                 "utf-8");
 
         //创建model java 文件
-        fieldsString= createDeails(lines);
+        fieldsString = createDeails(lines);
         String deails[] = fieldsString.split(";");
         createField(deails);
         ModelCreate.createModel(CUS, models);
@@ -52,49 +61,49 @@ public class Build {
         BoCreate.createModel(CUS, models);
 
         //创建dto java 文件
-        DtoCreate.createModel(CUS,models);
+        DtoCreate.createModel(CUS, models);
 
         //创建to java文件
-        ToCreate.createModel(CUS,models);
+        ToCreate.createModel(CUS, models);
 
         //创建vo Java文件
-        VoCreate.createModel(CUS,models);
+        VoCreate.createModel(CUS, models);
 
         //创建api interface 文件
-        ApiCreate.createModel(CUS,models);
+        ApiCreate.createModel(CUS, models);
 
         //创建ser interface 文件
-        ServiceCreate.createModel(CUS,models);
+        ServiceCreate.createModel(CUS, models);
 
         //创建api build.gradle 配置文件
         ApiBuildCreate.createConfig(CUS);
         //创建api setting.gradle 配置文件
         ApiSettingCreate.createConfig(CUS);
-        System.out.println(CUS.get("模块名")+"-api src创建成功----------");
+        System.out.println(CUS.get("模块名") + "-api src创建成功----------");
 
         //创建consumer action Java 文件
-        ActionCreate.createModel(CUS,models);
+        ActionCreate.createModel(CUS, models);
 
         //创建consumer build.gradle 文件
         ConsumerBuildCreate.createConfig(CUS);
         //创建consumer settings.gradle 文件
-        ConsumerSettingCreate.createConfig( CUS);
-        System.out.println(CUS.get("模块名")+"-consumer action创建成功----------");
+        ConsumerSettingCreate.createConfig(CUS);
+        System.out.println(CUS.get("模块名") + "-consumer action创建成功----------");
 
         //创建provider api
-        ProviderApiCreate.createModel(CUS,models);
+        ProviderApiCreate.createModel(CUS, models);
 
         //创建dao interface文件
-        DaoCreate.createModel(CUS,models);
+        DaoCreate.createModel(CUS, models);
 
         //创建provider service java文件
-        ProviderServiceCreate.createModel(CUS,models);
+        ProviderServiceCreate.createModel(CUS, models);
 
         //创建provider build.gradle 文件
         ProviderBuildCreate.createConfig(CUS);
         //创建provider settings.gradle 文件
-        ProviderSettingCreate.createConfig( CUS);
-        System.out.println(CUS.get("模块名")+"-provider src创建成功----------");
+        ProviderSettingCreate.createConfig(CUS);
+        System.out.println(CUS.get("模块名") + "-provider src创建成功----------");
 
     }
 
@@ -145,15 +154,15 @@ public class Build {
             switch (i) {
                 case 0:
                     packageName = desc[i].split("=")[1];
-                    String[]packageNames = packageName.split("\\.");
-                    int length=packageNames.length;
-                    if(0<length){
-                        packageName="";
-                        for(int j=0;j< length;j++){
-                            packageName=packageName+"/"+packageNames[j];
+                    String[] packageNames = packageName.split("\\.");
+                    int length = packageNames.length;
+                    if (0 < length) {
+                        packageName = "";
+                        for (int j = 0; j < length; j++) {
+                            packageName = packageName + "/" + packageNames[j];
                         }
-                    }else {
-                        packageName="/"+packageName;
+                    } else {
+                        packageName = "/" + packageName;
                     }
                     break;
                 case 1:
@@ -174,7 +183,7 @@ public class Build {
     /**
      * 构建属性
      */
-    private static  void createField(String[] deails){
+    private static void createField(String[] deails) {
         Model m = null;
         models.removeAll(models);
         for (String str : deails) {
@@ -182,7 +191,7 @@ public class Build {
             String type = str.split(" ")[0];
             String name = str.split(" ")[1];
             String[] annotation = str.split(" ");
-            if(annotation.length>2){
+            if (annotation.length > 2) {
                 m.setAnnotation(annotation[2]);
             }
             m.setSwapCaseName(name.substring(0, 1).toUpperCase() + name.substring(1));
