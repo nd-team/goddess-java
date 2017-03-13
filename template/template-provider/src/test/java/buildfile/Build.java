@@ -3,14 +3,17 @@ package buildfile;
 
 import GenerateTemplet.*;
 import GenerateTemplet.configBuild.*;
-import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author: [tanghaixiang]
@@ -41,15 +44,15 @@ public class Build {
     }
 
 
-
-
     public static void create() throws IOException {
         //获取输入文件路径
         String inputPath = System.getProperty("user.dir") + "/template/template-provider/src/test/java/buildfile/input.txt";
         System.err.println(inputPath);
         String fieldsString = null;
-        List<String> lines = FileUtils.readLines(new File(inputPath),
-                "utf-8");
+        File file = new File(inputPath);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        Stream<String> stream = reader.lines();
+        List<String> lines = stream.collect(Collectors.toList());
 
         //创建model java 文件
         fieldsString = createDeails(lines);

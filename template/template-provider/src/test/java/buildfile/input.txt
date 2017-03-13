@@ -1,13 +1,13 @@
 模块名:haha
-类名:BusinessDaily
+类名:User
 作者:tanghaixiang
-描述:业务日计划
+描述:用户
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-LocalDate while 时间;
+LocalDate createTime 时间;
 Boolean businessStatus 业务状态;
 BusinessWeekly week 周计划;
 String company 公司名;

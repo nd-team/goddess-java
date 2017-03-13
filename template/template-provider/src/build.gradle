@@ -1,8 +1,7 @@
 apply from: '../../config.gradle'
 
 dependencies {
-    compile project(":common:common-jpa")
-    compile project(":common:common-provider")
     compile project(":template:template-api")
     compile project(":common:common-utils")
+
 }

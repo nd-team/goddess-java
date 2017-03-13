@@ -22,9 +22,8 @@ public class ProviderBuildCreate {
         sb.append("dependencies {\n" )
                 .append(   "    compile project(\":common:common-jpa\")\n" )
                 .append(  "    compile project(\":common:common-provider\")\n" )
-                .append(  "    compile project(\":staffentry:"+packageName+"-api\")\n" )
+                .append(  "    compile project(\":"+packageName+":"+packageName+"-api\")\n" )
                 .append(  "    compile project(\":common:common-utils\")\n" )
-                .append(  "    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'\n" )
                 .append(   "}\n\n");
         //文件创建路径
         StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/")
