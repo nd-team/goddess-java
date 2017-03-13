@@ -29,9 +29,22 @@ public interface RoleSer extends Ser<Role, RoleDTO> {
         return null;
     }
 
-
+    /**
+     * 保存角色资源
+     * @param roleTO
+     * @throws SerException
+     */
     default RoleBO save(RoleTO roleTO) throws SerException {
        return  null;
+    }
+
+    /**
+     * 更新角色资源
+     * @param roleTO
+     * @throws SerException
+     */
+    default void update(RoleTO roleTO)throws SerException{
+
     }
 
 }

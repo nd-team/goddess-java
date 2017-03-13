@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;

@@ -38,4 +38,9 @@ public class RoleApiImpl implements RoleAPI {
     public void remove(String id) throws SerException {
         roleSer.remove(id);
     }
+
+    @Override
+    public void update(RoleTO roleTO) throws SerException {
+        roleSer.update(roleTO);
+    }
 }

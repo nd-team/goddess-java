@@ -38,4 +38,9 @@ public class PermissionApiImpl implements PermissionAPI {
     public void remove(String id) throws SerException {
         permissionSer.remove(id);
     }
+
+    @Override
+    public void update(PermissionTO permissionTO) throws SerException {
+        permissionSer.update(permissionTO);
+    }
 }

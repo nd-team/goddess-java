@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -35,10 +35,9 @@ public class DepartmentAct {
 
 
     /**
-     * 异步获取部门树结构,逐层加载,参考ztree
+     * 获取部门树结构
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
-     * @return 树结构数据
      * @version v1
      */
     @GetMapping("v1/treeData")
@@ -55,7 +54,7 @@ public class DepartmentAct {
      * 添加部门
      *
      * @param departmentTO 部门bo信息
-     * @return 持久化的部门信息
+     * @des 返回部门信息
      * @version v1
      */
     @PostMapping("v1/add")
@@ -69,10 +68,9 @@ public class DepartmentAct {
     }
 
     /**
-     * 通过id删除部门(如该节点存在子节点,先删除子节点)
-     *
+     * 通过id删除部门
+     * @des 如该节点存在子节点,先删除子节点
      * @param id 部门唯一标示
-     * @return
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -87,7 +85,6 @@ public class DepartmentAct {
     /**
      * 编辑部门信息
      *
-     * @return
      * @version v1
      */
     @PostMapping("v1/edit")

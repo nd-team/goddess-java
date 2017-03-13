@@ -1,22 +1,30 @@
-package com.bjike.goddess.user.api;
+package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.to.UserTO;
 
 import java.util.List;
 
 /**
- * 对外提供用户业务接口
+ * 用户业务接口
  *
  * @Author: [liguiqin]
- * @Date: [2017-03-11 13:56]
- * @Description: [ ]
+ * @Date: [2016-11-23 15:47]
+ * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface UserAPI {
+public interface UserSer extends Ser<User, UserDTO> {
 
+    /**
+     * 用户列表
+     * @return
+     * @throws SerException
+     */
     default List<UserBO> list() throws SerException {
         return null;
     }
@@ -76,4 +84,7 @@ public interface UserAPI {
         return null;
     }
 
+    default void update(UserTO userTO) throws SerException{
+
+    }
 }

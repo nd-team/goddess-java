@@ -1,12 +1,10 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserRegisterAPI;
-import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
-import com.bjike.goddess.user.service.UserRegisterSer;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -30,7 +28,9 @@ public class RegisterAct {
     private UserRegisterAPI userRegisterAPI;
 
     /**
-     * @param registerTO    注册用户传输对象
+     * 注册用户
+     *
+     * @param registerTO
      * @param result
      * @throws ActException
      * @version v1
@@ -47,7 +47,7 @@ public class RegisterAct {
 
 
     /**
-     * 验证手机号码并发生验证码到手机
+     * 验证手机号码并发送验证码
      *
      * @param phone 手机号码
      * @throws ActException

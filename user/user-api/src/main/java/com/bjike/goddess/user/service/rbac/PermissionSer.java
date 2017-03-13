@@ -52,8 +52,20 @@ public interface PermissionSer extends Ser<Permission, PermissionDTO> {
     default List<PermissionTreeBO> treeData(String id)throws SerException{
         return null;
     }
-
+    /**
+     * 保存权限资源
+     * @param permissionTO
+     * @throws SerException
+     */
     default PermissionBO save(PermissionTO permissionTO) throws SerException {
         return null;
+    }
+    /**
+     * 更新权限资源
+     * @param permissionTO
+     * @throws SerException
+     */
+    default void update(PermissionTO permissionTO)throws SerException{
+
     }
 }

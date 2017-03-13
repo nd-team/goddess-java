@@ -1,30 +1,22 @@
-package com.bjike.goddess.user.service;
+package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.to.UserTO;
 
 import java.util.List;
 
 /**
- * 用户业务接口
+ * 对外提供用户业务接口
  *
  * @Author: [liguiqin]
- * @Date: [2016-11-23 15:47]
- * @Description: []
+ * @Date: [2017-03-11 13:56]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface UserSer extends Ser<User, UserDTO> {
+public interface UserAPI {
 
-    /**
-     * 用户列表
-     * @return
-     * @throws SerException
-     */
     default List<UserBO> list() throws SerException {
         return null;
     }
@@ -38,6 +30,15 @@ public interface UserSer extends Ser<User, UserDTO> {
     default UserBO add(UserTO userTO) throws SerException {
         return null;
     }
+    /**
+     * 更新用户
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void update(UserTO userTO) throws SerException {
+    }
+
 
     /**
      * 通过用户名查询用户
@@ -83,6 +84,5 @@ public interface UserSer extends Ser<User, UserDTO> {
     default UserBO findByAccountNumber(String accountNumber) throws SerException {
         return null;
     }
-
 
 }

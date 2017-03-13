@@ -70,4 +70,13 @@ public interface PermissionAPI {
      */
     default void remove(String id) throws SerException {
     }
+
+    /**
+     * 更新权限资源
+     * @param permissionTO
+     * @throws SerException
+     */
+    default void update(PermissionTO permissionTO)throws SerException{
+
+    }
 }

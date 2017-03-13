@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -35,7 +35,6 @@ public class LoginLogAct {
     /**
      * 根据获取用户的日志信息
      *
-     * @return
      * @throws ActException
      * @version v1
      */

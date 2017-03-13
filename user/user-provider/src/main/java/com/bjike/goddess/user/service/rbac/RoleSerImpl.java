@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,5 +70,14 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
         Role role = BeanTransform.copyProperties(roleTO, Role.class, true);
         super.save(role);
         return BeanTransform.copyProperties(role,RoleBO.class);
+    }
+
+    @Override
+    public void update(RoleTO roleTO) throws SerException {
+        Role role = super.findById(roleTO.getId());
+        BeanTransform.copyProperties(roleTO,role,true);
+        role.setModifyTime(LocalDateTime.now());
+        super.update(role);
+
     }
 }

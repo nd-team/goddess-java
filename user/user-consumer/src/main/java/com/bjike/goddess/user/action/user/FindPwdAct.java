@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -30,9 +30,8 @@ public class FindPwdAct {
     /**
      * 验证码验证
      *
-     * @param account  账号(email,username,phone)
+     * @param account  账号email,username,phone
      * @param authCode 验证码
-     * @return 简单的用户信息
      * @version v1
      */
     @GetMapping("v1/verifyAccount")
@@ -46,7 +45,7 @@ public class FindPwdAct {
     }
 
     /**
-     * 通过昵称发送手机验证码到手机
+     * 发送手机验证码
      *
      * @param nickName 昵称
      * @version v1

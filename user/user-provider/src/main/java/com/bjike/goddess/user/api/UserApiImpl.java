@@ -34,6 +34,11 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
+    public void update(UserTO userTO) throws SerException {
+        userSer.update(userTO);
+    }
+
+    @Override
     public UserBO findByUsername(String username) throws SerException {
         return userSer.findByUsername(username);
     }

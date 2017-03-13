@@ -44,4 +44,12 @@ public interface RoleAPI {
      */
     default void remove(String id) throws SerException {
     }
+    /**
+     * 更新角色资源
+     * @param roleTO
+     * @throws SerException
+     */
+    default void update(RoleTO roleTO)throws SerException{
+
+    }
 }
