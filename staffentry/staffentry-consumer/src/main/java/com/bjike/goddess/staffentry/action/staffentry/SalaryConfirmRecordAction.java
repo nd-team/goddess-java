@@ -7,6 +7,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI;
 import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
+import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.staffentry.vo.SalaryConfirmRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,14 +49,14 @@ public class SalaryConfirmRecordAction {
 
     /**
      * 添加员工入职
-     * @param salaryConfirmRecordBO 员工入职基本信息数据bo
+     * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
      */
     @PostMapping("v1/add")
-    public ActResult addSalaryConfirmRecord (@Valid SalaryConfirmRecordBO salaryConfirmRecordBO) throws ActException {
+    public ActResult addSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
-            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordBO );
+            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO );
             return ActResult.initialize( salaryConfirmRecordBO1);
         } catch (SerException e) {
             throw  new ActException( e.getMessage() );
@@ -65,14 +66,14 @@ public class SalaryConfirmRecordAction {
 
     /**
      * 编辑员工入职
-     * @param salaryConfirmRecordBO 员工入职基本信息数据bo
+     * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
      */
     @PostMapping("v1/edit")
-    public ActResult editSalaryConfirmRecord (@Valid SalaryConfirmRecordBO salaryConfirmRecordBO ) throws ActException {
+    public ActResult editSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO ) throws ActException {
         try {
-            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordBO );
+            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO );
             return ActResult.initialize( salaryConfirmRecordBO1);
         } catch (SerException e) {
             throw  new ActException( e.getMessage() );
