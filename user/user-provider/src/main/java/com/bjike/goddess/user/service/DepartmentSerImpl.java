@@ -6,16 +6,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.dto.DepartmentDTO;
-import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
 import com.bjike.goddess.user.bo.DepartmentTreeBO;
-import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.dto.DepartmentDTO;
+import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.to.DepartmentTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +33,6 @@ import java.util.List;
 @Service
 public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> implements DepartmentSer {
 
-@Autowired
-private UserAPI userAPI;
 
     @Override
     public List<DepartmentTreeBO> treeData(String id) throws SerException {
@@ -56,6 +50,7 @@ private UserAPI userAPI;
             DepartmentTreeBO bo = new DepartmentTreeBO();
             bo.setName(permission.getName());
             bo.setId(permission.getId());
+            bo.setDescription(permission.getDescription());
             bo.setParent(null == permission.getParent());
             departmentTreeBOS.add(bo);
         });

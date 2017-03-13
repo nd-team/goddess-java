@@ -33,7 +33,7 @@ public class LoginLogAct {
 
 
     /**
-     * 通过用户id获取登录日志列表
+     * 获取登录日志列表
      *
      * @throws ActException
      * @version v1

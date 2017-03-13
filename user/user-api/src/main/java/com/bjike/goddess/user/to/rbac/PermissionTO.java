@@ -1,8 +1,8 @@
 package com.bjike.goddess.user.to.rbac;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
-
-import java.io.Serializable;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @Author: [liguiqin]
@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class PermissionTO extends BaseTO {
 
+    @NotBlank(message = "资源名不能为空", groups = ADD.class)
     private String name;
     private String resource;
 

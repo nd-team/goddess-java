@@ -1,5 +1,7 @@
 package com.bjike.goddess.user.action.user;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.user.vo.DepartmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +58,7 @@ public class DepartmentAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(DepartmentTO departmentTO) throws ActException {
+    public Result add(@Validated({ADD.class}) DepartmentTO departmentTO) throws ActException {
         try {
             DepartmentVO vo = BeanTransform.copyProperties(departmentAPI.save(departmentTO), DepartmentVO.class);
             return ActResult.initialize(vo);
@@ -65,7 +68,7 @@ public class DepartmentAct {
     }
 
     /**
-     * 通过id删除部门
+     * 删除部门
      *
      * @param id 部门唯一标示
      * @des 如该节点存在子节点, 先删除子节点
@@ -87,7 +90,7 @@ public class DepartmentAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(DepartmentTO departmentTO) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DepartmentTO departmentTO) throws ActException {
         try {
             departmentAPI.update(departmentTO);
             return new ActResult("edit success!");
