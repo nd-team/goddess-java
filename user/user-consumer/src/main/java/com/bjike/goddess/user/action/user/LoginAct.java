@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -36,7 +36,6 @@ public class LoginAct {
      *
      * @param loginTO 登录用户传输数据对象
      * @param request
-     * @return
      * @version v1
      */
     @PostMapping("v1/login")

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -126,6 +127,14 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         Permission permission = BeanTransform.copyProperties(permissionTO, Permission.class, true);
         super.save(permission);
 
-        return BeanTransform.copyProperties(permission,PermissionBO.class);
+        return BeanTransform.copyProperties(permission, PermissionBO.class);
+    }
+
+    @Override
+    public void update(PermissionTO permissionTO) throws SerException {
+        Permission permission = super.findById(permissionTO.getId());
+        BeanTransform.copyProperties(permissionTO, permission,true);
+        permission.setModifyTime(LocalDateTime.now());
+        super.update(permission);
     }
 }

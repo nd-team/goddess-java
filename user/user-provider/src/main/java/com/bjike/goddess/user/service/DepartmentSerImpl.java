@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,9 @@ private UserAPI userAPI;
 
     @Override
     public void update(DepartmentTO departmentTO) throws SerException {
-        Department department = BeanTransform.copyProperties(departmentTO, Department.class, true);
+        Department department = super.findById(departmentTO.getId());
+        BeanTransform.copyProperties(departmentTO, department, true);
+        department.setModifyTime(LocalDateTime.now());
         super.update(department);
     }
 }

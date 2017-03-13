@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -97,4 +98,11 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return BeanTransform.copyProperties(findOne(dto), UserBO.class);
     }
 
+    @Override
+    public void update(UserTO userTO) throws SerException {
+        User user = super.findById(userTO.getId());
+        BeanTransform.copyProperties(userTO,user,true);
+        user.setModifyTime(LocalDateTime.now());
+        super.update(user);
+    }
 }

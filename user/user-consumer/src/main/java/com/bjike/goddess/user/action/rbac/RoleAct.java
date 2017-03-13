@@ -5,8 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.RoleAPI;
-import com.bjike.goddess.user.bo.rbac.RoleBO;
-import com.bjike.goddess.user.service.rbac.RoleSer;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 import com.bjike.goddess.user.vo.rbac.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +28,10 @@ public class RoleAct {
     private RoleAPI roleAPI;
 
     /**
-     * 异步获取角色树结构,逐层加载,参考ztree
+     * 获取角色树结构
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
-     * @return 树结构数据
+     * @des 逐层加载,参考ztree
      * @version v1
      */
     @GetMapping("v1/treeData")
@@ -50,7 +48,7 @@ public class RoleAct {
      * 添加角色
      *
      * @param roleTO 新的角色信息
-     * @return 持久化的角色信息
+     * @des 持久化的角色信息
      * @version v1
      */
     @PostMapping("v1/add")
@@ -63,10 +61,10 @@ public class RoleAct {
     }
 
     /**
-     * 通过id删除角色(如该节点存在子节点,先删除子节点)
+     * 通过id删除角色
      *
      * @param id 角色唯一标示
-     * @return
+     * @des 如该节点存在子节点,先删除子节点
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")

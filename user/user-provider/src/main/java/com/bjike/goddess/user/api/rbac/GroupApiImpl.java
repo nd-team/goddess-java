@@ -38,4 +38,9 @@ public class GroupApiImpl implements GroupAPI {
     public void remove(String id) throws SerException {
         groupSer.remove(id);
     }
+
+    @Override
+    public void update(GroupTO groupTO) throws SerException {
+        groupSer.update(groupTO);
+    }
 }

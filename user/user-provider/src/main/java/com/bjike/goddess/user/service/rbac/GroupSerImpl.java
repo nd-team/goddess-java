@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,5 +72,13 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         GroupBO bo = BeanTransform.copyProperties(group, Group.class);
         bo.setId(group.getId());//复制id
         return bo;
+    }
+
+    @Override
+    public void update(GroupTO groupTO) throws SerException {
+        Group group = super.findById(groupTO.getId());
+        BeanTransform.copyProperties(groupTO,group,true);
+        group.setModifyTime(LocalDateTime.now());
+        super.update(group);
     }
 }

@@ -19,19 +19,35 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface GroupSer  extends Ser<Group, GroupDTO>{
+public interface GroupSer extends Ser<Group, GroupDTO> {
 
     /**
      * 逐层查询,逐层加载
+     *
      * @param id 组id
      * @return
      */
-    default List<GroupTreeBO> treeData(String id)throws SerException{
+    default List<GroupTreeBO> treeData(String id) throws SerException {
         return null;
     }
 
-    default GroupBO save (GroupTO groupTO) throws SerException{
+    /**
+     * 保存部门
+     *
+     * @param groupTO
+     * @throws SerException
+     */
+    default GroupBO save(GroupTO groupTO) throws SerException {
         return null;
     }
 
+    /**
+     * 更新部门
+     *
+     * @param groupTO
+     * @throws SerException
+     */
+    default void update(GroupTO groupTO) throws SerException {
+
+    }
 }

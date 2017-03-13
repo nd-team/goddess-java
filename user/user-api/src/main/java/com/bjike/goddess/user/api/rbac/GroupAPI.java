@@ -3,6 +3,7 @@ package com.bjike.goddess.user.api.rbac;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
 import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 
 import java.util.List;
@@ -44,5 +45,14 @@ public interface GroupAPI {
      * @throws SerException
      */
     default void remove(String id) throws SerException {
+    }
+
+    /**
+     * 更新部门
+     * @param groupTO
+     * @throws SerException
+     */
+    default void update(GroupTO groupTO)throws SerException{
+
     }
 }

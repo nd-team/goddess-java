@@ -28,10 +28,10 @@ public class GroupAct {
     private GroupAPI groupAPI;
 
     /**
-     * 异步获取组树结构,逐层加载,参考ztree
+     * 获取组树结构
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
-     * @return 树结构数据
+     * @des 逐层加载,参考ztree
      * @version v1
      */
     @GetMapping("v1/treeData")
@@ -48,7 +48,6 @@ public class GroupAct {
      * 添加组
      *
      * @param groupTO 新的组信息
-     * @return 持久化的组信息
      * @version v1
      */
     @PostMapping("v1/add")
@@ -61,10 +60,10 @@ public class GroupAct {
     }
 
     /**
-     * 通过id删除组(如该节点存在子节点,先删除子节点)
+     * 通过id删除组
      *
      * @param id 组唯一标示
-     * @return
+     * @des 如该节点存在子节点,先删除子节点
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")

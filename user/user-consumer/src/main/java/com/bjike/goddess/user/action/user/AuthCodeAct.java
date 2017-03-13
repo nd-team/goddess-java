@@ -1,11 +1,10 @@
-package com.bjike.goddess.user.action;
+package com.bjike.goddess.user.action.user;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAuthCodeAPI;
-import com.bjike.goddess.user.service.UserAuthCodeSer;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,10 +34,10 @@ public class AuthCodeAct {
     private UserAuthCodeAPI userAuthCodeAPI;
 
     /**
-     * 显示验证码（登录是否需要验证码）
+     * 显示验证码
      *
      * @param account 账号(email,username,phone)
-     * @return true代表需要要验证, false代表不需要验证码
+     * @des 登录是否需要验证码true代表需要要验证, false代表不需要验证码
      * @version v1
      */
     @GetMapping("v1/showAuthCode/{account}")
@@ -53,11 +52,12 @@ public class AuthCodeAct {
     }
 
     /**
-     * 生成验证码 （登录/找回密码/注册）
+     * 生成验证码
      *
      * @param account  账号(email,username,phone)
      * @param response
-     * @return 验证码图片流
+     * @des 登录找回密码注册, 验证码图片流
+     * @return  {name:'testName',type:'string',defaultValue:'',description:'图片流.'}
      * @version v1
      */
     @GetMapping("v1/generateCode/{account}")
