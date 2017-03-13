@@ -60,7 +60,7 @@ public class DtoCreate {
         if  (!file .exists()  && !file .isDirectory())
         {
             System.out.println("//不存在");
-            file .mkdir();
+            file .mkdirs();
         }
         filePath.append( className+"DTO.java" );
         file = new File( filePath.toString() );

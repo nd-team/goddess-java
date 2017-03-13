@@ -65,7 +65,7 @@ public class DaoCreate {
         if  (!file .exists()  && !file .isDirectory())
         {
             System.out.println("//不存在");
-            file .mkdir();
+            file .mkdirs();
         }
         filePath.append( "I"+className+".java" );
         file = new File( filePath.toString() );

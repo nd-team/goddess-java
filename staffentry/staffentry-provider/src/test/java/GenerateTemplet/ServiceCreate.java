@@ -24,10 +24,7 @@ public class ServiceCreate {
         String author = cus.get("作者");
         String desc = cus.get("描述")+"业务接口";
         LocalDateTime date = LocalDateTime.now();
-        int size = 0;
-        if (models != null && models.size() > 0) {
-            size = models.size(); //属性字段长度
-        }
+
 
 
         StringBuilder sb = new StringBuilder("");
@@ -66,7 +63,7 @@ public class ServiceCreate {
         if  (!file .exists()  && !file .isDirectory())
         {
             System.out.println("//不存在");
-            file .mkdir();
+            file .mkdirs();
         }
         filePath.append( className+"Ser.java" );
         file = new File( filePath.toString() );

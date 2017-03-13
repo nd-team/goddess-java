@@ -48,37 +48,37 @@ public class Build {
         ModelCreate.createModel(CUS, models);
 
         //创建bo java 文件
-//        BoCreate.createModel(CUS, models);
-//
-//        //创建dto java 文件
-//        DtoCreate.createModel(CUS,models);
-//
-//        //创建to java文件
-//        ToCreate.createModel(CUS,models);
-//
-//        //创建vo Java文件
-//        VoCreate.createModel(CUS,models);
-//
-//        //创建api interface 文件
-//        ApiCreate.createModel(CUS,models);
-//
-//        //创建ser interface 文件
-//        ServiceCreate.createModel(CUS,models);
-//        System.out.println(CUS.get("模块名")+"-api src创建成功----------");
-//
-//        //创建consumer action Java 文件
-//        ActionCreate.createModel(CUS,models);
-//        System.out.println(CUS.get("模块名")+"-consumer action创建成功----------");
-//
-//        //创建provider api
-//        ProviderApiCreate.createModel(CUS,models);
-//
-//        //创建dao interface文件
-//        DaoCreate.createModel(CUS,models);
-//
-//        //创建provider service java文件
-//        ProviderServiceCreate.createModel(CUS,models);
-//        System.out.println(CUS.get("模块名")+"-provider src创建成功----------");
+        BoCreate.createModel(CUS, models);
+
+        //创建dto java 文件
+        DtoCreate.createModel(CUS,models);
+
+        //创建to java文件
+        ToCreate.createModel(CUS,models);
+
+        //创建vo Java文件
+        VoCreate.createModel(CUS,models);
+
+        //创建api interface 文件
+        ApiCreate.createModel(CUS,models);
+
+        //创建ser interface 文件
+        ServiceCreate.createModel(CUS,models);
+        System.out.println(CUS.get("模块名")+"-api src创建成功----------");
+
+        //创建consumer action Java 文件
+        ActionCreate.createModel(CUS,models);
+        System.out.println(CUS.get("模块名")+"-consumer action创建成功----------");
+
+        //创建provider api
+        ProviderApiCreate.createModel(CUS,models);
+
+        //创建dao interface文件
+        DaoCreate.createModel(CUS,models);
+
+        //创建provider service java文件
+        ProviderServiceCreate.createModel(CUS,models);
+        System.out.println(CUS.get("模块名")+"-provider src创建成功----------");
 
     }
 

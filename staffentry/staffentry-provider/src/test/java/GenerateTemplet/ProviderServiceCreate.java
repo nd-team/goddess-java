@@ -67,7 +67,7 @@ public class ProviderServiceCreate {
         if  (!file .exists()  && !file .isDirectory())
         {
             System.out.println("//不存在");
-            file .mkdir();
+            file .mkdirs();
         }
         filePath.append( className+"Impl.java" );
         file = new File( filePath.toString() );
