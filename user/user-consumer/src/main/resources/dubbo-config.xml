@@ -15,17 +15,16 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-	<dubbo:reference validation="true"  id="userDetailSer" interface="com.bjike.goddess.user.service.UserDetailAPI" />
-	<dubbo:reference validation="true"  id="departmentSer" interface="com.bjike.goddess.user.service.DepartmentAPI" />
-	<dubbo:reference validation="true"  id="userAuthCodeSer" interface="com.bjike.goddess.user.service.UserAuthCodeAPI" />
-	<dubbo:reference validation="true"  id="userSer" interface="com.bjike.goddess.user.service.UserAPI" />
-	<dubbo:reference validation="true"  id="userLoginSer" interface="com.bjike.goddess.user.service.UserLoginAPI" />
-	<dubbo:reference validation="true"  id="userLoginLogSer" interface="com.bjike.goddess.user.service.UserLoginLogAPI" />
-	<dubbo:reference validation="true"  id="userRegisterSer" interface="com.bjike.goddess.user.service.UserRegisterAPI" />
-	<dubbo:reference validation="true"  id="userFindPwdSer" interface="com.bjike.goddess.user.service.UserFindPwdAPI" />
-	<dubbo:reference validation="true"  id="groupSer" interface="com.bjike.goddess.user.service.rbac.GroupAPI" />
-	<dubbo:reference validation="true"  id="roleSer" interface="com.bjike.goddess.user.service.rbac.RoleAPI" />
-	<dubbo:reference validation="true"  id="permissionSer" interface="com.bjike.goddess.user.service.rbac.PermissionAPI" />
 
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RoleAPI" id="roleApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupAPI" id="groupApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginAPI" id="userLoginApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserRegisterAPI" id="userRegisterApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAuthCodeAPI" id="userAuthCodeApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginLogAPI" id="userLoginLogApiImpl"/>
 
 </beans>

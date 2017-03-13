@@ -6,10 +6,10 @@ import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.entity.rbac.Role;
 import com.bjike.goddess.user.entity.rbac.UserRole;
 import com.bjike.goddess.user.service.*;
-import com.bjike.goddess.user.service.rbac.GroupAPI;
-import com.bjike.goddess.user.service.rbac.PermissionAPI;
-import com.bjike.goddess.user.service.rbac.RoleAPI;
-import com.bjike.goddess.user.service.rbac.UserRoleAPI;
+import com.bjike.goddess.user.service.rbac.GroupSer;
+import com.bjike.goddess.user.service.rbac.PermissionSer;
+import com.bjike.goddess.user.service.rbac.RoleSer;
+import com.bjike.goddess.user.service.rbac.UserRoleSer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import user_common_code.AppConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -36,19 +35,19 @@ import java.util.Set;
 @ContextConfiguration(classes = AppConfig.class)
 public class RbacTest {
     @Autowired
-    private UserAPI userAPI;
+    private UserSer userAPI;
     @Autowired
-    private RoleAPI roleAPI;
+    private RoleSer roleAPI;
     @Autowired
-    private UserRoleAPI userRoleAPI;
+    private UserRoleSer userRoleAPI;
     @Autowired
-    private PermissionAPI permissionAPI;
+    private PermissionSer permissionAPI;
     @Autowired
-    private DepartmentAPI departmentAPI;
+    private DepartmentSer departmentAPI;
     @Autowired
-    private GroupAPI groupAPI;
+    private GroupSer groupAPI;
     @Autowired
-    private PositionAPI positionAPI;
+    private PositionSer positionAPI;
 
     /**
      * 添加角色

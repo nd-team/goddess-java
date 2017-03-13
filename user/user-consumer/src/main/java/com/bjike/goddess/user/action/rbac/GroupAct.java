@@ -4,10 +4,9 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.bo.rbac.GroupBO;
-import com.bjike.goddess.user.service.rbac.GroupAPI;
-import com.bjike.goddess.user.vo.GroupVO;
-import com.dounine.japi.common.springmvc.ApiVersion;
+import com.bjike.goddess.user.api.rbac.GroupAPI;
+import com.bjike.goddess.user.to.rbac.GroupTO;
+import com.bjike.goddess.user.vo.rbac.GroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/rbac/group")
+@RequestMapping("rbac/group")
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
@@ -33,9 +32,9 @@ public class GroupAct {
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
      * @return 树结构数据
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("treeData")
+    @GetMapping("v1/treeData")
     public ActResult treeData(String id) throws ActException {
         try {
             List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
@@ -48,14 +47,14 @@ public class GroupAct {
     /**
      * 添加组
      *
-     * @param bo 新的组信息
+     * @param groupTO 新的组信息
      * @return 持久化的组信息
+     * @version v1
      */
-    @ApiVersion(1)
-    @PostMapping("add")
-    public ActResult add(GroupBO bo) throws ActException {
+    @PostMapping("v1/add")
+    public ActResult add(GroupTO groupTO) throws ActException {
         try {
-            return ActResult.initialize(groupAPI.saveByBO(bo));
+            return ActResult.initialize(groupAPI.save(groupTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -66,9 +65,9 @@ public class GroupAct {
      *
      * @param id 组唯一标示
      * @return
+     * @version v1
      */
-    @ApiVersion(1)
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
             groupAPI.remove(id);

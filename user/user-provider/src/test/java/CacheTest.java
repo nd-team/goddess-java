@@ -1,7 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.service.UserAPI;
+import com.bjike.goddess.user.service.UserSer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ import java.util.List;
 public class CacheTest {
 
     @Autowired
-    private UserAPI userAPI;
+    private UserSer userAPI;
     @Autowired
     CacheManager cacheManager;
     private List<Cache> caches = new ArrayList<>();

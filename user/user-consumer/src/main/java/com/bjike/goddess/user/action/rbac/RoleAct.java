@@ -4,10 +4,11 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.rbac.RoleAPI;
 import com.bjike.goddess.user.bo.rbac.RoleBO;
-import com.bjike.goddess.user.service.rbac.RoleAPI;
-import com.bjike.goddess.user.vo.RoleVO;
-import com.dounine.japi.common.springmvc.ApiVersion;
+import com.bjike.goddess.user.service.rbac.RoleSer;
+import com.bjike.goddess.user.to.rbac.RoleTO;
+import com.bjike.goddess.user.vo.rbac.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/rbac/role")
+@RequestMapping("rbac/role")
 public class RoleAct {
     @Autowired
     private RoleAPI roleAPI;
@@ -33,12 +34,12 @@ public class RoleAct {
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
      * @return 树结构数据
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("treeData")
+    @GetMapping("v1/treeData")
     public ActResult treeData(String id) throws ActException {
         try {
-            List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id),RoleVO.class);
+            List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id), RoleVO.class);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -48,14 +49,14 @@ public class RoleAct {
     /**
      * 添加角色
      *
-     * @param bo 新的角色信息
+     * @param roleTO 新的角色信息
      * @return 持久化的角色信息
+     * @version v1
      */
-    @ApiVersion(1)
-    @PostMapping("add")
-    public ActResult add(RoleBO bo) throws ActException {
+    @PostMapping("v1/add")
+    public ActResult add(RoleTO roleTO) throws ActException {
         try {
-            return ActResult.initialize(roleAPI.saveByBO(bo));
+            return ActResult.initialize(roleAPI.save(roleTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -66,9 +67,9 @@ public class RoleAct {
      *
      * @param id 角色唯一标示
      * @return
+     * @version v1
      */
-    @ApiVersion(1)
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
             roleAPI.remove(id);

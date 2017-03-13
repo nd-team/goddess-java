@@ -4,10 +4,11 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.service.rbac.PermissionAPI;
-import com.bjike.goddess.user.vo.PermissionVO;
-import com.dounine.japi.common.springmvc.ApiVersion;
+import com.bjike.goddess.user.service.rbac.PermissionSer;
+import com.bjike.goddess.user.to.rbac.PermissionTO;
+import com.bjike.goddess.user.vo.rbac.PermissionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("{version}/rbac/permission")
+@RequestMapping("rbac/permission")
 public class PermissionAct {
     @Autowired
     private PermissionAPI permissionAPI;
@@ -33,9 +34,9 @@ public class PermissionAct {
      *
      * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
      * @return 树结构数据
+     * @version v1
      */
-    @ApiVersion(1)
-    @GetMapping("treeData")
+    @GetMapping("v1/treeData")
     public ActResult treeData(String id) throws ActException {
         try {
             List<PermissionVO> vos = BeanTransform.copyProperties(permissionAPI.treeData(id), PermissionVO.class);
@@ -48,14 +49,14 @@ public class PermissionAct {
     /**
      * 添加资源
      *
-     * @param bo 新的资源信息
+     * @param permissionTO 新的资源信息
      * @return 持久化的的资源信息
+     * @version v1
      */
-    @ApiVersion(1)
-    @PostMapping("add")
-    public ActResult add(PermissionBO bo) throws ActException {
+    @PostMapping("v1/add")
+    public ActResult add(PermissionTO permissionTO) throws ActException {
         try {
-            return ActResult.initialize(permissionAPI.saveByBO(bo));
+            return ActResult.initialize(permissionAPI.save(permissionTO));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -66,9 +67,9 @@ public class PermissionAct {
      *
      * @param id 权限资源唯一标示
      * @return
+     * @version v1
      */
-    @ApiVersion(1)
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public ActResult delete(@PathVariable String id) throws ActException {
         try {
             permissionAPI.remove(id);
