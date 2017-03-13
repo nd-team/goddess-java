@@ -21,6 +21,12 @@ include ':demo:demo-card:demo-card-provider'
 //#demo
 //include ':dbs:mongo'
 //include ':dbs:redis'
+
+//#template
+include ':template:template-api'
+include ':template:template-consumer'
+include ':template:template-provider'
+
 include ':user:user-api'
 include ':user:user-consumer'
 include ':user:user-provider'
