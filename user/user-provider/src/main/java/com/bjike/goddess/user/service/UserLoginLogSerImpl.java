@@ -9,8 +9,6 @@ import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.to.UserLoginLogTO;
-import com.bjike.goddess.user.utils.UserUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;

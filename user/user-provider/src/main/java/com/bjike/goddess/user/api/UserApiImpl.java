@@ -1,8 +1,12 @@
 package com.bjike.goddess.user.api;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.session.validcorrect.Subject;
+import com.bjike.goddess.user.session.validcorrect.UserSession;
 import com.bjike.goddess.user.to.UserTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,33 @@ import java.util.List;
 public class UserApiImpl implements UserAPI {
     @Autowired
     private UserSer userSer;
+
+    @Override
+    public UserBO currentUser() throws SerException {
+        Object token = RpcContext.getContext().getAttachment("userToken");
+        if (null != token) {
+            Subject subject = UserSession.get(token.toString());
+            if (null != subject) {
+                return BeanTransform.copyProperties(subject.getUser(),UserBO.class);
+            }
+            throw new SerException("登录已过期!");
+        }
+        throw new SerException("用户未登录!");
+    }
+
+
+    @Override
+    public UserBO currentUser(String userToken) throws SerException {
+        if (null == userToken) {
+            throw new SerException("用户未登录!");
+        } else {
+            Subject subject = UserSession.get(userToken.toString());
+            if (null != subject) {
+                return BeanTransform.copyProperties(subject.getUser(),UserBO.class);
+            }
+            throw new SerException("登录已过期!");
+        }
+    }
 
     @Override
     public List<UserBO> list() throws SerException {

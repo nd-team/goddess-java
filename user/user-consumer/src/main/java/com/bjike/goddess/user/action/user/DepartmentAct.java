@@ -6,9 +6,6 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
-import com.bjike.goddess.user.bo.DepartmentBO;
-import com.bjike.goddess.user.entity.Department;
-import com.bjike.goddess.user.service.DepartmentSer;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.user.vo.DepartmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,7 @@ public class DepartmentAct {
     /**
      * 获取部门树结构
      *
-     * @param id 通过自身id查询下层子节点,参数为空时查询最顶层
+     * @param id 通id不为空时查询下层子节点,参数为空时查询最顶层
      * @version v1
      */
     @GetMapping("v1/treeData")
@@ -60,7 +57,7 @@ public class DepartmentAct {
     @PostMapping("v1/add")
     public Result add(DepartmentTO departmentTO) throws ActException {
         try {
-            DepartmentVO vo = BeanTransform.copyProperties(departmentAPI.save(departmentTO),DepartmentVO.class);
+            DepartmentVO vo = BeanTransform.copyProperties(departmentAPI.save(departmentTO), DepartmentVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -69,8 +66,9 @@ public class DepartmentAct {
 
     /**
      * 通过id删除部门
-     * @des 如该节点存在子节点,先删除子节点
+     *
      * @param id 部门唯一标示
+     * @des 如该节点存在子节点, 先删除子节点
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -82,6 +80,7 @@ public class DepartmentAct {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 编辑部门信息
      *

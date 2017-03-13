@@ -11,6 +11,7 @@ import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.CheckMobile;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,11 +36,11 @@ public class LoginAct {
      * 登录
      *
      * @param loginTO 登录用户传输数据对象
-     * @param request
+     * @param request httpRequest
      * @version v1
      */
     @PostMapping("v1/login")
-    public Result login(UserLoginTO loginTO, HttpServletRequest request) throws ActException {
+    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request) throws ActException {
         try {
             String userAgent = request.getHeader("USER-AGENT").toLowerCase();
             LoginType type = LoginType.PC;

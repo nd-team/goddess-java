@@ -8,6 +8,7 @@ import com.bjike.goddess.user.api.UserRegisterAPI;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,13 +31,12 @@ public class RegisterAct {
     /**
      * 注册用户
      *
-     * @param registerTO
-     * @param result
+     * @param registerTO 注册用户信息
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/register")
-    public Result register(@Valid UserRegisterTO registerTO, BindingResult result) throws ActException {
+    public Result register(@Validated UserRegisterTO registerTO, BindingResult result) throws ActException {
         try {
             userRegisterAPI.verifyCodeAndReg(registerTO);
         } catch (SerException e) {

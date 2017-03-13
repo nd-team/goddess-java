@@ -34,10 +34,10 @@ public class AuthCodeAct {
     private UserAuthCodeAPI userAuthCodeAPI;
 
     /**
-     * 显示验证码
+     * 登录是否需要验证码
      *
-     * @param account 账号(email,username,phone)
-     * @des 登录是否需要验证码true代表需要要验证, false代表不需要验证码
+     * @param account 账号email,username,phone
+     * @des true代表需要要验证,false代表不需要验证码
      * @version v1
      */
     @GetMapping("v1/showAuthCode/{account}")
@@ -54,9 +54,8 @@ public class AuthCodeAct {
     /**
      * 生成验证码
      *
-     * @param account  账号(email,username,phone)
-     * @param response
-     * @des 登录找回密码注册, 验证码图片流
+     * @param account  账号email,username,phone
+     * @des 登录找回密码注册,验证码图片流
      * @return  {name:'testName',type:'string',defaultValue:'',description:'图片流.'}
      * @version v1
      */

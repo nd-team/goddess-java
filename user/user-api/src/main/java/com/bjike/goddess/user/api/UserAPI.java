@@ -16,6 +16,13 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface UserAPI {
+    default UserBO currentUser() throws SerException {
+        return null;
+    }
+
+    default UserBO currentUser(String userToken) throws SerException {
+        return null;
+    }
 
     default List<UserBO> list() throws SerException {
         return null;
