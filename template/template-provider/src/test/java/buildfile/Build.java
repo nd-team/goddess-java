@@ -39,12 +39,19 @@ public class Build {
 
     public static void main(String[] args) throws IOException {
 
-        create();
+        //创建请运行此方法
+        create("create");
+
+        //删除请运行此方法
+        delete();
 
     }
 
+    public static  void delete()throws IOException {
+        create("delete");
+    }
 
-    public static void create() throws IOException {
+    public static void create(String createOrDelete) throws IOException {
         //获取输入文件路径
         String inputPath = System.getProperty("user.dir") + "/template/template-provider/src/test/java/buildfile/input.txt";
         System.err.println(inputPath);
@@ -58,56 +65,71 @@ public class Build {
         fieldsString = createDeails(lines);
         String deails[] = fieldsString.split(";");
         createField(deails);
-        ModelCreate.createModel(CUS, models);
+        ModelCreate.createModel(CUS, models,createOrDelete);
 
         //创建bo java 文件
-        BoCreate.createModel(CUS, models);
+        BoCreate.createModel(CUS, models,createOrDelete);
 
         //创建dto java 文件
-        DtoCreate.createModel(CUS, models);
+        DtoCreate.createModel(CUS, models,createOrDelete);
 
         //创建to java文件
-        ToCreate.createModel(CUS, models);
+        ToCreate.createModel(CUS, models,createOrDelete);
 
         //创建vo Java文件
-        VoCreate.createModel(CUS, models);
+        VoCreate.createModel(CUS, models,createOrDelete);
 
         //创建api interface 文件
-        ApiCreate.createModel(CUS, models);
+        ApiCreate.createModel(CUS, models,createOrDelete);
 
         //创建ser interface 文件
-        ServiceCreate.createModel(CUS, models);
+        ServiceCreate.createModel(CUS, models,createOrDelete);
 
         //创建api build.gradle 配置文件
-        ApiBuildCreate.createConfig(CUS);
+        ApiBuildCreate.createConfig(CUS,createOrDelete);
         //创建api setting.gradle 配置文件
-        ApiSettingCreate.createConfig(CUS);
-        System.out.println(CUS.get("模块名") + "-api src创建成功----------");
+        ApiSettingCreate.createConfig(CUS,createOrDelete);
+
+        if( createOrDelete.equals("create")){
+            System.out.println(CUS.get("模块名") + "-api src创建成功----------");
+        }else if( createOrDelete.equals("delete")){
+            System.out.println(CUS.get("模块名") + "-api src删除成功----------");
+        }
 
         //创建consumer action Java 文件
-        ActionCreate.createModel(CUS, models);
+        ActionCreate.createModel(CUS, models,createOrDelete);
 
+        //创建package-info.java
+        PackageInfoCreate.createModel(CUS,models,createOrDelete);
         //创建consumer build.gradle 文件
-        ConsumerBuildCreate.createConfig(CUS);
+        ConsumerBuildCreate.createConfig(CUS,createOrDelete);
         //创建consumer settings.gradle 文件
-        ConsumerSettingCreate.createConfig(CUS);
-        System.out.println(CUS.get("模块名") + "-consumer action创建成功----------");
+        ConsumerSettingCreate.createConfig(CUS,createOrDelete);
 
+        if( createOrDelete.equals("create")){
+            System.out.println(CUS.get("模块名") + "-consumer src创建成功----------");
+        }else if( createOrDelete.equals("delete")){
+            System.out.println(CUS.get("模块名") + "-consumer src删除成功----------");
+        }
         //创建provider api
-        ProviderApiCreate.createModel(CUS, models);
+        ProviderApiCreate.createModel(CUS, models,createOrDelete);
 
         //创建dao interface文件
-        DaoCreate.createModel(CUS, models);
+        DaoCreate.createModel(CUS, models,createOrDelete);
 
         //创建provider service java文件
-        ProviderServiceCreate.createModel(CUS, models);
+        ProviderServiceCreate.createModel(CUS, models,createOrDelete);
 
         //创建provider build.gradle 文件
-        ProviderBuildCreate.createConfig(CUS);
+        ProviderBuildCreate.createConfig(CUS,createOrDelete);
         //创建provider settings.gradle 文件
-        ProviderSettingCreate.createConfig(CUS);
-        System.out.println(CUS.get("模块名") + "-provider src创建成功----------");
+        ProviderSettingCreate.createConfig(CUS,createOrDelete);
 
+        if( createOrDelete.equals("create")){
+            System.out.println(CUS.get("模块名") + "-provider src创建成功----------");
+        }else if( createOrDelete.equals("delete")){
+            System.out.println(CUS.get("模块名") + "-provider src删除成功----------");
+        }
     }
 
     /**
