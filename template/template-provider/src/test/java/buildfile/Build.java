@@ -43,7 +43,7 @@ public class Build {
         create("create");
 
         //删除请运行此方法
-//        delete();
+        delete();
 
     }
 
