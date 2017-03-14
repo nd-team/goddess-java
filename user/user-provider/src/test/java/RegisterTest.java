@@ -1,6 +1,7 @@
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.service.UserRegisterSer;
+import com.bjike.goddess.user.to.UserRegisterTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,16 +42,16 @@ public class RegisterTest {
 
     @Test
     public void verifyCodeAndReg() throws SerException {
-        UserRegisterDTO dto = new UserRegisterDTO();
-        dto.setPhoneCode("123");
-        userRegisterAPI.verifyCodeAndReg(dto);
+        UserRegisterTO to = new UserRegisterTO();
+        to.setPhoneCode("123");
+        userRegisterAPI.verifyCodeAndReg(to);
     }
 
     @Test
     public void saveUser() throws SerException {
-        UserRegisterDTO dto = new UserRegisterDTO();
-        dto.setPhoneCode("123");
-        userRegisterAPI.verifyCodeAndReg(dto);
+        UserRegisterTO to = new UserRegisterTO();
+        to.setPhoneCode("123");
+        userRegisterAPI.verifyCodeAndReg(to);
     }
 
 

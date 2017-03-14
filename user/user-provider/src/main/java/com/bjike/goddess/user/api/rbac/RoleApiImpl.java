@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 对外提供角色接口实现
+ *
  *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:13]

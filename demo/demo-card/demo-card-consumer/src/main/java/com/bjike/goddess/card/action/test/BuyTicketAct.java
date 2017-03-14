@@ -40,7 +40,7 @@ public class BuyTicketAct {
      *
      * @param cardTO          卡传输对象
      * @param position      座位号
-     * @version v1         版本
+     * @version v1
      * @param bindingResult
      */
     @PostMapping("v1/buy/{position}")
@@ -58,7 +58,7 @@ public class BuyTicketAct {
      * @param cardTO 卡传输对象
      * @param position
      * @param bindingResult
-     * @version v1         版本
+     * @version v1
      * @throws ActException
      */
     @PostMapping("v1/cancel/{position}")
