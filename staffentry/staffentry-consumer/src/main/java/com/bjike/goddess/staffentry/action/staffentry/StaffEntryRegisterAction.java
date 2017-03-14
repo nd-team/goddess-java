@@ -30,10 +30,10 @@ public class StaffEntryRegisterAction {
     private UserAPI userAPI;
 
     /**
-     * 添加用户 和用户相关的信息
+     * 添加用户
      *
      * @param userBO 用户数据
-     * @throws SerException
+     * @des 添加用户 和用户相关的信息
      * @version v1
      */
     @PostMapping("v1/add")
@@ -45,10 +45,10 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 根据用户id删除用户
+     * 删除用户
      *
      * @param id 用户id
-     * @throws SerException
+     * @des 根据用户id删除用户
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -62,7 +62,7 @@ public class StaffEntryRegisterAction {
      * 获取所有用户
      *
      * @return class user
-     * @throws SerException
+     * @des 获取所有用户
      * @version v1
      */
     @GetMapping(value = "v1/userInfo")
@@ -81,10 +81,10 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 根据用户id修改用户
+     * 修改用户
      *
      * @param id 用户id
-     * @throws SerException
+     * @des 根据用户id修改用户
      * @version v1
      */
     @PutMapping("v1/edit/{id}")
@@ -94,10 +94,10 @@ public class StaffEntryRegisterAction {
     }
 
     /**
-     * 根据用户id解冻用户
+     * 解冻用户
      *
      * @param id 用户id
-     * @throws SerException
+     * @des 根据用户id解冻用户
      * @version v1
      */
     @PutMapping("v1/thow")
@@ -107,10 +107,10 @@ public class StaffEntryRegisterAction {
     }
 
     /**
-     * 根据用户id冻结用户
+     * 冻结用户
      *
      * @param id 用户id
-     * @throws SerException
+     * @des 根据用户id冻结用户
      * @version v1
      */
     @PutMapping("v1/concle")
@@ -121,9 +121,10 @@ public class StaffEntryRegisterAction {
 
 
     /**
+     * 發送郵件
      * @param id           用户id
      * @param emailAccount 用户入职注册个人邮箱
-     * @throws ActException
+     * @des 發送郵件
      * @version v1
      */
     @PutMapping("v1/sendAccountToEmplore")

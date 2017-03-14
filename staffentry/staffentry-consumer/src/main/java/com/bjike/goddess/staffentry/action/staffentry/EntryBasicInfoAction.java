@@ -11,6 +11,7 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,11 +34,10 @@ public class EntryBasicInfoAction {
     private EntryBasicInfoAPI entryBasicInfoAPI;
 
     /**
-     * 获取所有入职基本信息
+     * 入职基本信息列表
      *
      * @param entryBasicInfoDTO 入职基本信息dto
-     * @return class entryBasicInfoBO
-     * @throws ActException
+     * @des 获取所有入职基本信息
      * @version v1
      */
     @GetMapping("v1/listEntryBasicInfo")
@@ -55,12 +55,11 @@ public class EntryBasicInfoAction {
      * 添加员工入职
      *
      * @param entryBasicInfoTO 员工入职基本信息数据to
-     * @return class entryBasicInfoBO
-     * @throws ActException
+     * @des 添加员工入职
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addEntryBasicInfo(@Valid EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result addEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.insertEntryBasicInfo(entryBasicInfoTO);
             return ActResult.initialize(entryBasicInfoBO1);
@@ -74,12 +73,11 @@ public class EntryBasicInfoAction {
      * 编辑员工入职
      *
      * @param entryBasicInfoTO 员工入职基本信息数据bo
-     * @return class entryBasicInfoBO
-     * @throws ActException
+     * @des 添加员工入职
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editEntryBasicInfo(@Valid EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result editEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO);
             return ActResult.initialize(entryBasicInfoBO1);
@@ -90,10 +88,10 @@ public class EntryBasicInfoAction {
 
 
     /**
-     * 根据用户id删除员工入职基本信息记录
+     * 删除入职信息
      *
      * @param id 用户id
-     * @throws ActException
+     * @des 根据用户id删除员工入职基本信息记录
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -107,11 +105,10 @@ public class EntryBasicInfoAction {
     }
 
     /**
-     * 根据id查找某个员工入职基本信息
+     * 查找入职信息
      *
      * @param id 员工入职基本信息id
-     * @return class entryBasicInfoTO
-     * @throws ActException
+     * @des 根据id查找某个员工入职基本信息
      * @version v1
      */
     @GetMapping("v1/getEntryBasicInfo")
@@ -126,15 +123,14 @@ public class EntryBasicInfoAction {
     }
 
     /**
-     * 根据id emails发送入职通告邮件
+     * 入职通告邮件
      *
      * @param entryBasicInfoTO 员工入职基本信息bo 主要id 和 emails
-     * @return class entryBasicInfoBO
-     * @throws ActException
+     * @des 根据id emails发送入职通告邮件
      * @version v1
      */
     @GetMapping("v1/sendEmailEntryBasicInfo")
-    public Result emialEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result emialEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.sendEntryBasicInfo(entryBasicInfoTO), EntryBasicInfoVO.class, true);
@@ -145,11 +141,10 @@ public class EntryBasicInfoAction {
     }
 
     /**
-     * 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
+     * 汇总入职情况统计
      *
      * @param entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
-     * @return class entryBasicInfoBO
-     * @throws ActException
+     * @des 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
      * @version v1
      */
     @GetMapping("v1/collect")
