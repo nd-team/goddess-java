@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
  * 用户注册业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 10:24]
  * @Description: [用户注册业务传输对象]

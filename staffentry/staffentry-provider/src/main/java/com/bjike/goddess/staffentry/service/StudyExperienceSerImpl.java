@@ -26,7 +26,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class StudyExperienceImpl extends ServiceImpl<StudyExperience, StudyExperienceDTO> implements StudyExperienceSer {
+public class StudyExperienceSerImpl extends ServiceImpl<StudyExperience, StudyExperienceDTO> implements StudyExperienceSer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override

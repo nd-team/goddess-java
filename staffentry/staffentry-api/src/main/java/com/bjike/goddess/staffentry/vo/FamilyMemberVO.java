@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.vo;
 
 /**
  * 家庭成员表出层对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 10:35]
  * @Description: [家庭成员表出层对象]
@@ -21,27 +22,27 @@ public class FamilyMemberVO {
     private String title;
 
     /**
-     *姓名
+     * 姓名
      */
     private String name;
 
     /**
-     *年龄
+     * 年龄
      */
     private Integer age;
 
     /**
-     *单位
+     * 单位
      */
     private String unit;
 
     /**
-     *职务
+     * 职务
      */
     private String position;
 
     /**
-     *联系方式
+     * 联系方式
      */
     private String phone;
 

@@ -32,7 +32,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "entryBasicInfoSerCache")
 @Service
-public class EntryBasicInfoImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
+public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
 
     @Cacheable
     @Override

@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.vo;
 
 /**
  * 工作经历表现层对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 10:36]
  * @Description: [工作经历表现层对象]

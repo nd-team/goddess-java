@@ -30,9 +30,9 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class EntryRegisterImpl extends ServiceImpl<EntryRegister, EntryRegisterDTO> implements EntryRegisterSer {
+public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegisterDTO> implements EntryRegisterSer {
 
-    private static Logger log = Logger.getLogger(EntryRegisterImpl.class);
+    private static Logger log = Logger.getLogger(EntryRegisterSerImpl.class);
     @Autowired
     private UserSer userSer;
     @Autowired

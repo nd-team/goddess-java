@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
  * 薪资确认传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 17:25]
  * @Description: [薪资确认传输对象]

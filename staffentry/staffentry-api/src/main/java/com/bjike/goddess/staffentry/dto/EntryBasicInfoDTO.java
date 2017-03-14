@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
  * 入职基本信息数据传输
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 11:55]
  * @Description: [入职基本信息数据传输]

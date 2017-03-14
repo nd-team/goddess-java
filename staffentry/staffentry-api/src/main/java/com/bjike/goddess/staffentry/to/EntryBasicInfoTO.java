@@ -1,72 +1,75 @@
 package com.bjike.goddess.staffentry.to;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 入职基本信息业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 13:55]
  * @Description: [入职基本信息业务传输对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EntryBasicInfoTO  extends BaseTO {
+public class EntryBasicInfoTO extends BaseTO {
 
     /**
      * 地区
      */
+    @NotBlank(message = "xxx", groups = {ADD.class})
     private String area;
     /**
-     *部门
+     * 部门
      */
     private String department;
     /**
-     *项目组
+     * 项目组
      */
     private String projectGroup;
     /**
-     *岗位
+     * 岗位
      */
     private String position;
     /**
-     *入职时间
+     * 入职时间
      */
     private String entryTime;
     /**
-     *姓名
+     * 姓名
      */
     private String name;
     /**
-     *员工编号
+     * 员工编号
      */
     private String employeeID;
     /**
-     *邮箱账号
+     * 邮箱账号
      */
     private String email;
     /**
-     *联系电话
+     * 联系电话
      */
     private String phone;
     /**
-     *专业
+     * 专业
      */
     private String profession;
     /**
-     *银行卡账号
+     * 银行卡账号
      */
     private String bankCardID;
     /**
-     *开户行
+     * 开户行
      */
     private String bankOfDeposit;
     /**
-     *开户账户
+     * 开户账户
      */
     private String bankAccount;
     /**
-     *薪资是否确认
+     * 薪资是否确认
      */
     private Boolean salaryConfirm;
 

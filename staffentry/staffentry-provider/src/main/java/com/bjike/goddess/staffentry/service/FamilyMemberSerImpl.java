@@ -26,7 +26,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class FamilyMemberImpl extends ServiceImpl<FamilyMember, FamilyMemberDTO> implements FamilyMemberSer {
+public class FamilyMemberSerImpl extends ServiceImpl<FamilyMember, FamilyMemberDTO> implements FamilyMemberSer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override

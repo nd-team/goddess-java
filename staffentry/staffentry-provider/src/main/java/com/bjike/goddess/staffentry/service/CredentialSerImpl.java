@@ -25,7 +25,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class CredentialImpl extends ServiceImpl<Credential, CredentialDTO> implements CredentialSer {
+public class CredentialSerImpl extends ServiceImpl<Credential, CredentialDTO> implements CredentialSer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override

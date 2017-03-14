@@ -5,7 +5,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
-import com.bjike.goddess.staffentry.service.EntryBasicInfoImpl;
 import com.bjike.goddess.staffentry.service.EntryBasicInfoSer;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;

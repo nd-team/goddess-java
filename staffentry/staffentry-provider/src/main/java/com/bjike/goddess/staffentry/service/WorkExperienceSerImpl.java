@@ -26,7 +26,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class WorkExperienceImpl extends ServiceImpl<WorkExperience, WorkExperienceDTO> implements WorkExperienceSer {
+public class WorkExperienceSerImpl extends ServiceImpl<WorkExperience, WorkExperienceDTO> implements WorkExperienceSer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override

@@ -1,22 +1,19 @@
 package com.bjike.goddess.staffentry.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.staffentry.vo.CredentialVO;
-import com.bjike.goddess.staffentry.vo.FamilyMemberVO;
-import com.bjike.goddess.staffentry.vo.StudyExperienceVO;
-import com.bjike.goddess.staffentry.vo.WorkExperienceVO;
 
 import java.util.List;
 
 /**
  * 入职登记业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 11:09]
  * @Description: [入职登记业务传输对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EntryRegisterBO extends BaseBO{
+public class EntryRegisterBO extends BaseBO {
 
 
     /**
@@ -29,107 +26,107 @@ public class EntryRegisterBO extends BaseBO{
     private String username;
 
     /**
-     *性别0男1女
+     * 性别0男1女
      */
     private Integer gender;
 
     /**
-     *出生年月日
+     * 出生年月日
      */
     private String birthday;
 
     /**
-     *民族
+     * 民族
      */
     private String nation;
 
     /**
-     *婚姻状况
+     * 婚姻状况
      */
     private String marriage;
 
     /**
-     *政治面貌
+     * 政治面貌
      */
     private String politicsStatus;
 
     /**
-     *籍贯
+     * 籍贯
      */
     private String nativePlace;
 
     /**
-     *身高
+     * 身高
      */
     private String stature;
 
     /**
-     *专业
+     * 专业
      */
     private String profession;
 
     /**
-     *学历
+     * 学历
      */
     private String education;
 
     /**
-     *毕业学校
+     * 毕业学校
      */
     private String schoolTag;
 
     /**
-     *毕业时间
+     * 毕业时间
      */
     private String graduationDate;
 
     /**
-     *健康状况
+     * 健康状况
      */
     private String healthStatus;
 
     /**
-     *QQ号
+     * QQ号
      */
     private String qq;
 
     /**
-     *手机号
+     * 手机号
      */
     private String phone;
 
     /**
-     *个人邮箱账号
+     * 个人邮箱账号
      */
     private String email;
 
     /**
-     *紧急情况联系人
+     * 紧急情况联系人
      */
     private String emergencyContact;
 
     /**
-     *联系电话
+     * 联系电话
      */
     private String phoneNumber;
 
     /**
-     *身份证号码
+     * 身份证号码
      */
     private String idCard;
 
     /**
-     *户口地址
+     * 户口地址
      */
     private String registeredAddress;
 
     /**
-     *目前住宿地址
+     * 目前住宿地址
      */
     private String location;
 
     /**
-     *兴趣爱好
+     * 兴趣爱好
      */
     private String hobbies;
 
@@ -141,17 +138,17 @@ public class EntryRegisterBO extends BaseBO{
     /**
      * 学习经历集合
      */
-    private List<StudyExperienceBO> studyExperienceBOList ;
+    private List<StudyExperienceBO> studyExperienceBOList;
 
     /**
      * 工作经历集合
      */
-    private List<WorkExperienceBO> workExperienceBOList ;
+    private List<WorkExperienceBO> workExperienceBOList;
 
     /**
      * 证书集合
      */
-    private List<CredentialBO> credentialBOList ;
+    private List<CredentialBO> credentialBOList;
 
 
     public String getEmpNumber() {

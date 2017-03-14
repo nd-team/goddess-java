@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.vo;
 
 /**
  * 证书情况表现层对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 10:35]
  * @Description: [证书情况表现层对象]

@@ -3,12 +3,11 @@ package com.bjike.goddess.staffentry.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
-import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
  * 学习经历业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 14:33]
  * @Description: [学习经历业务传输对象]
@@ -43,19 +42,19 @@ public class StudyExperienceBO extends BaseBO {
     private EntryRegister entryRegister;
 
     /**
-     *开始时间集合
+     * 开始时间集合
      */
     private List<String> studyStartTimes;
     /**
-     *结束时间集合
+     * 结束时间集合
      */
     private List<String> studyEndTimes;
     /**
-     *就读学校集合
+     * 就读学校集合
      */
     private List<String> schools;
     /**
-     *毕业证书集合
+     * 毕业证书集合
      */
     private List<String> certificates;
 
