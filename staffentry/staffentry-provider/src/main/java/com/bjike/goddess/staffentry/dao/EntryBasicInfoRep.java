@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface IEntryBasicInfo extends JpaRep<EntryBasicInfo ,EntryBasicInfoDTO> {
+public interface EntryBasicInfoRep extends JpaRep<EntryBasicInfo ,EntryBasicInfoDTO> {
 }

@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.EntryRegister;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface IEntryRegister extends JpaRep<EntryRegister ,EntryRegisterDTO> {
+public interface EntryRegisterRep extends JpaRep<EntryRegister ,EntryRegisterDTO> {
 }

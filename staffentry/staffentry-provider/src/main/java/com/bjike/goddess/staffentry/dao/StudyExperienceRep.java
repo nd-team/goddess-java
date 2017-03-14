@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.StudyExperience;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface IStudyExperience extends JpaRep<StudyExperience ,StudyExperienceDTO> {
+public interface StudyExperienceRep extends JpaRep<StudyExperience ,StudyExperienceDTO> {
 }

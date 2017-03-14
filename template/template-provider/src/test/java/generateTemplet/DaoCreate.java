@@ -49,7 +49,7 @@ public class DaoCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
         //类创建
-        sb.append("public interface I"+className+" extends JpaRep<"+className+" ,"+className+"DTO> { \n\n");
+        sb.append("public interface "+className+"Rep extends JpaRep<"+className+" ,"+className+"DTO> { \n\n");
 
 
         //拼接类完成
@@ -73,7 +73,7 @@ public class DaoCreate {
         {
             file .mkdirs();
         }
-        filePath.append( "I"+className+".java" );
+        filePath.append( className+"Rep.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 

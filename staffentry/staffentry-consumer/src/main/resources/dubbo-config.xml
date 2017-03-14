@@ -15,7 +15,7 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" id="credentialApiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
 	<dubbo:reference validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
 	<dubbo:reference validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
