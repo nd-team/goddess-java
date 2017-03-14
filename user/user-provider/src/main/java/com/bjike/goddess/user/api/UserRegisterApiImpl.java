@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.user.dto.ext.UserRegisterDTO;
 import com.bjike.goddess.user.service.UserRegisterSer;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserRegisterApiImpl implements UserRegisterAPI {
     @Autowired
     private UserRegisterSer userRegisterSer;
+
     @Override
     public Boolean existUsername(String username) throws SerException {
         return userRegisterSer.existUsername(username);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 对外提供权限资源接口实现
+ *
  *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:20]
@@ -23,6 +23,11 @@ import java.util.List;
 public class PermissionApiImpl implements PermissionAPI {
     @Autowired
     private PermissionSer permissionSer;
+
+    @Override
+    public List<PermissionBO> findByUserId(String userId) throws SerException {
+        return permissionSer.findByUserId(userId);
+    }
 
     @Override
     public List<PermissionTreeBO> treeData(String id) throws SerException {

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 对外提供用户登陆接口实现
+ *
  *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 15:23]
