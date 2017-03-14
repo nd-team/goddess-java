@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
@@ -34,10 +35,11 @@ public class EntryBasicInfoAction {
      * 获取所有入职基本信息
      * @param entryBasicInfoDTO 入职基本信息dto
      * @return class entryBasicInfoBO
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/listEntryBasicInfo")
-    public ActResult findListEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws ActException {
+    public Result findListEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws ActException {
         try {
             List<EntryBasicInfoVO> entryBasicInfoVOList = BeanTransform.copyProperties(
                     entryBasicInfoAPI.listEntryBasicInfo( entryBasicInfoDTO ) , EntryBasicInfoVO.class ,true);
@@ -52,9 +54,10 @@ public class EntryBasicInfoAction {
      * @param entryBasicInfoTO 员工入职基本信息数据to
      * @return class entryBasicInfoBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/add")
-    public ActResult addEntryBasicInfo (@Valid EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result addEntryBasicInfo (@Valid EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.insertEntryBasicInfo(entryBasicInfoTO );
             return ActResult.initialize( entryBasicInfoBO1);
@@ -69,9 +72,10 @@ public class EntryBasicInfoAction {
      * @param entryBasicInfoTO 员工入职基本信息数据bo
      * @return class entryBasicInfoBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/edit")
-    public ActResult editEntryBasicInfo (@Valid EntryBasicInfoTO entryBasicInfoTO ) throws ActException {
+    public Result editEntryBasicInfo (@Valid EntryBasicInfoTO entryBasicInfoTO ) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO );
             return ActResult.initialize( entryBasicInfoBO1);
@@ -86,9 +90,10 @@ public class EntryBasicInfoAction {
      * @param id 用户id
      * @return
      * @throws ActException
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public ActResult deleteEntryBasicInfo(@PathVariable String id) throws ActException {
+    public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
             entryBasicInfoAPI.removeEntryBasicInfo( id );
             return new ActResult("delete success!");
@@ -102,9 +107,10 @@ public class EntryBasicInfoAction {
      * @param id 员工入职基本信息id
      * @return class entryBasicInfoTO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/getEntryBasicInfo")
-    public ActResult findOneEntryBasicInfo(@RequestParam String id) throws ActException {
+    public Result findOneEntryBasicInfo(@RequestParam String id) throws ActException {
         try {
             EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.getEntryBasicInfo( id ) , EntryBasicInfoVO.class ,true);
@@ -119,9 +125,10 @@ public class EntryBasicInfoAction {
      * @param entryBasicInfoTO 员工入职基本信息bo 主要id 和 emails
      * @return class entryBasicInfoBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/sendEmailEntryBasicInfo")
-    public ActResult emialEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result emialEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.sendEntryBasicInfo( entryBasicInfoTO ) , EntryBasicInfoVO.class ,true);
@@ -136,9 +143,10 @@ public class EntryBasicInfoAction {
      * @param entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
      * @return class entryBasicInfoBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/collect")
-    public ActResult collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws ActException {
+    public Result collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws ActException {
         try {
             List<EntryBasicInfoVO> entryBasicInfoVOList = BeanTransform.copyProperties(
                     entryBasicInfoAPI.collectEntryBasicInfo( entryBasicInfoDTO ) , EntryBasicInfoVO.class ,true);

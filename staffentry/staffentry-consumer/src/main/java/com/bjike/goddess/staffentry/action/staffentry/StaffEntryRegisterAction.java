@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -30,11 +31,11 @@ public class StaffEntryRegisterAction {
     /**
     * 添加用户 和用户相关的信息
     * @param userBO 用户数据
-    * @return class user
     * @throws SerException
+     * @version v1
     */
     @PostMapping("v1/add")
-    public ActResult addUsers(UserBO userBO) throws ActException {
+    public Result addUsers(UserBO userBO) throws ActException {
 
         //TODO:  tanghaixiang 2017-03-09 未做用户注册
         return ActResult.initialize( null);
@@ -44,11 +45,11 @@ public class StaffEntryRegisterAction {
     /**
     * 根据用户id删除用户
     * @param id 用户id
-    * @return
     * @throws SerException
+     * @version v1
     */
     @DeleteMapping("v1/delete/{id}")
-    public ActResult delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
             //TODO:  tanghaixiang 2017-03-09 未做删除用户 记得抛异常
             return new ActResult("delete success!");
     }
@@ -59,9 +60,10 @@ public class StaffEntryRegisterAction {
     * @param
     * @return class user
     * @throws SerException
+     * @version v1
     */
     @GetMapping(value = "v1/userInfo" )
-    public ActResult getAllUser( ) throws ActException{
+    public Result getAllUser( ) throws ActException{
 
         try {
             //TODO:  tanghaixiang 2017-03-09 未做获取用户信息 记得抛异常
@@ -80,9 +82,10 @@ public class StaffEntryRegisterAction {
      * @param id 用户id
      * @return
      * @throws SerException
+     * @version v1
      */
     @PutMapping("v1/edit/{id}")
-    public ActResult edit(@PathVariable String id ) throws ActException {
+    public Result edit(@PathVariable String id ) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做修改用户 记得抛异常
         return new ActResult("edit success!");
     }
@@ -90,11 +93,11 @@ public class StaffEntryRegisterAction {
     /**
      * 根据用户id解冻用户
      * @param id 用户id
-     * @return
      * @throws SerException
+     * @version v1
      */
     @PutMapping("v1/thow")
-    public ActResult thow(@RequestParam String id) throws ActException {
+    public Result thow(@RequestParam String id) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做解冻用户 记得抛异常
         return new ActResult("thow success!");
     }
@@ -102,11 +105,11 @@ public class StaffEntryRegisterAction {
     /**
      * 根据用户id冻结用户
      * @param id 用户id
-     * @return
      * @throws SerException
+     * @version v1
      */
     @PutMapping("v1/concle")
-    public ActResult concle(@RequestParam String id) throws ActException {
+    public Result concle(@RequestParam String id) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做冻结用户 记得抛异常
         return new ActResult("concle success!");
     }
@@ -116,11 +119,11 @@ public class StaffEntryRegisterAction {
      *
      * @param id 用户id
      * @param emailAccount 用户入职注册个人邮箱
-     * @return
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/sendAccountToEmplore")
-    public ActResult sendAccountToEmp(@RequestParam String id, @RequestParam String emailAccount) throws ActException {
+    public Result sendAccountToEmp(@RequestParam String id, @RequestParam String emailAccount) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做邮件告知员工账号密码 记得抛异常
         return new ActResult("send success!");
     }

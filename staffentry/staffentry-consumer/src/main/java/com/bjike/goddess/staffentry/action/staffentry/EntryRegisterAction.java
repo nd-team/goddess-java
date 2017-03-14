@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
@@ -36,9 +37,10 @@ public class EntryRegisterAction {
      * @param entryRegisterDTO 入职登记dto
      * @return class entryRegisterBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/listEntryRegister")
-    public ActResult findListEntryRegister( EntryRegisterDTO entryRegisterDTO) throws ActException {
+    public Result findListEntryRegister(EntryRegisterDTO entryRegisterDTO) throws ActException {
         try {
             List<EntryRegisterVO> entryRegisterVOList = BeanTransform.copyProperties(
                     entryRegisterAPI.listEntryRegister( entryRegisterDTO ) , EntryRegisterVO.class );
@@ -57,9 +59,10 @@ public class EntryRegisterAction {
      * @param credentialTO 证书情况数据to
      * @return class entryRegisterBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/add")
-    public ActResult addEntryRegister (@Valid EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
+    public Result addEntryRegister (@Valid EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                        WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws ActException {
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.insertEntryRegister(entryRegisterTO,
@@ -80,9 +83,10 @@ public class EntryRegisterAction {
      * @param credentialTO 证书情况数据to
      * @return class entryRegisterBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/edit")
-    public ActResult editEntryRegister (@Valid EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
+    public Result editEntryRegister (@Valid EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                        WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws ActException {
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.editEntryRegister(entryRegisterTO,
@@ -99,9 +103,10 @@ public class EntryRegisterAction {
      * @param id 用户id
      * @return
      * @throws ActException
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public ActResult deleteEntryRegister(@PathVariable String id) throws ActException {
+    public Result deleteEntryRegister(@PathVariable String id) throws ActException {
         try {
             entryRegisterAPI.removeEntryRegister( id );
             return new ActResult("delete success!");
@@ -115,9 +120,10 @@ public class EntryRegisterAction {
      * @param id 员工入职登记id
      * @return class entryRegisterBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/getEntryRegister")
-    public ActResult findOneEntryRegister(@RequestParam String id) throws ActException {
+    public Result findOneEntryRegister(@RequestParam String id) throws ActException {
         try {
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
                     entryRegisterAPI.getEntryRegister( id ) , EntryRegisterVO.class );
