@@ -18,15 +18,15 @@
 
 	<!--发布接口,供其他模块调用-->
 	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-	<dubbo:service  ref="credentialAPiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
-	<dubbo:service  ref="entryBasicInfoAPiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
-	<dubbo:service  ref="entryRegisterAPiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
-	<dubbo:service  ref="familyMemberAPiImpl" interface="com.bjike.goddess.staffentry.api.FamilyMemberAPI" />
-	<dubbo:service  ref="salaryConfirmRecordAPiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
-	<dubbo:service  ref="studyExperienceAPiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
-	<dubbo:service  ref="workExperienceAPiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
+	<dubbo:service  ref="credentialApiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
+	<dubbo:service  ref="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<dubbo:service  ref="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
+	<dubbo:service  ref="familyMemberApiImpl" interface="com.bjike.goddess.staffentry.api.FamilyMemberAPI" />
+	<dubbo:service  ref="salaryConfirmRecordApiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
+	<dubbo:service  ref="studyExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
+	<dubbo:service  ref="workExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
-	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.service.UserAPI" />
+	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * 员工入职用户注册
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-08 17:00]
  * @Description: [员工入职用户注册]
@@ -29,69 +30,72 @@ public class StaffEntryRegisterAction {
     private UserAPI userAPI;
 
     /**
-    * 添加用户 和用户相关的信息
-    * @param userBO 用户数据
-    * @throws SerException
+     * 添加用户 和用户相关的信息
+     *
+     * @param userBO 用户数据
+     * @throws SerException
      * @version v1
-    */
+     */
     @PostMapping("v1/add")
     public Result addUsers(UserBO userBO) throws ActException {
 
         //TODO:  tanghaixiang 2017-03-09 未做用户注册
-        return ActResult.initialize( null);
+        return ActResult.initialize(null);
     }
 
 
     /**
-    * 根据用户id删除用户
-    * @param id 用户id
-    * @throws SerException
+     * 根据用户id删除用户
+     *
+     * @param id 用户id
+     * @throws SerException
      * @version v1
-    */
+     */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
-            //TODO:  tanghaixiang 2017-03-09 未做删除用户 记得抛异常
-            return new ActResult("delete success!");
+        //TODO:  tanghaixiang 2017-03-09 未做删除用户 记得抛异常
+        return new ActResult("delete success!");
     }
 
 
     /**
-    * 获取所有用户
-    * @param
-    * @return class user
-    * @throws SerException
+     * 获取所有用户
+     *
+     * @return class user
+     * @throws SerException
      * @version v1
-    */
-    @GetMapping(value = "v1/userInfo" )
-    public Result getAllUser( ) throws ActException{
+     */
+    @GetMapping(value = "v1/userInfo")
+    public Result getAllUser() throws ActException {
 
         try {
             //TODO:  tanghaixiang 2017-03-09 未做获取用户信息 记得抛异常
 //            List<UserVO> userVOS = BeanTransform.copyProperties( userAPI.findAllGoods() , UserVO.class);
-            List<UserBO> user =  userAPI.list();
+            List<UserBO> user = userAPI.list();
             List<UserVO> userVOS = new ArrayList<>();
             return ActResult.initialize(userVOS);
         } catch (Exception e) {
-            throw  new ActException(e.getMessage());
+            throw new ActException(e.getMessage());
         }
     }
 
 
     /**
      * 根据用户id修改用户
+     *
      * @param id 用户id
-     * @return
      * @throws SerException
      * @version v1
      */
     @PutMapping("v1/edit/{id}")
-    public Result edit(@PathVariable String id ) throws ActException {
+    public Result edit(@PathVariable String id) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做修改用户 记得抛异常
         return new ActResult("edit success!");
     }
 
     /**
      * 根据用户id解冻用户
+     *
      * @param id 用户id
      * @throws SerException
      * @version v1
@@ -104,6 +108,7 @@ public class StaffEntryRegisterAction {
 
     /**
      * 根据用户id冻结用户
+     *
      * @param id 用户id
      * @throws SerException
      * @version v1
@@ -116,8 +121,7 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     *
-     * @param id 用户id
+     * @param id           用户id
      * @param emailAccount 用户入职注册个人邮箱
      * @throws ActException
      * @version v1
@@ -127,7 +131,6 @@ public class StaffEntryRegisterAction {
         //TODO: tanghaixiang 2017-03-09 未做邮件告知员工账号密码 记得抛异常
         return new ActResult("send success!");
     }
-
 
 
 }

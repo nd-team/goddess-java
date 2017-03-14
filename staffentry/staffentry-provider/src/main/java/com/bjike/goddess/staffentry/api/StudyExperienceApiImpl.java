@@ -18,8 +18,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("studyExperienceAPiImpl")
-public class StudyExperienceAPiImpl implements StudyExperienceAPI{
+@Service("studyExperienceApiImpl")
+public class StudyExperienceApiImpl implements StudyExperienceAPI{
 
     @Autowired
     private StudyExperienceSer studyExperienceSer;

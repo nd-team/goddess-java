@@ -47,9 +47,9 @@ public class ProviderApiCreate {
                 .append("* @Copy:   \t\t[ com.bjike ]\n")
                 .append("*/\n");
 
-        sb.append("@Service(\""+className.substring(0,1).toLowerCase()+className.substring(1)+"APiImpl\")\n");
+        sb.append("@Service(\""+className.substring(0,1).toLowerCase()+className.substring(1)+"ApiImpl\")\n");
         //类创建
-        sb.append("public class "+className+"APiImpl implements "+className+"API  { \n\n");
+        sb.append("public class "+className+"ApiImpl implements "+className+"API  { \n\n");
 
 
         //拼接类完成
@@ -73,7 +73,7 @@ public class ProviderApiCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"APiImpl.java" );
+        filePath.append( className+"ApiImpl.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 

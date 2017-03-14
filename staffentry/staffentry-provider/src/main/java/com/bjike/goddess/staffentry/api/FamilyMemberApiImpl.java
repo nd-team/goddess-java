@@ -17,8 +17,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("familyMemberAPiImpl")
-public class FamilyMemberAPiImpl implements FamilyMemberAPI{
+@Service("familyMemberApiImpl")
+public class FamilyMemberApiImpl implements FamilyMemberAPI{
 
     @Autowired
     private FamilyMemberSer familyMemberSer;

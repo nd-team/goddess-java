@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * 薪资确认
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-11 10:31]
  * @Description: [薪资确认]
@@ -33,6 +34,7 @@ public class SalaryConfirmRecordAction {
 
     /**
      * 获取所有入职基本信息
+     *
      * @param salaryConfirmRecordDTO 入职基本信息dto
      * @return class salaryConfirmRecordBO
      * @throws ActException
@@ -42,51 +44,54 @@ public class SalaryConfirmRecordAction {
     public Result findListSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws ActException {
         try {
             List<SalaryConfirmRecordVO> salaryConfirmRecordVOList = BeanTransform.copyProperties(
-                    salaryConfirmRecordAPI.listSalaryConfirmRecord( salaryConfirmRecordDTO ) , SalaryConfirmRecordVO.class ,true);
-            return ActResult.initialize( salaryConfirmRecordVOList );
+                    salaryConfirmRecordAPI.listSalaryConfirmRecord(salaryConfirmRecordDTO), SalaryConfirmRecordVO.class, true);
+            return ActResult.initialize(salaryConfirmRecordVOList);
         } catch (SerException e) {
-            throw  new ActException( e.getMessage());
+            throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 添加员工入职
+     *
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
+    public Result addSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
-            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO );
-            return ActResult.initialize( salaryConfirmRecordBO1);
+            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO);
+            return ActResult.initialize(salaryConfirmRecordBO1);
         } catch (SerException e) {
-            throw  new ActException( e.getMessage() );
+            throw new ActException(e.getMessage());
         }
     }
 
 
     /**
      * 编辑员工入职
+     *
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO ) throws ActException {
+    public Result editSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
-            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO );
-            return ActResult.initialize( salaryConfirmRecordBO1);
+            SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO);
+            return ActResult.initialize(salaryConfirmRecordBO1);
         } catch (SerException e) {
-            throw  new ActException( e.getMessage() );
+            throw new ActException(e.getMessage());
         }
     }
 
 
     /**
      * 根据用户id删除员工入职基本信息记录
+     *
      * @param id 用户id
      * @return 删除成功或失败
      * @throws ActException
@@ -95,10 +100,10 @@ public class SalaryConfirmRecordAction {
     @DeleteMapping("v1/delete/{id}")
     public Result deleteSalaryConfirmRecord(@PathVariable String id) throws ActException {
         try {
-            salaryConfirmRecordAPI.removeSalaryConfirmRecord( id );
+            salaryConfirmRecordAPI.removeSalaryConfirmRecord(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
-            throw  new ActException( e.getMessage());
+            throw new ActException(e.getMessage());
         }
     }
 }

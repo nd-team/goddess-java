@@ -21,8 +21,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("entryBasicInfoAPiImpl")
-public class EntryBasicInfoAPiImpl implements EntryBasicInfoAPI{
+@Service("entryBasicInfoApiImpl")
+public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
 
     @Autowired
     private EntryBasicInfoSer entryBasicInfoSer;
