@@ -1,20 +1,40 @@
 rootProject.name = 'goddess'
 
-//#dbs
-include ':dbs:jpa'
+
+//#common
+include ':common:common-api'
+include ':common:common-consumer'
+include ':common:common-provider'
+include ':common:common-jpa'
+include ':common:common-utils'
+
+//$common
+
+//$demo
+include ':demo:demo-ticket:demo-ticket-api'
+include ':demo:demo-ticket:demo-ticket-consumer'
+include ':demo:demo-ticket:demo-ticket-provider'
+
+include ':demo:demo-card:demo-card-api'
+include ':demo:demo-card:demo-card-consumer'
+include ':demo:demo-card:demo-card-provider'
+//#demo
 //include ':dbs:mongo'
 //include ':dbs:redis'
-//#user
-//common
-include ':user:user-common:user-common-api'
-include ':user:user-common:user-common-consumer'
-include ':user:user-common:user-common-provider'
-//user login
-include ':user:user-login:user-login-api'
-include ':user:user-login:user-login-consumer'
-include ':user:user-login:user-login-provider'
-//user register
-include ':user:user-register:user-register-api'
-include ':user:user-register:user-register-consumer'
-include ':user:user-register:user-register-provider'
+
+//#template
+include ':template:template-api'
+include ':template:template-consumer'
+include ':template:template-provider'
+
+include ':user:user-api'
+include ':user:user-consumer'
+include ':user:user-provider'
+
+//#staffentry
+include ':staffentry:staffentry-api'
+include ':staffentry:staffentry-consumer'
+include ':staffentry:staffentry-provider'
+
+
 

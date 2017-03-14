@@ -1,5 +1,0 @@
-rootProject.name = 'user-common-api'
-
-
-include ':dbs:jpa'
-project('dbs:jpa').projectDir = new File(settingsDir, '../../jpa')

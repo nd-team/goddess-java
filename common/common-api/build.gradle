@@ -1,0 +1,8 @@
+apply from: '../../config.gradle'
+
+dependencies {
+
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: "$hibernate_validator_version"
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: "$hibernate_version"
+    compile group: 'org.mengyun', name: 'tcc-transaction-api', version: "$tcc_version"
+}
