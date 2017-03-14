@@ -4,6 +4,7 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.session.validcorrect.Subject;
 import com.bjike.goddess.user.session.validcorrect.UserSession;
@@ -55,11 +56,6 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
-    public List<UserBO> list() throws SerException {
-        return userSer.list();
-    }
-
-    @Override
     public UserBO add(UserTO userTO) throws SerException {
         return userSer.add(userTO);
     }
@@ -87,5 +83,15 @@ public class UserApiImpl implements UserAPI {
     @Override
     public UserBO findByAccountNumber(String accountNumber) throws SerException {
         return userSer.findByAccountNumber(accountNumber);
+    }
+
+    @Override
+    public List<UserBO> findByCis(UserDTO dto) throws SerException {
+        return BeanTransform.copyProperties(userSer.findByCis(dto),UserBO.class);
+    }
+
+    @Override
+    public List<UserBO> findOne(UserDTO dto) throws SerException {
+        return BeanTransform.copyProperties(userSer.findOne(dto),UserBO.class);
     }
 }
