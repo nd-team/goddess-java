@@ -5,6 +5,9 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":user:user-api")
     compile project(":common:common-utils")
-
-    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+}
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.bjike.goddess.user.Application'
+    }
 }

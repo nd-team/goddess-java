@@ -2,6 +2,7 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.to.UserTO;
 
 import java.util.List;
@@ -16,20 +17,53 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface UserAPI {
+    /**
+     * 获取当前用户
+     *
+     * @return
+     * @throws SerException
+     */
     default UserBO currentUser() throws SerException {
         return null;
     }
 
+    /**
+     * 获取当前用户
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
     default UserBO currentUser(String userToken) throws SerException {
         return null;
     }
 
-    default List<UserBO> list() throws SerException {
+    /**
+     * 条件查询用户
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findByCis(UserDTO dto) throws SerException {
+        return null;
+
+    }
+
+    /**
+     * 获取一个用户对象
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findOne(UserDTO dto) throws SerException {
         return null;
     }
 
     /**
      * 添加用户
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -37,8 +71,10 @@ public interface UserAPI {
     default UserBO add(UserTO userTO) throws SerException {
         return null;
     }
+
     /**
      * 更新用户
+     *
      * @param userTO
      * @return
      * @throws SerException
