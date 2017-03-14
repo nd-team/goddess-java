@@ -71,7 +71,7 @@ public class StaffEntryRegisterAction {
         try {
             //TODO:  tanghaixiang 2017-03-09 未做获取用户信息 记得抛异常
 //            List<UserVO> userVOS = BeanTransform.copyProperties( userAPI.findAllGoods() , UserVO.class);
-            List<UserBO> user = userAPI.list();
+            List<UserBO> user = userAPI.findByCis(null);
             List<UserVO> userVOS = new ArrayList<>();
             return ActResult.initialize(userVOS);
         } catch (Exception e) {
