@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI;
@@ -35,9 +36,10 @@ public class SalaryConfirmRecordAction {
      * @param salaryConfirmRecordDTO 入职基本信息dto
      * @return class salaryConfirmRecordBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/listSalaryConfirmRecord")
-    public ActResult findListSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws ActException {
+    public Result findListSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws ActException {
         try {
             List<SalaryConfirmRecordVO> salaryConfirmRecordVOList = BeanTransform.copyProperties(
                     salaryConfirmRecordAPI.listSalaryConfirmRecord( salaryConfirmRecordDTO ) , SalaryConfirmRecordVO.class ,true);
@@ -52,9 +54,10 @@ public class SalaryConfirmRecordAction {
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/add")
-    public ActResult addSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
+    public Result addSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO );
             return ActResult.initialize( salaryConfirmRecordBO1);
@@ -69,9 +72,10 @@ public class SalaryConfirmRecordAction {
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @return class salaryConfirmRecordBO
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/edit")
-    public ActResult editSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO ) throws ActException {
+    public Result editSalaryConfirmRecord (@Valid SalaryConfirmRecordTO salaryConfirmRecordTO ) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO );
             return ActResult.initialize( salaryConfirmRecordBO1);
@@ -84,11 +88,12 @@ public class SalaryConfirmRecordAction {
     /**
      * 根据用户id删除员工入职基本信息记录
      * @param id 用户id
-     * @return
+     * @return 删除成功或失败
      * @throws ActException
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public ActResult deleteSalaryConfirmRecord(@PathVariable String id) throws ActException {
+    public Result deleteSalaryConfirmRecord(@PathVariable String id) throws ActException {
         try {
             salaryConfirmRecordAPI.removeSalaryConfirmRecord( id );
             return new ActResult("delete success!");
