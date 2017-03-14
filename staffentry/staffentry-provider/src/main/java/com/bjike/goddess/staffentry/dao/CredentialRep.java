@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.Credential;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface ICredential extends JpaRep<Credential ,CredentialDTO> {
+public interface CredentialRep extends JpaRep<Credential ,CredentialDTO> {
 }

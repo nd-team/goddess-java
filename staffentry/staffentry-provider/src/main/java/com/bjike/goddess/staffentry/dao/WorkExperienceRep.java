@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.WorkExperience;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface IWorkExperience extends JpaRep<WorkExperience ,WorkExperienceDTO> {
+public interface WorkExperienceRep extends JpaRep<WorkExperience ,WorkExperienceDTO> {
 }

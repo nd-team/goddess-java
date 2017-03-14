@@ -12,5 +12,5 @@ import com.bjike.goddess.staffentry.entity.FamilyMember;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface IFamilyMember extends JpaRep<FamilyMember ,FamilyMemberDTO> {
+public interface FamilyMemberRep extends JpaRep<FamilyMember ,FamilyMemberDTO> {
 }
