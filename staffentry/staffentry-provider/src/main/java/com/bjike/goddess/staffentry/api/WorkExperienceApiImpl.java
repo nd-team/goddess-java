@@ -18,8 +18,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("workExperienceAPiImpl")
-public class WorkExperienceAPiImpl implements WorkExperienceAPI{
+@Service("workExperienceApiImpl")
+public class WorkExperienceApiImpl implements WorkExperienceAPI{
 
     @Autowired
     private WorkExperienceSer workExperienceSer;

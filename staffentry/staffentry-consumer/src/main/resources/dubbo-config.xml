@@ -15,14 +15,14 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.service.UserAPI" />
-	<dubbo:reference validation="true" id="credentialAPiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
-	<dubbo:reference validation="true" id="entryBasicInfoAPiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
-	<dubbo:reference validation="true" id="entryRegisterAPiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
-	<dubbo:reference validation="true" id="familyMemberAPiImpl" interface="com.bjike.goddess.staffentry.api.FamilyMemberAPI" />
-	<dubbo:reference validation="true" id="salaryConfirmRecordAPiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
-	<dubbo:reference validation="true" id="studyExperienceAPiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
-	<dubbo:reference validation="true" id="workExperienceAPiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
+	<dubbo:reference validation="true" id="userAPI" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="credentialApiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
+	<dubbo:reference validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<dubbo:reference validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
+	<dubbo:reference validation="true" id="familyMemberApiImpl" interface="com.bjike.goddess.staffentry.api.FamilyMemberAPI" />
+	<dubbo:reference validation="true" id="salaryConfirmRecordApiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
+	<dubbo:reference validation="true" id="studyExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
+	<dubbo:reference validation="true" id="workExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
 
 
 

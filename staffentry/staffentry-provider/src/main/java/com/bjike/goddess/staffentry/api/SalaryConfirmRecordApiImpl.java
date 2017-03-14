@@ -20,8 +20,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("salaryConfirmRecordAPiImpl")
-public class SalaryConfirmRecordAPiImpl implements SalaryConfirmRecordAPI{
+@Service("salaryConfirmRecordApiImpl")
+public class SalaryConfirmRecordApiImpl implements SalaryConfirmRecordAPI{
 
     @Autowired
     private SalaryConfirmRecordSer salaryConfirmRecordSer;

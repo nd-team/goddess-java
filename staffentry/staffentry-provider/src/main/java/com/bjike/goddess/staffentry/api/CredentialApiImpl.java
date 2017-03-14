@@ -17,8 +17,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("credentialAPiImpl")
-public class CredentialAPiImpl implements CredentialAPI{
+@Service("credentialApiImpl")
+public class CredentialApiImpl implements CredentialAPI{
 
     @Autowired
     private CredentialSer credentialSer;

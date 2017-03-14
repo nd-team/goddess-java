@@ -22,8 +22,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("entryRegisterAPiImpl")
-public class EntryRegisterAPiImpl implements EntryRegisterAPI {
+@Service("entryRegisterApiImpl")
+public class EntryRegisterApiImpl implements EntryRegisterAPI {
 
     @Autowired
     private EntryRegisterSer entryRegisterSer;
