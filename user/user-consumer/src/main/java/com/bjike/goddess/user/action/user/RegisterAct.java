@@ -47,7 +47,7 @@ public class RegisterAct {
 
 
     /**
-     * 验证手机号码并发送验证码
+     * 发送手机验证码
      *
      * @param phone 手机号码
      * @throws ActException

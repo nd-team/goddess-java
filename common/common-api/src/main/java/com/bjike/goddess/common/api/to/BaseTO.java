@@ -1,5 +1,9 @@
 package com.bjike.goddess.common.api.to;
 
+import com.bjike.goddess.common.api.entity.DEL;
+import com.bjike.goddess.common.api.entity.EDIT;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +13,8 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public abstract  class BaseTO implements Serializable {
+public abstract class BaseTO implements Serializable {
+    @NotBlank(message = "id不能为空", groups = {EDIT.class, DEL.class})
     protected String id;
 
     public String getId() {

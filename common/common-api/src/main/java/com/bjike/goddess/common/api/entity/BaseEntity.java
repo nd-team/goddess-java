@@ -24,7 +24,7 @@ public abstract class BaseEntity implements Serializable{
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", nullable = false,length = 36,updatable = false,insertable = false)
-    @NotBlank(message = "编号不能为空",groups = {EDIT.class,DEL.class})
+    @NotBlank(message = "id不能为空",groups = {EDIT.class,DEL.class})
     protected String id;
 
     /**

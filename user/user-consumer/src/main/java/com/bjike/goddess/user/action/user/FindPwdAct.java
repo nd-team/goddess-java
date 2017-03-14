@@ -47,14 +47,14 @@ public class FindPwdAct {
     /**
      * 发送手机验证码
      *
-     * @param nickName 昵称
+     * @param nickname 昵称
      * @version v1
      */
 
-    @GetMapping("v1/sendCode/{nickName}")
-    public Result sendCode(@PathVariable String nickName) throws ActException {
+    @GetMapping("v1/sendCode/{nickname}")
+    public Result sendCode(@PathVariable String nickname) throws ActException {
         try {
-            Boolean result = userFindPwdAPI.sendCodeByNickname(nickName);
+            Boolean result = userFindPwdAPI.sendCodeByNickname(nickname);
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

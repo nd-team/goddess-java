@@ -1,7 +1,9 @@
 package com.bjike.goddess.user.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 
@@ -20,6 +22,7 @@ public class DepartmentTO extends BaseTO {
     /**
      * 组名
      */
+    @NotBlank(message = "部门名不能为空",groups = ADD.class)
     private String name;
     /**
      * 描述
