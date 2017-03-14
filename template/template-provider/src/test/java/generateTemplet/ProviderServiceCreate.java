@@ -54,7 +54,7 @@ public class ProviderServiceCreate {
         sb.append("@CacheConfig(cacheNames =\""+className.substring(0,1).toLowerCase()+className.substring(1)+"SerCache\")\n")
         .append("@Service\n");
         //类创建
-        sb.append("public class "+className+"Impl extends ServiceImpl<"+className+", "+className+"DTO> implements "+className+"Ser { \n\n");
+        sb.append("public class "+className+"SerImpl extends ServiceImpl<"+className+", "+className+"DTO> implements "+className+"Ser { \n\n");
 
 
         //拼接类完成
@@ -78,7 +78,7 @@ public class ProviderServiceCreate {
         {
             file .mkdirs();
         }
-        filePath.append( className+"Impl.java" );
+        filePath.append( className+"SerImpl.java" );
         file = new File( filePath.toString() );
         if( createOrDelete.equals("create")){
 

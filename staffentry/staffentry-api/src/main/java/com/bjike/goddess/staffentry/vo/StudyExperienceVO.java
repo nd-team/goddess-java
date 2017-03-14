@@ -2,13 +2,14 @@ package com.bjike.goddess.staffentry.vo;
 
 /**
  * 学习经历表现层对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-10 10:36]
  * @Description: [学习经历表现层对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class StudyExperienceVO  {
+public class StudyExperienceVO {
 
     /**
      * id

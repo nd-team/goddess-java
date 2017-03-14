@@ -1,6 +1,5 @@
 package com.bjike.goddess.staffentry.to;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
@@ -8,13 +7,14 @@ import java.util.List;
 
 /**
  * 证书情况业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 14:31]
  * @Description: [证书情况业务传输对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CredentialTO extends BaseTO{
+public class CredentialTO extends BaseTO {
 
 
     /**

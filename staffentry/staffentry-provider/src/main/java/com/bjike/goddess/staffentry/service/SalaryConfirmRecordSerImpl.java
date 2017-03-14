@@ -25,7 +25,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
-public class SalaryConfirmRecordImpl extends ServiceImpl<SalaryConfirmRecord, SalaryConfirmRecordDTO> implements SalaryConfirmRecordSer {
+public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord, SalaryConfirmRecordDTO> implements SalaryConfirmRecordSer {
 
     @Cacheable
     @Override

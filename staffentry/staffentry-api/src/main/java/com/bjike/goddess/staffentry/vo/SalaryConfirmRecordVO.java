@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 /**
  * 薪资确认表现层
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-11 11:09]
  * @Description: [薪资确认表现层]
@@ -17,95 +18,95 @@ public class SalaryConfirmRecordVO {
      */
     private String id;
     /**
-     *姓名
+     * 姓名
      */
     private String name;
     /**
-     *员工编号
+     * 员工编号
      */
     private String employeeID;
     /**
-     *籍贯
+     * 籍贯
      */
     private String nativePlace;
     /**
-     *办理入职时间
+     * 办理入职时间
      */
     private LocalDate entryTime;
     /**
-     *入职前居住地
+     * 入职前居住地
      */
     private String beforeResidence;
     /**
-     *是否对工作地有要求
+     * 是否对工作地有要求
      */
     private String workPlaceRequest;
     /**
-     *试用期是多长时间
+     * 试用期是多长时间
      */
     private String probationDuration;
     /**
-     *期望薪资
+     * 期望薪资
      */
     private String expectSalary;
     /**
-     *试用期薪资
+     * 试用期薪资
      */
     private String probationSalary;
     /**
-     *转正后薪资
+     * 转正后薪资
      */
     private String officialSalary;
     /**
-     *是否同意征税
+     * 是否同意征税
      */
     private Boolean whetherTax;
     /**
-     *是否需要公司安排住宿
+     * 是否需要公司安排住宿
      */
     private Boolean whetherArrangeResidence;
     /**
-     *是否购买社保
+     * 是否购买社保
      */
     private Boolean whetherSocialSecurity;
     /**
-     *紧急联络人
+     * 紧急联络人
      */
     private String emergencyContract;
     /**
-     *紧急联络人电话
+     * 紧急联络人电话
      */
     private String contractPhone;
     /**
-     *从事通信工作时长
+     * 从事通信工作时长
      */
     private String communicationWorkDuration;
     /**
-     *从事非通信工作时长
+     * 从事非通信工作时长
      */
     private String notCommunicationWorkDuration;
     /**
-     *其他特殊要求
+     * 其他特殊要求
      */
     private String otherSpecialNeeds;
     /**
-     *协办人
+     * 协办人
      */
     private String assistant;
     /**
-     *是否有面谈确认单原件
+     * 是否有面谈确认单原件
      */
     private Boolean whetherVoucher;
     /**
-     *是否有住宿
+     * 是否有住宿
      */
     private Boolean whetherAccommodation;
     /**
-     *确认人
+     * 确认人
      */
     private String confirmPerson;
     /**
-     *存档人
+     * 存档人
      */
     private String archivePerson;
 

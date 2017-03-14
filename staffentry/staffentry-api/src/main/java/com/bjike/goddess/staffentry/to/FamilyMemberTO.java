@@ -1,6 +1,5 @@
 package com.bjike.goddess.staffentry.to;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
@@ -8,13 +7,14 @@ import java.util.List;
 
 /**
  * 家庭成员业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 14:32]
  * @Description: [家庭成员业务传输对象]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FamilyMemberTO  extends BaseTO {
+public class FamilyMemberTO extends BaseTO {
 
 
     /**
@@ -23,27 +23,27 @@ public class FamilyMemberTO  extends BaseTO {
     private String title;
 
     /**
-     *姓名
+     * 姓名
      */
     private String name;
 
     /**
-     *年龄
+     * 年龄
      */
     private Integer age;
 
     /**
-     *单位
+     * 单位
      */
     private String unit;
 
     /**
-     *职务
+     * 职务
      */
     private String position;
 
     /**
-     *联系方式
+     * 联系方式
      */
     private String phone;
 
@@ -59,27 +59,27 @@ public class FamilyMemberTO  extends BaseTO {
     private List<String> titles;
 
     /**
-     *姓名集合
+     * 姓名集合
      */
     private List<String> names;
 
     /**
-     *年龄集合
+     * 年龄集合
      */
     private List<Integer> ages;
 
     /**
-     *单位集合
+     * 单位集合
      */
     private List<String> units;
 
     /**
-     *职务集合
+     * 职务集合
      */
     private List<String> positions;
 
     /**
-     *联系方式集合
+     * 联系方式集合
      */
     private List<String> phones;
 

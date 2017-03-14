@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 证书情况业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 14:31]
  * @Description: [证书情况业务传输对象]

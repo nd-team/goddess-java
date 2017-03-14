@@ -8,7 +8,6 @@ import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
-import com.bjike.goddess.user.utils.email.Email;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,7 +31,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "entryBasicInfoSerCache")
 @Service
-public class EntryBasicInfoImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
+public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
 
     @Cacheable
     @Override
@@ -112,7 +111,7 @@ public class EntryBasicInfoImpl extends ServiceImpl<EntryBasicInfo, EntryBasicIn
                         .append(" 入职项目组:" + entryBasicInfoTO.getProjectGroup())
                         .append(" 入职岗位:" + entryBasicInfoTO.getPosition())
                 ;
-                Email email = new Email("入职通告", content.toString());
+//                Email email = new Email("入职通告", content.toString());
 //                email.initEmailInfo("培训信息通知邮件内容", emails );
 
                 try {

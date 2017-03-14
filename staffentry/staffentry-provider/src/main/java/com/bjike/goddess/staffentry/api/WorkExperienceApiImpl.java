@@ -1,8 +1,6 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.staffentry.bo.WorkExperienceBO;
-import com.bjike.goddess.staffentry.service.WorkExperienceImpl;
 import com.bjike.goddess.staffentry.service.WorkExperienceSer;
 import com.bjike.goddess.staffentry.to.WorkExperienceTO;
 import org.springframework.beans.factory.annotation.Autowired;

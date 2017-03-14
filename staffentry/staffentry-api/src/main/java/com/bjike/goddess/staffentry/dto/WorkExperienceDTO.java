@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
  * 工作经历传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 15:53]
  * @Description: [工作经历传输对象]

@@ -3,11 +3,11 @@ package com.bjike.goddess.staffentry.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
  * 工作经历业务传输对象
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-09 14:34]
  * @Description: [工作经历业务传输对象]
@@ -42,21 +42,21 @@ public class WorkExperienceBO extends BaseBO {
     private EntryRegister entryRegister;
 
     /**
-     *开始时间集合
+     * 开始时间集合
      */
     private List<String> workStartTimes;
     /**
-     *结束时间集合
+     * 结束时间集合
      */
     private List<String> workEndTimes;
 
     /**
-     *公司名称集合
+     * 公司名称集合
      */
     private List<String> firms;
 
     /**
-     *工作描述集合
+     * 工作描述集合
      */
     private List<String> jobDescriptions;
 
