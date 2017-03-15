@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--配置暴露的公共接口-->
+	<!--<dubbo:reference id="activityAttendSer" interface="com.bjike.goddess.activity.service.ActivityAttendAPI"/>-->
+	<!--<dubbo:reference id="activityEvaluateSer" interface="com.bjike.goddess.activity.service.ActivityEvaluateAPI"/>-->
+	<!--<dubbo:reference id="activitySchemeSer" interface="com.bjike.goddess.activity.service.ActivitySchemeAPI"/>-->
+	<!--<dubbo:reference id="activityThemeSer" interface="com.bjike.goddess.activity.service.ActivityThemeAPI"/>-->
+	<!--<dubbo:reference id="activityVoteSer" interface="com.bjike.goddess.activity.service.ActivityVoteAPI"/>-->
+	<!--<dubbo:reference id="laborDivisionSer" interface="com.bjike.goddess.activity.service.LaborDivisionAPI"/>-->
+	<!--<dubbo:reference id="modalitySer" interface="com.bjike.goddess.activity.service.ModalityAPI"/>-->
+	<!--<dubbo:reference id="purposeSer" interface="com.bjike.goddess.activity.service.PurposeAPI" />-->
+	<!--<dubbo:reference id="regularFeaturesSer" interface="com.bjike.goddess.activity.service.RegularFeaturesAPI"/>-->
+	<!--<dubbo:reference id="voteInformationSer" interface="com.bjike.goddess.activity.service.VoteInformationAPI"/>-->
+
+</beans>
