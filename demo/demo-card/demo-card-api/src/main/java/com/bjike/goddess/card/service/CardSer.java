@@ -8,8 +8,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
-import java.util.List;
-
 /**
  * 购票接口
  *

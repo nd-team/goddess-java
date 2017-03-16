@@ -2,12 +2,9 @@ package com.bjike.goddess.card.entity;
 
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 /**
  * 实体对象
