@@ -1,0 +1,11 @@
+apply from: '../../config.gradle'
+
+dependencies {
+    compile project(":common:common-jpa")
+    compile project(":common:common-provider")
+    compile project(":organize:organize-api")
+    compile project(":common:common-utils")
+    compile project(":user:user-api")
+
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+}
