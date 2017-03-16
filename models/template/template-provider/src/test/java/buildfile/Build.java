@@ -53,7 +53,7 @@ public class Build {
 
     public static void create(String createOrDelete) throws IOException {
         //获取输入文件路径
-        String inputPath = System.getProperty("user.dir") + "/template/template-provider/src/test/java/buildfile/input.txt";
+        String inputPath = System.getProperty("user.dir") + "/models/template/template-provider/src/test/java/buildfile/input.txt";
         System.err.println(inputPath);
         String fieldsString = null;
         File file = new File(inputPath);

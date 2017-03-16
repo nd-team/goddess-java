@@ -52,7 +52,7 @@ public class ConsumerBuildCreate {
         sb.append("compile(\"org.springframework.boot:spring-boot-starter-web\")\n" )
                 .append( "}\n\n");
         //文件创建路径
-        StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/")
+        StringBuffer filePath = new StringBuffer(System.getProperty("user.dir") + "/models/")
                 .append(packageName.toLowerCase() + "/")
                 .append(packageName.toLowerCase() + "-consumer/");
 
