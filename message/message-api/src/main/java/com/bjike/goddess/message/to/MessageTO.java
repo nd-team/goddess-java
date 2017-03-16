@@ -29,20 +29,17 @@ public class MessageTO extends BaseTO {
     private String content;
 
     /**
-     * 发送人id
+     * 发送人id,无需初始化，默认当前用户
      */
-    @NotBlank(message = "发送人id不能为空",groups = ADD.class)
     private String senderId;
     /**
-     * 发送人姓名
+     * 发送人姓名，无需初始化，默认当前用户
      */
-    @NotBlank(message = "发送人姓名不能为空",groups = ADD.class)
     private String senderName;
 
     /**
-     * 发送时间
+     * 发送时间，无需初始化，默认当前时间
      */
-    @NotBlank(message = "发送时间不能为空",groups = ADD.class)
     private String createTime;
 
     /**
