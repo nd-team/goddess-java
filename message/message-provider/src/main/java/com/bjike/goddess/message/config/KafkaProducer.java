@@ -1,11 +1,11 @@
 package com.bjike.goddess.message.config;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class KafkaProducer {
     public final static String TOPIC = "TEST-TOPIC"; //消息标签
 
     @Bean
-    public Producer  initProducer(Environment env) {
+    public Producer initProducer(Environment env) {
         Properties props = new Properties();
         //此处配置的是kafka的端口
         props.put("metadata.broker.list", env.getProperty("metadata.broker.list"));
@@ -42,11 +42,17 @@ public class KafkaProducer {
 
 
     public static void produce(MessageTO messageTO) {
-        producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
-        if (null!=messageTO.getSendEmail()) {
+        SendType sendType = messageTO.getSendType();
+        if (sendType.equals(SendType.ALL)) {
+            producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
             //sendEmail()
+
+        } else if (sendType.equals(SendType.EMAIL)) {
+            //sendEmail()
+        } else if (sendType.equals(SendType.MSG)) {
+            producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
+
         }
-        System.out.println(JSON.toJSONString(messageTO));
     }
 
 
