@@ -66,6 +66,8 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     @Override
     public void verifyCodeAndReg(UserRegisterTO registerTO) throws SerException {
 
+        if(true) return;
+
         if (registerTO.getPassword().equals(registerTO.getRePassword())) {
             if (!Validator.isPassword(registerTO.getPassword())) {
                 throw new SerException("密码过于简单！");
@@ -90,7 +92,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 }
 
             } else {
-//                throw new SerException("手机验证码已过期！");
+                throw new SerException("手机验证码已过期！");
             }
         } else {
             throw new SerException("手机验证码为空！");

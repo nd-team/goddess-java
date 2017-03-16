@@ -31,6 +31,10 @@ include ':user:user-api'
 include ':user:user-consumer'
 include ':user:user-provider'
 
+include ':message:message-api'
+include ':message:message-consumer'
+include ':message:message-provider'
+
 //#staffentry
 include ':staffentry:staffentry-api'
 include ':staffentry:staffentry-consumer'
