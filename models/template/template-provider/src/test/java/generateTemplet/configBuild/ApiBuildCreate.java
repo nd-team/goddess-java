@@ -19,7 +19,7 @@ public class ApiBuildCreate {
         String packageName = cus.get("模块名");
 
         StringBuffer sb = new StringBuffer("");
-        sb.append("apply from: '../../config.gradle'\n")
+        sb.append("apply from: '../../../config.gradle'\n")
                 .append("dependencies { \n")
                 .append("compile project(\":common:common-api\")\n" )
                 .append("compile project(\":common:common-utils\")")

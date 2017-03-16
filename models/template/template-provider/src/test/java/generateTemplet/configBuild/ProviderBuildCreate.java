@@ -17,12 +17,12 @@ public class ProviderBuildCreate {
         String packageName = cus.get("模块名");
 
         StringBuffer sb = new StringBuffer("");
-        sb.append("apply from: '../../config.gradle' \n\n");
+        sb.append("apply from: '../../../config.gradle' \n\n");
 
         sb.append("dependencies {\n" )
                 .append(   "    compile project(\":common:common-jpa\")\n" )
                 .append(  "    compile project(\":common:common-provider\")\n" )
-                .append(  "    compile project(\":"+packageName+":"+packageName+"-api\")\n" )
+                .append(  "    compile project(\":models:"+packageName+":"+packageName+"-api\")\n" )
                 .append(  "    compile project(\":common:common-utils\")\n" )
                 .append(   "}\n\n");
         //文件创建路径

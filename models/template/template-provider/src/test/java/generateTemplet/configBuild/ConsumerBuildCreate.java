@@ -47,7 +47,7 @@ public class ConsumerBuildCreate {
                 .append("    exclude group: 'org.slf4j', module: 'slf4j-log4j12'\n" )
                 .append("}\n\n");
 
-        sb.append("compile project(\":"+packageName+":"+packageName+"-api\")\n\n");
+        sb.append("compile project(\":models:"+packageName+":"+packageName+"-api\")\n\n");
 
         sb.append("compile(\"org.springframework.boot:spring-boot-starter-web\")\n" )
                 .append( "}\n\n");
