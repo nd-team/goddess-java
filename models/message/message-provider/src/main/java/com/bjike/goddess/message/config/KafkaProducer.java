@@ -1,7 +1,6 @@
 package com.bjike.goddess.message.config;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -42,17 +41,9 @@ public class KafkaProducer {
 
 
     public static void produce(MessageTO messageTO) {
-        SendType sendType = messageTO.getSendType();
-        if (sendType.equals(SendType.ALL)) {
-            producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
-            //sendEmail()
 
-        } else if (sendType.equals(SendType.EMAIL)) {
-            //sendEmail()
-        } else if (sendType.equals(SendType.MSG)) {
-            producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
+        producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
 
-        }
     }
 
 

@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
+ * 数据传输基础对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-13 09:41]
  * @Description: [ ]
@@ -14,6 +16,9 @@ import java.io.Serializable;
  * @Copy: [com.bjike]
  */
 public abstract class BaseTO implements Serializable {
+    /**
+     * 数据行id
+     */
     @NotBlank(message = "id不能为空", groups = {EDIT.class, DEL.class})
     protected String id;
 

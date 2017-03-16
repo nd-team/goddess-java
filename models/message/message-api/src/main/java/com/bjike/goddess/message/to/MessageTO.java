@@ -55,7 +55,7 @@ public class MessageTO extends BaseTO {
     private SendType sendType;
 
     /**
-     * 接收人
+     * 接收人,邮箱
      */
     @NotBlank(message = "接收人不能为空",groups = ADD.class)
     private String[] receivers;

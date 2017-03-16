@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 用户业务传送对象
@@ -16,6 +17,7 @@ public class UserTO extends BaseTO {
      * 用户名
      */
     private String username;
+
     /**
      * 登录手机(注册验证手机)
      */
@@ -23,7 +25,12 @@ public class UserTO extends BaseTO {
     /**
      * 登录邮箱
      */
+
     private String email;
+    /**
+     * 登陆密码
+     */
+    private String password;
     /**
      * 头像
      */
@@ -32,9 +39,15 @@ public class UserTO extends BaseTO {
      * 昵称
      */
     private String nickname;
+    /**
+     * 员工编号
+     */
+    private String employeeNumber;
 
-    private String createTime;
-
+    /**
+     * 用户状态
+     */
+    private Status status;
 
     public String getUsername() {
         return username;
@@ -60,6 +73,14 @@ public class UserTO extends BaseTO {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getHeadSculpture() {
         return headSculpture;
     }
@@ -76,12 +97,20 @@ public class UserTO extends BaseTO {
         this.nickname = nickname;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }
