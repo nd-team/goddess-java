@@ -1,49 +1,45 @@
 rootProject.name = 'goddess'
 
-
-//#common
+//#common 通用模块
 include ':common:common-api'
 include ':common:common-consumer'
 include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
-
-//$common
-
-//$demo
+//$demo 参考模块
 include ':demo:demo-ticket:demo-ticket-api'
 include ':demo:demo-ticket:demo-ticket-consumer'
 include ':demo:demo-ticket:demo-ticket-provider'
-
+//#demo 参考模块
 include ':demo:demo-card:demo-card-api'
 include ':demo:demo-card:demo-card-consumer'
 include ':demo:demo-card:demo-card-provider'
-//#demo
-//include ':dbs:mongo'
-//include ':dbs:redis'
+//#template 生成类模板
+include ':models:template:template-api'
+include ':models:template:template-consumer'
+include ':models:template:template-provider'
+//#user 用户模块
+include ':models:user:user-api'
+include ':models:user:user-consumer'
+include ':models:user:user-provider'
+//#message 消息模块
+include ':models:message:message-api'
+include ':models:message:message-consumer'
+include ':models:message:message-provider'
+////#staffentry 员工入职
+include ':models:staffentry:staffentry-api'
+include ':models:staffentry:staffentry-consumer'
+include ':models:staffentry:staffentry-provider'
+////#accommodation 住宿管理
+include ':models:accommodation:accommodation-api'
+include ':models:accommodation:accommodation-consumer'
+include ':models:accommodation:accommodation-provider'
 
-//#template
-include ':template:template-api'
-include ':template:template-consumer'
-include ':template:template-provider'
+//#客户信息
+//include ':models:customer:customer-api'
+//include ':models:customer:customer-consumer'
+//include ':models:customer:customer-provider'
 
-include ':user:user-api'
-include ':user:user-consumer'
-include ':user:user-provider'
-
-include ':message:message-api'
-include ':message:message-consumer'
-include ':message:message-provider'
-
-//#staffentry
-include ':staffentry:staffentry-api'
-include ':staffentry:staffentry-consumer'
-include ':staffentry:staffentry-provider'
-
-//#accommodation
-include ':accommodation:accommodation-api'
-include ':accommodation:accommodation-consumer'
-include ':accommodation:accommodation-provider'//#accommodation
 
 
 

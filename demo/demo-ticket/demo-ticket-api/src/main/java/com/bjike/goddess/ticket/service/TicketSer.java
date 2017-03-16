@@ -2,7 +2,6 @@ package com.bjike.goddess.ticket.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.ticket.bo.TicketBO;
 import com.bjike.goddess.ticket.dto.TicketDTO;
 import com.bjike.goddess.ticket.entity.Ticket;
 import org.mengyun.tcctransaction.api.TransactionContext;

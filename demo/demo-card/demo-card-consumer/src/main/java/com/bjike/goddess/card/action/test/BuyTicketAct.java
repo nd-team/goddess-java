@@ -1,7 +1,6 @@
 package com.bjike.goddess.card.action.test;
 
 import com.bjike.goddess.card.api.CardAPI;
-import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.card.to.CardTO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -9,7 +8,6 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.ticket.vo.TicketVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

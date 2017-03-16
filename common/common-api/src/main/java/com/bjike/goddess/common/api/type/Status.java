@@ -10,12 +10,26 @@ package com.bjike.goddess.common.api.type;
  * @Copy: [com.bjike]
  */
 public enum Status {
-    THAW(0)//解冻(正常)
-    , CONGEAL(1)//冻结
-    , DELETE(2)//删除
-    , NOACTIVE(3)//未激活
-    , UNREVIEW(4)//未审核
-    ;
+    /**
+     * 解冻
+     */
+    THAW(0)
+    /**
+     * 冻结
+     */
+    , CONGEAL(1)
+    /**
+     * 删除
+     */
+    , DELETE(2)
+    /**
+     * 未激活
+     */
+    , NOACTIVE(3)
+    /**
+     * 未审核
+     */
+    , UNREVIEW(4);
 
     private int code;
 
