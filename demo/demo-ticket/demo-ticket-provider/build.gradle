@@ -8,13 +8,14 @@ jar {
                 "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }
+
 }
 
 task copyJars(type:Copy) {
     from configurations.runtime
     into new File('build/libs/lib') // 目标位置
 }
-build.dependsOn copyJars
+compileJava.dependsOn copyJars
 
 
 dependencies {
