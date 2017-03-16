@@ -37,6 +37,7 @@ public class SalaryConfirmRecordAction {
      *
      * @param salaryConfirmRecordDTO 入职基本信息dto
      * @des 获取所有入职基本信息
+     * @return class SalaryConfirmRecordVO
      * @version v1
      */
     @GetMapping("v1/listSalaryConfirmRecord")
@@ -55,13 +56,14 @@ public class SalaryConfirmRecordAction {
      *
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @des 添加员工入职
+     * @return class SalaryConfirmRecordVO
      * @version v1
      */
     @PostMapping("v1/add")
     public Result addSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO);
-            return ActResult.initialize(salaryConfirmRecordBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,13 +75,14 @@ public class SalaryConfirmRecordAction {
      *
      * @param salaryConfirmRecordTO 员工入职基本信息数据to
      * @des 编辑员工入职
+     * @return class SalaryConfirmRecordVO
      * @version v1
      */
     @PostMapping("v1/edit")
     public Result editSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO);
-            return ActResult.initialize(salaryConfirmRecordBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -38,6 +38,7 @@ public class EntryBasicInfoAction {
      *
      * @param entryBasicInfoDTO 入职基本信息dto
      * @des 获取所有入职基本信息
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @GetMapping("v1/listEntryBasicInfo")
@@ -56,13 +57,14 @@ public class EntryBasicInfoAction {
      *
      * @param entryBasicInfoTO 员工入职基本信息数据to
      * @des 添加员工入职
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
     public Result addEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.insertEntryBasicInfo(entryBasicInfoTO);
-            return ActResult.initialize(entryBasicInfoBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -74,13 +76,14 @@ public class EntryBasicInfoAction {
      *
      * @param entryBasicInfoTO 员工入职基本信息数据bo
      * @des 添加员工入职
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @PostMapping("v1/edit")
     public Result editEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO);
-            return ActResult.initialize(entryBasicInfoBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -109,6 +112,7 @@ public class EntryBasicInfoAction {
      *
      * @param id 员工入职基本信息id
      * @des 根据id查找某个员工入职基本信息
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @GetMapping("v1/getEntryBasicInfo")
@@ -127,6 +131,7 @@ public class EntryBasicInfoAction {
      *
      * @param entryBasicInfoTO 员工入职基本信息bo 主要id 和 emails
      * @des 根据id emails发送入职通告邮件
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @GetMapping("v1/sendEmailEntryBasicInfo")
@@ -145,6 +150,7 @@ public class EntryBasicInfoAction {
      *
      * @param entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
      * @des 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
+     * @return class EntryBasicInfoVO
      * @version v1
      */
     @GetMapping("v1/collect")

@@ -38,6 +38,7 @@ public class EntryRegisterAction {
      *
      * @param entryRegisterDTO 入职登记dto
      * @des 获取所有入职登记
+     * @return class EntryRegisterVO
      * @version v1
      */
     @GetMapping("v1/listEntryRegister")
@@ -60,6 +61,7 @@ public class EntryRegisterAction {
      * @param workExperienceTO  工作经历数据to
      * @param credentialTO      证书情况数据to
      * @des 添加员工入职
+     * @return class EntryRegisterVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -68,7 +70,7 @@ public class EntryRegisterAction {
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.insertEntryRegister(entryRegisterTO,
                     familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
-            return ActResult.initialize(entryRegisterBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1,EntryRegisterVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -84,6 +86,7 @@ public class EntryRegisterAction {
      * @param workExperienceTO  工作经历数据to
      * @param credentialTO      证书情况数据to
      * @des 编辑员工入职
+     * @return class EntryRegisterVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -92,7 +95,7 @@ public class EntryRegisterAction {
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.editEntryRegister(entryRegisterTO,
                     familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
-            return ActResult.initialize(entryRegisterBO1);
+            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1,EntryRegisterVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,13 +124,14 @@ public class EntryRegisterAction {
      *
      * @param id 员工入职登记id
      * @des 根据id查找某个员工入职登记
+     * @return class EntryRegisterVO
      * @version v1
      */
     @GetMapping("v1/getEntryRegister")
     public Result findOneEntryRegister(@RequestParam String id) throws ActException {
         try {
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
-                    entryRegisterAPI.getEntryRegister(id), EntryRegisterVO.class);
+                    entryRegisterAPI.getEntryRegister(id), EntryRegisterVO.class,true);
             return ActResult.initialize(entryRegisterVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

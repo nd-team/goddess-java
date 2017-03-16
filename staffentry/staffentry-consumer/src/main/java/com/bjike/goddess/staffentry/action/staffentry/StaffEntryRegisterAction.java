@@ -32,12 +32,12 @@ public class StaffEntryRegisterAction {
     /**
      * 添加用户
      *
-     * @param userBO 用户数据
-     * @des 添加用户 和用户相关的信息
+     * @param userVO 用户数据
+     * @des 添加用户和用户相关的信息
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addUsers(UserBO userBO) throws ActException {
+    public Result addUsers(UserVO userVO) throws ActException {
 
         //TODO:  tanghaixiang 2017-03-09 未做用户注册
         return ActResult.initialize(null);
@@ -61,7 +61,6 @@ public class StaffEntryRegisterAction {
     /**
      * 获取所有用户
      *
-     * @return class user
      * @des 获取所有用户
      * @version v1
      */
