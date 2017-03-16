@@ -51,7 +51,7 @@ public class ProviderServiceCreate {
                 .append("*/\n");
 
 
-        sb.append("@CacheConfig(cacheNames =\""+className.substring(0,1).toLowerCase()+className.substring(1)+"SerCache\")\n")
+        sb.append("@CacheConfig(cacheNames =\""+packageName+"SerCache\")\n")
         .append("@Service\n");
         //类创建
         sb.append("public class "+className+"SerImpl extends ServiceImpl<"+className+", "+className+"DTO> implements "+className+"Ser { \n\n");
@@ -61,7 +61,7 @@ public class ProviderServiceCreate {
         sb.append(" }");
 
         //文件创建路径
-        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
+        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/models/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-provider/src/main/java/com/bjike/goddess/")
                 .append( packageName.toLowerCase()+"/service/")

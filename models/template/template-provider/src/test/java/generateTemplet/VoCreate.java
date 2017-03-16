@@ -53,7 +53,12 @@ public class VoCreate {
         //类创建
         sb.append("public class "+className+"VO { \n\n");
 
+
         //拼接属性
+        sb.append("/**\n")
+                .append("* id\n")
+                .append("*/\n");
+        sb.append(" private String  id; \n");
         for(int i =0 ;i<size;i++){
             Model model = models.get(i);
             sb.append("/**\n")
@@ -69,6 +74,12 @@ public class VoCreate {
         }
 
         //拼接get和set
+        sb.append(" public String getId () { \n")
+                .append(" return id;\n")
+                .append(" } \n")
+                .append(" public void setId (String id ) { \n")
+                .append(" this.id = id ; \n")
+                .append(" } \n");
         for(int i =0 ;i<size;i++){
             Model m = models.get(i);
 
@@ -84,7 +95,7 @@ public class VoCreate {
         sb.append(" }");
 
         //文件创建路径
-        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/" )
+        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/models/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/src/main/java/com/bjike/goddess/")
                 .append( packageName.toLowerCase()+"/vo/")
