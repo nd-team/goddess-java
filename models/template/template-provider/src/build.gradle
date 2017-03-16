@@ -1,7 +1,0 @@
-apply from: '../../../config.gradle'
-
-dependencies {
-    compile project(":models:template:template-api")
-    compile project(":common:common-utils")
-
-}
