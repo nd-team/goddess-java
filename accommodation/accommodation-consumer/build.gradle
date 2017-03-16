@@ -13,7 +13,7 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 jar {
-    baseName = 'template-consumer'
+    baseName = 'accommodation-consumer'
     version =  '1.0'
 }
 
@@ -27,7 +27,7 @@ dependencies {
 compile(project(":common:common-consumer")){
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
-    compile project(":template:template-api")
+    compile project(":accommodation:accommodation-api")
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }
