@@ -46,5 +46,12 @@ include ':models:accommodation:accommodation-consumer'
 include ':models:accommodation:accommodation-provider'
 
 
+//#客户信息
+//include ':models:customer:customer-api'
+//include ':models:customer:customer-consumer'
+//include ':models:customer:customer-provider'
+
+
+
 
 
