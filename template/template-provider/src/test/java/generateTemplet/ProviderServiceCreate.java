@@ -51,7 +51,7 @@ public class ProviderServiceCreate {
                 .append("*/\n");
 
 
-        sb.append("@CacheConfig(cacheNames =\""+className.substring(0,1).toLowerCase()+className.substring(1)+"SerCache\")\n")
+        sb.append("@CacheConfig(cacheNames =\""+packageName+"SerCache\")\n")
         .append("@Service\n");
         //类创建
         sb.append("public class "+className+"SerImpl extends ServiceImpl<"+className+", "+className+"DTO> implements "+className+"Ser { \n\n");
