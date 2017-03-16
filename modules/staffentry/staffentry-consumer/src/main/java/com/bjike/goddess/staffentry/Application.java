@@ -28,10 +28,10 @@ public class Application {
 	public static void japi(){
 		JapiClient.setPrefixPath("/home/ike/java/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
-		JapiClient.setProjectJavaPath("models/staffentry/staffentry-consumer");//主项目位置
+		JapiClient.setProjectJavaPath("modules/staffentry/staffentry-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/staffentry/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"models/staffentry/staffentry-api",
+				"modules/staffentry/staffentry-api",
 				"user/user-api",
 				"common/common-api"
 		});

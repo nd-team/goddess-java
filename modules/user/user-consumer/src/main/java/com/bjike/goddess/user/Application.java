@@ -28,10 +28,10 @@ public class Application {
 	public static void japi(){
 		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
-		JapiClient.setProjectJavaPath("models/user/user-consumer");//主项目位置
+		JapiClient.setProjectJavaPath("modules/user/user-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/user/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"models/user/user-api",
+				"modules/user/user-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
