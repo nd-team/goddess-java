@@ -1,5 +1,21 @@
 apply from: '../../../config.gradle'
 
+jar {
+    String buildDir = project.buildDir
+    manifest {
+        attributes (
+                "Main-Class": "com.bjike.goddess.card.Application",//main主函数加载入口
+                "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
+        )
+    }
+}
+
+task copyJars(type:Copy) {
+    from configurations.runtime
+    into new File('build/libs/lib') // 目标位置
+}
+build.dependsOn copyJars
+
 dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")

@@ -1,8 +1,6 @@
 package com.bjike.goddess.card.api;
 
 import com.bjike.goddess.card.bo.CardBO;
-import com.bjike.goddess.card.dto.CardDTO;
-import com.bjike.goddess.card.entity.Card;
 import com.bjike.goddess.card.to.CardTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.mengyun.tcctransaction.api.TransactionContext;

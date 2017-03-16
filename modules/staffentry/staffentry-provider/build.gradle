@@ -1,0 +1,10 @@
+apply from: '../../../config.gradle'
+
+dependencies {
+    compile project(":common:common-jpa")
+    compile project(":common:common-provider")
+    compile project(":common:common-utils")
+    compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:user:user-api")
+    compile project(":modules:user:user-provider")
+}

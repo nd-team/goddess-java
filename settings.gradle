@@ -1,40 +1,45 @@
 rootProject.name = 'goddess'
 
-
-//#common
+//#common 通用模块
 include ':common:common-api'
 include ':common:common-consumer'
 include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
-
-//$common
-
-//$demo
+//$demo 参考模块
 include ':demo:demo-ticket:demo-ticket-api'
 include ':demo:demo-ticket:demo-ticket-consumer'
 include ':demo:demo-ticket:demo-ticket-provider'
-
+//#demo 参考模块
 include ':demo:demo-card:demo-card-api'
 include ':demo:demo-card:demo-card-consumer'
 include ':demo:demo-card:demo-card-provider'
-//#demo
-//include ':dbs:mongo'
-//include ':dbs:redis'
+//#template 生成类模板
+include ':modules:template:template-api'
+include ':modules:template:template-provider'
+//#user 用户模块
+include ':modules:user:user-api'
+include ':modules:user:user-consumer'
+include ':modules:user:user-provider'
+//#message 消息模块
+include ':modules:message:message-api'
+include ':modules:message:message-consumer'
+include ':modules:message:message-provider'
+////#staffentry 员工入职
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
+////#accommodation 住宿管理
+include ':modules:accommodation:accommodation-api'
+include ':modules:accommodation:accommodation-consumer'
+include ':modules:accommodation:accommodation-provider'
 
-//#template
-include ':template:template-api'
-include ':template:template-consumer'
-include ':template:template-provider'
+//#客户信息
+//include ':modules:customer:customer-api'
+//include ':modules:customer:customer-consumer'
+//include ':modules:customer:customer-provider'
 
-include ':user:user-api'
-include ':user:user-consumer'
-include ':user:user-provider'
 
-//#staffentry
-include ':staffentry:staffentry-api'
-include ':staffentry:staffentry-consumer'
-include ':staffentry:staffentry-provider'
 
 //#organize
 include ':organize:organize-api'
