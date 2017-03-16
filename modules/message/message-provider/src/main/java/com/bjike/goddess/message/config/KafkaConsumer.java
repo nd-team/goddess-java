@@ -23,7 +23,7 @@ public class KafkaConsumer {
         props.put("zookeeper.connect", "localhost:2181");
 
         //group 代表一个消费组
-        props.put("group.id", "group1");
+        props.put("group.id", "group2");
 
         //zk连接超时
         props.put("zookeeper.session.timeout.ms", "4000");
@@ -47,7 +47,8 @@ public class KafkaConsumer {
         KafkaStream<String, String> stream = consumerMap.get(KafkaProducer.TOPIC).get(0);
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {
-            System.out.println(it.next().message());
+            String msg = new String(it.next().message());
+            System.out.println("收到消息：" + msg);
         }
         System.out.println("11111111111111");
     }

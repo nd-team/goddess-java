@@ -15,6 +15,7 @@ public class PermissionTO extends BaseTO {
 
     @NotBlank(message = "资源名不能为空", groups = ADD.class)
     private String name;
+    @NotBlank(message = "资源不能为空", groups = ADD.class)
     private String resource;
 
     public String getName() {

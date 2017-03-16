@@ -22,8 +22,7 @@ public enum SexType {
     /**
      * 女
      */
-    WOMAN(2),
-    ;
+    WOMAN(2);
 
     private int code;
 

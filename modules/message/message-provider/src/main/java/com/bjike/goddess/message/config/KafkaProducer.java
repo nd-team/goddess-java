@@ -5,6 +5,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import kafka.serializer.StringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class KafkaProducer {
         //配置value的序列化类
         props.put("serializer.class", "kafka.serializer.StringEncoder");
         //配置key的序列化类
-        props.put("key.serializer.class", "kafka.serializer.StringEncoder");
+        props.put("key.serializer.class", StringEncoder.class.getName());
         props.put("request.required.acks", "-1");
         Producer  producer = new Producer(new ProducerConfig(props));
          producer.send(new KeyedMessage(TOPIC, "消息1", "这是消息内容111"));

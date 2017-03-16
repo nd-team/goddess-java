@@ -18,7 +18,7 @@ public enum UserType {
     /**
      * 管理员
      */
-    ADMIN(1),;
+    ADMIN(1);
 
     private int code;
 

@@ -16,16 +16,24 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class MessageTO extends BaseTO {
+    public MessageTO() {
+
+    }
+
+    public MessageTO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     /**
      * 消息标题
      */
-    @NotBlank(message = "消息标题不能为空",groups = ADD.class)
+    @NotBlank(message = "消息标题不能为空", groups = ADD.class)
     private String title;
     /**
      * 发送内容
      */
-    @NotBlank(message = "消息内容不能为空",groups = ADD.class)
+    @NotBlank(message = "消息内容不能为空", groups = ADD.class)
     private String content;
 
     /**
@@ -45,19 +53,19 @@ public class MessageTO extends BaseTO {
     /**
      * 消息类型
      */
-    @NotBlank(message = "消息类型不能为空",groups = ADD.class)
+    @NotBlank(message = "消息类型不能为空", groups = ADD.class)
     private MsgType msgType;
 
     /**
      * 发送类型
      */
-    @NotBlank(message = "发送类型不能为空",groups = ADD.class)
+    @NotBlank(message = "发送类型不能为空", groups = ADD.class)
     private SendType sendType;
 
     /**
      * 接收人,邮箱
      */
-    @NotBlank(message = "接收人不能为空",groups = ADD.class)
+    @NotBlank(message = "接收人不能为空", groups = ADD.class)
     private String[] receivers;
 
     public String getTitle() {
