@@ -23,27 +23,27 @@ include ':demo:demo-card:demo-card-provider'
 //include ':dbs:redis'
 
 //#template
-include ':template:template-api'
-include ':template:template-consumer'
-include ':template:template-provider'
+include ':models:template:template-api'
+include ':models:template:template-consumer'
+include ':models:template:template-provider'
 
-include ':user:user-api'
-include ':user:user-consumer'
-include ':user:user-provider'
+include ':models:user:user-api'
+include ':models:user:user-consumer'
+include ':models:user:user-provider'
 
-include ':message:message-api'
-include ':message:message-consumer'
-include ':message:message-provider'
-
-//#staffentry
-include ':staffentry:staffentry-api'
-include ':staffentry:staffentry-consumer'
-include ':staffentry:staffentry-provider'
-
-//#accommodation
-include ':accommodation:accommodation-api'
-include ':accommodation:accommodation-consumer'
-include ':accommodation:accommodation-provider'//#accommodation
+include ':models:message:message-api'
+include ':models:message:message-consumer'
+include ':models:message:message-provider'
+//
+////#staffentry
+include ':models:staffentry:staffentry-api'
+include ':models:staffentry:staffentry-consumer'
+include ':models:staffentry:staffentry-provider'
+//
+////#accommodation
+include ':models:accommodation:accommodation-api'
+include ':models:accommodation:accommodation-consumer'
+include ':models:accommodation:accommodation-provider'
 
 
 
