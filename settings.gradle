@@ -35,16 +35,14 @@ include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
 
 //#客户信息
-//include ':modules:customer:customer-api'
-//include ':modules:customer:customer-consumer'
-//include ':modules:customer:customer-provider'
-
-
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
 
 //#organize
-include ':organize:organize-api'
-include ':organize:organize-consumer'
-include ':organize:organize-provider'
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
 
 
 
