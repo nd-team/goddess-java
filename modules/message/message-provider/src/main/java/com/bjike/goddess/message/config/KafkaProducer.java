@@ -42,6 +42,7 @@ public class KafkaProducer {
         props.put("request.required.acks", "-1");
         Producer  producer = new Producer(new ProducerConfig(props));
          producer.send(new KeyedMessage(TOPIC, "消息1", "这是消息内容111"));
+
     }
 
 

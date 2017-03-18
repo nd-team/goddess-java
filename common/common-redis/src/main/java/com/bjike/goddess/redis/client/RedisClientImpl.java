@@ -216,7 +216,7 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
-    public Set<String> getSetValues(String key) throws SerException {
+    public Set<String> getSet(String key) throws SerException {
         try {
             jedis = jedisPool.getResource();
             return jedis.smembers(key);
@@ -229,10 +229,10 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
-    public void removeSet(String key, String... fields) throws SerException {
+    public void removeSet(String key,String values) throws SerException {
         try {
             jedis = jedisPool.getResource();
-            jedis.srem(key);
+            jedis.srem(key,values);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {
