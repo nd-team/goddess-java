@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class BeanTransform {
      * @return List<TARGET>目标对象列表
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
-    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes){
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes) {
         return copyList(sources, target, false, excludes);
 
     }
@@ -51,7 +52,7 @@ public class BeanTransform {
      * @param sources     转换对象源列表
      * @param target      目标类
      * @param excludes    过滤字段
-     * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @param convertDate 是否处理字符串转换日期 true：字符串转日期 ,false： 日期转字符串
      * @return List<TARGET>目标对象列表
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
@@ -108,7 +109,7 @@ public class BeanTransform {
      *
      * @param source      源对象
      * @param target      目标对象
-     * @param convertDate 是否处理字符串转换日期 false 处理,true 不处理
+     * @param convertDate 是否处理字符串转换日期 true：字符串转日期 ,false： 日期转字符串
      * @param excludes    过滤字段
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
@@ -122,12 +123,13 @@ public class BeanTransform {
 
 
     /**
-     * @param source   源对象
-     * @param target   目标类
-     * @param <TARGET> 目标对象
-     * @param excludes 过滤属性
-     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
+     * @param source      源对象
+     * @param target      目标类
+     * @param convertDate 是否处理字符串转换日期 true：字符串转日期 ,false： 日期转字符串
+     * @param <TARGET>    目标对象
+     * @param excludes    过滤属性
      * @return
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> TARGET copyProperties(SOURCE source, Class target, boolean convertDate, String... excludes) {
         if (null != source) {
@@ -186,63 +188,73 @@ public class BeanTransform {
     private static void handlerCopyFields(Object source, Object target, boolean convertDate, String... excludes) throws Exception {
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
-        boolean first = true;
-        while (null != t_clazz) { //目标类父类
-            if (!first) {
-                s_clazz = s_clazz.getSuperclass();
-                t_clazz = t_clazz.getSuperclass();
-                if (Object.class.equals(t_clazz) || null == t_clazz) {
-                    break;
-                }
+        List<Field> s_fields = new ArrayList<>(); //源类属性列表
+        List<Field> t_fields = new ArrayList<>();//目标类属性列表
+        List<Method> methods = new ArrayList<>();//目标类所有方法
+        while (null != s_clazz) { //数据源类所有属性（包括父类）
+            s_fields.addAll(Arrays.asList(s_clazz.getDeclaredFields())); //源对象属性
+            s_clazz = s_clazz.getSuperclass();
+            if (Object.class.equals(s_clazz) || null == s_clazz) {
+                break;
             }
-            first = false;
-            Field[] s_fields = s_clazz.getDeclaredFields(); //源对象属性
-            Field[] t_fields = t_clazz.getDeclaredFields();//目标对象属性
-            Method[] methods = t_clazz.getDeclaredMethods();
-            for (Field t_field : t_fields) {
-                boolean has_ex = false;
-                if (null != excludes && excludes.length > 0) {
-                    for (String exclude : excludes) {
-                        if (exclude.equals(t_field.getName())) {
-                            has_ex = true;
-                            break;
-                        }
-                    }
-                    if (has_ex) {
-                        continue;
-                    }
-                }
-
-                for (Field s_field : s_fields) {
-                    if (t_field.getName().equals(s_field.getName())) { //同名属性
-                        t_field.setAccessible(true);
-                        s_field.setAccessible(true);
-                        Object s_val = s_field.get(source);
-                        if (null == s_val) {
-                            break;
-                        }
-                        if (!convertDate) { //处理字符串转日期
-                            s_val = convertStringType(s_field.getType(), s_val);
-                        } else {
-                            for (Type type : DATE_TYPES) {
-                                if (type.equals(t_field.getType())) {
-                                    s_val = convertDateType(type, s_val);
-                                    break;
-                                }
-                            }
-                        }
-                        String methodName = "set" + upperCaseFirst(t_field.getName());
-                        for (Method m : methods) { //找到相应方法
-                            if (m.getName().equals(methodName)) {
-                                m.invoke(target, s_val);
-                                break;
-                            }
-                        }
+        }
+        while (null != t_clazz) { //目标类所有属性（包括父类）
+            t_fields.addAll(Arrays.asList(t_clazz.getDeclaredFields())); //源对象属性
+            methods.addAll(Arrays.asList(t_clazz.getDeclaredMethods()));
+            t_clazz = t_clazz.getSuperclass();
+            if (Object.class.equals(t_clazz) || null == t_clazz) {
+                break;
+            }
+        }
+        for (Field t_field : t_fields) {
+            boolean has_ex = false;
+            if (null != excludes && excludes.length > 0) {
+                for (String exclude : excludes) {
+                    if (exclude.equals(t_field.getName())) {
+                        has_ex = true;
                         break;
                     }
                 }
+                if (has_ex) {
+                    continue;
+                }
+            }
+
+            for (Field s_field : s_fields) {
+                if (t_field.getName().equals(s_field.getName())) { //同名属性
+                    t_field.setAccessible(true);
+                    s_field.setAccessible(true);
+                    Object s_val = s_field.get(source);
+                    if (null == s_val) {
+                        break;
+                    }
+                    if (!convertDate) { //处理字符串转日期
+                        for (Type type : DATE_TYPES) {
+                            if (type.equals(s_field.getType())) {
+                                s_val = s_val.toString();
+                                break;
+                            }
+                        }
+                    } else {
+                        for (Type type : DATE_TYPES) {
+                            if (type.equals(t_field.getType())) {
+                                s_val = convertDateType(type, s_val);
+                                break;
+                            }
+                        }
+                    }
+                    String methodName = "set" + upperCaseFirst(t_field.getName());
+                    for (Method m : methods) { //找到相应方法
+                        if (m.getName().equals(methodName)) {
+                            m.invoke(target, s_val);
+                            break;
+                        }
+                    }
+                    break;
+                }
             }
         }
+
     }
 
     private static String upperCaseFirst(String val) {
@@ -254,23 +266,6 @@ public class BeanTransform {
         return val;
     }
 
-    /**
-     * 时间转换成字符串
-     *
-     * @param type
-     * @param val
-     * @return
-     */
-    private static Object convertStringType(Type type, Object val) {
-        if (type.equals(LocalDateTime.class)) {
-            val = String.valueOf(DateUtil.dateToString((LocalDateTime) val));
-        } else if (type.equals(LocalDate.class)) {
-            val = String.valueOf(DateUtil.dateToString((LocalDate) val));
-        } else if (type.equals(LocalTime.class)) {
-            val = String.valueOf(DateUtil.dateToString((LocalTime) val));
-        }
-        return val;
-    }
 
     /**
      * 字符串转换成时间
