@@ -69,8 +69,8 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户级别
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Column(name = "customerLevel_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "customerLevel_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
     private CustomerLevel customerLevel;
 
     /**

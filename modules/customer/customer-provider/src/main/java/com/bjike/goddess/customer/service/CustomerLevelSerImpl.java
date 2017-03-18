@@ -47,7 +47,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         customerLevel.setCreateTime(LocalDateTime.now());
         super.save( customerLevel );
-        return BeanTransform.copyProperties(customerLevel, CustomerLevelBO.class, true);
+        return BeanTransform.copyProperties(customerLevel, CustomerLevelBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -56,7 +56,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         customerLevel.setModifyTime(LocalDateTime.now());
         super.update( customerLevel );
-        return BeanTransform.copyProperties(customerLevel, CustomerLevelBO.class, true);
+        return BeanTransform.copyProperties(customerLevel, CustomerLevelBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

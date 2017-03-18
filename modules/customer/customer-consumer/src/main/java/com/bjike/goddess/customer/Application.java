@@ -46,7 +46,7 @@ public class Application {
 	}
 
 	public static void main(String[] args) throws IOException {
-		japi();
+//		japi();
 
 		SpringApplication.run(Application.class,args);
 		System.in.read();

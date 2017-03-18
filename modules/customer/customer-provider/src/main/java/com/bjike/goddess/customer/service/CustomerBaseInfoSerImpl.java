@@ -14,6 +14,7 @@ import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
+import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -64,8 +65,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                 cusNumberList.add(Integer.valueOf(num.substring(5)));
             }
         }
-        Integer maxInt = Collections.max(cusNumberList) + 0001;
-        String customerNumber = "CS000" + maxInt.intValue();
+        Integer maxInt =(( cusNumberList != null && cusNumberList.size()>0)?Collections.max(cusNumberList):0) + 0001;
+        String customerNumber = "CS000" + maxInt;
 
         CustomerBaseInfoBO cbo = new CustomerBaseInfoBO();
         cbo.setCustomerNum( customerNumber);
@@ -85,16 +86,16 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public CustomerBaseInfoBO addCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         String levelName =  customerBaseInfoTO.getCustomerLevelTO().getName();
         CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName( levelName );
-        CustomerLevelTO customerLevelTO = BeanTransform.copyProperties( customerLevelBO,CustomerLevelBO.class,true);
+        CustomerLevel customerLevel = BeanTransform.copyProperties( customerLevelBO,CustomerLevel.class,true);
 
-        customerBaseInfoTO.setCustomerLevelTO( customerLevelTO );
         performance(customerBaseInfoTO);
         CustomerBaseInfo customerBaseInfo =  BeanTransform.copyProperties( customerBaseInfoTO , CustomerBaseInfo.class,true);
         customerBaseInfo.setCreateTime(LocalDateTime.now());
         customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
+        customerBaseInfo.setCustomerLevel(customerLevel);
 
         super.save( customerBaseInfo );
-        return BeanTransform.copyProperties( customerBaseInfoTO ,CustomerLevelBO.class,true);
+        return BeanTransform.copyProperties( customerBaseInfoTO ,CustomerBaseInfoBO.class,true);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -106,7 +107,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfo.setModifyTime( LocalDateTime.now());
         customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
         super.update( customerBaseInfo);
-        return BeanTransform.copyProperties( customerBaseInfo ,CustomerLevelBO.class,true);
+        return BeanTransform.copyProperties( customerBaseInfo ,CustomerBaseInfoBO.class,true);
     }
 
     @Transactional(rollbackFor = SerException.class)
