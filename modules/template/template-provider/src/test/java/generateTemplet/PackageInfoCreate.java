@@ -46,7 +46,7 @@ public class PackageInfoCreate {
         sb.append(";\n");
 
         //文件创建路径
-        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/models/" )
+        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/modules/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-consumer/src/main/java/com/bjike/goddess/")
                 .append( packageName.toLowerCase()+"/action/"+packageName+"/")

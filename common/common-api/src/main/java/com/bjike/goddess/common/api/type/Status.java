@@ -13,23 +13,24 @@ public enum Status {
     /**
      * 解冻
      */
-    THAW(0)
+    THAW(0),
     /**
      * 冻结
      */
-    , CONGEAL(1)
+    CONGEAL(1),
     /**
      * 删除
      */
-    , DELETE(2)
+    DELETE(2),
     /**
      * 未激活
      */
-    , NOACTIVE(3)
+    NOACTIVE(3),
     /**
      * 未审核
      */
-    , UNREVIEW(4);
+    UNREVIEW(4)
+    ;
 
     private int code;
 
