@@ -10,6 +10,7 @@ import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class CustomerDetailAction {
      *
      * @param customerDetailDTO 客户详细信息dto
      * @des 获取所有客户详细信息
+     * @return class CustomerDetailVO
      * @version v1
      */
     @GetMapping("v1/listCustomerDetail")
@@ -56,10 +58,11 @@ public class CustomerDetailAction {
      *
      * @param customerNum 客户编号
      * @des 根据客户编号获取单个客户详细
+     * @return class CustomerDetailVO
      * @version v1
      */
     @GetMapping("v1/getInfoByCustomerNum")
-    public Result getInfoByCustomerNum(String customerNum) throws ActException {
+    public Result getInfoByCustomerNum(@NotBlank String customerNum) throws ActException {
         try {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.getCustomerDetailByNum(customerNum);
             return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
@@ -73,6 +76,7 @@ public class CustomerDetailAction {
      *
      * @param customerDetailTO 客户详细基本信息数据to
      * @des 添加客户详细
+     * @return class CustomerDetailVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -91,6 +95,7 @@ public class CustomerDetailAction {
      *
      * @param customerDetailTO 客户详细基本信息数据bo
      * @des 添加客户详细
+     * @return class CustomerDetailVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -126,7 +131,7 @@ public class CustomerDetailAction {
      *
      * @param area 地区
      * @param customerName 客户名
-     * @des 根据地区或客户名导出
+     * @des 根据地区或客户名导出还不可以用
      * @version v1
      */
     @DeleteMapping("v1/exportInfo")

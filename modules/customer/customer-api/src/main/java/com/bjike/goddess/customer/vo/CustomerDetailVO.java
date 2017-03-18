@@ -75,7 +75,7 @@ public class CustomerDetailVO {
     /**
      * 客户基本信息集合
      */
-    List<CusFamilyMemberVO> cusFamilyMemberVOList;
+    private List<CusFamilyMemberVO> cusFamilyMemberVOList;
 
     public String getId() {
         return id;

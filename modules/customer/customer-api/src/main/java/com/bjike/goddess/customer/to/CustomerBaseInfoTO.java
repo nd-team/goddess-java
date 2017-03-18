@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 客户基本信息
@@ -20,6 +21,7 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 客户信息编号
      */
+    @NotBlank
     private String customerNum;
 
     /**

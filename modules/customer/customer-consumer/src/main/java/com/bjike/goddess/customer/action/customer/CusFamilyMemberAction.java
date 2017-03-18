@@ -38,6 +38,7 @@ public class CusFamilyMemberAction {
      *
      * @param cusFamilyMemberDTO 客户家庭成员信息dto
      * @des 获取所有客户家庭成员信息
+     * @return class CusFamilyMemberVO
      * @version v1
      */
     @GetMapping("v1/listCusFamilyMember")
@@ -56,6 +57,7 @@ public class CusFamilyMemberAction {
      *
      * @param cusFamilyMemberTO 客户家庭成员基本信息数据to
      * @des 添加客户家庭成员
+     * @return class CusFamilyMemberVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -74,6 +76,7 @@ public class CusFamilyMemberAction {
      *
      * @param cusFamilyMemberTO 客户家庭成员基本信息数据bo
      * @des 添加客户家庭成员
+     * @return class CusFamilyMemberVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -90,7 +93,7 @@ public class CusFamilyMemberAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除客户家庭成员信息记录
+     * @return class CusFamilyMemberVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")

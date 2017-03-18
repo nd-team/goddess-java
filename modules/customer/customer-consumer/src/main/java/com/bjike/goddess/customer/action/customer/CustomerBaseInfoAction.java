@@ -39,6 +39,7 @@ public class CustomerBaseInfoAction {
      *
      * @param customerBaseInfoDTO 客户基本信息dto
      * @des 获取所有客户基本信息
+     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @GetMapping("v1/listCustomerBaseInfo")
@@ -56,6 +57,7 @@ public class CustomerBaseInfoAction {
      * 自动编号
      *
      * @des 自动生成客户编号
+     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @GetMapping("v1/generateNumber")
@@ -73,6 +75,7 @@ public class CustomerBaseInfoAction {
      *
      * @param customerBaseInfoTO 客户基本信息数据to
      * @des 添加客户基本信息
+     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -91,6 +94,7 @@ public class CustomerBaseInfoAction {
      *
      * @param customerBaseInfoTO 客户基本基本信息数据bo
      * @des 添加客户基本
+     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -160,6 +164,7 @@ public class CustomerBaseInfoAction {
      * 获取客户地区
      *
      * @des 获取客户地区集合
+     * @return  {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @version v1
      */
     @GetMapping("v1/getArea")
@@ -176,6 +181,7 @@ public class CustomerBaseInfoAction {
      * 获取客户名
      *
      * @des 获取客户名集合
+     * @return  {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @version v1
      */
     @GetMapping("v1/getName")

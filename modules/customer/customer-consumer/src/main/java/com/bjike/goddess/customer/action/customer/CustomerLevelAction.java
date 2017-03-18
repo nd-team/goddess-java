@@ -38,6 +38,7 @@ public class CustomerLevelAction {
      *
      * @param customerLevelDTO 客户等级信息dto
      * @des 获取所有客户等级信息
+     * @return  class CustomerLevelVO
      * @version v1
      */
     @GetMapping("v1/listCustomerLevel")
@@ -56,6 +57,7 @@ public class CustomerLevelAction {
      *
      * @param customerLevelTO 客户等级基本信息数据to
      * @des 添加客户等级
+     * @return  class CustomerLevelVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -74,6 +76,7 @@ public class CustomerLevelAction {
      *
      * @param customerLevelTO 客户等级基本信息数据bo
      * @des 添加客户等级
+     * @return  class CustomerLevelVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -108,6 +111,7 @@ public class CustomerLevelAction {
      *
      * @param name 客户等级名name
      * @des 根据id查找某个客户等级信息
+     * @return  class CustomerLevelVO
      * @version v1
      */
     @GetMapping("v1/getCustomerLevel")
