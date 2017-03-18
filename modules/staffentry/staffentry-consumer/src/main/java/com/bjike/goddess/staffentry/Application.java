@@ -32,11 +32,11 @@ public class Application {
 		JapiClient.setActionReletivePath("com/bjike/goddess/staffentry/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/staffentry/staffentry-api",
-				"user/user-api",
+				"modules/user/user-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
-		JapiClient.setUseCache(true);//
+//		JapiClient.setUseCache(true);//modules/
 
 		IProject project = ProjectImpl.init();
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
