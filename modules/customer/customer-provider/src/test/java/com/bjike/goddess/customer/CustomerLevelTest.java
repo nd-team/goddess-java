@@ -37,7 +37,7 @@ public class CustomerLevelTest {
     @Test
     public void addLevel() throws SerException {
         CustomerLevelTO clevel = new CustomerLevelTO();
-        clevel.setName("7星级");
+        clevel.setName("9星级");
         clevel.setRemark("这个自己想");
         clevel.setStatus(Status.THAW);
         clevel.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));

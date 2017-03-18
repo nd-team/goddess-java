@@ -47,7 +47,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
 
-        return BeanTransform.copyProperties(list, CustomerDetailBO.class, true);
+        return BeanTransform.copyProperties(list, CustomerDetailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -71,7 +71,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
         cusFamilyMemberAPI.save( cusFamilyMemberList );
 
-        return BeanTransform.copyProperties(customerDetail, CustomerDetailBO.class, true);
+        return BeanTransform.copyProperties(customerDetail, CustomerDetailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -100,7 +100,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
 
 
-        return BeanTransform.copyProperties(customerDetail, CustomerDetailBO.class, true);
+        return BeanTransform.copyProperties(customerDetail, CustomerDetailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -125,13 +125,13 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public CustomerDetailBO getCustomerDetailById(String id) throws SerException {
         CustomerDetail customerDetail = super.findById( id );
 
-        CustomerDetailBO customerDetailBO = BeanTransform.copyProperties(customerDetail , CustomerDetailBO.class ,true);
+        CustomerDetailBO customerDetailBO = BeanTransform.copyProperties(customerDetail , CustomerDetailBO.class  );
 
         //查找家庭信息
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id",id));
         List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis( cusFamilyMemberDTO );
-        List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList,CusFamilyMemberBO.class,true);
+        List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList,CusFamilyMemberBO.class  );
 
         customerDetailBO.setCusFamilyMemberBOList( cusFamilyMemberBOList );
 
@@ -145,17 +145,17 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         CustomerBaseInfoDTO cBaseInfoDTO = new CustomerBaseInfoDTO();
         cBaseInfoDTO.getConditions().add(Restrict.eq("customerNum",cBaseInfoDTO));
         CustomerBaseInfo customerBaseInfo = customerBaseInfoAPI.findOne(cBaseInfoDTO );
-        CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties( customerBaseInfo,CustomerBaseInfoBO.class,true);
+        CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties( customerBaseInfo,CustomerBaseInfoBO.class );
 
         CustomerDetailDTO cdDTO = new CustomerDetailDTO();
         cdDTO.getConditions().add( Restrict.eq("customerNum",customerNum));
         CustomerDetail customerDetail = super.findOne( cdDTO );
-        CustomerDetailBO customerDetailBO = BeanTransform.copyProperties( customerDetail,CustomerDetailBO.class,true);
+        CustomerDetailBO customerDetailBO = BeanTransform.copyProperties( customerDetail,CustomerDetailBO.class );
         //查找家庭信息
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id",customerDetail.getId()));
         List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis( cusFamilyMemberDTO );
-        List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList,CusFamilyMemberBO.class,true);
+        List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList,CusFamilyMemberBO.class );
 
         customerDetailBO.setCustomerBaseInfoBO( customerBaseInfoBO );
         customerDetailBO.setCusFamilyMemberBOList( cusFamilyMemberBOList );

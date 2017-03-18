@@ -78,7 +78,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
 
-        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class, true);
+        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -95,7 +95,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfo.setCustomerLevel(customerLevel);
 
         super.save( customerBaseInfo );
-        return BeanTransform.copyProperties( customerBaseInfoTO ,CustomerBaseInfoBO.class,true);
+        return BeanTransform.copyProperties( customerBaseInfoTO ,CustomerBaseInfoBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -107,7 +107,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfo.setModifyTime( LocalDateTime.now());
         customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
         super.update( customerBaseInfo);
-        return BeanTransform.copyProperties( customerBaseInfo ,CustomerBaseInfoBO.class,true);
+        return BeanTransform.copyProperties( customerBaseInfo ,CustomerBaseInfoBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)

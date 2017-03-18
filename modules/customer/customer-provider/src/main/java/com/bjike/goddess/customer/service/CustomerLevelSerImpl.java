@@ -38,7 +38,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
         List<CustomerLevel> list = super.findByCis(customerLevelDTO, true);
 
-        return BeanTransform.copyProperties(list, CustomerLevelBO.class, true);
+        return BeanTransform.copyProperties(list, CustomerLevelBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -90,7 +90,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         dto.getConditions().add(Restrict.eq("name",name));
 
         CustomerLevel customerLevel = super.findOne( dto );
-        return BeanTransform.copyProperties(customerLevel ,CustomerLevelBO.class,true);
+        return BeanTransform.copyProperties(customerLevel ,CustomerLevelBO.class);
     }
 
     @Cacheable

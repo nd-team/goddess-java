@@ -49,7 +49,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
         List<CusEmail> list = super.findByCis(cusEmailDTO, true);
-        return BeanTransform.copyProperties(list, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(list, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -78,7 +78,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
 
         super.save(cusEmail);
 
-        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -103,7 +103,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         cusEmail.setSendObject(String.valueOf(emails));
 
         super.update(cusEmail);
-        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
