@@ -37,7 +37,6 @@ public class CustomerDetailAction {
      * 客户详细列表
      *
      * @param customerDetailDTO 客户详细信息dto
-     * @return class CustomerDetailVO
      * @des 获取所有客户详细信息
      * @version v1
      */
@@ -57,7 +56,6 @@ public class CustomerDetailAction {
      *
      * @param customerNum 客户编号
      * @des 根据客户编号获取单个客户详细
-     * @return class CustomerDetailVO
      * @version v1
      */
     @GetMapping("v1/getInfoByCustomerNum")
@@ -75,7 +73,6 @@ public class CustomerDetailAction {
      *
      * @param customerDetailTO 客户详细基本信息数据to
      * @des 添加客户详细
-     * @return class CustomerDetailVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -94,7 +91,6 @@ public class CustomerDetailAction {
      *
      * @param customerDetailTO 客户详细基本信息数据bo
      * @des 添加客户详细
-     * @return class CustomerDetailVO
      * @version v1
      */
     @PostMapping("v1/edit")

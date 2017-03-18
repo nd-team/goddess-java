@@ -37,7 +37,6 @@ public class CusFamilyMemberAction {
      * 客户家庭成员列表
      *
      * @param cusFamilyMemberDTO 客户家庭成员信息dto
-     * @return class CusFamilyMemberVO
      * @des 获取所有客户家庭成员信息
      * @version v1
      */
@@ -56,7 +55,6 @@ public class CusFamilyMemberAction {
      * 添加客户家庭成员
      *
      * @param cusFamilyMemberTO 客户家庭成员基本信息数据to
-     * @return class CusFamilyMemberVO
      * @des 添加客户家庭成员
      * @version v1
      */
@@ -75,7 +73,6 @@ public class CusFamilyMemberAction {
      * 编辑客户家庭成员
      *
      * @param cusFamilyMemberTO 客户家庭成员基本信息数据bo
-     * @return class CusFamilyMemberVO
      * @des 添加客户家庭成员
      * @version v1
      */

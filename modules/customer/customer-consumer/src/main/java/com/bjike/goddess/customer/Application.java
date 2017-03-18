@@ -28,15 +28,15 @@ public class Application {
 	public static void japi(){
 		JapiClient.setPrefixPath("/home/ike/java/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
-		JapiClient.setProjectJavaPath("customer/customer-consumer");//主项目位置
+		JapiClient.setProjectJavaPath("modules/customer/customer-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/customer/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"customer/customer-api",
-				"user/user-api",
+				"modules/customer/customer-api",
+				"modules/user/user-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
-		JapiClient.setUseCache(true);//
+//		JapiClient.setUseCache(true);//
 
 		IProject project = ProjectImpl.init();
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();

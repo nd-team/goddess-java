@@ -38,7 +38,6 @@ public class CustomerBaseInfoAction {
      * 客户基本列表
      *
      * @param customerBaseInfoDTO 客户基本信息dto
-     * @return class CustomerBaseInfoVO
      * @des 获取所有客户基本信息
      * @version v1
      */
@@ -57,7 +56,6 @@ public class CustomerBaseInfoAction {
      * 自动编号
      *
      * @des 自动生成客户编号
-     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @GetMapping("v1/generateNumber")
@@ -75,7 +73,6 @@ public class CustomerBaseInfoAction {
      *
      * @param customerBaseInfoTO 客户基本信息数据to
      * @des 添加客户基本信息
-     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -94,7 +91,6 @@ public class CustomerBaseInfoAction {
      *
      * @param customerBaseInfoTO 客户基本基本信息数据bo
      * @des 添加客户基本
-     * @return class CustomerBaseInfoVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -164,7 +160,6 @@ public class CustomerBaseInfoAction {
      * 获取客户地区
      *
      * @des 获取客户地区集合
-     * @return class String
      * @version v1
      */
     @GetMapping("v1/getArea")
