@@ -167,10 +167,6 @@ public class CustomerBaseInfoTO extends BaseTO {
      */
     private String modifyTime;
 
-    /**
-     * 客户详细信息
-     */
-    private CustomerDetailTO customerDetailTO;
 
 
     public String getCustomerNum() {
@@ -413,11 +409,5 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.modifyTime = modifyTime;
     }
 
-    public CustomerDetailTO getCustomerDetailTO() {
-        return customerDetailTO;
-    }
 
-    public void setCustomerDetailTO(CustomerDetailTO customerDetailTO) {
-        this.customerDetailTO = customerDetailTO;
-    }
 }

@@ -54,10 +54,7 @@ public class CusFamilyMemberTO extends BaseTO {
      */
     private String modifyTime;
 
-    /**
-     * 客户详细
-     */
-    private CustomerDetailTO customerDetailTO;
+
 
     public String getTitle() {
         return title;
@@ -123,11 +120,5 @@ public class CusFamilyMemberTO extends BaseTO {
         this.modifyTime = modifyTime;
     }
 
-    public CustomerDetailTO getCustomerDetailTO() {
-        return customerDetailTO;
-    }
 
-    public void setCustomerDetailTO(CustomerDetailTO customerDetailTO) {
-        this.customerDetailTO = customerDetailTO;
-    }
 }

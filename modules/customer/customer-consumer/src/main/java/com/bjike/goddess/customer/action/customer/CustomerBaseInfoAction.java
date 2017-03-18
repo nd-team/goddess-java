@@ -176,7 +176,6 @@ public class CustomerBaseInfoAction {
      * 获取客户名
      *
      * @des 获取客户名集合
-     * @return class String
      * @version v1
      */
     @GetMapping("v1/getName")
