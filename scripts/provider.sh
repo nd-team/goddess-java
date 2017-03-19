@@ -1,18 +1,22 @@
 #!/bin/bash
 dir=$(cd `dirname $0`; pwd)
+if [ $1 -ne 1 ];then
+	echo "您的bootstrap.sh部署脚本版本过低,请升级."
+	exit 0
+fi
 if [ ! -d $dir"/build/libs" ];then
 	echo "$dir/build/libs 目录下没有可运动jar包."
 	exit 0
 fi
 javaName=`ls $dir"/"build/libs/*.jar`
-if [ "$1" = "help" ];then
+if [ "$2" = "help" ];then
 	echo "默认  程序已经启动则杀掉重新启动,未启动则帮助启动."
 	echo "stop  停止已经启动中的程序."
 	echo "nlog  程序运行,不查看日志输出."
 	echo "help  使用帮助."
 	exit 0
 fi
-if [ "$1" = "stop" ];then
+if [ "$2" = "stop" ];then
 	ps -ef | grep $javaName | grep -v "grep" >> /dev/null
 	if [ $? -eq 0 ];then
 		kill `ps -ef | grep $javaName | grep -v "grep" | awk '{print $2}'` >> /dev/null
@@ -31,7 +35,7 @@ else
 		fi
 		echo $javaName" 程序重新启动."
 	else
-		if [ "$1" != "nlog" ];then
+		if [ "$2" != "nlog" ];then
 			java -jar $javaName
 		else
 			java -jar $javaName >> /dev/null
