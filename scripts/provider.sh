@@ -11,7 +11,7 @@ fi
 javaName=`ls $dir"/"build/libs/*.jar`
 if [ "$2" = "help" ];then
 	echo "默认  程序已经启动则杀掉重新启动,未启动则帮助启动."
-	echo "stop  停止已经启动中的程序."
+	echo "stop -f  停止已经启动中的程序[-f 为强制停止]."
 	echo "nlog  程序运行,不查看日志输出."
 	echo "help  使用帮助."
 	exit 0
@@ -19,8 +19,13 @@ fi
 if [ "$2" = "stop" ];then
 	ps -ef | grep $javaName | grep -v "grep" >> /dev/null
 	if [ $? -eq 0 ];then
-		kill `ps -ef | grep $javaName | grep -v "grep" | awk '{print $2}'` >> /dev/null
-		echo $javaName" 程序停止成功."
+		if [ "$3" = "-f" ];then
+			kill -9 `ps -ef | grep $javaName | grep -v "grep" | awk '{print $2}'` >> /dev/null
+			echo $javaName" 程序强制停止成功."
+		else
+			kill `ps -ef | grep $javaName | grep -v "grep" | awk '{print $2}'` >> /dev/null
+			echo $javaName" 程序停止成功."
+		fi
 	else
 		echo $javaName" 程序未启动."
 	fi
