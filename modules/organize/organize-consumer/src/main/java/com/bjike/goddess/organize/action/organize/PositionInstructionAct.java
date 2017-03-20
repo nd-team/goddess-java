@@ -32,6 +32,7 @@ public class PositionInstructionAct {
      * 根据职位查询说明书
      *
      * @param id 职位详细ID
+     * @return class PositionInstructionVO
      * @version v1
      */
     @GetMapping("v1/findByPosition")
@@ -47,6 +48,7 @@ public class PositionInstructionAct {
      * 分页数据
      *
      * @param dto 岗位说明书数据传输
+     * @return class PositionInstructionVO
      * @version v1
      */
     @GetMapping("v1/findPage")

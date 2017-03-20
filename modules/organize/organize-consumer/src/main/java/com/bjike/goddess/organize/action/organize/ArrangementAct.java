@@ -33,6 +33,7 @@ public class ArrangementAct {
     /**
      * 获取未冻结岗位层级数据
      *
+     * @return class ArrangementVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

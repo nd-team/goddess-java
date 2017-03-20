@@ -60,6 +60,7 @@ public class InstructionClassifyAct {
     /**
      * 获取正常状态的岗位说明书分类信息
      *
+     * @return class InstructionClassifyVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

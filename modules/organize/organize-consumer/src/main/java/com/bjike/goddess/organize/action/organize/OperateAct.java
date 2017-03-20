@@ -60,6 +60,7 @@ public class OperateAct {
     /**
      * 获取正常状态的操作类型信息
      *
+     * @return class OperateVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

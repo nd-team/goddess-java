@@ -67,6 +67,7 @@ public class AngleAct {
     /**
      * 获取未冻结角度数据
      *
+     * @return class AngleVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

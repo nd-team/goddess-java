@@ -63,6 +63,7 @@ public class DimensionAct {
     /**
      * 获取未冻结维度信息
      *
+     * @return class DimensionVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

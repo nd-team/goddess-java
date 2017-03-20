@@ -63,6 +63,7 @@ public class DepartmentDetailAct {
     /**
      * 查询未冻结部门项目组详细信息
      *
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

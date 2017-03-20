@@ -31,6 +31,7 @@ public class PositionDetailAct {
     /**
      * 查询正常状态的岗位详细
      *
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findStatus")
@@ -46,6 +47,7 @@ public class PositionDetailAct {
      * 根据职位ID集合查询
      *
      * @param ids 职位ID集合
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findByPostIds")
@@ -61,6 +63,7 @@ public class PositionDetailAct {
      * 根据职位ID查询
      *
      * @param id 职位ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findByPostId")
@@ -76,6 +79,7 @@ public class PositionDetailAct {
      * 根据上级职位ID查询
      *
      * @param parentId 上级职位ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findChild")
@@ -91,6 +95,7 @@ public class PositionDetailAct {
      * 根据职位ID查询直接上级职位详细
      *
      * @param postId 职位ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findParent")
@@ -106,6 +111,7 @@ public class PositionDetailAct {
      * 查询下级层级职位详细
      *
      * @param postId 职位ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findChildByArrangement")
@@ -121,6 +127,7 @@ public class PositionDetailAct {
      * 查询上级层级职位详细
      *
      * @param postId 职位ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findParentByArrangement")
@@ -136,6 +143,7 @@ public class PositionDetailAct {
      * 根据ID查询职位详细信息
      *
      * @param id 职位详细ID
+     * @return class PositionDetailVO
      * @version v1
      */
     @GetMapping("v1/findBOById")

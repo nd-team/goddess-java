@@ -35,6 +35,7 @@ public class WorkRangeAct {
      *
      * @param department_id 部门ID
      * @param dto           部门工作范围数据传输
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findDepartmentWorkRangeView")
@@ -50,6 +51,7 @@ public class WorkRangeAct {
      * 根据部门详细ID查询工作范围信息
      *
      * @param departmentId 部门详细ID
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findByDepartment")
@@ -65,6 +67,7 @@ public class WorkRangeAct {
      * 根据工作范围ID查询部门详细信息
      *
      * @param rangeId 工作范围ID
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findByRange")
@@ -96,6 +99,7 @@ public class WorkRangeAct {
      * 根据方向查询工作范围
      *
      * @param direction 方向
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findByDirection")
@@ -112,6 +116,7 @@ public class WorkRangeAct {
      *
      * @param direction 方向
      * @param project   科目
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findByDirectionProject")
@@ -127,6 +132,7 @@ public class WorkRangeAct {
      * 根据科目查询工作范围
      *
      * @param project 科目
+     * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findByProject")

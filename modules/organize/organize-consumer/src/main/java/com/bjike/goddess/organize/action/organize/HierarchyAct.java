@@ -62,6 +62,7 @@ public class HierarchyAct {
     /**
      * 获取正常状态的体系信息
      *
+     * @return class HierarchyVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

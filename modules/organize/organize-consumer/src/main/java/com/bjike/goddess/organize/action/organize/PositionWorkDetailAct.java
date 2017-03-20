@@ -32,6 +32,7 @@ public class PositionWorkDetailAct {
      * 根据说明书ID查询工作详细
      *
      * @param id 岗位说明书ID
+     * @return class PositionWorkDetailVO
      * @version v1
      */
     @GetMapping("v1/findByInstruction")
