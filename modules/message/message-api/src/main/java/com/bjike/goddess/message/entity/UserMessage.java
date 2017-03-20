@@ -27,11 +27,6 @@ public class UserMessage extends BaseEntity {
     @JoinColumn(name = "message_id", columnDefinition = "VARCHAR(36) COMMENT '消息id' ")
     private Message message;
 
-    /**
-     * 是否已读
-     */
-    @Column(name = "is_read", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否已读'", nullable = false, insertable = false)
-    private Boolean read;
 
     public String getUserId() {
         return userId;
@@ -47,13 +42,5 @@ public class UserMessage extends BaseEntity {
 
     public void setMessage(Message message) {
         this.message = message;
-    }
-
-    public Boolean getRead() {
-        return read;
-    }
-
-    public void setRead(Boolean read) {
-        this.read = read;
     }
 }

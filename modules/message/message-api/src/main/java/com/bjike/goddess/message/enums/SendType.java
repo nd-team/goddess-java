@@ -11,13 +11,14 @@ package com.bjike.goddess.message.enums;
  */
 public enum SendType {
     /**
-     * 邮件
-     */
-    EMAIL(0),
-    /**
      * 消息
      */
-    MSG(1),
+    MSG(0),
+    /**
+     * 邮件
+     */
+    EMAIL(1),
+
     /**
      * 邮件及消息
      */

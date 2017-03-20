@@ -31,7 +31,10 @@ public class RedisTest {
 
     @Test
     public void get() throws SerException {
-        System.out.println(redisClinet.get("name"));
+        System.out.println(redisClinet.getList("56913117-0a7d-431a-bdb0-b0c0f0f88c23"+"_message"));
+        redisClinet.removeToList("56913117-0a7d-431a-bdb0-b0c0f0f88c23"+"_message","1111111111");
+        System.out.println(redisClinet.getList("56913117-0a7d-431a-bdb0-b0c0f0f88c23"+"_message"));
+
     }
 
     @Test
@@ -53,12 +56,13 @@ public class RedisTest {
             map.put("count" + i, "li" + i + "name");
         }
         redisClinet.saveMap("username", map);
+        redisClinet.appendToMap("username","xxxx","xxxxx");
         System.out.println(redisClinet.getMap("username", "count2", "count3"));
         System.out.println(redisClinet.mapKeys("username"));
         System.out.println(redisClinet.mapValues("username"));
         System.out.println(redisClinet.mapLength("username"));
-        redisClinet.removeMap("username", "count2");
         System.out.println(redisClinet.getMap("username", "count2", "count3"));
+        System.out.println(redisClinet.getAllMap("username"));
 
     }
 
