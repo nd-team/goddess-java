@@ -55,10 +55,6 @@ public class CusFamilyMemberVO {
      */
     private String modifyTime;
 
-    /**
-     * 客户详细
-     */
-    private CustomerDetailVO customerDetailVO;
 
     public String getId() {
         return id;
@@ -132,11 +128,4 @@ public class CusFamilyMemberVO {
         this.modifyTime = modifyTime;
     }
 
-    public CustomerDetailVO getCustomerDetailVO() {
-        return customerDetailVO;
-    }
-
-    public void setCustomerDetailVO(CustomerDetailVO customerDetailVO) {
-        this.customerDetailVO = customerDetailVO;
-    }
 }

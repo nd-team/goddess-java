@@ -57,7 +57,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     public EntryRegisterBO getEntryRegister(String id) throws SerException {
 
-        EntryRegisterBO entryRegisterBO = BeanTransform.copyProperties(super.findById(id), EntryRegisterBO.class ,true);
+        EntryRegisterBO entryRegisterBO = BeanTransform.copyProperties(super.findById(id), EntryRegisterBO.class );
 
         /**
          *  根据入职登记查询子表
