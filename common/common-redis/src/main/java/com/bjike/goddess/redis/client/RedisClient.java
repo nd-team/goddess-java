@@ -61,6 +61,27 @@ public interface RedisClient {
 
     }
 
+  /**
+     * 追加
+     *
+     * @param key
+     * @param values 追加值
+     * @throws SerException
+     */
+    default void appendToList(String key, String ... values) throws SerException {
+
+    }
+  /**
+     * 追加
+     *
+     * @param key
+     * @param value 追加值
+     * @throws SerException
+     */
+    default void appendToMap(String key,String field ,String value) throws SerException {
+
+    }
+
     /**
      * @param key 存入redis的key
      * @param map

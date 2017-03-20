@@ -37,13 +37,11 @@ public class RedisTest {
     @Test
     public void listTest() throws SerException {
         List<String> emails = new ArrayList<>(5);
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 6; i <= 10; i++) {
             emails.add("aa" + i + "@qq.com");
         }
-        redisClinet.saveList("emails", emails);
-        System.out.println(redisClinet.getList("emails", 2, 4));
-        System.out.println(redisClinet.getList("emails"));
-        redisClinet.remove("emails");
+        redisClinet.appendToList("emails", "xxx@qq.com","sss@qq.com");
+
         System.out.println(redisClinet.getList("emails"));
     }
 
