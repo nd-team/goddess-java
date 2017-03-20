@@ -87,4 +87,14 @@ public interface UserSer extends Ser<User, UserDTO> {
     default void update(UserTO userTO) throws SerException{
 
     }
+
+    /**
+     * 通过组查寻用户
+     * @param groups
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findByGroup(String ...  groups) throws SerException{
+        return null;
+    }
 }

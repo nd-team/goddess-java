@@ -2,6 +2,7 @@ package com.bjike.goddess.message.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 
 import javax.persistence.Column;
@@ -55,6 +56,11 @@ public class Message extends BaseEntity {
      */
     @Column(name = "sendType", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '发送类型' ", nullable = false, insertable = false)
     private SendType sendType;
+    /**
+     * 消息范围
+     */
+    @Column(name = "rangeType", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '消息范围' ", nullable = false, insertable = false)
+    private RangeType rangeType;
 
 
     public String getTitle() {
@@ -103,5 +109,13 @@ public class Message extends BaseEntity {
 
     public void setSendType(SendType sendType) {
         this.sendType = sendType;
+    }
+
+    public RangeType getRangeType() {
+        return rangeType;
+    }
+
+    public void setRangeType(RangeType rangeType) {
+        this.rangeType = rangeType;
     }
 }

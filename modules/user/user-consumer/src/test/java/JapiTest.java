@@ -1,5 +1,3 @@
-package com.bjike.goddess.user;
-
 import com.dounine.japi.JapiClient;
 import com.dounine.japi.JapiClientStorage;
 import com.dounine.japi.JapiClientTransfer;
@@ -14,18 +12,9 @@ import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 
-/**
- * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
- */
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.user.action","com.bjike.goddess.common.consumer"},
-		excludeFilters = {@ComponentScan.Filter(
-				type = FilterType.ANNOTATION,
-				value = {Configuration.class})})
-@ImportResource("classpath:app.xml")
-public class Application {
+public class JapiTest {
 
-	public static void japi(){
+	public static void main(String[] args) throws IOException {
 		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/user/user-consumer");//主项目位置
@@ -40,11 +29,6 @@ public class Application {
 		japiClientStorage.setProject(project);
 		japiClientStorage.autoSaveToDisk();
 		new JapiClientTransfer().autoTransfer(japiClientStorage);
-	}
-	public static void main(String[] args) throws IOException {
-//		japi();
-		SpringApplication.run(Application.class,args);
-		System.in.read();
 	}
 
 }

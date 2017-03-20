@@ -10,10 +10,18 @@ package com.bjike.goddess.message.enums;
  * @Copy: [com.bjike]
  */
 public enum MsgType {
-    SYS(0), //系统
-    PERSONAL(1),//个人
-    MULTI(2); //多人
-
+    /**
+     * 系统
+     */
+    SYS(0),
+    /**
+     * 文章
+     */
+    ARTICLE(1),
+    /**
+     * 其他
+     */
+    OTHER(2);
     private int code;
 
     MsgType(int code) {
