@@ -23,19 +23,19 @@ if [ $1 -ne 1 ];then
 fi
 function stopApp(){
 	echo "$str 尝试停止 $moduleRelativePath 程序 $str"
-	ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
+	ps -ef | grep $mName | grep "java -jar" > /dev/null
 	if [ $? -eq 0 ];then
 		if [ "$1" = "-f" ];then
-			kill -9 `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
-			ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
+			kill -9 `ps -ef | grep $mName | grep "java -jar" | awk '{print $2}'` > /dev/null
+			ps -ef | grep $mName | grep "java -jar" > /dev/null
 			if [ $? -eq 0 ];then
 				console error "$str $moduleRelativePath 程程序强制停止失败 $str"
 			else
 				echo "$str $moduleRelativePath 程序强制停止成功 $str"
 			fi
 		else
-			kill `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
-			ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
+			kill `ps -ef | grep $mName | grep "java -jar" | awk '{print $2}'` > /dev/null
+			ps -ef | grep $mName | grep "java -jar" > /dev/null
 			if [ $? -eq 0 ];then
 				console error "$str $moduleRelativePath 程序正常停止失败 $str"
 				exit 0
@@ -63,7 +63,7 @@ else
 	if [ "$2" = "list" ];then
 		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $2
 	elif [ "$2" = "status" ];then
-		ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
+		ps -ef | grep $mName | grep "java -jar" > /dev/null
 		if [ $? -eq 0 ];then
 			echo -e "\033[32m$str $moduleRelativePath 程序运行中 $str\033[0m"
 		else
@@ -88,18 +88,18 @@ jarPath=`ls $libPath/*.jar`
 if [ "$2" = "stop" ];then
 	stopApp $3
 else
-	ps -ef | grep $jarPath | grep -v "grep" >> /dev/null
+	ps -ef | grep $jarPath | grep "java -jar" > /dev/null
 	if [ $? -eq 0 ];then
 		if [ "$1" != "nlog" ];then
 			java -jar $jarPath
 		else
-			java -jar $jarPath >> /dev/null
+			java -jar $jarPath > /dev/null
 		fi
 	else
 		if [ "$2" != "nlog" ];then
 			java -jar $jarPath
 		else
-			java -jar $jarPath >> /dev/null
+			java -jar $jarPath > /dev/null
 		fi
 	fi
 fi
