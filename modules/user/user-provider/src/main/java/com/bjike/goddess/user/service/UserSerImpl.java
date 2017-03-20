@@ -9,7 +9,9 @@ import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,6 +40,8 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Autowired
     private UserRep userRep;
+    @Autowired
+    private UserDetailSer userDetailSer;
 
 
     @Cacheable
@@ -105,4 +110,19 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         user.setModifyTime(LocalDateTime.now());
         super.update(user);
     }
+
+    @Override
+    public List<UserBO> findByGroup(String... groups) throws SerException {
+        UserDetailDTO detailDTO = new UserDetailDTO();
+        detailDTO.getConditions().add(Restrict.in("group.id",groups));
+        List<UserDetail> userDetails = userDetailSer.findByCis(detailDTO);
+        List<UserBO> userBOS = new ArrayList<>(userDetails.size());
+        userDetails.stream().forEach(detail->{
+            UserBO userBO = BeanTransform.copyProperties(detail.getUser(),UserBO.class);
+            userBOS.add(userBO);
+        });
+        return userBOS;
+    }
+
+
 }

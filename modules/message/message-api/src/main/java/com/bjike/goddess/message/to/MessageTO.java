@@ -3,6 +3,7 @@ package com.bjike.goddess.message.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -63,10 +64,22 @@ public class MessageTO extends BaseTO {
     private SendType sendType;
 
     /**
-     * 接收人,邮箱
+     * 消息范围
+     */
+    private RangeType rangeType;
+
+
+    /**
+     * 接收人id
      */
     @NotBlank(message = "接收人不能为空", groups = ADD.class)
     private String[] receivers;
+
+    /**
+     * 接收组
+     */
+    private String[] groups;
+
 
     public String getTitle() {
         return title;
@@ -124,11 +137,27 @@ public class MessageTO extends BaseTO {
         this.sendType = sendType;
     }
 
+    public RangeType getRangeType() {
+        return rangeType;
+    }
+
+    public void setRangeType(RangeType rangeType) {
+        this.rangeType = rangeType;
+    }
+
     public String[] getReceivers() {
         return receivers;
     }
 
     public void setReceivers(String[] receivers) {
         this.receivers = receivers;
+    }
+
+    public String[] getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String[] groups) {
+        this.groups = groups;
     }
 }

@@ -94,4 +94,9 @@ public class UserApiImpl implements UserAPI {
     public List<UserBO> findOne(UserDTO dto) throws SerException {
         return BeanTransform.copyProperties(userSer.findOne(dto),UserBO.class);
     }
+
+    @Override
+    public List<UserBO> findByGroup(String... groups) throws SerException {
+           return userSer.findByGroup(groups);
+    }
 }

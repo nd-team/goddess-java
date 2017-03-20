@@ -127,5 +127,13 @@ public interface UserAPI {
     default UserBO findByAccountNumber(String accountNumber) throws SerException {
         return null;
     }
-
+    /**
+     * 通过组查寻用户
+     * @param groups
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findByGroup(String ...  groups) throws SerException{
+        return null;
+    }
 }
