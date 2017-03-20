@@ -19,7 +19,7 @@ public enum SendType {
      */
     MSG(1),
     /**
-     * 邮件,消息
+     * 邮件及消息
      */
     ALL(2);
 

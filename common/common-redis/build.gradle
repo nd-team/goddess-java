@@ -1,0 +1,13 @@
+apply from: '../../config.gradle'
+
+dependencies {
+    compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-redis', version: '1.4.5.RELEASE'){
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+        exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
+
+
+    }
+    compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
+    compile project(":common:common-api")
+}

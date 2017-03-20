@@ -25,7 +25,7 @@ public class ApiBuildCreate {
                 .append("compile project(\":common:common-utils\")")
                 .append("} \n");
         //文件创建路径
-        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/models/" )
+        StringBuffer  filePath = new StringBuffer( System.getProperty("user.dir") + "/modules/" )
                 .append(packageName.toLowerCase()+"/")
                 .append( packageName.toLowerCase()+"-api/")
                 ;

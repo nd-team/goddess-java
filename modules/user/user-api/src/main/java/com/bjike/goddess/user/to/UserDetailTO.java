@@ -16,7 +16,7 @@ public class UserDetailTO extends BaseTO {
     /**
      * 性别
      */
-    private SexType sex = SexType.NONE;
+    private SexType sex;
     /**
      * 年龄
      */
@@ -24,7 +24,7 @@ public class UserDetailTO extends BaseTO {
     /**
      * 用户类型
      */
-    private UserType userType = UserType.CUSTOMER;
+    private UserType userType ;
     /**
      * 所在地址
      */

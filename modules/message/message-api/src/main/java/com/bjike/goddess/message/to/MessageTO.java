@@ -3,6 +3,7 @@ package com.bjike.goddess.message.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,16 +17,24 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class MessageTO extends BaseTO {
+    public MessageTO() {
+
+    }
+
+    public MessageTO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     /**
      * 消息标题
      */
-    @NotBlank(message = "消息标题不能为空",groups = ADD.class)
+    @NotBlank(message = "消息标题不能为空", groups = ADD.class)
     private String title;
     /**
      * 发送内容
      */
-    @NotBlank(message = "消息内容不能为空",groups = ADD.class)
+    @NotBlank(message = "消息内容不能为空", groups = ADD.class)
     private String content;
 
     /**
@@ -45,20 +54,32 @@ public class MessageTO extends BaseTO {
     /**
      * 消息类型
      */
-    @NotBlank(message = "消息类型不能为空",groups = ADD.class)
+    @NotBlank(message = "消息类型不能为空", groups = ADD.class)
     private MsgType msgType;
 
     /**
      * 发送类型
      */
-    @NotBlank(message = "发送类型不能为空",groups = ADD.class)
+    @NotBlank(message = "发送类型不能为空", groups = ADD.class)
     private SendType sendType;
 
     /**
-     * 接收人,邮箱
+     * 消息范围
      */
-    @NotBlank(message = "接收人不能为空",groups = ADD.class)
+    private RangeType rangeType;
+
+
+    /**
+     * 接收人id
+     */
+    @NotBlank(message = "接收人不能为空", groups = ADD.class)
     private String[] receivers;
+
+    /**
+     * 接收组
+     */
+    private String[] groups;
+
 
     public String getTitle() {
         return title;
@@ -116,11 +137,27 @@ public class MessageTO extends BaseTO {
         this.sendType = sendType;
     }
 
+    public RangeType getRangeType() {
+        return rangeType;
+    }
+
+    public void setRangeType(RangeType rangeType) {
+        this.rangeType = rangeType;
+    }
+
     public String[] getReceivers() {
         return receivers;
     }
 
     public void setReceivers(String[] receivers) {
         this.receivers = receivers;
+    }
+
+    public String[] getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String[] groups) {
+        this.groups = groups;
     }
 }

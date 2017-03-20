@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [com.bjike]
  */
 public class GroupTO extends BaseTO {
+    private String start;
 
     /**
      * 组名
@@ -67,4 +68,11 @@ public class GroupTO extends BaseTO {
         this.createTime = createTime;
     }
 
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
 }

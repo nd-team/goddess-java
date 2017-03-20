@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 组
@@ -18,6 +19,8 @@ import javax.persistence.*;
 @Table(name = "rbac_group")
 public class Group extends BaseEntity {
 
+    @Transient
+    private LocalDateTime start;
     /**
      * 组名
      */
@@ -71,5 +74,13 @@ public class Group extends BaseEntity {
 
     public void setParent(Group parent) {
         this.parent = parent;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 }

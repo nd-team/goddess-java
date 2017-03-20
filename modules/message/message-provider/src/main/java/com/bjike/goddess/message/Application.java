@@ -21,7 +21,6 @@ public class Application {
     public static void main(String[] args) throws IOException {
         context = new AnnotationConfigApplicationContext(AppRoot.class);
         context.start();
-        System.in.read(); // 按任意键退出
     }
 }
 
