@@ -73,6 +73,31 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
+    public void appendToList(String key, String... values) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.rpush(key, values);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+
+    }
+
+    @Override
+    public void appendToMap(String key, String field, String value) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.hsetnx(key,field, value);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
     public void saveMap(String key, Map<String, String> map) throws SerException {
         try {
             jedis = jedisPool.getResource();
@@ -164,6 +189,7 @@ public class RedisClientImpl implements RedisClient {
             jedis = jedisPool.getResource();
             values.stream().forEach(val -> {
                 jedis.lpush(key, val);
+
             });
 
         } catch (Exception e) {
