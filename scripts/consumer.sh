@@ -5,6 +5,7 @@ projectRootParent=${dir%goddess-java*} #goddess-java父级目录
 moduleRelativePath=${dir#*goddess-java} #模块相对goddess-java目录
 distPath=$projectRootParent$deployPath$moduleRelativePath #转移后的目录
 source $projectRootParent/goddess-java/scripts/console.sh
+mName=${moduleRelativePath##*/}
 str=" ------------------ "
 if [ "$2" = "help" ];then
 	echo "默认 ----  程序已经启动则杀掉重新启动,未启动则帮助启动,并保留历史版本."
@@ -22,7 +23,6 @@ if [ $1 -ne 1 ];then
 fi
 function stopApp(){
 	echo "$str 尝试停止 $moduleRelativePath 程序 $str"
-	mName=${moduleRelativePath##*/}
 	ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
 	if [ $? -eq 0 ];then
 		if [ "$1" = "-f" ];then
@@ -38,6 +38,7 @@ function stopApp(){
 			ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
 			if [ $? -eq 0 ];then
 				console error "$str $moduleRelativePath 程序正常停止失败 $str"
+				exit 0
 			else
 				echo "$str $moduleRelativePath 程序正常停止成功 $str"
 			fi
@@ -62,7 +63,6 @@ else
 	if [ "$2" = "list" ];then
 		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $2
 	elif [ "$2" = "status" ];then
-		mName=${moduleRelativePath##*/}
 		ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
 		if [ $? -eq 0 ];then
 			echo -e "\033[32m$str $moduleRelativePath 程序运行中 $str\033[0m"
@@ -71,7 +71,7 @@ else
 		fi
 		exit 0
 	elif [ "$2" = "" ];then
-		stopApp -f
+		stopApp
 		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $*
 	fi
 	libPath=$distPath"/"build/libs
@@ -90,7 +90,6 @@ if [ "$2" = "stop" ];then
 else
 	ps -ef | grep $jarPath | grep -v "grep" >> /dev/null
 	if [ $? -eq 0 ];then
-		kill `ps -ef | grep $jarPath | grep -v "grep" | awk '{print $2}'` >> /dev/null
 		if [ "$1" != "nlog" ];then
 			java -jar $jarPath
 		else
