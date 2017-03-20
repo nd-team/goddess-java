@@ -6,6 +6,7 @@ include ':common:common-consumer'
 include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
+include ':common:common-redis'
 //$demo 参考模块
 include ':demo:demo-ticket:demo-ticket-api'
 include ':demo:demo-ticket:demo-ticket-consumer'

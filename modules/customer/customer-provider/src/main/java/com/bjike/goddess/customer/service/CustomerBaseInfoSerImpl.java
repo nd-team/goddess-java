@@ -15,11 +15,13 @@ import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
+import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -161,7 +163,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String[] fields = new String[]{"area"};
         List<CustomerBaseInfoBO> customerBaseInfoBOS =super.findBySql("select area,1 from customer_customerbaseinfo order by area asc ", CustomerBaseInfoBO.class, fields);
 
-        List<String> areaList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea).distinct().collect(Collectors.toList());
+        List<String> areaList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());
 
 
         return areaList;
@@ -173,7 +176,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         String[] fields = new String[]{"customerName"};
         List<CustomerBaseInfoBO> customerBaseInfoBOS =super.findBySql("select customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
 
-        List<String> customerNameList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea).distinct().collect(Collectors.toList());
+        List<String> customerNameList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerName)
+                .filter(name -> (name != null || !"".equals(name.trim())) ).distinct().collect(Collectors.toList());
 
 
         return customerNameList;
@@ -285,5 +289,36 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
         double completeness = (now / sum) * 100;
         customerBaseInfoTO.setInfoComplet(new BigDecimal(completeness).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%");
+    }
+
+
+    @Override
+    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName) throws SerException {
+        if( StringUtils.isNotBlank(customerName) ){
+            return null;
+        }else{
+            /**
+             * 生成客户编号
+             */
+            CustomerBaseInfoBO cBO = generateCustomerNum();
+
+            CustomerBaseInfo cbaseInfo = new CustomerBaseInfo();
+            cbaseInfo.setCustomerName( customerName );
+            cbaseInfo.setCustomerNum( cBO.getCustomerNum() );
+            cbaseInfo.setCustomerSex(CustomerSex.NONE );
+            cbaseInfo.setCreateTime( LocalDateTime.now());
+            cbaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
+
+            super.save( cbaseInfo );
+            return BeanTransform.copyProperties(cbaseInfo , CustomerBaseInfoBO.class);
+        }
+    }
+
+    @Override
+    public CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
+        CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
+        dto.getConditions().add(Restrict.eq("customerNum",customerNum));
+        CustomerBaseInfo customerBaseInfo = super.findOne( dto );
+        return BeanTransform.copyProperties( customerBaseInfo,CustomerBaseInfoBO.class);
     }
 }

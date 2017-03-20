@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
@@ -108,4 +109,27 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     default List<String> getCustomerBaseInfoName() throws SerException {
         return null;
     }
+
+
+    /**
+     * 添加市场开发添加的客户
+     *
+     * @param customerName 客户名
+     * @return class CustomerBaseInfoBO
+     */
+    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据客户编号查询客户
+     *
+     * @param customerNum 客户编号
+     * @return class CustomerBaseInfoBO
+     */
+    default CustomerBaseInfoBO getCustomerInfoByNum( String customerNum) throws SerException {
+        return null;
+    }
+
 }

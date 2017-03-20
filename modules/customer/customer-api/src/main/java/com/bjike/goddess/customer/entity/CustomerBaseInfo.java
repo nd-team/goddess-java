@@ -39,7 +39,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
@@ -51,19 +51,19 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户类别
      */
-    @Column(name = "customerType", nullable = false, columnDefinition = "INT(1)   COMMENT '客户类别'")
+    @Column(name = "customerType",  columnDefinition = "INT(1)   COMMENT '客户类别'")
     private CustomerType customerType;
 
     /**
      * 客户状态
      */
-    @Column(name = "customerStatus", nullable = false, columnDefinition = "INT(1)   COMMENT '客户状态'")
+    @Column(name = "customerStatus",  columnDefinition = "INT(1)   COMMENT '客户状态'")
     private CustomerStatus customerStatus;
 
     /**
      * 关系程度
      */
-    @Column(name = "relation", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '关系程度'")
+    @Column(name = "relation",  columnDefinition = "DECIMAL(10,2)   COMMENT '关系程度'")
     private Double relation;
 
     /**
@@ -76,7 +76,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户来源
      */
-    @Column(name = "origin", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户来源'")
+    @Column(name = "origin",  columnDefinition = "VARCHAR(255)   COMMENT '客户来源'")
     private String origin;
 
     /**
@@ -95,7 +95,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 手机号
      */
-    @Column(name = "tel", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '手机号'")
+    @Column(name = "tel",  columnDefinition = "VARCHAR(255)   COMMENT '手机号'")
     private String tel;
 
     /**
@@ -119,7 +119,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 行业
      */
-    @Column(name = "workProfession", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '行业'")
+    @Column(name = "workProfession",  columnDefinition = "VARCHAR(255)   COMMENT '行业'")
     private String workProfession;
 
     /**

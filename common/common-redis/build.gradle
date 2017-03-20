@@ -10,6 +10,4 @@ dependencies {
     }
     compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"
     compile project(":common:common-api")
-    compile project(":common:common-redis")
-
 }

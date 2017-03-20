@@ -172,10 +172,6 @@ public class CustomerBaseInfoVO {
      */
     private String modifyTime;
 
-    /**
-     * 客户详细信息
-     */
-    private CustomerDetailVO customerDetailVO;
 
     public String getId() {
         return id;
@@ -425,11 +421,4 @@ public class CustomerBaseInfoVO {
         this.modifyTime = modifyTime;
     }
 
-    public CustomerDetailVO getCustomerDetailVO() {
-        return customerDetailVO;
-    }
-
-    public void setCustomerDetailVO(CustomerDetailVO customerDetailVO) {
-        this.customerDetailVO = customerDetailVO;
-    }
 }
