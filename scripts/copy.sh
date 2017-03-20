@@ -27,9 +27,31 @@ function saveHistoryVersions(){
 		echo " libs 旧版本往后递增 1_libs"
 	fi
 }
+function showList(){
+	if [ ! -d $distPath/build ];then
+		echo $str$distPath/build" 文件夹不存在"$str
+		exit 0
+	fi
+	let count=`ls -l $distPath/build | grep "^d" | wc -l`
+	if [ $count -lt 2 ];then
+		echo $str"没有版本可显示"$str
+		exit 0
+	fi
+	echo $str"版本列表如下"$str
+	for name in `ls $distPath/build`;do
+		if [ "$name" != "libs" ];then
+			echo " "${name%_libs*}
+		fi
+	done
+	echo $str"版本列表end"$str
+}
 
 if [ "$1" != "$copyVersion" ];then
 	echo $str"您的copy.sh复制脚本版本过低,请升级."$str
+	exit 0
+fi
+if [ "$2" = "list" ];then
+	showList
 	exit 0
 fi
 if [ ! -d "$dir/build/libs" ];then

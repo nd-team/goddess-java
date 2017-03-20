@@ -17,6 +17,22 @@ if [ $1 -ne 1 ];then
 	echo $str"您的bootstrap.sh部署脚本版本过低,请升级"$str
 	exit 0
 fi
+function stopApp(){
+	echo $str"尝试停止$moduleRelativePath程序"$str
+	mName=${moduleRelativePath##*/}
+	ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
+	if [ $? -eq 0 ];then
+		if [ "$1" = "-f" ];then
+			kill -9 `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
+			echo $str$moduleRelativePath" 程序强制停止成功"$str
+		else
+			kill `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
+			echo $str$moduleRelativePath" 程序停止成功"$str
+		fi
+	else
+		echo $str$moduleRelativePath" 程序未启动"$str
+	fi
+}
 if [ "$2" = "run" ];then
 	if [ $# -eq 2 ];then
 		echo $str"请选择要运行的版本号"$str
@@ -30,8 +46,11 @@ if [ "$2" = "run" ];then
 	fi
 	libPath=$distPath"/"build/$3""_libs
 else
-	if [ "$2" = "" ];then
-		echo $str"复制程序最新版本"$str
+	if [ "$2" = "list" ];then
+		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $2
+	elif [ "$2" = "" ];then
+		stopApp -f
+		echo $str"停止程序"$str
 		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $*
 	fi
 	libPath=$distPath"/"build/libs
@@ -46,20 +65,7 @@ if [ ! -d "$libPath" ];then
 fi
 jarPath=`ls $libPath/*.jar`
 if [ "$2" = "stop" ];then
-	echo $str"尝试停止$moduleRelativePath程序"$str
-	mName=${moduleRelativePath##*/}
-	ps -ef | grep "$mName" | grep -v "grep" >> /dev/null
-	if [ $? -eq 0 ];then
-		if [ "$3" = "-f" ];then
-			kill -9 `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
-			echo $str$moduleRelativePath" 程序强制停止成功"$str
-		else
-			kill `ps -ef | grep $mName | grep -v "grep" | awk '{print $2}'` >> /dev/null
-			echo $str$moduleRelativePath" 程序停止成功"$str
-		fi
-	else
-		echo $str$moduleRelativePath" 程序未启动"$str
-	fi
+	stopApp $3
 else
 	ps -ef | grep $jarPath | grep -v "grep" >> /dev/null
 	if [ $? -eq 0 ];then
