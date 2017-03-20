@@ -19,7 +19,7 @@ import java.io.IOException;
                 value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
 public class Application {
-	
+
 
     public static void main(String[] args) throws IOException {
 
