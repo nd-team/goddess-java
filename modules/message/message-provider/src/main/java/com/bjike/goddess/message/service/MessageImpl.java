@@ -106,7 +106,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from (select * from message where rangeType = 0 ");//公共消息
+        sb.append("select id,createTime,modifyTime,title,content ,sendId,sendName from (select * from message where rangeType = 0 ");//公共消息
         sb.append(" union ");
         sb.append(" select a.*  from message a,message_group_message b, user_detail c where a.id=b.message_id and ");//组消息
         sb.append(" b.group_id=c.group_id and c.user_id = '%s' and rangeType = 1 ");
@@ -118,11 +118,11 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         sb.append(" order by createTime desc ");
         String sql = String.format(sb.toString());
         sql = String.format(sql, dto.getUserId(), dto.getUserId());
-        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "msgType", "sendType", "sendId", "sendName"};
+        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "sendId", "sendName"};
         List<Message> messages = super.findBySql(sql, MessageBO.class, fields); //公共的
         messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
                 limit(dto.getLimit()).collect(Collectors.toList());
-        return null;
+        return BeanTransform.copyProperties(messages,MessageBO.class);
     }
 
 }
