@@ -66,6 +66,7 @@ public class MessageTO extends BaseTO {
     /**
      * 消息范围
      */
+    @NotBlank(message = "消息范围不能为空", groups = ADD.class)
     private RangeType rangeType;
 
 

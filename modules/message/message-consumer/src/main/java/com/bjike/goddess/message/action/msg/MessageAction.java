@@ -1,5 +1,6 @@
 package com.bjike.goddess.message.action.msg;
 
+import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +12,7 @@ import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,11 +64,11 @@ public class MessageAction {
      * 读取消息
      * @throws ActException
      */
-    @GetMapping("v1/maps")
-    public Result read( MessageDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result read( @Validated(GET.class) MessageDTO dto) throws ActException {
         try {
             List<MessageBO> messageBOS = messageAPI.list(dto);
-            return ActResult.initialize("");
+            return ActResult.initialize(messageBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

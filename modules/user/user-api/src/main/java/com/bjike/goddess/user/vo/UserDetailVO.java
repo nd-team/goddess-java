@@ -34,6 +34,32 @@ public class UserDetailVO   {
      */
     private String realName;
 
+    /**
+     * 部门id
+     */
+    private String departmentId;
+    /**
+     * 部门名
+     */
+    private String departmentName;
+    /**
+     * 组id
+     */
+    private String groupId;
+    /**
+     * 组名
+     */
+    private String groupName;
+    /**
+     * 职位id
+     */
+    private String positionId;
+    /**
+     * 职位名
+     */
+    private String positionName;
+
+
     public SexType getSex() {
         return sex;
     }
@@ -72,5 +98,53 @@ public class UserDetailVO   {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
     }
 }

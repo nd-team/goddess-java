@@ -15,8 +15,11 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.UserDetail;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -40,6 +43,8 @@ import java.util.stream.Collectors;
 public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements MessageSer {
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
     @Autowired
     private RedisClient redisClient;
 
@@ -105,21 +110,26 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
+        UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
+        String groupId ="1";
+        if(null!=detailBO){
+            groupId = detailBO.getGroupId();
+        }
         StringBuilder sb = new StringBuilder();
-        sb.append("select id,createTime,modifyTime,title,content ,sendId,sendName from (select * from message where rangeType = 0 ");//公共消息
+        sb.append("select id,createTime,modifyTime,title,content ,senderId,senderName from (select * from message where rangeType = 0 ");//公共消息
         sb.append(" union ");
-        sb.append(" select a.*  from message a,message_group_message b, user_detail c where a.id=b.message_id and ");//组消息
-        sb.append(" b.group_id=c.group_id and c.user_id = '%s' and rangeType = 1 ");
+        sb.append(" select a.*  from message a,message_group_message b where a.id=b.message_id and ");//组消息
+        sb.append(" b.group_id='%s' and rangeType = 1 ");
         sb.append(" union "); //个人消息
         sb.append(" select a.*  from message a, message_user_message b where a.id = b.message_id and b.user_id='%s' and rangeType=2 ) as a ");
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
         sb.append(" order by createTime desc ");
-        String sql = String.format(sb.toString());
-        sql = String.format(sql, dto.getUserId(), dto.getUserId());
-        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "sendId", "sendName"};
-        List<Message> messages = super.findBySql(sql, MessageBO.class, fields); //公共的
+        String sql = sb.toString();
+        sql = String.format(sql, groupId, dto.getUserId());
+        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
+        List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
         messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
                 limit(dto.getLimit()).collect(Collectors.toList());
         return BeanTransform.copyProperties(messages,MessageBO.class);
