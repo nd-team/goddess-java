@@ -49,6 +49,16 @@ public class UserBO extends BaseBO {
      */
     private Status status;
 
+    private String createTime;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getUsername() {
         return username;
     }

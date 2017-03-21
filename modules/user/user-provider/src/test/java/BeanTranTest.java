@@ -73,6 +73,22 @@ public class BeanTranTest {
         System.out.println(JSON.toJSONString(bos));
 
     }
+    @Test
+    public void Transform() {
+        UserBO userBO = new UserBO();
+        userBO.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
+        userBO.setPhone("888");
+        userBO.setUsername("liguiqin1");
 
+        UserBO userBO2 = new UserBO();
+        userBO2.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
+        userBO2.setPhone("999");
+        userBO2.setUsername("liguiqin2");
+
+        List<UserBO> userBOS = Arrays.asList(userBO, userBO2);
+        List<User> users = BeanTransform.copyProperties(userBOS, User.class,true);
+        System.out.println(JSON.toJSONString(users));
+
+    }
 
 }

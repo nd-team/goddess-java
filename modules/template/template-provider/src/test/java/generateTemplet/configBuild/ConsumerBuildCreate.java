@@ -26,21 +26,31 @@ public class ConsumerBuildCreate {
                 .append(" classpath(\"org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version\")\n")
                 .append(" }\n")
                 .append(" } \n\n");
-        sb.append("apply plugin: 'java'\n")
-                .append("apply plugin: 'idea'\n")
-                .append("apply plugin: 'org.springframework.boot'\n\n");
+        sb.append("apply plugin: 'org.springframework.boot'\n")
+                .append("jar {\n")
+                .append("    String buildDir = project.buildDir\n")
+                .append("    manifest {\n")
+                .append("        attributes (\n")
+                .append("                \"Main-Class\": \"com.bjike.goddess."+packageName+".Application\",//main主函数加载入口\n")
+                .append("    \"Class-Path\": new File(buildDir+'/libs/lib').list().collect { \"lib/${it}\" }.join(\" \")\n")
+                .append("   )\n")
+                .append("    }\n")
+                .append("    }\n\n")
+                ;
 
-        sb.append("jar {\n")
-                .append("    baseName = '" + packageName + "-consumer'\n")
-                .append("    version =  '1.0'\n")
-                .append("}\n\n");
-
-        sb.append("repositories {\n")
-                .append(" mavenCentral()\n")
-                .append("}\n\n");
-
-        sb.append("sourceCompatibility = 1.8\n" )
-                .append(  "targetCompatibility = 1.8\n\n");
+        sb.append("task copyJars(type:Copy) {\n")
+                .append("    from configurations.runtime\n")
+                .append("    into new File('build/libs/lib') // 目标位置\n")
+                .append(" }\n");
+        sb.append("  compileJava.dependsOn copyJars\n\n");
+        sb.append(" def env = hasProperty(\"pro\")?\"pro\":(hasProperty(\"dev\")?\"dev\":null)\n")
+                .append("sourceSets {\n")
+                .append("    main {\n")
+                .append("        resources {\n")
+                .append("     srcDirs = [\"src/main/resources\", \"src/main/profile/$env\"]\n")
+                .append("     }\n")
+                .append("     }\n")
+                .append("     }\n");
 
         sb.append("dependencies {\n" )
                 .append( "compile(project(\":common:common-consumer\")){\n" )

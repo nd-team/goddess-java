@@ -42,9 +42,23 @@ public class BeanTransform {
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, String... excludes) {
-        return copyList(sources, target, false, excludes);
+        if (null != sources && sources.size() > 0) {
+            try {
+                Object o_source = sources.iterator().next();
+                Object o_target = target.newInstance();
+                BeanInfo beanInfo = getBeanInfo(o_source, o_target);
+                beanInfo.setExcludes(excludes);
+                beanInfo.setConvertDate(false);
+                return copyList(sources, beanInfo);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        return null;
+
 
     }
+
 
     /**
      * 复制列表对象属性
@@ -57,9 +71,24 @@ public class BeanTransform {
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, boolean convertDate, String... excludes) {
-        return copyList(sources, target, convertDate, excludes);
+        if (null != sources && sources.size() > 0) {
+            try {
+                Object o_target = target.newInstance();
+                Object o_source = sources.iterator().next();
+                BeanInfo beanInfo = getBeanInfo(o_source, o_target);
+                beanInfo.setExcludes(excludes);
+                beanInfo.setConvertDate(convertDate);
+                return copyList(sources, beanInfo);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+
+        }
+        return null;
 
     }
+
 
     /**
      * @param source   源对象
@@ -73,7 +102,9 @@ public class BeanTransform {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();
-                copyProperties(source, o_target, excludes);
+                BeanInfo beanInfo = getBeanInfo(source, o_target);
+                beanInfo.setExcludes(excludes);
+                o_target = handlerCopyFields(beanInfo);
                 return (TARGET) o_target;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
@@ -94,7 +125,9 @@ public class BeanTransform {
      */
     public static void copyProperties(Object source, Object target, String... excludes) {
         try {
-            handlerClazz(source, target, excludes);
+            BeanInfo beanInfo = getBeanInfo(source, target);
+            beanInfo.setExcludes(excludes);
+            handlerCopyFields(beanInfo);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -115,7 +148,10 @@ public class BeanTransform {
      */
     public static void copyProperties(Object source, Object target, boolean convertDate, String... excludes) {
         try {
-            handlerClazz(source, target, convertDate, excludes);
+            BeanInfo beanInfo = getBeanInfo(source, target);
+            beanInfo.setConvertDate(convertDate);
+            beanInfo.setExcludes(excludes);
+            handlerCopyFields(beanInfo);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -135,7 +171,10 @@ public class BeanTransform {
         if (null != source) {
             try {
                 Object o_target = target.newInstance();
-                copyProperties(source, o_target, convertDate, excludes);
+                BeanInfo beanInfo = getBeanInfo(source, o_target);
+                beanInfo.setConvertDate(convertDate);
+                beanInfo.setExcludes(excludes);
+                o_target = handlerCopyFields(beanInfo);
                 return (TARGET) o_target;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
@@ -145,67 +184,36 @@ public class BeanTransform {
 
     }
 
-
-    /**
-     * 复制列表对象属性
-     */
-    private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, Class target, boolean convertDate, String... excludes) {
-        List<TARGET> targets = null;
+    private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, BeanInfo beanInfo) throws Exception {
         if (null != sources && sources.size() > 0) {
-            targets = new ArrayList<>(sources.size());
-            try {
-                for (SOURCE source : sources) {
-                    Object o_target = target.newInstance();
-                    copyProperties(source, o_target, convertDate, excludes);
-                    targets.add((TARGET) o_target);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
+            List<TARGET> targets = new ArrayList(sources.size());
+            for (SOURCE source : sources) {
+                Object target = beanInfo.getTargetClass().newInstance();
+                beanInfo.setSource(source);
+                beanInfo.setTarget(target);
+                target = handlerCopyFields(beanInfo);
+                targets.add((TARGET) target);
             }
+            return targets;
         }
-        return targets;
-    }
+        return null;
 
-
-    private static void handlerClazz(Object source, Object target, boolean convertDate, String... excludes) throws Exception {
-        handlerCopyFields(source, target, convertDate, excludes);
-    }
-
-    private static void handlerClazz(Object source, Object target, String... excludes) throws Exception {
-        handlerCopyFields(source, target, false, excludes);
     }
 
 
     /**
-     * 处理反射类及复制熟悉
+     * 处理反射类及复制属性
      *
-     * @param source      源
-     * @param target      目标
-     * @param convertDate 是否处理日期
-     * @param excludes    过滤熟悉
      * @throws Exception
      */
-    private static void handlerCopyFields(Object source, Object target, boolean convertDate, String... excludes) throws Exception {
-        Class s_clazz = source.getClass();
-        Class t_clazz = target.getClass();
-        List<Field> s_fields = new ArrayList<>(); //源类属性列表
-        List<Field> t_fields = new ArrayList<>();//目标类属性列表
-        List<Method> methods = new ArrayList<>();//目标类所有方法
-        while (null != s_clazz) { //数据源类所有属性（包括父类）
-            s_fields.addAll(Arrays.asList(s_clazz.getDeclaredFields())); //源对象属性
-            s_clazz = s_clazz.getSuperclass();
-            if (Object.class.equals(s_clazz) || null == s_clazz) {
-                break;
-            }
-        }
-        while (null != t_clazz) { //目标类所有属性（包括父类）
-            t_fields.addAll(Arrays.asList(t_clazz.getDeclaredFields())); //源对象属性
-            methods.addAll(Arrays.asList(t_clazz.getDeclaredMethods()));
-            t_clazz = t_clazz.getSuperclass();
-            if (Object.class.equals(t_clazz) || null == t_clazz) {
-                break;
-            }
-        }
+    private static Object handlerCopyFields(BeanInfo beanInfo) throws Exception {
+        String[] excludes = beanInfo.getExcludes();
+        Object source = beanInfo.getSource();
+        Object target = beanInfo.getTarget();
+        List<Field> s_fields =beanInfo.getSourceFields(); //源类属性列表
+        List<Field> t_fields = beanInfo.getTargetFields();//目标类属性列表
+        List<Method> methods =beanInfo.getTargetMethods();//目标类所有方法
+        boolean convertDate = beanInfo.isConvertDate();
         for (Field t_field : t_fields) {
             boolean has_ex = false;
             if (null != excludes && excludes.length > 0) {
@@ -231,7 +239,7 @@ public class BeanTransform {
                     if (!convertDate) { //处理字符串转日期
                         for (Type type : DATE_TYPES) {
                             if (type.equals(s_field.getType())) {
-                                s_val = s_val.toString();
+                                s_val = DateUtil.dateToString(s_val);
                                 break;
                             }
                         }
@@ -254,6 +262,7 @@ public class BeanTransform {
                 }
             }
         }
+        return target;
 
     }
 
@@ -283,6 +292,35 @@ public class BeanTransform {
             val = DateUtil.parseTime(String.valueOf(val));
         }
         return val;
+    }
+
+
+    private static BeanInfo getBeanInfo(Object source, Object target) {
+        BeanInfo beanInfo = new BeanInfo(source, target);
+        Class s_clazz = source.getClass();
+        Class t_clazz = target.getClass();
+        List<Field> s_fields = new ArrayList<>(); //源类属性列表
+        List<Field> t_fields = new ArrayList<>();//目标类属性列表
+        List<Method> methods = new ArrayList<>();//目标类所有方法
+        while (null != s_clazz) { //数据源类所有属性（包括父类）
+            s_fields.addAll(Arrays.asList(s_clazz.getDeclaredFields())); //源对象属性
+            s_clazz = s_clazz.getSuperclass();
+            if (Object.class.equals(s_clazz) || null == s_clazz) {
+                break;
+            }
+        }
+        while (null != t_clazz) { //目标类所有属性（包括父类）
+            t_fields.addAll(Arrays.asList(t_clazz.getDeclaredFields())); //源对象属性
+            methods.addAll(Arrays.asList(t_clazz.getDeclaredMethods()));
+            t_clazz = t_clazz.getSuperclass();
+            if (Object.class.equals(t_clazz) || null == t_clazz) {
+                break;
+            }
+        }
+        beanInfo.setTargetFields(t_fields);
+        beanInfo.setSourceFields(s_fields);
+        beanInfo.setTargetMethods(methods);
+        return beanInfo;
     }
 
 
