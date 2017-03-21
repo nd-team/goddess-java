@@ -38,7 +38,7 @@ public class UserLoginLog extends BaseEntity {
     /**
      * 登录方式
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '登录方式'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '登录方式'", nullable = false, insertable = false)
     private LoginType loginType;
 
     /**

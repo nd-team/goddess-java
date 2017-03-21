@@ -23,8 +23,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 消息推送业务实现
@@ -105,12 +105,24 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
-        if(null != dto.getMsgType()){
-            dto.getConditions().add(Restrict.eq("msgType",dto.getMsgType().getCode()));
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from (select * from message where rangeType = 0 ");//公共消息
+        sb.append(" union ");
+        sb.append(" select a.*  from message a,message_group_message b, user_detail c where a.id=b.message_id and ");//组消息
+        sb.append(" b.group_id=c.group_id and c.user_id = '%s' and rangeType = 1 ");
+        sb.append(" union "); //个人消息
+        sb.append(" select a.*  from message a, message_user_message b where a.id = b.message_id and b.user_id='%s' and rangeType=2 ) as a ");
+        if (null != dto.getMsgType()) {
+            sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        dto.getConditions().add(Restrict.eq("rangeType",RangeType.PUB.getCode()));
-        dto.getSorts().add("createTime");
-        List<Message> messages = super.findByCis(dto); //公共的
+        sb.append(" order by createTime desc ");
+        String sql = String.format(sb.toString());
+        sql = String.format(sql, dto.getUserId(), dto.getUserId());
+        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "msgType", "sendType", "sendId", "sendName"};
+        List<Message> messages = super.findBySql(sql, MessageBO.class, fields); //公共的
+        messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
+                limit(dto.getLimit()).collect(Collectors.toList());
         return null;
     }
+
 }
