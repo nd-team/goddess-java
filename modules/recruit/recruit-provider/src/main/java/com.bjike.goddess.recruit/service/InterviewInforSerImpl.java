@@ -32,8 +32,8 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
      */
     @Override
     public List<InterviewInforBO> list(InterviewInforDTO dto) throws SerException {
-        List<InterviewInfor> interviewInforList = super.findByCis(dto);
-        List<InterviewInforBO> interviewInforBOList = BeanTransform.copyProperties(interviewInforList, InterviewInforBO.class, true);
+        List<InterviewInfor> interviewInforList = super.findByPage(dto);
+        List<InterviewInforBO> interviewInforBOList = BeanTransform.copyProperties(interviewInforList, InterviewInforBO.class);
         return interviewInforBOList;
     }
 
@@ -48,7 +48,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     public InterviewInforBO save(InterviewInforTO interviewInforTO) throws SerException {
         InterviewInfor interviewInfor = BeanTransform.copyProperties(interviewInforTO, InterviewInfor.class, true);
         interviewInfor = super.save(interviewInfor);
-        InterviewInforBO interviewInforBO = BeanTransform.copyProperties(interviewInfor, InterviewInforBO.class, true);
+        InterviewInforBO interviewInforBO = BeanTransform.copyProperties(interviewInfor, InterviewInforBO.class);
         return interviewInforBO;
     }
 

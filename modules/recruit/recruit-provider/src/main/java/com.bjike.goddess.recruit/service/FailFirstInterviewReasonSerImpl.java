@@ -24,7 +24,7 @@ import java.util.List;
 public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterviewReason, FailFirstInterviewReasonDTO> implements FailFirstInterviewReasonSer {
 
     /**
-     * 查询未应约初试原因
+     * 分页查询未应约初试原因
      *
      * @param dto
      * @return
@@ -32,8 +32,8 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
      */
     @Override
     public List<FailFirstInterviewReasonBO> list(FailFirstInterviewReasonDTO dto) throws SerException {
-        List<FailFirstInterviewReason> list = super.findByCis(dto, Boolean.TRUE);
-        List<FailFirstInterviewReasonBO> listBO = BeanTransform.copyProperties(list, FailFirstInterviewReasonBO.class, true);
+        List<FailFirstInterviewReason> list = super.findByPage(dto);
+        List<FailFirstInterviewReasonBO> listBO = BeanTransform.copyProperties(list, FailFirstInterviewReasonBO.class);
         return listBO;
     }
 
@@ -48,7 +48,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     public FailFirstInterviewReasonBO save(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException {
         FailFirstInterviewReason failFirstInterviewReason = BeanTransform.copyProperties(failFirstInterviewReasonTO, FailFirstInterviewReason.class, true);
         failFirstInterviewReason = super.save(failFirstInterviewReason);
-        FailFirstInterviewReasonBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FailFirstInterviewReasonBO.class, true);
+        FailFirstInterviewReasonBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FailFirstInterviewReasonBO.class);
         return bo;
     }
 

@@ -2,6 +2,11 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.recruit.type.Gender;
+import org.hibernate.validator.constraints.Email;
+
+import javax.persistence.Column;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 第一次电访记录
@@ -117,9 +122,6 @@ public class FirstPhoneRecordBO extends BaseBO {
      * 附件地址
      */
     private String attachmentAddr;
-
-    public FirstPhoneRecordBO() {
-    }
 
     public String getDate() {
         return date;

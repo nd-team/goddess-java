@@ -6,7 +6,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
-apply from: '../../config.gradle'
+apply from: '../../../config.gradle'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
@@ -29,7 +29,7 @@ dependencies {
     compile(project(":common:common-consumer")){
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
-    compile project(":recruit:recruit-api")
+    compile project(":modules:recruit:recruit-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

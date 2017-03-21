@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 import java.time.LocalDate;
 
 /**
@@ -11,7 +13,7 @@ import java.time.LocalDate;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class RecruitPlanTO {
+public class RecruitPlanTO extends BaseTO {
 
     /**
      * 招聘地区
