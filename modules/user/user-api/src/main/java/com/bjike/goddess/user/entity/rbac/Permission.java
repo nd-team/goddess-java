@@ -37,7 +37,7 @@ public class Permission extends BaseEntity {
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '资源状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '资源状态'", nullable = false, insertable = false)
     private Status status;
 
     /**

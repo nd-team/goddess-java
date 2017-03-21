@@ -29,7 +29,7 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     @Override
     public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         List<EntryBasicInfo> entryBasicInfos = entryBasicInfoSer.listEntryBasicInfo(entryBasicInfoDTO);
-        return BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class, true);
+        return BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     public EntryBasicInfoBO getEntryBasicInfo(String id) throws SerException {
         EntryBasicInfo entryBasicInfo = entryBasicInfoSer.getEntryBasicInfo(id);
 
-        return BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class, true);
+        return BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class );
     }
 
     @Override

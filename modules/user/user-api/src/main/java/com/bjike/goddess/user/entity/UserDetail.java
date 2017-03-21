@@ -26,7 +26,7 @@ public class UserDetail extends BaseEntity {
     /**
      * 性别
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户性别' ", nullable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '用户性别' ", nullable = false)
     private SexType sex;
     /**
      * 年龄
@@ -37,7 +37,7 @@ public class UserDetail extends BaseEntity {
     /**
      * 用户类型
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户类型' ", nullable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '用户类型' ", nullable = false)
     private UserType userType;
     /**
      * 地址

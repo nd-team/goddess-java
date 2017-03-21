@@ -72,7 +72,7 @@ public class CustomerDetailTO extends BaseTO {
     /**
      * 客户基本信息集合
      */
-    private  List<CusFamilyMemberTO> cusFamilyMemberTOList;
+    private List<CusFamilyMemberTO> cusFamilyMemberTOList;
 
     public String getCustomerNum() {
         return customerNum;

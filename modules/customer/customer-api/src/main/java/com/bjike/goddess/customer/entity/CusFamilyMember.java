@@ -57,8 +57,8 @@ public class CusFamilyMember extends BaseEntity {
     /**
      * 客户成员详细
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "customerDetail_id",  columnDefinition = "VARCHAR(36)   COMMENT '客户成员详细'")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "customerDetail_id",  columnDefinition = "VARCHAR(36)   COMMENT '客户成员详细'")
     private CustomerDetail customerDetail;
 
 

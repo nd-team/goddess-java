@@ -1,11 +1,15 @@
 package com.bjike.goddess.message.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.message.bo.MessageBO;
+import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.service.MessageSer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
 
 /**
  * 消息推送业务接口实现
@@ -27,7 +31,12 @@ public class MessageApiImpl implements MessageAPI {
     }
 
     @Override
-    public void  read(String userId) throws SerException{
-        messageSer.read(userId);
+    public void  read(String messageId) throws SerException{
+        messageSer.read(messageId);
+    }
+
+    @Override
+    public List<MessageBO> list(MessageDTO dto) throws SerException {
+       return messageSer.list(dto);
     }
 }

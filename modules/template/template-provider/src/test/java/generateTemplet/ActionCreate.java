@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ActionCreate {
             relativePath = cus.get("类名").substring( 0,cus.get("类名").lastIndexOf("/"));
         }
         LocalDateTime date = LocalDateTime.now();
-
+        String time = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
 
         StringBuilder sb = new StringBuilder("");
         sb.append("package com.bjike.goddess." + packageName + ".action." + (packageName+(relativePath.equals("")?"":"."+relativePath)).replaceAll("/",".") + ";\n\n")
@@ -44,7 +45,7 @@ public class ActionCreate {
         sb.append("/**\n")
                 .append("* " + desc + "\n")
                 .append("* @Author:\t\t\t[ " + author + " ]\n")
-                .append("* @Date:\t\t\t[  " + date + " ]\n")
+                .append("* @Date:\t\t\t[  " + time + " ]\n")
                 .append("* @Description:\t[ " + desc + " ]\n")
                 .append("* @Version:\t\t[ v1.0.0 ]\n")
                 .append("* @Copy:   \t\t[ com.bjike ]\n")

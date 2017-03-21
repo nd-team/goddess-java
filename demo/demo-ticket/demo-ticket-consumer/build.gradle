@@ -6,13 +6,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
-apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-
-repositories {
-    mavenCentral()
-}
-
 jar {
     String buildDir = project.buildDir
     manifest {
@@ -29,6 +23,15 @@ task copyJars(type:Copy) {
     into new File('build/libs/lib') // 目标位置
 }
 compileJava.dependsOn copyJars
+
+def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "src/main/profile/$env"]
+        }
+    }
+}
 
 dependencies {
     compile(project(":common:common-consumer")){

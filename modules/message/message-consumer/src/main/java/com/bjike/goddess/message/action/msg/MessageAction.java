@@ -5,9 +5,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.bo.MessageBO;
+import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.entity.Message;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -39,16 +45,31 @@ public class MessageAction {
 
     /**
      * 读取消息
-     * @param userId 用户id
+     * @param messageId 消息id
      * @throws ActException
      */
     @GetMapping("v1/read/{userId}")
-    public Result send(@PathVariable String userId) throws ActException {
+    public Result read(@PathVariable String messageId) throws ActException {
         try {
-            messageAPI.read(userId);
+            messageAPI.read(messageId);
             return ActResult.initialize("");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 读取消息
+     * @throws ActException
+     */
+    @GetMapping("v1/maps")
+    public Result read( MessageDTO dto) throws ActException {
+        try {
+            List<MessageBO> messageBOS = messageAPI.list(dto);
+            return ActResult.initialize("");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.message.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import com.bjike.goddess.message.enums.MsgType;
 
 /**
  * 消息推送数据传输对象
@@ -12,5 +13,22 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class MessageDTO extends BaseDTO {
+    private String userId;
+    private MsgType msgType;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public MsgType getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(MsgType msgType) {
+        this.msgType = msgType;
+    }
 }

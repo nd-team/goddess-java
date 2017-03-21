@@ -50,6 +50,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         return rep.findAll();
     }
 
+
     @Override
     public List<BE> findByPage(BD dto) throws SerException {
         JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
@@ -125,7 +126,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     public BE save(BE entity) throws SerException {
         return rep.save(entity);
     }
-
 
 
     @Transactional
