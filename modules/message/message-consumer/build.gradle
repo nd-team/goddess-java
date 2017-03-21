@@ -1,11 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
-    }
-}
+buildscript { 
+ repositories { 
+ mavenCentral()
+ }
+ dependencies {
+ classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+ }
+ } 
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -13,23 +13,23 @@ apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'message-consumer'
-    version = '1.0'
+    version =  '1.0'
 }
 
 repositories {
-    mavenCentral()
+ mavenCentral()
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile(project(":common:common-consumer")) {
-        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    }
+compile(project(":common:common-consumer")){
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
 
-    compile project(":modules:message:message-api")
+compile project(":modules:message:message-api")
 
-    compile("org.springframework.boot:spring-boot-starter-web")
+compile("org.springframework.boot:spring-boot-starter-web")
 }
 

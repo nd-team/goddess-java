@@ -46,7 +46,7 @@ public class XXX extends BaseEntity{
     /**
      * 枚举 (设置默认值 default 0 一定要带insertable = false)
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
     private Status status;
 
     /**

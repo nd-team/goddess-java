@@ -1,2 +1,2 @@
 #!/bin/bash
-cd .. && gradle jar -xtest && gradle jar -xtest
+cd .. && gradle jar -P$1 -xtest && gradle jar -P$1 -xtest

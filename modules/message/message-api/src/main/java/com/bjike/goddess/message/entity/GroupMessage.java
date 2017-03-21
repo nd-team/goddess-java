@@ -4,12 +4,15 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
 
+
 /**
- * @Author: [liguiqin]
- * @Date: [2017-03-20 10:26]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * 组消息
+ *
+ * @Author: [ liguiqin ]
+ * @Date: [ 2017-03-21T09:07:50.363 ]
+ * @Description: [ 组消息 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @Entity
 @Table(name = "message_group_message")

@@ -1,16 +1,12 @@
-模块名:haha
-类名:myuser/UserDetail
-作者:tanghaixiang
-描述:用户
+模块名:message
+类名:UserMessage
+作者:liguiqin
+描述:用户消息
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-LocalDate createTime 时间;
-Boolean businessStatus 业务状态;
-BusinessWeekly week 周计划;
-String company 公司名;
-String content 计划工作内容;
-Double quantity 任务量;
+String userId 所属用户;
+Message message 消息;
 )
