@@ -24,7 +24,6 @@ public class RedisClientImpl implements RedisClient {
     private Jedis jedis = null;
 
     public void save(String key, String value) throws SerException {
-
         try {
             jedis = jedisPool.getResource();
             jedis.set(key, value);
@@ -86,10 +85,22 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
+    public void removeToList(String key, String value) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.lrem(key,0, value);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
     public void appendToMap(String key, String field, String value) throws SerException {
         try {
             jedis = jedisPool.getResource();
-            jedis.hsetnx(key,field, value);
+            jedis.hset(key,field, value);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {
@@ -114,6 +125,18 @@ public class RedisClientImpl implements RedisClient {
         try {
             jedis = jedisPool.getResource();
             return jedis.hmget(key, fields);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
+    public Map<String, String> getAllMap(String key) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.hgetAll(key);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {

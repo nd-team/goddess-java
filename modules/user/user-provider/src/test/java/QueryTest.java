@@ -73,9 +73,9 @@ public class QueryTest {
     @Test
     public void findBySql() throws SerException {
         String sql = "select  a.username,a.password," +
-                " b.address from user a " +
-                "left join user_detail b on a.id = b.user_id";
-        String[] fields = new String[]{"username", "password", "address"};
+                " a.status from user a " ;
+
+        String[] fields = new String[]{"username", "password", "status"};
         List<User> users = userAPI.findBySql(sql, User.class, fields);
         for (User info : users) {
             System.out.println(info.getId());

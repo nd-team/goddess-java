@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,5 +67,16 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     @Override
     public List<String> getCustomerBaseInfoName() throws SerException {
         return customerBaseInfoSer.getCustomerBaseInfoName();
+    }
+
+
+    @Override
+    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
+        return customerBaseInfoSer.addMarketCustomerInfo( customerName );
+    }
+
+    @Override
+    public CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
+        return null;
     }
 }

@@ -19,7 +19,6 @@ import java.util.Properties;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-
 public class KafkaProducer {
 
     public final static  String TOPIC ="test";
@@ -29,6 +28,7 @@ public class KafkaProducer {
       //  producer.send(new KeyedMessage(messageTO.getId(), messageTO.getTitle(), JSON.toJSONString(messageTO)));
 
     }
+
     public static void main(String[] args) {
 
         Properties props = new Properties();

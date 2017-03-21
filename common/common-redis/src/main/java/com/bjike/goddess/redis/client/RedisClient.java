@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * key 不重复，值会覆盖更新
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-18 10:41]
  * @Description: [ ]
@@ -71,10 +73,22 @@ public interface RedisClient {
     default void appendToList(String key, String ... values) throws SerException {
 
     }
+    /**
+     * 删除某元素
+     *
+     * @param key
+     * @param value 删除值
+     * @throws SerException
+     */
+    default void removeToList(String key, String  value) throws SerException {
+
+    }
+
+
   /**
      * 追加
      *
-     * @param key
+     * @param key 不重复
      * @param value 追加值
      * @throws SerException
      */
@@ -83,8 +97,8 @@ public interface RedisClient {
     }
 
     /**
-     * @param key 存入redis的key
-     * @param map
+     * @param key 存入redis的key，不重复
+     * @param map 保存多个key val
      * @throws SerException
      */
     default void saveMap(String key, Map<String, String> map) throws SerException {
@@ -98,6 +112,14 @@ public interface RedisClient {
      * @throws SerException
      */
     default List<String> getMap(String key, String... fields) throws SerException {
+        return null;
+    }
+ /**
+     * @param key    存入redis中map对象的key
+     * @return
+     * @throws SerException
+     */
+    default Map<String,String> getAllMap(String key) throws SerException {
         return null;
     }
 

@@ -67,9 +67,8 @@ public class CustomerDetail extends BaseEntity {
     /**
      * 客户基本信息
      */
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH )
     @JoinColumn(name = "customerBaseInfo_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户基本信息'")
-//    @JSONField(serialize = false)
     private CustomerBaseInfo customerBaseInfo;
 
     public String getCustomerNum() {

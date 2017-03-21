@@ -21,6 +21,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -49,7 +52,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
         List<CusEmail> list = super.findByCis(cusEmailDTO, true);
-        return BeanTransform.copyProperties(list, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(list, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -78,7 +81,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
 
         super.save(cusEmail);
 
-        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -103,7 +106,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         cusEmail.setSendObject(String.valueOf(emails));
 
         super.update(cusEmail);
-        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class, true);
+        return BeanTransform.copyProperties(cusEmail, CusEmailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -329,6 +332,32 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
             }
         }
         return mapList;
+    }
+
+
+    public static void main(String[] args) {
+        String name = "湖光月色";
+        int lenth = name.length();
+        String py = getTargetNumber( name , lenth );
+        System.out.println( py );
+    }
+
+    public static String getTargetNumber(String src, int length) {
+        String number = "";
+        try {
+            for (int i = 0; i < length; i++) {//获取指定长度的字符穿首字母大写
+                char text = src.charAt(i);
+                String[] initial = PinyinHelper.toHanyuPinyinStringArray(text, new HanyuPinyinOutputFormat());
+                if (initial != null) {
+                    number += initial[0].charAt(0);
+                } else {
+                    number += text;
+                }
+            }
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            badHanyuPinyinOutputFormatCombination.printStackTrace();
+        }
+        return number.toUpperCase();
     }
 
 }

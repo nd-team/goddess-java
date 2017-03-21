@@ -97,7 +97,7 @@ public class CustomerLevelAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
+    public Result deleteCustomerLevel(@PathVariable String id) throws ActException {
         try {
             customerLevelAPI.deleteCustomerLevel(id);
             return new ActResult("delete success!");
@@ -133,7 +133,7 @@ public class CustomerLevelAction {
      * @des 根据id冻结客户等级记录
      * @version v1
      */
-    @DeleteMapping("v1/delete/{id}")
+    @DeleteMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             customerLevelAPI.congealCustomerLevel(id);
@@ -151,7 +151,7 @@ public class CustomerLevelAction {
      * @des 根据id解冻客户等级记录
      * @version v1
      */
-    @DeleteMapping("v1/delete/{id}")
+    @DeleteMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {
             customerLevelAPI.thawCustomerLevel(id);
