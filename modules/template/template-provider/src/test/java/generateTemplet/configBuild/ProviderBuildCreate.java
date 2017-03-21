@@ -19,6 +19,33 @@ public class ProviderBuildCreate {
         StringBuffer sb = new StringBuffer("");
         sb.append("apply from: '../../../config.gradle' \n\n");
 
+        sb.append("jar {\n" )
+                .append("    String buildDir = project.buildDir\n"  )
+                .append("    manifest {\n"  )
+                .append("        attributes (\n"  )
+                .append("                \"Main-Class\": \"com.bjike.goddess."+packageName+".Application\",//main主函数加载入口\n"  )
+                .append("                \"Class-Path\": new File(buildDir+'/libs/lib').list().collect { \"lib/${it}\" }.join(\" \")\n"  )
+                .append("        )\n"  )
+                .append("    }\n"  )
+                .append("}\n\n");
+
+        sb.append("task copyJars(type:Copy) {\n" )
+                .append(  "    from configurations.runtime\n" )
+                .append(  "    into new File('build/libs/lib') // 目标位置\n" )
+                .append(  "}\n");
+
+        sb.append("build.dependsOn copyJars\n\n");
+
+        sb.append("def env = hasProperty(\"pro\")?\"pro\":(hasProperty(\"dev\")?\"dev\":null)\n");
+
+        sb.append("sourceSets {\n" )
+                .append(   "    main {\n" )
+                .append(   "        resources {\n" )
+                .append(  "            srcDirs = [\"src/main/resources\", \"src/main/profile/$env\"]\n" )
+                .append(  "        }\n" )
+                .append(  "    }\n" )
+                .append(  "}\n\n");
+
         sb.append("dependencies {\n" )
                 .append(   "    compile project(\":common:common-jpa\")\n" )
                 .append(  "    compile project(\":common:common-provider\")\n" )
