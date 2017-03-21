@@ -1,0 +1,35 @@
+buildscript { 
+ repositories { 
+ mavenCentral()
+ }
+ dependencies {
+ classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+ }
+ } 
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'contractquotemanager-consumer'
+    version =  '1.0'
+}
+
+repositories {
+ mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+compile(project(":common:common-consumer")){
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
+compile project(":modules:contractquotemanager:contractquotemanager-api")
+
+compile("org.springframework.boot:spring-boot-starter-web")
+}
+
