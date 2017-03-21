@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +27,15 @@ public class PackageInfoCreate {
         className = className.substring(className.lastIndexOf("/")+1,className.length());
         String author = cus.get("作者");
         String desc = cus.get("描述")+"业务接口";
-        LocalDate date = LocalDate.now();
+        LocalDateTime date = LocalDateTime.now();
+        String time = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
 
         StringBuilder sb = new StringBuilder("");
 
         //包描述
         sb.append( "/**\n" )
                 .append(  " * "+desc+"\n" )
-                .append(  " * Created by "+author+" on "+ date+".\n" )
+                .append(  " * Created by "+author+" on "+ time+".\n" )
                 .append( " */\n");
         sb.append("package com.bjike.goddess."+packageName+".action."+packageName);
         //相对路径
