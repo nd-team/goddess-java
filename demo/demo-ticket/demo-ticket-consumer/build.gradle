@@ -24,6 +24,15 @@ task copyJars(type:Copy) {
 }
 compileJava.dependsOn copyJars
 
+def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "src/main/profile/$env"]
+        }
+    }
+}
+
 dependencies {
     compile(project(":common:common-consumer")){
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
