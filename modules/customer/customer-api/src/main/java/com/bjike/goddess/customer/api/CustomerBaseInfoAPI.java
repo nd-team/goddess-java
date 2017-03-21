@@ -115,7 +115,7 @@ public interface CustomerBaseInfoAPI {
      * @param customerName 客户名
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName) throws SerException {
+    default CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
         return null;
     }
 

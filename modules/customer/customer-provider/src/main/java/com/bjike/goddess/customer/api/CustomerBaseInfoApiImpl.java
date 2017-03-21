@@ -71,7 +71,7 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
 
 
     @Override
-    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName) throws SerException {
+    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
         return customerBaseInfoSer.addMarketCustomerInfo( customerName );
     }
 

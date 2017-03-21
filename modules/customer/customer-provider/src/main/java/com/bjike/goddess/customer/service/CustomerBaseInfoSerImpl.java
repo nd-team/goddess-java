@@ -293,7 +293,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
 
     @Override
-    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName) throws SerException {
+    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
         if( StringUtils.isNotBlank(customerName) ){
             return null;
         }else{
@@ -304,6 +304,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
             CustomerBaseInfo cbaseInfo = new CustomerBaseInfo();
             cbaseInfo.setCustomerName( customerName );
+            cbaseInfo.setOrigin(origanizion);
             cbaseInfo.setCustomerNum( cBO.getCustomerNum() );
             cbaseInfo.setCustomerSex(CustomerSex.NONE );
             cbaseInfo.setCreateTime( LocalDateTime.now());
