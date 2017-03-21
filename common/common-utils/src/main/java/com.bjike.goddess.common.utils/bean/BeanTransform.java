@@ -77,16 +77,15 @@ public class BeanTransform {
                 Object o_source = sources.iterator().next();
                 BeanInfo beanInfo = getBeanInfo(o_source, o_target);
                 beanInfo.setExcludes(excludes);
-                beanInfo.setConvertDate(false);
+                beanInfo.setConvertDate(convertDate);
                 return copyList(sources, beanInfo);
 
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
 
-        } else {
-            return null;
         }
+        return null;
 
     }
 
@@ -208,30 +207,13 @@ public class BeanTransform {
      * @throws Exception
      */
     private static Object handlerCopyFields(BeanInfo beanInfo) throws Exception {
-        Class s_clazz = beanInfo.getSource().getClass();
-        Class t_clazz = beanInfo.getTarget().getClass();
         String[] excludes = beanInfo.getExcludes();
         Object source = beanInfo.getSource();
         Object target = beanInfo.getTarget();
+        List<Field> s_fields =beanInfo.getSourceFields(); //源类属性列表
+        List<Field> t_fields = beanInfo.getTargetFields();//目标类属性列表
+        List<Method> methods =beanInfo.getTargetMethods();//目标类所有方法
         boolean convertDate = beanInfo.isConvertDate();
-        List<Field> s_fields = new ArrayList<>(); //源类属性列表
-        List<Field> t_fields = new ArrayList<>();//目标类属性列表
-        List<Method> methods = new ArrayList<>();//目标类所有方法
-        while (null != s_clazz) { //数据源类所有属性（包括父类）
-            s_fields.addAll(Arrays.asList(s_clazz.getDeclaredFields())); //源对象属性
-            s_clazz = s_clazz.getSuperclass();
-            if (Object.class.equals(s_clazz) || null == s_clazz) {
-                break;
-            }
-        }
-        while (null != t_clazz) { //目标类所有属性（包括父类）
-            t_fields.addAll(Arrays.asList(t_clazz.getDeclaredFields())); //源对象属性
-            methods.addAll(Arrays.asList(t_clazz.getDeclaredMethods()));
-            t_clazz = t_clazz.getSuperclass();
-            if (Object.class.equals(t_clazz) || null == t_clazz) {
-                break;
-            }
-        }
         for (Field t_field : t_fields) {
             boolean has_ex = false;
             if (null != excludes && excludes.length > 0) {
@@ -336,6 +318,7 @@ public class BeanTransform {
             }
         }
         beanInfo.setTargetFields(t_fields);
+        beanInfo.setSourceFields(s_fields);
         beanInfo.setTargetMethods(methods);
         return beanInfo;
     }
