@@ -1,0 +1,8 @@
+apply from: '../../../config.gradle'
+
+dependencies {
+    compile project(":common:common-jpa")
+    compile project(":common:common-utils")
+    compile project(":common:common-provider")
+    compile project(":modules:driverinfo:driverinfo-api")
+}

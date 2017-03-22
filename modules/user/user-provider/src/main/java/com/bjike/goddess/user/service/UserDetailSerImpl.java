@@ -11,6 +11,7 @@ import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.Department;
+import com.bjike.goddess.user.entity.Position;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.entity.rbac.Group;
@@ -67,6 +68,27 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
     public UserDetailBO findByUserId(String userId) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.eq("user.id", userId));
-        return BeanTransform.copyProperties(detailDTO, UserDetailBO.class);
+        UserDetail detail = super.findOne(detailDTO);
+        if(null!=detail){
+            UserDetailBO userDetailBO = BeanTransform.copyProperties(detail, UserDetailBO.class);
+            Department department = detail.getDepartment();
+            Group group = detail.getGroup();
+            Position position = detail.getPosition();
+            if (null != department) {
+                userDetailBO.setDepartmentId(detail.getDepartment().getId());
+                userDetailBO.setDepartmentName(detail.getDepartment().getName());
+            }
+            if (null != group) {
+                userDetailBO.setGroupId(detail.getGroup().getId());
+                userDetailBO.setGroupName(detail.getGroup().getName());
+            }
+            if (null != position) {
+                userDetailBO.setPositionId(detail.getPosition().getId());
+                userDetailBO.setPositionName(detail.getPosition().getName());
+            }
+            return  userDetailBO;
+        }
+
+        return null;
     }
 }
