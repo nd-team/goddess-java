@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * 消息推送业务接口
  *
- * @Author: [ liguiqin ]
- * @Date: [ 2017-03-14T10:21:59.621 ]
- * @Description: [ 消息推送业务接口 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [liguiqin]
+ * @Date: [2017-03-14 10:21]
+ * @Description: [消息推送业务接口]
+ * @Version: [v1.0.0]
+ * @Copy: [com.bjike]
  */
 public interface MessageAPI {
 
