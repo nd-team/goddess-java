@@ -7,6 +7,8 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 消息推送
  *
@@ -54,26 +56,25 @@ public class MessageTO extends BaseTO {
     /**
      * 消息类型
      */
-    @NotBlank(message = "消息类型不能为空", groups = ADD.class)
+    @NotNull(message = "消息类型不能为空", groups = ADD.class)
     private MsgType msgType;
 
     /**
      * 发送类型
      */
-    @NotBlank(message = "发送类型不能为空", groups = ADD.class)
+    @NotNull(message = "发送类型不能为空", groups = ADD.class)
     private SendType sendType;
 
     /**
      * 消息范围
      */
-    @NotBlank(message = "消息范围不能为空", groups = ADD.class)
+    @NotNull(message = "消息范围不能为空", groups = ADD.class)
     private RangeType rangeType;
 
 
     /**
      * 接收人id
      */
-    @NotBlank(message = "接收人不能为空", groups = ADD.class)
     private String[] receivers;
 
     /**
