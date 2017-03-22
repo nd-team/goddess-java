@@ -1,2 +1,2 @@
 #!/bin/bash
-cd .. && /soft/gradle/bin/gradle jar -P$1 -xtest && /soft/gradle/bin/gradle jar -P$1 -xtest
+cd /storage/dockers/commons/goddess-java && /soft/gradle/bin/gradle jar -P$1 -xtest && /soft/gradle/bin/gradle jar -P$1 -xtest
