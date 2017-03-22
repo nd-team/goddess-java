@@ -89,7 +89,7 @@ public class PositionInstructionsLog extends BaseEntity {
     /**
      * 记录时间
      */
-    @Column(columnDefinition = "datetime",nullable = false)
+    @Column(columnDefinition = "DATETIME COMMENT '记录时间'",nullable = false)
     private LocalDateTime logTime;
 
     public PositionDetail getPosition() {

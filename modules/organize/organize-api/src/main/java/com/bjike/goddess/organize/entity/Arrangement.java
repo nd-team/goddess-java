@@ -40,7 +40,7 @@ public class Arrangement extends BaseEntity {
     /**
      * 使用状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '岗位层级状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '岗位层级状态'", nullable = false, insertable = false)
     private Status status;
 
     /**

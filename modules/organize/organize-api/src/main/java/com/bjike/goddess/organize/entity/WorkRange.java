@@ -54,7 +54,7 @@ public class WorkRange extends BaseEntity {
     /**
      * 使用状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
