@@ -27,7 +27,7 @@ public class GroupMessage extends BaseEntity {
      * 消息id
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", columnDefinition = "VARCHAR(36) COMMENT '消息id' ")
+    @JoinColumn(name = "message_id", columnDefinition = "VARCHAR(36) COMMENT '消息id' ", nullable = false)
     private Message message;
 
     public String getGroupId() {
