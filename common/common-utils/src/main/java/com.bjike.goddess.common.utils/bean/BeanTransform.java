@@ -185,7 +185,6 @@ public class BeanTransform {
     }
 
     private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, BeanInfo beanInfo) throws Exception {
-        if (null != sources && sources.size() > 0) {
             List<TARGET> targets = new ArrayList(sources.size());
             for (SOURCE source : sources) {
                 Object target = beanInfo.getTargetClass().newInstance();
@@ -195,9 +194,6 @@ public class BeanTransform {
                 targets.add((TARGET) target);
             }
             return targets;
-        }
-        return null;
-
     }
 
 

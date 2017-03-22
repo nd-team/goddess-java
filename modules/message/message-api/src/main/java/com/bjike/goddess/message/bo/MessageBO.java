@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.user.entity.User;
 
 /**
  * 消息推送业务传输对象

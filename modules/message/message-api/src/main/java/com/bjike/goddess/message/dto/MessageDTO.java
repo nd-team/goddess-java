@@ -1,7 +1,10 @@
 package com.bjike.goddess.message.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.message.enums.MsgType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 消息推送数据传输对象
@@ -13,6 +16,7 @@ import com.bjike.goddess.message.enums.MsgType;
  * @Copy: [ com.bjike ]
  */
 public class MessageDTO extends BaseDTO {
+    @NotBlank(message = "用户id不能为空", groups = GET.class)
     private String userId;
     private MsgType msgType;
 

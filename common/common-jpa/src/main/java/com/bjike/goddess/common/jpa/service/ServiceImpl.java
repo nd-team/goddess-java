@@ -19,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -199,16 +201,25 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Override
     public <T> List<T> findBySql(String sql, Class clazz, String[] fields) throws SerException {
+        List<Method> all_methods = new ArrayList<>(); //源类属性列表
+        Class temp_clazz = clazz;
+        while (null != temp_clazz) { //数据源类所有属性（包括父类）
+            all_methods.addAll(Arrays.asList(temp_clazz.getDeclaredMethods()));
+            temp_clazz = temp_clazz.getSuperclass();
+            if (Object.class.equals(temp_clazz) || null == temp_clazz) {
+                break;
+            }
+        }
         Query nativeQuery = entityManager.createNativeQuery(sql);
         List<Object> resultList = nativeQuery.getResultList();
         List<T> list = new ArrayList<>(resultList.size());
-        Method[] all_methods = clazz.getMethods();
         List<Method> methods = new ArrayList<>();
         for (Method m : all_methods) {
             if (m.getName().indexOf("set") != -1) {
                 methods.add(m);
             }
         }
+
         //解析查询结果
         try {
             for (int i = 0; i < resultList.size(); i++) {
@@ -216,8 +227,12 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 Object obj = clazz.newInstance();
                 for (int j = 0; j < fields.length; j++) {
                     for (Method m : methods) {
-                        if (m.getName().indexOf(CharacterUtil.upperCaseFirst(fields[j])) != -1) {
-                            m.invoke(obj, convertDataType(arr_obj[j]));
+                        String method ="set"+CharacterUtil.upperCaseFirst(fields[j]);
+                        if (m.getName().equals(method)) {
+                            if(!m.getReturnType().isEnum()){ //忽略枚举类型
+                                m.invoke(obj, convertDataType(arr_obj[j]));
+
+                            }
                             break;
                         }
                     }
