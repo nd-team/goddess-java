@@ -227,12 +227,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 Object obj = clazz.newInstance();
                 for (int j = 0; j < fields.length; j++) {
                     for (Method m : methods) {
-                        String str = CharacterUtil.upperCaseFirst(fields[j]);
-                        System.out.println(str);
-                        if (m.getName().indexOf(str) != -1 || m.getName().indexOf(str)==0) {
-
+                        String method ="set"+CharacterUtil.upperCaseFirst(fields[j]);
+                        if (m.getName().equals(method)) {
                             if(!m.getReturnType().isEnum()){ //忽略枚举类型
-
                                 m.invoke(obj, convertDataType(arr_obj[j]));
 
                             }
