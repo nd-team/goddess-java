@@ -32,9 +32,10 @@ public class EnterpriseQualificationAction {
      * 根据供应商基本信息ID查询企业资质
      *
      * @param info_id 供应商基本信息ID
+     * @version v1
      * @return class EnterpriseQualificationVO
      */
-    @GetMapping("findByInformation/{info_id}")
+    @GetMapping("v1/findByInformation/{info_id}")
     public Result findByInformation(@PathVariable String info_id) throws ActException {
         try {
             return ActResult.initialize(
@@ -50,9 +51,10 @@ public class EnterpriseQualificationAction {
      * 保存供应商企业资质数据
      *
      * @param to 供应商企业资质传输对象
+     * @version v1
      * @return class EnterpriseQualificationVO
      */
-    @PostMapping("save")
+    @PostMapping("v1/save")
     public Result save(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.save(to), EnterpriseQualificationVO.class));
@@ -65,9 +67,10 @@ public class EnterpriseQualificationAction {
      * 修改供应商企业资质数据
      *
      * @param to 供应商企业资质传输对象
+     * @version v1
      * @return class EnterpriseQualificationVO
      */
-    @PutMapping("update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.update(to), EnterpriseQualificationVO.class));
@@ -80,9 +83,10 @@ public class EnterpriseQualificationAction {
      * 删除供应商企业资质数据
      *
      * @param id 供应商企业资质id
+     * @version v1
      * @return class EnterpriseQualificationVO
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.delete(id), EnterpriseQualificationVO.class));

@@ -33,9 +33,10 @@ public class RewardSituationAction {
      * 根据供应商基本信息ID查询获奖情况
      *
      * @param info_id 供应商基本信息ID
+     * @version v1
      * @return class RewardSituationVO
      */
-    @GetMapping("findByInformation/{info_id}")
+    @GetMapping("v1/findByInformation/{info_id}")
     public Result findByInformation(@PathVariable String info_id) throws ActException {
         try {
             return ActResult.initialize(
@@ -51,9 +52,10 @@ public class RewardSituationAction {
      * 保存供应商获奖情况数据
      *
      * @param to 供应商获奖情况传输对象
+     * @version v1
      * @return class RewardSituationVO
      */
-    @PostMapping("save")
+    @PostMapping("v1/save")
     public Result save(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.save(to), RewardSituationVO.class));
@@ -66,9 +68,10 @@ public class RewardSituationAction {
      * 修改供应商获奖情况数据
      *
      * @param to 供应商获奖情况传输对象
+     * @version v1
      * @return class RewardSituationVO
      */
-    @PutMapping("update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.update(to), RewardSituationVO.class));
@@ -81,9 +84,10 @@ public class RewardSituationAction {
      * 删除供应商获奖情况数据
      *
      * @param id 供应商获奖情况id
+     * @version v1
      * @return class RewardSituationVO
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.delete(id), RewardSituationVO.class));

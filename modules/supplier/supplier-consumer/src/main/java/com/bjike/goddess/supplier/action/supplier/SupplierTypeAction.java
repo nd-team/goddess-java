@@ -32,10 +32,10 @@ public class SupplierTypeAction {
     /**
      * 查询未冻结的供应商类型
      *
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @GetMapping("findStatus")
+    @GetMapping("v1/findStatus")
     public Result findStatus() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.findStatus(), SupplierTypeVO.class));
@@ -48,10 +48,10 @@ public class SupplierTypeAction {
      * 保存供应商类型数据
      *
      * @param to 供应商类型传输对象
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @PostMapping("save")
+    @PostMapping("v1/save")
     public Result save(@Validated SupplierTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.save(to), SupplierTypeVO.class));
@@ -64,10 +64,10 @@ public class SupplierTypeAction {
      * 修改供应商类型数据
      *
      * @param to 供应商类型传输对象
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @PutMapping("update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated SupplierTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.update(to), SupplierTypeVO.class));
@@ -80,10 +80,10 @@ public class SupplierTypeAction {
      * 删除供应商类型数据
      *
      * @param to 供应商类型传输对象
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(SupplierTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.delete(to), SupplierTypeVO.class));
@@ -96,10 +96,10 @@ public class SupplierTypeAction {
      * 冻结供应商类型数据
      *
      * @param to 供应商类型传输对象
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @PatchMapping("congeal/{id}")
+    @PatchMapping("v1/congeal/{id}")
     public Result congeal(SupplierTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.congeal(to), SupplierTypeVO.class));
@@ -112,10 +112,10 @@ public class SupplierTypeAction {
      * 解冻供应商类型数据
      *
      * @param to 供应商类型传输对象
-     * @return
-     * @throws ActException
+     * @version v1
+     * @return class SupplierTypeVO
      */
-    @PatchMapping("thaw/{id}")
+    @PatchMapping("v1/thaw/{id}")
     public Result thaw(SupplierTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.thaw(to), SupplierTypeVO.class));

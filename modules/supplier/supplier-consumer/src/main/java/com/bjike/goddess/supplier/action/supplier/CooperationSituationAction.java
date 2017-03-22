@@ -32,9 +32,10 @@ public class CooperationSituationAction {
      * 根据供应商基本信息ID查询合作情况
      *
      * @param info_id 供应商基本信息ID
+     * @version v1
      * @return class CooperationSituationVO
      */
-    @GetMapping("findByInformation/{info_id}")
+    @GetMapping("v1/findByInformation/{info_id}")
     public Result findByInformation(@PathVariable String info_id) throws ActException {
         try {
             return ActResult.initialize(
@@ -50,9 +51,10 @@ public class CooperationSituationAction {
      * 保存供应商合作情况数据
      *
      * @param to 供应商合作情况传输对象
+     * @version v1
      * @return class CooperationSituationVO
      */
-    @PostMapping("save")
+    @PostMapping("v1/save")
     public Result save(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.save(to), CooperationSituationVO.class));
@@ -65,9 +67,10 @@ public class CooperationSituationAction {
      * 修改供应商合作情况数据
      *
      * @param to 供应商合作情况传输对象
+     * @version v1
      * @return class CooperationSituationVO
      */
-    @PutMapping("update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.update(to), CooperationSituationVO.class));
@@ -80,9 +83,10 @@ public class CooperationSituationAction {
      * 删除供应商合作情况数据
      *
      * @param id 供应商合作情况id
+     * @version v1
      * @return class CooperationSituationVO
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.delete(id), CooperationSituationVO.class));

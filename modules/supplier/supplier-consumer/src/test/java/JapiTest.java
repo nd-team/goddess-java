@@ -18,7 +18,7 @@ public class JapiTest {
 		JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/supplier/supplier-consumer");//主项目位置
-		JapiClient.setActionReletivePath("com/bjike/goddess/organize/action");//主项目action位置
+		JapiClient.setActionReletivePath("com/bjike/goddess/supplier/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/supplier/supplier-api",
 				"common/common-api"

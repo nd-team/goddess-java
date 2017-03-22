@@ -32,9 +32,10 @@ public class SupplierInformationAction {
      * 保存供应商基本信息数据
      *
      * @param to 供应商信息传输对象
+     * @version v1
      * @return class SupplierInformationVO
      */
-    @PostMapping("save")
+    @PostMapping("v1/save")
     public Result save(@Validated SupplierInformationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.save(to), SupplierInformationVO.class));
@@ -47,9 +48,10 @@ public class SupplierInformationAction {
      * 修改供应商基本信息数据
      *
      * @param to 供应商信息传输对象
+     * @version v1
      * @return class SupplierInformationVO
      */
-    @PutMapping("update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated SupplierInformationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.update(to), SupplierInformationVO.class));
@@ -62,9 +64,10 @@ public class SupplierInformationAction {
      * 修改供应商详细信息数据
      *
      * @param to 供应商信息传输对象
+     * @version v1
      * @return class SupplierInformationVO
      */
-    @PutMapping("updateDetail/{id}")
+    @PutMapping("v1/updateDetail/{id}")
     public Result updateDetail(@Validated SupplierInformationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.updateDetail(to), SupplierInformationVO.class));
@@ -76,9 +79,10 @@ public class SupplierInformationAction {
     /**
      * 查询根据供应商名称排序的供应商信息
      *
+     * @version v1
      * @return class SupplierInformationVO
      */
-    @GetMapping("findOrderName")
+    @GetMapping("v1/findOrderName")
     public Result findOrderName() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.findOrderName(), SupplierInformationVO.class));
