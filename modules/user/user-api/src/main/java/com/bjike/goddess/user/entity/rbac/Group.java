@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 @Table(name = "rbac_group")
 public class Group extends BaseEntity {
 
-    @Transient
-    private LocalDateTime start;
     /**
      * 组名
      */
@@ -76,11 +74,4 @@ public class Group extends BaseEntity {
         this.parent = parent;
     }
 
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
 }

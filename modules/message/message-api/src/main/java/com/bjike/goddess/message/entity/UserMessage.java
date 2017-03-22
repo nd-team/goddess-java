@@ -26,8 +26,8 @@ public class UserMessage extends BaseEntity {
     /**
      * 消息id
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", columnDefinition = "VARCHAR(36) COMMENT '消息id' ")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY,optional=false)
+    @JoinColumn(name = "message_id", columnDefinition = "VARCHAR(36) COMMENT '消息id' ",nullable = false)
     private Message message;
 
 
