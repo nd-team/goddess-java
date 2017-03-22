@@ -5,6 +5,7 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeApplySer;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,17 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Override
     public void update(MarketServeApplyTO to) throws SerException {
         marketServeApplySer.update(to);
+    }
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void addClientInfo(CustomerInfoTO to) throws SerException {
+        marketServeApplySer.addClientInfo(to);
     }
 
     /**

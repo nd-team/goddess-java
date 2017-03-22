@@ -5,6 +5,7 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 
@@ -56,6 +57,14 @@ public interface MarketServeRecordAPI {
      * @throws SerException
      */
     void update(MarketServeRecordTO to) throws SerException;
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    void addClientInfo(CustomerInfoTO to) throws SerException;
 
     /**
      * 资金模块意见

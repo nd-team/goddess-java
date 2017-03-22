@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeRecordSer;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,17 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
     @Override
     public void update(MarketServeRecordTO to) throws SerException {
         marketServeRecordSer.update(to);
+    }
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void addClientInfo(CustomerInfoTO to) throws SerException {
+        marketServeRecordSer.addClientInfo(to);
     }
 
     /**

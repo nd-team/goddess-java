@@ -3,12 +3,15 @@ package com.bjike.goddess.marketactivitymanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "marketServeRecordSerCache")
 @Service
 public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, MarketServeRecordDTO> implements MarketServeRecordSer {
+
+    @Autowired
+    private CustomerInfoAPI customerInfoAPI;
 
     /**
      * 分页查询市场招待记录
@@ -71,6 +77,34 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     public void update(MarketServeRecordTO to) throws SerException {
         MarketServeRecord entity = BeanTransform.copyProperties(to, MarketServeRecord.class, true);
         super.update(entity);
+    }
+
+    /**
+     * 添加用户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    @Transactional
+    public void addClientInfo(CustomerInfoTO to) throws SerException {
+        String marketServeId = to.getMarketServeId();
+        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
+        List<String> clientNames = to.getClientNames();//客户姓名
+        List<String> importanceLevels = to.getImportanceLevels();//重要性级别
+
+        if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
+            int clientSize = clientInfoNos.size();
+            for (int i = 0; i < clientSize; i ++) {
+                CustomerInfoTO customerInfoTO = new CustomerInfoTO();
+                customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
+                customerInfoTO.setClientName(clientNames.get(i));
+                customerInfoTO.setImportanceLevel(importanceLevels.get(i));
+                customerInfoTO.setMarketServeId(marketServeId);
+
+                customerInfoAPI.save(customerInfoTO);
+            }
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.bjike.goddess.marketactivitymanage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 
 import java.io.InputStream;
@@ -53,6 +54,14 @@ public interface MarketServeApplyAPI {
      * @throws SerException
      */
     void update(MarketServeApplyTO to) throws SerException;
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    void addClientInfo(CustomerInfoTO to) throws SerException;
 
     /**
      * 资金模块意见

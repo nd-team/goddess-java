@@ -1,4 +1,4 @@
-apply from: '../../../config.gradle'
+apply from: '../../../config.gradle' 
 
 dependencies {
     compile project(":common:common-jpa")

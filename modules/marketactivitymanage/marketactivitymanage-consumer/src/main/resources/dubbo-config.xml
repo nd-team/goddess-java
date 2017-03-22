@@ -17,5 +17,7 @@
 	<!--配置暴露的公共接口-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI" id="marketServeApplyApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeRecordAPI" id="marketServeRecordApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeSummaryAPI" id="marketServeSummaryApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI" id="customerInfoApiImpl"/>
 
 </beans>

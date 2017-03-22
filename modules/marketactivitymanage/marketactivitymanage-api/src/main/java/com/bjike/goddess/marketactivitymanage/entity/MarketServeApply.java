@@ -119,7 +119,7 @@ public class MarketServeApply extends BaseEntity {
     /**
      * 决策层审核意见
      */
-    @Column(name = "executiveAuditOpinion", insertable = false, columnDefinition = "TINYINT(1) COMMENT '决策层审核意见'")
+    @Column(name = "executiveAuditOpinion", insertable = false, columnDefinition = "TINYINT(2) COMMENT '决策层审核意见'")
     private AuditType executiveAuditOpinion;
 
 

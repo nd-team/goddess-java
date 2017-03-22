@@ -1,22 +1,14 @@
 模块名:marketactivitymanage
-类名:MarketServeSummary
+类名:CustomerInfo
 作者:sunfengtao
-描述:市场招待汇总
+描述:客户信息
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String projectGroups 项目组;
-Boolean type 类型(计划:true,实际:false);
-String createUser 创建人;
-LocalDateTime updateTime 更新时间;
-LocalDateTime lastTime 上次发送时间;
-String note 备注;
-Integer sendInterval 发送间隔;
-CycleType cycle 发送时间格式;
-Integer detailInterval 汇总间隔;
-CycleType detailCycle 汇总时间格式;
-String emails 发送对象;
-Status status 状态;
+String clientInfoNo 客户信息编号;
+String clientName 客户姓名;
+String importanceLevel 重要性级别;
+String marketServeId 市场招待唯一标识;
 )
