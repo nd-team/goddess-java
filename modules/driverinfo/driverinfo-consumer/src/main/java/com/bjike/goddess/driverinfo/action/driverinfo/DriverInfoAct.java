@@ -10,7 +10,6 @@ import com.bjike.goddess.driverinfo.bo.DriverInfoBO;
 import com.bjike.goddess.driverinfo.dto.DriverInfoDTO;
 import com.bjike.goddess.driverinfo.to.DriverInfoTO;
 import com.bjike.goddess.driverinfo.vo.DriverInfoVO;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 租车协议、车辆信息管理控制器
+ * 租车协议车辆信息管理控制器
  *
  * @Author: [Jason]
  * @Date: [17-3-8 上午9:41]
@@ -118,7 +117,7 @@ public class DriverInfoAct {
     }
 
     /**
-     * 上传附件（证件照片）
+     * 上传附件证件照片
      *
      * @param name 司机姓名
      * @version v1
@@ -156,7 +155,7 @@ public class DriverInfoAct {
     /**
      * 分页查询
      *
-     * @param dto 分页查询条件
+     * @param dto  分页查询条件
      * @param type 记录类型
      * @version v1
      */
