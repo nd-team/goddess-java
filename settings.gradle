@@ -38,7 +38,14 @@ include ':modules:accommodation:accommodation-provider'
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
-
+//#organize 组织结构管理
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
+//#supplier 供应商管理
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
 
 
 
