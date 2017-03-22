@@ -5,5 +5,11 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:message:message-api")
     compile project(":common:common-utils")
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+    compile group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.10.2.0'
+    compile (project(":common:common-redis")){
+            exclude group: 'org.slf4j', module: 'slf4j-log4j12'}
+
+
 }
 

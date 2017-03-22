@@ -30,7 +30,6 @@ public class GroupTest {
 
     public static void main(String[] args) {
         Group group = new Group();
-        group.setStart(LocalDateTime.now());
         group.setCreateTime(LocalDateTime.now());
         GroupTO to = BeanTransform.copyProperties(group,GroupTO.class);
         System.out.println(to);
