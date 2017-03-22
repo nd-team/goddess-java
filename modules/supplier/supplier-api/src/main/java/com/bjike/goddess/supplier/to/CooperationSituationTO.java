@@ -1,6 +1,10 @@
 package com.bjike.goddess.supplier.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 合作情况
@@ -12,70 +16,71 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class CooperationSituationTO extends BaseTO {
-
     /**
-     * 合作情况id数组
+     * 供应商基本信息
      */
-    private String[] cooperation_ids;
+    @NotNull(message = "供应商信息传输错误", groups = {ADD.class, EDIT.class})
+    private String information_id;
 
     /**
      * 公司名称
      */
-    private String[] name;
+    @NotNull(message = "公司名称不能为空", groups = {ADD.class, EDIT.class})
+    private String name;
 
     /**
-     * 产品/服务内容
+     * 产品服务内容
      */
-    private String[] product;
+    @NotNull(message = "产品服务内容不能为空", groups = {ADD.class, EDIT.class})
+    private String product;
 
     /**
      * 合作时间
      */
-    private String[] cooperationTime;
+    private String cooperationTime;
 
     /**
      * 合作期限
      */
-    private String[] cooperationTerm;
+    private String cooperationTerm;
 
+    public String getInformation_id() {
+        return information_id;
+    }
 
-    public String[] getName() {
+    public void setInformation_id(String information_id) {
+        this.information_id = information_id;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void setName(String[] name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String[] getProduct() {
+    public String getProduct() {
         return product;
     }
 
-    public void setProduct(String[] product) {
+    public void setProduct(String product) {
         this.product = product;
     }
 
-    public String[] getCooperationTime() {
+    public String getCooperationTime() {
         return cooperationTime;
     }
 
-    public void setCooperationTime(String[] cooperationTime) {
+    public void setCooperationTime(String cooperationTime) {
         this.cooperationTime = cooperationTime;
     }
 
-    public String[] getCooperationTerm() {
+    public String getCooperationTerm() {
         return cooperationTerm;
     }
 
-    public void setCooperationTerm(String[] cooperationTerm) {
+    public void setCooperationTerm(String cooperationTerm) {
         this.cooperationTerm = cooperationTerm;
-    }
-
-    public String[] getCooperation_ids() {
-        return cooperation_ids;
-    }
-
-    public void setCooperation_ids(String[] cooperation_ids) {
-        this.cooperation_ids = cooperation_ids;
     }
 }

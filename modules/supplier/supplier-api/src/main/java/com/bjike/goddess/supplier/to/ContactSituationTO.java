@@ -1,5 +1,7 @@
 package com.bjike.goddess.supplier.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 import javax.validation.constraints.NotNull;
@@ -16,80 +18,83 @@ import javax.validation.constraints.NotNull;
 public class ContactSituationTO extends BaseTO {
 
     /**
-     * 联系情况ID数组
+     * 供应商基本信息
      */
-    private String[] contact_ids;
+    @NotNull(message = "供应商信息传输错误", groups = {ADD.class, EDIT.class})
+    private String information_id;
 
     /**
-     * 业务联系人数组
+     * 业务联系人
      */
-    private String[] contacts;
+    @NotNull(message = "业务联系人不能为空", groups = {ADD.class, EDIT.class})
+    private String contacts;
 
     /**
-     * 职务数组
+     * 职务
      */
-    private String[] duties;
+    private String duties;
 
     /**
-     * 联系电话数组
+     * 联系电话
      */
-    private String[] telephone;
+    @NotNull(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
+    private String telephone;
 
     /**
-     * 邮箱数组
+     * 邮箱
      */
-    private String[] email;
+    private String email;
 
     /**
-     * 传真数组
+     * 传真
      */
-    private String[] fax;
+    private String fax;
 
-    public String[] getContact_ids() {
-        return contact_ids;
+    public String getInformation_id() {
+        return information_id;
     }
 
-    public void setContact_ids(String[] contact_ids) {
-        this.contact_ids = contact_ids;
+    public void setInformation_id(String information_id) {
+        this.information_id = information_id;
     }
 
-    public String[] getContacts() {
+    public String getContacts() {
         return contacts;
     }
 
-    public void setContacts(String[] contacts) {
+    public void setContacts(String contacts) {
         this.contacts = contacts;
     }
 
-    public String[] getDuties() {
+    public String getDuties() {
         return duties;
     }
 
-    public void setDuties(String[] duties) {
+    public void setDuties(String duties) {
         this.duties = duties;
     }
 
-    public String[] getTelephone() {
+    public String getTelephone() {
         return telephone;
     }
 
-    public void setTelephone(String[] telephone) {
+    public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 
-    public String[] getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String[] email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String[] getFax() {
+    public String getFax() {
         return fax;
     }
 
-    public void setFax(String[] fax) {
+    public void setFax(String fax) {
         this.fax = fax;
     }
 }

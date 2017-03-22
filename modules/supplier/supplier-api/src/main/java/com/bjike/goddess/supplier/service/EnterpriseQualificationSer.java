@@ -2,10 +2,10 @@ package com.bjike.goddess.supplier.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.dto.EnterpriseQualificationDTO;
 import com.bjike.goddess.supplier.entity.EnterpriseQualification;
+import com.bjike.goddess.supplier.to.ContactSituationTO;
 
 import java.util.List;
 
@@ -28,6 +28,39 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
      * @throws SerException
      */
     default List<EnterpriseQualificationBO> findByInformation(String info_id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 保存供应商企业资质数据
+     *
+     * @param to 供应商企业资质传输对象
+     * @return
+     * @throws SerException
+     */
+    default EnterpriseQualificationBO save(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改供应商企业资质数据
+     *
+     * @param to 供应商企业资质传输对象
+     * @return
+     * @throws SerException
+     */
+    default EnterpriseQualificationBO update(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除供应商企业资质数据
+     *
+     * @param id 供应商企业资质id
+     * @return
+     * @throws SerException
+     */
+    default EnterpriseQualificationBO delete(String id) throws SerException {
         return null;
     }
 

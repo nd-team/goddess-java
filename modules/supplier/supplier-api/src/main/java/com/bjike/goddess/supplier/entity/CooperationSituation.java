@@ -32,7 +32,7 @@ public class CooperationSituation extends BaseEntity {
     private String name;
 
     /**
-     * 产品/服务内容
+     * 产品服务内容
      */
     @Column(name = "product", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '产品/服务内容'")
     private String product;

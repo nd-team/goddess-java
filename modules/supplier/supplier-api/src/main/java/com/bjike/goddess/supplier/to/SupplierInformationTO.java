@@ -32,16 +32,19 @@ public class SupplierInformationTO extends BaseTO {
     /**
      * 供应商类型
      */
+    @NotNull(message = "供应商类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 经营范围
      */
+    @NotNull(message = "经营范围不能为空", groups = {ADD.class, EDIT.class})
     private String scope;
 
     /**
      * 主要产品和服务
      */
+    @NotNull(message = "主要产品和服务不能为空", groups = {ADD.class, EDIT.class})
     private String product;
 
     /**

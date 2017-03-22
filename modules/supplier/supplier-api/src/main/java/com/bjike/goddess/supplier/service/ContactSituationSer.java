@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.ContactSituationBO;
 import com.bjike.goddess.supplier.dto.ContactSituationDTO;
 import com.bjike.goddess.supplier.entity.ContactSituation;
+import com.bjike.goddess.supplier.to.ContactSituationTO;
 
 import java.util.List;
 
@@ -30,4 +31,36 @@ public interface ContactSituationSer extends Ser<ContactSituation, ContactSituat
         return null;
     }
 
+    /**
+     * 保存供应商联系情况数据
+     *
+     * @param to 供应商联系情况传输对象
+     * @return
+     * @throws SerException
+     */
+    default ContactSituationBO save(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改供应商联系情况数据
+     *
+     * @param to 供应商联系情况传输对象
+     * @return
+     * @throws SerException
+     */
+    default ContactSituationBO update(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除供应商联系情况数据
+     *
+     * @param id 供应商联系情况id
+     * @return
+     * @throws SerException
+     */
+    default ContactSituationBO delete(String id) throws SerException {
+        return null;
+    }
 }

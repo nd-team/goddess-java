@@ -1,6 +1,10 @@
 package com.bjike.goddess.supplier.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 企业资质
@@ -14,106 +18,111 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class EnterpriseQualificationTO extends BaseTO {
 
     /**
-     * 企业资质id数组
+     * 供应商基本信息
      */
-    private String[] enterprise_ids;
+    @NotNull(message = "供应商信息传输错误", groups = {ADD.class, EDIT.class})
+    private String information_id;
 
     /**
-     * 企业资质序号
+     * 序号
      */
-    private String[] qualificationNumber;
+    @NotNull(message = "序号不能为空", groups = {ADD.class, EDIT.class})
+    private String serialNumber;
 
     /**
      * 证书名称
      */
-    private String[] qualificationName;
+    @NotNull(message = "证书名称不能为空", groups = {ADD.class, EDIT.class})
+    private String name;
 
     /**
      * 证书编号
      */
-    private String[] certificateNumber;
+    @NotNull(message = "证书编号不能为空", groups = {ADD.class, EDIT.class})
+    private String certificateNumber;
 
     /**
      * 有效期限
      */
-    private String[] validityPeriod;
+    @NotNull(message = "有效期限不能为空", groups = {ADD.class, EDIT.class})
+    private String validityPeriod;
 
     /**
      * 颁发单位
      */
-    private String[] promulgate;
+    private String promulgate;
 
     /**
      * 资质等级
      */
-    private String[] aptitude;
+    private String aptitude;
 
     /**
      * 备注
      */
-    private String[] remark;
+    private String remark;
 
-    public String[] getQualificationNumber() {
-        return qualificationNumber;
+    public String getInformation_id() {
+        return information_id;
     }
 
-    public void setQualificationNumber(String[] qualificationNumber) {
-        this.qualificationNumber = qualificationNumber;
+    public void setInformation_id(String information_id) {
+        this.information_id = information_id;
     }
 
-    public String[] getQualificationName() {
-        return qualificationName;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setQualificationName(String[] qualificationName) {
-        this.qualificationName = qualificationName;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
-    public String[] getCertificateNumber() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCertificateNumber() {
         return certificateNumber;
     }
 
-    public void setCertificateNumber(String[] certificateNumber) {
+    public void setCertificateNumber(String certificateNumber) {
         this.certificateNumber = certificateNumber;
     }
 
-    public String[] getValidityPeriod() {
+    public String getValidityPeriod() {
         return validityPeriod;
     }
 
-    public void setValidityPeriod(String[] validityPeriod) {
+    public void setValidityPeriod(String validityPeriod) {
         this.validityPeriod = validityPeriod;
     }
 
-    public String[] getPromulgate() {
+    public String getPromulgate() {
         return promulgate;
     }
 
-    public void setPromulgate(String[] promulgate) {
+    public void setPromulgate(String promulgate) {
         this.promulgate = promulgate;
     }
 
-    public String[] getAptitude() {
+    public String getAptitude() {
         return aptitude;
     }
 
-    public void setAptitude(String[] aptitude) {
+    public void setAptitude(String aptitude) {
         this.aptitude = aptitude;
     }
 
-    public String[] getRemark() {
+    public String getRemark() {
         return remark;
     }
 
-    public void setRemark(String[] remark) {
+    public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String[] getEnterprise_ids() {
-        return enterprise_ids;
-    }
-
-    public void setEnterprise_ids(String[] enterprise_ids) {
-        this.enterprise_ids = enterprise_ids;
     }
 }

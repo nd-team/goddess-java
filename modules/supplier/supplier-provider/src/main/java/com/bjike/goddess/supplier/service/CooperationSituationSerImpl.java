@@ -7,9 +7,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.dto.CooperationSituationDTO;
 import com.bjike.goddess.supplier.entity.CooperationSituation;
+import com.bjike.goddess.supplier.to.ContactSituationTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,11 +28,52 @@ import java.util.List;
 @Service
 public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituation, CooperationSituationDTO> implements CooperationSituationSer {
 
+    @Autowired
+    private SupplierInformationSer supplierInformationSer;
+
+    /**
+     * 转换合作情况传输对象
+     *
+     * @param entity 合作情况实体对象
+     * @return
+     */
+    private CooperationSituationBO transformBO(CooperationSituation entity) {
+        CooperationSituationBO bo = BeanTransform.copyProperties(entity, CooperationSituationBO.class);
+        bo.setInformation_id(entity.getInformation().getId());
+        return bo;
+    }
+
     @Override
     public List<CooperationSituationBO> findByInformation(String info_id) throws SerException {
         CooperationSituationDTO dto = new CooperationSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
         List<CooperationSituation> list = super.findByCis(dto, false);
-        return BeanTransform.copyProperties(list, CooperationSituationBO.class);
+        List<CooperationSituationBO> bos = new ArrayList<>(0);
+        for (CooperationSituation entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
+    @Override
+    public CooperationSituationBO save(ContactSituationTO to) throws SerException {
+        CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
+        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        super.save(entity);
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public CooperationSituationBO update(ContactSituationTO to) throws SerException {
+        CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
+        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        super.update(entity);
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public CooperationSituationBO delete(String id) throws SerException {
+        CooperationSituation entity = super.findById(id);
+        super.remove(entity);
+        return this.transformBO(entity);
     }
 }

@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.entity.SupplierInformation;
-import com.bjike.goddess.supplier.to.*;
+import com.bjike.goddess.supplier.to.SupplierInformationTO;
+
+import java.util.List;
 
 /**
  * 供应商基本信息业务接口
@@ -18,13 +20,46 @@ import com.bjike.goddess.supplier.to.*;
  */
 public interface SupplierInformationSer extends Ser<SupplierInformation, SupplierInformationDTO> {
 
+    /**
+     * 保存供应商基本信息数据
+     *
+     * @param to 供应商信息传输对象
+     * @return
+     * @throws SerException
+     */
     default SupplierInformationBO save(SupplierInformationTO to) throws SerException {
         return null;
     }
 
-    default SupplierInformationBO update(SupplierInformationTO to, ContactSituationTO contactSituation
-            , CooperationSituationTO cooperationSituation, EnterpriseQualificationTO enterpriseQualification
-            , RewardSituationTO rewardSituation) throws SerException {
+    /**
+     * 修改供应商基本信息数据
+     *
+     * @param to 供应商信息传输对象
+     * @return
+     * @throws SerException
+     */
+    default SupplierInformationBO update(SupplierInformationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改供应商详细信息数据
+     *
+     * @param to 供应商信息传输对象
+     * @return
+     * @throws SerException
+     */
+    default SupplierInformationBO updateDetail(SupplierInformationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询根据供应商名称排序的供应商信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<SupplierInformationBO> findOrderName() throws SerException {
         return null;
     }
 

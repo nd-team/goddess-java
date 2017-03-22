@@ -2,72 +2,80 @@ package com.bjike.goddess.supplier.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
 /**
-* 合作情况业务传输对象
-* @Author:			[ dengjunren ]
-* @Date:			[  2017-03-20T11:05:37.653 ]
-* @Description:	[ 合作情况业务传输对象 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class CooperationSituationBO extends BaseBO { 
+ * 合作情况业务传输对象
+ *
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-03-20T11:05:37.653 ]
+ * @Description: [ 合作情况业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class CooperationSituationBO extends BaseBO {
 
-/**
-* 供应商基本信息
-*/
- private SupplierInformation  information; 
+    /**
+     * 供应商基本信息
+     */
+    private String information_id;
 
-/**
-* 公司名称
-*/
- private String  name; 
+    /**
+     * 公司名称
+     */
+    private String name;
 
-/**
-* 产品/服务内容
-*/
- private String  product; 
+    /**
+     * 产品服务内容
+     */
+    private String product;
 
-/**
-* 合作时间
-*/
- private String  cooperationTime; 
+    /**
+     * 合作时间
+     */
+    private String cooperationTime;
 
-/**
-* 合作期限
-*/
- private String  cooperationTerm; 
+    /**
+     * 合作期限
+     */
+    private String cooperationTerm;
 
 
+    public String getName() {
+        return name;
+    }
 
- public SupplierInformation getInformation () { 
- return information;
- } 
- public void setInformation (SupplierInformation information ) { 
- this.information = information ; 
- } 
- public String getName () { 
- return name;
- } 
- public void setName (String name ) { 
- this.name = name ; 
- } 
- public String getProduct () { 
- return product;
- } 
- public void setProduct (String product ) { 
- this.product = product ; 
- } 
- public String getCooperationTime () { 
- return cooperationTime;
- } 
- public void setCooperationTime (String cooperationTime ) { 
- this.cooperationTime = cooperationTime ; 
- } 
- public String getCooperationTerm () { 
- return cooperationTerm;
- } 
- public void setCooperationTerm (String cooperationTerm ) { 
- this.cooperationTerm = cooperationTerm ; 
- } 
- }
+    public String getInformation_id() {
+        return information_id;
+    }
+
+    public void setInformation_id(String information_id) {
+        this.information_id = information_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getCooperationTime() {
+        return cooperationTime;
+    }
+
+    public void setCooperationTime(String cooperationTime) {
+        this.cooperationTime = cooperationTime;
+    }
+
+    public String getCooperationTerm() {
+        return cooperationTerm;
+    }
+
+    public void setCooperationTerm(String cooperationTerm) {
+        this.cooperationTerm = cooperationTerm;
+    }
+}

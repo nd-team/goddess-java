@@ -4,8 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.dto.CooperationSituationDTO;
-import com.bjike.goddess.supplier.entity.ContactSituation;
 import com.bjike.goddess.supplier.entity.CooperationSituation;
+import com.bjike.goddess.supplier.to.ContactSituationTO;
 
 import java.util.List;
 
@@ -28,6 +28,39 @@ public interface CooperationSituationSer extends Ser<CooperationSituation, Coope
      * @throws SerException
      */
     default List<CooperationSituationBO> findByInformation(String info_id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 保存供应商合作情况数据
+     *
+     * @param to 供应商合作情况传输对象
+     * @return
+     * @throws SerException
+     */
+    default CooperationSituationBO save(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改供应商合作情况数据
+     *
+     * @param to 供应商合作情况传输对象
+     * @return
+     * @throws SerException
+     */
+    default CooperationSituationBO update(ContactSituationTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除供应商合作情况数据
+     *
+     * @param id 供应商合作情况id
+     * @return
+     * @throws SerException
+     */
+    default CooperationSituationBO delete(String id) throws SerException {
         return null;
     }
 
