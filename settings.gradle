@@ -42,10 +42,23 @@ include ':modules:customer:customer-provider'
 include ':modules:recruit:recruit-api'
 include ':modules:recruit:recruit-consumer'
 include ':modules:recruit:recruit-provider'
-//#招聘模块
+//#市场活动管理
 include ':modules:marketactivitymanage:marketactivitymanage-api'
 include ':modules:marketactivitymanage:marketactivitymanage-consumer'
 include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//#司机信息
+include ':modules:driverinfo:driverinfo-api'
+include ':modules:driverinfo:driverinfo-consumer'
+include ':modules:driverinfo:driverinfo-provider'
+//#油卡管理
+include ':modules:oilcardmanage:oilcardmanage-api'
+include ':modules:oilcardmanage:oilcardmanage-consumer'
+include ':modules:oilcardmanage:oilcardmanage-provider'
+//#商务洽谈
+include ':modules:contractcommunicat:contractcommunicat-api'
+include ':modules:contractcommunicat:contractcommunicat-consumer'
+include ':modules:contractcommunicat:contractcommunicat-provider'
+
 
 
 

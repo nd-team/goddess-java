@@ -41,10 +41,10 @@ public class QueryTest {
     @Test
     public void init() throws Exception {
         User user = new User();
-        user.setUsername("liguiqin8");
+        user.setUsername("黎");
         user.setPassword(PasswordHash.createHash("123458"));
-        user.setPhone("13457910248");
-        user.setNickname("xiaoming8");
+        user.setPhone("13457910208");
+        user.setNickname("xiaoming萨斯");
         user.setEmployeeNumber("1111128");
         userAPI.save(user);
 
