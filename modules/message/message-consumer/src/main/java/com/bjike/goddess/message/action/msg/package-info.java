@@ -1,4 +1,6 @@
 /**
+ * 消息功能操作
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-15 14:38]
  * @Description: [ ]

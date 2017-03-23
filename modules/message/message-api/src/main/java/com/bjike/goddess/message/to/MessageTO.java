@@ -12,11 +12,11 @@ import javax.validation.constraints.NotNull;
 /**
  * 消息推送
  *
- * @Author: [ liguiqin ]
- * @Date: [ 2017-03-14T10:21:59.619 ]
- * @Description: [ 消息推送 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [liguiqin]
+ * @Date: [2017-03-14 10:21]
+ * @Description: [消息推送]
+ * @Version: [v1.0.0]
+ * @Copy: [com.bjike]
  */
 public class MessageTO extends BaseTO {
     public MessageTO() {
@@ -40,16 +40,16 @@ public class MessageTO extends BaseTO {
     private String content;
 
     /**
-     * 发送人id,无需初始化，默认当前用户
+     * 发送人id无需初始化默认当前用户
      */
     private String senderId;
     /**
-     * 发送人姓名，无需初始化，默认当前用户
+     * 发送人姓名无需初始化默认当前用户
      */
     private String senderName;
 
     /**
-     * 发送时间，无需初始化，默认当前时间
+     * 发送时间无需初始化默认当前时间
      */
     private String createTime;
 
