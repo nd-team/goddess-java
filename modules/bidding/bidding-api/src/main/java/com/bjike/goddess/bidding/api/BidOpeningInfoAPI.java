@@ -22,17 +22,17 @@ public interface BidOpeningInfoAPI {
      * 获取所有开标信息
      *
      * @param bidOpeningInfoDTO 开标信息dto
-     * @return class bidOpeningInfo
+     * @return class bidOpeningInfoBO
      * @throws SerException
      */
-    default List<BidOpeningInfo> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+    default List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         return null;
     }
 
     /**
      * 添加开标信息
      *
-     * @param bidOpeningInfoTO 开标信息数据集合
+     * @param bidOpeningInfoTO 开标信息数据集合to
      * @throws SerException
      */
     default BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {

@@ -29,10 +29,10 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
      * 获取所有开标信息
      *
      * @param bidOpeningInfoDTO 开标信息dto
-     * @return class bidOpeningInfo
+     * @return class bidOpeningInfoBO
      * @throws SerException
      */
-    default List<BidOpeningInfo> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+    default List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         return null;
     }
 

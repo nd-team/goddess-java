@@ -1,4 +1,4 @@
-package com.bjike.goddess.accommodation.config;
+package com.bjike.goddess.bidding.config;
 
 
 import com.bjike.goddess.common.jpa.boot.JpaCache;
@@ -21,11 +21,11 @@ public class AppJpaCache implements JpaCache {
 	
     @Override
     public List<Cache> initCaches() {
-        ConcurrentMapCache serCache = new ConcurrentMapCache("rentalPreceptSerCache");
+        ConcurrentMapCache serCache = new ConcurrentMapCache("biddingWebInfoSerCache");
         serCache.put("timeToLiveSeconds",60*60);//1小时过期
         serCache.put("timeToIdleSeconds",60*60*12);//闲置时间
 
-        ConcurrentMapCache daoCache = new ConcurrentMapCache("rentalPreceptDaoCache");
+        ConcurrentMapCache daoCache = new ConcurrentMapCache("biddingWebInfoDaoCache");
         daoCache.put("timeToLiveSeconds",60*60);//1小时过期
         daoCache.put("timeToIdleSeconds",60*60*12);//闲置时间
         return Arrays.asList(serCache,daoCache);

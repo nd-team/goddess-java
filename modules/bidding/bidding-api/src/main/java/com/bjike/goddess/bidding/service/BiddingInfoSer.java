@@ -23,10 +23,10 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
      * 获取所有招标信息
      *
      * @param biddingInfoDTO 招标信息dto
-     * @return class biddingInfo
+     * @return class biddingInfoBO
      * @throws SerException
      */
-    default List<BiddingInfo> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+    default List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
     }
 

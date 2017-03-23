@@ -41,7 +41,7 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     }
 
     @Override
-    public List<BiddingInfo> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+    public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.findListBiddingInfo(biddingInfoDTO);
     }
 

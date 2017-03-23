@@ -22,17 +22,17 @@ public interface BiddingAnswerQuestionsAPI {
      * 获取所有投标答疑问题记录
      *
      * @param biddingAnswerQuestionsDTO 投标答疑问题记录dto
-     * @return class biddingAnswerQuestions
+     * @return class biddingAnswerQuestionsBO
      * @throws SerException
      */
-    default List<BiddingAnswerQuestions> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+    default List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return null;
     }
 
     /**
      * 添加投标答疑问题记录
      *
-     * @param biddingAnswerQuestionsTO 投标答疑问题记录数据集合
+     * @param biddingAnswerQuestionsTO 投标答疑问题记录数据TO
      * @throws SerException
      */
     default BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {

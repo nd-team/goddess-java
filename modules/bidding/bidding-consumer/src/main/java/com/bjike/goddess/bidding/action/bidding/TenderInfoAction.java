@@ -101,9 +101,55 @@ public class TenderInfoAction {
             throw new ActException(e.getMessage());
         }
     }
-    //TODO: xiazhili 2017-03-17 未做导出
-    //TODO: xiazhili 2017-03-17 未做上传
-    //TODO: xiazhili 2017-03-17 未做上传附件
+
+    /**
+     * 标书资料导出
+     *
+     * @param projectName 项目名称
+     * @version v1
+     */
+    @PostMapping("v1/exportExcel")
+    public Result exportExcel(String projectName) throws ActException {
+        String excel = null;
+        try {
+            excel = tenderInfoAPI.exportExcel(projectName);
+            return new ActResult(excel);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 上传
+     *
+     * @version v1
+     */
+    @PostMapping("v1/upload")
+    public Result upload() throws ActException {
+        try {
+            tenderInfoAPI.upload();
+            return new ActResult("upload success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @PostMapping("v1/uploadAttachments")
+    public Result uploadAttachments() throws ActException {
+        try {
+            tenderInfoAPI.uploadAttachments();
+            return new ActResult("uploadAttachments success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

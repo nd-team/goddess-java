@@ -72,10 +72,9 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public List<BiddingInfo> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
-        //TODO: xiazhili 2017-03-10 未做根据 biddingWebInfoDTO 分页查询所有
-        List<BiddingInfo> biddingInfo = super.findByPage(biddingInfoDTO);
-        return biddingInfo;
+    public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO,true);
+        return BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

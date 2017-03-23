@@ -1,4 +1,4 @@
-package com.bjike.goddess.accommodation.config;
+package com.bjike.goddess.bidding.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScan;
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
@@ -16,6 +16,6 @@ public class AppComponents extends JpaComponents implements EntityToScan<AppRoot
 
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.accommodation.entity"};
+        return new String[]{"com.bjike.goddess.bidding.entity"};
     }
 }

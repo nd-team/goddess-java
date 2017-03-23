@@ -23,10 +23,10 @@ public interface BiddingAnswerQuestionsSer extends Ser<BiddingAnswerQuestions, B
      * 获取所有投标答疑问题记录
      *
      * @param biddingAnswerQuestionsDTO 投标答疑问题记录dto
-     * @return class biddingAnswerQuestions
+     * @return class biddingAnswerQuestionsBO
      * @throws SerException
      */
-    default List<BiddingAnswerQuestions> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+    default List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return null;
     }
 

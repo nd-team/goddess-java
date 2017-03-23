@@ -25,8 +25,15 @@ import java.util.List;
  */
 @Service("bidOpeningInfoApiImpl")
 public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
-    @Autowired
     private BidOpeningInfoSer bidOpeningInfoSer;
+
+    public BidOpeningInfoSer getBidOpeningInfoSer() {
+        return bidOpeningInfoSer;
+    }
+
+    public void setBidOpeningInfoSer(BidOpeningInfoSer bidOpeningInfoSer) {
+        this.bidOpeningInfoSer = bidOpeningInfoSer;
+    }
 
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
@@ -44,7 +51,7 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
     }
 
     @Override
-    public List<BidOpeningInfo> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+    public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         return bidOpeningInfoSer.findListBidOpeningInfo(bidOpeningInfoDTO);
     }
 

@@ -2,8 +2,10 @@ package com.bjike.goddess.bidding.action.bidding;
 
 import com.bjike.goddess.bidding.api.BidOpeningInfoAPI;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
+import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.vo.BidOpeningInfoVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -114,7 +116,7 @@ public class BidOpeningInfoAction {
     public Result collectBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws ActException {
         try {
             List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.collectBidOpeningInfo(bidOpeningInfoDTO), BidOpeningInfoVO.class, true);
+                    bidOpeningInfoAPI.collectBidOpeningInfo(String.valueOf(bidOpeningInfoDTO)), BidOpeningInfoVO.class, true);
             return ActResult.initialize(bidOpeningInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -138,8 +140,39 @@ public class BidOpeningInfoAction {
             throw new ActException(e.getMessage());
         }
     }
-    //TODO: xiazhili 2017-03-10 未做导出
-    //TODO: xiazhili 2017-03-10 未做发送邮件
 
+    /**
+     * 开标信息导出
+     *
+     * @param projectName 项目名称
+     * @version v1
+     */
+    @PostMapping("v1/exportExcel")
+    public Result exportExcel(String projectName) throws ActException {
+        String excel = null;
+        try {
+            excel = bidOpeningInfoAPI.exportExcel(projectName);
+            return new ActResult(excel);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @version v1
+     */
+    @PostMapping("v1/send")
+    public Result sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws ActException {
+        try {
+            BidOpeningInfoBO bidOpeningInfoBO = bidOpeningInfoAPI.sendBidOpeningInfo(bidOpeningInfoTO);
+            return ActResult.initialize(bidOpeningInfoBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
 
 }

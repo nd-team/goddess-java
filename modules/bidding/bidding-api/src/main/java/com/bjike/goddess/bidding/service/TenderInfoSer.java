@@ -26,7 +26,7 @@ public interface TenderInfoSer extends Ser<TenderInfo, TenderInfoDTO> {
      * @return class tenderInfo
      * @throws SerException
      */
-    default List<TenderInfo> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
+    default List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return null;
     }
 

@@ -1,10 +1,7 @@
 package com.bjike.goddess.bidding.dto;
 
-import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
-import javax.persistence.Column;
-import java.time.LocalDate;
 
 /**
  * 招标信息数据传输对象

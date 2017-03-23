@@ -123,7 +123,7 @@ public class BiddingInfoAction {
     /**
      * 汇总
      *
-     * @return class EntryBasicInfoVO
+     * @return class BiddingInfoVO
      * @version v1
      */
     @GetMapping("v1/collect")
@@ -137,9 +137,54 @@ public class BiddingInfoAction {
         }
     }
 
-    //TODO: xiazhili 2017-03-17 未做上传
-    //TODO: xiazhili 2017-03-17 未做导出
-    //TODO: xiazhili 2017-03-17 未做发送邮件
+    /**
+     * 招标信息导出
+     *
+     * @param projectName 项目名称
+     * @version v1
+     */
+    @PostMapping("v1/exportExcel")
+    public Result exportExcel(String projectName) throws ActException {
+        String excel = null;
+        try {
+            excel = biddingInfoAPI.exportExcel(projectName);
+            return new ActResult(excel);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
 
+    }
+
+    /**
+     * 上传
+     *
+     * @version v1
+     */
+    @PostMapping("v1/upload")
+    public Result upload() throws ActException {
+        try {
+            biddingInfoAPI.upload();
+            return new ActResult("upload success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @version v1
+     */
+    @PostMapping("v1/send")
+    public Result sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws ActException {
+        try {
+            BiddingInfoBO biddingInfoBO = biddingInfoAPI.sendBiddingInfo(biddingInfoTO);
+            return ActResult.initialize(biddingInfoBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
 
 }

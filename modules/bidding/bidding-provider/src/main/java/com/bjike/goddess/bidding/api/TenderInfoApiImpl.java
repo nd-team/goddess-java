@@ -39,7 +39,7 @@ public class TenderInfoApiImpl implements TenderInfoAPI {
     }
 
     @Override
-    public List<TenderInfo> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
+    public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return tenderInfoAPI.findListTenderInfo(tenderInfoDTO);
     }
 

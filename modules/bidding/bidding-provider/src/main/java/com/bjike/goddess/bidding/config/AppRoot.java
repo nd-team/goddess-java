@@ -1,4 +1,4 @@
-package com.bjike.goddess.accommodation.config;
+package com.bjike.goddess.bidding.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.accommodation.dao"})//jpa 所在包
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.bidding.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.accommodation"},
+@ComponentScan(basePackages = {"com.bjike.goddess.bidding"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

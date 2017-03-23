@@ -17,7 +17,7 @@ public class BidOpeningInfoDTO extends BaseDTO {
     /**
      * 竞争公司
      */
-    private String []competitive;
+    private String[] competitive;
     /**
      * 开始日期
      */

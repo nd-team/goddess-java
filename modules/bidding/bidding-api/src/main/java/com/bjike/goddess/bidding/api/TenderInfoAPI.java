@@ -22,17 +22,17 @@ public interface TenderInfoAPI {
      * 获取所有标书资料
      *
      * @param tenderInfoDTO 标书资料dto
-     * @return class tenderInfo
+     * @return class tenderInfoBO
      * @throws SerException
      */
-    default List<TenderInfo> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
+    default List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return null;
     }
 
     /**
      * 添加标书资料
      *
-     * @param tenderInfoTO 标书资料数据集合
+     * @param tenderInfoTO 标书资料数据to
      * @throws SerException
      */
     default TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {

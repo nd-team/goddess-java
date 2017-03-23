@@ -22,17 +22,17 @@ public interface BiddingInfoAPI {
      * 获取所有招标信息
      *
      * @param biddingInfoDTO 招标信息dto
-     * @return class biddingInfo
+     * @return class biddingInfoBO
      * @throws SerException
      */
-    default List<BiddingInfo> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+    default List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
     }
 
     /**
      * 添加招标信息
      *
-     * @param biddingInfoTO 招标信息数据集合
+     * @param biddingInfoTO 招标信息数据to
      * @throws SerException
      */
     default BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {

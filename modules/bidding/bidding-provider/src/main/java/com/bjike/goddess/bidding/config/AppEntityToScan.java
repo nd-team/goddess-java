@@ -1,4 +1,4 @@
-package com.bjike.goddess.accommodation.config;
+package com.bjike.goddess.bidding.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScanImpl;
 import org.springframework.stereotype.Component;

@@ -41,7 +41,7 @@ public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI 
     }
 
     @Override
-    public List<BiddingAnswerQuestions> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+    public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return biddingAnswerQuestionsSer.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO);
     }
 
