@@ -1,12 +1,25 @@
-模块名:message
-类名:UserMessage
-作者:liguiqin
-描述:用户消息
+模块名:contractquotemanager
+类名:ContractProjectInfo
+作者:yewenbo
+描述:合同项目基本信息(临时表，存放数据，商务模块获取数据)
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String userId 所属用户;
-Message message 消息;
+String area 所属用户;
+String project 项目组;
+String projectInner 项目内部结构;
+String projectDispatch 派工项目名称;
+String dispatchCode 派工单编号;
+String dispatchContraCode 派工合同号;
+String startTime 开工时间;
+String endTime 完工时间;
+Integer completeTime 完工时间(单位：个月);
+Double contractMoney 合同金额(单位:万元);
+String dispatchUnit 派工单位;
+String contractScale 合同规模数;
+Double receivableNum 回款周期;
+String emphasis 重点性;
+String difficulty 难易程度;
 )

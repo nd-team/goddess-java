@@ -2,6 +2,7 @@ package com.bjike.goddess.contractquotemanager.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface ContractNodeStandardAPI  {
   return null;
  }
 
- default List<ContractNodeStandardBO> list()throws SerException{
+ default List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto)throws SerException{
   return null;
  }
 
@@ -30,5 +31,14 @@ public interface ContractNodeStandardAPI  {
  default void remove(String id)throws SerException{
 
  }
+
+ default List<ContractNodeStandardBO> collect(ContractNodeStandardBO bo)throws SerException{
+  return null;
+ }
+
+ default List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardBO bo)throws SerException{
+  return null;
+ }
+
 
  }

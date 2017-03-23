@@ -18,6 +18,4 @@ import java.util.List;
 */
 public interface ContractQuoteDataRep extends JpaRep<ContractQuoteData ,ContractQuoteDataDTO> { 
 
- List<ContractQuoteDataBO> findByArea(String area)throws RepException;
- List<ContractQuoteDataBO> findByCustomerName(String custmoerName)throws RepException;
  }

@@ -2,6 +2,7 @@ package com.bjike.goddess.contractquotemanager.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
+import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
 
@@ -20,7 +21,7 @@ public interface ContractQuoteDataAPI  {
     return null;
   }
 
-  default List<ContractQuoteDataBO> list()throws SerException{
+  default List<ContractQuoteDataBO> list(ContractQuoteDataDTO contractQuoteDataDTO)throws SerException{
    return null;
   }
 
@@ -30,12 +31,32 @@ public interface ContractQuoteDataAPI  {
   default void remove(String id)throws SerException{
 
   }
+  /**
+   * 冻结使用状态
+   *
+   * @param id id
+   */
+  default void congealStatus(String id) throws SerException {
+    return;
+  }
 
-  default List<ContractQuoteDataBO> findByArea(String area)throws SerException{
+  ;
+
+  /**
+   * 解冻使用状态
+   *
+   * @param id id
+   */
+  default void thawStatus(String id) throws SerException {
+    return;
+  }
+
+  default List<ContractQuoteDataBO> collect(ContractQuoteDataBO bo)throws SerException{
     return null;
   }
 
-  default List<ContractQuoteDataBO> findByCustomerName(String customerName)throws SerException{
-      return null;
+  default List<ContractQuoteDataBO> searchs(ContractQuoteDataBO bo)throws SerException{
+    return null;
   }
+
  }

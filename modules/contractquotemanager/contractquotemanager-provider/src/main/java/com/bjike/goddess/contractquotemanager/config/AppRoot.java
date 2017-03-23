@@ -1,4 +1,4 @@
-package com.bjike.goddess.headcount.config;
+package com.bjike.goddess.contractquotemanager.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [com.bjike]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.headcount.dao"})//jpa 所在包
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.contractquotemanager.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.headcount"},
+@ComponentScan(basePackages = {"com.bjike.goddess.contractquotemanager"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

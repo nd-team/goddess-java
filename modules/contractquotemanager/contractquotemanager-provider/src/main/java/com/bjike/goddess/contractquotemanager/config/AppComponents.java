@@ -1,4 +1,4 @@
-package com.bjike.goddess.headcount.config;
+package com.bjike.goddess.contractquotemanager.config;
 
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
 import org.springframework.stereotype.Component;

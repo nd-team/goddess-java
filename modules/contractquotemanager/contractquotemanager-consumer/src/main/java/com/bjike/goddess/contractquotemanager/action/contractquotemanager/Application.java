@@ -1,4 +1,6 @@
-package com.bjike.goddess.headcount.action.headcount;
+package com.bjike.goddess.contractquotemanager.action.contractquotemanager;
+
+
 
 import com.dounine.japi.JapiClient;
 import com.dounine.japi.JapiClientStorage;
@@ -22,32 +24,32 @@ import java.io.IOException;
  */
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.headcount.action","com.bjike.goddess.common.consumer"},
+@ComponentScan(basePackages = {"com.bjike.goddess.contractquotemanager.action","com.bjike.goddess.common.consumer"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 @ImportResource({"classpath:app.xml"})
 public class Application{
-
-    public static void japi(){
-        JapiClient.setPrefixPath("/home/goddess-java/");//路径前缀
-        JapiClient.setpostfixPath("/src/main/java");
-
-        JapiClient.setProjectJavaPath("headcount/headcount-consumer");//主项目位置
-        JapiClient.setActionReletivePath("com/bjike/goddess/headcount/action");//主项目action位置
-        JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-                "headcount/headcount-api",
-                "common/common-api"
-        });
-        JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
-        JapiClient.setUseCache(true);//
-
-        IProject project = ProjectImpl.init();
-        JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
-        japiClientStorage.setProject(project);
-        japiClientStorage.autoSaveToDisk();
-        new JapiClientTransfer().autoTransfer(japiClientStorage);
-    }
+//
+//    public static void japi(){
+//        JapiClient.setPrefixPath("/home/goddess-java/");//路径前缀
+//        JapiClient.setpostfixPath("/src/main/java");
+//
+//        JapiClient.setProjectJavaPath("contractquotemanager/contractquotemanager-consumer");//主项目位置
+//        JapiClient.setActionReletivePath("com/bjike/goddess/contractquotemanager/action");//主项目action位置
+//        JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
+//                "contractquotemanager/contractquotemanager-api",
+//                "common/common-api"
+//        });
+//        JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
+//        JapiClient.setUseCache(true);
+//
+//        IProject project = ProjectImpl.init();
+//        JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
+//        japiClientStorage.setProject(project);
+//        japiClientStorage.autoSaveToDisk();
+//        new JapiClientTransfer().autoTransfer(japiClientStorage);
+//    }
 
     public static void main(String[] args) throws IOException {
 //        japi();

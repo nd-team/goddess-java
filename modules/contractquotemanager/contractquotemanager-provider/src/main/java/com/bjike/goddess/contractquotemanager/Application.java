@@ -1,6 +1,6 @@
-package com.bjike.goddess.headcount;
+package com.bjike.goddess.contractquotemanager;
 
-import com.bjike.goddess.headcount.config.AppRoot;
+import com.bjike.goddess.contractquotemanager.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;

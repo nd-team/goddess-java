@@ -15,10 +15,8 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 
-	<dubbo:reference validation="true" id="intervalInfoApiImpl" interface="com.bjike.goddess.headcount.api.IntervalInfoAPI" />
-	<dubbo:reference validation="true"  id="groupInfoApiImpl" interface="com.bjike.goddess.headcount.api.GroupInfoAPI" />
-	<dubbo:reference validation="true" id="planCostsApiImpl" interface="com.bjike.goddess.headcount.api.PlanCostsAPI" />
-	<dubbo:reference validation="true" id="configCurrentApiImpl" interface="com.bjike.goddess.headcount.api.ConfigCurrentAPI" />
-	<dubbo:reference validation="true" id="configPlanApiImpl" interface="com.bjike.goddess.headcount.api.ConfigPlanAPI" />
-	<dubbo:reference validation="true" id="skillsManageApiImpl" interface="com.bjike.goddess.headcount.api.SkillsManageAPI" />
+	<dubbo:reference validation="true" id="contractQuoteDataApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" />
+	<dubbo:reference validation="true"  id="contractNodeStandardApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" />
+	<dubbo:reference validation="true" id="ContractProjectInfoApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" />
+
 </beans>

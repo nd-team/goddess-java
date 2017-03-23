@@ -18,12 +18,9 @@
 
 
 	<!--发布接口，供其它模块调用-->
-	<dubbo:service interface="com.bjike.goddess.headcount.api.GroupInfoAPI" ref="groupInfoApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.headcount.api.IntervalInfoAPI" ref="intervalInfoApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.headcount.api.PlanCostsAPI" ref="planCostsApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.headcount.api.ConfigCurrentAPI" ref="configCurrentApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.headcount.api.ConfigPlanAPI" ref="configPlanApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.headcount.api.SkillsManageAPI" ref="skillsManageApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" ref="contractNodeStandardApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" ref="contractQuoteDataApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" ref="contractProjectInfoApiImpl"/>
 
 
 </beans>
