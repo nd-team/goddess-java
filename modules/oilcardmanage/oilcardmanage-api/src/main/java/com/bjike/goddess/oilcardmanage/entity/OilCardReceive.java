@@ -23,7 +23,7 @@ public class OilCardReceive extends BaseEntity {
     /**
      * 数据状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '数据状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '数据状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
@@ -77,7 +77,7 @@ public class OilCardReceive extends BaseEntity {
     /**
      * 审核结果
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '审核结果'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核结果'", nullable = false, insertable = false)
     private OilCardReceiveResult auditResult;
 
     /**
