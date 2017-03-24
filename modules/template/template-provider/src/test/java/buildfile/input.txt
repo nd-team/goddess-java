@@ -1,12 +1,14 @@
-模块名:message
-类名:UserMessage
-作者:liguiqin
-描述:用户消息
+模块名:marketdevelopment
+类名:BusinessCourse
+作者:dengjunren
+描述:业务方向科目
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String userId 所属用户;
-Message message 消息;
+BusinessType type 业务类型;
+String course 业务方向科目;
+String description 描述;
+Status status 状态;
 )
