@@ -95,4 +95,13 @@ public class CustomerBaseInfoTest {
         System.out.println( customerBaseInfoBO.getCustomerNum());
     }
 
+    @Test
+    public void testEnums()throws SerException {
+        CustomerBaseInfoTO to = new CustomerBaseInfoTO();
+        to.setCustomerStatus( CustomerStatus.POTENTIAL );
+
+        CustomerBaseInfo c = BeanTransform.copyProperties(to, CustomerBaseInfo.class,true);
+        System.out.println("");
+    }
+
 }

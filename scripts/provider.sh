@@ -71,7 +71,7 @@ else
 		fi
 		exit 0
 	elif [ "$2" = "" ];then
-		stopApp
+		stopApp -f
 		source $projectRootParent"goddess-java/"scripts/copy.sh 1 $*
 	fi
 	libPath=$distPath"/"build/libs
