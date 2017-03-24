@@ -7,7 +7,7 @@ import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
-import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,7 +34,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     private static Logger log = Logger.getLogger(EntryRegisterSerImpl.class);
     @Autowired
-    private UserSer userSer;
+    private UserAPI userAPI;
     @Autowired
     private FamilyMemberSer familyMemberAPI;
     @Autowired

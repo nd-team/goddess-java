@@ -1,10 +1,12 @@
 package com.bjike.goddess.user.api;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.session.validcorrect.Subject;
 import com.bjike.goddess.user.session.validcorrect.UserSession;
@@ -30,6 +32,14 @@ public class UserApiImpl implements UserAPI {
 
     @Override
     public UserBO currentUser() throws SerException {
+        String nickname = userSer.findByMaxField("nickname", User.class);
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("nickname",nickname));
+        if(true){
+            return BeanTransform.copyProperties(userSer.findOne(dto),UserBO.class);
+
+        } //获取当前用户直接给无需登录
+
         Object token = RpcContext.getContext().getAttachment("userToken");
         if (null != token) {
             Subject subject = UserSession.get(token.toString());

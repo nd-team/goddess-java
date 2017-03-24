@@ -1,0 +1,53 @@
+package com.bjike.goddess.bidding.dto;
+
+import com.bjike.goddess.common.api.dto.BaseDTO;
+
+import javax.persistence.Column;
+
+/**
+ * 开标信息数据传输对象
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-03-16T14:17:14.803 ]
+ * @Description: [ 开标信息数据传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class BidOpeningInfoDTO extends BaseDTO {
+    /**
+     * 竞争公司
+     */
+    private String[] competitive;
+    /**
+     * 开始日期
+     */
+    private String startDate;
+    /**
+     * 结束日期
+     */
+    private String endDate;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String[] getCompetitive() {
+        return competitive;
+    }
+
+    public void setCompetitive(String[] competitive) {
+        this.competitive = competitive;
+    }
+}

@@ -10,7 +10,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.bo.MessageRead;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.entity.GroupMessage;
 import com.bjike.goddess.message.entity.Message;
+import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
@@ -19,13 +21,14 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.UserDetail;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +50,12 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     private UserDetailAPI userDetailAPI;
     @Autowired
     private RedisClient redisClient;
+    @Autowired
+    private GroupMessageSer groupMessageSer;
+    @Autowired
+    private UserMessageSer userMessageSer;
 
+    @Transactional
     @Override
     public void send(MessageTO messageTO) throws SerException {
         if (StringUtils.isBlank(messageTO.getCreateTime())) {
@@ -61,23 +69,62 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         //   KafkaProducer.produce(messageTO);
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
-        saveMsgToRedis(messageTO); //保存到redis
+        saveMessage(messageTO,message);
+        saveMsgToRedis(messageTO,message.getId()); //保存到redis
     }
 
-    private void saveMsgToRedis(MessageTO messageTO) throws SerException {
+    /**
+     * 保存组消息及个人消息
+     *
+     * @param to
+     * @throws SerException
+     */
+    public void saveMessage(MessageTO to,Message m) throws SerException {
+
+
+        RangeType rangeType = to.getRangeType();
+        Message message = super.findById(m.getId());
+        switch (rangeType) {
+            case GROUP:
+                List<GroupMessage> groupMessages = new ArrayList<>();
+                for (String group : to.getGroups()) {
+                    GroupMessage groupMessage = new GroupMessage();
+                    groupMessage.setGroupId(group);
+                    groupMessage.setMessage(message);
+                    groupMessages.add(groupMessage);
+                }
+                groupMessageSer.save(groupMessages);
+
+                break;
+            case SPECIFIED:
+                List<UserMessage> userMessages = new ArrayList<>();
+                for (String user : to.getReceivers()) {
+                    UserMessage userMessage = new UserMessage();
+                    userMessage.setMessage(message);
+                    userMessage.setUserId(user);
+                    userMessages.add(userMessage);
+                }
+                userMessageSer.save(userMessages);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void saveMsgToRedis(MessageTO messageTO,String message_id) throws SerException {
         List<UserBO> userBOS = null;
         String[] receivers = null;
         MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
-        String message_id = messageTO.getId();
         String json_messageRead = JSON.toJSONString(messageRead);
         RangeType rangeType = messageTO.getRangeType();
         UserDTO dto = new UserDTO();
         switch (rangeType) {
             case GROUP:
-                receivers = new String[userBOS.size()];
+                userBOS = userAPI.findByGroup(messageTO.getGroups());
                 break;
             case SPECIFIED:
-                userBOS = userAPI.findByGroup(messageTO.getGroups());
+                receivers = messageTO.getReceivers();
                 break;
             case PUB:
                 dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
@@ -111,8 +158,8 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
         UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
-        String groupId ="1";
-        if(null!=detailBO){
+        String groupId = "-1";
+        if (null != detailBO) {
             groupId = detailBO.getGroupId();
         }
         StringBuilder sb = new StringBuilder();
@@ -132,7 +179,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
         messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
                 limit(dto.getLimit()).collect(Collectors.toList());
-        return BeanTransform.copyProperties(messages,MessageBO.class);
+        return BeanTransform.copyProperties(messages, MessageBO.class);
     }
 
 }
