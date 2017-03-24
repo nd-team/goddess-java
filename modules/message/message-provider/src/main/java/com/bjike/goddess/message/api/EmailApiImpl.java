@@ -1,11 +1,14 @@
-package com.bjike.goddess.message.email;
+package com.bjike.goddess.message.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.message.to.email.Email;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
 
 import javax.activation.DataHandler;
@@ -20,43 +23,51 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 邮件生成类
- *
  * @Author: [liguiqin]
- * @Date: [2016-11-30 09:35]
- * @Description: []
+ * @Date: [2017-03-24 17:29]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EmailGenerate {
-
+@Service("emailApiImpl")
+public class EmailApiImpl implements EmailAPI {
     @Autowired
     private Environment env;
 
-    /**
-     * 发送HTML格式邮件，可以添加多个附件
-     *
-     * @return
-     */
-    public boolean sendHtmlEMail(Email em) throws Exception {
-        validateEmail(em);
-        HtmlEmail email = new HtmlEmail();
-        email.setCharset("UTF-8");
-        initHtmlEmailInfo(email, em);
-        email.send();
-        return true;
+    @Override
+    public void send(Email em) throws SerException {
+        try {
+            validateEmail(em);
+            HtmlEmail email = new HtmlEmail();
+            initHtmlEmail(email, em);
+            initHtmlEmailInfo(email, em);
+            email.send();
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+    }
+
+    private void initHtmlEmail(HtmlEmail email, Email em) {
+        try {
+            String username = StringUtils.isNotBlank(em.getUsername()) ? em.getUsername() : env.getProperty("email.username");
+            String password = StringUtils.isNotBlank(em.getPassword()) ? em.getPassword() : env.getProperty("email.password");
+            password = new String(new BASE64Decoder().decodeBuffer(password));
+            String host = StringUtils.isNotBlank(em.getHost()) ? em.getHost() : env.getProperty("email.host");
+            email.setFrom(em.getSender(), StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName"));   // 发送人
+            email.setSubject(em.getSubject());   // 标题
+            email.setHtmlMsg(em.getContent()); // 邮件内容
+            email.setAuthentication(username, password);
+            email.setHostName(host);
+            email.setCharset("UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     private void initHtmlEmailInfo(HtmlEmail email, Email em) throws Exception {
 
-        email.setFrom(em.getSender(), StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName"));   // 发送人
-        email.setSubject(em.getSubject());   // 标题
-        email.setHtmlMsg(em.getContent()); // 邮件内容
-        String username = StringUtils.isNotBlank(em.getUsername()) ? em.getUsername() : env.getProperty("email.username");
-        String password = StringUtils.isNotBlank(em.getPassword()) ? em.getPassword() : env.getProperty("email.password");
-        password = new String(new BASE64Decoder().decodeBuffer(password));
-        email.setAuthentication(username, password);
-        email.setHostName(StringUtils.isNotBlank(em.getHost()) ? em.getHost() : env.getProperty("email.host"));
 
         List<EmailAttachment> accessories = null; //  初始化邮件附件列表
         if (null != em.getAppendixPath()) {// 发送带附件的邮件
@@ -145,16 +156,16 @@ public class EmailGenerate {
         return username.split("@")[0];
     }
 
-    public static boolean validateEmail(Email email) throws Exception {
+    public static boolean validateEmail(Email email) throws SerException {
         if (!Validator.isEmail(email.getSender())) {
-            throw new Exception("发件人邮件格式错误！");
+            throw new SerException("发件人邮件格式错误！");
         }
         if (null == email.getReceiver() || 0 == email.getReceiver().size()) {
-            throw new Exception("收件人不能为空！");
+            throw new SerException("收件人不能为空！");
         }
         for (String receiver : email.getReceiver()) {
             if (!Validator.isEmail(receiver)) {
-                throw new Exception(String.format("该<%s>收件人邮件格式错误！", receiver));
+                throw new SerException(String.format("该<%s>收件人邮件格式错误！", receiver));
             }
         }
         return true;

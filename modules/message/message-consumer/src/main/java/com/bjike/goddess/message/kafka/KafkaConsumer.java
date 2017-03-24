@@ -1,12 +1,14 @@
-package com.bjike.goddess.message.config;
+package com.bjike.goddess.message.kafka;
 
-import com.bjike.goddess.message.thread.KafkaThread;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +23,14 @@ import java.util.Properties;
  * @Copy: [com.bjike]
  */
 public class KafkaConsumer {
-    public static void main(String[] args) throws Exception {
+
+    public void consumer (){
         Properties props = new Properties();
         //zookeeper 配置
         props.put("zookeeper.connect", "localhost:2181");
 
         //group 代表一个消费组
-        props.put("group.id", "group9");
+        props.put("group.id", "group1");
 
         //zk连接超时
         props.put("zookeeper.session.timeout.ms", "4000");
@@ -42,24 +45,21 @@ public class KafkaConsumer {
 
         ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(config);
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(KafkaProducer.TOPIC, new Integer(1));
+        topicCountMap.put("message", new Integer(1));
 
         StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
         StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
 
         Map<String, List<KafkaStream<String, String>>> consumerMap =
                 consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
-        KafkaStream<String, String> stream = consumerMap.get(KafkaProducer.TOPIC).get(0);
+        KafkaStream<String, String> stream = consumerMap.get("message").get(0);
         ConsumerIterator<String, String> it = stream.iterator();
-//        KafkaThread kafkaThread = new KafkaThread(consumer);
-//        new Thread(kafkaThread).start();
         while (it.hasNext()) {
             String msg = new String(it.next().message());
             System.out.println("收到消息：" + msg);
+            //send email
         }
-//        consumer.commitOffsets();
-//        consumer.shutdown();
-    }
 
+    }
 
 }

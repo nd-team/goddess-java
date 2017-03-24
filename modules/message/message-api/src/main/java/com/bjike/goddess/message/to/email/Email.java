@@ -1,5 +1,6 @@
-package com.bjike.goddess.message.email;
+package com.bjike.goddess.message.to.email;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class Email {
+public class Email implements Serializable{
     /**
      * 登录服务器用户名
      */

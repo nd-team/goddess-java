@@ -1,5 +1,6 @@
 package com.bjike.goddess.message;
 
+import com.bjike.goddess.message.kafka.KafkaConsumer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,8 +22,8 @@ import java.io.IOException;
 public class Application {
 
     public static void main(String[] args) throws IOException {
-
         SpringApplication.run(Application.class, args);
+        new KafkaConsumer().consumer();
         System.in.read();
     }
 

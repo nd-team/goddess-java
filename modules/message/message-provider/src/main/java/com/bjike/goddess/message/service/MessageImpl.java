@@ -14,6 +14,8 @@ import com.bjike.goddess.message.entity.GroupMessage;
 import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.kafka.KafkaProducer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
@@ -51,6 +53,8 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Autowired
     private RedisClient redisClient;
     @Autowired
+    private KafkaProducer kafkaProducer;
+    @Autowired
     private GroupMessageSer groupMessageSer;
     @Autowired
     private UserMessageSer userMessageSer;
@@ -66,7 +70,10 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setSenderId(userBO.getId());
             messageTO.setSenderName(userBO.getUsername());
         }
-        //   KafkaProducer.produce(messageTO);
+        SendType  sendType = messageTO.getSendType();
+        if(sendType.equals(SendType.EMAIL)|| sendType.equals(SendType.ALL)){
+            kafkaProducer.produce(messageTO);
+        }
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
         saveMessage(messageTO, message);
