@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" id="businessCourseApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" id="businessTypeApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.DemandAnalysisAPI" id="demandAnalysisApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarketChannelAPI" id="marketChannelApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI" id="marketMeasureApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarketResearchAPI" id="marketResearchApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MonthPlanAPI" id="MonthPlanApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.TargetInformationAPI"
+                     id="targetInformationApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.WeekPlanAPI" id="weekPlanApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.YearPlanAPI" id="yearPlanApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.DayPlanAPI" id="dayPlanApiImpl"/>
+
+
+</beans>
