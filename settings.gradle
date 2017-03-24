@@ -55,6 +55,10 @@ include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
 
+include ':modules:bidding:bidding-api'
+include ':modules:bidding:bidding-consumer'
+include ':modules:bidding:bidding-provider'
+
 
 
 
