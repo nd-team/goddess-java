@@ -45,19 +45,19 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 性别
      */
-    @Column(name = "customerSex", nullable = false, columnDefinition = "INT(1)   COMMENT '性别'")
+    @Column(name = "customerSex", nullable = false, columnDefinition = "INT(2)   COMMENT '性别'")
     private CustomerSex customerSex;
 
     /**
      * 客户类别
      */
-    @Column(name = "customerType",  columnDefinition = "INT(1)   COMMENT '客户类别'")
+    @Column(name = "customerType",  columnDefinition = "INT(2)   COMMENT '客户类别'")
     private CustomerType customerType;
 
     /**
      * 客户状态
      */
-    @Column(name = "customerStatus",  columnDefinition = "INT(1)   COMMENT '客户状态'")
+    @Column(name = "customerStatus",  columnDefinition = "INT(2)   COMMENT '客户状态'")
     private CustomerStatus customerStatus;
 
     /**
@@ -191,7 +191,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户启用状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '客户启用状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '客户启用状态'", nullable = false, insertable = false)
     private Status status;
 
     /**

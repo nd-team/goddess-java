@@ -34,10 +34,10 @@ include ':modules:staffentry:staffentry-provider'
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
-/*//#客户信息
+//#客户信息
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
-include ':modules:customer:customer-provider'*/
+include ':modules:customer:customer-provider'
 //#司机信息
 include ':modules:driverinfo:driverinfo-api'
 include ':modules:driverinfo:driverinfo-consumer'
@@ -50,7 +50,10 @@ include ':modules:oilcardmanage:oilcardmanage-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
-
+//#商务项目合同管理
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
 
 
 
