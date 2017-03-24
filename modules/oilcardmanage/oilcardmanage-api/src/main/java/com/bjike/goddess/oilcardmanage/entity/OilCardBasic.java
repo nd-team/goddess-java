@@ -26,7 +26,7 @@ public class OilCardBasic extends BaseEntity{
     /**
      * 数据状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '数据状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
@@ -86,7 +86,7 @@ public class OilCardBasic extends BaseEntity{
     /**
      * 油卡状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '使用状态更新时间'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '油卡状态'", nullable = false, insertable = false)
     private OilCardStatus cardStatus;
 
     /**

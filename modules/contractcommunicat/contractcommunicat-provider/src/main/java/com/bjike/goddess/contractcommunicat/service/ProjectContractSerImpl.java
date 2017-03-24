@@ -12,6 +12,7 @@ import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, ProjectContractDTO> implements ProjectContractSer {
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class ,true);
         super.save(model);
@@ -39,6 +41,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO editProjectContract(ProjectContractTO to) throws SerException {
 
         if(!StringUtils.isEmpty(to.getId())){
@@ -53,6 +56,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ProjectContractBO> pageList(ProjectContractDTO dto) throws SerException {
 
         dto.getSorts().add("createTime=desc");
@@ -71,6 +75,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ProjectContractBO> collect(ProjectContractDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         if(dto.getContractInProject()!=null){
@@ -87,6 +92,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void setCollectSend(QuartzCycleType cycle) throws SerException {
         // TODO: 17-3-20
     }
@@ -117,8 +123,6 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             ProjectContractBO total = new ProjectContractBO("合计" , null , null , null , null , totalCostBudget , totalCooperate , totalTrail , totalAbandon);
             boList.add(total);
         }
-
-
         return  boList;
     }
 }

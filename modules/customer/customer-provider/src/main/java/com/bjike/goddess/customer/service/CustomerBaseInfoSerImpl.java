@@ -55,6 +55,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Autowired
     private UserAPI userAPI;
 
+    @Cacheable
     @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
         String[] fields = new String[]{"customerNum", "customerName"};
@@ -291,7 +292,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoTO.setInfoComplet(new BigDecimal(completeness).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%");
     }
 
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
         if( StringUtils.isNotBlank(customerName) ){
@@ -315,6 +316,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         }
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();

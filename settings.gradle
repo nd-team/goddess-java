@@ -50,7 +50,18 @@ include ':modules:oilcardmanage:oilcardmanage-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
+//#organize 组织结构管理
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
+//#supplier 供应商管理
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
 
+include ':modules:bidding:bidding-api'
+include ':modules:bidding:bidding-consumer'
+include ':modules:bidding:bidding-provider'
 
 
 

@@ -14,111 +14,137 @@ import java.time.LocalDate;
  * @Copy: [com.bjike]
  */
 @Entity
-@Table(name = "rental")
+@Table(name = "accommodation_rental")
 public class Rental extends BaseEntity {
     /**
      * 地区
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '地区'")
     private String area;
     /**
      * 项目组
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '项目组'")
     private String projectGroup;
     /**
      * 项目名称
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
     private String projectName;
     /**
      * 租赁人
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租赁人'")
     private String lessee;
     /**
      * 租房地址
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租房地址'")
     private String address;
     /**
      * 房东姓名
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '房东姓名'")
     private String landlord;
     /**
      * 联系方式
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '联系方式'")
     private String contact;
     /**
      * 账户名称
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '账户名称'")
     private String accountTitle;
     /**
      * 银行卡号
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '银行卡号'")
     private String bankNumber;
     /**
      * 银行开户行（详细到支行）
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '银行开户行（详细到支行）'")
     private String bankAccount;
     /**
      * 租房用途
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租房用途'")
     private String purpose;
     /**
      * 租房合同
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租房合同'")
     private String tenancyAgreement;
     /**
      * 租房开始时间
      */
+    @Column(nullable = false,columnDefinition = "DATE COMMENT '租房开始时间'")
     private LocalDate rentBeginTime;
     /**
      * 租房截止时间
      */
+    @Column(nullable = false,columnDefinition = "DATE COMMENT '租房截止时间'")
     private LocalDate rentEndTime;
     /**
      * 房屋交租方式（转账，现金）
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '房屋交租方式（转账，现金）'")
     private String taxesWay;
     /**
      * 房租交租频率
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '房租交租频率'")
     private String taxesFequency;
     /**
      * 房租缴费日期
      */
+    @Column(nullable = false,columnDefinition = "DATE COMMENT '房租缴费日期'")
     private LocalDate rentTime;
     /**
      * 水电费缴费频率
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '水电费缴费频率'")
     private String paymentFrequency;
     /**
      * 中介费
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '中介费'")
     private Double agency;
     /**
      * 押金
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '押金'")
     private Double deposit;
     /**
      * 房租
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '房租'")
     private Double rent;
     /**
      * 水费计价
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '水费计价'")
     private Double water;
     /**
      * 电费计价
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '电费计价'")
     private Double energy;
     /**
      * 网络套餐费用
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '网络套餐费用'")
     private Double network;
     /**
      * 燃气费
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '燃气费'")
     private Double gas;
     /**
      * 备注
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
 
 

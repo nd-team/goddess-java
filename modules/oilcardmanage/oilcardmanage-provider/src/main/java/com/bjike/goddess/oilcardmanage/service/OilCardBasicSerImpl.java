@@ -30,8 +30,8 @@ import java.util.List;
 public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDTO> implements OilCardBasicSer {
 
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO saveOilCarBasic(OilCardBasicTO to) throws SerException {
 
         if(to.getCycleEarlyMoney() != null ){
@@ -45,8 +45,8 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
         return BeanTransform.copyProperties(to,OilCardBasicBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public OilCardBasicBO updateOilCardBasic(OilCardBasicTO to) throws SerException {
         updateModel(to);
         return BeanTransform.copyProperties(to,OilCardBasicBO.class);
@@ -63,8 +63,8 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
         }
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
         OilCardBasic model = super.findById(id);
         if(model != null){
@@ -75,6 +75,7 @@ public class OilCardBasicSerImpl extends ServiceImpl<OilCardBasic,OilCardBasicDT
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<OilCardBasicBO> pageList(OilCardBasicDTO dto) throws SerException {
 
         List<OilCardBasic> list = super.findByPage(dto);
