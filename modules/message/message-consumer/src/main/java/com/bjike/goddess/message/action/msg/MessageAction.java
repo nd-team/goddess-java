@@ -84,6 +84,23 @@ public class MessageAction {
     }
 
     /**
+     * 未读消息
+     *
+     * @param userId 用户id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/unreadList/{userId}")
+    public Result list(@PathVariable String userId) throws ActException {
+        try {
+            List<MessageBO> messageBOS = messageAPI.unreadList(userId);
+            return ActResult.initialize(messageBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 消息修改
      *
      * @param messageTO 消息体
@@ -91,8 +108,32 @@ public class MessageAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result list(@Validated(EDIT.class) MessageTO messageTO) throws ActException {
-        return new ActResult("");
+    public Result edit(@Validated(EDIT.class) MessageTO messageTO) throws ActException {
+        try {
+            messageAPI.edit(messageTO);
+            return new ActResult("edit is success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
+
+    /**
+     * 消息删除
+     *
+     * @param messageId 消息id
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/delete/{messageId}")
+    public Result delete(@PathVariable String messageId) throws ActException {
+        try {
+
+            messageAPI.remove(messageId);
+            return new ActResult("delete is success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }
