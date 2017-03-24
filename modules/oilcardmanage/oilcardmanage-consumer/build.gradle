@@ -1,3 +1,4 @@
+apply from: '../../../config.gradle'
 buildscript {
     repositories {
         mavenCentral()
@@ -32,7 +33,6 @@ sourceSets {
         }
     }
 }
-
 
 dependencies {
     compile(project(":common:common-consumer")){
