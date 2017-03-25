@@ -60,7 +60,7 @@ public class MessageTO extends BaseTO {
     private MsgType msgType;
 
     /**
-     * 发送类型
+     * 发送类型:0消息1邮件2消息及邮件
      */
     @NotNull(message = "发送类型不能为空", groups = ADD.class)
     private SendType sendType;

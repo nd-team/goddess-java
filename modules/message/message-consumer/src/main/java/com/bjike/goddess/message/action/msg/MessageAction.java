@@ -13,7 +13,6 @@ import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
-import com.bjike.goddess.message.to.email.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +36,12 @@ public class MessageAction {
     private MessageAPI messageAPI;
     @Autowired
     private EmailAPI emailAPI;
+
     @PostConstruct
-    public  void init(){
+    public void init() {
         KafkaConsumer.emailAPI = emailAPI;
     }
+
     /**
      * 发送消息
      *
