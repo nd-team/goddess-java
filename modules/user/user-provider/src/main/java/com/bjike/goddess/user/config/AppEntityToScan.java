@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.boot;
+package com.bjike.goddess.user.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScanImpl;
 import org.springframework.stereotype.Component;

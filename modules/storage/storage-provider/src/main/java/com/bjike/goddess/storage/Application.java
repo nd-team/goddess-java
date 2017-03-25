@@ -1,6 +1,6 @@
-package com.bjike.goddess.user;
+package com.bjike.goddess.storage;
 
-import com.bjike.goddess.user.config.AppRoot;
+import com.bjike.goddess.storage.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
