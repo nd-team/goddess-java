@@ -29,7 +29,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
     public List<InstructionClassifyBO> findStatus() throws SerException {
         InstructionClassifyDTO dto = new InstructionClassifyDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<InstructionClassify> list = super.findByCis(dto, false);
+        List<InstructionClassify> list = super.findByCis(dto);
         List<InstructionClassifyBO> bos = BeanTransform.copyProperties(list, InstructionClassifyBO.class);
         return bos;
     }

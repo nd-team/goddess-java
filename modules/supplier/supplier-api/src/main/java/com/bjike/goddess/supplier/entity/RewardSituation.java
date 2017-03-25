@@ -22,7 +22,7 @@ public class RewardSituation extends BaseEntity {
     /**
      * 供应商基本信息
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "information_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '供应商基本信息'")
     private SupplierInformation information;
 

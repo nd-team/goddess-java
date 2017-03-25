@@ -76,7 +76,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     public List<PositionDetailBO> findByPostIds(String[] ids) throws SerException {
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.in("position.id", ids));
-        return this.transformationToBOList(super.findByCis(dto, false));
+        return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
                 .stream().map(ArrangementBO::getId).collect(Collectors.toList());
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.in("arrangement.id", arrangementIds));
-        return this.transformationToBOList(super.findByCis(dto, false));
+        return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         Arrangement arrangement = arrangementSer.findById(entity.getArrangement().getId());
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getParent().getId()));
-        return this.transformationToBOList(super.findByCis(dto, false));
+        return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override

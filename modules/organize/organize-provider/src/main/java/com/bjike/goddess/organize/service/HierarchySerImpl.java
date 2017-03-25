@@ -30,7 +30,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
     public List<HierarchyBO> findStatus() throws SerException {
         HierarchyDTO dto = new HierarchyDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Hierarchy> list = super.findByCis(dto, false);
+        List<Hierarchy> list = super.findByCis(dto);
         List<HierarchyBO> bos = BeanTransform.copyProperties(list, HierarchyBO.class);
         return bos;
     }

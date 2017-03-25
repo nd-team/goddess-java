@@ -30,7 +30,7 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
     public List<OperateBO> findStatus() throws SerException {
         OperateDTO dto = new OperateDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Operate> list = super.findByCis(dto, false);
+        List<Operate> list = super.findByCis(dto);
         List<OperateBO> bos = BeanTransform.copyProperties(list, OperateBO.class);
         return bos;
     }

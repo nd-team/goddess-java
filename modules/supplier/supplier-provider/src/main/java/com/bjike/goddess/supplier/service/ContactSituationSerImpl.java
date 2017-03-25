@@ -47,7 +47,7 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     public List<ContactSituationBO> findByInformation(String info_id) throws SerException {
         ContactSituationDTO dto = new ContactSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
-        List<ContactSituation> list = super.findByCis(dto, false);
+        List<ContactSituation> list = super.findByCis(dto);
         List<ContactSituationBO> bos = new ArrayList<>(0);
         for (ContactSituation entity : list) {
             bos.add(this.transformBO(entity));

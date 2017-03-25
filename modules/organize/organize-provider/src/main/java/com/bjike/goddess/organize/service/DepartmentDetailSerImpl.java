@@ -71,7 +71,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public List<DepartmentDetailBO> findByHierarchy(String hierarchy_id) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.eq("hierarchy.id", hierarchy_id));
-        return this.transformationToBOList(super.findByCis(dto, false));
+        return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public List<DepartmentDetailBO> findByDepartmentIds(List<String> ids) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.in("department_id", ids));
-        return this.transformationToBOList(super.findByCis(dto, false));
+        return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override

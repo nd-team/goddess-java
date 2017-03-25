@@ -32,7 +32,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     public List<ArrangementBO> findStatus() throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Arrangement> list = super.findByCis(dto, false);
+        List<Arrangement> list = super.findByCis(dto);
         List<ArrangementBO> bos = BeanTransform.copyProperties(list, ArrangementBO.class);
         return bos;
     }
@@ -62,6 +62,6 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     public List<ArrangementBO> findChild(String id) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
-        return BeanTransform.copyProperties(super.findByCis(dto, false), ArrangementBO.class);
+        return BeanTransform.copyProperties(super.findByCis(dto), ArrangementBO.class);
     }
 }

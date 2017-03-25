@@ -65,7 +65,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
     public List<PositionWorkDetailBO> findByInstruction(String id) throws SerException {
         PositionWorkDetailDTO dto = new PositionWorkDetailDTO();
         dto.getConditions().add(Restrict.eq("instruction.id", id));
-        List<PositionWorkDetail> list = super.findByCis(dto, false);
+        List<PositionWorkDetail> list = super.findByCis(dto);
         return transformBOList(list);
     }
 

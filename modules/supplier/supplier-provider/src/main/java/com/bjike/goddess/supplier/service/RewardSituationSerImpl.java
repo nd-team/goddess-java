@@ -47,7 +47,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     public List<RewardSituationBO> findByInformation(String info_id) throws SerException {
         RewardSituationDTO dto = new RewardSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
-        List<RewardSituation> list = super.findByCis(dto, false);
+        List<RewardSituation> list = super.findByCis(dto);
         List<RewardSituationBO> bos = new ArrayList<>(0);
         for (RewardSituation entity : list)
             bos.add(this.transformBO(entity));

@@ -47,7 +47,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     public List<CooperationSituationBO> findByInformation(String info_id) throws SerException {
         CooperationSituationDTO dto = new CooperationSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
-        List<CooperationSituation> list = super.findByCis(dto, false);
+        List<CooperationSituation> list = super.findByCis(dto);
         List<CooperationSituationBO> bos = new ArrayList<>(0);
         for (CooperationSituation entity : list)
             bos.add(this.transformBO(entity));

@@ -29,7 +29,7 @@ public class AngleSerImpl extends ServiceImpl<Angle, AngleDTO> implements AngleS
     public List<AngleBO> findStatus() throws SerException {
         AngleDTO dto = new AngleDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Angle> angleList = super.findByCis(dto, false);
+        List<Angle> angleList = super.findByCis(dto);
         List<AngleBO> angleBOList = BeanTransform.copyProperties(angleList, AngleBO.class);
         return angleBOList;
     }
