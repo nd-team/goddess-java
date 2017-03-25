@@ -33,8 +33,9 @@ public interface MessageSer extends Ser<Message, MessageDTO> {
      *
      * @param messageId
      */
-    default void  read(String messageId) throws SerException {
+    default void read(String messageId) throws SerException {
     }
+
     /**
      * 读取消息列表
      *
@@ -42,6 +43,33 @@ public interface MessageSer extends Ser<Message, MessageDTO> {
      */
     default List<MessageBO> list(MessageDTO dto) throws SerException {
         return null;
+    }
+
+    /**
+     * 未读消息列表
+     * @param userId
+     * @return
+     * @throws SerException
+     */
+    default List<MessageBO> unreadList(String userId) throws SerException{
+        return null;
+    }
+
+
+    /**
+     * 删除消息
+     *
+     * @param messageId 消息id
+     */
+    default void remove(String messageId) throws SerException {
+    }
+
+    /**
+     * 修改消息
+     *
+     * @param messageTO 消息id
+     */
+    default void edit(MessageTO messageTO) throws SerException {
     }
 
 }

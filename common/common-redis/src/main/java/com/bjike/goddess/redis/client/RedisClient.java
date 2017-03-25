@@ -32,6 +32,18 @@ public interface RedisClient {
     }
 
     /**
+     * 保存
+     *
+     * @param key
+     * @param value
+     * @param seconds 保存时间
+     * @throws SerException
+     */
+    default void save(String key, String value, int seconds) throws SerException {
+
+    }
+
+    /**
      * 获取
      *
      * @param key
@@ -63,16 +75,29 @@ public interface RedisClient {
 
     }
 
-  /**
+    /**
      * 追加
      *
      * @param key
      * @param values 追加值
      * @throws SerException
      */
-    default void appendToList(String key, String ... values) throws SerException {
+    default void appendToList(String key, String... values) throws SerException {
 
     }
+
+    /**
+     * 追加
+     *
+     * @param key
+     * @param seconds 时间
+     * @param values  追加值
+     * @throws SerException
+     */
+    default void appendToList(String key, int seconds, String... values) throws SerException {
+
+    }
+
     /**
      * 删除某元素
      *
@@ -80,19 +105,31 @@ public interface RedisClient {
      * @param value 删除值
      * @throws SerException
      */
-    default void removeToList(String key, String  value) throws SerException {
+    default void removeToList(String key, String value) throws SerException {
 
     }
 
 
-  /**
+    /**
      * 追加
      *
-     * @param key 不重复
+     * @param key   不重复
      * @param value 追加值
      * @throws SerException
      */
-    default void appendToMap(String key,String field ,String value) throws SerException {
+    default void appendToMap(String key, String field, String value) throws SerException {
+
+    }
+
+    /**
+     * 追加
+     *
+     * @param key     不重复
+     * @param value   追加值
+     * @param seconds 时间
+     * @throws SerException
+     */
+    default void appendToMap(String key, String field, String value, int seconds) throws SerException {
 
     }
 
@@ -106,6 +143,16 @@ public interface RedisClient {
     }
 
     /**
+     * @param key     存入redis的key，不重复
+     * @param map     保存多个key val
+     * @param seconds 时间
+     * @throws SerException
+     */
+    default void saveMap(String key, Map<String, String> map, int seconds) throws SerException {
+
+    }
+
+    /**
      * @param key    存入redis中map对象的key
      * @param fields 放入map中的对象的key
      * @return
@@ -114,12 +161,13 @@ public interface RedisClient {
     default List<String> getMap(String key, String... fields) throws SerException {
         return null;
     }
- /**
-     * @param key    存入redis中map对象的key
+
+    /**
+     * @param key 存入redis中map对象的key
      * @return
      * @throws SerException
      */
-    default Map<String,String> getAllMap(String key) throws SerException {
+    default Map<String, String> getAllMap(String key) throws SerException {
         return null;
     }
 
@@ -190,6 +238,18 @@ public interface RedisClient {
     }
 
     /**
+     * 保存列表
+     *
+     * @param key
+     * @param seconds 时间
+     * @param values
+     * @throws SerException
+     */
+    default void saveList(String key, List<String> values, int seconds) throws SerException {
+
+    }
+
+    /**
      * 获取list集合
      *
      * @param key
@@ -240,7 +300,7 @@ public interface RedisClient {
      * @param key
      * @throws SerException
      */
-    default void removeSet(String key,String values) throws SerException {
+    default void removeSet(String key, String values) throws SerException {
 
     }
 

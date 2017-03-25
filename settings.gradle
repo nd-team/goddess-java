@@ -58,10 +58,7 @@ include ':modules:organize:organize-provider'
 include ':modules:supplier:supplier-api'
 include ':modules:supplier:supplier-consumer'
 include ':modules:supplier:supplier-provider'
-//#marketdevelopment 市场计划进度管理
-include ':modules:marketdevelopment:marketdevelopment-api'
-include ':modules:marketdevelopment:marketdevelopment-consumer'
-include ':modules:marketdevelopment:marketdevelopment-provider'
+
 
 
 

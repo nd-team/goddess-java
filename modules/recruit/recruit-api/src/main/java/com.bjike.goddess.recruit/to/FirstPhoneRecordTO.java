@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.Gender;
 
 /**
@@ -11,7 +12,7 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FirstPhoneRecordTO {
+public class FirstPhoneRecordTO extends BaseTO {
 
     /**
      * 日期

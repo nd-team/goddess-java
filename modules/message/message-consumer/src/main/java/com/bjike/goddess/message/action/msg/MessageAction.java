@@ -7,14 +7,17 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -31,6 +34,13 @@ import java.util.List;
 public class MessageAction {
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private EmailAPI emailAPI;
+
+    @PostConstruct
+    public void init() {
+        KafkaConsumer.emailAPI = emailAPI;
+    }
 
     /**
      * 发送消息
@@ -84,6 +94,23 @@ public class MessageAction {
     }
 
     /**
+     * 未读消息
+     *
+     * @param userId 用户id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/unreadList/{userId}")
+    public Result list(@PathVariable String userId) throws ActException {
+        try {
+            List<MessageBO> messageBOS = messageAPI.unreadList(userId);
+            return ActResult.initialize(messageBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 消息修改
      *
      * @param messageTO 消息体
@@ -91,8 +118,32 @@ public class MessageAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result list(@Validated(EDIT.class) MessageTO messageTO) throws ActException {
-        return new ActResult("");
+    public Result edit(@Validated(EDIT.class) MessageTO messageTO) throws ActException {
+        try {
+            messageAPI.edit(messageTO);
+            return new ActResult("edit is success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
+
+    /**
+     * 消息删除
+     *
+     * @param messageId 消息id
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/delete/{messageId}")
+    public Result delete(@PathVariable String messageId) throws ActException {
+        try {
+
+            messageAPI.remove(messageId);
+            return new ActResult("delete is success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

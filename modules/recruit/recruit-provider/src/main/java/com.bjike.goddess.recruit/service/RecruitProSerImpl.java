@@ -33,8 +33,8 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
      */
     @Override
     public List<RecruitProBO> list(RecruitProDTO dto) throws SerException {
-        List<RecruitPro> proList =  super.findByCis(dto);
-        List<RecruitProBO> recruitProBOList = BeanTransform.copyProperties(proList, RecruitProBO.class, true);
+        List<RecruitPro> proList =  super.findByPage(dto);
+        List<RecruitProBO> recruitProBOList = BeanTransform.copyProperties(proList, RecruitProBO.class);
         return recruitProBOList;
     }
 
@@ -49,7 +49,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     public RecruitProBO save(RecruitProTO recruitProTO) throws SerException {
         RecruitPro recruitPro = BeanTransform.copyProperties(recruitProTO, RecruitPro.class, true);
         RecruitPro entity = super.save(recruitPro);
-        RecruitProBO recruitProBO = BeanTransform.copyProperties(entity, RecruitProBO.class, true);
+        RecruitProBO recruitProBO = BeanTransform.copyProperties(entity, RecruitProBO.class);
         return recruitProBO;
     }
 

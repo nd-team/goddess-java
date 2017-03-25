@@ -2,6 +2,7 @@ package com.bjike.goddess.accommodation.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,107 +14,132 @@ import javax.persistence.Table;
  * @Copy: [com.bjike]
  */
 @Entity
-@Table(name = "rentalApply")
+@Table(name = "accommodation_rentalApply")
 public class RentalApply extends BaseEntity{
     /**
      * 姓名（用户名称）
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '姓名（用户名称）'")
     private String name;
     /**
      * 地区
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '地区'")
     private String area;
     /**
      * 岗位
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '岗位'")
     private String jobs;
     /**
      * 项目组
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '项目组'")
     private String projectGroup;
     /**
      * 项目名称
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
     private String projectName;
     /**
      * 租赁人
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租赁人'")
     private String lessee;
     /**
      * 住宿人
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '住宿人'")
     private String stayPeople;
     /**
      * 申请原因
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '申请原因'")
     private String reason;
     /**
      * 租房用途
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租房用途'")
     private String purpose;
     /**
      * 租房地址
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '租房地址'")
     private String address;
     /**
      * 房东姓名
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '房东姓名'")
     private String landlord ;
     /**
      * 联系方式
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '联系方式'")
     private String contact;
     /**
      * 中介费
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '中介费'")
     private Double agency;
     /**
      * 押金
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '押金'")
     private Double deposit;
     /**
      * 房租
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '房租'")
     private Double rent;
     /**
      * 房租管理费
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '房租管理费'")
     private Double rentFee;
     /**
      * 卫生费
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '卫生费'")
     private Double sanitation;
     /**
      * 水费计价
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '水费计价'")
     private Double water;
     /**
      * 电费计价
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '电费计价'")
     private Double energy;
     /**
      * 网络套餐费用
      */
+    @Column(nullable = false,columnDefinition = "DECIMAL(5,2) COMMENT '网络套餐费用'")
     private Double network;
     /**
      * 项目经理审批
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '项目经理审批'")
     private String manageApproval;
     /**
      * 商务发展部意见
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '商务发展部意见'")
     private String commerceRemark;
     /**
      * 综合资源部意见
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '综合资源部意见'")
     private String comprehensiveRemark;
     /**
      * 运营财务部意见
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '运营财务部意见'")
     private String operatingRemark;
     /**
      * 备注
      */
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String remark;
 
     public String getName() {

@@ -1,14 +1,21 @@
-模块名:marketdevelopment
-类名:BusinessCourse
-作者:dengjunren
-描述:业务方向科目
+模块名:projectmeasure
+类名:ProjectMeasureSummary
+作者:sunfengtao
+描述:项目测算汇总
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-BusinessType type 业务类型;
-String course 业务方向科目;
-String description 描述;
+String projectGroups 项目组;
+String createUser 创建/修改人;
+LocalDateTime updateTime 更新时间;
+LocalDateTime lastTime 上次发送时间
+String note 备注;
+Integer sendInterval 发送间隔;
+CycleType cycle 发送时间格式;
+Integer detailInterval 汇总间隔;
+CycleType detailCycle 汇总时间格式;
+String emails 发送对象;
 Status status 状态;
 )

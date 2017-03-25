@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 /**
  * 未入职原因
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.recruit.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class NotEntryReasonTO {
+public class NotEntryReasonTO extends BaseTO {
 
     /**
      * 未入职原因类型
