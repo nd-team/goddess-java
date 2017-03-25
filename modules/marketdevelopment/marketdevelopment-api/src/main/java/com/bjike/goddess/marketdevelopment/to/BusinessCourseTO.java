@@ -1,7 +1,11 @@
 package com.bjike.goddess.marketdevelopment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 业务方向科目
@@ -17,6 +21,7 @@ public class BusinessCourseTO extends BaseTO {
     /**
      * 业务类型id
      */
+    @NotNull(message = "业务类型ID不能为空",groups = {ADD.class, EDIT.class})
     private String type_id;
 
     /**
@@ -27,6 +32,7 @@ public class BusinessCourseTO extends BaseTO {
     /**
      * 业务方向科目
      */
+    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String course;
 
     /**

@@ -49,16 +49,18 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
-        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class);
+        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class,true);
         entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
+        entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
         super.save(entity);
         return this.transformBO(entity);
     }
 
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
-        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class);
+        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class,true);
         entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
+        entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
         super.update(entity);
         return this.transformBO(entity);
     }

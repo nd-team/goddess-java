@@ -31,8 +31,8 @@ public class YearPlanAction {
      * 保存年计划数据
      *
      * @param to 年计划传输对象
-     * @version v1
      * @return class YearPlanVO
+     * @version v1
      */
     @PostMapping("v1/save")
     public Result save(YearPlanTO to) throws ActException {
@@ -47,8 +47,8 @@ public class YearPlanAction {
      * 修改年计划数据
      *
      * @param to 年计划传输对象
-     * @version v1
      * @return class YearPlanVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
     public Result update(YearPlanTO to) throws ActException {
@@ -63,8 +63,8 @@ public class YearPlanAction {
      * 删除年计划对象
      *
      * @param to 年计划传输对象
-     * @version v1
      * @return class YearPlanVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(YearPlanTO to) throws ActException {
@@ -78,8 +78,8 @@ public class YearPlanAction {
     /**
      * 查询本年年计划数据
      *
-     * @version v1
      * @return class YearPlanVO
+     * @version v1
      */
     @GetMapping("v1/findThisYear")
     public Result findThisYear() throws ActException {
@@ -94,11 +94,11 @@ public class YearPlanAction {
      * 根据年份查询年计划数据
      *
      * @param year 年份
-     * @version v1
      * @return class YearPlanVO
+     * @version v1
      */
     @GetMapping("v1/findByYear")
-    public Result findByYear(@PathVariable Integer year) throws ActException {
+    public Result findByYear(Integer year) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findByYear(year), YearPlanVO.class));
         } catch (SerException e) {

@@ -8,7 +8,6 @@ import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
-import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -71,6 +70,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
         entity.setYear(yearPlanSer.findById(to.getYear_id()));
+        entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted());
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -80,6 +80,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     public MonthPlanBO update(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
         entity.setYear(yearPlanSer.findById(to.getYear_id()));
+        entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted() / 100);
         super.update(entity);
         return this.transformBO(entity);
     }

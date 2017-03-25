@@ -83,8 +83,8 @@ public class DayPlanAction {
      * @return class DayPlanVO
      * @version v1
      */
-    @GetMapping("v1/findByDate")
-    public Result findByDate(@PathVariable String start, @PathVariable String end) throws ActException {
+    @GetMapping("v1/findByDateCycle")
+    public Result findByDate(String start, String end) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(start, end), DayPlanVO.class));
         } catch (SerException e) {
@@ -100,7 +100,7 @@ public class DayPlanAction {
      * @version v1
      */
     @GetMapping("v1/findByDate")
-    public Result findByDate(@PathVariable String date) throws ActException {
+    public Result findByDate(String date) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(date), DayPlanVO.class));
         } catch (SerException e) {

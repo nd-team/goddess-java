@@ -25,7 +25,7 @@
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketChannelAPI" ref="marketChannelApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI" ref="marketMeasureApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketResearchAPI" ref="marketResearchApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthPlanAPI" ref="MonthPlanApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthPlanAPI" ref="monthPlanApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.TargetInformationAPI" ref="targetInformationApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekPlanAPI" ref="weekPlanApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.YearPlanAPI" ref="yearPlanApiImpl"/>

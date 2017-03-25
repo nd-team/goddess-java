@@ -115,7 +115,7 @@ public class BusinessCourseAction {
      * @version v1
      */
     @GetMapping("v1/findByType/{type_id}")
-    public Result findByType(String type_id) throws ActException {
+    public Result findByType(@PathVariable String type_id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findByType(type_id), BusinessCourseVO.class));
         } catch (SerException e) {

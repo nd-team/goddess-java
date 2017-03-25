@@ -1,7 +1,11 @@
 package com.bjike.goddess.marketdevelopment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.marketdevelopment.enums.MonthType;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 月计划
@@ -17,31 +21,37 @@ public class MonthPlanTO extends BaseTO {
     /**
      * 年计划ID
      */
+    @NotNull(message = "年计划ID不能为空",groups = {ADD.class, EDIT.class})
     private String year_id;
 
     /**
      * 月份
      */
+    @NotNull(message = "月份不能为空",groups = {ADD.class, EDIT.class})
     private MonthType month;
 
     /**
      * 各科目年度任务量
      */
+    @NotNull(message = "各科目年度任务量不能为空",groups = {ADD.class, EDIT.class})
     private Double quota;
 
     /**
      * 年度占比
      */
+    @NotNull(message = "年度占比不能为空",groups = {ADD.class, EDIT.class})
     private Double accounted;
 
     /**
      * 业务方向科目中占比
      */
+    @NotNull(message = "业务方向科目中占比不能为空",groups = {ADD.class, EDIT.class})
     private Double courseAccounted;
 
     /**
      * 计划最小任务量
      */
+    @NotNull(message = "计划最小任务量不能为空",groups = {ADD.class, EDIT.class})
     private Double leastQuota;
 
     /**

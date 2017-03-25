@@ -83,7 +83,7 @@ public class MarketChannelAction {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(@PathVariable String type) throws ActException {
+    public Result findByType( String type) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByType(type), MarketChannelVO.class));
         } catch (SerException e) {
@@ -99,7 +99,7 @@ public class MarketChannelAction {
      * @version v1
      */
     @GetMapping("v1/findByCourse")
-    public Result findByCourse(@PathVariable String course) throws ActException {
+    public Result findByCourse( String course) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourse(course), MarketChannelVO.class));
         } catch (SerException e) {
@@ -116,7 +116,7 @@ public class MarketChannelAction {
      * @version v1
      */
     @GetMapping("v1/findByCourseType")
-    public Result findByCourseType(@PathVariable String type,@PathVariable String course) throws ActException {
+    public Result findByCourseType( String type, String course) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourseType(type, course), MarketChannelVO.class));
         } catch (SerException e) {

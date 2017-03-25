@@ -1,6 +1,10 @@
 package com.bjike.goddess.marketdevelopment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 市场需求分析
@@ -16,21 +20,25 @@ public class DemandAnalysisTO extends BaseTO {
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 业务方向科目
      */
+    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String course;
 
     /**
      * 目标人群
      */
+    @NotNull(message = "目标人群不能为空",groups = {ADD.class, EDIT.class})
     private String target;
 
     /**
      * 目标定位
      */
+    @NotNull(message = "目标定位不能为空",groups = {ADD.class, EDIT.class})
     private String orientation;
 
     /**

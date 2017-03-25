@@ -31,21 +31,21 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     public YearPlanBO save(YearPlanTO to) throws SerException {
         YearPlan entity = BeanTransform.copyProperties(to, YearPlan.class);
         super.save(entity);
-        return BeanTransform.copyProperties(to, YearPlanBO.class);
+        return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 
     @Override
     public YearPlanBO update(YearPlanTO to) throws SerException {
         YearPlan entity = BeanTransform.copyProperties(to, YearPlan.class);
         super.update(entity);
-        return BeanTransform.copyProperties(to, YearPlanBO.class);
+        return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 
     @Override
     public YearPlanBO delete(YearPlanTO to) throws SerException {
         YearPlan entity = super.findById(to.getId());
         super.remove(entity);
-        return BeanTransform.copyProperties(to, YearPlanBO.class);
+        return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 
     @Override

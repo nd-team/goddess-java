@@ -1,6 +1,10 @@
 package com.bjike.goddess.marketdevelopment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 天计划
@@ -16,76 +20,91 @@ public class DayPlanTO extends BaseTO {
     /**
      * 序号
      */
+    @NotNull(message = "序号不能为空",groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 时间
      */
+    @NotNull(message = "时间不能为空",groups = {ADD.class, EDIT.class})
     private String time;
 
     /**
      * 业务状态(立项前/立项后)
      */
+    @NotNull(message = "业务状态不能为空",groups = {ADD.class, EDIT.class})
     private Boolean business;
 
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 业务方向科目
      */
+    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String source;
 
     /**
      * 公司名称
      */
+    @NotNull(message = "公司名称不能为空",groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 计划工作内容
      */
+    @NotNull(message = "计划工作内容不能为空",groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
      * 所属阶段
      */
+    @NotNull(message = "所属阶段不能为空",groups = {ADD.class, EDIT.class})
     private String phase;
 
     /**
      * 任务量
      */
+    @NotNull(message = "任务量不能为空",groups = {ADD.class, EDIT.class})
     private Double quota;
 
     /**
      * 任务人
      */
+    @NotNull(message = "任务人不能为空",groups = {ADD.class, EDIT.class})
     private String own;
 
     /**
      * 洽谈方式
      */
+    @NotNull(message = "洽谈方式不能为空",groups = {ADD.class, EDIT.class})
     private String negotiation;
 
     /**
      * 商务预算费
      */
+    @NotNull(message = "商务预算费不能为空",groups = {ADD.class, EDIT.class})
     private Double budget;
 
     /**
      * 客户姓名
      */
+    @NotNull(message = "客户姓名不能为空",groups = {ADD.class, EDIT.class})
     private String customer;
 
     /**
      * 客户电话
      */
+    @NotNull(message = "客户电话不能为空",groups = {ADD.class, EDIT.class})
     private String phone;
 
     /**
      * 商务内容
      */
+    @NotNull(message = "商务内容不能为空",groups = {ADD.class, EDIT.class})
     private String businessContent;
 
     /**

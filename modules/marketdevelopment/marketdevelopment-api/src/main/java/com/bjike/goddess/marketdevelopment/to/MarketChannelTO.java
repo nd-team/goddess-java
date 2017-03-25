@@ -1,6 +1,10 @@
 package com.bjike.goddess.marketdevelopment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 市场挖掘
@@ -16,21 +20,25 @@ public class MarketChannelTO extends BaseTO {
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 业务方向科目
      */
+    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String course;
 
     /**
      * 人员
      */
+    @NotNull(message = "人员不能为空",groups = {ADD.class, EDIT.class})
     private String staff;
 
     /**
      * 资质
      */
+    @NotNull(message = "资质不能为空",groups = {ADD.class, EDIT.class})
     private String qualification;
 
     /**

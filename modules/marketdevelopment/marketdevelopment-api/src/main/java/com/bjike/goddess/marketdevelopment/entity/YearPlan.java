@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketdevelopment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,8 @@ public class YearPlan extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
+    @Range(min = 1990, max = 2999) //取范围
+    @Column(name = "year", nullable = false, columnDefinition = "INT(11)  COMMENT '年份'")
     private Integer year;
 
     /**
@@ -47,7 +49,8 @@ public class YearPlan extends BaseEntity {
     /**
      * 可发展对象
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '可发展对象'")
+    @Range(min = 0, max = 9999) //取范围
+    @Column(name = "development", nullable = false, columnDefinition = "TINYINT   COMMENT '可发展对象'")
     private Integer development;
 
     /**
