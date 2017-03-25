@@ -3,6 +3,8 @@ package com.bjike.goddess.marketactivitymanage.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
+import java.util.List;
+
 /**
  * 市场招待记录业务传输对象
  *
@@ -82,7 +84,7 @@ public class MarketServeRecordBO extends BaseBO {
     /**
      * 预计费用
      */
-    private double predictCharge;
+    private Double predictCharge;
 
     /**
      * 招待负责人
@@ -114,6 +116,10 @@ public class MarketServeRecordBO extends BaseBO {
      */
     private AuditType executiveAuditOpinion;
 
+    /**
+     * 客户信息
+     */
+    private List<CustomerInfoBO> customerInfoBOList;
 
     public String getPlanActivityTiming() {
         return planActivityTiming;
@@ -219,11 +225,11 @@ public class MarketServeRecordBO extends BaseBO {
         this.classify = classify;
     }
 
-    public double getPredictCharge() {
+    public Double getPredictCharge() {
         return predictCharge;
     }
 
-    public void setPredictCharge(double predictCharge) {
+    public void setPredictCharge(Double predictCharge) {
         this.predictCharge = predictCharge;
     }
 
@@ -273,5 +279,13 @@ public class MarketServeRecordBO extends BaseBO {
 
     public void setExecutiveAuditOpinion(AuditType executiveAuditOpinion) {
         this.executiveAuditOpinion = executiveAuditOpinion;
+    }
+
+    public List<CustomerInfoBO> getCustomerInfoBOList() {
+        return customerInfoBOList;
+    }
+
+    public void setCustomerInfoBOList(List<CustomerInfoBO> customerInfoBOList) {
+        this.customerInfoBOList = customerInfoBOList;
     }
 }

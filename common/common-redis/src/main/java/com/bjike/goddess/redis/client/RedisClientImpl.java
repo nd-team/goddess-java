@@ -34,6 +34,19 @@ public class RedisClientImpl implements RedisClient {
         }
     }
 
+    public void save(String key, String value, int seconds) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.set(key, value);
+            jedis.expire(key, seconds);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+
+    }
+
     @Override
     public String get(String key) throws SerException {
 
@@ -85,10 +98,37 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
+    public void appendToList(String key, int seconds, String... values) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.rpush(key, values);
+            jedis.expire(key, seconds);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+
+    }
+
+    @Override
     public void removeToList(String key, String value) throws SerException {
         try {
             jedis = jedisPool.getResource();
-            jedis.lrem(key,0, value);
+            jedis.lrem(key, 0, value);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
+    public void appendToMap(String key, String field, String value, int seconds) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.hset(key, field, value);
+            jedis.expire(key, seconds);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {
@@ -100,7 +140,7 @@ public class RedisClientImpl implements RedisClient {
     public void appendToMap(String key, String field, String value) throws SerException {
         try {
             jedis = jedisPool.getResource();
-            jedis.hset(key,field, value);
+            jedis.hset(key, field, value);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {
@@ -113,6 +153,19 @@ public class RedisClientImpl implements RedisClient {
         try {
             jedis = jedisPool.getResource();
             jedis.hmset(key, map);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
+    public void saveMap(String key, Map<String, String> map, int seconds) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            jedis.hmset(key, map);
+            jedis.expire(key, seconds);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {
@@ -223,6 +276,23 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
+    public void saveList(String key, List<String> values, int seconds) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            values.stream().forEach(val -> {
+                jedis.lpush(key, val);
+                jedis.expire(key, seconds);
+
+            });
+
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
     public List<String> getList(String key, int start, int end) throws SerException {
         try {
             jedis = jedisPool.getResource();
@@ -278,10 +348,10 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
-    public void removeSet(String key,String values) throws SerException {
+    public void removeSet(String key, String values) throws SerException {
         try {
             jedis = jedisPool.getResource();
-            jedis.srem(key,values);
+            jedis.srem(key, values);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         } finally {

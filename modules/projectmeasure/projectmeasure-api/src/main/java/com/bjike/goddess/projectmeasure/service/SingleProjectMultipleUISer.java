@@ -1,0 +1,56 @@
+package com.bjike.goddess.projectmeasure.service;
+
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectmeasure.bo.SingleProjectMultipleUIBO;
+import com.bjike.goddess.projectmeasure.entity.SingleProjectMultipleUI;
+import com.bjike.goddess.projectmeasure.dto.SingleProjectMultipleUIDTO;
+import com.bjike.goddess.projectmeasure.to.SingleProjectMultipleUITO;
+
+import java.util.List;
+
+/**
+ * 单个项目多个界面业务接口
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-03-23 10:51 ]
+ * @Description: [ ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface SingleProjectMultipleUISer extends Ser<SingleProjectMultipleUI, SingleProjectMultipleUIDTO> {
+
+    /**
+     * 分页查询单个项目多个界面
+     *
+     * @return class SingleProjectMultipleUIBO
+     * @throws SerException
+     */
+    List<SingleProjectMultipleUIBO> list(SingleProjectMultipleUIDTO dto) throws SerException;
+
+    /**
+     * 保存单个项目多个界面
+     *
+     * @param to 单个项目多个界面to
+     * @return class SingleProjectMultipleUIBO
+     * @throws SerException
+     */
+    SingleProjectMultipleUIBO save(SingleProjectMultipleUITO to) throws SerException;
+
+    /**
+     * 根据id删除单个项目多个界面
+     *
+     * @param id 单个项目多个界面唯一标识
+     * @throws SerException
+     */
+    void remove(String id) throws SerException;
+
+    /**
+     * 更新单个项目多个界面
+     *
+     * @param to 单个项目多个界面to
+     * @throws SerException
+     */
+    void update(SingleProjectMultipleUITO to) throws SerException;
+
+}

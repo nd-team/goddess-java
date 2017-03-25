@@ -84,7 +84,7 @@ public class MarketServeApply extends BaseEntity {
      * 预计费用
      */
     @Column(name = "predictCharge", nullable = false, columnDefinition = "DECIMAL(7,2) COMMENT '预计费用'")
-    private double predictCharge;
+    private Double predictCharge;
 
     /**
      * 招待负责人
@@ -203,11 +203,11 @@ public class MarketServeApply extends BaseEntity {
         this.classify = classify;
     }
 
-    public double getPredictCharge() {
+    public Double getPredictCharge() {
         return predictCharge;
     }
 
-    public void setPredictCharge(double predictCharge) {
+    public void setPredictCharge(Double predictCharge) {
         this.predictCharge = predictCharge;
     }
 

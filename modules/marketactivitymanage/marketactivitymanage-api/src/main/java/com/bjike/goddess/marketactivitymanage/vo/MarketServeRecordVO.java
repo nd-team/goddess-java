@@ -81,7 +81,7 @@ public class MarketServeRecordVO {
     /**
      * 预计费用
      */
-    private double predictCharge;
+    private Double predictCharge;
 
     /**
      * 招待负责人
@@ -218,11 +218,11 @@ public class MarketServeRecordVO {
         this.classify = classify;
     }
 
-    public double getPredictCharge() {
+    public Double getPredictCharge() {
         return predictCharge;
     }
 
-    public void setPredictCharge(double predictCharge) {
+    public void setPredictCharge(Double predictCharge) {
         this.predictCharge = predictCharge;
     }
 

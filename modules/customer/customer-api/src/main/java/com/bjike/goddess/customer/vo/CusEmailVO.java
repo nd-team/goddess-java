@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.enums.CustomerCollectUnit;
 import com.bjike.goddess.customer.enums.CustomerSendUnit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户邮件发送定制表现层对象
@@ -85,6 +86,37 @@ public class CusEmailVO {
      * 修改时间
      */
     private String modifyTime;
+
+
+    /**
+     * 个数
+     */
+    private int counts;
+
+    /**
+     * 数据库枚举转换
+     */
+    private int enumConvert;
+
+    /**
+     * 行业地区汇总集合
+     */
+    private List<Map<String, String>> areaMap;
+
+    /**
+     * 行业客户级别汇总集合
+     */
+    private List<Map<String, String>> levelMap;
+
+    /**
+     * 行业客户类别汇总集合
+     */
+    private List<Map<String, String>> cusTypeMap;
+
+    /**
+     * 行业客户状态汇总集合
+     */
+    private List<Map<String, String>> cusStatusMap;
 
 
     public String getId() {
@@ -197,5 +229,53 @@ public class CusEmailVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public int getCounts() {
+        return counts;
+    }
+
+    public void setCounts(int counts) {
+        this.counts = counts;
+    }
+
+    public int getEnumConvert() {
+        return enumConvert;
+    }
+
+    public void setEnumConvert(int enumConvert) {
+        this.enumConvert = enumConvert;
+    }
+
+    public List<Map<String, String>> getAreaMap() {
+        return areaMap;
+    }
+
+    public void setAreaMap(List<Map<String, String>> areaMap) {
+        this.areaMap = areaMap;
+    }
+
+    public List<Map<String, String>> getLevelMap() {
+        return levelMap;
+    }
+
+    public void setLevelMap(List<Map<String, String>> levelMap) {
+        this.levelMap = levelMap;
+    }
+
+    public List<Map<String, String>> getCusTypeMap() {
+        return cusTypeMap;
+    }
+
+    public void setCusTypeMap(List<Map<String, String>> cusTypeMap) {
+        this.cusTypeMap = cusTypeMap;
+    }
+
+    public List<Map<String, String>> getCusStatusMap() {
+        return cusStatusMap;
+    }
+
+    public void setCusStatusMap(List<Map<String, String>> cusStatusMap) {
+        this.cusStatusMap = cusStatusMap;
     }
 }

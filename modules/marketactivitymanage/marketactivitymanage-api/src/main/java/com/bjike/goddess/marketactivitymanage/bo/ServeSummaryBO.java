@@ -47,7 +47,7 @@ public class ServeSummaryBO extends BaseBO {
     /**
      * 是否临时招待
      */
-    private Boolean whetherTemporaryServe;
+    private String whetherTemporaryServe;
 
     /**
      * 参加人数
@@ -57,12 +57,12 @@ public class ServeSummaryBO extends BaseBO {
     /**
      * 费用
      */
-    private double charge;
+    private Double charge;
 
     /**
      * 金额
      */
-    private double amount;
+    private Double amount;
 
     public String getProjectName() {
         return projectName;
@@ -112,11 +112,11 @@ public class ServeSummaryBO extends BaseBO {
         this.activityTiming = activityTiming;
     }
 
-    public Boolean getWhetherTemporaryServe() {
+    public String getWhetherTemporaryServe() {
         return whetherTemporaryServe;
     }
 
-    public void setWhetherTemporaryServe(Boolean whetherTemporaryServe) {
+    public void setWhetherTemporaryServe(String whetherTemporaryServe) {
         this.whetherTemporaryServe = whetherTemporaryServe;
     }
 
@@ -128,19 +128,19 @@ public class ServeSummaryBO extends BaseBO {
         this.attendPeopleNo = attendPeopleNo;
     }
 
-    public double getCharge() {
+    public Double getCharge() {
         return charge;
     }
 
-    public void setCharge(double charge) {
+    public void setCharge(Double charge) {
         this.charge = charge;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 }

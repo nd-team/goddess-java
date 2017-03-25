@@ -57,7 +57,7 @@ public class MarketServeApplyAct {
      * 添加市场招待申请
      *
      * @param to 市场招待申请to信息
-     * @return class FailPhoneReasonVO
+     * @return class MarketServeApplyVO
      * @throws ActException
      * @version v1
      */
@@ -111,6 +111,7 @@ public class MarketServeApplyAct {
      *
      * @param to 市场招待申请to信息
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/fundModuleOpinion")
     public Result fundModuleOpinion(MarketServeApplyTO to) throws ActException {
@@ -126,8 +127,8 @@ public class MarketServeApplyAct {
      * 决策层意见
      *
      * @param to 市场招待申请to信息
-     * @return
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/executiveOpinion")
     public Result executiveOpinion(MarketServeApplyTO to) throws ActException {

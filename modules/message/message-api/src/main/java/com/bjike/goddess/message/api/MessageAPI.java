@@ -3,7 +3,6 @@ package com.bjike.goddess.message.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
-import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.to.MessageTO;
 
 import java.util.List;
@@ -43,5 +42,31 @@ public interface MessageAPI {
      */
     default List<MessageBO> list(MessageDTO dto) throws SerException {
         return null;
+    }
+
+    /**
+     * 未读消息列表
+     * @param userId
+     * @return
+     * @throws SerException
+     */
+    default List<MessageBO> unreadList(String userId) throws SerException{
+        return null;
+    }
+
+    /**
+     * 删除消息
+     *
+     * @param messageId 消息id
+     */
+    default void remove(String messageId) throws SerException {
+    }
+
+    /**
+     * 修改消息
+     *
+     * @param messageTO 消息体
+     */
+    default void edit(MessageTO messageTO) throws SerException {
     }
 }

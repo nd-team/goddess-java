@@ -111,6 +111,7 @@ public class MarketServeRecordAct {
      *
      * @param to 市场招待记录to信息
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/fundModuleOpinion")
     public Result fundModuleOpinion(MarketServeRecordTO to) throws ActException {
@@ -127,12 +128,32 @@ public class MarketServeRecordAct {
      *
      * @param to 市场招待记录to信息
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/executiveOpinion")
     public Result executiveOpinion(MarketServeRecordTO to) throws ActException {
         try {
             marketServeRecordAPI.executiveOpinion(to);
             return new ActResult("executiveOpinion success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看详情
+     *
+     * @param id 市场招待记录唯一标识
+     * @return class MarketServeRecordVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkDetails/{id}")
+    public Result checkDetails(@PathVariable String id) throws ActException {
+        try {
+            MarketServeRecordBO bo =  marketServeRecordAPI.checkDetails(id);
+            MarketServeRecordVO vo = BeanTransform.copyProperties(bo, MarketServeRecordVO.class);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

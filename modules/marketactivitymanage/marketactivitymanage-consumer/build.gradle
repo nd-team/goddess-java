@@ -1,35 +1,46 @@
-buildscript { 
- repositories { 
- mavenCentral()
- }
- dependencies {
- classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
- }
- } 
-
-apply plugin: 'java'
-apply plugin: 'idea'
+apply from: '../../../config.gradle'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+    }
+}
 apply plugin: 'org.springframework.boot'
-
 jar {
-    baseName = 'marketactivitymanage-consumer'
-    version =  '1.0'
+    String buildDir = project.buildDir
+    manifest {
+        attributes(
+                "Main-Class": "com.bjike.goddess.marketactivitymanage.Application",//main主函数加载入口
+                "Class-Path": new File(buildDir + '/libs/lib').list().collect { "lib/${it}" }.join(" ")
+        )
+    }
+
 }
 
-repositories {
- mavenCentral()
+task copyJars(type: Copy) {
+    from configurations.runtime
+    into new File('build/libs/lib') // 目标位置
 }
+compileJava.dependsOn copyJars
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+def env = hasProperty("pro") ? "pro" : (hasProperty("dev") ? "dev" : null)
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources", "src/main/profile/$env"]
+        }
+    }
+}
 
 dependencies {
-compile(project(":common:common-consumer")){
-    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-}
+    compile(project(":common:common-consumer")) {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 
-compile project(":modules:marketactivitymanage:marketactivitymanage-api")
+    compile project(":modules:marketactivitymanage:marketactivitymanage-api")
 
-compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-web")
 }
 

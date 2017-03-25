@@ -72,7 +72,7 @@ public class MarketServeApplyTO extends BaseTO {
     /**
      * 预计费用
      */
-    private double predictCharge;
+    private Double predictCharge;
 
     /**
      * 招待负责人
@@ -192,11 +192,11 @@ public class MarketServeApplyTO extends BaseTO {
         this.classify = classify;
     }
 
-    public double getPredictCharge() {
+    public Double getPredictCharge() {
         return predictCharge;
     }
 
-    public void setPredictCharge(double predictCharge) {
+    public void setPredictCharge(Double predictCharge) {
         this.predictCharge = predictCharge;
     }
 
