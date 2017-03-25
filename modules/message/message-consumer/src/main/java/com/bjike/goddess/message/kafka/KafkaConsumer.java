@@ -1,14 +1,16 @@
 package com.bjike.goddess.message.kafka;
 
+import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.message.api.EmailAPI;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.message.to.email.Email;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,10 @@ import java.util.Properties;
  */
 public class KafkaConsumer {
 
-    public void consumer (){
+
+    public static EmailAPI emailAPI;
+
+    public void consumer() {
         Properties props = new Properties();
         //zookeeper 配置
         props.put("zookeeper.connect", "localhost:2181");
@@ -56,8 +61,17 @@ public class KafkaConsumer {
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {
             String msg = new String(it.next().message());
-            System.out.println("收到消息：" + msg);
-            //send email
+            MessageTO to = JSON.parseObject(msg, MessageTO.class);
+            Email email = new Email(to.getTitle(), to.getContent());
+            email.setReceiver(to.getReceivers());
+            try {
+                emailAPI.send(email);
+                System.out.println("收到消息：" + msg);
+            } catch (SerException e) {
+                System.out.println(e.getMessage());
+            }
+
+
         }
 
     }

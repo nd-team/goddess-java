@@ -6,6 +6,8 @@ import com.bjike.goddess.message.to.email.Email;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,14 @@ import java.util.Map;
  */
 @Service("emailApiImpl")
 public class EmailApiImpl implements EmailAPI {
+    private static final Logger CONSOLE = LoggerFactory.getLogger(EmailApiImpl.class);
+
     @Autowired
     private Environment env;
 
     @Override
     public void send(Email em) throws SerException {
         try {
-            validateEmail(em);
             HtmlEmail email = new HtmlEmail();
             initHtmlEmail(email, em);
             initHtmlEmailInfo(email, em);
@@ -54,7 +57,10 @@ public class EmailApiImpl implements EmailAPI {
             String password = StringUtils.isNotBlank(em.getPassword()) ? em.getPassword() : env.getProperty("email.password");
             password = new String(new BASE64Decoder().decodeBuffer(password));
             String host = StringUtils.isNotBlank(em.getHost()) ? em.getHost() : env.getProperty("email.host");
-            email.setFrom(em.getSender(), StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName"));   // 发送人
+            String sender = StringUtils.isNotBlank(em.getSender()) ? em.getSender() : env.getProperty("email.sender");
+            String senderName = StringUtils.isNotBlank(em.getSenderName()) ? em.getSenderName() : env.getProperty("email.senderName");
+            em.setSender(sender);
+            email.setFrom(sender, senderName);   // 发送人
             email.setSubject(em.getSubject());   // 标题
             email.setHtmlMsg(em.getContent()); // 邮件内容
             email.setAuthentication(username, password);
@@ -77,7 +83,13 @@ public class EmailApiImpl implements EmailAPI {
             }
         }
         for (String receiver : em.getReceiver()) {// 接收人
-            email.addTo(receiver, getUserName(receiver));
+            if (StringUtils.isNotBlank(receiver) && Validator.isEmail(receiver)) {
+                email.addTo(receiver, getUserName(receiver));
+            } else {
+                if (StringUtils.isNotBlank(receiver)) {
+                    CONSOLE.info("收件人邮箱格式不正确！");
+                }
+            }
         }
         if (null != em.getCc_address()) {// 抄送
             for (String cc : em.getCc_address()) {
@@ -154,21 +166,6 @@ public class EmailApiImpl implements EmailAPI {
      */
     private String getUserName(String username) {
         return username.split("@")[0];
-    }
-
-    public static boolean validateEmail(Email email) throws SerException {
-        if (!Validator.isEmail(email.getSender())) {
-            throw new SerException("发件人邮件格式错误！");
-        }
-        if (null == email.getReceiver() || 0 == email.getReceiver().size()) {
-            throw new SerException("收件人不能为空！");
-        }
-        for (String receiver : email.getReceiver()) {
-            if (!Validator.isEmail(receiver)) {
-                throw new SerException(String.format("该<%s>收件人邮件格式错误！", receiver));
-            }
-        }
-        return true;
     }
 
 

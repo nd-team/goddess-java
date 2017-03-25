@@ -7,14 +7,18 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.message.to.email.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -31,7 +35,12 @@ import java.util.List;
 public class MessageAction {
     @Autowired
     private MessageAPI messageAPI;
-
+    @Autowired
+    private EmailAPI emailAPI;
+    @PostConstruct
+    public  void init(){
+        KafkaConsumer.emailAPI = emailAPI;
+    }
     /**
      * 发送消息
      *

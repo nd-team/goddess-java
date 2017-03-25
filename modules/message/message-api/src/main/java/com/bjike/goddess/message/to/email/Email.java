@@ -1,5 +1,9 @@
 package com.bjike.goddess.message.to.email;
 
+import com.bjike.goddess.message.entity.Message;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,15 +43,18 @@ public class Email implements Serializable{
     /**
      * 发送主题
      */
+    @NotBlank(message = "发送主题不能为空")
     private String subject;
     /**
      * 发送内容
      */
+    @NotBlank(message = "发送内容不能为空")
     private String content;
     /**
      * 接收人
      */
-    private List<String> receiver = new ArrayList<>(0);
+    @NotNull(message = "接收人不能为空")
+    private String[] receiver = new String[0];
     /**
      * 发送图片地址
      */
@@ -83,10 +90,6 @@ public class Email implements Serializable{
      * @param sender    发送者
      * @param receivers 接收者
      */
-    public void initEmailInfo(String sender, String... receivers) {
-        this.sender = sender;
-        this.receiver = Arrays.asList(receivers);
-    }
 
     public String getHost() {
         return host;
@@ -112,12 +115,15 @@ public class Email implements Serializable{
         this.senderName = senderName;
     }
 
-    public List<String> getReceiver() {
+    public String[] getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(List<String> receiver) {
+    public void setReceiver(String[] receiver) {
         this.receiver = receiver;
+    }
+    public void setReceiver(String receiver) {
+        this.receiver = new String[]{receiver};
     }
 
     public String getSubject() {

@@ -70,91 +70,37 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setSenderId(userBO.getId());
             messageTO.setSenderName(userBO.getUsername());
         }
-        SendType  sendType = messageTO.getSendType();
-        if(sendType.equals(SendType.EMAIL)|| sendType.equals(SendType.ALL)){
-            kafkaProducer.produce(messageTO);
-        }
+
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
         saveMessage(messageTO, message);
-        saveMsgToRedis(messageTO, message.getId()); //保存到redis
-    }
-
-    /**
-     * 保存组消息及个人消息
-     *
-     * @param to
-     * @throws SerException
-     */
-    public void saveMessage(MessageTO to, Message m) throws SerException {
-
-
-        RangeType rangeType = to.getRangeType();
-        Message message = super.findById(m.getId());
-        switch (rangeType) {
-            case GROUP:
-                List<GroupMessage> groupMessages = new ArrayList<>();
-                for (String group : to.getGroups()) {
-                    GroupMessage groupMessage = new GroupMessage();
-                    groupMessage.setGroupId(group);
-                    groupMessage.setMessage(message);
-                    groupMessages.add(groupMessage);
-                }
-                groupMessageSer.save(groupMessages);
-
-                break;
-            case SPECIFIED:
-                List<UserMessage> userMessages = new ArrayList<>();
-                for (String user : to.getReceivers()) {
-                    UserMessage userMessage = new UserMessage();
-                    userMessage.setMessage(message);
-                    userMessage.setUserId(user);
-                    userMessages.add(userMessage);
-                }
-                userMessageSer.save(userMessages);
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    private void saveMsgToRedis(MessageTO messageTO, String message_id) throws SerException {
-        List<UserBO> userBOS = null;
-        String[] receivers = null;
-        MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
-        String json_messageRead = JSON.toJSONString(messageRead);
-        RangeType rangeType = messageTO.getRangeType();
-        UserDTO dto = new UserDTO();
-        switch (rangeType) {
-            case GROUP:
-                userBOS = userAPI.findByGroup(messageTO.getGroups());
-                break;
-            case SPECIFIED:
-                receivers = messageTO.getReceivers();
-                break;
-            case PUB:
-                dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-                userBOS = userAPI.findByCis(dto);
-            default:
-                break;
-        }
+        List<UserBO> userBOS = getReceivers(messageTO);
+        String[] receivers =null;
+        String[] receiversEmail =null;
         if (null != userBOS && userBOS.size() > 0) {
             receivers = new String[userBOS.size()];
+            receiversEmail = new String[userBOS.size()];
             for (int i = 0; i < userBOS.size(); i++) {
                 receivers[i] = userBOS.get(i).getId();
+                receiversEmail[i] = userBOS.get(i).getEmail();
             }
         }
-        if (null != receivers) {
-            for (int i = 0; i < receivers.length; i++) {
-                redisClient.appendToList(receivers[i] + "_message", 30 * 24 * 60 * 60, message_id); //未读消息保存一个月
-            }
-            //保存系统所发送的所有消息，以供查询
-            redisClient.appendToMap("message", message_id, json_messageRead, 7 * 24 * 60 * 60);//系统所发出的消息缓存7天
-        }
+        SendType sendType = messageTO.getSendType();
 
+        switch (sendType) {
+            case EMAIL:
+                messageTO.setReceivers(receiversEmail);
+                kafkaProducer.produce(messageTO);
+                break;
+            case MSG:
+                saveMsgToRedis(messageTO, message.getId(), receivers); //保存到redis
+            case ALL:
+                saveMsgToRedis(messageTO, message.getId(), receivers);//保存到redis
+                messageTO.setReceivers(receiversEmail);
+                kafkaProducer.produce(messageTO);
+                break;
+        }
     }
-
 
     @Override
     public void read(String messageId) throws SerException {
@@ -218,4 +164,84 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         }
 
     }
+
+
+    /**
+     * 保存组消息及个人消息
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void saveMessage(MessageTO to, Message m) throws SerException {
+        RangeType rangeType = to.getRangeType();
+        Message message = super.findById(m.getId());
+        switch (rangeType) {
+            case GROUP:
+                List<GroupMessage> groupMessages = new ArrayList<>();
+                for (String group : to.getGroups()) {
+                    GroupMessage groupMessage = new GroupMessage();
+                    groupMessage.setGroupId(group);
+                    groupMessage.setMessage(message);
+                    groupMessages.add(groupMessage);
+                }
+                groupMessageSer.save(groupMessages);
+
+                break;
+            case SPECIFIED:
+                List<UserMessage> userMessages = new ArrayList<>();
+                for (String user : to.getReceivers()) {
+                    UserMessage userMessage = new UserMessage();
+                    userMessage.setMessage(message);
+                    userMessage.setUserId(user);
+                    userMessages.add(userMessage);
+                }
+                userMessageSer.save(userMessages);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private List<UserBO> getReceivers(MessageTO messageTO) throws SerException {
+        List<UserBO> userBOS = null;
+        String[] receivers = null;
+        RangeType rangeType = messageTO.getRangeType();
+        UserDTO dto = new UserDTO();
+        switch (rangeType) {
+            case GROUP:
+                userBOS = userAPI.findByGroup(messageTO.getGroups());
+                break;
+            case SPECIFIED:
+                dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+                dto.getConditions().add(Restrict.in("id", messageTO.getReceivers()));
+                userBOS = userAPI.findByCis(dto);
+                break;
+            case PUB:
+                dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+                userBOS = userAPI.findByCis(dto);
+                break;
+            default:
+                break;
+        }
+
+        return userBOS;
+    }
+
+    private void saveMsgToRedis(MessageTO messageTO, String message_id, String[] receivers) throws SerException {
+
+        MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
+        String json_messageRead = JSON.toJSONString(messageRead);
+
+        if (null != receivers) {
+            for (int i = 0; i < receivers.length; i++) {
+                redisClient.appendToList(receivers[i] + "_message", 30 * 24 * 60 * 60, message_id); //未读消息保存一个月
+            }
+            //保存系统所发送的所有消息，以供查询
+            redisClient.appendToMap("message", message_id, json_messageRead, 7 * 24 * 60 * 60);//系统所发出的消息缓存7天
+        }
+
+
+    }
+
 }
