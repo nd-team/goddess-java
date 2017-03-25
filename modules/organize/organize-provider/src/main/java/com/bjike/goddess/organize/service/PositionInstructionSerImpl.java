@@ -101,7 +101,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     public List<PositionInstructionBO> findByPosition(String id) throws SerException {
         PositionInstructionDTO dto = new PositionInstructionDTO();
         dto.getConditions().add(Restrict.eq("position.id", id));
-        return this.transformToBOList(super.findByCis(dto, false));
+        return this.transformToBOList(super.findByCis(dto));
     }
 
     @Override

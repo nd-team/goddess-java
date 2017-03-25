@@ -102,7 +102,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         WorkRangeDTO dto = new WorkRangeDTO();
         dto.getConditions().add(Restrict.eq("direction", direction));
         dto.getConditions().add(Restrict.eq("project", project));
-        List<WorkRange> list = super.findByCis(dto, false);
+        List<WorkRange> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 
@@ -110,7 +110,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     public List<WorkRangeBO> findByProject(String project) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
         dto.getConditions().add(Restrict.eq("project", project));
-        List<WorkRange> list = super.findByCis(dto, false);
+        List<WorkRange> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 
