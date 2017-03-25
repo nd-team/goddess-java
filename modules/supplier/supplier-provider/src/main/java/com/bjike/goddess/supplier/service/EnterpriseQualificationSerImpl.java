@@ -47,7 +47,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     public List<EnterpriseQualificationBO> findByInformation(String info_id) throws SerException {
         EnterpriseQualificationDTO dto = new EnterpriseQualificationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
-        List<EnterpriseQualification> list = super.findByCis(dto, false);
+        List<EnterpriseQualification> list = super.findByCis(dto);
         List<EnterpriseQualificationBO> bos = new ArrayList<>(0);
         for (EnterpriseQualification entity : list)
             bos.add(this.transformBO(entity));

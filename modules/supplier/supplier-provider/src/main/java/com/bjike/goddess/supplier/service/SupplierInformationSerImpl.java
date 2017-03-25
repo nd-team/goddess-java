@@ -130,7 +130,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     public List<SupplierInformationBO> findOrderName() throws SerException {
         SupplierInformationDTO dto = new SupplierInformationDTO();
         dto.getSorts().add("name");
-        List<SupplierInformation> list = super.findByCis(dto, false);
+        List<SupplierInformation> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, SupplierInformationBO.class);
     }
 }

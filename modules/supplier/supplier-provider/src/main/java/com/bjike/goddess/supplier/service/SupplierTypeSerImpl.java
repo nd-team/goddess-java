@@ -31,7 +31,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     public List<SupplierTypeBO> findStatus() throws SerException {
         SupplierTypeDTO dto = new SupplierTypeDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<SupplierType> list = super.findByCis(dto, false);
+        List<SupplierType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, SupplierTypeBO.class);
     }
 
