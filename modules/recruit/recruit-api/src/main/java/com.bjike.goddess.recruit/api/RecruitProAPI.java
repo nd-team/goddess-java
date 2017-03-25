@@ -2,6 +2,7 @@ package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
+import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface RecruitProAPI {
      * @return
      * @throws SerException
      */
-    List<RecruitProBO> list(RecruitProTO dto) throws SerException;
+    List<RecruitProBO> list(RecruitProDTO dto) throws SerException;
 
     /**
      * 保存招聘方案
@@ -58,7 +59,7 @@ public interface RecruitProAPI {
      * @param pass
      * @throws SerException
      */
-    void yyEdit (RecruitProTO recruitProTO,Boolean pass) throws SerException;
+    void yyEdit(RecruitProTO recruitProTO,Boolean pass) throws SerException;
 
     /**
      * 总经办审核
@@ -67,5 +68,5 @@ public interface RecruitProAPI {
      * @param pass
      * @throws SerException
      */
-    void managerEdit (RecruitProTO recruitProTO, Boolean pass) throws SerException;
+    void managerEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException;
 }

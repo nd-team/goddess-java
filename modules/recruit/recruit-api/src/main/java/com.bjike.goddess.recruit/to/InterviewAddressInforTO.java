@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 /**
  * 面试地址信息
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.recruit.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class InterviewAddressInforTO {
+public class InterviewAddressInforTO extends BaseTO {
 
     /**
      * 面试地址

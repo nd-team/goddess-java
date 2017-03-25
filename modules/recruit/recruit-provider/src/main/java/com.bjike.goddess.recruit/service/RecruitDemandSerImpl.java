@@ -32,8 +32,8 @@ public class RecruitDemandSerImpl extends ServiceImpl<RecruitDemand, RecruitDema
      */
     @Override
     public List<RecruitDemandBO> list(RecruitDemandDTO dto) throws SerException {
-        List<RecruitDemand> recruitDemandList = super.findByCis(dto, Boolean.TRUE);
-        List<RecruitDemandBO> recruitDemandBOList = BeanTransform.copyProperties(recruitDemandList, RecruitDemandBO.class, true);
+        List<RecruitDemand> recruitDemandList = super.findByPage(dto);
+        List<RecruitDemandBO> recruitDemandBOList = BeanTransform.copyProperties(recruitDemandList, RecruitDemandBO.class);
         return recruitDemandBOList;
     }
 
@@ -48,18 +48,19 @@ public class RecruitDemandSerImpl extends ServiceImpl<RecruitDemand, RecruitDema
     public RecruitDemandBO save(RecruitDemandTO recruitDemandTO) throws SerException {
         RecruitDemand recruitDemand = BeanTransform.copyProperties(recruitDemandTO, RecruitDemand.class, true);
         recruitDemand = super.save(recruitDemand);
-        RecruitDemandBO recruitDemandBO = BeanTransform.copyProperties(recruitDemand, RecruitDemandBO.class, true);
+        RecruitDemandBO recruitDemandBO = BeanTransform.copyProperties(recruitDemand, RecruitDemandBO.class);
         return recruitDemandBO;
     }
 
     /**
      * 更新招聘需求
      *
-     * @param recruitDemandBO
+     * @param recruitDemandTO
      * @throws SerException
      */
     @Override
-    public void update(RecruitDemandBO recruitDemandBO) throws SerException {
-        RecruitDemand recruitDemand;
+    public void update(RecruitDemandTO recruitDemandTO) throws SerException {
+        RecruitDemand recruitDemand = BeanTransform.copyProperties(recruitDemandTO, RecruitDemandTO.class);
+        super.update(recruitDemand);
     }
 }

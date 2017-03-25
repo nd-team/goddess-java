@@ -33,8 +33,8 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
      */
     @Override
     public List<FailPhoneReasonBO> list(FailPhoneReasonDTO dto) throws SerException {
-        List<FailPhoneReason> failPhoneReasonList = super.findByCis(dto, Boolean.TRUE);
-        List<FailPhoneReasonBO> failPhoneReasonBOList = BeanTransform.copyProperties(failPhoneReasonList, FailPhoneReasonBO.class, true);
+        List<FailPhoneReason> failPhoneReasonList = super.findByPage(dto);
+        List<FailPhoneReasonBO> failPhoneReasonBOList = BeanTransform.copyProperties(failPhoneReasonList, FailPhoneReasonBO.class);
         return failPhoneReasonBOList;
     }
 
@@ -49,7 +49,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
     public FailPhoneReasonBO save(FailPhoneReasonTO failPhoneReasonTO) throws SerException {
         FailPhoneReason failPhoneReason = BeanTransform.copyProperties(failPhoneReasonTO, FailPhoneReason.class, true);
         failPhoneReason = super.save(failPhoneReason);
-        FailPhoneReasonBO failPhoneReasonBO = BeanTransform.copyProperties(failPhoneReason, FailPhoneReasonBO.class, true);
+        FailPhoneReasonBO failPhoneReasonBO = BeanTransform.copyProperties(failPhoneReason, FailPhoneReasonBO.class);
         return failPhoneReasonBO;
     }
 

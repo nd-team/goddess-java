@@ -118,9 +118,6 @@ public class FirstPhoneRecordVO {
      */
     private String attachmentAddr;
 
-    public FirstPhoneRecordVO() {
-    }
-
     public String getDate() {
         return date;
     }
