@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 合同项目基本信息(临时表，存放数据，商务模块获取数据)业务实现
+ * 合同项目基本信息(临时表存放数据商务模块获取数据)业务实现
  *
  * @Author: [ yewenbo ]
  * @Date: [ 2017-03-21 07:18 ]
- * @Description: [ 合同项目基本信息(临时表，存放数据，商务模块获取数据)业务实现 ]
+ * @Description: []
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

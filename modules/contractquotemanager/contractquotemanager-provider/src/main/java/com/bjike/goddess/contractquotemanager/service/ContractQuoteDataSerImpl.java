@@ -12,6 +12,7 @@ import com.bjike.goddess.contractquotemanager.dao.ContractQuoteDataRep;
 import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -85,25 +86,37 @@ public class ContractQuoteDataSerImpl extends ServiceImpl<ContractQuoteData, Con
         super.update(contractQuoteData);
     }
 
+
     @Override
-    public List<ContractQuoteDataBO> collect(ContractQuoteDataBO bo) throws SerException {
-        ContractQuoteDataDTO dto = new ContractQuoteDataDTO();
-        if (bo.getArea() != null && !bo.getArea().equals("")) {
-            dto.getConditions().add(Restrict.eq("area", bo.getArea()));
+    public List<ContractQuoteDataBO> collect(ContractQuoteDataDTO dto) throws SerException {
+        if(dto ==null){
+            throw new SerException("您好!查询条件为空,无法进行查询!");
         }
-        if (bo.getCustomerName() != null && !bo.getCustomerName().equals("")) {
-            dto.getConditions().add(Restrict.eq("customerName", bo.getCustomerName()));
+        if((dto.getArea()==null) || (dto.getArea().length == 0)){
+            throw new SerException("您好!地区列表为空,无法进行查询!");
+
         }
-        if (bo.getSuitableDateStart() != null && !bo.getSuitableDateStart().equals("")) {
-            dto.getConditions().add(Restrict.eq("suitableDateStart", bo.getSuitableDateStart()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String[] areas = dto.getArea();
+        String customerName = dto.getCustomerName();
+        String startDate = dto.getStartDate();
+        String endDate = dto.getEndDate();
+        List<ContractQuoteDataBO> list = new ArrayList<>(0);
+        for(String area : areas){
+           ContractQuoteDataDTO contractQuoteDateDTO = new ContractQuoteDataDTO();
+            contractQuoteDateDTO.getConditions().add(Restrict.eq("area",area));
+            contractQuoteDateDTO.getConditions().add(Restrict.eq("customerName",customerName));
+            ContractQuoteDataBO bo = new ContractQuoteDataBO();
+            bo.setArea(area);
+            bo.setCustomerName(customerName);
+            bo.setSuitableDateStart(startDate);
+            bo.setSuitableDateEnd(endDate);
+            list.add(bo);
         }
-        if (bo.getSuitableDateEnd() != null && !bo.getSuitableDateEnd().equals("")) {
-            dto.getConditions().add(Restrict.eq("suitableDateEnd", bo.getSuitableDateEnd()));
-        }
+
 
         return BeanTransform.copyProperties(super.findByCis(dto), ContractQuoteDataBO.class);
     }
-
     @Override
     public List<ContractQuoteDataBO> searchs(ContractQuoteDataBO bo) throws SerException {
         ContractQuoteDataDTO dto = new ContractQuoteDataDTO();

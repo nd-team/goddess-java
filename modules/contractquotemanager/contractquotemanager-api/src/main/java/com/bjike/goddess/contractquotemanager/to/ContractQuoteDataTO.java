@@ -3,8 +3,6 @@ package com.bjike.goddess.contractquotemanager.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-
 /**
  * 合同单价资料信息
  *
@@ -46,10 +44,6 @@ public class ContractQuoteDataTO extends BaseTO {
      */
     private Status status;
 
-    /**
-     * 附件
-     */
-// private Set<ModuleAttchment>  attchmentSet;
     public String getCustomerName() {
         return customerName;
     }
@@ -97,11 +91,4 @@ public class ContractQuoteDataTO extends BaseTO {
     public void setStatus(Status status) {
         this.status = status;
     }
-// public Set<ModuleAttchment> getAttchmentSet () {
-// return attchmentSet;
-// }
-// public void setAttchmentSet (Set<ModuleAttchment> attchmentSet ) {
-// this.attchmentSet = attchmentSet ;
-// }
-//
 }

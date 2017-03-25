@@ -46,10 +46,6 @@ public class ContractQuoteDataBO extends BaseBO {
      */
     private Status status;
 
-    /**
-     * 附件
-     */
-// private Set<ModuleAttchment>  attchmentSet;
     public String getCustomerName() {
         return customerName;
     }
@@ -97,12 +93,6 @@ public class ContractQuoteDataBO extends BaseBO {
     public void setStatus(Status status) {
         this.status = status;
     }
-// public Set<ModuleAttchment> getAttchmentSet () {
-// return attchmentSet;
-// }
-// public void setAttchmentSet (Set<ModuleAttchment> attchmentSet ) {
-// this.attchmentSet = attchmentSet ;
-// }
-//
+
 
 }

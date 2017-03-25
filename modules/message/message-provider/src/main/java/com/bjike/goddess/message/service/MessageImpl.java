@@ -14,6 +14,8 @@ import com.bjike.goddess.message.entity.GroupMessage;
 import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.kafka.KafkaProducer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
@@ -51,6 +53,8 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Autowired
     private RedisClient redisClient;
     @Autowired
+    private KafkaProducer kafkaProducer;
+    @Autowired
     private GroupMessageSer groupMessageSer;
     @Autowired
     private UserMessageSer userMessageSer;
@@ -66,11 +70,14 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setSenderId(userBO.getId());
             messageTO.setSenderName(userBO.getUsername());
         }
-        //   KafkaProducer.produce(messageTO);
+        SendType  sendType = messageTO.getSendType();
+        if(sendType.equals(SendType.EMAIL)|| sendType.equals(SendType.ALL)){
+            kafkaProducer.produce(messageTO);
+        }
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
-        saveMessage(messageTO,message);
-        saveMsgToRedis(messageTO,message.getId()); //保存到redis
+        saveMessage(messageTO, message);
+        saveMsgToRedis(messageTO, message.getId()); //保存到redis
     }
 
     /**
@@ -79,7 +86,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
      * @param to
      * @throws SerException
      */
-    public void saveMessage(MessageTO to,Message m) throws SerException {
+    public void saveMessage(MessageTO to, Message m) throws SerException {
 
 
         RangeType rangeType = to.getRangeType();
@@ -112,7 +119,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     }
 
-    private void saveMsgToRedis(MessageTO messageTO,String message_id) throws SerException {
+    private void saveMsgToRedis(MessageTO messageTO, String message_id) throws SerException {
         List<UserBO> userBOS = null;
         String[] receivers = null;
         MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
@@ -140,10 +147,10 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         }
         if (null != receivers) {
             for (int i = 0; i < receivers.length; i++) {
-                redisClient.appendToList(receivers[i] + "_message", message_id);
+                redisClient.appendToList(receivers[i] + "_message", 30 * 24 * 60 * 60, message_id); //未读消息保存一个月
             }
             //保存系统所发送的所有消息，以供查询
-            redisClient.appendToMap("message", message_id, json_messageRead);
+            redisClient.appendToMap("message", message_id, json_messageRead, 7 * 24 * 60 * 60);//系统所发出的消息缓存7天
         }
 
     }
@@ -152,7 +159,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Override
     public void read(String messageId) throws SerException {
         String userId = userAPI.currentUser().getId();
-        redisClient.removeToList(userId + "_message", messageId);
+        redisClient.removeToList(userId + "_message", messageId); //从用户消息列表移除
     }
 
     @Override
@@ -182,4 +189,33 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         return BeanTransform.copyProperties(messages, MessageBO.class);
     }
 
+    @Override
+    public List<MessageBO> unreadList(String userId) throws SerException {
+        List<String> messageIds = redisClient.getList(userId + "_message");
+        MessageDTO dto = new MessageDTO();
+        dto.getConditions().add(Restrict.in("id", messageIds.toArray()));
+
+        return BeanTransform.copyProperties(super.findByCis(dto), MessageBO.class);
+    }
+
+    @Override
+    public void remove(String messageId) throws SerException {
+        redisClient.removeMap("message", messageId); //从缓存消息列表删除
+        super.remove(messageId); //数据库删除
+    }
+
+    @Override
+    public void edit(MessageTO messageTO) throws SerException {
+        Message message = super.findById(messageTO.getId());
+        if (null != message) {
+            BeanTransform.copyProperties(messageTO, message);
+            super.update(message);
+            MessageRead messageRead = BeanTransform.copyProperties(message, MessageRead.class);
+            String json_messageRead = JSON.toJSONString(messageRead);
+            redisClient.appendToMap("message", message.getId(), json_messageRead);
+        } else {
+            throw new SerException("not exist data by id");
+        }
+
+    }
 }

@@ -125,13 +125,13 @@ public class RecruitPro extends BaseEntity {
     /**
      * 是否有合同附件
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT '0' COMMENT '是否有合同附件' ")
+    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否有合同附件' ")
     private Boolean haveAnnex;
 
     /**
      * 是否付款
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT '0' COMMENT '是否付款' ")
+    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否付款' ")
     private Boolean whetherPay;
 
     /**
@@ -149,7 +149,7 @@ public class RecruitPro extends BaseEntity {
     /**
      * 是否有发票
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT '0' COMMENT '是否有发票' ")
+    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否有发票' ")
     private Boolean haveInvoice;
 
     /**

@@ -144,17 +144,17 @@ public class ContractQuoteDataAction {
     /**
      * 汇总合同单价资料信息
      *
-     * @param bo 合同单价资料信息
+     * @param dto 合同单价资料信息
      * @throws ActException
      * @des class ContractQuoteDataVO 根据地区(area)、用户名称(customerName)和适用年度汇总
      * @version v1
      */
     @GetMapping("v1/collects")
-    public Result collect(ContractQuoteDataBO bo) throws ActException {
+    public Result collect(ContractQuoteDataDTO dto) throws ActException {
         try {
 
             List<ContractQuoteDataVO> contractQuoteDataVOs = BeanTransform.copyProperties(
-                    contractQuoteDataAPI.collect(bo),
+                    contractQuoteDataAPI.collect(dto),
                     ContractQuoteDataVO.class, true);
             return ActResult.initialize(contractQuoteDataVOs);
         } catch (SerException e) {

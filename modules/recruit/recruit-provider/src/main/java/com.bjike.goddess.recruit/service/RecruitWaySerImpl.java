@@ -32,8 +32,8 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
      */
     @Override
     public List<RecruitWayBO> list(RecruitWayDTO dto) throws SerException {
-        List<RecruitWay> recruitWayList = super.findByCis(dto);
-        List<RecruitWayBO> recruitWayBOList = BeanTransform.copyProperties(recruitWayList, RecruitWayBO.class, true);
+        List<RecruitWay> recruitWayList = super.findByPage(dto);
+        List<RecruitWayBO> recruitWayBOList = BeanTransform.copyProperties(recruitWayList, RecruitWayBO.class);
         return recruitWayBOList;
     }
 
@@ -47,7 +47,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Override
     public RecruitWayBO save(RecruitWayTO recruitWayTO) throws SerException {
         RecruitWay recruitWay = BeanTransform.copyProperties(recruitWayTO, RecruitWay.class, true);
-        RecruitWayBO entity = BeanTransform.copyProperties(recruitWay, RecruitWayBO.class, true);
+        RecruitWayBO entity = BeanTransform.copyProperties(recruitWay, RecruitWayBO.class);
         return entity;
     }
 

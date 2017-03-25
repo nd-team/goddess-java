@@ -23,11 +23,11 @@ public interface TemplateManageSer extends Ser<TemplateManage, TemplateManageDTO
     /**
      * 分页查询模板管理
      *
-     * @param templateManageTO
+     * @param templateManageDTO
      * @return
      * @throws SerException
      */
-    List<TemplateManageBO> list(TemplateManageTO templateManageTO) throws SerException;
+    List<TemplateManageBO> list(TemplateManageDTO templateManageDTO) throws SerException;
 
     /**
      * 保存模板管理

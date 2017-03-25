@@ -51,7 +51,7 @@ public interface ContractQuoteDataAPI  {
     return;
   }
 
-  default List<ContractQuoteDataBO> collect(ContractQuoteDataBO bo)throws SerException{
+  default List<ContractQuoteDataBO> collect(ContractQuoteDataDTO dto)throws SerException{
     return null;
   }
 

@@ -57,7 +57,7 @@ public class ContractNodeStandardAction {
     /**
      * 获取合同节点标准信息
      *
-     * @return class ContractNOdeStandardVO
+     * @return class ContractNodeStandardVO
      * @throws ActException
      * @version v1
      */

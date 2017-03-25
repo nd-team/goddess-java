@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 import javax.persistence.Column;
 
 /**
@@ -11,7 +13,7 @@ import javax.persistence.Column;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ReportAddressInforTO {
+public class ReportAddressInforTO extends BaseTO {
 
     /**
      * 报道地址

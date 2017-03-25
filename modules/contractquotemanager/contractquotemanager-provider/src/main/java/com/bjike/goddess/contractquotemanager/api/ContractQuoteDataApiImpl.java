@@ -57,8 +57,8 @@ public class ContractQuoteDataApiImpl implements ContractQuoteDataAPI {
     }
 
     @Override
-    public List<ContractQuoteDataBO> collect(ContractQuoteDataBO bo) throws SerException {
-        return contractQuoteDataSer.collect(bo);
+    public List<ContractQuoteDataBO> collect(ContractQuoteDataDTO dto) throws SerException {
+        return contractQuoteDataSer.collect(dto);
     }
 
     @Override
