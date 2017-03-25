@@ -35,6 +35,10 @@ include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
 //#客户信息
+//include ':modules:accommodation:accommodation-api'
+//include ':modules:accommodation:accommodation-consumer'
+//include ':modules:accommodation:accommodation-provider'
+//#客户信息
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
@@ -79,5 +83,16 @@ include ':modules:bidding:bidding-provider'
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
+
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
+
+include ':modules:proearlymarketcost:proearlymarketcost-api'
+include ':modules:proearlymarketcost:proearlymarketcost-consumer'
+include ':modules:proearlymarketcost:proearlymarketcost-provider'
+
+
+
 
 
