@@ -41,7 +41,7 @@ public class TemplateManage extends BaseEntity {
     /**
      * 模板状态
      */
-    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(255) DEFAULT 1 COMMENT '模板状态' ")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 1 COMMENT '模板状态' ")
     private TemplateStatus templateStatus;
 
     public String getTemplteName() {

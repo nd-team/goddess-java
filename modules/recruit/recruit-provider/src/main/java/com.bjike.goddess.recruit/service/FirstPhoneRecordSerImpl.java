@@ -33,7 +33,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
      */
     @Override
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
-        List<FirstPhoneRecord> firstPhoneRecordList = super.findByCis(dto);
+        List<FirstPhoneRecord> firstPhoneRecordList = super.findByPage(dto);
         List<FirstPhoneRecordBO> firstPhoneRecordBOList = BeanTransform.copyProperties(firstPhoneRecordList, FirstPhoneRecordBO.class, true);
         return firstPhoneRecordBOList;
     }
@@ -48,9 +48,9 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     @Transactional
     public FirstPhoneRecordBO save(FirstPhoneRecordTO firstPhoneRecordTO) throws SerException {
-        FirstPhoneRecord firstPhoneRecord = BeanTransform.copyProperties(firstPhoneRecordTO, FirstPhoneRecord.class, true);
+        FirstPhoneRecord firstPhoneRecord = BeanTransform.copyProperties(firstPhoneRecordTO, FirstPhoneRecord.class,true);
         firstPhoneRecord = super.save(firstPhoneRecord);
-        FirstPhoneRecordBO firstPhoneRecordBO = BeanTransform.copyProperties(firstPhoneRecord, FirstPhoneRecordBO.class, true);
+        FirstPhoneRecordBO firstPhoneRecordBO = BeanTransform.copyProperties(firstPhoneRecord, FirstPhoneRecordBO.class);
         return firstPhoneRecordBO;
     }
 

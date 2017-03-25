@@ -43,4 +43,12 @@ public interface InterviewInforAPI {
      * @throws SerException
      */
     void remove(String id) throws SerException;
+
+    /**
+     * 更新面试信息
+     *
+     * @param interviewInforTO
+     * @throws SerException
+     */
+    void update(InterviewInforTO interviewInforTO) throws SerException;
 }

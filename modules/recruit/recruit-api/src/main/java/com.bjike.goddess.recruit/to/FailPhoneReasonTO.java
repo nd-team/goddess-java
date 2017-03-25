@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 /**
  * 未成功通话原因
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.recruit.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FailPhoneReasonTO {
+public class FailPhoneReasonTO extends BaseTO {
 
     /**
      * 未成功通话原因类型

@@ -3,7 +3,9 @@ package com.bjike.goddess.recruit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.RecruitPlanBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
+import com.bjike.goddess.recruit.service.RecruitPlanSer;
 import com.bjike.goddess.recruit.to.RecruitPlanTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,23 +21,53 @@ import java.util.List;
  */
 @Service("recruitPlanApiImpl")
 public class RecruitPlanApiImpl implements RecruitPlanAPI {
+
+    @Autowired
+    private RecruitPlanSer recruitPlanSer;
+
+    /**
+     * 分页查询招聘计划
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     @Override
     public List<RecruitPlanBO> list(RecruitPlanDTO dto) throws SerException {
-        return null;
+        return recruitPlanSer.list(dto);
     }
 
+    /**
+     * 保存招聘计划
+     *
+     * @param recruitPlanTO
+     * @return
+     * @throws SerException
+     */
     @Override
     public RecruitPlanBO save(RecruitPlanTO recruitPlanTO) throws SerException {
-        return null;
+        return recruitPlanSer.save(recruitPlanTO);
     }
 
+    /**
+     * 根据id删除招聘计划
+     *
+     * @param id
+     * @throws SerException
+     */
     @Override
     public void remove(String id) throws SerException {
-
+        recruitPlanSer.remove(id);
     }
 
+    /**
+     * 更新招聘计划
+     *
+     * @param recruitPlanTO
+     * @throws SerException
+     */
     @Override
     public void update(RecruitPlanTO recruitPlanTO) throws SerException {
-
+        recruitPlanSer.update(recruitPlanTO);
     }
 }
