@@ -2,6 +2,7 @@ package com.bjike.goddess.accommodation.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
