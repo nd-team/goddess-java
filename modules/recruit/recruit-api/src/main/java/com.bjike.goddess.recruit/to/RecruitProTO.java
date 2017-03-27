@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.recruit.type.AuditType;
 
 /**
@@ -11,12 +13,12 @@ import com.bjike.goddess.recruit.type.AuditType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class RecruitProTO {
+public class RecruitProTO extends BaseTO {
 
     /**
-     * 用户id
+     * 状态
      */
-    private String id;
+    private Status status;
 
     /**
      * 招聘网站
@@ -128,12 +130,12 @@ public class RecruitProTO {
      */
     private String note;
 
-    public String getId() {
-        return id;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getRecruitSite() {

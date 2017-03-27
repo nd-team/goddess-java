@@ -23,12 +23,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserFindPwdSerImpl implements UserFindPwdSer {
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
 
 
     @Override
     public UserSimpleBO verifyAccount(String account, String authCode) throws SerException {
-        UserBO userBO = userAPI.findByAccountNumber(account);
+        UserBO userBO = userSer.findByAccountNumber(account);
         if (null == userBO) {
             throw new SerException("用户不存在");
         }
@@ -47,7 +47,7 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
     @Override
     public Boolean sendCodeByNickname(String nickname) throws SerException {
         User user = null;
-        UserBO bo = userAPI.findByNickname(nickname);
+        UserBO bo = userSer.findByNickname(nickname);
         if (null != user) {
             PhoneCode phoneCode = new PhoneCode();
             phoneCode.setCode("123456");
@@ -61,7 +61,7 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
     @Override
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
         User user = null;
-        UserBO bo = userAPI.findByNickname(nickname);
+        UserBO bo = userSer.findByNickname(nickname);
         if (null != user) {
             PhoneCode code = PhoneCodeSession.get(user.getPhone());
             if (null == code && !phoneCode.equalsIgnoreCase(code.getCode())) {

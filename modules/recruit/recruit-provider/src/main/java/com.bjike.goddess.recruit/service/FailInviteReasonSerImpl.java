@@ -26,14 +26,14 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     /**
      * 分页查询未成功邀约原因
      *
-     * @param failInviteReasonDTO
+     * @param dto
      * @return
      * @throws SerException
      */
     @Override
-    public List<FailInviteReasonBO> list(FailInviteReasonDTO failInviteReasonDTO) throws SerException {
-        List<FailInviteReason> failInviteReasonList = super.findByCis(failInviteReasonDTO);
-        List<FailInviteReasonBO> failInviteReasonBOList = BeanTransform.copyProperties(failInviteReasonList, FailInviteReasonBO.class, true);
+    public List<FailInviteReasonBO> list(FailInviteReasonDTO dto) throws SerException {
+        List<FailInviteReason> failInviteReasonList = super.findByPage(dto);
+        List<FailInviteReasonBO> failInviteReasonBOList = BeanTransform.copyProperties(failInviteReasonList, FailInviteReasonBO.class);
         return failInviteReasonBOList;
     }
 
@@ -48,7 +48,7 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
     public FailInviteReasonBO save(FailInviteReasonTO failInviteReasonTO) throws SerException {
         FailInviteReason failInviteReason = BeanTransform.copyProperties(failInviteReasonTO, FailInviteReason.class, true);
         failInviteReason = super.save(failInviteReason);
-        FailInviteReasonBO failInviteReasonBO = BeanTransform.copyProperties(failInviteReason, FailInviteReasonBO.class, true);
+        FailInviteReasonBO failInviteReasonBO = BeanTransform.copyProperties(failInviteReason, FailInviteReasonBO.class);
         return failInviteReasonBO;
     }
 

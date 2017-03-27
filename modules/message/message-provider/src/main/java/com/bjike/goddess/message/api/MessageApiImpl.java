@@ -39,4 +39,19 @@ public class MessageApiImpl implements MessageAPI {
     public List<MessageBO> list(MessageDTO dto) throws SerException {
        return messageSer.list(dto);
     }
+
+    @Override
+    public List<MessageBO> unreadList(String userId) throws SerException {
+        return messageSer.unreadList(userId);
+    }
+
+    @Override
+    public void remove(String messageId) throws SerException {
+        messageSer.remove(messageId);
+    }
+
+    @Override
+    public void edit(MessageTO messageTO) throws SerException {
+        messageSer.edit(messageTO);
+    }
 }

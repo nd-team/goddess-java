@@ -33,8 +33,8 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
      */
     @Override
     public List<RecruitPlanBO> list(RecruitPlanDTO dto) throws SerException {
-        List<RecruitPlan> recruitPlanList = super.findByCis(dto);
-        List<RecruitPlanBO> recruitWayBOList = BeanTransform.copyProperties(recruitPlanList, RecruitPlanBO.class, true);
+        List<RecruitPlan> recruitPlanList = super.findByPage(dto);
+        List<RecruitPlanBO> recruitWayBOList = BeanTransform.copyProperties(recruitPlanList, RecruitPlanBO.class);
         return recruitWayBOList;
     }
 
@@ -49,7 +49,7 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
     public RecruitPlanBO save(RecruitPlanTO recruitPlanTO) throws SerException {
         RecruitPlan recruitPlan = BeanTransform.copyProperties(recruitPlanTO, RecruitPlan.class, true);
         recruitPlan = super.save(recruitPlan);
-        RecruitPlanBO recruitPlanBO = BeanTransform.copyProperties(recruitPlan, RecruitWayBO.class, true);
+        RecruitPlanBO recruitPlanBO = BeanTransform.copyProperties(recruitPlan, RecruitWayBO.class);
         return recruitPlanBO;
     }
 

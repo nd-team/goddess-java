@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.TemplateStatus;
 
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.persistence.Column;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class TemplateManageTO {
+public class TemplateManageTO extends BaseTO {
 
     /**
      * 模板名称

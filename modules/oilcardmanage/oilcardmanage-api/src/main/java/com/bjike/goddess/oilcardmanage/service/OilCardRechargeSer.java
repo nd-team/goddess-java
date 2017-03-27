@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 油卡充值业务接口
+ *
  * @Author: [Jason]
  * @Date: [17-3-15 上午10:49]
  * @Package:[ com.bjike.goddess.oilcardmanage.service ]
@@ -18,9 +19,10 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface OilCardRechargeSer extends Ser<OilCardRecharge,OilCardRechargeDTO> {
+public interface OilCardRechargeSer extends Ser<OilCardRecharge, OilCardRechargeDTO> {
     /**
      * 新增油卡充值信息
+     *
      * @param to 油卡充值信息
      * @return 油卡充值信息
      * @throws SerException 油卡充值异常
@@ -29,6 +31,7 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge,OilCardRechargeD
 
     /**
      * 编辑油卡充值信息
+     *
      * @param to 油卡充值信息
      * @return 油卡充值信息
      * @throws SerException 编辑油卡充值异常
@@ -37,16 +40,18 @@ public interface OilCardRechargeSer extends Ser<OilCardRecharge,OilCardRechargeD
 
     /**
      * 油卡充值汇总
+     *
      * @param id        油卡id
      * @param startTime 查询开始时间
      * @param endTime   查询结束时间
      * @return 油卡充值汇总
      * @throws SerException 油卡充值异常
      */
-    List<OilCardRechargeBO> collect(String id,String startTime,String endTime) throws SerException;
+    List<OilCardRechargeBO> collect(String id, String startTime, String endTime) throws SerException;
 
     /**
      * 分页查询
+     *
      * @param dto 查询条件
      * @throws SerException 分页查询业务异常
      */

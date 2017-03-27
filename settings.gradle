@@ -34,10 +34,22 @@ include ':modules:staffentry:staffentry-provider'
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
-/*//#客户信息
+//#客户信息
+//include ':modules:accommodation:accommodation-api'
+//include ':modules:accommodation:accommodation-consumer'
+//include ':modules:accommodation:accommodation-provider'
+//#客户信息
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
-include ':modules:customer:customer-provider'*/
+include ':modules:customer:customer-provider'
+//#招聘模块
+include ':modules:recruit:recruit-api'
+include ':modules:recruit:recruit-consumer'
+include ':modules:recruit:recruit-provider'
+//#市场活动管理
+include ':modules:marketactivitymanage:marketactivitymanage-api'
+include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+include ':modules:marketactivitymanage:marketactivitymanage-provider'
 //#司机信息
 include ':modules:driverinfo:driverinfo-api'
 include ':modules:driverinfo:driverinfo-consumer'
@@ -50,14 +62,40 @@ include ':modules:oilcardmanage:oilcardmanage-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
-
+//#organize 组织结构管理
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
+//#supplier 供应商管理
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
+//#项目测算
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
 
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
 
+//#竞争对手管理
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
 
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
 
+include ':modules:proearlymarketcost:proearlymarketcost-api'
+include ':modules:proearlymarketcost:proearlymarketcost-consumer'
+include ':modules:proearlymarketcost:proearlymarketcost-provider'
+
+//#marketdevelopment 市场计划进度管理
+include ':modules:marketdevelopment:marketdevelopment-api'
+include ':modules:marketdevelopment:marketdevelopment-consumer'
+include ':modules:marketdevelopment:marketdevelopment-provider'
 
 
 

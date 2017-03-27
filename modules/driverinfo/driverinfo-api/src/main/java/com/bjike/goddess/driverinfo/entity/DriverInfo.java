@@ -221,7 +221,7 @@ public class DriverInfo extends BaseEntity {
     private Boolean spare = Boolean.FALSE;
 
 
-    @Column(columnDefinition = "TINYINT(2) COMMENT '用户状态'", nullable = false)
+    @Column(columnDefinition = "TINYINT(2) COMMENT '司机数据类型'", nullable = false)
     private DriverInfoType infoType;
 
     public Status getStatus() {

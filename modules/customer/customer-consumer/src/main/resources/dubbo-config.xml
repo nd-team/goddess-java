@@ -21,15 +21,6 @@
 	<dubbo:reference  validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
 	<dubbo:reference  validation="true" id="customerDetailApiImpl" interface="com.bjike.goddess.customer.api.CustomerDetailAPI" />
 	<dubbo:reference  validation="true" id="customerLevelApiImpl" interface="com.bjike.goddess.customer.api.CustomerLevelAPI" />
-	<!--<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:reference validation="true" id="credentialApiImpl" interface="com.bjike.goddess.staffentry.api.CredentialAPI" />
-	<dubbo:reference validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
-	<dubbo:reference validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
-	<dubbo:reference validation="true" id="familyMemberApiImpl" interface="com.bjike.goddess.staffentry.api.FamilyMemberAPI" />
-	<dubbo:reference validation="true" id="salaryConfirmRecordApiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
-	<dubbo:reference validation="true" id="studyExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
-	<dubbo:reference validation="true" id="workExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
 
--->
 
 </beans>
