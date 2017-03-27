@@ -17,18 +17,8 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--发布接口,供其他模块调用-->
-	<!--<dubbo:service interface="com.bjike.goddess.user.api.rbac.RoleAPI" ref="roleApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupAPI" ref="groupApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserDetailAPI" ref="userDetailApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.DepartmentAPI" ref="departmentApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserAPI" ref="userApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginAPI" ref="userLoginApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>-->
 	<dubbo:service interface="com.bjike.goddess.market.api.MarketInfoAPI" ref="marketInfoApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.market.api.MarketEmailAPI" ref="marketEmailApiImpl"/>
-
+	<dubbo:reference validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
 
 </beans>
