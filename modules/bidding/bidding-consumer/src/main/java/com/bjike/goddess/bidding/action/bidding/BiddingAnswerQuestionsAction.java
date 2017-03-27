@@ -42,7 +42,7 @@ public class BiddingAnswerQuestionsAction {
     public Result findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws ActException {
         try {
             List<BiddingAnswerQuestionsVO> biddingAnswerQuestionsVOS = BeanTransform.copyProperties(
-                    biddingAnswerQuestionsAPI.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO), BiddingAnswerQuestionsVO.class, true);
+                    biddingAnswerQuestionsAPI.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO), BiddingAnswerQuestionsVO.class);
             return ActResult.initialize(biddingAnswerQuestionsVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

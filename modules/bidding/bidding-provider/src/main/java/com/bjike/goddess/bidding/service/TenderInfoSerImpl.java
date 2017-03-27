@@ -23,7 +23,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "tenderInfoSerCache")
+@CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> implements TenderInfoSer {
 
@@ -32,7 +32,7 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
     public TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
         TenderInfo tenderInfo = BeanTransform.copyProperties(tenderInfoTO, TenderInfo.class, true);
         try {
-            tenderInfo.setCreateTime(LocalDateTime.now());
+            tenderInfo.setModifyTime(LocalDateTime.now());
             super.save(tenderInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());

@@ -23,7 +23,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "biddingAnswerQuestionsSerCache")
+@CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQuestions, BiddingAnswerQuestionsDTO> implements BiddingAnswerQuestionsSer {
     @Transactional(rollbackFor = SerException.class)
