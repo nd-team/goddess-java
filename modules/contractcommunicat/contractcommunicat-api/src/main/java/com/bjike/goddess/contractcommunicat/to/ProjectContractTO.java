@@ -23,6 +23,7 @@ public class ProjectContractTO extends BaseTO {
     private String contractExtProject;
 
     /**
+     * 合同项目编号
      */
     @NotNull(message = "合同外部编号不能为空!")
     private String contractExtCode;

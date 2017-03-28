@@ -14,13 +14,30 @@ import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
  */
 public class ProjectOutsourcingDTO extends BaseDTO {
 
-    //模糊查询条件
-    private String communicateUser; //洽谈人
-    private String communicateObj; //洽谈对象
-    private CommunicateResult communicateResult; //项目结果
-    private String contractInProject;//内部项目名称
-    private String startTime;//创建开始范围时间
-    private String endTime;//创建结束范围时间
+    /**
+     * 洽谈人
+     */
+    private String communicateUser;
+    /**
+     * 洽谈对象
+     */
+    private String communicateObj;
+    /**
+     * 项目结果
+     */
+    private CommunicateResult communicateResult;
+    /**
+     * 内部项目名称
+     */
+    private String contractInProject;
+    /**
+     * 创建开始范围时间
+     */
+    private String startTime;
+    /**
+     * 创建结束范围时间
+     */
+    private String endTime;
 
     public String getCommunicateUser() {
         return communicateUser;

@@ -12,6 +12,7 @@ import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, ProjectOutsourcingDTO> implements ProjectOutsourcingSer {
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO saveProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
         ProjectOutsourcing model = BeanTransform.copyProperties(to, ProjectOutsourcing.class ,true);
         super.save(model);
@@ -39,6 +41,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO editProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
 
         if(!StringUtils.isEmpty(to.getId())){
@@ -53,6 +56,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ProjectOutsourcingBO> pageList(ProjectOutsourcingDTO dto) throws SerException {
 
         dto.getSorts().add("createTime=desc");
@@ -71,6 +75,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ProjectOutsourcingBO> collect(ProjectOutsourcingDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         if(dto.getContractInProject()!=null){
@@ -87,6 +92,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void setCollectSend(QuartzCycleType cycle) throws SerException {
         // TODO: 17-3-20
     }

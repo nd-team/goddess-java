@@ -2,6 +2,7 @@ package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.recruit.bo.TemplateManageBO;
+import com.bjike.goddess.recruit.dto.TemplateManageDTO;
 import com.bjike.goddess.recruit.to.TemplateManageTO;
 
 import java.util.List;
@@ -20,11 +21,11 @@ public interface TemplateManageAPI {
     /**
      * 分页查询模板管理
      *
-     * @param templateManageTO
+     * @param templateManageDTO
      * @return
      * @throws SerException
      */
-    List<TemplateManageBO> list(TemplateManageTO templateManageTO) throws SerException;
+    List<TemplateManageBO> list(TemplateManageDTO templateManageDTO) throws SerException;
 
     /**
      * 保存模板管理

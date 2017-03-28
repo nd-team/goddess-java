@@ -49,9 +49,9 @@ public interface RecruitDemandSer extends Ser<RecruitDemand, RecruitDemandDTO> {
     /**
      * 更新招聘需求
      *
-     * @param recruitDemandBO
+     * @param recruitDemandTO
      * @throws SerException
      */
-    void update(RecruitDemandBO recruitDemandBO) throws SerException;
+    void update(RecruitDemandTO recruitDemandTO) throws SerException;
 
 }

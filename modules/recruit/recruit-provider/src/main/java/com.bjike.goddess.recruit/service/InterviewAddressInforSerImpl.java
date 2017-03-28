@@ -33,8 +33,8 @@ public class InterviewAddressInforSerImpl extends ServiceImpl<InterviewAddressIn
      */
     @Override
     public List<InterviewAddressInforBO> list(InterviewAddressInforDTO dto) throws SerException {
-        List<InterviewAddressInfor> interviewAddressInforList = super.findByCis(dto, Boolean.TRUE);
-        List<InterviewAddressInforBO> interviewAddressInforBOList = BeanTransform.copyProperties(interviewAddressInforList, InterviewAddressInforBO.class, true);
+        List<InterviewAddressInfor> interviewAddressInforList = super.findByPage(dto);
+        List<InterviewAddressInforBO> interviewAddressInforBOList = BeanTransform.copyProperties(interviewAddressInforList, InterviewAddressInforBO.class);
         return interviewAddressInforBOList;
     }
 
@@ -49,7 +49,7 @@ public class InterviewAddressInforSerImpl extends ServiceImpl<InterviewAddressIn
     public InterviewAddressInforBO save(InterviewAddressInforTO interviewAddressInforTO) throws SerException {
         InterviewAddressInfor interviewAddressInfor = BeanTransform.copyProperties(interviewAddressInforTO, InterviewAddressInfor.class, true);
         interviewAddressInfor = super.save(interviewAddressInfor);
-        InterviewAddressInforBO interviewAddressInforBO = BeanTransform.copyProperties(interviewAddressInfor, InterviewAddressInforBO.class, true);
+        InterviewAddressInforBO interviewAddressInforBO = BeanTransform.copyProperties(interviewAddressInfor, InterviewAddressInforBO.class);
         return interviewAddressInforBO;
     }
 

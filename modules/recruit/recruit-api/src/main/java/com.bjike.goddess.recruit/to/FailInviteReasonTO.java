@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.to.BaseTO;
+
 /**
  * 未邀约成功原因
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.recruit.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FailInviteReasonTO {
+public class FailInviteReasonTO extends BaseTO {
 
     /**
      * 未邀约成功原因类型

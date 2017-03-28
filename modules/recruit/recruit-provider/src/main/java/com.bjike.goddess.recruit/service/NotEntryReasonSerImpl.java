@@ -32,8 +32,8 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
      */
     @Override
     public List<NotEntryReasonBO> list(NotEntryReasonDTO dto) throws SerException {
-        List<NotEntryReason> notEntryReasonList = super.findByCis(dto, Boolean.TRUE);
-        List<NotEntryReasonBO> notEntryReasonBOList = BeanTransform.copyProperties(notEntryReasonList, NotEntryReasonBO.class, true);
+        List<NotEntryReason> notEntryReasonList = super.findByPage(dto);
+        List<NotEntryReasonBO> notEntryReasonBOList = BeanTransform.copyProperties(notEntryReasonList, NotEntryReasonBO.class);
         return notEntryReasonBOList;
     }
 
@@ -48,7 +48,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
     public NotEntryReasonBO save(NotEntryReasonTO notEntryReasonTO) throws SerException {
         NotEntryReason notEntryReason = BeanTransform.copyProperties(notEntryReasonTO, NotEntryReason.class, true);
         notEntryReason = super.save(notEntryReason);
-        NotEntryReasonBO notEntryReasonBO = BeanTransform.copyProperties(notEntryReason, NotEntryReasonBO.class, true);
+        NotEntryReasonBO notEntryReasonBO = BeanTransform.copyProperties(notEntryReason, NotEntryReasonBO.class);
         return notEntryReasonBO;
     }
 

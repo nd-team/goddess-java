@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.vo;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,12 @@ import javax.persistence.Table;
  * @Copy: [com.bjike]
  */
 public class RecruitProVO {
+
+    /**
+     * 状态
+     */
+    private Status status;
+
     /**
      * 招聘网站
      */
@@ -120,6 +127,14 @@ public class RecruitProVO {
      * 备注
      */
     private String note;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getRecruitSite() {
         return recruitSite;

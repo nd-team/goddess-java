@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class UserLoginLogSerImpl extends ServiceImpl<UserLoginLog, UserLoginLogDTO> implements UserLoginLogSer {
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
 
     /**
      * 每个用户仅保存最近的五条登录记录
@@ -53,7 +53,7 @@ public class UserLoginLogSerImpl extends ServiceImpl<UserLoginLog, UserLoginLogD
             super.update(old_log);
         } else {
             UserLoginLog loginLog = BeanTransform.copyProperties(loginLogTO,UserLoginLog.class);
-            loginLog.setUser(userAPI.findById(loginLog.getUser().getId()));
+            loginLog.setUser(userSer.findById(loginLog.getUser().getId()));
             super.save(loginLog);
         }
     }

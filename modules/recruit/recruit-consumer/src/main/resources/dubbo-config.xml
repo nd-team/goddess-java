@@ -15,15 +15,18 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--配置暴露的公共接口-->
-	<!--<dubbo:reference id="activityAttendSer" interface="com.bjike.goddess.activity.service.ActivityAttendAPI"/>-->
-	<!--<dubbo:reference id="activityEvaluateSer" interface="com.bjike.goddess.activity.service.ActivityEvaluateAPI"/>-->
-	<!--<dubbo:reference id="activitySchemeSer" interface="com.bjike.goddess.activity.service.ActivitySchemeAPI"/>-->
-	<!--<dubbo:reference id="activityThemeSer" interface="com.bjike.goddess.activity.service.ActivityThemeAPI"/>-->
-	<!--<dubbo:reference id="activityVoteSer" interface="com.bjike.goddess.activity.service.ActivityVoteAPI"/>-->
-	<!--<dubbo:reference id="laborDivisionSer" interface="com.bjike.goddess.activity.service.LaborDivisionAPI"/>-->
-	<!--<dubbo:reference id="modalitySer" interface="com.bjike.goddess.activity.service.ModalityAPI"/>-->
-	<!--<dubbo:reference id="purposeSer" interface="com.bjike.goddess.activity.service.PurposeAPI" />-->
-	<!--<dubbo:reference id="regularFeaturesSer" interface="com.bjike.goddess.activity.service.RegularFeaturesAPI"/>-->
-	<!--<dubbo:reference id="voteInformationSer" interface="com.bjike.goddess.activity.service.VoteInformationAPI"/>-->
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailFirstInterviewReasonAPI" id="failFirstInterviewReasonApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailInviteReasonAPI" id="failInviteReasonApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailPhoneReasonAPI" id="failPhoneReasonApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FirstPhoneRecordAPI" id="firstPhoneRecordApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewAddressInforAPI" id="interviewAddressInforApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewInforAPI" id="interviewInforApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.NotEntryReasonAPI" id="notEntryReasonApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitDemandAPI" id="recruitDemandApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitPlanAPI" id="recruitPlanApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitProAPI" id="recruitProApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitWayAPI" id="RecruitWayApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" id="reportAddressInforApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.TemplateManageAPI" id="templateManageApiImpl"/>
 
 </beans>

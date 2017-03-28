@@ -23,11 +23,11 @@ public interface FailInviteReasonSer extends Ser<FailInviteReason, FailInviteRea
     /**
      * 分页查询所有未成功邀约原因
      *
-     * @param failInviteReasonDTO
+     * @param dto
      * @return
      * @throws SerException
      */
-    List<FailInviteReasonBO> list(FailInviteReasonDTO failInviteReasonDTO) throws SerException;
+    List<FailInviteReasonBO> list(FailInviteReasonDTO dto) throws SerException;
 
     /**
      * 保存未邀约成功原因

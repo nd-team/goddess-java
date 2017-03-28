@@ -14,6 +14,8 @@ import com.bjike.goddess.message.entity.GroupMessage;
 import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.entity.UserMessage;
 import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.kafka.KafkaProducer;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.api.UserAPI;
@@ -51,6 +53,8 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     @Autowired
     private RedisClient redisClient;
     @Autowired
+    private KafkaProducer kafkaProducer;
+    @Autowired
     private GroupMessageSer groupMessageSer;
     @Autowired
     private UserMessageSer userMessageSer;
@@ -66,12 +70,101 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setSenderId(userBO.getId());
             messageTO.setSenderName(userBO.getUsername());
         }
-        //   KafkaProducer.produce(messageTO);
+
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
-        saveMessage(messageTO,message);
-        saveMsgToRedis(messageTO,message.getId()); //保存到redis
+        saveMessage(messageTO, message);
+        List<UserBO> userBOS = getReceivers(messageTO);
+        String[] receivers =null;
+        String[] receiversEmail =null;
+        if (null != userBOS && userBOS.size() > 0) {
+            receivers = new String[userBOS.size()];
+            receiversEmail = new String[userBOS.size()];
+            for (int i = 0; i < userBOS.size(); i++) {
+                receivers[i] = userBOS.get(i).getId();
+                receiversEmail[i] = userBOS.get(i).getEmail();
+            }
+        }
+        SendType sendType = messageTO.getSendType();
+
+        switch (sendType) {
+            case EMAIL:
+                messageTO.setReceivers(receiversEmail);
+                kafkaProducer.produce(messageTO);
+                break;
+            case MSG:
+                saveMsgToRedis(messageTO, message.getId(), receivers); //保存到redis
+            case ALL:
+                saveMsgToRedis(messageTO, message.getId(), receivers);//保存到redis
+                messageTO.setReceivers(receiversEmail);
+                kafkaProducer.produce(messageTO);
+                break;
+        }
     }
+
+    @Override
+    public void read(String messageId) throws SerException {
+        String userId = userAPI.currentUser().getId();
+        redisClient.removeToList(userId + "_message", messageId); //从用户消息列表移除
+    }
+
+    @Override
+    public List<MessageBO> list(MessageDTO dto) throws SerException {
+        UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
+        String groupId = "-1";
+        if (null != detailBO) {
+            groupId = detailBO.getGroupId();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("select id,createTime,modifyTime,title,content ,senderId,senderName from (select * from message where rangeType = 0 ");//公共消息
+        sb.append(" union ");
+        sb.append(" select a.*  from message a,message_group_message b where a.id=b.message_id and ");//组消息
+        sb.append(" b.group_id='%s' and rangeType = 1 ");
+        sb.append(" union "); //个人消息
+        sb.append(" select a.*  from message a, message_user_message b where a.id = b.message_id and b.user_id='%s' and rangeType=2 ) as a ");
+        if (null != dto.getMsgType()) {
+            sb.append(" where msgType=" + dto.getMsgType().getCode());
+        }
+        sb.append(" order by createTime desc ");
+        String sql = sb.toString();
+        sql = String.format(sql, groupId, dto.getUserId());
+        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
+        List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
+        messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
+                limit(dto.getLimit()).collect(Collectors.toList());
+        return BeanTransform.copyProperties(messages, MessageBO.class);
+    }
+
+    @Override
+    public List<MessageBO> unreadList(String userId) throws SerException {
+        List<String> messageIds = redisClient.getList(userId + "_message");
+        MessageDTO dto = new MessageDTO();
+        dto.getConditions().add(Restrict.in("id", messageIds.toArray()));
+
+        return BeanTransform.copyProperties(super.findByCis(dto), MessageBO.class);
+    }
+
+    @Override
+    public void remove(String messageId) throws SerException {
+        redisClient.removeMap("message", messageId); //从缓存消息列表删除
+        super.remove(messageId); //数据库删除
+    }
+
+    @Override
+    public void edit(MessageTO messageTO) throws SerException {
+        Message message = super.findById(messageTO.getId());
+        if (null != message) {
+            BeanTransform.copyProperties(messageTO, message);
+            super.update(message);
+            MessageRead messageRead = BeanTransform.copyProperties(message, MessageRead.class);
+            String json_messageRead = JSON.toJSONString(messageRead);
+            redisClient.appendToMap("message", message.getId(), json_messageRead);
+        } else {
+            throw new SerException("not exist data by id");
+        }
+
+    }
+
 
     /**
      * 保存组消息及个人消息
@@ -79,9 +172,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
      * @param to
      * @throws SerException
      */
-    public void saveMessage(MessageTO to,Message m) throws SerException {
-
-
+    private void saveMessage(MessageTO to, Message m) throws SerException {
         RangeType rangeType = to.getRangeType();
         Message message = super.findById(m.getId());
         switch (rangeType) {
@@ -112,11 +203,9 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     }
 
-    private void saveMsgToRedis(MessageTO messageTO,String message_id) throws SerException {
+    private List<UserBO> getReceivers(MessageTO messageTO) throws SerException {
         List<UserBO> userBOS = null;
         String[] receivers = null;
-        MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
-        String json_messageRead = JSON.toJSONString(messageRead);
         RangeType rangeType = messageTO.getRangeType();
         UserDTO dto = new UserDTO();
         switch (rangeType) {
@@ -124,62 +213,35 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 userBOS = userAPI.findByGroup(messageTO.getGroups());
                 break;
             case SPECIFIED:
-                receivers = messageTO.getReceivers();
+                dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+                dto.getConditions().add(Restrict.in("id", messageTO.getReceivers()));
+                userBOS = userAPI.findByCis(dto);
                 break;
             case PUB:
                 dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
                 userBOS = userAPI.findByCis(dto);
+                break;
             default:
                 break;
         }
-        if (null != userBOS && userBOS.size() > 0) {
-            receivers = new String[userBOS.size()];
-            for (int i = 0; i < userBOS.size(); i++) {
-                receivers[i] = userBOS.get(i).getId();
-            }
-        }
+
+        return userBOS;
+    }
+
+    private void saveMsgToRedis(MessageTO messageTO, String message_id, String[] receivers) throws SerException {
+
+        MessageRead messageRead = BeanTransform.copyProperties(messageTO, MessageRead.class);
+        String json_messageRead = JSON.toJSONString(messageRead);
+
         if (null != receivers) {
             for (int i = 0; i < receivers.length; i++) {
-                redisClient.appendToList(receivers[i] + "_message", message_id);
+                redisClient.appendToList(receivers[i] + "_message", 30 * 24 * 60 * 60, message_id); //未读消息保存一个月
             }
             //保存系统所发送的所有消息，以供查询
-            redisClient.appendToMap("message", message_id, json_messageRead);
+            redisClient.appendToMap("message", message_id, json_messageRead, 7 * 24 * 60 * 60);//系统所发出的消息缓存7天
         }
 
-    }
 
-
-    @Override
-    public void read(String messageId) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        redisClient.removeToList(userId + "_message", messageId);
-    }
-
-    @Override
-    public List<MessageBO> list(MessageDTO dto) throws SerException {
-        UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
-        String groupId = "-1";
-        if (null != detailBO) {
-            groupId = detailBO.getGroupId();
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("select id,createTime,modifyTime,title,content ,senderId,senderName from (select * from message where rangeType = 0 ");//公共消息
-        sb.append(" union ");
-        sb.append(" select a.*  from message a,message_group_message b where a.id=b.message_id and ");//组消息
-        sb.append(" b.group_id='%s' and rangeType = 1 ");
-        sb.append(" union "); //个人消息
-        sb.append(" select a.*  from message a, message_user_message b where a.id = b.message_id and b.user_id='%s' and rangeType=2 ) as a ");
-        if (null != dto.getMsgType()) {
-            sb.append(" where msgType=" + dto.getMsgType().getCode());
-        }
-        sb.append(" order by createTime desc ");
-        String sql = sb.toString();
-        sql = String.format(sql, groupId, dto.getUserId());
-        String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};
-        List<Message> messages = super.findBySql(sql, Message.class, fields); //公共的
-        messages = messages.stream().skip((dto.getPage() - 1 < 0 ? 0 : dto.getPage() - 1) * dto.getLimit()).
-                limit(dto.getLimit()).collect(Collectors.toList());
-        return BeanTransform.copyProperties(messages, MessageBO.class);
     }
 
 }
