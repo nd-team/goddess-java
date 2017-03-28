@@ -11,6 +11,7 @@ import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,7 +80,7 @@ public class CustomerBaseInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO) throws ActException {
+    public Result addCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO, BindingResult bindingResult) throws ActException {
         try {
             CustomerBaseInfoBO customerBaseInfoBO1 = customerBaseInfoAPI.addCustomerBaseInfo(customerBaseInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(customerBaseInfoBO1,CustomerBaseInfoVO.class,true));
@@ -97,7 +98,7 @@ public class CustomerBaseInfoAction {
      * @return class CustomerBaseInfoVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result editCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO) throws ActException {
         try {
             CustomerBaseInfoBO customerBaseInfoBO1 = customerBaseInfoAPI.editCustomerBaseInfo(customerBaseInfoTO);
@@ -120,7 +121,7 @@ public class CustomerBaseInfoAction {
             customerBaseInfoAPI.deleteCustomerBaseInfo(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException("删除失败："+e.getMessage());
         }
     }
 
@@ -132,13 +133,13 @@ public class CustomerBaseInfoAction {
      * @des 根据id冻结客户基本信息记录
      * @version v1
      */
-    @DeleteMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             customerBaseInfoAPI.congealCustomerBaseInfo(id);
             return new ActResult("congeal success!");
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException("冻结失败："+e.getMessage());
         }
     }
 
@@ -150,11 +151,28 @@ public class CustomerBaseInfoAction {
      * @des 根据id解冻客户基本信息记录
      * @version v1
      */
-    @DeleteMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {
             customerBaseInfoAPI.thawCustomerBaseInfo(id);
             return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException("解冻失败："+e.getMessage());
+        }
+    }
+
+    /**
+     * 获取客户编号
+     *
+     * @des 获取客户编号集合
+     * @return  {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @version v1
+     */
+    @GetMapping("v1/getCusNum")
+    public Result getCusNum( ) throws ActException {
+        try {
+            List<String> areaList = customerBaseInfoAPI.getCustomerBaseInfoCusNum();
+            return ActResult.initialize(areaList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -194,6 +212,40 @@ public class CustomerBaseInfoAction {
         }
     }
 
+    /**
+     * 获取单个客户
+     *
+     * @param customerNum customerNum
+     * @des 根据客户编号查询客户基本信息
+     * @return class CustomerBaseInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/getCustomer")
+    public Result getCustomer (String customerNum) throws ActException {
+        try {
+            CustomerBaseInfoBO bo = customerBaseInfoAPI.getCustomerInfoByNum(customerNum);
+            return ActResult.initialize(BeanTransform.copyProperties(bo,CustomerBaseInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取行业数组
+     *
+     * @des 获取客户编号集合
+     * @return  {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回行业数组'}
+     * @version v1
+     */
+    @GetMapping("v1/getWorks")
+    public Result getWorks( ) throws ActException {
+        try {
+            List<String> workList = customerBaseInfoAPI.getCustomerBaseInfoWorks();
+            return ActResult.initialize(workList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

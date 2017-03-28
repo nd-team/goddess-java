@@ -87,7 +87,7 @@ public interface CusEmailAPI {
      * @param works works
      * @return class CusEmailBO
      */
-    default CusEmailBO collectCusEmail(String[] works) throws SerException {
+    default List<CusEmailBO> collectCusEmail(String[] works) throws SerException {
         return null;
     }
 

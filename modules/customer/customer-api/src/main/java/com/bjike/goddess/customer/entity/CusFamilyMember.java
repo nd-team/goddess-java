@@ -21,7 +21,7 @@ public class CusFamilyMember extends BaseEntity {
     /**
      * 称谓
      */
-    @Column(name = "title",unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '称谓'")
+    @Column(name = "title" ,columnDefinition = "VARCHAR(255)   COMMENT '称谓'")
     private String title;
 
     /**

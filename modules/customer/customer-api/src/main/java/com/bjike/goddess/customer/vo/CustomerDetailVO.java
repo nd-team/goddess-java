@@ -50,7 +50,7 @@ public class CustomerDetailVO {
     /**
      * 性格评价
      */
-    private String CharacterEvaluation;
+    private String characterEvaluation;
 
     /**
      * 家庭成员
@@ -134,11 +134,11 @@ public class CustomerDetailVO {
     }
 
     public String getCharacterEvaluation() {
-        return CharacterEvaluation;
+        return characterEvaluation;
     }
 
-    public void setCharacterEvaluation(String CharacterEvaluation) {
-        this.CharacterEvaluation = CharacterEvaluation;
+    public void setCharacterEvaluation(String characterEvaluation) {
+        this.characterEvaluation = characterEvaluation;
     }
 
     public CusFamilyMemberVO getCusFamilyMemberVO() {
