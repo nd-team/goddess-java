@@ -232,6 +232,13 @@ public class BeanTransform {
                     if (null == s_val) {
                         break;
                     }
+                    if("String".equals(s_val.getClass().getSimpleName())){
+                        String val = (String)s_val;
+                        if("".equals(val.trim())){
+                            break;
+                        }
+                    }
+
                     if (!convertDate) { //处理字符串转日期
                         for (Type type : DATE_TYPES) {
                             if (type.equals(s_field.getType())) {
