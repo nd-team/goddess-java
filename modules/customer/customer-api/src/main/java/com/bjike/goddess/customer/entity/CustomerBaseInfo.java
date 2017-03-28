@@ -197,7 +197,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户详细信息
      */
-    @OneToOne(cascade = CascadeType.ALL ,mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REFRESH,mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
 
     public String getCustomerNum() {

@@ -23,7 +23,7 @@ public class CustomerDetail extends BaseEntity {
     /**
      * 客户信息编号
      */
-    @Column(name = "customerNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+    @Column(name = "customerNum", nullable = false,unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
     private String customerNum;
 
     /**
@@ -60,14 +60,14 @@ public class CustomerDetail extends BaseEntity {
     /**
      * 性格评价
      */
-    @Column(name = "CharacterEvaluation",  columnDefinition = "TEXT   COMMENT '性格评价'")
-    private String CharacterEvaluation;
+    @Column(name = "characterEvaluation",  columnDefinition = "TEXT   COMMENT '性格评价'")
+    private String characterEvaluation;
 
 
     /**
      * 客户基本信息
      */
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH )
+    @OneToOne(fetch = FetchType.EAGER , cascade = {CascadeType.PERSIST,CascadeType.REFRESH} )
     @JoinColumn(name = "customerBaseInfo_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户基本信息'")
     private CustomerBaseInfo customerBaseInfo;
 
@@ -120,11 +120,11 @@ public class CustomerDetail extends BaseEntity {
     }
 
     public String getCharacterEvaluation() {
-        return CharacterEvaluation;
+        return characterEvaluation;
     }
 
-    public void setCharacterEvaluation(String CharacterEvaluation) {
-        this.CharacterEvaluation = CharacterEvaluation;
+    public void setCharacterEvaluation(String characterEvaluation) {
+        this.characterEvaluation = characterEvaluation;
     }
 
     public CustomerBaseInfo getCustomerBaseInfo() {

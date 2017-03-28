@@ -49,7 +49,7 @@ public class CustomerDetailBO extends BaseBO {
     /**
      * 性格评价
      */
-    private String CharacterEvaluation;
+    private String characterEvaluation;
 
 
     /**
@@ -121,11 +121,11 @@ public class CustomerDetailBO extends BaseBO {
     }
 
     public String getCharacterEvaluation() {
-        return CharacterEvaluation;
+        return characterEvaluation;
     }
 
-    public void setCharacterEvaluation(String CharacterEvaluation) {
-        this.CharacterEvaluation = CharacterEvaluation;
+    public void setCharacterEvaluation(String characterEvaluation) {
+        this.characterEvaluation = characterEvaluation;
     }
 
     public String getCreateTime() {

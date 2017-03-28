@@ -6,12 +6,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
+import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
+import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
+import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,10 +66,18 @@ public class CustomerDetailAction {
      * @version v1
      */
     @GetMapping("v1/getInfoByCustomerNum")
-    public Result getInfoByCustomerNum(@NotBlank String customerNum) throws ActException {
+    public Result getInfoByCustomerNum(String customerNum) throws ActException {
         try {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.getCustomerDetailByNum(customerNum);
-            return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
+
+            CustomerBaseInfoVO baseinfo = BeanTransform.copyProperties(customerDetailBO1.getCustomerBaseInfoBO(),CustomerBaseInfoVO.class);
+            List<CusFamilyMemberVO> family =  BeanTransform.copyProperties(customerDetailBO1.getCusFamilyMemberBOList(),CusFamilyMemberVO.class);
+
+            CustomerDetailVO vo = BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true);
+            vo.setCusFamilyMemberVOList(family);
+            vo.setCustomerBaseInfoVO( baseinfo );
+
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -80,7 +92,7 @@ public class CustomerDetailAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addCustomerDetail(@Validated CustomerDetailTO customerDetailTO) throws ActException {
+    public Result addCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.addCustomerDetail(customerDetailTO);
             return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
@@ -98,8 +110,8 @@ public class CustomerDetailAction {
      * @return class CustomerDetailVO
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result editCustomerDetail(@Validated CustomerDetailTO customerDetailTO) throws ActException {
+    @PutMapping("v1/edit")
+    public Result editCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.editCustomerDetail(customerDetailTO);
             return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
@@ -134,7 +146,7 @@ public class CustomerDetailAction {
      * @des 根据地区或客户名导出还不可以用
      * @version v1
      */
-    @DeleteMapping("v1/exportInfo")
+    @GetMapping("v1/exportInfo")
     public Result exportCustomerBasicInfo(String area ,String customerName) throws ActException {
             //TODO : tanghaixiang 2017-03-16 导出未做
 //            customerDetailAPI.deleteCustomerDetail(id);
