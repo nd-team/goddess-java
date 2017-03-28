@@ -2,8 +2,8 @@ package com.bjike.goddess.market.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerCollectUnit;
-import com.bjike.goddess.customer.enums.CustomerSendUnit;
+import com.bjike.goddess.market.enums.MarketCollectUnit;
+import com.bjike.goddess.market.enums.MarketSendUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class MarketEmail extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
@@ -51,14 +51,16 @@ public class MarketEmail extends BaseEntity {
     /**
      * 发送单位
      */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '发送单位'", nullable = false )
-    private CustomerSendUnit customerSendUnit;
+
+    @Column(columnDefinition = "TINYINT(1)  COMMENT '发送单位'", nullable = false)
+    private MarketSendUnit marketSendUnit;
 
     /**
      * 汇总间隔
      */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false )
-    private CustomerCollectUnit customerCollectUnit;
+
+    @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false)
+    private MarketCollectUnit marketCollectUnit;
 
     /**
      * 发送对象
@@ -117,20 +119,20 @@ public class MarketEmail extends BaseEntity {
         this.sendNumAndUnit = sendNumAndUnit;
     }
 
-    public CustomerSendUnit getCustomerSendUnit() {
-        return customerSendUnit;
+    public MarketSendUnit getMarketSendUnit() {
+        return marketSendUnit;
     }
 
-    public void setCustomerSendUnit(CustomerSendUnit customerSendUnit) {
-        this.customerSendUnit = customerSendUnit;
+    public void setMarketSendUnit(MarketSendUnit customerSendUnit) {
+        this.marketSendUnit = marketSendUnit;
     }
 
-    public CustomerCollectUnit getCustomerCollectUnit() {
-        return customerCollectUnit;
+    public MarketCollectUnit getMarketCollectUnit() {
+        return marketCollectUnit;
     }
 
-    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
-        this.customerCollectUnit = customerCollectUnit;
+    public void setMarketCollectUnit(MarketCollectUnit marketCollectUnit) {
+        this.marketCollectUnit = marketCollectUnit;
     }
 
     public String getSendObject() {

@@ -23,7 +23,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "biddingWebInfoSerCache")
+@CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWebInfoDTO> implements BiddingWebInfoSer {
     @Transactional(rollbackFor = SerException.class)
@@ -31,7 +31,7 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
         BiddingWebInfo biddingWebInfo = BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
         try {
-            biddingWebInfo.setCreateTime(LocalDateTime.now());
+            biddingWebInfo.setId(biddingWebInfoTO.getId());
             super.save(biddingWebInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());

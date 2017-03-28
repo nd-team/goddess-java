@@ -2,11 +2,10 @@ package com.bjike.goddess.market.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerCollectUnit;
-import com.bjike.goddess.customer.enums.CustomerSendUnit;
+import com.bjike.goddess.market.enums.MarketCollectUnit;
+import com.bjike.goddess.market.enums.MarketSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
 import java.util.List;
 import java.util.Map;
 
@@ -46,12 +45,12 @@ public class MarketEmailBO extends BaseBO {
     /**
      * 发送单位
      */
-    private CustomerSendUnit customerSendUnit;
+    private MarketSendUnit marketSendUnit;
 
     /**
      * 汇总间隔
      */
-    private CustomerCollectUnit customerCollectUnit;
+    private MarketCollectUnit marketCollectUnit;
 
     /**
      * 发送对象
@@ -163,20 +162,20 @@ public class MarketEmailBO extends BaseBO {
         this.sendNumAndUnit = sendNumAndUnit;
     }
 
-    public CustomerSendUnit getCustomerSendUnit() {
-        return customerSendUnit;
+    public MarketSendUnit getMarketSendUnit() {
+        return marketSendUnit;
     }
 
-    public void setCustomerSendUnit(CustomerSendUnit customerSendUnit) {
-        this.customerSendUnit = customerSendUnit;
+    public void setMarketSendUnit(MarketSendUnit customerSendUnit) {
+        this.marketSendUnit = marketSendUnit;
     }
 
-    public CustomerCollectUnit getCustomerCollectUnit() {
-        return customerCollectUnit;
+    public MarketCollectUnit getMarketCollectUnit() {
+        return marketCollectUnit;
     }
 
-    public void setCustomerCollectUnit(CustomerCollectUnit customerCollectUnit) {
-        this.customerCollectUnit = customerCollectUnit;
+    public void setMarketCollectUnit(MarketCollectUnit customerCollectUnit) {
+        this.marketCollectUnit = marketCollectUnit;
     }
 
     public String getSendObject() {

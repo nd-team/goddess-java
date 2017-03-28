@@ -2,6 +2,7 @@ package com.bjike.goddess.market.enums;
 
 /**
  * 汇总间隔
+ *
  * @Author: [xiazhili]
  * @Date: [2017-03-22 19:16]
  * @Description: [汇总间隔]

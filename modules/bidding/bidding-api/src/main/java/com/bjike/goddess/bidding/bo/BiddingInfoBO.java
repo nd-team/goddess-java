@@ -1,11 +1,8 @@
 package com.bjike.goddess.bidding.bo;
 
-import com.bjike.goddess.bidding.enums.BiddingType;
-import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -54,12 +51,12 @@ public class BiddingInfoBO extends BaseBO {
     /**
      * 报名时间
      */
-    private LocalDate registrationTime;
+    private String registrationTime;
 
     /**
      * 投标时间
      */
-    private LocalDate biddingTime;
+    private String biddingTime;
 
     /**
      * 投标资格要求
@@ -104,7 +101,7 @@ public class BiddingInfoBO extends BaseBO {
     /**
      * 购买标书时间
      */
-    private LocalDate buyTenderTime;
+    private String buyTenderTime;
 
     /**
      * 价格
@@ -119,7 +116,7 @@ public class BiddingInfoBO extends BaseBO {
     /**
      * 交保证金时间
      */
-    private LocalDate marginTime;
+    private String marginTime;
 
     /**
      * 交保证金方式
@@ -129,7 +126,7 @@ public class BiddingInfoBO extends BaseBO {
     /**
      * 保证金退回时间
      */
-    private LocalDate backTimeDeposit;
+    private String backTimeDeposit;
 
     /**
      * 备注
@@ -152,6 +149,10 @@ public class BiddingInfoBO extends BaseBO {
      * 招投标类型汇总集合
      */
     private List<Map<String, String>> biddingType;
+    /**
+     * 业务类型汇总集合
+     */
+    private List<Map<String, String>> businessType;
 
     public int getEnumConvert() {
         return enumConvert;
@@ -176,11 +177,6 @@ public class BiddingInfoBO extends BaseBO {
     public void setBusinessType(List<Map<String, String>> businessType) {
         this.businessType = businessType;
     }
-
-    /**
-     * 业务类型汇总集合
-     */
-    private List<Map<String, String>> businessType;
 
     public int getCounts() {
         return counts;
@@ -238,19 +234,19 @@ public class BiddingInfoBO extends BaseBO {
         this.projectName = projectName;
     }
 
-    public LocalDate getRegistrationTime() {
+    public String getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(LocalDate registrationTime) {
+    public void setRegistrationTime(String registrationTime) {
         this.registrationTime = registrationTime;
     }
 
-    public LocalDate getBiddingTime() {
+    public String getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDate biddingTime) {
+    public void setBiddingTime(String biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -318,11 +314,11 @@ public class BiddingInfoBO extends BaseBO {
         this.status = status;
     }
 
-    public LocalDate getBuyTenderTime() {
+    public String getBuyTenderTime() {
         return buyTenderTime;
     }
 
-    public void setBuyTenderTime(LocalDate buyTenderTime) {
+    public void setBuyTenderTime(String buyTenderTime) {
         this.buyTenderTime = buyTenderTime;
     }
 
@@ -342,11 +338,11 @@ public class BiddingInfoBO extends BaseBO {
         this.buyTenderRequirements = buyTenderRequirements;
     }
 
-    public LocalDate getMarginTime() {
+    public String getMarginTime() {
         return marginTime;
     }
 
-    public void setMarginTime(LocalDate marginTime) {
+    public void setMarginTime(String marginTime) {
         this.marginTime = marginTime;
     }
 
@@ -358,11 +354,11 @@ public class BiddingInfoBO extends BaseBO {
         this.marginMethod = marginMethod;
     }
 
-    public LocalDate getBackTimeDeposit() {
+    public String getBackTimeDeposit() {
         return backTimeDeposit;
     }
 
-    public void setBackTimeDeposit(LocalDate backTimeDeposit) {
+    public void setBackTimeDeposit(String backTimeDeposit) {
         this.backTimeDeposit = backTimeDeposit;
     }
 
@@ -372,5 +368,13 @@ public class BiddingInfoBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public List<Map<String, String>> getBiddingType() {
+        return biddingType;
+    }
+
+    public List<Map<String, String>> getBusinessType() {
+        return businessType;
     }
 }

@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
  * @Copy: [com.bjike]
  */
 @Component
-public class AppComponents extends JpaComponents implements EntityToScan<AppRoot> {
+public class AppComponents extends JpaComponents {
 
-    @Override
-    public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.market.entity"};
-    }
 }
