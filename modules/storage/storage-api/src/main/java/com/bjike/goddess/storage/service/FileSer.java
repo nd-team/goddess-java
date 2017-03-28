@@ -66,10 +66,9 @@ public interface FileSer extends Ser<File, FileDTO> {
      * 重命名
      *
      * @param path 文件或者文件夹路径
-     * @param oldName 旧文件名
      * @param newName 新文件名
      */
-    default void rename(String path, String oldName, String newName) throws SerException {
+    default void rename(String path,String newName) throws SerException {
 
     }
 

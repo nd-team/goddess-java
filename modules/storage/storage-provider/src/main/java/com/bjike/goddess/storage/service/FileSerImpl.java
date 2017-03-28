@@ -11,9 +11,11 @@ import com.bjike.goddess.storage.entity.File;
 import com.bjike.goddess.storage.utils.FileUtils;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +36,9 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public List<FileBO> list(String path) throws SerException {
-        StringBuilder sb = new StringBuilder();
-        sb.append(PathCommon.ROOT_PATH);
-        sb.append(PathCommon.SEPARATOR);
-        sb.append(userAPI.currentUser().getId());
-        sb.append(PathCommon.SEPARATOR);
-        String rootPath = sb.toString();
-        path = rootPath + PathCommon.SEPARATOR + path;
-        java.io.File dir = new java.io.File(path);
+        String rootPath = getRootPath(); // 根路径
+        String savePath = getSavePath(path); //文件实际保存路径
+        java.io.File dir = new java.io.File(savePath);
         java.io.File[] files = dir.listFiles();
         if (null != files) {
             List<FileBO> fileBOS = new ArrayList<>(files.length);
@@ -52,17 +49,18 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                     fileBO.setSize(FileUtils.getFileSize(file));
                     fileBO.setFileType(FileUtils.getFileType(file));
                 }
-                String parentPath = file.getParent();
-                fileBO.setParentPath(parentPath.split(rootPath)[1]);
+                if(rootPath.equals(file.getParent())){
+                    fileBO.setParentPath(null);
+                }else {
+                    fileBO.setParentPath(StringUtils.substringAfter(file.getParent(),rootPath));
+                }
+                fileBO.setPath(StringUtils.substringAfter(file.getPath(),rootPath));
                 fileBO.setDir(file.isDirectory());
                 fileBO.setName(file.getName());
-                fileBO.setPath(file.getPath().split(rootPath)[1]);
                 fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
                 fileBOS.add(fileBO);
-
             }
             return fileBOS;
-
         }
         return null;
     }
@@ -72,8 +70,10 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     public void upload(byte[] bytes, String fileName, String path) throws SerException {
         String userId = userAPI.currentUser().getId();
         String savePath = this.getSavePath(path);
-        java.io.File file = FileUtils.byteToFile(bytes, savePath, fileName);
-        if (!new java.io.File(savePath).exists()) {
+        String filePath = savePath+PathCommon.SEPARATOR+fileName;
+        java.io.File file = null;
+        if (!new java.io.File(filePath).exists()) {
+            file = FileUtils.byteToFile(bytes, savePath, fileName);
             File myFile = new File();
             myFile.setName(fileName);
             myFile.setSize(FileUtils.getFileSize(file));
@@ -85,12 +85,13 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         } else { //更新
             FileDTO dto = new FileDTO();
             dto.getConditions().add(Restrict.eq("userId", userId));
-            dto.getConditions().add(Restrict.eq("fileName", fileName));
+            dto.getConditions().add(Restrict.eq("name", fileName));
             dto.getConditions().add(Restrict.eq("path", path));
-            File myFile = findOne(dto);
+            File myFile = super.findOne(dto);
             if (null != myFile) {
+                file = new java.io.File(filePath);
                 myFile.setSize(FileUtils.getFileSize(file));
-                myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+                myFile.setModifyTime(LocalDateTime.now());
                 super.update(myFile);
             }
         }
@@ -99,8 +100,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
 
     @Override
-    public void mkDir(String path,String dir) throws SerException {
-        path += (PathCommon.SEPARATOR+dir);
+    public void mkDir(String path, String dir) throws SerException {
+        path += (PathCommon.SEPARATOR + dir);
         path = getSavePath(path);
         java.io.File file = new java.io.File(path);
         if (!file.exists()) {
@@ -115,7 +116,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         path = getSavePath(path);
         java.io.File file = new java.io.File(path);
         if (file.exists()) {
-            file.delete();
+          file.delete();
         } else {
             throw new SerException("该文件目录不存在！");
         }
@@ -123,11 +124,13 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
 
     @Override
-    public void rename(String path, String oldName, String newName) throws SerException {
-        path = getSavePath(path);
+    public void rename(String path,String newName) throws SerException {
+         path = getSavePath(path);
+        String oldName = StringUtils.substringAfterLast(path, "/");
+        String savePath = StringUtils.substringBeforeLast(path, "/");
         if (!oldName.equals(newName)) {//新的文件名和以前文件名不同时,才有必要进行重命名
-            java.io.File oldFile = new java.io.File(path + "/" + oldName);
-            java.io.File newFile = new java.io.File(path + "/" + newName);
+            java.io.File oldFile = new java.io.File(path);
+            java.io.File newFile = new java.io.File(savePath + "/" + newName);
             if (!oldFile.exists()) {//重命名文件不存在
                 throw new SerException("重命名文件不存在！");
             }
@@ -166,8 +169,24 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         sb_path.append(PathCommon.ROOT_PATH);
         sb_path.append(PathCommon.SEPARATOR);
         sb_path.append(userBO.getId());
+        if (!"/".equals(path)) {
+            sb_path.append(path);
+        }
+        return sb_path.toString();
+    }
+
+    /**
+     * 获取真实保存地址前缀
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getRootPath() throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        StringBuilder sb_path = new StringBuilder();
+        sb_path.append(PathCommon.ROOT_PATH);
         sb_path.append(PathCommon.SEPARATOR);
-        sb_path.append(path);
+        sb_path.append(userBO.getId());
         return sb_path.toString();
     }
 

@@ -46,7 +46,6 @@ public class FileAction {
     public Result list(@RequestParam String path) throws ActException {
         try {
             List<FileBO> files = fileAPI.list(path);
-            fileAPI.list(path);
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -129,13 +128,12 @@ public class FileAction {
      * 重命名文件、文件夹
      *
      * @param path    文件路径
-     * @param oldName 旧文件名
      * @param newName 新文件名
      * @version v1
      */
     @PutMapping("v1/rename")
-    public Result rename(@RequestParam String path, @RequestParam String oldName, @RequestParam String newName) throws SerException {
-        fileAPI.rename(path, oldName, newName);
+    public Result rename(@RequestParam String path ,@RequestParam String newName) throws SerException {
+        fileAPI.rename(path, newName);
         return new ActResult("rename success");
     }
 

@@ -48,8 +48,8 @@ public class FileApiImpl implements FileAPI {
 
 
     @Override
-    public void rename(String path, String oldName, String newName) throws SerException {
-        fileSer.rename(path, oldName,newName);
+    public void rename(String path,  String newName) throws SerException {
+        fileSer.rename(path,newName);
     }
 
     @Override
