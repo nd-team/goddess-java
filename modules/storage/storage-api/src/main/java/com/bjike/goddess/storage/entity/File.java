@@ -1,9 +1,9 @@
 package com.bjike.goddess.storage.entity;
 
+import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.storage.enums.FileType;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
+import javax.persistence.*;
 
 
 /**
@@ -15,61 +15,40 @@ import java.time.LocalDateTime;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-
-public class File {
+@Entity
+@Table(name = "storage_file")
+public class File extends BaseEntity {
 
     /**
      * 文件名
      */
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '文件名'")
     private String name;
 
     /**
      * 文件路径
      */
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '文件路径'")
     private String path;
 
     /**
      * 文件类型
      */
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '文件类型'", nullable = false, insertable = false)
     private FileType fileType;
 
     /**
      * 文件大小
      */
-    private Long size;
+    @Column(columnDefinition = "VARCHAR(10)   COMMENT '文件大小'")
+    private String size;
+
 
     /**
-     * 是否为目录
+     * 上传用户
      */
-    private Boolean dir;
-
-    /**
-     * 父目录
-     */
-    private String parentPath;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime modifyTime;
-
-    /**
-     * 大图
-     */
-    @Column(name = "bigPicture", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '大图'")
-    private String bigPicture;
-
-    /**
-     * 小图
-     */
-    @Column(name = "minPicture", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '小图'")
-    private String minPicture;
-
+    @Column(name = "user_id", columnDefinition = "VARCHAR(36)   COMMENT '上传用户'")
+    private String userId;
 
     public String getName() {
         return name;
@@ -95,59 +74,20 @@ public class File {
         this.fileType = fileType;
     }
 
-    public Long getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(Long size) {
+    public void setSize(String size) {
         this.size = size;
     }
 
-    public Boolean getDir() {
-        return dir;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setDir(Boolean dir) {
-        this.dir = dir;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public String getBigPicture() {
-        return bigPicture;
-    }
-
-    public void setBigPicture(String bigPicture) {
-        this.bigPicture = bigPicture;
-    }
-
-    public String getMinPicture() {
-        return minPicture;
-    }
-
-    public void setMinPicture(String minPicture) {
-        this.minPicture = minPicture;
-    }
 }

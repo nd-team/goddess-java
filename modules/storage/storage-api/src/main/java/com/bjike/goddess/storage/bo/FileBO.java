@@ -34,7 +34,7 @@ public class FileBO extends BaseBO {
     /**
      * 文件大小
      */
-    private Long size;
+    private String size;
 
     /**
      * 是否为目录
@@ -49,12 +49,12 @@ public class FileBO extends BaseBO {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private String createTime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime modifyTime;
+    private String modifyTime;
 
     /**
      * 大图
@@ -91,11 +91,11 @@ public class FileBO extends BaseBO {
         this.fileType = fileType;
     }
 
-    public Long getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(Long size) {
+    public void setSize(String size) {
         this.size = size;
     }
 
@@ -115,19 +115,19 @@ public class FileBO extends BaseBO {
         this.parentPath = parentPath;
     }
 
-    public LocalDateTime getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDateTime getModifyTime() {
+    public String getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
+    public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
     }
 

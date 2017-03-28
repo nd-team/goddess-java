@@ -5,16 +5,17 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.FileAPI;
-import com.bjike.goddess.storage.entity.File;
-import com.bjike.goddess.storage.utils.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.bjike.goddess.storage.bo.FileBO;
+import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Arrays;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -39,9 +40,14 @@ public class FileAction {
      * @vsersion v1
      */
     @GetMapping("v1/list")
-    public Result list(String path) throws SerException {
-        List<File> files = fileAPI.list(path);
-        return ActResult.initialize(files);
+    public Result list(String path) throws ActException {
+        try {
+            List<FileBO> files = fileAPI.list(path);
+            fileAPI.list(path);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
@@ -53,35 +59,45 @@ public class FileAction {
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request, String path) throws ActException {
         try {
-            List<MultipartFile> mfiles = FileUtils.getMFiles(request); // 取得request中的所有文件
-            MultipartFile file = mfiles.get(0);
-            java.io.File _file = null;
-            if (null != file && StringUtils.isNoneBlank(path)) {
-                String myFileName = file.getOriginalFilename(); // 取得当前上传文件的文件名称
-                if (StringUtils.isNotBlank(myFileName)) {
-                    java.io.File localFile = new java.io.File(path);
-                    if (!localFile.exists()) {// 文件夹不存在则创建
-                        localFile.mkdirs();
-                    }
-
-                    localFile = new java.io.File(path+"/" + myFileName);
-                    try {
-                        file.transferTo(localFile);
-                        _file = localFile;
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            List<MultipartFile> multipartFiles = this.getMultipartFile(request);
+            for (MultipartFile multipartFile : multipartFiles) {
+                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
+                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), fileAPI.getSavePath(path));
             }
-            fileAPI.upload(Arrays.asList(_file), null);
+
             return new ActResult("upload success");
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
 
     }
+
+
+    /**
+     * 文件是否存在（上传前）
+     *
+     * @param path 上传路径
+     * @vsersion v1
+     */
+    @GetMapping("v1/exists")
+    public Result exists(HttpServletRequest request, String path) throws ActException {
+        try {
+            List<MultipartFile> multipartFiles = this.getMultipartFile(request);
+            path = fileAPI.getSavePath(path);
+            for (MultipartFile multipartFile : multipartFiles) {
+                path = path + "/" + multipartFile.getOriginalFilename();
+                if (new File(path).exists()) {
+                    return new ActResult(multipartFile.getOriginalFilename() + "is exists!");
+                }
+            }
+
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+        return new ActResult("not exists!");
+
+    }
+
 
     /**
      * 文件夹创建
@@ -96,7 +112,7 @@ public class FileAction {
     }
 
     /**
-     * 删除文件
+     * 删除文件,文件夹
      *
      * @param path
      * @vsersion v1
@@ -107,17 +123,6 @@ public class FileAction {
         return new ActResult("delFile success");
     }
 
-    /**
-     * 删除文件夹
-     *
-     * @param path
-     * @vsersion v1
-     */
-    @DeleteMapping("v1/delFolder")
-    public Result delFolder(String path) throws SerException {
-        fileAPI.delFolder(path);
-        return new ActResult("delFolder success");
-    }
 
     /**
      * 重命名
@@ -127,8 +132,8 @@ public class FileAction {
      * @vsersion v1
      */
     @PutMapping("v1/rename")
-    public Result rename(String path, String newName) throws SerException {
-        fileAPI.rename(path, newName);
+    public Result rename(String path, String oldName, String newName) throws SerException {
+        fileAPI.rename(path, oldName, newName);
         return new ActResult("rename success");
     }
 
@@ -139,9 +144,36 @@ public class FileAction {
      * @vsersion v1
      */
     @GetMapping("v1/download")
-    public Result download(String path) throws SerException {
-        fileAPI.download(path);
-        return new ActResult("download success");
+    public Result download(String path, String filename, HttpServletResponse response) throws ActException {
+        try {
+
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = fileAPI.download(path);
+            fis.read(buffer);
+            fis.close();
+            response.reset();
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1"));
+            response.addHeader("Content-Length", "" + buffer.length);
+            OutputStream os = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            os.write(buffer);// 输出文件
+            os.flush();
+            os.close();
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
     }
+
+
+    private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
+        if (null != request && !ServletFileUpload.isMultipartContent(request)) {
+            throw new SerException("上传表单不是multipart/form-data类型");
+        }
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
+        return multiRequest.getFiles("file");
+    }
+
 
 }

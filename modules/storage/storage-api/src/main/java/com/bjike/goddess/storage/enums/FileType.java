@@ -21,7 +21,8 @@ public enum FileType {
     PNG(8),
     GIF(9),
     JPG(10),
-    JPEG(11);
+    JPEG(11),
+    UNKNOW(12);
 
     private int code;
 
@@ -32,4 +33,5 @@ public enum FileType {
     public int getCode() {
         return this.code;
     }
+
 }

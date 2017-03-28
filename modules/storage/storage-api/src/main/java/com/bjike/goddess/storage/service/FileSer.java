@@ -1,8 +1,13 @@
 package com.bjike.goddess.storage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.storage.bo.FileBO;
+import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
+import com.bjike.goddess.storage.to.FileTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -14,7 +19,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface FileSer {
+public interface FileSer extends Ser<File, FileDTO> {
 
 
     /**
@@ -22,17 +27,17 @@ public interface FileSer {
      *
      * @param path
      */
-    default List<File> list(String path) throws SerException {
+    default List<FileBO> list(String path) throws SerException {
         return null;
     }
 
     /**
      * 文件上传
      *
-     * @param files 文件
+     * @param bytes 文件
      * @param path  上传路径
      */
-    default void upload(List<java.io.File> files, String path) throws SerException {
+    default void upload( byte[] bytes,String fileName, String path) throws SerException {
 
     }
 
@@ -54,22 +59,15 @@ public interface FileSer {
 
     }
 
-    /**
-     * 删除文件夹
-     *
-     * @param path
-     */
-    default void delFolder(String path) throws SerException {
-
-    }
 
     /**
      * 重命名
      *
      * @param path
+     * @param oldName
      * @param newName
      */
-    default void rename(String path, String newName) throws SerException {
+    default void rename(String path, String oldName, String newName) throws SerException {
 
     }
 
@@ -78,8 +76,17 @@ public interface FileSer {
      *
      * @param path
      */
-    default void download(String path) throws SerException {
+    default byte[] download(String path) throws SerException {
+        return null;
+    }
 
+    /**
+     * 获取保存路径
+     *
+     * @param path
+     */
+    default String getSavePath(String path) throws SerException {
+        return null;
     }
 
 }

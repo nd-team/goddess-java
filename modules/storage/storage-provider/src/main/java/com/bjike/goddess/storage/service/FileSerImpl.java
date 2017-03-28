@@ -1,12 +1,23 @@
 package com.bjike.goddess.storage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.storage.bo.FileBO;
+import com.bjike.goddess.storage.constant.PathCommon;
+import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
+import com.bjike.goddess.storage.utils.FileInfoUtils;
+import com.bjike.goddess.storage.utils.FileUtils;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,43 +30,114 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @Service
-public class FileSerImpl implements FileSer {
+public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
+
     @Autowired
     private UserAPI userAPI;
 
     @Override
-    public List<File> list(String path) throws SerException {
-        String username = userAPI.currentUser().getUsername();
+    public List<FileBO> list(String path) throws SerException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(PathCommon.ROOT_PATH);
+        sb.append(PathCommon.SEPARATOR);
+        sb.append(userAPI.currentUser().getId());
+        sb.append(PathCommon.SEPARATOR);
+        String rootPath = sb.toString();
+        path = rootPath + PathCommon.SEPARATOR + path;
+        java.io.File dir = new java.io.File(path);
+        java.io.File[] files = dir.listFiles();
+        if (null != files) {
+            List<FileBO> fileBOS = new ArrayList<>(files.length);
+            for (int i = 0; i < files.length; i++) {
+                FileBO fileBO = new FileBO();
+                java.io.File file = files[i];
+                if (file.isFile()) {
+                    fileBO.setSize(FileInfoUtils.getFileSize(file));
+                    fileBO.setFileType(FileInfoUtils.getFileType(file));
+                }
+                String parentPath = file.getParent();
+                fileBO.setParentPath(parentPath.split(rootPath)[1]);
+                fileBO.setDir(file.isDirectory());
+                fileBO.setName(file.getName());
+                fileBO.setPath(file.getPath().split(rootPath)[1]);
+                fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
+                fileBOS.add(fileBO);
+
+            }
+            return fileBOS;
+
+        }
         return null;
     }
 
+
     @Override
-    public void upload(List<java.io.File> files, String path) throws SerException {
-        System.out.println(files);
+    public void upload( byte[] bytes, String fileName, String path) throws SerException {
+        FileUtils.byteToFile(bytes,path,fileName);
     }
+
+
+
 
     @Override
     public void mkDir(String path) throws SerException {
-
+        path = getSavePath(path);
+        java.io.File file = new java.io.File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        } else {
+            throw new SerException("该文件目录已存在！");
+        }
     }
 
     @Override
     public void delFile(String path) throws SerException {
+        path = getSavePath(path);
+        java.io.File file = new java.io.File(path);
+        if (file.exists()) {
+            file.delete();
+        } else {
+            throw new SerException("该文件目录不存在！");
+        }
+    }
 
+
+    @Override
+    public void rename(String path, String oldName, String newName) throws SerException {
+        path = getSavePath(path);
+        if (!oldName.equals(newName)) {//新的文件名和以前文件名不同时,才有必要进行重命名
+            java.io.File oldFile = new java.io.File(path + "/" + oldName);
+            java.io.File newFile = new java.io.File(path + "/" + newName);
+            if (!oldFile.exists()) {//重命名文件不存在
+                throw new SerException("重命名文件不存在！");
+            }
+            if (newFile.exists())
+                throw new SerException(newName + "已经存在！");
+            else {
+                oldFile.renameTo(newFile);
+            }
+        } else {
+            throw new SerException("新文件名和旧文件名相同...");
+        }
     }
 
     @Override
-    public void delFolder(String path) throws SerException {
-
+    public byte[] download(String path) throws SerException {
+        path = getSavePath(path);
+        return  FileUtils.FileToByte(path);
     }
 
     @Override
-    public void rename(String path, String newName) throws SerException {
-
+    public String getSavePath(String path) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        StringBuilder sb_path = new StringBuilder();
+        sb_path.append(PathCommon.ROOT_PATH);
+        sb_path.append(PathCommon.SEPARATOR);
+        sb_path.append(userBO.getId());
+        sb_path.append(PathCommon.SEPARATOR);
+        sb_path.append(path);
+        return sb_path.toString();
     }
 
-    @Override
-    public void download(String path) throws SerException {
 
-    }
 }

@@ -1,9 +1,10 @@
 package com.bjike.goddess.common.utils.date;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @Author: [liguiqin]
@@ -16,6 +17,7 @@ public class DateUtil {
     private static final DateTimeFormatter DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
+
 
     /**
      * 日期时间转换
@@ -63,6 +65,13 @@ public class DateUtil {
         } else {
             return ((LocalTime) date).format(TIME);
         }
+    }
+
+
+    public static LocalDateTime parseTime(long time){
+        Instant instant = Instant.ofEpochMilli(time);
+        ZoneId zone = ZoneId.systemDefault();
+        return  LocalDateTime.ofInstant(instant, zone);
     }
 
 

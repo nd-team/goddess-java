@@ -1,11 +1,14 @@
 package com.bjike.goddess.storage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.entity.File;
 import com.bjike.goddess.storage.service.FileSer;
+import com.bjike.goddess.storage.to.FileTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -24,13 +27,13 @@ public class FileApiImpl implements FileAPI {
     private FileSer fileSer;
 
     @Override
-    public List<File> list(String path) throws SerException {
+    public List<FileBO> list(String path) throws SerException {
         return fileSer.list(path);
     }
 
     @Override
-    public void upload(List<java.io.File> files, String path) throws SerException {
-        fileSer.upload(files, path);
+    public void upload( byte[] bytes,String fileName ,String path) throws SerException {
+        fileSer.upload(bytes, fileName,path);
     }
 
     @Override
@@ -43,18 +46,19 @@ public class FileApiImpl implements FileAPI {
         fileSer.delFile(path);
     }
 
+
     @Override
-    public void delFolder(String path) throws SerException {
-        fileSer.delFolder(path);
+    public void rename(String path, String oldName, String newName) throws SerException {
+        fileSer.rename(path, oldName,newName);
     }
 
     @Override
-    public void rename(String path, String newName) throws SerException {
-        fileSer.rename(path, newName);
+    public byte[] download(String path) throws SerException {
+       return fileSer.download(path);
     }
 
     @Override
-    public void download(String path) throws SerException {
-        fileSer.download(path);
+    public String getSavePath(String path) throws SerException {
+        return  fileSer.getSavePath(path);
     }
 }

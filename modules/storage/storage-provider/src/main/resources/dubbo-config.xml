@@ -17,7 +17,7 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.storage.api.FileAPI" ref="fileApiImpl"/>
+	<dubbo:service  interface="com.bjike.goddess.storage.api.FileAPI" ref="fileApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 

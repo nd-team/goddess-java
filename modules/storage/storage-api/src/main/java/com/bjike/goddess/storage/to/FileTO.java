@@ -34,7 +34,7 @@ public class FileTO extends BaseTO {
     /**
      * 文件大小
      */
-    private Long size;
+    private String size;
 
     /**
      * 是否为目录
@@ -91,11 +91,11 @@ public class FileTO extends BaseTO {
         this.fileType = fileType;
     }
 
-    public Long getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(Long size) {
+    public void setSize(String size) {
         this.size = size;
     }
 

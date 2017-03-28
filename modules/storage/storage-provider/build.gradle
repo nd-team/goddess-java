@@ -28,7 +28,9 @@ sourceSets {
 dependencies {
     compile project(":common:common-provider")
     compile project(":common:common-utils")
+    compile project(":common:common-jpa")
     compile project(":modules:storage:storage-api")
     compile project(":modules:user:user-api")
+
 }
 

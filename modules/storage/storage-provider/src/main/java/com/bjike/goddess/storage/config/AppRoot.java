@@ -1,6 +1,9 @@
 package com.bjike.goddess.storage.config;
 
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 配置项扫描
@@ -12,6 +15,9 @@ import org.springframework.context.annotation.*;
  * @Copy: [com.bjike]
  */
 @Configuration
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.storage.dao"})//jpa 所在包
+@EnableTransactionManagement(proxyTargetClass = true)
+@EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
 @ComponentScan(basePackages = {"com.bjike.goddess.storage"},
