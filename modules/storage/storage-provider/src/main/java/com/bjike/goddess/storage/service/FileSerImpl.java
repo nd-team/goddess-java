@@ -1,22 +1,18 @@
 package com.bjike.goddess.storage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.constant.PathCommon;
 import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
-import com.bjike.goddess.storage.utils.FileInfoUtils;
 import com.bjike.goddess.storage.utils.FileUtils;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +48,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 FileBO fileBO = new FileBO();
                 java.io.File file = files[i];
                 if (file.isFile()) {
-                    fileBO.setSize(FileInfoUtils.getFileSize(file));
-                    fileBO.setFileType(FileInfoUtils.getFileType(file));
+                    fileBO.setSize(FileUtils.getFileSize(file));
+                    fileBO.setFileType(FileUtils.getFileType(file));
                 }
                 String parentPath = file.getParent();
                 fileBO.setParentPath(parentPath.split(rootPath)[1]);
@@ -72,11 +68,18 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
 
     @Override
-    public void upload( byte[] bytes, String fileName, String path) throws SerException {
-        FileUtils.byteToFile(bytes,path,fileName);
+    public void upload(byte[] bytes, String fileName, String path) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        java.io.File file = FileUtils.byteToFile(bytes, path, fileName);
+        File myFile = new File();
+        myFile.setName(fileName);
+        myFile.setSize(FileUtils.getFileSize(file));
+        myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+        myFile.setPath(path);
+        myFile.setUserId(userBO.getId());
+        myFile.setFileType(FileUtils.getFileType(file));
+        super.save(myFile);
     }
-
-
 
 
     @Override
@@ -124,7 +127,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     @Override
     public byte[] download(String path) throws SerException {
         path = getSavePath(path);
-        return  FileUtils.FileToByte(path);
+        return FileUtils.FileToByte(path);
     }
 
     @Override

@@ -2,8 +2,11 @@ package com.bjike.goddess.storage.utils;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.storage.constant.PathCommon;
+import com.bjike.goddess.storage.enums.FileType;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @Author: [liguiqin]
@@ -42,7 +45,7 @@ public class FileUtils {
     }
 
 
-    public static void byteToFile(byte[] buffer, String path, String fileName) throws SerException {
+    public static File byteToFile(byte[] buffer, String path, String fileName) throws SerException {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         File file = null;
@@ -73,6 +76,64 @@ public class FileUtils {
                 }
             }
         }
+        return file;
     }
+
+
+
+    /**
+     * 获取文件类型
+     *
+     * @param file
+     * @return
+     */
+    public static FileType getFileType(File file) {
+        String suffix = file.getName().split("\\.")[1];
+        suffix = suffix.toUpperCase();
+        FileType type = null;
+        try {
+            type = FileType.valueOf(suffix);
+        } catch (Exception e) {
+            type = FileType.UNKNOW;
+        }
+        return type;
+    }
+
+    /**
+     * 获取文件大小
+     *
+     * @param file
+     * @return
+     */
+    public static String getFileSize(File file) {
+        long size = file.length();
+        if (size > 1000) {
+            double kb = new BigDecimal(size).divide(new BigDecimal(1000)).doubleValue();
+            if (kb > 1000) {
+                double mb = new BigDecimal(kb).divide(new BigDecimal(1000)).doubleValue();
+                if (mb > 1000) {
+                    return getBySeconds(mb / 1000) + "GB";
+                } else {
+                    return getBySeconds(mb) + "MB";
+                }
+            } else {
+                return getBySeconds(kb) + "KB";
+            }
+
+        } else {
+            return size + "B";
+        }
+    }
+
+
+    /**
+     * 保留两位小数
+     *
+     * @return
+     */
+    private  static  double getBySeconds(double val) {
+        return new BigDecimal(val).setScale(2, RoundingMode.UP).doubleValue();
+    }
+
 
 }
