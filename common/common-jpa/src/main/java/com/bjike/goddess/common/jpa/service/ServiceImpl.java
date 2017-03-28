@@ -21,6 +21,7 @@ import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -232,6 +233,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                             if(!m.getReturnType().isEnum()){ //忽略枚举类型
                                 m.invoke(obj, convertDataType(arr_obj[j]));
 
+
                             }
                             break;
                         }
@@ -262,6 +264,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                     break;
                 case "Double":
                     obj = Double.parseDouble(val);
+                    break;
+                    case "BigInteger":
+                    obj = Integer.parseInt(val);
                     break;
                 case "Integer":
                     obj = Integer.parseInt(val);
