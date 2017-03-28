@@ -38,7 +38,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Autowired
     private UserAPI userAPI;
 
-    @Cacheable
+    
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         List<SiginManage> list = super.findByPage(siginManageDTO);
@@ -85,7 +85,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         return siginManageBO;
     }
 
-    @Cacheable
+    
     @Override
     public List<SiginManageBO> searchSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         SiginManageDTO dto = siginManageDTO;
