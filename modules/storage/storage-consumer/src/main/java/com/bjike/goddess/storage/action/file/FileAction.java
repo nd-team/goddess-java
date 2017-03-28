@@ -42,8 +42,8 @@ public class FileAction {
      * @param path 文件夹路径
      * @version v1
      */
-    @GetMapping("v1/list/{path}")
-    public Result list(@PathVariable String path) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(@RequestParam String path) throws ActException {
         try {
             List<FileBO> files = fileAPI.list(path);
             fileAPI.list(path);
@@ -60,8 +60,8 @@ public class FileAction {
      * @param request multipart、form-data提交的文件
      * @version v1
      */
-    @PostMapping("v1/upload/{path}")
-    public Result upload(HttpServletRequest request, @PathVariable String path) throws ActException {
+    @PostMapping("v1/upload")
+    public Result upload(HttpServletRequest request, @RequestParam String path) throws ActException {
         try {
             List<MultipartFile> multipartFiles = this.getMultipartFile(request);
             for (MultipartFile multipartFile : multipartFiles) {
@@ -83,8 +83,8 @@ public class FileAction {
      * @param path 文件路径
      * @version v1
      */
-    @GetMapping("v1/exists/{path}")
-    public Result exists(@PathVariable String path) throws ActException {
+    @GetMapping("v1/exists")
+    public Result exists(@RequestParam String path) throws ActException {
         try {
             String filename = StringUtils.substringAfterLast(path, "/");
             if (fileAPI.existsFile(path)) {
@@ -106,8 +106,8 @@ public class FileAction {
      * @param dir  新的目录
      * @version v1
      */
-    @PostMapping("v1/mkDir/{path}/{dir}")
-    public Result mkDir(@PathVariable String path, @PathVariable String dir) throws SerException {
+    @PostMapping("v1/mkDir")
+    public Result mkDir(@RequestParam String path, @RequestParam String dir) throws SerException {
         fileAPI.mkDir(path, dir);
         return new ActResult("mkDir success");
     }
@@ -118,8 +118,8 @@ public class FileAction {
      * @param path 文件、文件夹路径
      * @version v1
      */
-    @DeleteMapping("v1/delFile/{path}")
-    public Result delFile(@PathVariable String path) throws SerException {
+    @DeleteMapping("v1/delFile")
+    public Result delFile(@RequestParam String path) throws SerException {
         fileAPI.delFile(path);
         return new ActResult("delFile success");
     }
@@ -133,8 +133,8 @@ public class FileAction {
      * @param newName 新文件名
      * @version v1
      */
-    @PutMapping("v1/rename/{path}")
-    public Result rename(@PathVariable String path, @RequestParam String oldName, @RequestParam String newName) throws SerException {
+    @PutMapping("v1/rename")
+    public Result rename(@RequestParam String path, @RequestParam String oldName, @RequestParam String newName) throws SerException {
         fileAPI.rename(path, oldName, newName);
         return new ActResult("rename success");
     }
@@ -145,8 +145,8 @@ public class FileAction {
      * @param path 文件路径
      * @version v1
      */
-    @GetMapping("v1/download/{path}")
-    public Result download(@PathVariable String path, HttpServletResponse response) throws ActException {
+    @GetMapping("v1/download")
+    public Result download(@RequestParam String path, HttpServletResponse response) throws ActException {
         try {
             String filename = StringUtils.substringAfterLast(path, "/");
             byte[] buffer = fileAPI.download(path);
