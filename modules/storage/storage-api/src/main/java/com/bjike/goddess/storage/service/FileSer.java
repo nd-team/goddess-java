@@ -35,6 +35,7 @@ public interface FileSer extends Ser<File, FileDTO> {
      * 文件上传
      *
      * @param bytes 文件
+     * @param fileName 文件名
      * @param path  上传路径
      */
     default void upload( byte[] bytes,String fileName, String path) throws SerException {
@@ -44,16 +45,17 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 文件夹创建
      *
-     * @param path
+     * @param path 文件路径
+     * @param dir 新的目录
      */
-    default void mkDir(String path) throws SerException {
+    default void mkDir(String path,String dir) throws SerException {
 
     }
 
     /**
      * 删除文件
      *
-     * @param path
+     * @param path 文件或者文件夹路径
      */
     default void delFile(String path) throws SerException {
 
@@ -63,9 +65,9 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 重命名
      *
-     * @param path
-     * @param oldName
-     * @param newName
+     * @param path 文件或者文件夹路径
+     * @param oldName 旧文件名
+     * @param newName 新文件名
      */
     default void rename(String path, String oldName, String newName) throws SerException {
 
@@ -74,18 +76,17 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 下载
      *
-     * @param path
+     * @param path 文件路径
      */
     default byte[] download(String path) throws SerException {
         return null;
     }
-
     /**
-     * 获取保存路径
+     * 文件是否存在
      *
-     * @param path
+     * @param path 文件路径
      */
-    default String getSavePath(String path) throws SerException {
+    default Boolean existsFile(String path) throws SerException {
         return null;
     }
 

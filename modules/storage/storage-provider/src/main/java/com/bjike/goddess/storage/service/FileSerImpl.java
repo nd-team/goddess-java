@@ -1,5 +1,6 @@
 package com.bjike.goddess.storage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.date.DateUtil;
@@ -69,21 +70,37 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void upload(byte[] bytes, String fileName, String path) throws SerException {
-        UserBO userBO = userAPI.currentUser();
-        java.io.File file = FileUtils.byteToFile(bytes, path, fileName);
-        File myFile = new File();
-        myFile.setName(fileName);
-        myFile.setSize(FileUtils.getFileSize(file));
-        myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
-        myFile.setPath(path);
-        myFile.setUserId(userBO.getId());
-        myFile.setFileType(FileUtils.getFileType(file));
-        super.save(myFile);
+        String userId = userAPI.currentUser().getId();
+        String savePath = this.getSavePath(path);
+        java.io.File file = FileUtils.byteToFile(bytes, savePath, fileName);
+        if (!new java.io.File(savePath).exists()) {
+            File myFile = new File();
+            myFile.setName(fileName);
+            myFile.setSize(FileUtils.getFileSize(file));
+            myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+            myFile.setPath(path); //只保存短路径
+            myFile.setUserId(userId);
+            myFile.setFileType(FileUtils.getFileType(file));
+            super.save(myFile);
+        } else { //更新
+            FileDTO dto = new FileDTO();
+            dto.getConditions().add(Restrict.eq("userId", userId));
+            dto.getConditions().add(Restrict.eq("fileName", fileName));
+            dto.getConditions().add(Restrict.eq("path", path));
+            File myFile = findOne(dto);
+            if (null != myFile) {
+                myFile.setSize(FileUtils.getFileSize(file));
+                myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+                super.update(myFile);
+            }
+        }
+
     }
 
 
     @Override
-    public void mkDir(String path) throws SerException {
+    public void mkDir(String path,String dir) throws SerException {
+        path += (PathCommon.SEPARATOR+dir);
         path = getSavePath(path);
         java.io.File file = new java.io.File(path);
         if (!file.exists()) {
@@ -131,7 +148,19 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     }
 
     @Override
-    public String getSavePath(String path) throws SerException {
+    public Boolean existsFile(String path) throws SerException {
+        path = getSavePath(path);
+        return new java.io.File(path).exists();
+    }
+
+    /**
+     * 获取真实保存地址前缀
+     *
+     * @param path
+     * @return
+     * @throws SerException
+     */
+    private String getSavePath(String path) throws SerException {
         UserBO userBO = userAPI.currentUser();
         StringBuilder sb_path = new StringBuilder();
         sb_path.append(PathCommon.ROOT_PATH);

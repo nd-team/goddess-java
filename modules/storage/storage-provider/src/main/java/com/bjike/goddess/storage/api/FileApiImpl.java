@@ -37,8 +37,8 @@ public class FileApiImpl implements FileAPI {
     }
 
     @Override
-    public void mkDir(String path) throws SerException {
-        fileSer.mkDir(path);
+    public void mkDir(String path,String dir) throws SerException {
+        fileSer.mkDir(path,dir);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class FileApiImpl implements FileAPI {
     }
 
     @Override
-    public String getSavePath(String path) throws SerException {
-        return  fileSer.getSavePath(path);
+    public Boolean existsFile(String path) throws SerException {
+        return fileSer.existsFile(path);
     }
 }

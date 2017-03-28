@@ -1,4 +1,4 @@
-package com.bjike.goddess.storage.action;
+package com.bjike.goddess.storage.action.file;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -7,7 +7,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -36,11 +39,11 @@ public class FileAction {
     /**
      * 文件列表
      *
-     * @param path
-     * @vsersion v1
+     * @param path 文件夹路径
+     * @version v1
      */
-    @GetMapping("v1/list")
-    public Result list(String path) throws ActException {
+    @GetMapping("v1/list/{path}")
+    public Result list(@PathVariable String path) throws ActException {
         try {
             List<FileBO> files = fileAPI.list(path);
             fileAPI.list(path);
@@ -54,15 +57,16 @@ public class FileAction {
      * 文件上传
      *
      * @param path 上传路径
-     * @vsersion v1
+     * @param request multipart、form-data提交的文件
+     * @version v1
      */
-    @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request, String path) throws ActException {
+    @PostMapping("v1/upload/{path}")
+    public Result upload(HttpServletRequest request, @PathVariable String path) throws ActException {
         try {
             List<MultipartFile> multipartFiles = this.getMultipartFile(request);
             for (MultipartFile multipartFile : multipartFiles) {
                 byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), fileAPI.getSavePath(path));
+                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), path);
             }
 
             return new ActResult("upload success");
@@ -74,21 +78,17 @@ public class FileAction {
 
 
     /**
-     * 文件是否存在（上传前）
+     * 文件是否存在
      *
-     * @param path 上传路径
-     * @vsersion v1
+     * @param path 文件路径
+     * @version v1
      */
-    @GetMapping("v1/exists")
-    public Result exists(HttpServletRequest request, String path) throws ActException {
+    @GetMapping("v1/exists/{path}")
+    public Result exists(@PathVariable String path) throws ActException {
         try {
-            List<MultipartFile> multipartFiles = this.getMultipartFile(request);
-            path = fileAPI.getSavePath(path);
-            for (MultipartFile multipartFile : multipartFiles) {
-                path = path + "/" + multipartFile.getOriginalFilename();
-                if (new File(path).exists()) {
-                    return new ActResult(multipartFile.getOriginalFilename() + "is exists!");
-                }
+            String filename = StringUtils.substringAfterLast(path, "/");
+            if (fileAPI.existsFile(path)) {
+                return new ActResult(filename + "is exists!");
             }
 
         } catch (Exception e) {
@@ -102,55 +102,54 @@ public class FileAction {
     /**
      * 文件夹创建
      *
-     * @param path
-     * @vsersion v1
+     * @param path 文件夹路径
+     * @param dir  新的目录
+     * @version v1
      */
-    @PostMapping("v1/mkDir")
-    public Result mkDir(String path) throws SerException {
-        fileAPI.mkDir(path);
+    @PostMapping("v1/mkDir/{path}/{dir}")
+    public Result mkDir(@PathVariable String path, @PathVariable String dir) throws SerException {
+        fileAPI.mkDir(path, dir);
         return new ActResult("mkDir success");
     }
 
     /**
-     * 删除文件,文件夹
+     * 删除文件、文件夹
      *
-     * @param path
-     * @vsersion v1
+     * @param path 文件、文件夹路径
+     * @version v1
      */
-    @DeleteMapping("v1/delFile")
-    public Result delFile(String path) throws SerException {
+    @DeleteMapping("v1/delFile/{path}")
+    public Result delFile(@PathVariable String path) throws SerException {
         fileAPI.delFile(path);
         return new ActResult("delFile success");
     }
 
 
     /**
-     * 重命名
+     * 重命名文件、文件夹
      *
-     * @param path
-     * @param newName
-     * @vsersion v1
+     * @param path    文件路径
+     * @param oldName 旧文件名
+     * @param newName 新文件名
+     * @version v1
      */
-    @PutMapping("v1/rename")
-    public Result rename(String path, String oldName, String newName) throws SerException {
+    @PutMapping("v1/rename/{path}")
+    public Result rename(@PathVariable String path, @RequestParam String oldName, @RequestParam String newName) throws SerException {
         fileAPI.rename(path, oldName, newName);
         return new ActResult("rename success");
     }
 
     /**
-     * 下载
+     * 文件下载
      *
-     * @param path
-     * @vsersion v1
+     * @param path 文件路径
+     * @version v1
      */
-    @GetMapping("v1/download")
-    public Result download(String path, String filename, HttpServletResponse response) throws ActException {
+    @GetMapping("v1/download/{path}")
+    public Result download(@PathVariable String path, HttpServletResponse response) throws ActException {
         try {
-
-            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            String filename = StringUtils.substringAfterLast(path, "/");
             byte[] buffer = fileAPI.download(path);
-            fis.read(buffer);
-            fis.close();
             response.reset();
             response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1"));
             response.addHeader("Content-Length", "" + buffer.length);
