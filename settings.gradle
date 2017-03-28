@@ -83,6 +83,14 @@ include ':modules:bidding:bidding-provider'
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
+//#商务项目合同管理
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//#商业能力展示
+include ':modules:capability:capability-api'
+include ':modules:capability:capability-consumer'
+include ':modules:capability:capability-provider'
 
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
