@@ -22,10 +22,10 @@ public interface MarketEmailSer extends Ser<MarketEmail, MarketEmailDTO> {
     /**
      * 汇总
      *
-     * @param works works
+     * @param areas areas
      * @return class MarketEmailBO
      */
-    default MarketEmailBO collectMarketEmail(String[] works) throws SerException {
+    default List<MarketEmailBO> collectMarketEmail(String[] areas) throws SerException {
         return null;
     }
 

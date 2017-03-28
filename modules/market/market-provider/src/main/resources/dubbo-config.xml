@@ -20,6 +20,7 @@
 
 	<dubbo:service interface="com.bjike.goddess.market.api.MarketInfoAPI" ref="marketInfoApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.market.api.MarketEmailAPI" ref="marketEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" ref="customerBaseInfoApiImpl"/>
 
 	<dubbo:reference validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
 

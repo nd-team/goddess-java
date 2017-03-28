@@ -5,6 +5,8 @@ import com.bjike.goddess.market.bo.MarketEmailBO;
 import com.bjike.goddess.market.service.MarketEmailSer;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * 市场邮件发送定制业务接口实现
@@ -21,7 +23,7 @@ public class MarketEmailApiImpl implements MarketEmailAPI {
     private MarketEmailSer marketEmailSer;
 
     @Override
-    public MarketEmailBO collectMarketEmail(String[] works) throws SerException {
+    public List<MarketEmailBO> collectMarketEmail(String[] works) throws SerException {
         return marketEmailSer.collectMarketEmail(works);
     }
 }

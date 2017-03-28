@@ -3,6 +3,8 @@ package com.bjike.goddess.market.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.market.bo.MarketEmailBO;
 
+import java.util.List;
+
 
 /**
  * 市场汇总邮件发送定制业务接口
@@ -18,10 +20,10 @@ public interface MarketEmailAPI {
     /**
      * 汇总
      *
-     * @param works works
+     * @param areas areas
      * @return class MarketEmailBO
      */
-    default MarketEmailBO collectMarketEmail(String[] works) throws SerException {
+    default List<MarketEmailBO> collectMarketEmail(String[] areas) throws SerException {
         return null;
     }
 

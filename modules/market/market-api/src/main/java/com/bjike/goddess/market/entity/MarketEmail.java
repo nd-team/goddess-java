@@ -51,12 +51,14 @@ public class MarketEmail extends BaseEntity {
     /**
      * 发送单位
      */
+
     @Column(columnDefinition = "TINYINT(1)  COMMENT '发送单位'", nullable = false)
     private MarketSendUnit marketSendUnit;
 
     /**
      * 汇总间隔
      */
+
     @Column(columnDefinition = "TINYINT(1)  COMMENT '汇总间隔'", nullable = false)
     private MarketCollectUnit marketCollectUnit;
 
