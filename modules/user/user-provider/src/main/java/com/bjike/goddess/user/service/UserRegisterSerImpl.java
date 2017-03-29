@@ -34,13 +34,13 @@ import java.util.Random;
 public class UserRegisterSerImpl implements UserRegisterSer {
 
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
 
 
     @Cacheable
     @Override
     public Boolean existUsername(String username) throws SerException {
-        UserBO bo = userAPI.findByUsername(username);
+        UserBO bo = userSer.findByUsername(username);
         return null != bo;
 
     }
@@ -48,7 +48,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     @Override
     public void verifyAndSendCode(String phone) throws SerException {
 
-        if (null != userAPI.findByPhone(phone)) {
+        if (null != userSer.findByPhone(phone)) {
             //generateCode()
             String code = "123456";
             PhoneCode phoneCode = new PhoneCode();
@@ -114,7 +114,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             user.setPhone(registerTO.getPhone());
             user.setCreateTime(LocalDateTime.now());
             user.setEmployeeNumber("ike" + new Random().nextInt(999999));
-            userAPI.save(user);
+            userSer.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }

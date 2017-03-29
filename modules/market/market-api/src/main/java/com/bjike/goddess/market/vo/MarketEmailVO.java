@@ -1,8 +1,6 @@
 package com.bjike.goddess.market.vo;
 
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerCollectUnit;
-import com.bjike.goddess.customer.enums.CustomerSendUnit;
 import com.bjike.goddess.market.enums.MarketCollectUnit;
 import com.bjike.goddess.market.enums.MarketSendUnit;
 

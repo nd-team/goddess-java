@@ -165,12 +165,12 @@ public class CustomerBaseInfoBO extends BaseBO {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private String createTime;
 
     /**
      * 修改时间
      */
-    private LocalDateTime modifyTime;
+    private String modifyTime;
 
     /**
      * 客户详细信息
@@ -402,19 +402,19 @@ public class CustomerBaseInfoBO extends BaseBO {
         this.status = status;
     }
 
-    public LocalDateTime getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDateTime getModifyTime() {
+    public String getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
+    public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
     }
 

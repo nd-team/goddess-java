@@ -26,6 +26,11 @@ include ':modules:user:user-provider'
 include ':modules:message:message-api'
 include ':modules:message:message-consumer'
 include ':modules:message:message-provider'
+//#storage 存储模块
+include ':modules:storage:storage-api'
+include ':modules:storage:storage-consumer'
+include ':modules:storage:storage-provider'
+
 ////#staffentry 员工入职
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
@@ -83,6 +88,14 @@ include ':modules:bidding:bidding-provider'
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
+//#商务项目合同管理
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//#商业能力展示
+include ':modules:capability:capability-api'
+include ':modules:capability:capability-consumer'
+include ':modules:capability:capability-provider'
 
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
@@ -96,6 +109,17 @@ include ':modules:proearlymarketcost:proearlymarketcost-provider'
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
 include ':modules:marketdevelopment:marketdevelopment-provider'
+
+//#projectissuehandle 项目问题受理
+include ':modules:projectissuehandle:projectissuehandle-api'
+include ':modules:projectissuehandle:projectissuehandle-consumer'
+include ':modules:projectissuehandle:projectissuehandle-provider'
+//#market 市场信息管理
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
+
+
 
 
 

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class CustomerDetailTO extends BaseTO {
     /**
      * 客户信息编号
      */
+    @NotBlank(message = "客户编号不能为空")
     private String customerNum;
 
     /**
@@ -51,7 +53,7 @@ public class CustomerDetailTO extends BaseTO {
     /**
      * 性格评价
      */
-    private String CharacterEvaluation;
+    private String characterEvaluation;
 
 
     /**
@@ -123,11 +125,11 @@ public class CustomerDetailTO extends BaseTO {
     }
 
     public String getCharacterEvaluation() {
-        return CharacterEvaluation;
+        return characterEvaluation;
     }
 
-    public void setCharacterEvaluation(String CharacterEvaluation) {
-        this.CharacterEvaluation = CharacterEvaluation;
+    public void setCharacterEvaluation(String characterEvaluation) {
+        this.characterEvaluation = characterEvaluation;
     }
 
     public String getCreateTime() {

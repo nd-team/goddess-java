@@ -2,6 +2,7 @@ package com.bjike.goddess.customer.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 客户级别
@@ -14,9 +15,12 @@ import com.bjike.goddess.common.api.type.Status;
  */
 public class CustomerLevelTO extends BaseTO {
 
+
+
     /**
      * 客户级别名
      */
+    @NotBlank(message = "客户级别名不能为空")
     private String name;
 
     /**

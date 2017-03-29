@@ -29,7 +29,7 @@ import java.util.List;
 public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, ContractCategoryDTO> implements ContractCategorySer {
 
 
-    @Cacheable
+    
     @Override
     public List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
         List<ContractCategory> list = super.findByPage(contractCategoryDTO);

@@ -1,8 +1,6 @@
 package com.bjike.goddess.market.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.customer.dto.CusEmailDTO;
-import com.bjike.goddess.customer.entity.CusEmail;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.entity.MarketEmail;
 

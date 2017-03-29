@@ -26,6 +26,8 @@ public class JapiTest {
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 //		JapiClient.setUseCache(true);//
+		JapiClient.setFlushServer(true);
+		JapiClient.saveHistory(false);
 
 		IProject project = ProjectImpl.init();
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();

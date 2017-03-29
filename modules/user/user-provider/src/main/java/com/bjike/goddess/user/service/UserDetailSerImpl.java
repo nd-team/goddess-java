@@ -37,28 +37,28 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
 
 
     @Autowired
-    private DepartmentSer departmentAPI;
+    private DepartmentSer departmentSer;
     @Autowired
-    private GroupSer groupAPI;
+    private GroupSer groupSer;
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
 
     @Transactional
     @Override
     public UserDetailBO add() throws SerException {
         UserDTO dto = new UserDTO();
         dto.getConditions().add(Restrict.eq("phone", "13457910241"));
-        User user = userAPI.findOne(dto);
+        User user = userSer.findOne(dto);
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
         DepartmentDTO departmentDTO = new DepartmentDTO();
         departmentDTO.getConditions().add(Restrict.eq("name", "a研发部"));
-        Department department = departmentAPI.findOne(departmentDTO);
+        Department department = departmentSer.findOne(departmentDTO);
         userDetail.setDepartment(department);
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.getConditions().add(Restrict.eq("name", "项目组"));
-        Group group = groupAPI.findOne(groupDTO);
+        Group group = groupSer.findOne(groupDTO);
         userDetail.setGroup(group);
         super.save(userDetail);
         return BeanTransform.copyProperties(userDetail, UserDetailBO.class);

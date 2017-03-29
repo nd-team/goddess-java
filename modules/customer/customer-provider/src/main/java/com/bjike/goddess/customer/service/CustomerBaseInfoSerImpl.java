@@ -22,6 +22,8 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -55,11 +57,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Autowired
     private UserAPI userAPI;
 
-    @Cacheable
+    
     @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
         String[] fields = new String[]{"customerNum", "customerName"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS =super.findBySql("select customernum as customerNum,customername as customerName from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select customernum as customerNum,customername as customerName from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
 
         Set<String> cusNumberSet = customerBaseInfoBOS.stream().filter(cus -> cus.getCustomerNum().length() > 5).map(CustomerBaseInfoBO::getCustomerNum).collect(Collectors.toSet());
         List<Integer> cusNumberList = new ArrayList<>(0);
@@ -68,69 +70,94 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                 cusNumberList.add(Integer.valueOf(num.substring(5)));
             }
         }
-        Integer maxInt =(( cusNumberList != null && cusNumberList.size()>0)?Collections.max(cusNumberList):0) + 0001;
+        Integer maxInt = ((cusNumberList != null && cusNumberList.size() > 0) ? Collections.max(cusNumberList) : 0) + 0001;
         String customerNumber = "CS000" + maxInt;
 
         CustomerBaseInfoBO cbo = new CustomerBaseInfoBO();
-        cbo.setCustomerNum( customerNumber);
+        cbo.setCustomerNum(customerNumber);
         return cbo;
     }
 
-    @Cacheable
+    
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
 
-        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class );
+        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerBaseInfoBO addCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
-        String levelName =  customerBaseInfoTO.getCustomerLevelTO().getName();
-        CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName( levelName );
-        CustomerLevel customerLevel = BeanTransform.copyProperties( customerLevelBO,CustomerLevel.class,true);
+        CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
+        dto.getConditions().add(Restrict.eq("customerName", customerBaseInfoTO.getCustomerName()));
+        Long count = super.count(dto);
+        if (count > 0) {
+            throw new SerException("添加失败，客户名已存在,请重新命名");
+        } else {
+            String levelName = customerBaseInfoTO.getCustomerLevelName();
+            CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName(levelName);
+            CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelBO, CustomerLevel.class, true);
 
-        performance(customerBaseInfoTO);
-        CustomerBaseInfo customerBaseInfo =  BeanTransform.copyProperties( customerBaseInfoTO , CustomerBaseInfo.class,true);
-        customerBaseInfo.setCreateTime(LocalDateTime.now());
-        customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
-        customerBaseInfo.setCustomerLevel(customerLevel);
+            performance(customerBaseInfoTO);
+            CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
+            customerBaseInfo.setCreateTime(LocalDateTime.now());
+            customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
+            customerBaseInfo.setCustomerLevel(customerLevel);
 
-        super.save( customerBaseInfo );
-        return BeanTransform.copyProperties( customerBaseInfoTO ,CustomerBaseInfoBO.class );
+            super.save(customerBaseInfo);
+            return BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfoBO.class);
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
-        performance(customerBaseInfoTO);
-        CustomerBaseInfo customerBaseInfo =  BeanTransform.copyProperties( customerBaseInfoTO , CustomerBaseInfo.class,true);
+        //查一遍级别
+        CustomerBaseInfo cusBase = null;
+        try {
+            String levelName = customerBaseInfoTO.getCustomerLevelName();
+            CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName(levelName);
+            CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelBO, CustomerLevel.class, true);
+            //先查一遍基本信息
+            cusBase = super.findById(customerBaseInfoTO.getId());
+            performance(customerBaseInfoTO);
 
-        customerBaseInfo.setModifyTime( LocalDateTime.now());
-        customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
-        super.update( customerBaseInfo);
-        return BeanTransform.copyProperties( customerBaseInfo ,CustomerBaseInfoBO.class );
+            CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
+            customerBaseInfo.setCustomerLevel(customerLevel);
+
+            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id");
+            cusBase.setModifyTime(LocalDateTime.now());
+            cusBase.setModifyPersion(userAPI.currentUser().getUsername());
+            super.update(cusBase);
+        } catch (SerException e) {
+            throw new SerException("更新失败"+e.getMessage());
+        }
+        return BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCustomerBaseInfo(String id) throws SerException {
-        CustomerBaseInfo customerBaseInfo = super.findById( id );
-        CustomerDetail detail = customerBaseInfo.getCustomerDetail();
-        if( detail != null ){
-            CusFamilyMemberDTO familyMemberDTO = new CusFamilyMemberDTO();
-            familyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", detail.getId()));
-            List<CusFamilyMember> cusFamilyMemberList = cusFamilyMemberAPI.findByCis(familyMemberDTO );
-            if( cusFamilyMemberList!= null && cusFamilyMemberList.size()>0 ){
-                //删除家庭信息
-                cusFamilyMemberAPI.remove( cusFamilyMemberList );
+        try {
+            CustomerBaseInfo customerBaseInfo = super.findById(id);
+            CustomerDetail detail = customerBaseInfo.getCustomerDetail();
+            if (detail != null) {
+                CusFamilyMemberDTO familyMemberDTO = new CusFamilyMemberDTO();
+                familyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", detail.getId()));
+                List<CusFamilyMember> cusFamilyMemberList = cusFamilyMemberAPI.findByCis(familyMemberDTO);
+                if (cusFamilyMemberList != null && cusFamilyMemberList.size() > 0) {
+                    //删除家庭信息
+                    cusFamilyMemberAPI.remove(cusFamilyMemberList);
+                }
+                //删除详细信息
+                customerDetailAPI.remove(detail);
+                super.remove(customerBaseInfo);
+            } else {
+                super.remove(customerBaseInfo);
             }
-            //删除详细信息
-            customerDetailAPI.remove( detail );
-            super.remove( customerBaseInfo );
-        }else{
-            super.remove( customerBaseInfo );
+        } catch (SerException e) {
+            throw new SerException("删除出现错误，删除失败"+e.getMessage());
         }
 
     }
@@ -138,47 +165,67 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCustomerBaseInfo(String id) throws SerException {
-        CustomerBaseInfo customerBaseInfo = super.findById( id );
-        customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
-        customerBaseInfo.setModifyTime( LocalDateTime.now() );
-        customerBaseInfo.setStatus(Status.CONGEAL);
+        try {
+            CustomerBaseInfo customerBaseInfo = super.findById(id);
+            customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
+            customerBaseInfo.setModifyTime(LocalDateTime.now());
+            customerBaseInfo.setStatus(Status.CONGEAL);
 
-        super.update( customerBaseInfo );
+            super.update(customerBaseInfo);
+        } catch (SerException e) {
+            throw new SerException("冻结出现错误，冻结失败"+e.getMessage());
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCustomerBaseInfo(String id) throws SerException {
-        CustomerBaseInfo customerBaseInfo = super.findById( id );
-        customerBaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
-        customerBaseInfo.setModifyTime( LocalDateTime.now() );
-        customerBaseInfo.setStatus(Status.THAW);
+        try {
+            CustomerBaseInfo customerBaseInfo = super.findById(id);
+            customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
+            customerBaseInfo.setModifyTime(LocalDateTime.now());
+            customerBaseInfo.setStatus(Status.THAW);
 
-        super.update( customerBaseInfo );
+            super.update(customerBaseInfo);
+        } catch (SerException e) {
+            throw new SerException("解冻出现错误，解冻失败"+e.getMessage());
+        }
     }
 
-
-    @Cacheable
     @Override
-    public List<String> getCustomerBaseInfoArea() throws SerException {
-        String[] fields = new String[]{"area"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS =super.findBySql("select area,1 from customer_customerbaseinfo order by area asc ", CustomerBaseInfoBO.class, fields);
+    public List<String> getCustomerBaseInfoCusNum() throws SerException {
+        String[] fields = new String[]{"customerNum"};
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql(
+                "select customerNum ,1 from customer_customerbaseinfo where customerNum not in ( select d.customerNum from customer_customerdetail AS d\n" +
+                        "  ) order by customerNum asc ", CustomerBaseInfoBO.class, fields);
 
-        List<String> areaList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
-                .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());
+        List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerNum)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
 
         return areaList;
     }
 
-    @Cacheable
+    @Override
+    public List<String> getCustomerBaseInfoArea() throws SerException {
+        String[] fields = new String[]{"area"};
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select area,1 from customer_customerbaseinfo order by area asc ", CustomerBaseInfoBO.class, fields);
+
+        List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+
+
+        return areaList;
+    }
+
+    
     @Override
     public List<String> getCustomerBaseInfoName() throws SerException {
         String[] fields = new String[]{"customerName"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS =super.findBySql("select customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
 
-        List<String> customerNameList  = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerName)
-                .filter(name -> (name != null || !"".equals(name.trim())) ).distinct().collect(Collectors.toList());
+        List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerName)
+                .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
 
 
         return customerNameList;
@@ -219,7 +266,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(customerBaseInfoTO.getCustomerLevelTO().getName())) {
+        if (StringUtils.isNotBlank(customerBaseInfoTO.getCustomerLevelName())) {
             now++;
         }
         sum++;
@@ -294,25 +341,25 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName,String origanizion) throws SerException {
-        if( StringUtils.isNotBlank(customerName) ){
+    public CustomerBaseInfoBO addMarketCustomerInfo(@NotBlank String customerName, String origanizion) throws SerException {
+        if (StringUtils.isNotBlank(customerName)) {
             return null;
-        }else{
+        } else {
             /**
              * 生成客户编号
              */
             CustomerBaseInfoBO cBO = generateCustomerNum();
 
             CustomerBaseInfo cbaseInfo = new CustomerBaseInfo();
-            cbaseInfo.setCustomerName( customerName );
+            cbaseInfo.setCustomerName(customerName);
             cbaseInfo.setOrigin(origanizion);
-            cbaseInfo.setCustomerNum( cBO.getCustomerNum() );
-            cbaseInfo.setCustomerSex(CustomerSex.NONE );
-            cbaseInfo.setCreateTime( LocalDateTime.now());
-            cbaseInfo.setModifyPersion( userAPI.currentUser().getUsername());
+            cbaseInfo.setCustomerNum(cBO.getCustomerNum());
+            cbaseInfo.setCustomerSex(CustomerSex.NONE);
+            cbaseInfo.setCreateTime(LocalDateTime.now());
+            cbaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
 
-            super.save( cbaseInfo );
-            return BeanTransform.copyProperties(cbaseInfo , CustomerBaseInfoBO.class);
+            super.save(cbaseInfo);
+            return BeanTransform.copyProperties(cbaseInfo, CustomerBaseInfoBO.class);
         }
     }
 
@@ -320,8 +367,20 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
-        dto.getConditions().add(Restrict.eq("customerNum",customerNum));
-        CustomerBaseInfo customerBaseInfo = super.findOne( dto );
-        return BeanTransform.copyProperties( customerBaseInfo,CustomerBaseInfoBO.class);
+        dto.getConditions().add(Restrict.eq("customerNum", customerNum));
+        CustomerBaseInfo customerBaseInfo = super.findOne(dto);
+        return BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
+    }
+
+    @Override
+    public List<String> getCustomerBaseInfoWorks() throws SerException {
+        String[] fields = new String[]{"workProfession"};
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select workProfession ,1 from customer_customerbaseinfo group by workProfession", CustomerBaseInfoBO.class, fields);
+
+        List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getWorkProfession)
+                .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
+
+
+        return customerNameList;
     }
 }

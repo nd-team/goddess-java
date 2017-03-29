@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoManageDTO> implements BaseInfoManageSer {
 
 
-    @Cacheable
+    
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         List<BaseInfoManage> list = super.findByPage(baseInfoManageDTO);
@@ -82,7 +82,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         super.remove( id );
     }
 
-    @Cacheable
+    
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         BaseInfoManage baseInfoManage = new BaseInfoManage();
@@ -97,7 +97,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         return bo;
     }
 
-    @Cacheable
+    
     @Override
     public List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         /**

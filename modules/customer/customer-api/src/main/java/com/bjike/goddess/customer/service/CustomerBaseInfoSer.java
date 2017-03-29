@@ -93,6 +93,15 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     ;
 
     /**
+     * 获取所有编号
+     *
+     * @return class String
+     */
+    default List<String> getCustomerBaseInfoCusNum() throws SerException {
+        return null;
+    }
+
+    /**
      * 获取地区
      *
      * @return class String
@@ -129,6 +138,15 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @return class CustomerBaseInfoBO
      */
     default CustomerBaseInfoBO getCustomerInfoByNum( String customerNum) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取行业数组
+     *
+     * @return class String
+     */
+    default List<String> getCustomerBaseInfoWorks() throws SerException {
         return null;
     }
 

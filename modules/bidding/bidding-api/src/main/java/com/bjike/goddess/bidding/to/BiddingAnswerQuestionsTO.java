@@ -28,10 +28,10 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
     /**
      * 答疑时间
      */
-    private LocalDate officeHour;
+    private String officeHour;
 
     /**
-     *
+     * 解答单位
      */
     private String answersUnit;
 
@@ -62,11 +62,11 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
         this.peopleAnswerQuestions = peopleAnswerQuestions;
     }
 
-    public LocalDate getOfficeHour() {
+    public String getOfficeHour() {
         return officeHour;
     }
 
-    public void setOfficeHour(LocalDate officeHour) {
+    public void setOfficeHour(String officeHour) {
         this.officeHour = officeHour;
     }
 

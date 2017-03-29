@@ -28,7 +28,7 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 开标时间String
      */
-    private LocalDate bidOpeningTime;
+    private String bidOpeningTime;
 
     /**
      * 委托人
@@ -77,11 +77,11 @@ public class BidOpeningInfoTO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public LocalDate getBidOpeningTime() {
+    public String getBidOpeningTime() {
         return bidOpeningTime;
     }
 
-    public void setBidOpeningTime(LocalDate bidOpeningTime) {
+    public void setBidOpeningTime(String bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
     }
 

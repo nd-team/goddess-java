@@ -38,9 +38,9 @@ import java.util.Map;
 public class UserLoginSerImpl implements UserLoginSer {
 
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
     @Autowired
-    private UserLoginLogAPI userLoginLogAPI;
+    private UserLoginLogSer userLoginLogSer;
 
 
     @Override
@@ -48,7 +48,7 @@ public class UserLoginSerImpl implements UserLoginSer {
         String token = null;
         String account = loginTO.getAccount();
         loginTO.setIp("192.168.0.1");
-        UserBO userBO = userAPI.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
+        UserBO userBO = userSer.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
         if (null != userBO) {
             User user = BeanTransform.copyProperties(userBO, User.class);
             boolean authCode = validateAuthCode(account, loginTO.getAuthCode());
@@ -71,8 +71,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                     loginLog.setLoginTime(LocalDateTime.now());
                     loginLog.setLoginType(loginTO.getLoginType());
                     loginLog.setLoginAddress("not has address");
-                     UserLoginLogTO loginLogTO = BeanTransform.copyProperties(loginLog,UserLoginLogTO.class);
-                    userLoginLogAPI.save(loginLogTO);
+                    userLoginLogSer.save(loginLog);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }

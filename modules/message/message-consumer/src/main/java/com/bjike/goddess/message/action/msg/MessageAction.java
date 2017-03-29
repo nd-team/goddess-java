@@ -137,7 +137,6 @@ public class MessageAction {
     @PutMapping("v1/delete/{messageId}")
     public Result delete(@PathVariable String messageId) throws ActException {
         try {
-
             messageAPI.remove(messageId);
             return new ActResult("delete is success");
         } catch (SerException e) {

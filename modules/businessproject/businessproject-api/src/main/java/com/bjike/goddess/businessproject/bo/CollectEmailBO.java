@@ -94,7 +94,7 @@ public class CollectEmailBO extends BaseBO {
     /**
      * 个数
      */
-    private int counts;
+    private Integer counts;
 
     /**
      * 数据库枚举转换
@@ -263,11 +263,11 @@ public class CollectEmailBO extends BaseBO {
         this.money = money;
     }
 
-    public int getCounts() {
+    public Integer getCounts() {
         return counts;
     }
 
-    public void setCounts(int counts) {
+    public void setCounts(Integer counts) {
         this.counts = counts;
     }
 

@@ -1,6 +1,5 @@
 package com.bjike.goddess.bidding.vo;
 
-import java.time.LocalDate;
 
 /**
  * 投标答疑问题记录表现层对象
@@ -26,10 +25,10 @@ public class BiddingAnswerQuestionsVO {
     /**
      * 答疑时间
      */
-    private LocalDate officeHour;
+    private String officeHour;
 
     /**
-     *
+     * 解答单位
      */
     private String answersUnit;
 
@@ -60,11 +59,11 @@ public class BiddingAnswerQuestionsVO {
         this.peopleAnswerQuestions = peopleAnswerQuestions;
     }
 
-    public LocalDate getOfficeHour() {
+    public String getOfficeHour() {
         return officeHour;
     }
 
-    public void setOfficeHour(LocalDate officeHour) {
+    public void setOfficeHour(String officeHour) {
         this.officeHour = officeHour;
     }
 

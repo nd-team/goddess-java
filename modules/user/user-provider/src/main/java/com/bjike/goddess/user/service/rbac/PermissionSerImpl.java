@@ -35,27 +35,27 @@ import java.util.Set;
 @Service
 public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> implements PermissionSer {
     @Autowired
-    private UserRoleSer userRoleAPI;
+    private UserRoleSer userRoleSer;
     @Autowired
-    private GroupUserSer groupUserAPI;
+    private GroupUserSer groupUserSer;
     @Autowired
-    private GroupRoleSer groupRoleAPI;
+    private GroupRoleSer groupRoleSer;
     @Autowired
-    private RolePermissionSer rolePermissionAPI;
+    private RolePermissionSer rolePermissionSer;
 
     @Override
     public List<PermissionBO> findByUserId(String userId) throws SerException {
         //通过角色(用户角色,组角色)查询其拥有的权限
         Set<String> role_ids = new HashSet<>();
-        List<UserRole> userRoles = userRoleAPI.findByUserId(userId);
-        List<GroupUser> groupUsers = groupUserAPI.findByUserId(userId);
+        List<UserRole> userRoles = userRoleSer.findByUserId(userId);
+        List<GroupUser> groupUsers = groupUserSer.findByUserId(userId);
         List<GroupRole> groupRoles = null;
         if (null != groupUsers && groupUsers.size() > 0) { //组角色
             List<String> group_ids = new ArrayList<>(groupUsers.size());
             groupUsers.stream().forEach(groupUser -> {
                 group_ids.add(groupUser.getGroup().getId());
             });
-            groupRoles = groupRoleAPI.findByGroupIds(group_ids.toArray(new String[group_ids.size()]));
+            groupRoles = groupRoleSer.findByGroupIds(group_ids.toArray(new String[group_ids.size()]));
         }
         if (null != userRoles && userRoles.size() > 0) { //用户角色
             userRoles.stream().forEach(userRole -> {
@@ -70,7 +70,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         //查询角色资源权限
         Set<Permission> permissions = new HashSet<>();
         if (0 < role_ids.size()) {
-            List<RolePermission> rolePermissions = rolePermissionAPI.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
+            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
             rolePermissions.stream().forEach(rolePermission -> {
                 permissions.add(rolePermission.getPermission());
             });
@@ -80,7 +80,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
 
     @Override
     public List<PermissionBO> findByRoleId(String roleId) throws SerException {
-        List<RolePermission> rolePermissions = rolePermissionAPI.findByRoleIds(roleId);
+        List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(roleId);
         Set<Permission> permissions = new HashSet<>();
         rolePermissions.stream().forEach(rolePermission -> {
             permissions.add(rolePermission.getPermission());

@@ -3,7 +3,6 @@ package com.bjike.goddess.bidding.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 
-import java.time.LocalDate;
 
 /**
  * 招标信息
@@ -59,12 +58,12 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 报名时间
      */
-    private LocalDate registrationTime;
+    private String registrationTime;
 
     /**
      * 投标时间
      */
-    private LocalDate biddingTime;
+    private String biddingTime;
 
     /**
      * 投标资格要求
@@ -109,7 +108,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 购买标书时间
      */
-    private LocalDate buyTenderTime;
+    private String buyTenderTime;
 
     /**
      * 价格
@@ -124,7 +123,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 交保证金时间
      */
-    private LocalDate marginTime;
+    private String marginTime;
 
     /**
      * 交保证金方式
@@ -134,7 +133,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 保证金退回时间
      */
-    private LocalDate backTimeDeposit;
+    private String backTimeDeposit;
 
     /**
      * 备注
@@ -206,19 +205,19 @@ public class BiddingInfoTO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public LocalDate getRegistrationTime() {
+    public String getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(LocalDate registrationTime) {
+    public void setRegistrationTime(String registrationTime) {
         this.registrationTime = registrationTime;
     }
 
-    public LocalDate getBiddingTime() {
+    public String getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDate biddingTime) {
+    public void setBiddingTime(String biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -286,11 +285,11 @@ public class BiddingInfoTO extends BaseTO {
         this.status = status;
     }
 
-    public LocalDate getBuyTenderTime() {
+    public String getBuyTenderTime() {
         return buyTenderTime;
     }
 
-    public void setBuyTenderTime(LocalDate buyTenderTime) {
+    public void setBuyTenderTime(String buyTenderTime) {
         this.buyTenderTime = buyTenderTime;
     }
 
@@ -310,11 +309,11 @@ public class BiddingInfoTO extends BaseTO {
         this.buyTenderRequirements = buyTenderRequirements;
     }
 
-    public LocalDate getMarginTime() {
+    public String getMarginTime() {
         return marginTime;
     }
 
-    public void setMarginTime(LocalDate marginTime) {
+    public void setMarginTime(String marginTime) {
         this.marginTime = marginTime;
     }
 
@@ -326,11 +325,11 @@ public class BiddingInfoTO extends BaseTO {
         this.marginMethod = marginMethod;
     }
 
-    public LocalDate getBackTimeDeposit() {
+    public String getBackTimeDeposit() {
         return backTimeDeposit;
     }
 
-    public void setBackTimeDeposit(LocalDate backTimeDeposit) {
+    public void setBackTimeDeposit(String backTimeDeposit) {
         this.backTimeDeposit = backTimeDeposit;
     }
 
