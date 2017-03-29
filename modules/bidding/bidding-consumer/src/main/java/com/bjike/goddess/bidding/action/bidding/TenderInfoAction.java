@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class TenderInfoAction {
     public Result findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws ActException {
         try {
             List<TenderInfoVO> tenderInfoVOS = BeanTransform.copyProperties(
-                    tenderInfoAPI.findListTenderInfo(tenderInfoDTO), TenderInfoVO.class, true);
+                    tenderInfoAPI.findListTenderInfo(tenderInfoDTO), TenderInfoVO.class);
             return ActResult.initialize(tenderInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -76,7 +77,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editTenderInfo(TenderInfoTO tenderInfoTO) throws ActException {
+    public Result editTenderInfo(@Validated TenderInfoTO tenderInfoTO) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.editTenderInfo(tenderInfoTO);
             return ActResult.initialize(tenderInfoBO);

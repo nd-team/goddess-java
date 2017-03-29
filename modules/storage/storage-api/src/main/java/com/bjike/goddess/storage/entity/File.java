@@ -34,7 +34,7 @@ public class File extends BaseEntity {
     /**
      * 文件类型
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '文件类型'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) COMMENT '文件类型'", nullable = false)
     private FileType fileType;
 
     /**

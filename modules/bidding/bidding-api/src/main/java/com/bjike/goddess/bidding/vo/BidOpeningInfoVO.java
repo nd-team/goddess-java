@@ -1,6 +1,5 @@
 package com.bjike.goddess.bidding.vo;
 
-import java.time.LocalDate;
 
 /**
  * 开标信息表现层对象
@@ -26,7 +25,7 @@ public class BidOpeningInfoVO {
     /**
      * 开标时间String
      */
-    private LocalDate bidOpeningTime;
+    private String bidOpeningTime;
 
     /**
      * 委托人
@@ -75,11 +74,11 @@ public class BidOpeningInfoVO {
         this.projectName = projectName;
     }
 
-    public LocalDate getBidOpeningTime() {
+    public String getBidOpeningTime() {
         return bidOpeningTime;
     }
 
-    public void setBidOpeningTime(LocalDate bidOpeningTime) {
+    public void setBidOpeningTime(String bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
     }
 

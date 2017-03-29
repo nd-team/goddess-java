@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
+import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.enums.BiddingType;
 import com.bjike.goddess.bidding.enums.BusinessType;
@@ -27,7 +28,7 @@ import java.util.*;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "biddingInfoSerCache")
+@CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO> implements BiddingInfoSer {
 
@@ -39,7 +40,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
         try {
-            biddingInfo.setCreateTime(LocalDateTime.now());
+            biddingInfo.setId(biddingInfoTO.getId());
             super.save(biddingInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());

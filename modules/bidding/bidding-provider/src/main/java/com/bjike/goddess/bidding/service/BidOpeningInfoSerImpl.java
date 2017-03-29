@@ -15,6 +15,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,8 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [com.bjike.goddess]
  */
+@CacheConfig(cacheNames = "biddingSerCache")
+@Service
 public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpeningInfoDTO> implements BidOpeningInfoSer{
     @Autowired
     private BidOpeningInfoSer bidOpeningInfoAPI;
@@ -38,7 +42,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
         try {
-            bidOpeningInfo.setCreateTime(LocalDateTime.now());
+            bidOpeningInfo.setModifyTime(LocalDateTime.now());
             super.save(bidOpeningInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());

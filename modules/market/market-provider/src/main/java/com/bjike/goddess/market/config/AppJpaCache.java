@@ -21,11 +21,11 @@ public class AppJpaCache implements JpaCache {
 	
     @Override
     public List<Cache> initCaches() {
-        ConcurrentMapCache serCache = new ConcurrentMapCache("marketInfoSerCache");
+        ConcurrentMapCache serCache = new ConcurrentMapCache("marketSerCache");
         serCache.put("timeToLiveSeconds",60*60);//1小时过期
         serCache.put("timeToIdleSeconds",60*60*12);//闲置时间
 
-        ConcurrentMapCache daoCache = new ConcurrentMapCache("marketInfoDaoCache");
+        ConcurrentMapCache daoCache = new ConcurrentMapCache("marketDaoCache");
         daoCache.put("timeToLiveSeconds",60*60);//1小时过期
         daoCache.put("timeToIdleSeconds",60*60*12);//闲置时间
         return Arrays.asList(serCache,daoCache);

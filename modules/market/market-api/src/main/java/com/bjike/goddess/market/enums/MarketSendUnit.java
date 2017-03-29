@@ -2,6 +2,7 @@ package com.bjike.goddess.market.enums;
 
 /**
  * 发送汇总邮件的发送间隔单位
+ *
  * @Author: [xiazhili]
  * @Date: [2017-03-22 19:10]
  * @Description: [发送汇总邮件的发送间隔单位]
@@ -37,8 +38,7 @@ public enum MarketSendUnit {
     /**
      * 年
      */
-    YEAR(6),
-    ;
+    YEAR(6),;
 
     private int code;
 

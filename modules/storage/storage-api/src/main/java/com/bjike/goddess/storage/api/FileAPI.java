@@ -2,9 +2,7 @@ package com.bjike.goddess.storage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.storage.bo.FileBO;
-import com.bjike.goddess.storage.to.FileTO;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -30,26 +28,28 @@ public interface FileAPI {
     /**
      * 文件上传
      *
-     * @param bytes 文件
-     * @param path  上传路径
+     * @param bytes    文件
+     * @param fileName 文件名
+     * @param path     上传路径
      */
-    default void upload(  byte[] bytes, String fileName,String path) throws SerException {
+    default void upload(byte[] bytes, String fileName, String path) throws SerException {
 
     }
 
     /**
      * 文件夹创建
      *
-     * @param path
+     * @param path 文件路径
+     * @param dir  新的目录
      */
-    default void mkDir(String path) throws SerException {
+    default void mkDir(String path, String dir) throws SerException {
 
     }
 
     /**
      * 删除文件
      *
-     * @param path
+     * @param path 文件或者文件夹路径
      */
     default void delFile(String path) throws SerException {
 
@@ -59,29 +59,28 @@ public interface FileAPI {
     /**
      * 重命名
      *
-     * @param path
-     * @param oldName
-     * @param newName
+     * @param path    文件或者文件夹路径
+     * @param newName 新文件名
      */
-    default void rename(String path, String oldName, String newName) throws SerException {
+    default void rename(String path, String newName) throws SerException {
 
     }
 
     /**
      * 下载
      *
-     * @param path
+     * @param path 文件路径
      */
     default byte[] download(String path) throws SerException {
         return null;
     }
 
     /**
-     * 获取保存路径
+     * 文件是否存在
      *
-     * @param path
+     * @param path 文件路径
      */
-    default String getSavePath(String path) throws SerException {
+    default Boolean existsFile(String path) throws SerException {
         return null;
     }
 

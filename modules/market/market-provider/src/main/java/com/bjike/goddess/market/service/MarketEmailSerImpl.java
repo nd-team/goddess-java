@@ -1,9 +1,7 @@
 package com.bjike.goddess.market.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
@@ -37,12 +35,14 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
     private MarketInfoSer marketInfoApi;
     @Cacheable
     @Override
-    public MarketEmailBO collectMarketEmail(String[] works) throws SerException {
+    public List<MarketEmailBO> collectMarketEmail(String[] areas) throws SerException {
         List<MarketEmailBO> marketEmailBOS = new ArrayList<>();
 
-        //先查有几个地区
+        //获取所有的地区
+        List<String> area = Arrays.asList(areas);
+        /*//先查有几个地区
         List<String> areas = marketInfoApi.getMarketInfoArea();
-
+*/
         //行业类别
         List<Integer> workType = Arrays.asList(MarketWorkType.MOBILECOMMUNICATION.getCode(), MarketWorkType.SOFTWAREDEVELOPMENT.getCode()
                 , MarketWorkType.INTELLIGENTSYSTEMINTEGRATION.getCode(), MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode());
@@ -54,36 +54,36 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         List<Integer> natureType = Arrays.asList(MarketProjectNature.NEWPROJECT.getCode(),
                 MarketProjectNature.OLDPROJECT.getCode());
 
-        for (String work : works) {
+        for (String areaStr : areas) {
             //处理地区汇总
-            String[] fields = new String[]{"count", "work", "remark"};
-            String sql = "select count(*) as count , workprofession as work ,area as remark  from  market_marketinfo " +
-                    "where area in (" + areas + ") and workprofession = " + work + " group by workprofession , area order by area asc  ";
+            String[] fields = new String[]{"count", "area", "remark"};
+            String sql = "select count(*) as count  ,area as area  from  market_marketinfo " +
+                    "where area in (" + areaStr + ")  area order by area asc  ";
             List<Map<String, String>> areaMapList = new ArrayList<>();
-            areaMapList = sqlQueryString(areas, fields, sql, areaMapList);
+            areaMapList = sqlQueryString(area, fields, sql, areaMapList);
 
             //处理行业类别汇总
-            sql = "select count(*) as count , workprofession as work ,workType as enumConvert  from  market_marketinfo " +
-                    "where workType in (" + workType + ") and workprofession = " + work + " group by workprofession , workType order by workType asc  ";
+            sql = "select count(*) as count , area as area ,workType as enumConvert  from  market_marketinfo " +
+                    "where workType in (" + workType + ") and area = " + areaStr + " group by area , workType order by workType asc  ";
             List<Map<String, String>> workTypeMapList = new ArrayList<>();
             workTypeMapList = sqlQueryInt("MarketWorkType",workType, fields, sql, workTypeMapList);
 
             //处理项目性质汇总
-            sql = "select count(*) as count , workprofession as work ,natureType as enumConvert  from  market_marketinfo " +
-                    "where natureType in (" + natureType + ") and workprofession = " + work + " group by workprofession , natureType order by natureType asc  ";
+            sql = "select count(*) as count , area as area ,natureType as enumConvert  from  market_marketinfo " +
+                    "where natureType in (" + natureType + ") and area = " + areaStr + " group by area , natureType order by natureType asc  ";
             List<Map<String, String>> natureTypeMapList = new ArrayList<>();
             natureTypeMapList = sqlQueryInt("MarketProjectNature",natureType, fields, sql, natureTypeMapList);
 
             //处理项目级别汇总
-            sql = "select count(*) as count , workprofession as work ,natureType as enumConvert  from  market_marketinfo " +
-                    "where scaleType in (" + scaleType + ") and workprofession = " + work + " group by workprofession , scaleType order by scaleType asc  ";
+            sql = "select count(*) as count , area as area ,natureType as enumConvert  from  market_marketinfo " +
+                    "where scaleType in (" + scaleType + ") and area = " + areaStr + " group by area , scaleType order by scaleType asc  ";
             List<Map<String, String>> scaleTypeMapList = new ArrayList<>();
             scaleTypeMapList = sqlQueryInt("MarketScaleType",scaleType, fields, sql, scaleTypeMapList);
 
             //处理是否为有效信息汇总
             sql = "select count(*) as count ,effective from market_marketinfo where area=''";
             List<Map<String,String>> effectiveMapList = new ArrayList<Map<String,String>>();
-            effectiveMapList = sqlQueryString(areas, fields, sql, effectiveMapList);
+            effectiveMapList = sqlQueryString(area, fields, sql, effectiveMapList);
 
 
             MarketEmailBO marketEmailBO = new MarketEmailBO();
@@ -94,7 +94,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
             marketEmailBOS.add(marketEmailBO);
         }
 
-        return null;
+        return marketEmailBOS;
     }
 
     /**

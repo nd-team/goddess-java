@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.service.PositionSer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@Service("positionApiImpl")
 public class PositionApiImpl implements PositionAPI {
 
     @Autowired

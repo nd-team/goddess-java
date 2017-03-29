@@ -2,6 +2,7 @@ package com.bjike.goddess.market.enums;
 
 /**
  * 项目性质
+ *
  * @Author: [xiazhili]
  * @Date: [17-3-22]
  * @Description: [项目性质]
@@ -12,12 +13,11 @@ public enum MarketProjectNature {
     /**
      * 新项目市场信息数量
      */
-    NEWPROJECT (0),
+    NEWPROJECT(0),
     /**
      * 已有项目or进行中项目市场信息数量
      */
-    OLDPROJECT(1),
-    ;
+    OLDPROJECT(1),;
     private int code;
 
     MarketProjectNature(int code) {
@@ -39,6 +39,7 @@ public enum MarketProjectNature {
         }
         return marketProjectNature;
     }
+
     public static String getStrConvert(int code) {
         String name = "";
         if (code == MarketProjectNature.NEWPROJECT.getCode()) {
