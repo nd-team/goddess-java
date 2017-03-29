@@ -250,19 +250,19 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerSex().getCode()))) {
+        if (customerBaseInfoTO.getCustomerSex()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerType().getCode()))) {
+        if (customerBaseInfoTO.getCustomerType()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerStatus().getCode()))) {
+        if (customerBaseInfoTO.getCustomerStatus()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
+        if (customerBaseInfoTO.getRelation() != null && StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
             now++;
         }
         sum++;
