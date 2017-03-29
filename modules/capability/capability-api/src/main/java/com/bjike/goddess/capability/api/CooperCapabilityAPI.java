@@ -74,5 +74,11 @@ public interface CooperCapabilityAPI {
      */
     default List<CooperCapabilityBO> listAllCompanyName( ) throws SerException {return null;}
 
+    /**
+     * 查找公司名/联系人/联系方式(提供给商业互动洽谈详情)
+     * @return class CooperCapabilityBO
+     */
+    default List<CooperCapabilityBO> listCompanyContact( String companyName ) throws SerException {return null;}
+
 
 }
