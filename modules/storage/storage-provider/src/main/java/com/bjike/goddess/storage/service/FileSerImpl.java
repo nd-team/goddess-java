@@ -12,9 +12,11 @@ import com.bjike.goddess.storage.utils.FileUtils;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,50 +35,26 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Autowired
     private UserAPI userAPI;
-
-    @Override
-    public List<FileBO> list(String path) throws SerException {
-
-        String userId = userAPI.currentUser().getId();
-        String rootPath = null;
-        rootPath = getRootPath(userId); // 根路径
-        String savePath = rootPath + path; //文件实际保存路径
-
-        java.io.File dir = new java.io.File(savePath);
-        java.io.File[] files = dir.listFiles();
-        return getFileBo(files, rootPath);
-
-    }
+    @Autowired
+    private Environment env;
 
     /**
-     * 通过文件列表获取文件的详细信息
+     * 功能操作会通过storageToken确认登录后操作，每个storageToken对应一个模块
      *
-     * @param files
-     * @param rootPath 根目录
+     * @param path
      * @return
+     * @throws SerException
      */
-    private List<FileBO> getFileBo(java.io.File[] files, String rootPath) {
-        if (null != files) {
-            List<FileBO> fileBOS = new ArrayList<>(files.length);
-            for (int i = 0; i < files.length; i++) {
-                FileBO fileBO = new FileBO();
-                java.io.File file = files[i];
-                fileBO.setFileType(FileUtils.getFileType(file));
-                fileBO.setSize(FileUtils.getFileSize(file));
-                if (rootPath.equals(file.getParent())) {
-                    fileBO.setParentPath(null);
-                } else {
-                    fileBO.setParentPath(StringUtils.substringAfter(file.getParent(), rootPath));
-                }
-                fileBO.setPath(StringUtils.substringAfter(file.getPath(), rootPath));
-                fileBO.setDir(file.isDirectory());
-                fileBO.setName(file.getName());
-                fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
-                fileBOS.add(fileBO);
-            }
-            return fileBOS;
-        }
-        return null;
+
+    //module/xxx/xxx
+    @Override
+    public List<FileBO> list(String path) throws SerException {
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path);
+        java.io.File dir = new java.io.File(realPath);
+        java.io.File[] files = dir.listFiles();
+        return getFileBo(files, module);
+
     }
 
 
@@ -84,16 +62,18 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     @Override
     public void upload(byte[] bytes, String fileName, String path) throws SerException {
         String userId = userAPI.currentUser().getId();
-        String savePath = this.getSavePath(userId, path);
-        String filePath = savePath + PathCommon.SEPARATOR + fileName;
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path); //真实目录
+        String filePath = realPath + PathCommon.SEPARATOR + fileName; //文件保存目录
         java.io.File file = null;
         if (!new java.io.File(filePath).exists()) {
-            file = FileUtils.byteToFile(bytes, savePath, fileName);
+            file = FileUtils.byteToFile(bytes, realPath, fileName);
             File myFile = new File();
             myFile.setName(fileName);
             myFile.setSize(FileUtils.getFileSize(file));
             myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
-            myFile.setPath(path + PathCommon.SEPARATOR + fileName); //只保存短路径
+            myFile.setPath(module + path + PathCommon.SEPARATOR + fileName); //保存路径为模块起始
+            myFile.setModule(module);
             myFile.setUserId(userId);
             myFile.setFileType(FileUtils.getFileType(file));
             super.save(myFile);
@@ -112,10 +92,10 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void mkDir(String path, String dir) throws SerException {
-        String userId = userAPI.currentUser().getId();
+        String module = env.getProperty("module"); //网盘登录用户
         path += (PathCommon.SEPARATOR + dir);
-        path = getSavePath(userId, path);
-        java.io.File file = new java.io.File(path);
+        String realPath = getRealPath(module, path);
+        java.io.File file = new java.io.File(realPath);
         if (!file.exists()) {
             file.mkdirs();
         } else {
@@ -125,19 +105,20 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void delFile(String path) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        String savePath = getSavePath(userId, path);
+        String module = env.getProperty("module"); //网盘登录用户
+        String savePath = getRealPath(module, path);
         java.io.File file = new java.io.File(savePath);
         if (file.exists()) {
             if (file.isFile()) {
-                String fileName = StringUtils.substringAfterLast(path, "/");
-                path = getRootPath(userId);
-                File myFile = getFile(userId, path, fileName);
-                if (null != myFile) {
-                    super.remove(myFile);
+                file.delete();
+            } else {
+                try {
+                    org.apache.commons.io.FileUtils.deleteDirectory(file);
+                } catch (IOException e) {
+                    throw new SerException(e.getMessage());
                 }
             }
-            file.delete();
+
         } else {
             throw new SerException("该文件目录不存在！");
         }
@@ -146,12 +127,12 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void rename(String path, String newName) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        path = getSavePath(userId, path);
-        String oldName = StringUtils.substringAfterLast(path, "/");
-        String savePath = StringUtils.substringBeforeLast(path, "/");
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path);
+        String oldName = StringUtils.substringAfterLast(realPath, "/");
+        String savePath = StringUtils.substringBeforeLast(realPath, "/");
         if (!oldName.equals(newName)) {//新的文件名和以前文件名不同时,才有必要进行重命名
-            java.io.File oldFile = new java.io.File(path);
+            java.io.File oldFile = new java.io.File(realPath);
             java.io.File newFile = new java.io.File(savePath + "/" + newName);
             if (!oldFile.exists()) {//重命名文件不存在
                 throw new SerException("重命名文件不存在！");
@@ -168,63 +149,18 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public byte[] download(String path) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        path = getSavePath(userId, path);
-        return FileUtils.FileToByte(path);
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path);
+        return FileUtils.FileToByte(realPath);
     }
 
     @Override
     public Boolean existsFile(String path) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        path = getSavePath(userId, path);
-        return new java.io.File(path).exists();
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path);
+        return new java.io.File(realPath).exists();
     }
 
-    /**
-     * 获取真实保存地址前缀
-     *
-     * @param path
-     * @return
-     * @throws SerException
-     */
-    private String getSavePath(String userId, String path) throws SerException {
-        StringBuilder sb_path = new StringBuilder();
-        sb_path.append(PathCommon.ROOT_PATH);
-        sb_path.append(PathCommon.SEPARATOR);
-        sb_path.append(userId);
-        if (!"/".equals(path)) {
-            sb_path.append(path);
-        }
-        return sb_path.toString();
-    }
-
-    /**
-     * 获取真实保存地址前缀
-     *
-     * @return
-     * @throws SerException
-     */
-    private String getRootPath(String userId) throws SerException {
-        StringBuilder sb_path = new StringBuilder();
-        sb_path.append(PathCommon.ROOT_PATH);
-        sb_path.append(PathCommon.SEPARATOR);
-        sb_path.append(userId);
-        return sb_path.toString();
-    }
-
-    /**
-     * 获取真实保存地址前缀
-     * 指定用户访问
-     *
-     * @return
-     * @throws SerException
-     */
-    private String getRootPath() throws SerException {
-        StringBuilder sb_path = new StringBuilder();
-        sb_path.append(PathCommon.ROOT_PATH);
-        sb_path.append(PathCommon.SEPARATOR);
-        return sb_path.toString();
-    }
 
     /**
      * 通过文件信息查询数据库保存的相应数据
@@ -242,6 +178,59 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         dto.getConditions().add(Restrict.eq("path", path));
         File myFile = super.findOne(dto);
         return myFile;
+    }
+
+
+    /**
+     * 通过文件列表获取文件的详细信息
+     *
+     * @param files
+     * @return
+     */
+    private List<FileBO> getFileBo(java.io.File[] files, String module) throws SerException {
+        String rootPath = PathCommon.ROOT_PATH;
+        if (null != module) {
+            rootPath = rootPath + PathCommon.SEPARATOR + module;
+        }
+        if (null != files) {
+            List<FileBO> fileBOS = new ArrayList<>(files.length);
+            for (int i = 0; i < files.length; i++) {
+                FileBO fileBO = new FileBO();
+                java.io.File file = files[i];
+                fileBO.setFileType(FileUtils.getFileType(file));
+                if (file.isFile()) {
+                    fileBO.setSize(FileUtils.getFileSize(file));
+                }
+
+                if (PathCommon.ROOT_PATH.equals(file.getParent())) {
+                    fileBO.setParentPath(null);
+                } else {
+                    fileBO.setParentPath(StringUtils.substringAfter(file.getParent(), rootPath));
+                }
+                fileBO.setPath(StringUtils.substringAfter(file.getPath(), rootPath));
+                fileBO.setDir(file.isDirectory());
+                fileBO.setName(file.getName());
+                fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
+                fileBOS.add(fileBO);
+            }
+            return fileBOS;
+        }
+        return null;
+    }
+
+    /**
+     * @param module 登录的模块名
+     * @param path   模块用户path为文件短路径不带模块名前缀，系统用户则带模块前缀
+     * @return
+     */
+    private String getRealPath(String module, String path) {
+        String realPath = null;
+        if (null != module) {
+            realPath = PathCommon.ROOT_PATH + PathCommon.SEPARATOR + module + path;
+        } else {
+            realPath = PathCommon.ROOT_PATH + path;
+        }
+        return realPath;
     }
 
 

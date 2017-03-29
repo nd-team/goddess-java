@@ -50,6 +50,12 @@ public class File extends BaseEntity {
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)   COMMENT '上传用户'")
     private String userId;
 
+    /**
+     * 所属模块
+     */
+    @Column(name = "module", columnDefinition = "VARCHAR(100)   COMMENT '所属模块'")
+    private String module;
+
     public String getName() {
         return name;
     }
@@ -90,4 +96,11 @@ public class File extends BaseEntity {
         this.userId = userId;
     }
 
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
 }

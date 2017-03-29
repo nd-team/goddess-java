@@ -87,7 +87,7 @@ public class FileAction {
         try {
             String filename = StringUtils.substringAfterLast(path, "/");
             if (fileAPI.existsFile(path)) {
-                return new ActResult(filename + "is exists!");
+                return new ActResult(filename + " is exists!");
             }
 
         } catch (Exception e) {

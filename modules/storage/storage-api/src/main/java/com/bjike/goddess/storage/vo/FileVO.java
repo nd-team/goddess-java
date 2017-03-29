@@ -69,6 +69,11 @@ public class FileVO {
      */
     private String minPicture;
 
+    /**
+     * 所属模块
+     */
+    private String module;
+
 
     public String getId() {
         return id;
@@ -156,5 +161,13 @@ public class FileVO {
 
     public void setMinPicture(String minPicture) {
         this.minPicture = minPicture;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
     }
 }
