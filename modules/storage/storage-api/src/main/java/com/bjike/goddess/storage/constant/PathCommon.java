@@ -12,5 +12,6 @@ public class PathCommon {
      * 根目录
      */
     public static  final String ROOT_PATH ="/home/lgq/storage";
+    public static  final String RECYCLE_PATH ="/home/lgq/recycle";
     public static  final String SEPARATOR ="/";
 }

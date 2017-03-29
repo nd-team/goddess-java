@@ -84,4 +84,31 @@ public interface FileAPI {
         return null;
     }
 
+    /**
+     * 文件是否存在
+     *
+     * @param fromPath 移动路径
+     * @param toPath 目标路径
+     */
+    default Boolean move(String fromPath,String toPath) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除到回收站
+     *
+     * @param path
+     * @throws SerException
+     */
+    default void recycle(String path) throws SerException {
+
+    }
+
+    /**
+     * 恢复目录
+     */
+    default void restore(String path) throws SerException {
+
+    }
+
 }

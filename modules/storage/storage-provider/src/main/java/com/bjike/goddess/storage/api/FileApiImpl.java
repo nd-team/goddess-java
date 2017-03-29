@@ -61,4 +61,19 @@ public class FileApiImpl implements FileAPI {
     public Boolean existsFile(String path) throws SerException {
         return fileSer.existsFile(path);
     }
+
+    @Override
+    public Boolean move(String fromPath, String toPath) throws SerException {
+        return fileSer.move(fromPath,toPath);
+    }
+
+    @Override
+    public void recycle(String path) throws SerException {
+        fileSer.recycle(path);
+    }
+
+    @Override
+    public void restore(String path) throws SerException {
+        fileSer.restore(path);
+    }
 }

@@ -161,6 +161,80 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         return new java.io.File(realPath).exists();
     }
 
+    @Override
+    public Boolean move(String fromPath, String toPath) throws SerException {
+        String module = env.getProperty("module"); //网盘登录用户
+        String from = getRealPath(module, fromPath);
+        String to = getRealPath(module, toPath);
+        java.io.File fromFile = new java.io.File(from);
+        java.io.File toFile = new java.io.File(to);
+        if (toFile.isFile()) {
+            throw new SerException("不允许移动文件或文件夹到文件下！");
+        } else {
+            try {
+                if (fromFile.isFile()) {
+                    org.apache.commons.io.FileUtils.moveFileToDirectory(fromFile, toFile, true);
+                } else {
+                    org.apache.commons.io.FileUtils.moveDirectoryToDirectory(fromFile, toFile, true);
+                }
+
+            } catch (IOException e) {
+                throw new SerException(e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void recycle(String path) throws SerException {
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = getRealPath(module, path); //原目录
+        java.io.File file = new java.io.File(realPath);
+        try {
+            if (file.isFile()) {
+                realPath = StringUtils.substringAfter(realPath, PathCommon.ROOT_PATH);// 文件存储路径
+                realPath = StringUtils.substringBeforeLast(realPath, PathCommon.SEPARATOR);//去文件名
+                realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + realPath;
+                java.io.File dir = new java.io.File(realPath);
+                org.apache.commons.io.FileUtils.moveFileToDirectory(file, dir, true);
+            } else {
+                realPath = StringUtils.substringAfter(realPath, PathCommon.ROOT_PATH);// 文件存储路径
+                realPath = PathCommon.RECYCLE_PATH + realPath;
+                realPath = StringUtils.substringBeforeLast(realPath, PathCommon.SEPARATOR);//去掉一层目录
+                java.io.File dir = new java.io.File(realPath);
+                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, true);
+            }
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void restore(String path) throws SerException {
+        String module = env.getProperty("module"); //网盘登录用户
+        String realPath = null;
+        if (null != module) {//回收站目录
+            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + path;
+        } else {
+            realPath = PathCommon.RECYCLE_PATH + path;
+        }
+        java.io.File file = new java.io.File(realPath);
+        try {
+            if (file.isFile()) {
+                String dirPath =getRealPath(module,path);
+                dirPath = StringUtils.substringBeforeLast(dirPath, PathCommon.SEPARATOR);//去文件名
+                java.io.File dir = new java.io.File(dirPath);
+                org.apache.commons.io.FileUtils.moveFileToDirectory(file, dir, true);
+            } else {
+                String dirPath =getRealPath(module,path);
+                dirPath = StringUtils.substringBeforeLast(dirPath, PathCommon.SEPARATOR); //去掉一层目录
+                java.io.File dir = new java.io.File(dirPath);
+                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir ,true);
+            }
+        } catch (IOException e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
     /**
      * 通过文件信息查询数据库保存的相应数据
