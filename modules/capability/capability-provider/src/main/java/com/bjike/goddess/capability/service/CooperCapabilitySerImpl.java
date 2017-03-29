@@ -163,4 +163,12 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
         return BeanTransform.copyProperties( cooperBOS , CooperCapabilityBO.class );
     }
+
+    @Override
+    public List<CooperCapabilityBO> listCompanyContact(String companyName) throws SerException {
+        String[] fields = new String[]{"companyName","contactName","contactWay"};
+        List<CooperCapabilityBO> cooperBOS =super.findBySql("select companyName,contactName,contactWay from capability_coopercapability where  companyName ='"+companyName+"'" , CooperCapabilityBO.class, fields);
+
+        return BeanTransform.copyProperties( cooperBOS , CooperCapabilityBO.class );
+    }
 }
