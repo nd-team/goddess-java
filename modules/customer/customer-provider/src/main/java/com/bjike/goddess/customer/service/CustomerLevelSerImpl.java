@@ -36,6 +36,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        customerLevelDTO.getSorts().add(" name=asc");
         List<CustomerLevel> list = super.findByCis(customerLevelDTO, true);
 
         return BeanTransform.copyProperties(list, CustomerLevelBO.class );
