@@ -72,7 +72,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 任务量
      */
-    @Column(name = "quota", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务量'")
+    @Column(name = "quota", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '任务量'")
     private Double quota;
 
     /**
