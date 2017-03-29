@@ -17,6 +17,13 @@ import java.math.RoundingMode;
  */
 public class FileUtils {
 
+    /**
+     * 文件转字节
+     *
+     * @param filePath 文件路径
+     * @return
+     * @throws SerException
+     */
     public static byte[] FileToByte(String filePath) throws SerException {
         byte[] buffer = null;
         try {
@@ -45,6 +52,15 @@ public class FileUtils {
     }
 
 
+    /**
+     * 字节转文件
+     *
+     * @param buffer   字节
+     * @param path     文件路径
+     * @param fileName 文件名
+     * @return
+     * @throws SerException
+     */
     public static File byteToFile(byte[] buffer, String path, String fileName) throws SerException {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
@@ -80,7 +96,6 @@ public class FileUtils {
     }
 
 
-
     /**
      * 获取文件类型
      *
@@ -88,13 +103,17 @@ public class FileUtils {
      * @return
      */
     public static FileType getFileType(File file) {
-        String suffix = file.getName().split("\\.")[1];
-        suffix = suffix.toUpperCase();
         FileType type = null;
-        try {
-            type = FileType.valueOf(suffix);
-        } catch (Exception e) {
-            type = FileType.UNKNOW;
+        if (file.isFile()) {
+            String suffix = file.getName().split("\\.")[1];
+            suffix = suffix.toUpperCase();
+            try {
+                type = FileType.valueOf(suffix);
+            } catch (Exception e) {
+                type = FileType.UNKNOW;
+            }
+        } else {
+            type = FileType.FOLDER;
         }
         return type;
     }
@@ -131,7 +150,7 @@ public class FileUtils {
      *
      * @return
      */
-    private  static  double getBySeconds(double val) {
+    private static double getBySeconds(double val) {
         return new BigDecimal(val).setScale(2, RoundingMode.UP).doubleValue();
     }
 

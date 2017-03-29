@@ -22,7 +22,14 @@ public enum FileType {
     GIF(9),
     JPG(10),
     JPEG(11),
-    UNKNOW(12);
+    /**
+     * 未知类型
+     */
+    UNKNOW(12),
+    /**
+     * 文件夹
+     */
+    FOLDER(13);
 
     private int code;
 

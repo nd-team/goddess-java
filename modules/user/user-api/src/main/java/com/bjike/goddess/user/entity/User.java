@@ -62,7 +62,7 @@ public class User extends BaseEntity {
     /**
      * 用户状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '用户状态'", nullable = false)
     private Status status;
 
 

@@ -105,8 +105,8 @@ public class FileAction {
      * @param dir  新的目录
      * @version v1
      */
-    @PostMapping("v1/mkDir")
-    public Result mkDir(@RequestParam String path, @RequestParam String dir) throws SerException {
+    @PostMapping("v1/mkdir")
+    public Result mkdir(@RequestParam String path, @RequestParam String dir) throws SerException {
         fileAPI.mkDir(path, dir);
         return new ActResult("mkDir success");
     }
@@ -117,7 +117,7 @@ public class FileAction {
      * @param path 文件、文件夹路径
      * @version v1
      */
-    @DeleteMapping("v1/delFile")
+    @DeleteMapping("v1/delete")
     public Result delFile(@RequestParam String path) throws SerException {
         fileAPI.delFile(path);
         return new ActResult("delFile success");
