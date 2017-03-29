@@ -32,7 +32,7 @@ public class cusTest {
         CustomerBaseInfoTO  to = new CustomerBaseInfoTO();
         to.setCreateTime("2015-07-01 12:12:12");
         to.setModifyTime("2015-08-01 12:12:12");
-        to.setCustomerLevelTO( customerLevelTO );
+//        to.setCustomerLevelTO( customerLevelTO );
 
 
         CustomerLevelBO c = BeanTransform.copyProperties( to,CustomerLevelBO.class,true);
