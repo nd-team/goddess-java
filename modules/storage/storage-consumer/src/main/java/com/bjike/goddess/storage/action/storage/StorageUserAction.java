@@ -46,7 +46,7 @@ public class StorageUserAction {
     }
 
     /**
-     * 注册
+     * 登录
      *
      * @param storageUserTO 存储用户传输对象
      * @version v1
@@ -64,13 +64,12 @@ public class StorageUserAction {
     /**
      * 退出
      *
-     * @param account 用户
      * @version v1
      */
     @PostMapping("v1/signOut")
-    public Result signOut(String account) throws ActException {
+    public Result signOut() throws ActException {
         try {
-             Boolean result = storageUserAPI.signOut(account);
+             Boolean result = storageUserAPI.signOut();
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

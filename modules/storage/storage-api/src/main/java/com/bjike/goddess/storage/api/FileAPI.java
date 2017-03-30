@@ -29,7 +29,7 @@ public interface FileAPI {
     /**
      * 多文件上传
      *
-     * @param maps  文件名，byte 文件字节
+     * @param maps 文件名，byte 文件字节
      * @param path 上传路径
      * @return 文件路径
      */
@@ -39,12 +39,12 @@ public interface FileAPI {
     /**
      * 单文件上传
      *
-     * @param bytes 文件字节
+     * @param bytes    文件字节
      * @param fileName 文件名
-     * @param path 上传路径
+     * @param path     上传路径
      * @return 文件路径
      */
-    default void upload( byte[] bytes,String fileName, String path) throws SerException {
+    default void upload(byte[] bytes, String fileName, String path) throws SerException {
     }
 
     /**
@@ -120,6 +120,16 @@ public interface FileAPI {
      */
     default void restore(String path) throws SerException {
 
+    }
+
+    /**
+     * 回收站目录
+     *
+     * @param path
+     * @throws SerException
+     */
+    default  List<FileBO> recycleList(String path) throws SerException {
+        return null;
     }
 
 }
