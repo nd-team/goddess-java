@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储
@@ -34,6 +36,7 @@ import java.util.List;
 public class FileAction {
     @Autowired
     private FileAPI fileAPI;
+
 
     /**
      * 文件列表
@@ -62,11 +65,12 @@ public class FileAction {
     public Result upload(HttpServletRequest request, @RequestParam String path) throws ActException {
         try {
             List<MultipartFile> multipartFiles = this.getMultipartFile(request);
+            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
             for (MultipartFile multipartFile : multipartFiles) {
                 byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), path);
+                map.put(multipartFile.getOriginalFilename(), bytes);
             }
-
+            fileAPI.upload(map, path);
             return new ActResult("upload success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

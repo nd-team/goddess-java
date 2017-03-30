@@ -8,14 +8,7 @@
 
 (
 String moduleName 模块名;
+String account 登录账号;
 String password 密码;
-LocalDateTime updateTime 更新时间;
-LocalDateTime lastTime 上次发送时间
-String note 备注;
-Integer sendInterval 发送间隔;
-CycleType cycle 发送时间格式;
-Integer detailInterval 汇总间隔;
-CycleType detailCycle 汇总时间格式;
-String emails 发送对象;
 Status status 状态;
 )

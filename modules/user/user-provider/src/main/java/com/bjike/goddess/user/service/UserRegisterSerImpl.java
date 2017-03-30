@@ -115,7 +115,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             user.setPhone(registerTO.getPhone());
             user.setCreateTime(LocalDateTime.now());
             user.setStatus(Status.THAW);
-            user.setEmployeeNumber("ike" + new Random().nextInt(999999));
+            user.setEmployeeNumber("IKE" + new Random().nextInt(999999));
             userSer.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
