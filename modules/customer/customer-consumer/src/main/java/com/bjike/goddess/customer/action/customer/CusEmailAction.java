@@ -12,6 +12,7 @@ import com.bjike.goddess.customer.to.CusEmailTO;
 import com.bjike.goddess.customer.vo.CusEmailVO;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,7 @@ public class CusEmailAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addCusEmail( CusEmailTO cusEmailTO) throws ActException {
+    public Result addCusEmail( @Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
             CusEmailBO cusEmailBO1 = cusEmailAPI.addCusEmail(cusEmailTO);
             return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1,CusEmailVO.class,true));
@@ -81,7 +82,7 @@ public class CusEmailAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result editCusEmail( CusEmailTO cusEmailTO) throws ActException {
+    public Result editCusEmail(@Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
             CusEmailBO cusEmailBO1 = cusEmailAPI.editCusEmail(cusEmailTO);
             return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1,CusEmailVO.class,true));
@@ -153,7 +154,7 @@ public class CusEmailAction {
      * @version v1
      */
     @GetMapping("v1/Collect")
-    public Result CollectSign ( @NotBlank String[] works ) throws ActException {
+    public Result CollectSign (@RequestParam String[] works ) throws ActException {
         try {
             List<CusEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     cusEmailAPI.collectCusEmail(works), CusEmailVO.class, true);

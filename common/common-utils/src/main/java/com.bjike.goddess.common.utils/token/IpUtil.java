@@ -1,4 +1,4 @@
-package com.bjike.goddess.user.utils;
+package com.bjike.goddess.common.utils.token;
 
 /**
  * ip地址转换工具

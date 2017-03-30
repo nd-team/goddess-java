@@ -5,10 +5,9 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
-import com.bjike.goddess.storage.to.FileTO;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储业务接口
@@ -34,21 +33,20 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 文件上传
      *
-     * @param bytes 文件
-     * @param fileName 文件名
-     * @param path  上传路径
+     * @param maps  文件名，byte 文件字节
+     * @param path 上传路径
      */
-    default void upload( byte[] bytes,String fileName, String path) throws SerException {
-
+    default void upload(Map<String, byte[]> maps, String path) throws SerException {
     }
+
 
     /**
      * 文件夹创建
      *
      * @param path 文件路径
-     * @param dir 新的目录
+     * @param dir  新的目录
      */
-    default void mkDir(String path,String dir) throws SerException {
+    default void mkDir(String path, String dir) throws SerException {
 
     }
 
@@ -65,10 +63,10 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 重命名
      *
-     * @param path 文件或者文件夹路径
+     * @param path    文件或者文件夹路径
      * @param newName 新文件名
      */
-    default void rename(String path,String newName) throws SerException {
+    default void rename(String path, String newName) throws SerException {
 
     }
 
@@ -80,6 +78,7 @@ public interface FileSer extends Ser<File, FileDTO> {
     default byte[] download(String path) throws SerException {
         return null;
     }
+
     /**
      * 文件是否存在
      *
@@ -87,6 +86,33 @@ public interface FileSer extends Ser<File, FileDTO> {
      */
     default Boolean existsFile(String path) throws SerException {
         return null;
+    }
+
+    /**
+     * 文件是否存在
+     *
+     * @param fromPath 移动路径
+     * @param toPath 目标路径
+     */
+    default Boolean move(String fromPath,String toPath) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除到回收站
+     *
+     * @param path
+     * @throws SerException
+     */
+    default void recycle(String path) throws SerException {
+
+    }
+
+    /**
+     * 恢复目录
+     */
+    default void restore(String path) throws SerException {
+
     }
 
 }

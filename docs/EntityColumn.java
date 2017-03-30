@@ -44,7 +44,7 @@ public class XXX extends BaseEntity{
     private Double weight;
 
     /**
-     * 枚举 (设置默认值 default 0 一定要带insertable = false)
+     * 枚举 (设置默认值 default 0 一定要带insertable = false) insertable标签开启代表插入无效
      */
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '用户状态'", nullable = false, insertable = false)
     private Status status;

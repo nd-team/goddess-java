@@ -9,7 +9,6 @@ import com.bjike.goddess.storage.bo.FileBO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储
@@ -35,6 +36,7 @@ import java.util.List;
 public class FileAction {
     @Autowired
     private FileAPI fileAPI;
+
 
     /**
      * 文件列表
@@ -55,7 +57,7 @@ public class FileAction {
     /**
      * 文件上传
      *
-     * @param path 上传路径
+     * @param path    上传路径
      * @param request multipart、form-data提交的文件
      * @version v1
      */
@@ -63,11 +65,12 @@ public class FileAction {
     public Result upload(HttpServletRequest request, @RequestParam String path) throws ActException {
         try {
             List<MultipartFile> multipartFiles = this.getMultipartFile(request);
+            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
             for (MultipartFile multipartFile : multipartFiles) {
                 byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), path);
+                map.put(multipartFile.getOriginalFilename(), bytes);
             }
-
+            fileAPI.upload(map, path);
             return new ActResult("upload success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());
@@ -87,7 +90,7 @@ public class FileAction {
         try {
             String filename = StringUtils.substringAfterLast(path, "/");
             if (fileAPI.existsFile(path)) {
-                return new ActResult(filename + "is exists!");
+                return new ActResult(filename + " is exists!");
             }
 
         } catch (Exception e) {
@@ -105,8 +108,8 @@ public class FileAction {
      * @param dir  新的目录
      * @version v1
      */
-    @PostMapping("v1/mkDir")
-    public Result mkDir(@RequestParam String path, @RequestParam String dir) throws SerException {
+    @PostMapping("v1/mkdir")
+    public Result mkdir(@RequestParam String path, @RequestParam String dir) throws SerException {
         fileAPI.mkDir(path, dir);
         return new ActResult("mkDir success");
     }
@@ -117,7 +120,7 @@ public class FileAction {
      * @param path 文件、文件夹路径
      * @version v1
      */
-    @DeleteMapping("v1/delFile")
+    @DeleteMapping("v1/delete")
     public Result delFile(@RequestParam String path) throws SerException {
         fileAPI.delFile(path);
         return new ActResult("delFile success");
@@ -132,7 +135,7 @@ public class FileAction {
      * @version v1
      */
     @PutMapping("v1/rename")
-    public Result rename(@RequestParam String path ,@RequestParam String newName) throws SerException {
+    public Result rename(@RequestParam String path, @RequestParam String newName) throws SerException {
         fileAPI.rename(path, newName);
         return new ActResult("rename success");
     }
@@ -161,6 +164,56 @@ public class FileAction {
             throw new ActException(e.getMessage());
         }
 
+    }
+
+    /**
+     * 文件、文件夹移动
+     *
+     * @param fromPath 移动的文件文件夹路径
+     * @param toPath   移动到的文件夹路径
+     * @version v1
+     */
+    @PutMapping("v1/move")
+    public Result move(@RequestParam String fromPath, @RequestParam String toPath) throws ActException {
+        try {
+            Boolean result = fileAPI.move(fromPath, toPath);
+            return ActResult.initialize(result);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 文件、文件夹回收
+     *
+     * @param path 回收的文件或者文件夹路径
+     * @version v1
+     */
+    @PutMapping("v1/recycle")
+    public Result recycle(@RequestParam String path) throws ActException {
+        try {
+            fileAPI.recycle(path);
+            return new ActResult("recycle success!");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件、文件夹还原
+     *
+     * @param path 还原的文件或者文件夹路径
+     * @version v1
+     */
+    @PutMapping("v1/restore")
+    public Result restore(@RequestParam String path) throws ActException {
+        try {
+            fileAPI.restore(path);
+            return new ActResult("restore success!");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
 

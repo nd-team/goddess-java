@@ -109,7 +109,6 @@ include ':modules:proearlymarketcost:proearlymarketcost-provider'
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
 include ':modules:marketdevelopment:marketdevelopment-provider'
-
 //#projectissuehandle 项目问题受理
 include ':modules:projectissuehandle:projectissuehandle-api'
 include ':modules:projectissuehandle:projectissuehandle-consumer'
@@ -118,8 +117,9 @@ include ':modules:projectissuehandle:projectissuehandle-provider'
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
-
-
-
+//#商业能力互动
+include ':modules:businessinteraction:businessinteraction-api'
+include ':modules:businessinteraction:businessinteraction-consumer'
+include ':modules:businessinteraction:businessinteraction-provider'
 
 

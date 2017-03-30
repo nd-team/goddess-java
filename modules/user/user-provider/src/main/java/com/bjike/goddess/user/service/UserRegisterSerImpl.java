@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.entity.User;
@@ -113,7 +114,8 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
             user.setPhone(registerTO.getPhone());
             user.setCreateTime(LocalDateTime.now());
-            user.setEmployeeNumber("ike" + new Random().nextInt(999999));
+            user.setStatus(Status.THAW);
+            user.setEmployeeNumber("IKE" + new Random().nextInt(999999));
             userSer.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());

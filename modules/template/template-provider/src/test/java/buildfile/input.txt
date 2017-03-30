@@ -1,21 +1,14 @@
-模块名:projectmeasure
-类名:ProjectMeasureSummary
-作者:sunfengtao
-描述:项目测算汇总
+模块名:storage
+类名:StorageUser
+作者:liguiqin
+描述:存储模块用户
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String projectGroups 项目组;
-String createUser 创建/修改人;
-LocalDateTime updateTime 更新时间;
-LocalDateTime lastTime 上次发送时间
-String note 备注;
-Integer sendInterval 发送间隔;
-CycleType cycle 发送时间格式;
-Integer detailInterval 汇总间隔;
-CycleType detailCycle 汇总时间格式;
-String emails 发送对象;
+String moduleName 模块名;
+String account 登录账号;
+String password 密码;
 Status status 状态;
 )

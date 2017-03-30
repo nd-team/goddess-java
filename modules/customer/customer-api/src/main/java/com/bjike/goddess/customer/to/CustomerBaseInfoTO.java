@@ -7,6 +7,8 @@ import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 客户基本信息
  *
@@ -28,6 +30,7 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 客户姓名
      */
+    @NotBlank(message = "客户信息编号不能为空,且唯一")
     private String customerName;
 
     /**
@@ -38,6 +41,7 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 性别
      */
+    @NotNull(message = "性别不能为空")
     private CustomerSex customerSex;
 
     /**
@@ -58,6 +62,7 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 客户级别
      */
+    @NotBlank(message = "客户级别不能为空")
     private String customerLevelName;
 
     /**

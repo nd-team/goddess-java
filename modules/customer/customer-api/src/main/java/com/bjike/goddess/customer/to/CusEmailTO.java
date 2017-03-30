@@ -7,6 +7,7 @@ import com.bjike.goddess.customer.enums.CustomerSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-//    @NotEmpty(message = "发送间隔不能为空且是double型数字")
+    @NotNull(message = "发送间隔不能为空且是double型数字")
     private Double sendNum;
 
     /**
@@ -41,11 +42,13 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送单位
      */
+    @NotNull(message = "发送单位不能为空")
     private CustomerSendUnit customerSendUnit;
 
     /**
      * 汇总间隔
      */
+    @NotNull(message = "汇总间隔不能为空")
     private CustomerCollectUnit customerCollectUnit;
 
 

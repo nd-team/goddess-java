@@ -2,6 +2,7 @@ package com.bjike.goddess.common.consumer.config;
 
 import com.bjike.goddess.common.consumer.interceptor.ErrorRequestInterceptor;
 import com.bjike.goddess.common.consumer.interceptor.SecurityIntercept;
+import com.bjike.goddess.common.consumer.interceptor.StorageIntercept;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -22,6 +23,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         // excludePathPatterns 用户排除拦截
         registry.addInterceptor(new SecurityIntercept()).addPathPatterns("/**");
         registry.addInterceptor(new ErrorRequestInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new StorageIntercept()).addPathPatterns("/storage/**");
         super.addInterceptors(registry);
     }
 

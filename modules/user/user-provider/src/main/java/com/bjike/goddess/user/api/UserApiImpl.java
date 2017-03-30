@@ -31,7 +31,7 @@ public class UserApiImpl implements UserAPI {
     private UserSer userSer;
 
     @Override
-    public UserBO currentUser() throws SerException {
+    public UserBO  currentUser() throws SerException {
         String nickname = userSer.findByMaxField("nickname", User.class);
         UserDTO dto = new UserDTO();
         dto.getConditions().add(Restrict.eq("nickname",nickname));
