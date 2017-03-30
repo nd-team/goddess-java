@@ -31,6 +31,95 @@ include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
 
+////#staffentry 员工入职
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
+////#accommodation 住宿管理
+include ':modules:accommodation:accommodation-api'
+include ':modules:accommodation:accommodation-consumer'
+include ':modules:accommodation:accommodation-provider'
+//#客户信息
+//include ':modules:accommodation:accommodation-api'
+//include ':modules:accommodation:accommodation-consumer'
+//include ':modules:accommodation:accommodation-provider'
+//#客户信息
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
+//#招聘模块
+include ':modules:recruit:recruit-api'
+include ':modules:recruit:recruit-consumer'
+include ':modules:recruit:recruit-provider'
+//#市场活动管理
+include ':modules:marketactivitymanage:marketactivitymanage-api'
+include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//#司机信息
+include ':modules:driverinfo:driverinfo-api'
+include ':modules:driverinfo:driverinfo-consumer'
+include ':modules:driverinfo:driverinfo-provider'
+//#油卡管理
+include ':modules:oilcardmanage:oilcardmanage-api'
+include ':modules:oilcardmanage:oilcardmanage-consumer'
+include ':modules:oilcardmanage:oilcardmanage-provider'
+//#商务洽谈
+include ':modules:contractcommunicat:contractcommunicat-api'
+include ':modules:contractcommunicat:contractcommunicat-consumer'
+include ':modules:contractcommunicat:contractcommunicat-provider'
+//#organize 组织结构管理
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
+//#supplier 供应商管理
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
+//#项目测算
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
 
+include ':modules:bidding:bidding-api'
+include ':modules:bidding:bidding-consumer'
+include ':modules:bidding:bidding-provider'
+
+//#竞争对手管理
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
+//#商务项目合同管理
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//#商业能力展示
+include ':modules:capability:capability-api'
+include ':modules:capability:capability-consumer'
+include ':modules:capability:capability-provider'
+
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
+
+include ':modules:proearlymarketcost:proearlymarketcost-api'
+include ':modules:proearlymarketcost:proearlymarketcost-consumer'
+include ':modules:proearlymarketcost:proearlymarketcost-provider'
+
+//#marketdevelopment 市场计划进度管理
+include ':modules:marketdevelopment:marketdevelopment-api'
+include ':modules:marketdevelopment:marketdevelopment-consumer'
+include ':modules:marketdevelopment:marketdevelopment-provider'
+//#projectissuehandle 项目问题受理
+include ':modules:projectissuehandle:projectissuehandle-api'
+include ':modules:projectissuehandle:projectissuehandle-consumer'
+include ':modules:projectissuehandle:projectissuehandle-provider'
+//#market 市场信息管理
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
+//#商业能力互动
+include ':modules:businessinteraction:businessinteraction-api'
+include ':modules:businessinteraction:businessinteraction-consumer'
+include ':modules:businessinteraction:businessinteraction-provider'
 
 
