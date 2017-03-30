@@ -11,6 +11,7 @@ import com.bjike.goddess.marketdevelopment.entity.BusinessType;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ import java.util.List;
 public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeDTO> implements BusinessTypeSer {
 
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO save(BusinessTypeTO to) throws SerException {
         BusinessType entity = BeanTransform.copyProperties(to, BusinessType.class);
@@ -36,6 +38,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO update(BusinessTypeTO to) throws SerException {
         BusinessType entity = BeanTransform.copyProperties(to, BusinessType.class);
@@ -44,6 +47,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO congeal(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());
@@ -52,6 +56,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO thaw(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());
@@ -60,6 +65,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO delete(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());

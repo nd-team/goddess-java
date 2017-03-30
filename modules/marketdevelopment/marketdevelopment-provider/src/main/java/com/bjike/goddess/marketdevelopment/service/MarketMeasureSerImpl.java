@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasureDTO> implements MarketMeasureSer {
 
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO save(MarketMeasureTO to) throws SerException {
         MarketMeasure entity = BeanTransform.copyProperties(to, MarketMeasure.class);
@@ -34,6 +36,7 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
         return BeanTransform.copyProperties(entity, MarketMeasureBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO update(MarketMeasureTO to) throws SerException {
         MarketMeasure entity = BeanTransform.copyProperties(to, MarketMeasure.class);
@@ -41,6 +44,7 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
         return BeanTransform.copyProperties(entity, MarketMeasureBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketMeasureBO delete(MarketMeasureTO to) throws SerException {
         MarketMeasure entity = super.findById(to.getId());

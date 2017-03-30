@@ -15,6 +15,7 @@ import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -104,6 +105,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return this.transformationToBO(super.findById(id));
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
@@ -113,6 +115,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return this.transformationToBO(department);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
         DepartmentDetail entity = BeanTransform.copyProperties(to, DepartmentDetail.class, true);

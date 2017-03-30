@@ -8,6 +8,7 @@ import com.bjike.goddess.organize.dto.DesignNumberInfoDTO;
 import com.bjike.goddess.organize.entity.DesignNumberInfo;
 import com.bjike.goddess.organize.to.DesignNumberInfoTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Service
 public class DesignNumberInfoSerImpl extends ServiceImpl<DesignNumberInfo, DesignNumberInfoDTO> implements DesignNumberInfoSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DesignNumberInfoBO save(DesignNumberInfoTO to) throws SerException {
         DesignNumberInfo designNumberInfo = BeanTransform.copyProperties(to, DesignNumberInfo.class);
@@ -31,6 +33,7 @@ public class DesignNumberInfoSerImpl extends ServiceImpl<DesignNumberInfo, Desig
         return BeanTransform.copyProperties(designNumberInfo, DesignNumberInfoBO.class, true);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DesignNumberInfoBO update(DesignNumberInfoTO to) throws SerException {
         DesignNumberInfo designNumberInfo = super.findById(to.getId());

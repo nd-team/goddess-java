@@ -11,6 +11,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @Service
 public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualStandardDTO> implements AnnualStandardSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO save(AnnualStandardTO to) throws SerException {
         AnnualStandard entity = BeanTransform.copyProperties(to, AnnualStandard.class);
@@ -39,6 +41,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO update(AnnualStandardTO to) throws SerException {
         AnnualStandard entity = BeanTransform.copyProperties(to, AnnualStandard.class);
@@ -47,6 +50,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO delete(AnnualStandardTO to) throws SerException {
         AnnualStandard entity = super.findById(to.getId());
@@ -54,6 +58,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO congeal(AnnualStandardTO to) throws SerException {
         AnnualStandard entity = super.findById(to.getId());
@@ -62,6 +67,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualStandardBO thaw(AnnualStandardTO to) throws SerException {
         AnnualStandard entity = super.findById(to.getId());

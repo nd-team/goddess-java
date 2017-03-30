@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.DayPlan;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 @Service
 public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements DayPlanSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO save(DayPlanTO to) throws SerException {
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
@@ -34,6 +36,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         return BeanTransform.copyProperties(entity, DayPlanBO.class, true);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO update(DayPlanTO to) throws SerException {
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
@@ -41,6 +44,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         return BeanTransform.copyProperties(entity, DayPlanBO.class, true);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO delete(DayPlanTO to) throws SerException {
         DayPlan entity = super.findById(to.getId());

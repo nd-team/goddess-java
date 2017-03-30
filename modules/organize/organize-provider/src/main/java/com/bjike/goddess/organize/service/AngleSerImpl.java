@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.AngleDTO;
 import com.bjike.goddess.organize.entity.Angle;
 import com.bjike.goddess.organize.to.AngleTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class AngleSerImpl extends ServiceImpl<Angle, AngleDTO> implements AngleS
         return angleBOList;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AngleBO saveAsTo(AngleTO to) throws SerException {
         Angle angle = BeanTransform.copyProperties(to, Angle.class, true);
@@ -41,6 +43,7 @@ public class AngleSerImpl extends ServiceImpl<Angle, AngleDTO> implements AngleS
         return BeanTransform.copyProperties(angle, AngleBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void updateAsTo(AngleTO to) throws SerException {
         Angle angle = super.findById(to.getId());

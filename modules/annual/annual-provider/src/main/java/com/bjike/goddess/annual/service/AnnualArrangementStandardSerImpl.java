@@ -14,6 +14,7 @@ import com.bjike.goddess.organize.bo.ArrangementBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,7 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualArrangementStandardBO update(AnnualArrangementStandardTO to) throws SerException {
         AnnualArrangementStandardBO bo = this.findByArrangementStandard(to.getStandard_id(), to.getArrangement_id());

@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.DemandAnalysis;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Service
 public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAnalysisDTO> implements DemandAnalysisSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO save(DemandAnalysisTO to) throws SerException {
         DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
@@ -33,6 +35,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO update(DemandAnalysisTO to) throws SerException {
         DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
@@ -40,6 +43,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
         DemandAnalysis entity = super.findById(to.getId());
