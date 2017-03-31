@@ -7,6 +7,7 @@ import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储业务接口
@@ -32,13 +33,12 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 文件上传
      *
-     * @param bytes    文件
-     * @param fileName 文件名
-     * @param path     上传路径
+     * @param maps  文件名，byte 文件字节
+     * @param path 上传路径
      */
-    default void upload(byte[] bytes, String fileName, String path) throws SerException {
-
+    default void upload(Map<String, byte[]> maps, String path) throws SerException {
     }
+
 
     /**
      * 文件夹创建
@@ -113,6 +113,16 @@ public interface FileSer extends Ser<File, FileDTO> {
      */
     default void restore(String path) throws SerException {
 
+    }
+
+    /**
+     * 回收站目录
+     *
+     * @param path
+     * @throws SerException
+     */
+    default List<FileBO> recycleList(String path) throws SerException {
+        return null;
     }
 
 }

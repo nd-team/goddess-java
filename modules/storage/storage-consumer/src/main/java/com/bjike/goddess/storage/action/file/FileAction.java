@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
@@ -18,7 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储
@@ -35,6 +39,7 @@ public class FileAction {
     @Autowired
     private FileAPI fileAPI;
 
+
     /**
      * 文件列表
      *
@@ -44,7 +49,7 @@ public class FileAction {
     @GetMapping("v1/list")
     public Result list(@RequestParam String path) throws ActException {
         try {
-            List<FileBO> files = fileAPI.list(path);
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(path),FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -62,11 +67,12 @@ public class FileAction {
     public Result upload(HttpServletRequest request, @RequestParam String path) throws ActException {
         try {
             List<MultipartFile> multipartFiles = this.getMultipartFile(request);
+            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
             for (MultipartFile multipartFile : multipartFiles) {
                 byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                fileAPI.upload(bytes, multipartFile.getOriginalFilename(), path);
+                map.put(multipartFile.getOriginalFilename(), bytes);
             }
-
+            fileAPI.upload(map, path);
             return new ActResult("upload success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());
@@ -208,6 +214,22 @@ public class FileAction {
             fileAPI.restore(path);
             return new ActResult("restore success!");
         } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 回收站列表
+     *
+     * @param path 文件夹路径
+     * @version v1
+     */
+    @GetMapping("v1/recycleList")
+    public Result recycleList(@RequestParam String path) throws ActException {
+        try {
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.recycleList(path),FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

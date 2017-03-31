@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.storage.bo.FileBO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存储业务接口
@@ -26,14 +27,24 @@ public interface FileAPI {
     }
 
     /**
-     * 文件上传
+     * 多文件上传
      *
-     * @param bytes    文件
+     * @param maps 文件名，byte 文件字节
+     * @param path 上传路径
+     * @return 文件路径
+     */
+    default void upload(Map<String, byte[]> maps, String path) throws SerException {
+    }
+
+    /**
+     * 单文件上传
+     *
+     * @param bytes    文件字节
      * @param fileName 文件名
      * @param path     上传路径
+     * @return 文件路径
      */
     default void upload(byte[] bytes, String fileName, String path) throws SerException {
-
     }
 
     /**
@@ -88,9 +99,9 @@ public interface FileAPI {
      * 文件是否存在
      *
      * @param fromPath 移动路径
-     * @param toPath 目标路径
+     * @param toPath   目标路径
      */
-    default Boolean move(String fromPath,String toPath) throws SerException {
+    default Boolean move(String fromPath, String toPath) throws SerException {
         return null;
     }
 
@@ -109,6 +120,16 @@ public interface FileAPI {
      */
     default void restore(String path) throws SerException {
 
+    }
+
+    /**
+     * 回收站目录
+     *
+     * @param path
+     * @throws SerException
+     */
+    default  List<FileBO> recycleList(String path) throws SerException {
+        return null;
     }
 
 }

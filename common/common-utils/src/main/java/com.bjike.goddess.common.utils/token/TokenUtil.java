@@ -1,7 +1,5 @@
-package com.bjike.goddess.user.utils;
+package com.bjike.goddess.common.utils.token;
 
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
@@ -44,7 +42,7 @@ public final class TokenUtil {
     }
 
     public static boolean verify(String token) {
-        if (StringUtils.isBlank(token)) {
+        if (null != token && !"".equals(token.trim())) {
             return false;
         }
         String[] tokens = token.split("\\.");

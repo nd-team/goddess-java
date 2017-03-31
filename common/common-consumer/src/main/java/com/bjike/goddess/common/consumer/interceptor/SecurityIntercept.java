@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 
 /**
  * 登录安全拦截(仅检测是否有携带token,用token获取用户的时候再进行token有无效判定)
+ * RpcContext.getContext().getAttachment(key)获取隐形参数，
+ * 假如在调用之前又进行了远程调用（如：userApi.findUser()）,则隐藏参数失效
  *
  * @Author: [liguiqin]
  * @Date: [2017-01-14 14:34]
@@ -48,11 +50,11 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
     }
 
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
-            if(StringUtils.isNotBlank(token)){
-                return true;
-            }else {
-                return  false;
-            }
+        if (StringUtils.isNotBlank(token)) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
