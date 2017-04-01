@@ -121,5 +121,13 @@ include ':modules:market:market-provider'
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
+//#财务初始化
+include ':modules:financeinit:financeinit-api'
+include ':modules:financeinit:financeinit-consumer'
+include ':modules:financeinit:financeinit-provider'
+//#项目验收、签字、结算进度管理
+include ':modules:projectprocing:projectprocing-api'
+include ':modules:projectprocing:projectprocing-consumer'
+include ':modules:projectprocing:projectprocing-provider'
 
 
