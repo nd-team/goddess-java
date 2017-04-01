@@ -7,12 +7,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusFamilyMemberBO;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
+import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
+import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,12 +46,25 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Autowired
     private CusFamilyMemberSer cusFamilyMemberAPI;
 
-    
+    @Override
+    public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
+        Long count = super.count( customerDetailDTO );
+        return count;
+    }
+
     @Override
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
-
-        return BeanTransform.copyProperties(list, CustomerDetailBO.class );
+        List<CustomerDetailBO> customerDetailBOArrayList = new ArrayList<>();
+        list.stream().forEach(str->{
+            CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(str.getCustomerBaseInfo().getCustomerLevel(), CustomerLevelBO.class);
+            CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(str.getCustomerBaseInfo(), CustomerBaseInfoBO.class);
+            customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
+            CustomerDetailBO customerDetailBO = BeanTransform.copyProperties(str, CustomerDetailBO.class);
+            customerDetailBO.setCustomerBaseInfoBO(customerBaseInfoBO);
+            customerDetailBOArrayList.add(customerDetailBO);
+        });
+        return BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -146,8 +162,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public CustomerDetailBO getCustomerDetailById(String id) throws SerException {
         CustomerDetail customerDetail = super.findById( id );
 
+        CustomerBaseInfo customerBaseInfo = customerDetail.getCustomerBaseInfo();
+        CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(customerBaseInfo.getCustomerLevel(),CustomerLevelBO.class);
+        CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerDetail.getCustomerBaseInfo(),CustomerBaseInfoBO.class);
+        customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
         CustomerDetailBO customerDetailBO = BeanTransform.copyProperties(customerDetail , CustomerDetailBO.class  );
-
+        customerDetailBO.setCustomerBaseInfoBO(customerBaseInfoBO);
         //查找家庭信息
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id",id));
@@ -167,6 +187,8 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         cBaseInfoDTO.getConditions().add(Restrict.eq("customerNum",customerNum));
         CustomerBaseInfo customerBaseInfo = customerBaseInfoAPI.findOne(cBaseInfoDTO );
         CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties( customerBaseInfo,CustomerBaseInfoBO.class );
+        CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(customerBaseInfo.getCustomerLevel(),CustomerLevelBO.class);
+        customerBaseInfoBO.setCustomerLevelBO(customerLevelBO );
 
         CustomerDetailDTO cdDTO = new CustomerDetailDTO();
         cdDTO.getConditions().add( Restrict.eq("customerNum",customerNum));

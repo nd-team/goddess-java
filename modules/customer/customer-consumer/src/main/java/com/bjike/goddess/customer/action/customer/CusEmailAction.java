@@ -36,6 +36,23 @@ public class CusEmailAction {
     private CusEmailAPI cusEmailAPI;
 
     /**
+     * 客户邮件汇总列表总条数
+     *
+     * @param cusEmailDTO 客户邮件汇总dto
+     * @des 获取所有客户邮件汇总总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CusEmailDTO cusEmailDTO) throws ActException {
+        try {
+            Long count = cusEmailAPI.countCusEmail(cusEmailDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 客户邮件汇总列表
      *
      * @param cusEmailDTO 客户邮件汇总信息dto

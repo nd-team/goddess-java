@@ -76,6 +76,11 @@ public class CustomerDetailTO extends BaseTO {
      */
     private List<CusFamilyMemberTO> cusFamilyMemberTOList;
 
+    /**
+     * 客户基本信息集合
+     */
+    private String[] cusFamilyMemberTOLists;
+
     public String getCustomerNum() {
         return customerNum;
     }
@@ -162,5 +167,13 @@ public class CustomerDetailTO extends BaseTO {
 
     public void setCusFamilyMemberTOList(List<CusFamilyMemberTO> cusFamilyMemberTOList) {
         this.cusFamilyMemberTOList = cusFamilyMemberTOList;
+    }
+
+    public String[] getCusFamilyMemberTOLists() {
+        return cusFamilyMemberTOLists;
+    }
+
+    public void setCusFamilyMemberTOLists(String[] cusFamilyMemberTOLists) {
+        this.cusFamilyMemberTOLists = cusFamilyMemberTOLists;
     }
 }

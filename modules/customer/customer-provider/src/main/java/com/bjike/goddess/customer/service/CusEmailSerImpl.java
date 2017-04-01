@@ -41,6 +41,11 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Autowired
     private CustomerLevelSer customerLevelAPI;
 
+    @Override
+    public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        return super.count(cusEmailDTO);
+    }
+
     @Cacheable
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
