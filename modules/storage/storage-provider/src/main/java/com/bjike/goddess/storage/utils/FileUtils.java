@@ -151,7 +151,7 @@ public class FileUtils {
      * @return
      */
     private static double getBySeconds(double val) {
-        return new BigDecimal(val).setScale(2, RoundingMode.UP).doubleValue();
+        return new BigDecimal(val).setScale(1, RoundingMode.UP).doubleValue();
     }
 
 

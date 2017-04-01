@@ -163,6 +163,16 @@ public interface RedisClient {
     }
 
     /**
+     * @param key    存入redis中map对象的key
+     * @param field 放入map中的对象的key
+     * @return
+     * @throws SerException
+     */
+    default String getMap(String key, String field) throws SerException {
+        return null;
+    }
+
+    /**
      * @param key 存入redis中map对象的key
      * @return
      * @throws SerException
