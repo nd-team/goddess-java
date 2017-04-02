@@ -83,4 +83,9 @@ public class FileApiImpl implements FileAPI {
     public void restore(String path) throws SerException {
         fileSer.restore(path);
     }
+
+    @Override
+    public List<FileBO> recycleList(String path) throws SerException {
+        return fileSer.recycleList(path);
+    }
 }

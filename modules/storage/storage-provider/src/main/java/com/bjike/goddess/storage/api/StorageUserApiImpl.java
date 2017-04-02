@@ -35,8 +35,8 @@ public class StorageUserApiImpl implements StorageUserAPI {
     }
 
     @Override
-    public Boolean signOut(String account) throws SerException {
-        return storageUserSer.signOut(account);
+    public Boolean signOut() throws SerException {
+        return storageUserSer.signOut();
     }
 
     @Override

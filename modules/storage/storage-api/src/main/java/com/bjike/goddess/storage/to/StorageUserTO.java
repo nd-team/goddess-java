@@ -25,7 +25,7 @@ public class StorageUserTO extends BaseTO {
     /**
      * 模块名
      */
-    @NotBlank(message = "模块名不能为空", groups = StorageUserTO.LOGIN.class)
+    @NotBlank(message = "模块名不能为空", groups = StorageUserTO.REGISTER.class)
     private String moduleName;
 
     /**

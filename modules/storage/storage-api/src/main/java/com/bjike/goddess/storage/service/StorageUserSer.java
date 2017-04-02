@@ -40,10 +40,9 @@ public interface StorageUserSer extends Ser<StorageUser, StorageUserDTO> {
     /**
      * 退出
      *
-     * @param account 账号
      * @return
      */
-    default Boolean signOut(String account) throws SerException {
+    default Boolean signOut( ) throws SerException {
         return null;
     }
 

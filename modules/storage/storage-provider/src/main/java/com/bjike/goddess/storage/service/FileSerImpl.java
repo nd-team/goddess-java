@@ -53,7 +53,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         String realPath = getRealPath(path);
         java.io.File dir = new java.io.File(realPath);
         java.io.File[] files = dir.listFiles();
-        return getFileBo(files, module);
+        return getFileBo(files, module,PathCommon.ROOT_PATH);
 
     }
 
@@ -234,6 +234,16 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         }
     }
 
+
+    @Override
+    public List<FileBO> recycleList(String path) throws SerException {
+        String module = storageUserAPI.getCurrentModule(); //网盘登录用户
+        String recycleRealPath = getRecycleRealPath(path);
+        java.io.File dir = new java.io.File(recycleRealPath);
+        java.io.File[] files = dir.listFiles();
+        return getFileBo(files, module,PathCommon.RECYCLE_PATH);
+    }
+
     /**
      * 通过文件信息查询数据库保存的相应数据
      *
@@ -259,8 +269,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
      * @param files
      * @return
      */
-    private List<FileBO> getFileBo(java.io.File[] files, String module) throws SerException {
-        String rootPath = PathCommon.ROOT_PATH;
+    private List<FileBO> getFileBo(java.io.File[] files, String module,String root) throws SerException {
+        String rootPath = root;
         if (null != module) {
             rootPath += (PathCommon.SEPARATOR + module);
         }
@@ -274,7 +284,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                     fileBO.setSize(FileUtils.getFileSize(file));
                 }
 
-                if (PathCommon.ROOT_PATH.equals(file.getParent())) {
+                if (root.equals(file.getParent())) {
                     fileBO.setParentPath(null);
                 } else {
                     fileBO.setParentPath(StringUtils.substringAfter(file.getParent(), rootPath));
@@ -305,5 +315,23 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         return realPath;
     }
 
+
+    /**
+     * 获取回收战真实路径
+     *
+     * @param path
+     * @return
+     * @throws SerException
+     */
+    private String getRecycleRealPath(String path) throws SerException {
+        String realPath = null;
+        String module = storageUserAPI.getCurrentModule(); //网盘登录用户
+        if (!"admin".equals(module)) {
+            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + path;
+        } else {
+            realPath = PathCommon.RECYCLE_PATH + path;
+        }
+        return realPath;
+    }
 
 }

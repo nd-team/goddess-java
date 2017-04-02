@@ -115,4 +115,14 @@ public interface FileSer extends Ser<File, FileDTO> {
 
     }
 
+    /**
+     * 回收站目录
+     *
+     * @param path
+     * @throws SerException
+     */
+    default List<FileBO> recycleList(String path) throws SerException {
+        return null;
+    }
+
 }

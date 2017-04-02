@@ -41,19 +41,20 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
         StorageUserDTO dto = new StorageUserDTO();
         dto.getConditions().add(Restrict.or("moduleName", storageUserTO.getModuleName()));
         dto.getConditions().add(Restrict.or("account", storageUserTO.getAccount()));
+        StorageUser storageUser = null;
         if (null == super.findOne(dto)) {
-            StorageUser storageUser = BeanTransform.copyProperties(storageUserTO, StorageUser.class);
+            storageUser = BeanTransform.copyProperties(storageUserTO, StorageUser.class);
             storageUser.setStatus(Status.THAW);
             try {
                 storageUser.setPassword(PasswordHash.createHash(storageUser.getPassword()));
             } catch (Exception e) {
                 throw new SerException(e.getMessage());
             }
-            super.save(storageUser);
+            storageUser = super.save(storageUser);
         } else {
             throw new SerException("账号名或者模块名已存在！");
         }
-        return null;
+        return BeanTransform.copyProperties(storageUser, StorageUserBO.class);
     }
 
     @Override
@@ -100,16 +101,11 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     @Override
-    public Boolean signOut(String account) throws SerException {
-        StorageUserDTO dto = new StorageUserDTO();
-        dto.getConditions().add(Restrict.eq("account", account));
-        StorageUser storageUser = findOne(dto);
-        if (null != storageUser) {
-            redis.removeMap(StorageCommon.STORAGE_USER, storageUser.getId());
-            return true;
-        }
-        return false;
-
+    public Boolean signOut() throws SerException {
+        StorageUserBO userBO = getCurrentUser();
+        redis.remove(userBO.getId());
+        redis.removeMap(StorageCommon.STORAGE_USER, userBO.getId());
+        return true;
     }
 
 
