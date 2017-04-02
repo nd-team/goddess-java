@@ -15,6 +15,7 @@ import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         return departmentDetailSer.findByDepartmentIds(range.getDepartments().stream().map(DepartmentDetail::getId).collect(Collectors.toList()));
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void departmentAddRange(DepartmentWorkRangeTO to) throws SerException {
         DepartmentDetail departmentDetail = departmentDetailSer.findById(to.getDepartment_id());
@@ -114,6 +116,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WorkRangeBO save(WorkRangeTO to) throws SerException {
         WorkRange entity = BeanTransform.copyProperties(to, WorkRange.class);
@@ -123,6 +126,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         return BeanTransform.copyProperties(entity, WorkRangeBO.class, true);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WorkRangeBO update(WorkRangeTO to) throws SerException {
         WorkRange entity = super.findById(to.getId()), workRange = BeanTransform.copyProperties(to, WorkRange.class);

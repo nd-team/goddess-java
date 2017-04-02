@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Service
 public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChannelDTO> implements MarketChannelSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO save(MarketChannelTO to) throws SerException {
         MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
@@ -33,6 +35,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         return BeanTransform.copyProperties(entity, MarketChannelBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO update(MarketChannelTO to) throws SerException {
         MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
@@ -40,6 +43,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         return BeanTransform.copyProperties(entity, MarketChannelBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO delete(MarketChannelTO to) throws SerException {
         MarketChannel entity = super.findById(to.getId());

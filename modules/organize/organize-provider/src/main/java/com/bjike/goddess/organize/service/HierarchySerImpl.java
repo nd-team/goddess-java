@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.HierarchyDTO;
 import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.HierarchyTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public HierarchyBO save(HierarchyTO to) throws SerException {
         Hierarchy hierarchy = BeanTransform.copyProperties(to, Hierarchy.class);
@@ -44,6 +46,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(hierarchy, HierarchyBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public HierarchyBO update(HierarchyTO to) throws SerException {
         Hierarchy hierarchy = super.findById(to.getId());

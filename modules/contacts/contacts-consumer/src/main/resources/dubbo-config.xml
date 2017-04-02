@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.CommerceContactsAPI"
+                     id="commerceContactsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.CommerceMemberAPI"
+                     id="commerceMemberApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.CommonalityAPI"
+                     id="commonalityApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.ExternalContactsAPI"
+                     id="externalContactsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.InternalContactsAPI"
+                     id="internalContactsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.OtherContactsAPI"
+                     id="otherContactsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.QQGroupAPI" id="qQGroupApiImpl"/>
+
+</beans>

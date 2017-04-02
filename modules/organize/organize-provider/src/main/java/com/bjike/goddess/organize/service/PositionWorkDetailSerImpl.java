@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.entity.PositionWorkDetail;
 import com.bjike.goddess.organize.to.PositionWorkDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         return transformBOList(list);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionWorkDetailBO save(PositionWorkDetailTO to) throws SerException {
         PositionWorkDetail entity = BeanTransform.copyProperties(to, PositionWorkDetail.class);
@@ -78,6 +80,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         return transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionWorkDetailBO update(PositionWorkDetailTO to) throws SerException {
         PositionWorkDetail entity = BeanTransform.copyProperties(to, PositionWorkDetail.class);

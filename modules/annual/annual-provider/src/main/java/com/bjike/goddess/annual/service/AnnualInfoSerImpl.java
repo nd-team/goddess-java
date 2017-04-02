@@ -25,6 +25,7 @@ import com.bjike.goddess.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -129,6 +130,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         messageAPI.send(message);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void generate() throws SerException {
         LocalDate now = LocalDate.now();//定时器为每年1月1日生成数据

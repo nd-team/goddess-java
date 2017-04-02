@@ -18,6 +18,7 @@ import com.bjike.goddess.user.dto.PositionDTO;
 import com.bjike.goddess.user.entity.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -120,6 +121,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         return this.transformationToBO(super.findById(id));
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO save(PositionDetailTO to) throws SerException {
         PositionDetail positionDetail = BeanTransform.copyProperties(to, PositionDetail.class);
@@ -129,6 +131,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         return this.transformationToBO(positionDetail);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO update(PositionDetailTO to) throws SerException {
         PositionDetail entity = BeanTransform.copyProperties(to, PositionDetail.class, true), positionDetail = super.findById(to.getId());

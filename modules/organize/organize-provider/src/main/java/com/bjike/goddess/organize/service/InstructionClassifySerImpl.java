@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.InstructionClassifyDTO;
 import com.bjike.goddess.organize.entity.InstructionClassify;
 import com.bjike.goddess.organize.to.InstructionClassifyTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public InstructionClassifyBO save(InstructionClassifyTO to) throws SerException {
         InstructionClassify classify = BeanTransform.copyProperties(to, InstructionClassify.class);
@@ -43,6 +45,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
         return BeanTransform.copyProperties(classify, InstructionClassifyBO.class, true);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public InstructionClassifyBO update(InstructionClassifyTO to) throws SerException {
         InstructionClassify classify = super.findById(to.getId());
