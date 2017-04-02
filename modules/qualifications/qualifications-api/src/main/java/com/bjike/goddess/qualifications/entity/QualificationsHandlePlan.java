@@ -2,9 +2,7 @@ package com.bjike.goddess.qualifications.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -24,7 +22,8 @@ public class QualificationsHandlePlan extends BaseEntity {
     /**
      * 资质办理
      */
-    @Column(name = "handle_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '资质办理'")
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "handle_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '资质办理'")
     private QualificationsHandle handle;
 
     /**

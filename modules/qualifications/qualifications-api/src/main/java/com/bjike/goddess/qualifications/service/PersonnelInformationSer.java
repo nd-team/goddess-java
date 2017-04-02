@@ -7,6 +7,8 @@ import com.bjike.goddess.qualifications.dto.PersonnelInformationDTO;
 import com.bjike.goddess.qualifications.entity.PersonnelInformation;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
 
+import java.util.List;
+
 /**
  * 人员信息资料业务接口
  *
@@ -18,15 +20,46 @@ import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
  */
 public interface PersonnelInformationSer extends Ser<PersonnelInformation, PersonnelInformationDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 人员资料信息传输对象
+     * @return
+     * @throws SerException
+     */
     default PersonnelInformationBO save(PersonnelInformationTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 人员资料信息传输对象
+     * @return
+     * @throws SerException
+     */
     default PersonnelInformationBO update(PersonnelInformationTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 人员资料信息id
+     * @return
+     * @throws SerException
+     */
     default PersonnelInformationBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<PersonnelInformationBO> all() throws SerException {
         return null;
     }
 

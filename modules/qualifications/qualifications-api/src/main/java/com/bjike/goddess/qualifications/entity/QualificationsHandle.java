@@ -117,4 +117,44 @@ public class QualificationsHandle extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public Set<PersonnelInformation> getPersonnelSet() {
+        return personnelSet;
+    }
+
+    public void setPersonnelSet(Set<PersonnelInformation> personnelSet) {
+        this.personnelSet = personnelSet;
+    }
+
+    public Set<FacilityInformation> getFacilitySet() {
+        return facilitySet;
+    }
+
+    public void setFacilitySet(Set<FacilityInformation> facilitySet) {
+        this.facilitySet = facilitySet;
+    }
+
+    public Set<CompanyInfo> getCompanySet() {
+        return companySet;
+    }
+
+    public void setCompanySet(Set<CompanyInfo> companySet) {
+        this.companySet = companySet;
+    }
+
+    public Set<FinanceInfo> getFinanceSet() {
+        return financeSet;
+    }
+
+    public void setFinanceSet(Set<FinanceInfo> financeSet) {
+        this.financeSet = financeSet;
+    }
+
+    public Set<AuditMaterial> getMaterialSet() {
+        return materialSet;
+    }
+
+    public void setMaterialSet(Set<AuditMaterial> materialSet) {
+        this.materialSet = materialSet;
+    }
 }

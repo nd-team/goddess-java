@@ -1,6 +1,10 @@
 package com.bjike.goddess.qualifications.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 公司基本信息
@@ -16,11 +20,13 @@ public class CompanyInfoTO extends BaseTO {
     /**
      * 公司注册地址
      */
+    @NotNull(message = "公司注册地址不能为空", groups = {ADD.class, EDIT.class})
     private String address;
 
     /**
      * 公司经营地址
      */
+    @NotNull(message = "公司经营地址不能为空", groups = {ADD.class, EDIT.class})
     private String operate;
 
     /**
@@ -31,11 +37,13 @@ public class CompanyInfoTO extends BaseTO {
     /**
      * 基本信息
      */
+    @NotNull(message = "基本信息不能为空", groups = {ADD.class, EDIT.class})
     private String baseInfo;
 
     /**
      * 证件信息
      */
+    @NotNull(message = "证件信息不能为空", groups = {ADD.class, EDIT.class})
     private String certificate;
 
     /**

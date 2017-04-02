@@ -1,7 +1,11 @@
 package com.bjike.goddess.qualifications.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.qualifications.enums.HandleStatus;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 资质办理管理
@@ -17,16 +21,13 @@ public class QualificationsHandleTO extends BaseTO {
     /**
      * 资质类别
      */
+    @NotNull(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
     private String type;
-
-    /**
-     * 是否办理成功
-     */
-    private HandleStatus status;
 
     /**
      * 预算的费用
      */
+    @NotNull(message = "预算的费用不能为空", groups = {ADD.class, EDIT.class})
     private Double cost;
 
     /**
@@ -41,14 +42,6 @@ public class QualificationsHandleTO extends BaseTO {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public HandleStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(HandleStatus status) {
-        this.status = status;
     }
 
     public Double getCost() {

@@ -1,6 +1,10 @@
 package com.bjike.goddess.qualifications.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 资质办理计划阶段划分
@@ -16,31 +20,37 @@ public class HandlePlanStageTO extends BaseTO {
     /**
      * 办理计划
      */
+    @NotNull(message = "办理计划不能为空", groups = {ADD.class, EDIT.class})
     private String plan_id;
 
     /**
      * 阶段划分
      */
+    @NotNull(message = "阶段划分不能为空", groups = {ADD.class, EDIT.class})
     private String stage;
 
     /**
      * 准备内容
      */
+    @NotNull(message = "准备内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
      * 完成时间
      */
+    @NotNull(message = "完成时间不能为空", groups = {ADD.class, EDIT.class})
     private String finishTime;
 
     /**
      * 协助人员
      */
+    @NotNull(message = "协助人员不能为空", groups = {ADD.class, EDIT.class})
     private String collaborator;
 
     /**
      * 问题记录
      */
+    @NotNull(message = "问题记录不能为空", groups = {ADD.class, EDIT.class})
     private String question;
 
 

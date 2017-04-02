@@ -36,7 +36,7 @@ public class QualificationsGatherVO {
     private String endTime;
 
     /**
-     * 认真时间
+     * 认证时间
      */
     private String authenticationTime;
 

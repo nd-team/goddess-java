@@ -8,8 +8,6 @@ import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -36,41 +34,25 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceContactsBO save(CommerceContactsTO to) throws SerException {
-        try {
-            CustomerBaseInfoTO customerTO = BeanTransform.copyProperties(to, CustomerBaseInfoTO.class);
-            CustomerBaseInfoBO bo = customerBaseInfoAPI.addCustomerBaseInfo(customerTO);
-            return BeanTransform.copyProperties(bo, CommerceContactsBO.class);
-        } catch (SerException e) {
-            CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class);
-            super.save(entity);
-            return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
-        }
+        CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class);
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceContactsBO update(CommerceContactsTO to) throws SerException {
-        try {
-            CustomerBaseInfoTO customerTO = BeanTransform.copyProperties(to, CustomerBaseInfoTO.class);
-            CustomerBaseInfoBO bo = customerBaseInfoAPI.editCustomerBaseInfo(customerTO);
-            return BeanTransform.copyProperties(bo, CommerceContactsBO.class);
-        } catch (SerException e) {
-            CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class), contacts = super.findById(to.getId());
-            entity.setCreateTime(contacts.getCreateTime());
-            entity.setModifyTime(LocalDateTime.now());
-            super.update(entity);
-            return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
-        }
+        CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class), contacts = super.findById(to.getId());
+        entity.setCreateTime(contacts.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(CommerceContactsTO to) throws SerException {
-        try {
-            customerBaseInfoAPI.deleteCustomerBaseInfo(to.getId());
-        } catch (SerException e) {
-            super.remove(to.getId());
-        }
+        super.remove(to.getId());
     }
 
 }

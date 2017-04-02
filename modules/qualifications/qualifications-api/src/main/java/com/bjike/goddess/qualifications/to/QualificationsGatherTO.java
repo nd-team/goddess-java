@@ -1,6 +1,10 @@
 package com.bjike.goddess.qualifications.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 资质办理信息采集
@@ -16,46 +20,54 @@ public class QualificationsGatherTO extends BaseTO {
     /**
      * 资质类别
      */
+    @NotNull(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 认证条件
      */
+    @NotNull(message = "认证条件不能为空", groups = {ADD.class, EDIT.class})
     private String authentication;
 
     /**
      * 申请开始时间
      */
+    @NotNull(message = "申请开始时间不能为空", groups = {ADD.class, EDIT.class})
     private String startTime;
 
     /**
      * 申请结束时间
      */
+    @NotNull(message = "申请结束时间不能为空", groups = {ADD.class, EDIT.class})
     private String endTime;
 
     /**
-     * 认真时间
+     * 认证时间
      */
     private String authenticationTime;
 
     /**
      * 认证要求描述
      */
+    @NotNull(message = "认证要求描述", groups = {ADD.class, EDIT.class})
     private String demand;
 
     /**
      * 所需资料描述
      */
+    @NotNull(message = "所需资料描述不能为空", groups = {ADD.class, EDIT.class})
     private String material;
 
     /**
      * 证书获取方式
      */
+    @NotNull(message = "证书获取方式不能为空", groups = {ADD.class, EDIT.class})
     private String way;
 
     /**
      * 办理费用(元)
      */
+    @NotNull(message = "办理费用不能为空", groups = {ADD.class, EDIT.class})
     private Double cost;
 
     /**
