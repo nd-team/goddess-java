@@ -129,5 +129,9 @@ include ':modules:financeinit:financeinit-provider'
 include ':modules:projectprocing:projectprocing-api'
 include ':modules:projectprocing:projectprocing-consumer'
 include ':modules:projectprocing:projectprocing-provider'
+//#法定节假日
+include ':modules:festival:festival-api'
+include ':modules:festival:festival-consumer'
+include ':modules:festival:festival-provider'
 
 
