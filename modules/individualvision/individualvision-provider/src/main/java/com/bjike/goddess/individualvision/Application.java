@@ -1,6 +1,6 @@
-package com.bjike.goddess.market;
+package com.bjike.goddess.individualvision;
 
-import com.bjike.goddess.market.config.AppRoot;
+import com.bjike.goddess.individualvision.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;

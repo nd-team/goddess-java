@@ -17,8 +17,7 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.receivable.api.ContractorAPI" ref="contractorApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" ref="receivableSubsidiaryApiImpl"/>
-
+	<dubbo:service interface="com.bjike.goddess.individualvision.api.IndividualVisionPlanAPI" ref="individualVisionPlanApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.individualvision.api.CareerPlanningCustomAPI" ref="careerPlanningCustomApiImpl"/>
 
 </beans>

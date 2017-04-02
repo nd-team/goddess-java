@@ -16,8 +16,8 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true" id="contractorApiImpl" interface="com.bjike.goddess.receivable.api.ContractorAPI" />
-	<dubbo:reference  validation="true" id="receivableSubsidiaryApiImpl" interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" />
+	<dubbo:reference  validation="true" id="individualVisionPlanApiImpl" interface="com.bjike.goddess.individualvision.api.IndividualVisionPlanAPI" />
+	<dubbo:reference  validation="true" id="careerPlanningCustomApiImpl" interface="com.bjike.goddess.individualvision.api.CareerPlanningCustomAPI" />
 
 
 </beans>

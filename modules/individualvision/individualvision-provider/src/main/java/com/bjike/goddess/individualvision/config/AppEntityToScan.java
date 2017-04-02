@@ -1,4 +1,4 @@
-package com.bjike.goddess.receivable.config;
+package com.bjike.goddess.individualvision.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScanImpl;
 import org.springframework.stereotype.Component;

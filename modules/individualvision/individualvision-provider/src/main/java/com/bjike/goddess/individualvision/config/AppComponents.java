@@ -1,4 +1,4 @@
-package com.bjike.goddess.receivable.config;
+package com.bjike.goddess.individualvision.config;
 
 import com.bjike.goddess.common.jpa.boot.EntityToScan;
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class AppComponents extends JpaComponents implements EntityToScan<AppRoot> {
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.receivable.entity"};
+        return new String[]{"com.bjike.goddess.individualvision.entity"};
     }
 
 }
