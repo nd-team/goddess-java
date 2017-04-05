@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 @Service
 public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implements YearPlanSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO save(YearPlanTO to) throws SerException {
         YearPlan entity = BeanTransform.copyProperties(to, YearPlan.class);
@@ -34,6 +36,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
         return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO update(YearPlanTO to) throws SerException {
         YearPlan entity = BeanTransform.copyProperties(to, YearPlan.class);
@@ -41,6 +44,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
         return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO delete(YearPlanTO to) throws SerException {
         YearPlan entity = super.findById(to.getId());

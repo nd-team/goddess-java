@@ -12,6 +12,7 @@ import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
@@ -76,6 +78,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     }
 
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO update(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
@@ -85,6 +88,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO delete(MonthPlanTO to) throws SerException {
         MonthPlan entity = super.findById(to.getId());

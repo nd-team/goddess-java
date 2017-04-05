@@ -11,6 +11,7 @@ import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class,true);
@@ -56,6 +58,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class,true);
@@ -65,6 +68,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO delete(WeekPlanTO to) throws SerException {
         WeekPlan entity = super.findById(to.getId());

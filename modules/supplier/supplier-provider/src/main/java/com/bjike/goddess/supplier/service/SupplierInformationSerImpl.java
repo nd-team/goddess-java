@@ -10,6 +10,7 @@ import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -40,6 +41,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Autowired
     private EnterpriseQualificationSer enterpriseQualificationSer;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO save(SupplierInformationTO to) throws SerException {
         SupplierInformation entity = BeanTransform.copyProperties(to, SupplierInformation.class);
@@ -93,6 +95,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         return new BigDecimal((objects.size() - 5) / (sum - 5)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO update(SupplierInformationTO to) throws SerException {
         SupplierInformation entity = super.findById(to.getId());
@@ -115,6 +118,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO updateDetail(SupplierInformationTO to) throws SerException {
         SupplierInformation entity = BeanTransform.copyProperties(to, SupplierInformation.class), information = super.findById(to.getId());

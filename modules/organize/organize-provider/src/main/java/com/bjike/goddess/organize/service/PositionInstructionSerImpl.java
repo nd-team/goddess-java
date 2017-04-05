@@ -13,6 +13,7 @@ import com.bjike.goddess.organize.entity.Reflect;
 import com.bjike.goddess.organize.to.PositionInstructionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         return this.transformToBOList(super.findByPage(dto));
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionInstructionBO save(PositionInstructionTO to) throws SerException {
         PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class);
@@ -137,6 +139,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         return instruction;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionInstructionBO update(PositionInstructionTO to) throws SerException {
         PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class), entity = super.findById(to.getId());

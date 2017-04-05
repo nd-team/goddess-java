@@ -21,6 +21,7 @@ import com.bjike.goddess.user.bo.UserDetailBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -92,6 +93,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         return 0d;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO save(AnnualApplyTO to) throws SerException {
         AnnualApply entity = BeanTransform.copyProperties(to, AnnualApply.class, true);
@@ -107,6 +109,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO delete(AnnualApplyTO to) throws SerException {
         AnnualApply entity = super.findById(to.getId());
@@ -117,6 +120,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO audit(AnnualApplyAuditTo to) throws SerException {
         AnnualApply entity = super.findById(to.getId());
