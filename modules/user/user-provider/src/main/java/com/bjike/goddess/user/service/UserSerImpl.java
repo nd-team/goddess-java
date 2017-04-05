@@ -92,7 +92,6 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     }
 
-    @Cacheable
     @Override
     public UserBO findByAccountNumber(String accountNumber) throws SerException {
         UserDTO dto = new UserDTO();
@@ -100,7 +99,9 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         conditions.add(Restrict.or("username", accountNumber));
         conditions.add(Restrict.or("phone", accountNumber));
         conditions.add(Restrict.or("email", accountNumber));
-        return BeanTransform.copyProperties(findOne(dto), UserBO.class);
+        User user = super.findOne(dto);
+        UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
+        return userBO;
     }
 
     @Override

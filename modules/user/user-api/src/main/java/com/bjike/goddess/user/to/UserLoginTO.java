@@ -28,7 +28,7 @@ public class UserLoginTO extends BaseTO {
      * 登陆账号 email，phone，username
      */
     @NotNull(message = "帐号不能为空")
-    private String account;
+        private String account;
     /**
      * 登录密码
      */

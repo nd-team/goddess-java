@@ -1,4 +1,4 @@
-package com.bjike.goddess.storage.config;
+package com.bjike.goddess.user.config;
 
 import com.bjike.goddess.redis.client.RedisClientImpl;
 import org.springframework.stereotype.Component;
