@@ -52,7 +52,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     @Override
     public void verifyAndSendCode(String phone) throws SerException {
 
-        if (null != userSer.findByPhone(phone)) {
+        if (null == userSer.findByPhone(phone)) {
             //generateCode()
             String code = "123456";
             phone = "13457910241";
@@ -68,7 +68,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     @Override
     public void verifyCodeAndReg(UserRegisterTO registerTO) throws SerException {
 
-        if (true) return;
 
         if (registerTO.getPassword().equals(registerTO.getRePassword())) {
             if (!Validator.isPassword(registerTO.getPassword())) {
@@ -78,25 +77,30 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             throw new SerException("输入密码不一致！");
         }
         String phoneCode = null;
+        if(true){  //暂时不验证
+            saveUserByDTO(registerTO);
 
+        }else {
 
-        if (StringUtils.isNotBlank(registerTO.getPhoneCode())) {
-            //通过手机号码获得系统生成的验证码对象
-            phoneCode = redis.getMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
-            if (StringUtils.isNotBlank(phoneCode)) {
-                if (phoneCode.equalsIgnoreCase(registerTO.getPhoneCode())) { //验证成功
-                    saveUserByDTO(registerTO);
-                    redis.removeMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
+            if (StringUtils.isNotBlank(registerTO.getPhoneCode())) {
+                //通过手机号码获得系统生成的验证码对象
+                phoneCode = redis.getMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
+                if (StringUtils.isNotBlank(phoneCode)) {
+                    if (phoneCode.equalsIgnoreCase(registerTO.getPhoneCode())) { //验证成功
+                        saveUserByDTO(registerTO);
+                        redis.removeMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
+                    } else {
+                        throw new SerException("手机验证码不正确！");
+                    }
+
                 } else {
-                    throw new SerException("手机验证码不正确！");
+                    throw new SerException("手机验证码已过期！");
                 }
-
             } else {
-                throw new SerException("手机验证码已过期！");
+                throw new SerException("手机验证码为空！");
             }
-        } else {
-            throw new SerException("手机验证码为空！");
         }
+
 
 
     }
