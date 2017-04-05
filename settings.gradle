@@ -121,6 +121,15 @@ include ':modules:market:market-provider'
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
+include ':modules:market:market-provider'
+//#businessevaluate 商务评估
+include ':modules:businessevaluate:businessevaluate-api'
+include ':modules:businessevaluate:businessevaluate-consumer'
+include ':modules:businessevaluate:businessevaluate-provider'
+//#enterpriseculturemanage 企业文化管理
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
 
 //#annual 年假管理
 include ':modules:annual:annual-api'
