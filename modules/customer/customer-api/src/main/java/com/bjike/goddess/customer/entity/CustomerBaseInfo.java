@@ -25,6 +25,12 @@ import java.time.LocalDateTime;
 public class CustomerBaseInfo extends BaseEntity {
 
     /**
+     * 第几个客户排序
+     */
+    @Column(name = "customerPosition", nullable = false,unique = true , columnDefinition = "DECIMAL(10,2)   COMMENT '第几个客户排序'")
+    private Double customerPosition;
+
+    /**
      * 客户信息编号
      */
     @Column(name = "customerNum", nullable = false,unique = true , columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
@@ -88,7 +94,6 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 邮箱
      */
-    @Email
     @Column(name = "cusEmail",  columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
     private String cusEmail;
 
@@ -199,6 +204,14 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @OneToOne(cascade = CascadeType.REFRESH,mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
+
+    public Double getCustomerPosition() {
+        return customerPosition;
+    }
+
+    public void setCustomerPosition(Double customerPosition) {
+        this.customerPosition = customerPosition;
+    }
 
     public String getCustomerNum() {
         return customerNum;

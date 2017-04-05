@@ -26,6 +26,11 @@ public class CustomerDetailApiImpl implements CustomerDetailAPI {
     private CustomerDetailSer customerDetailSer;
 
     @Override
+    public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
+        return customerDetailSer.countCustomerDetail(customerDetailDTO);
+    }
+
+    @Override
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
         return customerDetailSer.listCustomerDetail(customerDetailDTO);
     }

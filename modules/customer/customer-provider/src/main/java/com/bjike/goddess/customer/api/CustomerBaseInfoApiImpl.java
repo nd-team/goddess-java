@@ -27,6 +27,11 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     private CustomerBaseInfoSer customerBaseInfoSer;
 
     @Override
+    public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        return customerBaseInfoSer.countCustomerBaseInfo(customerBaseInfoDTO);
+    }
+
+    @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
         return customerBaseInfoSer.generateCustomerNum();
     }

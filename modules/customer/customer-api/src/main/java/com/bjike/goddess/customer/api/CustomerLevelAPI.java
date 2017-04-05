@@ -19,6 +19,13 @@ import java.util.List;
 public interface CustomerLevelAPI {
 
     /**
+     * 客户级别列表总条数
+     *
+     */
+    default Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        return null;
+    }
+    /**
      * 客户级别列表
      * @return class CustomerLevelBO
      */

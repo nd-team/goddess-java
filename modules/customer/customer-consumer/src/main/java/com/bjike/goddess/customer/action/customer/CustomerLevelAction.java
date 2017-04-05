@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerLevelAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
+import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,23 @@ public class CustomerLevelAction {
 
     @Autowired
     private CustomerLevelAPI customerLevelAPI;
+
+    /**
+     *  客户等级列表总条数
+     *
+     * @param customerBaseInfoDTO  客户等级信息dto
+     * @des 获取所有客户等级信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CustomerLevelDTO customerBaseInfoDTO) throws ActException {
+        try {
+            Long count = customerLevelAPI.countCustomerLevel(customerBaseInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 客户等级列表

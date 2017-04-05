@@ -33,10 +33,16 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLevelDTO> implements CustomerLevelSer {
 
-    
+    @Override
+    public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        Long count = super.count(customerLevelDTO);
+        return count;
+    }
+
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
-        List<CustomerLevel> list = super.findByCis(customerLevelDTO, true);
+        customerLevelDTO.getSorts().add("name=asc");
+        List<CustomerLevel> list = super.findByCis(customerLevelDTO,true);
 
         return BeanTransform.copyProperties(list, CustomerLevelBO.class );
     }

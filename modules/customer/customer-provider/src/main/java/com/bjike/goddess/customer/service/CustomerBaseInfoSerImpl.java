@@ -81,9 +81,24 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        customerBaseInfoDTO.getSorts().add("customerPosition=asc");
         List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
 
-        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class);
+        List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
+        list.stream().forEach(str->{
+            CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(str.getCustomerLevel(), CustomerLevelBO.class);
+            CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(str, CustomerBaseInfoBO.class);
+            customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
+            customerBaseInfoBOList.add(customerBaseInfoBO);
+        });
+
+        return customerBaseInfoBOList;
+    }
+
+    @Override
+    public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        Long count = super.count(customerBaseInfoDTO );
+        return count;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -104,6 +119,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             customerBaseInfo.setCreateTime(LocalDateTime.now());
             customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
             customerBaseInfo.setCustomerLevel(customerLevel);
+            customerBaseInfo.setCustomerPosition(
+                    Double.parseDouble(customerBaseInfoTO.getCustomerNum().substring(5,customerBaseInfoTO.getCustomerNum().length())));
 
             super.save(customerBaseInfo);
             return BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfoBO.class);
@@ -126,14 +143,15 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
             customerBaseInfo.setCustomerLevel(customerLevel);
 
-            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id");
+            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id","customerPosition");
             cusBase.setModifyTime(LocalDateTime.now());
             cusBase.setModifyPersion(userAPI.currentUser().getUsername());
             super.update(cusBase);
         } catch (SerException e) {
             throw new SerException("更新失败"+e.getMessage());
         }
-        return BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
+         CustomerBaseInfoBO b = BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
+        return b;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -250,19 +268,19 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerSex().getCode()))) {
+        if (customerBaseInfoTO.getCustomerSex()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerType().getCode()))) {
+        if (customerBaseInfoTO.getCustomerType()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerStatus().getCode()))) {
+        if (customerBaseInfoTO.getCustomerStatus()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
+        if (customerBaseInfoTO.getRelation() != null && StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
             now++;
         }
         sum++;
@@ -369,7 +387,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
         dto.getConditions().add(Restrict.eq("customerNum", customerNum));
         CustomerBaseInfo customerBaseInfo = super.findOne(dto);
-        return BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
+
+        CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
+        customerBaseInfoBO.setCustomerLevelBO( BeanTransform.copyProperties(
+                customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class));
+        return customerBaseInfoBO;
     }
 
     @Override
