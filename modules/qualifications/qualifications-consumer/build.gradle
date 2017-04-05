@@ -1,0 +1,44 @@
+buildscript { 
+ repositories { 
+ mavenCentral()
+ }
+ dependencies {
+ classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+ }
+ } 
+
+apply plugin: 'org.springframework.boot'
+jar {
+    String buildDir = project.buildDir
+    manifest {
+        attributes (
+                "Main-Class": "com.bjike.goddess.qualifications.Application",//main主函数加载入口
+    "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
+   )
+    }
+    }
+
+task copyJars(type:Copy) {
+    from configurations.runtime
+    into new File('build/libs/lib') // 目标位置
+ }
+  compileJava.dependsOn copyJars
+
+ def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
+sourceSets {
+    main {
+        resources {
+     srcDirs = ["src/main/resources", "src/main/profile/$env"]
+     }
+     }
+     }
+dependencies {
+compile(project(":common:common-consumer")){
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
+compile project(":modules:qualifications:qualifications-api")
+
+compile("org.springframework.boot:spring-boot-starter-web")
+}
+

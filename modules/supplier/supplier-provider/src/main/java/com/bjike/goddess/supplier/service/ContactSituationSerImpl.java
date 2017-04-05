@@ -11,6 +11,7 @@ import com.bjike.goddess.supplier.to.ContactSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO save(ContactSituationTO to) throws SerException {
         ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
@@ -63,6 +65,7 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO update(ContactSituationTO to) throws SerException {
         ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
@@ -71,6 +74,7 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO delete(String id) throws SerException {
         ContactSituation entity = super.findById(id);

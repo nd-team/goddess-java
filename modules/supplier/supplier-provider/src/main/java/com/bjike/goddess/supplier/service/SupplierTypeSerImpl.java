@@ -11,6 +11,7 @@ import com.bjike.goddess.supplier.entity.SupplierType;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         return BeanTransform.copyProperties(list, SupplierTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO save(SupplierTypeTO to) throws SerException {
         SupplierType entity = BeanTransform.copyProperties(to, SupplierType.class);
@@ -43,6 +45,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO update(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
@@ -52,6 +55,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO delete(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
@@ -59,6 +63,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO congeal(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
@@ -67,6 +72,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO thaw(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());

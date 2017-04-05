@@ -12,6 +12,7 @@ import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
@@ -67,6 +69,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO update(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
@@ -75,6 +78,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO congeal(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());
@@ -83,6 +87,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO thaw(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());
@@ -91,6 +96,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO delete(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());

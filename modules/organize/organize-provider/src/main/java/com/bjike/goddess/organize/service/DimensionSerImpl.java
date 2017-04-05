@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.DimensionDTO;
 import com.bjike.goddess.organize.entity.Dimension;
 import com.bjike.goddess.organize.to.DimensionTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class DimensionSerImpl extends ServiceImpl<Dimension, DimensionDTO> imple
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DimensionBO save(DimensionTO to) throws SerException {
         Dimension dimension = BeanTransform.copyProperties(to, Dimension.class);
@@ -46,6 +48,7 @@ public class DimensionSerImpl extends ServiceImpl<Dimension, DimensionDTO> imple
         return BeanTransform.copyProperties(dimension, DimensionBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DimensionBO update(DimensionTO to) throws SerException {
         Dimension dimension = super.findById(to.getId());

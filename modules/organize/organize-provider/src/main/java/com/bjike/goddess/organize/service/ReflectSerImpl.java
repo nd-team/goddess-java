@@ -9,6 +9,7 @@ import com.bjike.goddess.organize.dto.ReflectDTO;
 import com.bjike.goddess.organize.entity.Reflect;
 import com.bjike.goddess.organize.to.ReflectTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ReflectBO save(ReflectTO to) throws SerException {
         Reflect reflect = BeanTransform.copyProperties(to, Reflect.class);
@@ -40,6 +42,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         return BeanTransform.copyProperties(reflect, ReflectBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ReflectBO update(ReflectTO to) throws SerException {
         Reflect reflect = super.findById(to.getId());

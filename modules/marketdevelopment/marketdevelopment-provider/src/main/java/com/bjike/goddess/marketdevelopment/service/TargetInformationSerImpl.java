@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Service
 public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, TargetInformationDTO> implements TargetInformationSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO save(TargetInformationTO to) throws SerException {
         TargetInformation entity = BeanTransform.copyProperties(to, TargetInformation.class);
@@ -33,6 +35,7 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
         return BeanTransform.copyProperties(entity, TargetInformationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO update(TargetInformationTO to) throws SerException {
         TargetInformation entity = BeanTransform.copyProperties(to, TargetInformation.class);
@@ -40,6 +43,7 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
         return BeanTransform.copyProperties(entity, TargetInformationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO delete(TargetInformationTO to) throws SerException {
         TargetInformation entity = super.findById(to.getId());

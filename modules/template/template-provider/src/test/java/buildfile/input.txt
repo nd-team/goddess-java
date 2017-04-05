@@ -1,14 +1,18 @@
-模块名:storage
-类名:StorageUser
-作者:liguiqin
-描述:存储模块用户
+模块名:qualifications
+类名:PersonnelInformation
+作者:dengjunren
+描述:人员信息资料
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String moduleName 模块名;
-String account 登录账号;
-String password 密码;
-Status status 状态;
+String type 人员分类;
+String baseInfo 基本信息;
+String social 社保信息;
+String resume 人员简历;
+String certificate 人员基本证件;
+String classify 证书信息分类;
+String attestation 人员认证信息;
+String other 其他;
 )

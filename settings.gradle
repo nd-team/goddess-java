@@ -133,5 +133,30 @@ include ':modules:projectprocing:projectprocing-provider'
 include ':modules:festival:festival-api'
 include ':modules:festival:festival-consumer'
 include ':modules:festival:festival-provider'
+//#businessevaluate 商务评估
+include ':modules:businessevaluate:businessevaluate-api'
+include ':modules:businessevaluate:businessevaluate-consumer'
+include ':modules:businessevaluate:businessevaluate-provider'
+//#enterpriseculturemanage 企业文化管理
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
+
+//#annual 年假管理
+include ':modules:annual:annual-api'
+include ':modules:annual:annual-consumer'
+include ':modules:annual:annual-provider'
+
+//#contacts 通讯录管理
+include ':modules:contacts:contacts-api'
+include ':modules:contacts:contacts-consumer'
+include ':modules:contacts:contacts-provider'
+
+//#qualifications 公司资质管理
+include ':modules:qualifications:qualifications-api'
+include ':modules:qualifications:qualifications-consumer'
+include ':modules:qualifications:qualifications-provider'
+
+
 
 

@@ -11,6 +11,7 @@ import com.bjike.goddess.supplier.to.ContactSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO save(ContactSituationTO to) throws SerException {
         EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
@@ -62,6 +64,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO update(ContactSituationTO to) throws SerException {
         EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
@@ -70,6 +73,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO delete(String id) throws SerException {
         EnterpriseQualification entity = super.findById(id);

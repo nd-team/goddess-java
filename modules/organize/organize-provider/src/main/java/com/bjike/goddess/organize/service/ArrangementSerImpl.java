@@ -11,6 +11,7 @@ import com.bjike.goddess.organize.entity.Arrangement;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO save(ArrangementTO to) throws SerException {
         Arrangement arrangement = BeanTransform.copyProperties(to, Arrangement.class);
@@ -47,6 +49,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO update(ArrangementTO to) throws SerException {
         Arrangement arrangement = super.findById(to.getId());
