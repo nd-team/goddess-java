@@ -42,8 +42,8 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
     @Override
     public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         try {
-            Predicate preList = initPredicates(dto, root, cb);
-            return query.where(preList).getRestriction();
+            Predicate predicate = initPredicates(dto, root, cb);
+            return query.where(predicate).getRestriction();
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -54,7 +54,6 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
 
     /**
      * 连表查询支持单属性（model）查询，set，list集合
-     * 连接表查询的 or查询未解决
      *
      * @param dto
      * @param root
@@ -64,97 +63,102 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
      */
     private Predicate initPredicates(BD dto, Root<BE> root, CriteriaBuilder cb) throws RepException {
         List<Predicate> preList = new ArrayList<>(0); //条件列表
-        List<Condition> conditions = dto.getConditions() != null ? dto.getConditions() : new ArrayList<>(0);//避免条件列表为空
+        List<Condition> conditions = dto.getConditions();//避免条件列表为空
         List<Predicate> or_preList = new ArrayList<>(); //or 条件列表
         Class clazz = null;
         Join<BE, Object> join = null;
-        try {
-            for (Condition model : conditions) {
-                Boolean isOrPre = false; //是否为or查询
-                Predicate predicate = null;
-                if (null != model.getValue()) {
-                    clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
-                } else {
-                    clazz = String.class;
-                }
-                String field = model.getField(); //字段
-
-                RestrictionType type = model.getRestrict();
-                String[] fields = model.getField().split("\\.");
-                join = handlerJoinTable(root, fields);  //是否有连接查询
-                Method method = handlerMethod(cb, model);//获得反射调用方法
-                Boolean existJoin = (null != join);
-                if (existJoin) {
-                    field = fields[fields.length - 1]; //有连接查询取最后的分割字段
-                }
-                switch (type) {
-                    case LIKE:
-                        if (existJoin) {
-                            predicate = cb.like(join.get(field).as(clazz), "%" + model.getValue() + "%");
-                        } else {
-                            predicate = cb.like(root.get(field).as(clazz), "%" + model.getValue() + "%");
-                        }
-                        break;
-                    case ISNULL:
-                        if (existJoin) {
-                            predicate = cb.isNull(join.get(field).as(clazz));
-                        } else {
-                            predicate = cb.isNull(root.get(field).as(clazz));
-                        }
-                        break;
-                    case ISNOTNULL:
-                        if (existJoin) {
-                            predicate = cb.isNotNull(join.get(field).as(clazz));
-                        } else {
-                            predicate = cb.isNotNull(root.get(field).as(clazz));
-                        }
-                        break;
-                    case OR:
-                        isOrPre = true;
-                        if (existJoin) {
-                            predicate = cb.or(cb.equal(join.get(field).as(clazz), model.getValue()));
-                        } else {
-                            predicate = cb.or(cb.equal(root.get(field).as(clazz), model.getValue()));
-                        }
-                        break;
-                    default:
-                        Object[] values = PrimitiveUtil.convertValuesByType(model.getValue());
-                        if (type == RestrictionType.IN) {
-                            if (existJoin) {
-                                predicate = (Predicate) method.invoke(cb, join.get(field).as(clazz), values);
-                            } else {
-                                predicate = (Predicate) method.invoke(cb, root.get(field).as(clazz), values);
-                            }
-                        } else {
-                            if (existJoin) {
-                                predicate = (Predicate) method.invoke(cb, ArrayUtils.add(values, 0, join.get(field).as(clazz)));
-                            } else {
-                                predicate = (Predicate) method.invoke(cb, ArrayUtils.add(values, 0, root.get(field).as(clazz)));
-                            }
-                        }
-                }
-                if (null != predicate) {
-                    if (!isOrPre) {
-                        preList.add(predicate);
+        if (null!=conditions){
+            try {
+                for (Condition model : conditions) {
+                    Boolean isOrPre = false; //是否为or查询
+                    Predicate predicate = null;
+                    if (null != model.getValue()) {
+                        clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
                     } else {
-                        or_preList.add(predicate);
+                        clazz = String.class;
+                    }
+                    String field = model.getField(); //字段
+
+                    RestrictionType type = model.getRestrict();
+                    String[] fields = model.getField().split("\\.");
+                    join = handlerJoinTable(root, fields);  //是否有连接查询
+                    Method method = handlerMethod(cb, model);//获得反射调用方法
+                    Boolean existJoin = (null != join);
+                    if (existJoin) {
+                        field = fields[fields.length - 1]; //有连接查询取最后的分割字段
+                    }
+                    switch (type) {
+                        case LIKE:
+                            if (existJoin) {
+                                predicate = cb.like(join.get(field).as(clazz), "%" + model.getValue() + "%");
+                            } else {
+                                predicate = cb.like(root.get(field).as(clazz), "%" + model.getValue() + "%");
+                            }
+                            break;
+                        case ISNULL:
+                            if (existJoin) {
+                                predicate = cb.isNull(join.get(field).as(clazz));
+                            } else {
+                                predicate = cb.isNull(root.get(field).as(clazz));
+                            }
+                            break;
+                        case ISNOTNULL:
+                            if (existJoin) {
+                                predicate = cb.isNotNull(join.get(field).as(clazz));
+                            } else {
+                                predicate = cb.isNotNull(root.get(field).as(clazz));
+                            }
+                            break;
+                        case OR:
+                            isOrPre = true;
+                            if (existJoin) {
+                                predicate = cb.or(cb.equal(join.get(field).as(clazz), model.getValue()));
+                            } else {
+                                predicate = cb.or(cb.equal(root.get(field).as(clazz), model.getValue()));
+                            }
+                            break;
+                        default:
+                            Object[] values = PrimitiveUtil.convertValuesByType(model.getValue());
+                            if (type == RestrictionType.IN) {
+                                if (existJoin) {
+                                    predicate = (Predicate) method.invoke(cb, join.get(field).as(clazz), values);
+                                } else {
+                                    predicate = (Predicate) method.invoke(cb, root.get(field).as(clazz), values);
+                                }
+                            } else {
+                                if (existJoin) {
+                                    predicate = (Predicate) method.invoke(cb, ArrayUtils.add(values, 0, join.get(field).as(clazz)));
+                                } else {
+                                    predicate = (Predicate) method.invoke(cb, ArrayUtils.add(values, 0, root.get(field).as(clazz)));
+                                }
+                            }
+                    }
+                    if (null != predicate) {
+                        if (!isOrPre) {
+                            preList.add(predicate);
+                        } else {
+                            or_preList.add(predicate);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                exceptionHandler(e);
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            exceptionHandler(e);
 
+            Predicate[] predicates = new Predicate[preList.size()];
+            Predicate predicate = cb.and(preList.toArray(predicates));
+            if (or_preList.size() > 0) { //处理 or 查询
+                or_preList.add(0, predicate);
+                Predicate[] or_pres = new Predicate[or_preList.size()];
+                predicate = cb.or(or_preList.toArray(or_pres));
+            }
+            return predicate;
+        }else {
+            return null;
         }
 
-        Predicate[] predicates = new Predicate[preList.size()];
-        Predicate predicate = cb.and(preList.toArray(predicates));
-        if (or_preList.size() > 0) { //处理 or 查询
-            or_preList.add(0, predicate);
-            Predicate[] or_pres = new Predicate[or_preList.size()];
-            predicate = cb.or(or_preList.toArray(or_pres));
-        }
-        return predicate;
     }
 
     private Method handlerMethod(CriteriaBuilder cb, Condition condition) {
