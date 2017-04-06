@@ -53,6 +53,8 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
         if (StringUtils.isNotBlank(token)) {
             return true;
         } else {
+
+            handlerNotHasLogin(response,"用户未登录！");
             return false;
         }
 
