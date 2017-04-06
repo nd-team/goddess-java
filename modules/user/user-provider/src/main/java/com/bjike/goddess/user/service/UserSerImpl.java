@@ -96,7 +96,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     public UserBO findByAccountNumber(String accountNumber) throws SerException {
         UserDTO dto = new UserDTO();
         List<Condition> conditions = dto.getConditions();
-        conditions.add(Restrict.or("username", accountNumber));
+        conditions.add(Restrict.eq("username", accountNumber));
         conditions.add(Restrict.or("phone", accountNumber));
         conditions.add(Restrict.or("email", accountNumber));
         User user = super.findOne(dto);

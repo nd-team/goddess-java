@@ -39,6 +39,7 @@ public class GroupAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/treeData")
     public Result treeData(String id) throws ActException {
         try {
