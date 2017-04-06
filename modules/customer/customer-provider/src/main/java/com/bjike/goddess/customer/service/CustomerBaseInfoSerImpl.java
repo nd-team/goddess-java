@@ -1,9 +1,7 @@
 package com.bjike.goddess.customer.service;
 
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.DataType;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -17,16 +15,13 @@ import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
-import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,7 +77,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         customerBaseInfoDTO.getSorts().add("customerPosition=asc");
-        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
+        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO);
 
         List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
         list.stream().forEach(str->{
@@ -400,7 +395,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select workProfession ,1 from customer_customerbaseinfo group by workProfession", CustomerBaseInfoBO.class, fields);
 
         List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getWorkProfession)
-                .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
+                .filter(name -> (name != null || !"".equals(name))).distinct().collect(Collectors.toList());
 
 
         return customerNameList;

@@ -1,6 +1,5 @@
-package com.bjike.goddess.customer;
+package com.bjike.goddess.businessinteraction;
 
-import com.bjike.goddess.businessinteraction.entity.InteractionRelation;
 import com.bjike.goddess.businessinteraction.service.InteractionRelationSer;
 import com.bjike.goddess.businessinteraction.to.InteractionRelationTO;
 import com.bjike.goddess.common.api.exception.SerException;

@@ -1,16 +1,10 @@
 package com.bjike.goddess.customer;
 
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
-import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**

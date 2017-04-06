@@ -1,13 +1,9 @@
 package com.bjike.goddess.customer;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
-import com.bjike.goddess.customer.dto.CustomerLevelDTO;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import org.junit.Test;
@@ -15,9 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

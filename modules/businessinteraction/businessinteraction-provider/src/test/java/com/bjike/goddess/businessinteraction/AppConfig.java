@@ -1,4 +1,4 @@
-package com.bjike.goddess.customer;
+package com.bjike.goddess.businessinteraction;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
