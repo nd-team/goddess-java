@@ -90,6 +90,10 @@ include ':modules:contractquotemanager:contractquotemanager-provider'
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
+//#简介管理
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
 
 
 
