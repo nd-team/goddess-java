@@ -4,7 +4,7 @@ import com.bjike.goddess.redis.client.RedisClientImpl;
 import org.springframework.stereotype.Component;
 
 /**
- * 扫描entity
+ * 扫描Redis
  *
  * @Author: [liguiqin]
  * @Date: [2017-01-11 17:15]

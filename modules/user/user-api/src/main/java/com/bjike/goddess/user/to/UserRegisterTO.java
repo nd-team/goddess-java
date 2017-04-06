@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @Author: [liguiqin]
@@ -14,18 +15,22 @@ public class UserRegisterTO extends BaseTO {
     /**
      * 注册用名
      */
+    @NotBlank(message = "用户名不能为空")
     private String username;
     /**
      * 注册密码
      */
+    @NotBlank(message = "密码不能为空")
     private String password;
     /**
      * 重复密码
      */
+    @NotBlank(message = "重复密码不能为空")
     private String rePassword;
     /**
      * 注册手机
      */
+    @NotBlank(message = "手机不能为空")
     private String phone;
     /**
      * 手机验证码

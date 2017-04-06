@@ -7,8 +7,6 @@ import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
 import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
-import com.bjike.goddess.message.api.MessageAPI;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

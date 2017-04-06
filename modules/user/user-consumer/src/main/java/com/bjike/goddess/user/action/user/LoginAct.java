@@ -41,12 +41,12 @@ public class LoginAct {
     @PostMapping("v1/login")
     public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request) throws ActException {
         try {
-            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-            LoginType type = LoginType.PC;
-            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
-                type = LoginType.MOBILE;
-            }
-            loginTO.setLoginType(type);
+//            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+//            LoginType type = LoginType.PC;
+//            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
+//                type = LoginType.MOBILE;
+//            }
+//            loginTO.setLoginType(type);
             String token = userLoginAPI.login(loginTO);
             return ActResult.initialize(token);
 

@@ -1,4 +1,3 @@
-import com.bjike.goddess.user.session.authcode.AuthCodeSession;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,7 +13,6 @@ import java.util.TimerTask;
  */
 public class QuartzTest {
     public static void main(String[] args) {
-        AuthCodeSession.count();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {

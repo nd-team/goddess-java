@@ -1,7 +1,6 @@
 package com.bjike.goddess.message.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.message.enums.MsgType;
 import org.hibernate.validator.constraints.NotBlank;

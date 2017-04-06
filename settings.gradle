@@ -30,7 +30,6 @@ include ':modules:message:message-provider'
 include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
-
 ////#staffentry 员工入职
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
@@ -79,11 +78,14 @@ include ':modules:supplier:supplier-provider'
 include ':modules:projectmeasure:projectmeasure-api'
 include ':modules:projectmeasure:projectmeasure-consumer'
 include ':modules:projectmeasure:projectmeasure-provider'
-
+//#招投标管理
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
-
+//#市场信息管理
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
 //#竞争对手管理
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
@@ -104,7 +106,6 @@ include ':modules:contractquotemanager:contractquotemanager-provider'
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
-
 //#marketdevelopment 市场计划进度管理
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
@@ -141,22 +142,28 @@ include ':modules:businessevaluate:businessevaluate-provider'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
-
 //#annual 年假管理
 include ':modules:annual:annual-api'
 include ':modules:annual:annual-consumer'
 include ':modules:annual:annual-provider'
-
 //#contacts 通讯录管理
 include ':modules:contacts:contacts-api'
 include ':modules:contacts:contacts-consumer'
 include ':modules:contacts:contacts-provider'
-
 //#qualifications 公司资质管理
 include ':modules:qualifications:qualifications-api'
 include ':modules:qualifications:qualifications-consumer'
 include ':modules:qualifications:qualifications-provider'
-
-
-
+//#receivable 回款管理
+include ':modules:receivable:receivable-api'
+include ':modules:receivable:receivable-consumer'
+include ':modules:receivable:receivable-provider'
+//#individualvision 个人愿景管理
+include ':modules:individualvision:individualvision-api'
+include ':modules:individualvision:individualvision-consumer'
+include ':modules:individualvision:individualvision-provider'
+//#eggert 评估管理
+include ':modules:eggert:eggert-api'
+include ':modules:eggert:eggert-consumer'
+include ':modules:eggert:eggert-provider'
 
