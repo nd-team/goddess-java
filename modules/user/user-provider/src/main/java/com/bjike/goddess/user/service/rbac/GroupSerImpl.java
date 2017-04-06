@@ -14,6 +14,7 @@ import com.bjike.goddess.user.to.rbac.GroupTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -65,11 +66,12 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         super.remove(id);
     }
 
+    @Transactional
     @Override
     public GroupBO save(GroupTO groupTO) throws SerException {
         Group group = BeanTransform.copyProperties(groupTO, Group.class, true);
         super.save(group);
-        GroupBO bo = BeanTransform.copyProperties(group, Group.class);
+        GroupBO bo = BeanTransform.copyProperties(group, GroupBO.class);
         bo.setId(group.getId());//复制id
         return bo;
     }

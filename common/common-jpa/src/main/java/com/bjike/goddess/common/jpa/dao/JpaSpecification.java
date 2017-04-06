@@ -3,7 +3,6 @@ package com.bjike.goddess.common.jpa.dao;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.exception.QueryException;
 import com.bjike.goddess.common.api.exception.RepException;
 import com.bjike.goddess.common.api.type.RepExceptionType;
 import com.bjike.goddess.common.api.type.RestrictionType;
@@ -42,16 +41,13 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
 
     @Override
     public Predicate toPredicate(Root<BE> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        List<Predicate> preList = null;
-
         try {
-            preList = initPredicates(dto, root, cb);
-        } catch (RepException e) {
-            throw new QueryException(e.getMessage());
-        }
+            Predicate preList = initPredicates(dto, root, cb);
+            return query.where(preList).getRestriction();
 
-        Predicate[] predicates = preList.toArray(new Predicate[preList.size()]);
-        return query.where(predicates).getRestriction();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
     }
 
@@ -66,15 +62,16 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
      * @return
      * @throws RepException
      */
-    private List<Predicate> initPredicates(BD dto, Root<BE> root, CriteriaBuilder cb) throws RepException {
+    private Predicate initPredicates(BD dto, Root<BE> root, CriteriaBuilder cb) throws RepException {
         List<Predicate> preList = new ArrayList<>(0); //条件列表
         List<Condition> conditions = dto.getConditions() != null ? dto.getConditions() : new ArrayList<>(0);//避免条件列表为空
         List<Predicate> or_preList = new ArrayList<>(); //or 条件列表
+        Class clazz = null;
+        Join<BE, Object> join = null;
         try {
             for (Condition model : conditions) {
                 Boolean isOrPre = false; //是否为or查询
                 Predicate predicate = null;
-                Class clazz = null;
                 if (null != model.getValue()) {
                     clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
                 } else {
@@ -84,7 +81,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
 
                 RestrictionType type = model.getRestrict();
                 String[] fields = model.getField().split("\\.");
-                Join<BE, Object> join = handlerJoinTable(root, fields);  //是否有连接查询
+                join = handlerJoinTable(root, fields);  //是否有连接查询
                 Method method = handlerMethod(cb, model);//获得反射调用方法
                 Boolean existJoin = (null != join);
                 if (existJoin) {
@@ -149,12 +146,15 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
             exceptionHandler(e);
 
         }
+
+        Predicate[] predicates = new Predicate[preList.size()];
+        Predicate predicate = cb.and(preList.toArray(predicates));
         if (or_preList.size() > 0) { //处理 or 查询
-            Predicate[] arr_pre = new Predicate[or_preList.size()];
-            or_preList.toArray(arr_pre);
-            preList.add(cb.or(arr_pre));
+            or_preList.add(0, predicate);
+            Predicate[] or_pres = new Predicate[or_preList.size()];
+            predicate = cb.or(or_preList.toArray(or_pres));
         }
-        return preList;
+        return predicate;
     }
 
     private Method handlerMethod(CriteriaBuilder cb, Condition condition) {

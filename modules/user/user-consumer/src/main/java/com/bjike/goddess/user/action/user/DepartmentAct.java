@@ -87,6 +87,7 @@ public class DepartmentAct {
     /**
      * 编辑部门信息
      *
+     * @param departmentTO
      * @version v1
      */
     @PostMapping("v1/edit")

@@ -9,6 +9,8 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class PermissionVO{
+    private String id;
+
     /**
      * 部门名
      */
@@ -45,5 +47,13 @@ public class PermissionVO{
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

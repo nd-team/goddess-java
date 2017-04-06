@@ -9,6 +9,7 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class GroupVO   {
+    private String id;
     /**
      * 部门名
      */
@@ -45,5 +46,13 @@ public class GroupVO   {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
