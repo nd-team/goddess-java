@@ -1,6 +1,5 @@
 package com.bjike.goddess.intromanage.service;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,14 +7,17 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
+import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,9 +34,6 @@ import java.util.List;
 public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> implements FirmIntroSer {
 
     @Autowired
-    private FirmIntroSer firmIntroSer;
-
-    @Autowired
     private HonorAndQualitySer honorAndQualitySer;
 
     @Autowired
@@ -49,6 +48,15 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Autowired
     private CommunicationPathSer communicationPathSer;
 
+    @Autowired
+    private FirmDisplayFieldSer firmDisplayFieldSer;
+
+    @Autowired
+    private FirmDisplayUserSer firmDisplayUserSer;
+
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 分页查询公司简介
      *
@@ -57,7 +65,74 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      */
     @Override
     public List<FirmIntroBO> list(FirmIntroDTO dto) throws SerException {
-        List<FirmIntro> list = super.findByCis(dto);
+        List<FirmIntro> list = super.findByPage(dto);
+        UserBO userBO = userAPI.currentUser();
+        String currentUsername = userBO.getUsername();//获取当前用户姓名
+        List<FirmDisplayUser> users = firmDisplayUserSer.findAll();
+        for (FirmDisplayUser model : users) {
+            String usernames = model.getUsernames();
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) > 0);
+            if (containsUsername) {
+                String firmDisplayId = model.getDisplayId();
+                FirmDisplayField firmDisplayField = firmDisplayFieldSer.findById(firmDisplayId);
+                //设置需要显示的字段
+                for (FirmIntro firmIntro : list) {
+                    if (firmDisplayField.getIfShowFirmName() != Boolean.TRUE) {
+                        firmIntro.setFirmName(null);
+                    }
+                    if (firmDisplayField.getIfShowFirmNature() != Boolean.TRUE) {
+                        firmIntro.setFirmNature(null);
+                    }
+                    if (firmDisplayField.getIfShowRegisterMoney() != Boolean.TRUE) {
+                        firmIntro.setRegisterMoney(null);
+                    }
+                    if (firmDisplayField.getIfShowRegisterDate() != Boolean.TRUE) {
+                        firmIntro.setRegisterDate(null);
+                    }
+                    if (firmDisplayField.getIfShowFirmSpirit() != Boolean.TRUE) {
+                        firmIntro.setFirmSpirit(null);
+                    }
+                    if (firmDisplayField.getIfShowServiceAwareness() != Boolean.TRUE) {
+                        firmIntro.setServiceAwareness(null);
+                    }
+                    if (firmDisplayField.getIfShowFirmTenet() != Boolean.TRUE) {
+                        firmIntro.setFirmTenet(null);
+                    }
+                    if (firmDisplayField.getIfShowTalentView() != Boolean.TRUE) {
+                        firmIntro.setTalentView(null);
+                    }
+                    if (firmDisplayField.getIfShowOperationView() != Boolean.TRUE) {
+                        firmIntro.setOperationView(null);
+                    }
+                    if (firmDisplayField.getIfShowQualityView() != Boolean.TRUE) {
+                        firmIntro.setQualityView(null);
+                    }
+                    if (firmDisplayField.getIfShowOrganization() != Boolean.TRUE) {
+                        firmIntro.setOrganization(null);
+                    }
+                    if (firmDisplayField.getIfShowManageModel() != Boolean.TRUE) {
+                        firmIntro.setManageModel(null);
+                    }
+                    if (firmDisplayField.getIfShowServiceTeamIntro() != Boolean.TRUE) {
+                        firmIntro.setServiceTeamIntro(null);
+                    }
+                    if (firmDisplayField.getIfShowStaffNo() != Boolean.TRUE) {
+                        firmIntro.setStaffNo(null);
+                    }
+                    if (firmDisplayField.getIfShowIncludeArea() != Boolean.TRUE) {
+                        firmIntro.setIncludeArea(null);
+                    }
+                    if (firmDisplayField.getIfShowSolvingScheme() != Boolean.TRUE) {
+                        firmIntro.setSolvingScheme(null);
+                    }
+                    if (firmDisplayField.getIfShowDemandType() != Boolean.TRUE) {
+                        firmIntro.setDemandType(null);
+                    }
+                }
+                break;
+            }
+        }
+
         List<FirmIntroBO> boList = BeanTransform.copyProperties(list, FirmIntroBO.class);
         return boList;
     }
@@ -337,5 +412,50 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     public void remove(String id) throws SerException {
         removeSubObj(id);//删除所有子对象
         super.remove(id);//删除公司简介
+    }
+
+    /**
+     * 设置哪些用户可以查看哪些字段
+     *
+     * @param username 用户名集合
+     * @param to 公司简介需要显示的字段
+     * @throws SerException
+     */
+    @Override
+    @Transactional
+    public void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException {
+        Boolean usernameIsNotEmpty = (username != null) && (username.length > 0);
+        if (usernameIsNotEmpty) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < username.length; i ++) {
+                if (i < username.length - 1) {
+                    sb.append(username[i]).append(",");
+                } else {
+                    sb.append(username[i]);
+                }
+            }
+
+            saveFirmDisplayField(to, sb);
+        } else {
+            throw new SerException("您好,用户姓名为空,无法设置公司简介显示的字段");
+        }
+    }
+
+    /**
+     * 保存公司简介显示字段和显示的用户
+     *
+     * @param to 公司简介显示字段to
+     * @param sb 用户名称集合
+     * @throws SerException
+     */
+    private void saveFirmDisplayField(FirmDisplayFieldTO to, StringBuilder sb) throws SerException {
+        FirmDisplayField model = BeanTransform.copyProperties(to, FirmDisplayField.class, true);
+        model = firmDisplayFieldSer.save(model);//保存公司简介显示字段
+        String displayFieldId = model.getId();//获取公司显示字段ID
+        String usernameStr = sb.toString();//用户名字符串集合
+        FirmDisplayUser firmDisplayUser = new FirmDisplayUser();
+        firmDisplayUser.setUsernames(usernameStr);
+        firmDisplayUser.setDisplayId(displayFieldId);
+        firmDisplayUserSer.save(firmDisplayUser);
     }
 }

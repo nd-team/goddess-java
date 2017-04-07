@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
+import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 
 import java.util.List;
@@ -52,5 +53,14 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
      * @throws SerException
      */
     void update(FirmIntroTO to) throws SerException;
+
+    /**
+     * 设置哪些用户可以查看哪些字段
+     *
+     * @param username 用户名集合
+     * @param to       公司简介需要显示的字段
+     * @throws SerException
+     */
+    void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException;
 
 }

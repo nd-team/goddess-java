@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
+import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 
 import java.util.List;
@@ -52,5 +53,14 @@ public interface IndividualResumeSer extends Ser<IndividualResume, IndividualRes
      * @throws SerException
      */
     void update(IndividualResumeTO to) throws SerException;
+
+    /**
+     * 设置个人简介显示字段
+     *
+     * @param username 用户名称数组
+     * @param to       个人简介显示字段
+     * @throws SerException
+     */
+    void setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws SerException;
 
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
 import com.bjike.goddess.intromanage.service.IndividualResumeSer;
+import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +69,17 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
     @Override
     public void update(IndividualResumeTO to) throws SerException {
         individualResumeSer.update(to);
+    }
+
+    /**
+     * 设置个人简介显示字段
+     *
+     * @param username 用户名称数组
+     * @param to       个人简介显示字段
+     * @throws SerException
+     */
+    @Override
+    public void setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws SerException {
+        individualResumeSer.setIndividualDisplayField(username, to);
     }
 }

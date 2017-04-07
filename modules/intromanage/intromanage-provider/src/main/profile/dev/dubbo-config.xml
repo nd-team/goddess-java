@@ -16,6 +16,8 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.CommunicationPathAPI" ref="communicationPathApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.CredentialSituationAPI" ref="credentialSituationApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.CustomerAndPartnerAPI" ref="customerAndPartnerApiImpl"></dubbo:service>
@@ -28,5 +30,9 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.StaffRewardAPI" ref="staffRewardApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.SuccessStoriesAPI" ref="successStoriesApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.WorkExperienceAPI" ref="workExperienceApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.FirmDisplayFieldAPI" ref="firmDisplayFieldApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.FirmDisplayUserAPI" ref="firmDisplayUserApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.IndividualDisplayFieldAPI" ref="individualDisplayFieldApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.intromanage.api.IndividualDisplayUserAPI" ref="individualDisplayUserApiImpl"></dubbo:service>
 
 </beans>

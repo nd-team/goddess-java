@@ -7,7 +7,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
+import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -44,6 +48,15 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Autowired
     private CredentialSituationSer credentialSituationSer;
 
+    @Autowired
+    private IndividualDisplayFieldSer individualDisplayFieldSer;
+
+    @Autowired
+    private IndividualDisplayUserSer individualDisplayUserSer;
+
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 分页查询个人简介
      *
@@ -53,6 +66,132 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Override
     public List<IndividualResumeBO> list(IndividualResumeDTO dto) throws SerException {
         List<IndividualResume> list = super.findByPage(dto);
+        UserBO userBO = userAPI.currentUser();
+        String currentUsername = userBO.getUsername();//获取当前用户姓名
+        List<IndividualDisplayUser> users = individualDisplayUserSer.findAll();
+        for (IndividualDisplayUser model : users) {
+            String usernames = model.getUsernames();
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) > 0);
+            if (containsUsername) {
+                String individualDisplayId = model.getDisplayId();
+                IndividualDisplayField individualDisplayField = individualDisplayFieldSer.findById(individualDisplayId);
+                //设置需要显示的字段
+                for (IndividualResume individualResume : list) {
+                    if (individualDisplayField.getIfShowArea() != Boolean.TRUE) {
+                        individualResume.setArea(null);
+                    }
+                    if (individualDisplayField.getIfShowDepartment() != Boolean.TRUE) {
+                        individualResume.setDepartment(null);
+                    }
+                    if (individualDisplayField.getIfShowName() != Boolean.TRUE) {
+                        individualResume.setName(null);
+                    }
+                    if (individualDisplayField.getIfShowEmployeeId() != Boolean.TRUE) {
+                        individualResume.setEmployeeId(null);
+                    }
+                    if (individualDisplayField.getIfShowPost() != Boolean.TRUE) {
+                        individualResume.setPost(null);
+                    }
+                    if (individualDisplayField.getIfShowEmsil() != Boolean.TRUE) {
+                        individualResume.setEMsil(null);
+                    }
+                    if (individualDisplayField.getIfShowEntryDate() != Boolean.TRUE) {
+                        individualResume.setEntryDate(null);
+                    }
+                    if (individualDisplayField.getIfShowTenancyDuration() != Boolean.TRUE) {
+                        individualResume.setTenancyDuration(null);
+                    }
+                    if (individualDisplayField.getIfShowPositiveTime() != Boolean.TRUE) {
+                        individualResume.setPositiveTime(null);
+                    }
+                    if (individualDisplayField.getIfShowWhetherSocialSecurity() != Boolean.TRUE) {
+                        individualResume.setWhetherSocialSecurity(null);
+                    }
+                    if (individualDisplayField.getIfShowBuySocialSecurityTime() != Boolean.TRUE) {
+                        individualResume.setBuySocialSecurityTime(null);
+                    }
+                    if (individualDisplayField.getIfShowSkillRank() != Boolean.TRUE) {
+                        individualResume.setSkillRank(null);
+                    }
+                    if (individualDisplayField.getIfShowManageGrade() != Boolean.TRUE) {
+                        individualResume.setManageGrade(null);
+                    }
+                    if (individualDisplayField.getIfShowItemCommission() != Boolean.TRUE) {
+                        individualResume.setItemCommission(null);
+                    }
+                    if (individualDisplayField.getIfShowManageCommission() != Boolean.TRUE) {
+                        individualResume.setManageCommission(null);
+                    }
+                    if (individualDisplayField.getIfShowAwardScore() != Boolean.TRUE) {
+                        individualResume.setAwardScore(null);
+                    }
+                    if (individualDisplayField.getIfShowPenaltyScore() != Boolean.TRUE) {
+                        individualResume.setPenaltyScore(null);
+                    }
+                    if (individualDisplayField.getIfShowEmpiricalValue() != Boolean.TRUE) {
+                        individualResume.setEmpiricalValue(null);
+                    }
+                    if (individualDisplayField.getIfShowSubsidyAmount() != Boolean.TRUE) {
+                        individualResume.setSubsidyAmount(null);
+                    }
+                    if (individualDisplayField.getIfShowAnnualLeave() != Boolean.TRUE) {
+                        individualResume.setAnnualLeave(null);
+                    }
+                    if (individualDisplayField.getIfShowIndividualVision() != Boolean.TRUE) {
+                        individualResume.setIndividualVision(null);
+                    }
+                    if (individualDisplayField.getIfShowPicture() != Boolean.TRUE) {
+                        individualResume.setPicture(null);
+                    }
+                    if (individualDisplayField.getIfShowHobbies() != Boolean.TRUE) {
+                        individualResume.setHobbies(null);
+                    }
+                    if (individualDisplayField.getIfShowPersonalEmail() != Boolean.TRUE) {
+                        individualResume.setPersonalEmail(null);
+                    }
+                    if (individualDisplayField.getIfShowDateOfBirth() != Boolean.TRUE) {
+                        individualResume.setDateOfBirth(null);
+                    }
+                    if (individualDisplayField.getIfShowQqNumber() != Boolean.TRUE) {
+                        individualResume.setQqNumber(null);
+                    }
+                    if (individualDisplayField.getIfShowWechatId() != Boolean.TRUE) {
+                        individualResume.setWechatId(null);
+                    }
+                    if (individualDisplayField.getIfShowMobile() != Boolean.TRUE) {
+                        individualResume.setMobile(null);
+                    }
+                    if (individualDisplayField.getIfShowEmergencyContact() != Boolean.TRUE) {
+                        individualResume.setEmergencyContact(null);
+                    }
+                    if (individualDisplayField.getIfShowEmergencyContactPhone() != Boolean.TRUE) {
+                        individualResume.setEmergencyContactPhone(null);
+                    }
+                    if (individualDisplayField.getIfShowEducation() != Boolean.TRUE) {
+                        individualResume.setEducation(null);
+                    }
+                    if (individualDisplayField.getIfShowSpecialty() != Boolean.TRUE) {
+                        individualResume.setSpecialty(null);
+                    }
+                    if (individualDisplayField.getIfShowAcademy() != Boolean.TRUE) {
+                        individualResume.setAcademy(null);
+                    }
+                    if (individualDisplayField.getIfShowGraduationTime() != Boolean.TRUE) {
+                        individualResume.setGraduationTime(null);
+                    }
+                    if (individualDisplayField.getIfShowNowResidence() != Boolean.TRUE) {
+                        individualResume.setNowResidence(null);
+                    }
+                    if (individualDisplayField.getIfShowRegisteredAddress() != Boolean.TRUE) {
+                        individualResume.setRegisteredAddress(null);
+                    }
+                    if (individualDisplayField.getIfShowWorkExperience() != Boolean.TRUE) {
+                        individualResume.setWorkExperience(null);
+                    }
+                }
+                break;
+            }
+        }
         List<IndividualResumeBO> boList = BeanTransform.copyProperties(list, IndividualResume.class, true);
         return boList;
     }
@@ -78,7 +217,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存所有的子对象
      *
-     * @param to 个人简介to
+     * @param to      个人简介to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -93,7 +232,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存证书情况
      *
-     * @param to 个人简介to
+     * @param to      个人简介to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -105,7 +244,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         if (certificateTitlesNotEmpty) {
             List<CredentialSituation> list = new ArrayList<>(0);
             int len = certificateTitles.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 CredentialSituation model = new CredentialSituation();
                 model.setCertificateTitle(certificateTitles[i]);
                 model.setCertificateTime(certificateTimes[i]);
@@ -120,7 +259,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存工作经历
      *
-     * @param to 个人简历to
+     * @param to      个人简历to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -131,7 +270,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         if (participatedActivitiesNotEmpty) {
             List<WorkExperience> list = new ArrayList<>(0);
             int len = participatedActivities.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 WorkExperience model = new WorkExperience();
                 model.setParticipatedActivity(participatedActivities[i]);
                 model.setProjectExperience(projectExperiences[i]);
@@ -145,7 +284,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存教育经历
      *
-     * @param to 个人简介to
+     * @param to      个人简介to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -156,7 +295,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         if (educatAddressesNotEmpty) {
             List<EducateExperience> list = new ArrayList<>(0);
             int len = educatAddresses.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 EducateExperience model = new EducateExperience();
                 model.setEducatAddress(educatAddresses[i]);
                 model.setTrainingExperience(trainingExperiences[i]);
@@ -170,7 +309,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存员工荣誉
      *
-     * @param to 个人简介to
+     * @param to      个人简介to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -182,7 +321,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         if (honorNamesNotEmpty) {
             List<StaffHonor> list = new ArrayList<>(0);
             int len = honorNames.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 StaffHonor model = new StaffHonor();
                 model.setHonorName(honorNames[i]);
                 model.setHonorGrade(honorGrades[i]);
@@ -197,7 +336,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 保存员工奖励
      *
-     * @param to 个人简介to
+     * @param to      个人简介to
      * @param staffId 员工id
      * @throws SerException
      */
@@ -209,7 +348,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         if (rewardsNamesNotEmpty) {
             List<StaffReward> list = new ArrayList<>(0);
             int len = rewardsNames.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 StaffReward model = new StaffReward();
                 model.setRewardsName(rewardsNames[i]);
                 model.setPrize(prizes[i]);
@@ -254,7 +393,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     /**
      * 删除证书情况
      *
-     * @param staffId　员工id
+     * @param staffId 　员工id
      * @throws SerException
      */
     private void removeCredentialSituation(String staffId) throws SerException {
@@ -327,5 +466,55 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     public void remove(String id) throws SerException {
         removeSubObj(id);
         super.remove(id);
+    }
+
+    /**
+     * 设置个人简介显示字段
+     *
+     * @param username 用户名称数组
+     * @param to       个人简介显示字段
+     * @throws SerException
+     */
+    @Override
+    public void setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws SerException {
+        Boolean usernameIsNotEmpty = (username != null) && (username.length > 0);
+        if (usernameIsNotEmpty) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < username.length; i++) {
+                if (i < username.length - 1) {
+                    sb.append(username[i]).append(",");
+                } else {
+                    sb.append(username[i]);
+                }
+            }
+
+            saveIndividualDisplayField(to, sb);
+        } else {
+            throw new SerException("您好,用户姓名为空,无法设置个人简介显示的字段");
+        }
+    }
+
+    /**
+     *
+     *
+     * @param to
+     * @param sb
+     */
+    /**
+     * 保存个人简介显示字段和显示的用户
+     *
+     * @param to 个人简介显示字段to
+     * @param sb 用户姓名to
+     * @throws SerException
+     */
+    private void saveIndividualDisplayField(IndividualDisplayFieldTO to, StringBuilder sb) throws SerException {
+        IndividualDisplayField model = BeanTransform.copyProperties(to, IndividualDisplayField.class, true);
+        model = individualDisplayFieldSer.save(model);
+        String displayFieldId = model.getId();//获取个人简介显示字段
+        String usernameStr = sb.toString();//用户字符串集合
+        IndividualDisplayUser individualDisplayUser = new IndividualDisplayUser();
+        individualDisplayUser.setUsernames(usernameStr);
+        individualDisplayUser.setDisplayId(displayFieldId);
+        individualDisplayUserSer.save(individualDisplayUser);//保存显示的用户
     }
 }

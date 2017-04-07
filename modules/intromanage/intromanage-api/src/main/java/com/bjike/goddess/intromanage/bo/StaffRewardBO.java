@@ -35,7 +35,13 @@ public class StaffRewardBO extends BaseBO {
      */
     private String bonus;
 
+    public String getStaffId() {
+        return staffId;
+    }
 
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
 
     public String getRewardsName() {
         return rewardsName;

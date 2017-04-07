@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.api.IndividualResumeAPI;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
+import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 import com.bjike.goddess.intromanage.vo.IndividualResumeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,4 +106,21 @@ public class IndividualResumeAct {
         }
     }
 
+    /**
+     * 设置个人简介需要显示的字段
+     *
+     * @param username 用户姓名数组
+     * @param to 个人简介显示字段to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/setIndividualDisplayField")
+    public Result setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws ActException {
+        try {
+            individualResumeAPI.setIndividualDisplayField(username, to);
+            return new ActResult("setIndividualDisplayField success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

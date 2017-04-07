@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.api.FirmIntroAPI;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
+import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.vo.FirmIntroVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,24 @@ public class FirmIntroAct {
         try {
             firmIntroAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 设置公司简介显示的字段
+     *
+     * @param username 用户姓名数组
+     * @param to 公司简介显示字段to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/setFirmDisplayField")
+    public Result setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws ActException {
+        try {
+            firmIntroAPI.setFirmDisplayField(username, to);
+            return new ActResult("setFirmDisplayField success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
