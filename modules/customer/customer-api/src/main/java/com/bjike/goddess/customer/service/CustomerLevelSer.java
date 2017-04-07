@@ -21,6 +21,14 @@ import java.util.List;
 public interface CustomerLevelSer extends Ser<CustomerLevel, CustomerLevelDTO> {
 
     /**
+     * 客户级别列表总条数
+     *
+     */
+    default Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 客户级别列表
      *
      * @return class CustomerLevelBO

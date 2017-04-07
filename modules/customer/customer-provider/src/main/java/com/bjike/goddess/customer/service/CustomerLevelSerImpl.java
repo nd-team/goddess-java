@@ -1,9 +1,7 @@
 package com.bjike.goddess.customer.service;
 
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -12,7 +10,6 @@ import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +30,16 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLevelDTO> implements CustomerLevelSer {
 
-    
+    @Override
+    public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        Long count = super.count(customerLevelDTO);
+        return count;
+    }
+
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
-        List<CustomerLevel> list = super.findByCis(customerLevelDTO, true);
+        customerLevelDTO.getSorts().add("name=asc");
+        List<CustomerLevel> list = super.findByCis(customerLevelDTO,true);
 
         return BeanTransform.copyProperties(list, CustomerLevelBO.class );
     }

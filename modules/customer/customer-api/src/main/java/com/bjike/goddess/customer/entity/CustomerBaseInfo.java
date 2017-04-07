@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
-import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,6 +22,12 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "customer_customerbaseinfo")
 public class CustomerBaseInfo extends BaseEntity {
+
+    /**
+     * 第几个客户排序
+     */
+    @Column(name = "customerPosition", nullable = false,unique = true , columnDefinition = "DECIMAL(10,2)   COMMENT '第几个客户排序'")
+    private Double customerPosition;
 
     /**
      * 客户信息编号
@@ -88,7 +93,6 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 邮箱
      */
-    @Email
     @Column(name = "cusEmail",  columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
     private String cusEmail;
 
@@ -199,6 +203,14 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @OneToOne(cascade = CascadeType.REFRESH,mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
+
+    public Double getCustomerPosition() {
+        return customerPosition;
+    }
+
+    public void setCustomerPosition(Double customerPosition) {
+        this.customerPosition = customerPosition;
+    }
 
     public String getCustomerNum() {
         return customerNum;

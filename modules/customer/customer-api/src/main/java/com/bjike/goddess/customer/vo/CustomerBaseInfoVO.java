@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
-import com.bjike.goddess.customer.to.CustomerLevelTO;
 
 /**
  * 客户基本信息表现层对象
@@ -59,7 +58,7 @@ public class CustomerBaseInfoVO {
     /**
      * 客户级别
      */
-    private CustomerLevelTO customerLevelTO;
+    private CustomerLevelVO customerLevelVO;
 
     /**
      * 客户来源
@@ -237,12 +236,12 @@ public class CustomerBaseInfoVO {
         this.relation = relation;
     }
 
-    public CustomerLevelTO getCustomerLevelTO() {
-        return customerLevelTO;
+    public CustomerLevelVO getCustomerLevelVO() {
+        return customerLevelVO;
     }
 
-    public void setCustomerLevelTO(CustomerLevelTO customerLevelTO) {
-        this.customerLevelTO = customerLevelTO;
+    public void setCustomerLevelVO(CustomerLevelVO customerLevelVO) {
+        this.customerLevelVO = customerLevelVO;
     }
 
     public String getOrigin() {

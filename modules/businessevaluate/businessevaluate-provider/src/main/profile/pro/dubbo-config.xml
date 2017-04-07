@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!-- 发布接口 -->
+
+	<!-- 商务评估项目信息API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.EvaluateProjectInfoAPI" ref="evaluateProjectInfoApiImpl"/>
+
+	<!-- 商务评估劳动成本API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.LabourCostAPI" ref="labourCostApiImpl"/>
+
+	<!-- 商务评估需求成本API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.DemandCostAPI" ref="demandCostApiImpl"/>
+
+	<!-- 商务评估其它成本API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.AnotherCostAPI" ref="anotherCostApiImpl"/>
+
+	<!-- 商务评估项目费用API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.ProjectCostAPI" ref="projectCostApiImpl"/>
+
+	<!-- 商务评估能力成长API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.AbilityGrowUpAPI" ref="abilityGrowUpApiImpl"/>
+
+	<!-- 商务评估市场反应和创新能力API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.MarketSesponseAPI" ref="marketSesponseApiImpl"/>
+
+	<!-- 商务评估市场反应和创新能力API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.ProblemDisposeAPI" ref="problemDisposeApiImpl"/>
+
+	<!-- 商务评估市场反应和创新能力API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.ProjectAmountAPI" ref="projectAmountApiImpl"/>
+
+	<!-- 商务评估一线实施体系评价API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.FrontlineEvaluateAPI" ref="frontlineEvaluateApiImpl"/>
+
+	<!-- 商务评估商务负责人评价API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.BusinessPrincipalEvaluateAPI" ref="businessPrincipalEvaluateApiImpl"/>
+
+	<!-- 商务评估商务负责人评价API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.ProjectPrincipalEvaluateAPI" ref="projectPrincipalEvaluateApiImpl"/>
+
+	<!-- 商务评估汇总API -->
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI" ref="businessEvaluateCollectApiImpl"/>
+
+	<!-- 用户API -->
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+
+</beans>

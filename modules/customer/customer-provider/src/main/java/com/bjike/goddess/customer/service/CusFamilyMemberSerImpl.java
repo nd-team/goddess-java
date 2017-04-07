@@ -7,7 +7,6 @@ import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

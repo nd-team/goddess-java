@@ -2,6 +2,7 @@ package com.bjike.goddess.user.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.user.enums.LoginType;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -27,12 +28,12 @@ public class UserLoginTO extends BaseTO {
     /**
      * 登陆账号 email，phone，username
      */
-    @NotNull(message = "帐号不能为空")
-    private String account;
+    @NotBlank(message = "帐号不能为空")
+        private String account;
     /**
      * 登录密码
      */
-    @NotNull(message = "密码不能为空")
+    @NotBlank(message = "密码不能为空")
     private String password;
 
     /**

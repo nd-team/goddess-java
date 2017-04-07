@@ -1,9 +1,6 @@
 package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.customer.entity.CustomerDetail;
-
-import javax.persistence.Column;
 
 /**
  * 客户家庭成员业务传输对象

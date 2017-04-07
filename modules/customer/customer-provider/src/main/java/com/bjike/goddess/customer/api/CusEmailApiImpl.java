@@ -26,6 +26,11 @@ public class CusEmailApiImpl implements CusEmailAPI {
     private CusEmailSer cusEmailSer;
 
     @Override
+    public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        return cusEmailSer.countCusEmail( cusEmailDTO);
+    }
+
+    @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
         return cusEmailSer.listCusEmail( cusEmailDTO );
     }

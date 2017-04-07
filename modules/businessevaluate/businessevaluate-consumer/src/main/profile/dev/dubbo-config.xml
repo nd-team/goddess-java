@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!-- 注册接口-->
+
+	<!-- 商务评估项目信息API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.EvaluateProjectInfoAPI" id="evaluateProjectInfoApiImpl" />
+
+	<!-- 商务评估劳动成本API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.LabourCostAPI" id="labourCostApiImpl" />
+
+	<!-- 商务评估需求成本API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.DemandCostAPI" id="demandCostApiImpl" />
+
+	<!-- 商务评估需求成本API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.AnotherCostAPI" id="AnotherCostApiImpl" />
+
+	<!-- 商务评估项目费用API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.ProjectCostAPI" id="projectCostApiImpl" />
+
+	<!-- 商务评估能力成长API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.AbilityGrowUpAPI" id="abilityGrowUpApiImpl" />
+
+	<!-- 商务评估反应和创新能力API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.MarketSesponseAPI" id="marketSesponseApiImpl" />
+
+	<!-- 商务评估项目问题受理和处理API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.ProblemDisposeAPI" id="problemDisposeApiImpl" />
+
+	<!-- 商务评估项目金额API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.ProjectAmountAPI" id="projectAmountApiImpl" />
+
+	<!-- 商务评估一线实施体系评价API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.FrontlineEvaluateAPI" id="frontlineEvaluateApiImpl" />
+
+	<!-- 商务评估商务负责人评价API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.BusinessPrincipalEvaluateAPI" id="businessPrincipalEvaluateApiImpl" />
+
+	<!-- 商务评估项目负责人评价API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.interiorevaluate.ProjectPrincipalEvaluateAPI" id="projectPrincipalEvaluateApiImpl" />
+
+	<!-- 商务评估汇总API -->
+	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI" id="businessEvaluateCollectApiImpl" />
+
+</beans>

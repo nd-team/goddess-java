@@ -3,23 +3,25 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
+import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.customer.vo.CustomerLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,12 +33,31 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+@LoginAuth
 @RestController
 @RequestMapping("customer/customerdetail")
 public class CustomerDetailAction {
 
     @Autowired
     private CustomerDetailAPI customerDetailAPI;
+
+
+    /**
+     *  客户详细列表总条数
+     *
+     * @param customerDetailDTO 客户详细信息dto
+     * @des 获取所有客户详细信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CustomerDetailDTO customerDetailDTO) throws ActException {
+        try {
+            Long count = customerDetailAPI.countCustomerDetail(customerDetailDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 客户详细列表
@@ -49,8 +70,16 @@ public class CustomerDetailAction {
     @GetMapping("v1/listCustomerDetail")
     public Result findListCustomerDetail(CustomerDetailDTO customerDetailDTO) throws ActException {
         try {
-            List<CustomerDetailVO> customerDetailVOList = BeanTransform.copyProperties(
-                    customerDetailAPI.listCustomerDetail(customerDetailDTO), CustomerDetailVO.class, true);
+            List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
+            List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
+            customerDetailBOList.stream().forEach(str->{
+                CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
+                CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
+                customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
+                customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+                customerDetailVOList.add( customerDetailVO );
+            });
             return ActResult.initialize(customerDetailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -70,12 +99,15 @@ public class CustomerDetailAction {
         try {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.getCustomerDetailByNum(customerNum);
 
-            CustomerBaseInfoVO baseinfo = BeanTransform.copyProperties(customerDetailBO1.getCustomerBaseInfoBO(),CustomerBaseInfoVO.class);
+            CustomerBaseInfoBO customerBaseInfoBO = customerDetailBO1.getCustomerBaseInfoBO();
+            CustomerBaseInfoVO baseInfoVO = BeanTransform.copyProperties(customerBaseInfoBO.getCustomerLevelBO(),CustomerBaseInfoVO.class);
+            CustomerLevelVO clevel = BeanTransform.copyProperties( customerBaseInfoBO.getCustomerLevelBO(), CustomerLevel.class);
+            baseInfoVO.setCustomerLevelVO( clevel );
             List<CusFamilyMemberVO> family =  BeanTransform.copyProperties(customerDetailBO1.getCusFamilyMemberBOList(),CusFamilyMemberVO.class);
 
             CustomerDetailVO vo = BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true);
             vo.setCusFamilyMemberVOList(family);
-            vo.setCustomerBaseInfoVO( baseinfo );
+            vo.setCustomerBaseInfoVO( baseInfoVO );
 
             return ActResult.initialize(vo);
         } catch (SerException e) {

@@ -27,6 +27,13 @@ public interface CustomerBaseInfoAPI {
     default CustomerBaseInfoBO generateCustomerNum() throws SerException {
         return null;
     }
+    /**
+     * 客户基本信息列表总条数
+     *
+     */
+    default Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 客户基本信息列表

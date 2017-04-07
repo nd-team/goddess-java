@@ -92,15 +92,16 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     }
 
-    @Cacheable
     @Override
     public UserBO findByAccountNumber(String accountNumber) throws SerException {
         UserDTO dto = new UserDTO();
         List<Condition> conditions = dto.getConditions();
-        conditions.add(Restrict.or("username", accountNumber));
+        conditions.add(Restrict.eq("username", accountNumber));
         conditions.add(Restrict.or("phone", accountNumber));
         conditions.add(Restrict.or("email", accountNumber));
-        return BeanTransform.copyProperties(findOne(dto), UserBO.class);
+        User user = super.findOne(dto);
+        UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
+        return userBO;
     }
 
     @Override

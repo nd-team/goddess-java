@@ -36,8 +36,8 @@ public class MarketEmailAction {
      * @return  class MarketEmailVO
      * @version v1
      */
-    @GetMapping("v1/Collect")
-    public Result Collect (@NotBlank String[] areas ) throws ActException {
+    @GetMapping("v1/collect")
+    public Result collect (@NotBlank String[] areas ) throws ActException {
         try {
             List<MarketEmailVO> marketEmailVOS = BeanTransform.copyProperties(
                     marketEmailAPI.collectMarketEmail(areas),MarketEmailVO.class,true);

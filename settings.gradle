@@ -30,8 +30,7 @@ include ':modules:message:message-provider'
 include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
-
-////#staffentry 员工入职
+////#staffentry 员工入职tanghaixiang
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
 include ':modules:staffentry:staffentry-provider'
@@ -39,11 +38,7 @@ include ':modules:staffentry:staffentry-provider'
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
-//#客户信息
-//include ':modules:accommodation:accommodation-api'
-//include ':modules:accommodation:accommodation-consumer'
-//include ':modules:accommodation:accommodation-provider'
-//#客户信息
+//#客户信息tanghaixiang
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
@@ -79,20 +74,23 @@ include ':modules:supplier:supplier-provider'
 include ':modules:projectmeasure:projectmeasure-api'
 include ':modules:projectmeasure:projectmeasure-consumer'
 include ':modules:projectmeasure:projectmeasure-provider'
-
+//#招投标管理
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
-
+//#市场信息管理
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
 //#竞争对手管理
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
-//#商务项目合同管理
+//#商务项目合同管理tanghaixiang
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
-//#商业能力展示
+//#商业能力展示tanghaixiang
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
@@ -104,7 +102,6 @@ include ':modules:contractquotemanager:contractquotemanager-provider'
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
-
 //#marketdevelopment 市场计划进度管理
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
@@ -117,25 +114,58 @@ include ':modules:projectissuehandle:projectissuehandle-provider'
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
-//#商业能力互动
+//#商业能力互动tanghaixiang
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
-
+//#财务初始化tanghaixiang
+include ':modules:financeinit:financeinit-api'
+include ':modules:financeinit:financeinit-consumer'
+include ':modules:financeinit:financeinit-provider'
+//#项目验收、签字、结算进度管理tanghaixiang
+include ':modules:projectprocing:projectprocing-api'
+include ':modules:projectprocing:projectprocing-consumer'
+include ':modules:projectprocing:projectprocing-provider'
+//#法定节假日tanghaixiang
+include ':modules:festival:festival-api'
+include ':modules:festival:festival-consumer'
+include ':modules:festival:festival-provider'
+//#businessevaluate 商务评估
+include ':modules:businessevaluate:businessevaluate-api'
+include ':modules:businessevaluate:businessevaluate-consumer'
+include ':modules:businessevaluate:businessevaluate-provider'
+//#enterpriseculturemanage 企业文化管理
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
 //#annual 年假管理
 include ':modules:annual:annual-api'
 include ':modules:annual:annual-consumer'
 include ':modules:annual:annual-provider'
-
 //#contacts 通讯录管理
 include ':modules:contacts:contacts-api'
 include ':modules:contacts:contacts-consumer'
 include ':modules:contacts:contacts-provider'
-
 //#qualifications 公司资质管理
 include ':modules:qualifications:qualifications-api'
 include ':modules:qualifications:qualifications-consumer'
 include ':modules:qualifications:qualifications-provider'
+//#receivable 回款管理
+include ':modules:receivable:receivable-api'
+include ':modules:receivable:receivable-consumer'
+include ':modules:receivable:receivable-provider'
+//#individualvision 个人愿景管理
+include ':modules:individualvision:individualvision-api'
+include ':modules:individualvision:individualvision-consumer'
+include ':modules:individualvision:individualvision-provider'
+//#eggert 评估管理
+include ':modules:eggert:eggert-api'
+include ':modules:eggert:eggert-consumer'
+include ':modules:eggert:eggert-provider'
 
+//#借款与报销tanghaixiang
+//include ':modules:lendreimbursement:lendreimbursement-api'
+//include ':modules:lendreimbursement:lendreimbursement-consumer'
+//include ':modules:lendreimbursement:lendreimbursement-provider'
 
 

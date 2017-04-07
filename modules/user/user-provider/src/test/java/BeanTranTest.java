@@ -31,6 +31,17 @@ public class BeanTranTest {
 //        bo.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
         bo.setPhone("1332");
         bo.setUsername("liguiqin");
+        bo.setCreateTime("2017-11-10 12:12:11");
+        User user = BeanTransform.copyProperties(bo, User.class, true);
+        System.out.println(JSON.toJSONString(user));
+    }
+
+    public static void main(String[] args) {
+        UserBO bo = new UserBO();
+//        bo.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
+        bo.setPhone("1332");
+        bo.setUsername("liguiqin");
+        bo.setCreateTime("2017-11-10 12:12:11");
         User user = BeanTransform.copyProperties(bo, User.class, true);
         System.out.println(JSON.toJSONString(user));
     }

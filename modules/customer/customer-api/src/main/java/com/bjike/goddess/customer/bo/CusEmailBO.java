@@ -6,7 +6,6 @@ import com.bjike.goddess.customer.enums.CustomerCollectUnit;
 import com.bjike.goddess.customer.enums.CustomerSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
 import java.util.List;
 import java.util.Map;
 

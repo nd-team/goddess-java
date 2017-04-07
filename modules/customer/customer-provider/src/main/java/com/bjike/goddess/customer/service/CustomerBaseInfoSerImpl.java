@@ -1,9 +1,7 @@
 package com.bjike.goddess.customer.service;
 
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.DataType;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -17,16 +15,13 @@ import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
-import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,9 +76,24 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
-        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
+        customerBaseInfoDTO.getSorts().add("customerPosition=asc");
+        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO);
 
-        return BeanTransform.copyProperties(list, CustomerBaseInfoBO.class);
+        List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
+        list.stream().forEach(str->{
+            CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(str.getCustomerLevel(), CustomerLevelBO.class);
+            CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(str, CustomerBaseInfoBO.class);
+            customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
+            customerBaseInfoBOList.add(customerBaseInfoBO);
+        });
+
+        return customerBaseInfoBOList;
+    }
+
+    @Override
+    public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        Long count = super.count(customerBaseInfoDTO );
+        return count;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -104,6 +114,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             customerBaseInfo.setCreateTime(LocalDateTime.now());
             customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
             customerBaseInfo.setCustomerLevel(customerLevel);
+            customerBaseInfo.setCustomerPosition(
+                    Double.parseDouble(customerBaseInfoTO.getCustomerNum().substring(5,customerBaseInfoTO.getCustomerNum().length())));
 
             super.save(customerBaseInfo);
             return BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfoBO.class);
@@ -126,14 +138,15 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
             customerBaseInfo.setCustomerLevel(customerLevel);
 
-            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id");
+            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id","customerPosition");
             cusBase.setModifyTime(LocalDateTime.now());
             cusBase.setModifyPersion(userAPI.currentUser().getUsername());
             super.update(cusBase);
         } catch (SerException e) {
             throw new SerException("更新失败"+e.getMessage());
         }
-        return BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
+         CustomerBaseInfoBO b = BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
+        return b;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -250,19 +263,19 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerSex().getCode()))) {
+        if (customerBaseInfoTO.getCustomerSex()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerType().getCode()))) {
+        if (customerBaseInfoTO.getCustomerType()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getCustomerStatus().getCode()))) {
+        if (customerBaseInfoTO.getCustomerStatus()!= null ) {
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
+        if (customerBaseInfoTO.getRelation() != null && StringUtils.isNotBlank(String.valueOf(customerBaseInfoTO.getRelation()))) {
             now++;
         }
         sum++;
@@ -369,7 +382,11 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
         dto.getConditions().add(Restrict.eq("customerNum", customerNum));
         CustomerBaseInfo customerBaseInfo = super.findOne(dto);
-        return BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
+
+        CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
+        customerBaseInfoBO.setCustomerLevelBO( BeanTransform.copyProperties(
+                customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class));
+        return customerBaseInfoBO;
     }
 
     @Override
@@ -378,7 +395,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select workProfession ,1 from customer_customerbaseinfo group by workProfession", CustomerBaseInfoBO.class, fields);
 
         List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getWorkProfession)
-                .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
+                .filter(name -> (name != null || !"".equals(name))).distinct().collect(Collectors.toList());
 
 
         return customerNameList;

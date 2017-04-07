@@ -70,8 +70,8 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
                     if (StringUtils.isNotBlank(token)) { //是否已登录过
                         String str_loginUser = redis.getMap(StorageCommon.STORAGE_USER, token);//通过获取token用户信息
                         if (StringUtils.isNotBlank(str_loginUser)) {
-                            redis.save(storageUser.getId(), token, 60 * 60 * 24 * 1000); //更新登录失效时间
-                            redis.appendToMap(StorageCommon.STORAGE_USER, storageUser.getId(), str_loginUser, 60 * 60 * 24 * 1000);//更新登录失效时间
+                            redis.save(storageUser.getId(), token, 60 * 60 * 24 * 7); //更新登录失效时间
+                            redis.appendToMap(StorageCommon.STORAGE_USER, storageUser.getId(), str_loginUser, 60 * 60 * 24 * 7);//更新登录失效时间
                             return token;
                         } else {
                             return login(storageUser);
@@ -96,7 +96,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
         StorageUserBO loginUser = BeanTransform.copyProperties(storageUser, StorageUserBO.class);
         redis.save(storageUser.getId(), token);
         String str_loginUser = JSON.toJSONString(loginUser);
-        redis.appendToMap(StorageCommon.STORAGE_USER, token, str_loginUser, 60 * 60 * 24 * 1000);
+        redis.appendToMap(StorageCommon.STORAGE_USER, token, str_loginUser, 60 * 60 * 24 * 7);
         return token;
     }
 
