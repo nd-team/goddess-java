@@ -22,7 +22,7 @@ public class UserSubscribe extends BaseEntity {
     /**
      * 消息类型
      */
-    @Column(name = "msgType", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '消息类型' ", nullable = false, insertable = false)
+    @Column(name = "msgType", columnDefinition = "TINYINT(1)  COMMENT '消息类型' ", nullable = false)
     private MsgType msgType;
     /**
      * 订阅用户

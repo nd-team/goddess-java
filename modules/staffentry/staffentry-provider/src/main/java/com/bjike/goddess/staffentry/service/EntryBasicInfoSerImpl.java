@@ -33,7 +33,7 @@ import java.util.List;
 @Service
 public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
 
-    @Cacheable
+    
     @Override
     public List<EntryBasicInfo> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
 
@@ -42,7 +42,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         return entryBasicInfos;
     }
 
-    @Cacheable
+    
     @Override
     public EntryBasicInfo getEntryBasicInfo(String id) throws SerException {
         EntryBasicInfo entryBasicInfo = super.findById(id);
@@ -136,7 +136,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         return BeanTransform.copyProperties(entryBasicInfo, EntryRegisterBO.class);
     }
 
-    @Cacheable
+    
     @Override
     public  List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         if (entryBasicInfoDTO == null) {

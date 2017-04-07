@@ -12,10 +12,11 @@ public class JapiTest {
 		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath(
-				"modules/bidding/bidding-consumer");//主项目位置
-		JapiClient.setActionReletivePath("com/bjike/goddess/bidding/action");//主项目action位置
+				"modules/market/market-consumer");//主项目位置
+		JapiClient.setActionReletivePath("com/bjike/goddess/market/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"modules/user/user-api",
+				"modules/market/market-api",
+				"modules/customer/customer-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

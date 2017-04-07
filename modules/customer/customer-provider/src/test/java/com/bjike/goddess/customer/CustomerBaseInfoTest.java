@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
@@ -49,9 +50,9 @@ public class CustomerBaseInfoTest {
 
         CustomerBaseInfoTO customerBaseInfo = new CustomerBaseInfoTO();
         customerBaseInfo.setCreateTime( DateUtil.dateToString(LocalDateTime.now()) );
-        customerBaseInfo.setArea("广州");
+        customerBaseInfo.setArea("上海");
         customerBaseInfo.setCusEmail("88888@qq.com");
-        customerBaseInfo.setCustomerName( "北京艾佳");
+        customerBaseInfo.setCustomerName( "上海艾佳");
         customerBaseInfo.setCustomerNum( cBaseInfoBO.getCustomerNum() );
 
         customerBaseInfo.setCustomerSex(CustomerSex.MAN);
@@ -74,10 +75,11 @@ public class CustomerBaseInfoTest {
         customerBaseInfo.setWorkPosition("岗位");
         customerBaseInfo.setWorkProfession("电信行业");
         customerBaseInfo.setWorkRight("职权");
+//        customerBaseInfo.setStatus(Status.UNREVIEW);
 
 
         CustomerLevelBO clevel  = customerLevelAPI.getCustomerLevelByName("1星级");
-        customerBaseInfo.setCustomerLevelTO(BeanTransform.copyProperties(clevel,CustomerLevelTO.class) );
+        customerBaseInfo.setCustomerLevelName(clevel.getName() );
 
         CustomerBaseInfoBO returnBO = customerBaseInfoAPI.addCustomerBaseInfo( customerBaseInfo );
         System.out.println("");

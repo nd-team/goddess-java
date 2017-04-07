@@ -27,6 +27,7 @@
 	<dubbo:service interface="com.bjike.goddess.user.api.UserRegisterAPI" ref="userRegisterApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.user.api.UserAuthCodeAPI" ref="userAuthCodeApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.PositionAPI" ref="positionApiImpl"/>
 
 
 

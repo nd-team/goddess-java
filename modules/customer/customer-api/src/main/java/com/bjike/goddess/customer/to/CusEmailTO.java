@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.enums.CustomerCollectUnit;
 import com.bjike.goddess.customer.enums.CustomerSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -19,11 +21,7 @@ import java.util.List;
  */
 public class CusEmailTO extends BaseTO {
 
-    /**
-     * 行业
-     */
-    @NotBlank
-    private String work;
+
 
     /**
      * 备注
@@ -33,7 +31,7 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotBlank
+    @NotNull(message = "发送间隔不能为空且是double型数字")
     private Double sendNum;
 
     /**
@@ -44,17 +42,16 @@ public class CusEmailTO extends BaseTO {
     /**
      * 发送单位
      */
+    @NotNull(message = "发送单位不能为空")
     private CustomerSendUnit customerSendUnit;
 
     /**
      * 汇总间隔
      */
+    @NotNull(message = "汇总间隔不能为空")
     private CustomerCollectUnit customerCollectUnit;
 
-    /**
-     * 发送对象
-     */
-    private String sendObject;
+
 
     /**
      * 发送对象数组
@@ -92,13 +89,7 @@ public class CusEmailTO extends BaseTO {
     private String[] works;
 
 
-    public String getWork() {
-        return work;
-    }
 
-    public void setWork(String work) {
-        this.work = work;
-    }
 
     public String getRemark() {
         return remark;
@@ -140,13 +131,6 @@ public class CusEmailTO extends BaseTO {
         this.customerCollectUnit = customerCollectUnit;
     }
 
-    public String getSendObject() {
-        return sendObject;
-    }
-
-    public void setSendObject(String sendObject) {
-        this.sendObject = sendObject;
-    }
 
     public List<String> getSendObjectList() {
         return sendObjectList;

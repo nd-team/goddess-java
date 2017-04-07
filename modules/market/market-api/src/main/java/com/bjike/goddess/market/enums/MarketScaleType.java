@@ -19,8 +19,7 @@ public enum MarketScaleType {
     /**
      * 项目级别-C级市场信息数量
      */
-    PROJECTLEVELC(2),
-    ;
+    PROJECTLEVELC(2),;
 
     private int code;
 
@@ -33,32 +32,32 @@ public enum MarketScaleType {
     }
 
 
-    public static MarketScaleType getEnumConvert(int code){
+    public static MarketScaleType getEnumConvert(int code) {
         MarketScaleType marketScaleType = MarketScaleType.PROJECTLEVELA;
-        if( code == MarketScaleType.PROJECTLEVELA.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELA.getCode()) {
             marketScaleType = MarketScaleType.PROJECTLEVELA;
         }
-        if( code == MarketScaleType.PROJECTLEVELB.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELB.getCode()) {
             marketScaleType = MarketScaleType.PROJECTLEVELB;
         }
-        if( code == MarketScaleType.PROJECTLEVELC.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELC.getCode()) {
             marketScaleType = MarketScaleType.PROJECTLEVELC;
         }
-        return  marketScaleType ;
+        return marketScaleType;
     }
 
-    public static String getStrConvert(int code){
+    public static String getStrConvert(int code) {
         String name = "";
-        if( code == MarketScaleType.PROJECTLEVELA.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELA.getCode()) {
             name = "项目级别-A级";
         }
-        if( code == MarketScaleType.PROJECTLEVELB.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELB.getCode()) {
             name = "项目级别-B级";
         }
-        if( code == MarketScaleType.PROJECTLEVELC.getCode() ){
+        if (code == MarketScaleType.PROJECTLEVELC.getCode()) {
             name = "项目级别-C级";
         }
-        return  name ;
+        return name;
     }
 
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.organize.entity.Arrangement;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,11 +33,12 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     public List<ArrangementBO> findStatus() throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Arrangement> list = super.findByCis(dto, false);
+        List<Arrangement> list = super.findByCis(dto);
         List<ArrangementBO> bos = BeanTransform.copyProperties(list, ArrangementBO.class);
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO save(ArrangementTO to) throws SerException {
         Arrangement arrangement = BeanTransform.copyProperties(to, Arrangement.class);
@@ -47,6 +49,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO update(ArrangementTO to) throws SerException {
         Arrangement arrangement = super.findById(to.getId());
@@ -62,6 +65,6 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     public List<ArrangementBO> findChild(String id) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
-        return BeanTransform.copyProperties(super.findByCis(dto, false), ArrangementBO.class);
+        return BeanTransform.copyProperties(super.findByCis(dto), ArrangementBO.class);
     }
 }

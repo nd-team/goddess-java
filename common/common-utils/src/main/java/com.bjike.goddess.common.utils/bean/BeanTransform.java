@@ -185,15 +185,15 @@ public class BeanTransform {
     }
 
     private static <TARGET, SOURCE> List<TARGET> copyList(Collection<SOURCE> sources, BeanInfo beanInfo) throws Exception {
-            List<TARGET> targets = new ArrayList(sources.size());
-            for (SOURCE source : sources) {
-                Object target = beanInfo.getTargetClass().newInstance();
-                beanInfo.setSource(source);
-                beanInfo.setTarget(target);
-                target = handlerCopyFields(beanInfo);
-                targets.add((TARGET) target);
-            }
-            return targets;
+        List<TARGET> targets = new ArrayList(sources.size());
+        for (SOURCE source : sources) {
+            Object target = beanInfo.getTargetClass().newInstance();
+            beanInfo.setSource(source);
+            beanInfo.setTarget(target);
+            target = handlerCopyFields(beanInfo);
+            targets.add((TARGET) target);
+        }
+        return targets;
     }
 
 
@@ -206,9 +206,9 @@ public class BeanTransform {
         String[] excludes = beanInfo.getExcludes();
         Object source = beanInfo.getSource();
         Object target = beanInfo.getTarget();
-        List<Field> s_fields =beanInfo.getSourceFields(); //源类属性列表
+        List<Field> s_fields = beanInfo.getSourceFields(); //源类属性列表
         List<Field> t_fields = beanInfo.getTargetFields();//目标类属性列表
-        List<Method> methods =beanInfo.getTargetMethods();//目标类所有方法
+        List<Method> methods = beanInfo.getTargetMethods();//目标类所有方法
         boolean convertDate = beanInfo.isConvertDate();
         for (Field t_field : t_fields) {
             boolean has_ex = false;
@@ -229,31 +229,47 @@ public class BeanTransform {
                     t_field.setAccessible(true);
                     s_field.setAccessible(true);
                     Object s_val = s_field.get(source);
+
                     if (null == s_val) {
                         break;
                     }
+                    if ("String".equals(s_val.getClass().getSimpleName())) {
+                        String val = (String) s_val;
+                        if ("".equals(val.trim())) {
+                            break;
+                        }
+                    }
                     if (!convertDate) { //处理字符串转日期
+                        Type s_type = s_field.getType();
                         for (Type type : DATE_TYPES) {
-                            if (type.equals(s_field.getType())) {
+                            if (type.equals(s_type)) {
                                 s_val = DateUtil.dateToString(s_val);
                                 break;
                             }
                         }
                     } else {
-                        for (Type type : DATE_TYPES) {
-                            if (type.equals(t_field.getType())) {
-                                s_val = convertDateType(type, s_val);
+                        Type t_type = t_field.getType();
+                        if (t_type.equals(LocalDate.class)) {
+                            s_val = DateUtil.parseDate(String.valueOf(s_val));
+                        } else if (t_type.equals(LocalTime.class)) {
+                            s_val = DateUtil.parseTime(String.valueOf(s_val));
+                        } else if (t_type.equals(LocalDateTime.class)) {
+                            s_val = DateUtil.parseDateTime(String.valueOf(s_val));
+                        }
+                    }
+
+                    String methodName = "set" + upperCaseFirst(t_field.getName());
+                    try {
+                        for (Method m : methods) { //找到相应方法
+                            if (m.getName().equals(methodName)) {
+                                m.invoke(target, s_val);
                                 break;
                             }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    String methodName = "set" + upperCaseFirst(t_field.getName());
-                    for (Method m : methods) { //找到相应方法
-                        if (m.getName().equals(methodName)) {
-                            m.invoke(target, s_val);
-                            break;
-                        }
-                    }
+
                     break;
                 }
             }
@@ -267,25 +283,6 @@ public class BeanTransform {
             char[] cs = val.toCharArray();
             cs[0] -= 32;
             return String.valueOf(cs);
-        }
-        return val;
-    }
-
-
-    /**
-     * 字符串转换成时间
-     *
-     * @param type
-     * @param val
-     * @return
-     */
-    private static Object convertDateType(Type type, Object val) {
-        if (type.equals(LocalDateTime.class)) {
-            val = DateUtil.parseDateTime(String.valueOf(val));
-        } else if (type.equals(LocalDate.class)) {
-            val = DateUtil.parseDate(String.valueOf(val));
-        } else if (type.equals(LocalTime.class)) {
-            val = DateUtil.parseTime(String.valueOf(val));
         }
         return val;
     }

@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,13 @@ import java.util.List;
 @Service("customerBaseInfoApiImpl")
 public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
 
+    @Autowired
     private CustomerBaseInfoSer customerBaseInfoSer;
+
+    @Override
+    public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        return customerBaseInfoSer.countCustomerBaseInfo(customerBaseInfoDTO);
+    }
 
     @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
@@ -60,6 +67,11 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     }
 
     @Override
+    public List<String> getCustomerBaseInfoCusNum() throws SerException {
+        return customerBaseInfoSer.getCustomerBaseInfoCusNum();
+    }
+
+    @Override
     public List<String> getCustomerBaseInfoArea() throws SerException {
         return customerBaseInfoSer.getCustomerBaseInfoArea();
     }
@@ -77,6 +89,11 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
 
     @Override
     public CustomerBaseInfoBO getCustomerInfoByNum(String customerNum) throws SerException {
-        return null;
+        return customerBaseInfoSer.getCustomerInfoByNum(customerNum);
+    }
+
+    @Override
+    public List<String> getCustomerBaseInfoWorks() throws SerException {
+        return customerBaseInfoSer.getCustomerBaseInfoWorks();
     }
 }

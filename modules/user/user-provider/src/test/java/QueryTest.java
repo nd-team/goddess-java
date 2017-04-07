@@ -2,6 +2,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserSer;
@@ -47,6 +48,17 @@ public class QueryTest {
         user.setNickname("xiaoming萨斯");
         user.setEmployeeNumber("1111128");
         userAPI.save(user);
+
+    }
+
+    @Test
+    public void or() throws Exception {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("username", "xxx"));
+        dto.getConditions().add(Restrict.or("email", "liguiqin_aj@163.com"));
+        dto.getConditions().add(Restrict.or("username", "liguiqin8"));
+        List<User> bo = userAPI.findByCis(dto);
+        System.out.println(bo);
 
     }
 

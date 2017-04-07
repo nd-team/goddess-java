@@ -19,6 +19,12 @@ import java.util.List;
 public interface CustomerDetailAPI {
 
     /**
+     * 客户详细列表总条数
+     */
+    default Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
+        return null;
+    }
+    /**
      * 客户详细列表
      * @return class CustomerDetailBO
      */

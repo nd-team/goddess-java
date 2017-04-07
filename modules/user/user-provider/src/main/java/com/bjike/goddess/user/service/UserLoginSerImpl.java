@@ -1,28 +1,26 @@
 package com.bjike.goddess.user.service;
 
 
+import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.api.UserLoginLogAPI;
+import com.bjike.goddess.common.utils.token.TokenUtil;
+import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.constant.UserCommon;
+import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.session.authcode.AuthCode;
-import com.bjike.goddess.user.session.authcode.AuthCodeSession;
-import com.bjike.goddess.user.session.validcorrect.Subject;
-import com.bjike.goddess.user.session.validcorrect.UserSession;
-import com.bjike.goddess.user.session.validfail.ValidErrSession;
-import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
-import com.bjike.goddess.user.utils.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * 用户登陆业务实现
@@ -38,9 +36,13 @@ import java.util.Map;
 public class UserLoginSerImpl implements UserLoginSer {
 
     @Autowired
-    private UserSer userAPI;
+    private UserSer userSer;
     @Autowired
-    private UserLoginLogAPI userLoginLogAPI;
+    private UserLoginLogSer userLoginLogSer;
+    @Autowired
+    private RedisClient redis;
+    @Autowired
+    private Environment env;
 
 
     @Override
@@ -48,39 +50,51 @@ public class UserLoginSerImpl implements UserLoginSer {
         String token = null;
         String account = loginTO.getAccount();
         loginTO.setIp("192.168.0.1");
-        UserBO userBO = userAPI.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
+        UserBO userBO = userSer.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
         if (null != userBO) {
-            User user = BeanTransform.copyProperties(userBO, User.class);
+            User user = BeanTransform.copyProperties(userBO, User.class,true);
             boolean authCode = validateAuthCode(account, loginTO.getAuthCode());
             if (authCode) { //验证码正确
                 token = validatePassword(loginTO, user);  //验证密码
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
-                    ValidErrSession.remove(account); //清除密码输错会话
-                    AuthCodeSession.remove(account);//清除验证码
-                    //存入session
-                    Subject subject = new Subject();
-                    subject.setAccessTime(LocalDateTime.now());
-                    subject.setIp(loginTO.getIp());
-                    subject.setLoginType(loginTO.getLoginType());
-                    subject.setUser(user);
-                    UserSession.put(token, subject);
+                    redis.removeMap(UserCommon.VALID_ERR,loginTO.getAccount());//删除密码验证错误次数统计
+                    redis.removeMap(UserCommon.AUTH_CODE,account);//清除验证码
+                    //保存登录用户到redis
+                    saveToRedis(user, token);
                     //记录登录日志
+                    UserDTO dto= new UserDTO();
+                    dto.getConditions().add(Restrict.eq("id",user.getId()));
+                    user = userSer.findOne(dto);
                     UserLoginLog loginLog = new UserLoginLog();
                     loginLog.setUser(user);
                     loginLog.setLoginIp(loginTO.getIp());
                     loginLog.setLoginTime(LocalDateTime.now());
                     loginLog.setLoginType(loginTO.getLoginType());
                     loginLog.setLoginAddress("not has address");
-                     UserLoginLogTO loginLogTO = BeanTransform.copyProperties(loginLog,UserLoginLogTO.class);
-                    userLoginLogAPI.save(loginLogTO);
+                  //  userLoginLogSer.save(loginLog);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
             } else {
                 throw new SerException("验证码错误");
             }
+        } else {
+            throw new SerException("账号或者密码错误");
         }
         return token;
+    }
+
+    /**
+     * 保存登录用户到redis
+     *
+     * @param user
+     * @param token
+     * @throws SerException
+     */
+    private void saveToRedis(User user, String token) throws SerException {
+        UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
+        redis.save(user.getId(), token);
+        redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(userBO), Integer.parseInt(env.getProperty("session.timeout")));
     }
 
 
@@ -94,29 +108,33 @@ public class UserLoginSerImpl implements UserLoginSer {
         String account = loginTO.getAccount();
         try {
             if (PasswordHash.validatePassword(loginTO.getPassword(), persistUser.getPassword())) {
-                Map.Entry<String, Subject> entity = UserSession.getByUserId(persistUser.getId());
-                if (null != entity) { //已登录过
-                    token = entity.getKey();
-                    Subject subject = entity.getValue();
-                    if (subject.getLoginType().equals(loginTO.getLoginType())) {
+                token = redis.get(persistUser.getId());
+                if (StringUtils.isNotBlank(token)) { //已登录过
+                    String userBo_str = redis.getMap(UserCommon.LOGIN_USER, token);
+                    if (StringUtils.isNotBlank(userBo_str)) {
                         return token;
                     } else {
                         token = createToken(persistUser, loginTO);
-                        return token;
-                    }
 
+                    }
                 } else {
                     token = createToken(persistUser, loginTO);
-                    return token;
                 }
             } else { //密码错误
-                ValidErrSession.putValidErr(account);
+                String errCount = redis.getMap(UserCommon.VALID_ERR, account);
+                if (StringUtils.isNotBlank(errCount)) {
+                    int count = Integer.parseInt(errCount) + 1;
+                    redis.appendToMap(UserCommon.VALID_ERR, account, String.valueOf(count), Integer.parseInt(env.getProperty("validerr.timeout")));
+                } else {
+                    redis.appendToMap(UserCommon.VALID_ERR, account, "1", Integer.parseInt(env.getProperty("validerr.timeout")));
+                }
                 return null;
             }
 
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+        return token;
 
     }
 
@@ -127,15 +145,10 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @param loginTO
      * @return
      */
-    private String createToken(User persistUser, UserLoginTO loginTO) {
+    private String createToken(User persistUser, UserLoginTO loginTO) throws SerException {
         String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
-        Subject subject = new Subject();
-        subject.setUser(persistUser);
-        subject.setLoginType(loginTO.getLoginType());
-        subject.setIp(loginTO.getIp());
-        subject.setRemember(loginTO.isRememberMe());
-        UserSession.put(token, subject);
-        ValidErrSession.remove(loginTO.getAccount());//删除密码验证错误次数统计
+        saveToRedis(persistUser, token);
+        redis.removeMap(UserCommon.VALID_ERR,loginTO.getAccount());//删除密码验证错误次数统计
         return token;
     }
 
@@ -146,13 +159,13 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @param authCode
      * @return
      */
-    private boolean validateAuthCode(String account, String authCode) {
-        AuthCode auth = AuthCodeSession.get(account);
+    private boolean validateAuthCode(String account, String authCode)throws SerException {
+        String code = redis.getMap(UserCommon.AUTH_CODE,account);
         boolean pass = false;
-        if (null == auth) {
+        if (null == code) {
             pass = true;
         } else {
-            if (auth.getCode().equals(authCode)) {
+            if (code.equals(authCode)) {
                 pass = true;
             }
         }
@@ -161,9 +174,11 @@ public class UserLoginSerImpl implements UserLoginSer {
 
     @Override
     public Boolean loginOut(String token) throws SerException {
-        User user = UserSession.getUser(token);
-        if (null != user) {
-//            user.setLoginStatus(LoginStatus.LOGINOUT);
+        String userBo_str = redis.getMap(UserCommon.LOGIN_USER, token);
+        if (StringUtils.isNotBlank(userBo_str)) {
+            UserBO bo = JSON.parseObject(userBo_str, UserBO.class);
+            redis.removeMap(UserCommon.LOGIN_USER, token);
+            redis.remove(bo.getId());
         }
         return true;
     }

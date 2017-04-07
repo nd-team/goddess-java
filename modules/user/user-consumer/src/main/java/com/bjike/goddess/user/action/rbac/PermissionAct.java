@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.action.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -25,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/permission")
+@RequestMapping("permission")
 public class PermissionAct {
     @Autowired
     private PermissionAPI permissionAPI;
@@ -76,6 +77,22 @@ public class PermissionAct {
         try {
             permissionAPI.remove(id);
             return new ActResult("delete is success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑权限资源信息
+     *
+     * @param permissionTO
+     * @version v1
+     */
+    @PostMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) PermissionTO permissionTO) throws ActException {
+        try {
+            permissionAPI.update(permissionTO);
+            return new ActResult("edit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

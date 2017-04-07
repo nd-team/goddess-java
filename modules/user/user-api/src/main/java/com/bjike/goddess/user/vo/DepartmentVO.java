@@ -10,6 +10,8 @@ package com.bjike.goddess.user.vo;
  * @Copy: [com.bjike]
  */
 public class DepartmentVO   {
+    private String id;
+
 
     /**
      * 部门名
@@ -49,5 +51,11 @@ public class DepartmentVO   {
         this.createTime = createTime;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }

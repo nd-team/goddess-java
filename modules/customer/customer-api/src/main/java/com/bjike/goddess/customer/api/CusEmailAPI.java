@@ -18,6 +18,14 @@ import java.util.List;
  */
 public interface CusEmailAPI {
 
+    /**
+     * 客户汇总邮件列表总条数
+     *
+     */
+    default Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 客户邮件汇总列表
@@ -87,7 +95,7 @@ public interface CusEmailAPI {
      * @param works works
      * @return class CusEmailBO
      */
-    default CusEmailBO collectCusEmail(String[] works) throws SerException {
+    default List<CusEmailBO> collectCusEmail(String[] works) throws SerException {
         return null;
     }
 

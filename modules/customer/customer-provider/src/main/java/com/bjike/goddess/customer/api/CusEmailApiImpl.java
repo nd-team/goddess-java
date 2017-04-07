@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.service.CusEmailSer;
 import com.bjike.goddess.customer.to.CusEmailTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,13 @@ import java.util.List;
 @Service("cusEmailApiImpl")
 public class CusEmailApiImpl implements CusEmailAPI {
 
+    @Autowired
     private CusEmailSer cusEmailSer;
+
+    @Override
+    public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        return cusEmailSer.countCusEmail( cusEmailDTO);
+    }
 
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
@@ -54,7 +61,7 @@ public class CusEmailApiImpl implements CusEmailAPI {
     }
 
     @Override
-    public CusEmailBO collectCusEmail(String[] works) throws SerException {
+    public List<CusEmailBO> collectCusEmail(String[] works) throws SerException {
         return cusEmailSer.collectCusEmail(works);
     }
 }

@@ -1,9 +1,11 @@
 package com.bjike.goddess.user.action.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.GroupAPI;
@@ -25,7 +27,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/group")
+@RequestMapping("group")
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
@@ -37,6 +39,7 @@ public class GroupAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/treeData")
     public Result treeData(String id) throws ActException {
         try {
@@ -75,6 +78,22 @@ public class GroupAct {
         try {
             groupAPI.remove(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑组信息
+     *
+     * @param groupTO
+     * @version v1
+     */
+    @PostMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) GroupTO groupTO) throws ActException {
+        try {
+            groupAPI.update(groupTO);
+            return new ActResult("edit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -2,6 +2,7 @@ package com.bjike.goddess.market.enums;
 
 /**
  * 行业类别
+ *
  * @Author: [xiazhili]
  * @Date: [17-3-22]
  * @Description: [行业类别]
@@ -24,8 +25,7 @@ public enum MarketWorkType {
     /**
      * 策划与营销方案行业市场信息数量
      */
-    PLANNINGMARKETINGSOLUTIONS(3),
-    ;
+    PLANNINGMARKETINGSOLUTIONS(3),;
 
     private int code;
 
@@ -38,38 +38,38 @@ public enum MarketWorkType {
     }
 
 
-    public static MarketWorkType getEnumConvert(int code){
+    public static MarketWorkType getEnumConvert(int code) {
         MarketWorkType marketWorkType = MarketWorkType.MOBILECOMMUNICATION;
-        if( code == MarketWorkType.MOBILECOMMUNICATION.getCode() ){
+        if (code == MarketWorkType.MOBILECOMMUNICATION.getCode()) {
             marketWorkType = MarketWorkType.MOBILECOMMUNICATION;
         }
-        if( code == MarketWorkType.SOFTWAREDEVELOPMENT.getCode() ){
+        if (code == MarketWorkType.SOFTWAREDEVELOPMENT.getCode()) {
             marketWorkType = MarketWorkType.SOFTWAREDEVELOPMENT;
         }
-        if( code == MarketWorkType.INTELLIGENTSYSTEMINTEGRATION.getCode() ){
+        if (code == MarketWorkType.INTELLIGENTSYSTEMINTEGRATION.getCode()) {
             marketWorkType = MarketWorkType.INTELLIGENTSYSTEMINTEGRATION;
         }
-        if( code == MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode() ){
+        if (code == MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode()) {
             marketWorkType = MarketWorkType.PLANNINGMARKETINGSOLUTIONS;
         }
-        return  marketWorkType ;
+        return marketWorkType;
     }
 
-    public static String getStrConvert(int code){
+    public static String getStrConvert(int code) {
         String name = "";
-        if( code == MarketWorkType.MOBILECOMMUNICATION.getCode() ){
+        if (code == MarketWorkType.MOBILECOMMUNICATION.getCode()) {
             name = "移动通信";
         }
-        if( code == MarketWorkType.SOFTWAREDEVELOPMENT.getCode() ){
+        if (code == MarketWorkType.SOFTWAREDEVELOPMENT.getCode()) {
             name = "软件开发";
         }
-        if( code == MarketWorkType.INTELLIGENTSYSTEMINTEGRATION.getCode() ){
+        if (code == MarketWorkType.INTELLIGENTSYSTEMINTEGRATION.getCode()) {
             name = "智能系统集成";
         }
-        if( code == MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode() ){
+        if (code == MarketWorkType.PLANNINGMARKETINGSOLUTIONS.getCode()) {
             name = "策划与营销方案";
         }
-        return  name ;
+        return name;
     }
 
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.supplier.to.ContactSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +48,14 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     public List<CooperationSituationBO> findByInformation(String info_id) throws SerException {
         CooperationSituationDTO dto = new CooperationSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
-        List<CooperationSituation> list = super.findByCis(dto, false);
+        List<CooperationSituation> list = super.findByCis(dto);
         List<CooperationSituationBO> bos = new ArrayList<>(0);
         for (CooperationSituation entity : list)
             bos.add(this.transformBO(entity));
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO save(ContactSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
@@ -62,6 +64,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO update(ContactSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
@@ -70,6 +73,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO delete(String id) throws SerException {
         CooperationSituation entity = super.findById(id);

@@ -33,10 +33,16 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLevelDTO> implements CustomerLevelSer {
 
-    @Cacheable
+    @Override
+    public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        Long count = super.count(customerLevelDTO);
+        return count;
+    }
+
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
-        List<CustomerLevel> list = super.findByCis(customerLevelDTO, true);
+        customerLevelDTO.getSorts().add("name=asc");
+        List<CustomerLevel> list = super.findByCis(customerLevelDTO,true);
 
         return BeanTransform.copyProperties(list, CustomerLevelBO.class );
     }
@@ -54,14 +60,20 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public CustomerLevelBO editCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
-        customerLevel.setModifyTime(LocalDateTime.now());
-        super.update( customerLevel );
+        CustomerLevel cusLevel = super.findById( customerLevelTO.getId() );
+
+        cusLevel.setName( customerLevel.getName() );
+        cusLevel.setRemark( customerLevel.getRemark() );
+        cusLevel.setName( customerLevel.getName() );
+        cusLevel.setModifyTime(LocalDateTime.now());
+        super.update( cusLevel );
         return BeanTransform.copyProperties(customerLevel, CustomerLevelBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCustomerLevel(String id) throws SerException {
+
         super.remove( id );
     }
 
@@ -78,12 +90,12 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public void thawCustomerLevel(String id) throws SerException {
         CustomerLevel customerLevel = super.findById( id );
-        customerLevel.setStatus(Status.CONGEAL);
+        customerLevel.setStatus(Status.THAW);
         customerLevel.setModifyTime(LocalDateTime.now());
         super.update( customerLevel );
     }
 
-    @Cacheable
+    
     @Override
     public CustomerLevelBO getCustomerLevelByName(String name) throws SerException {
         CustomerLevelDTO dto = new CustomerLevelDTO();
@@ -93,7 +105,6 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         return BeanTransform.copyProperties(customerLevel ,CustomerLevelBO.class);
     }
 
-    @Cacheable
     @Override
     public List<String> getAllLevel() throws SerException {
         String[] fields = new String[]{"name"};

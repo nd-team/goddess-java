@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchSheetDTO> implements DispatchSheetSer {
 
-    @Cacheable
+    
     @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         List<DispatchSheet> list = super.findByPage(dispatchSheetDTO);
@@ -70,7 +70,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         super.remove(id);
     }
 
-    @Cacheable
+    
     @Override
     public List<DispatchSheetBO> searchDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         DispatchSheetDTO dto = dispatchSheetDTO;

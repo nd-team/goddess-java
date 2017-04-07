@@ -61,7 +61,7 @@ public class CusFamilyMemberAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addCusFamilyMember(@Validated CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
+    public Result addCusFamilyMember( CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
         try {
             CusFamilyMemberBO cusFamilyMemberBO1 = cusFamilyMemberAPI.addCusFamilyMember(cusFamilyMemberTO);
             return ActResult.initialize(BeanTransform.copyProperties(cusFamilyMemberBO1, CusFamilyMemberVO.class, true));
@@ -80,7 +80,7 @@ public class CusFamilyMemberAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editCusFamilyMember(@Validated CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
+    public Result editCusFamilyMember( CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
         try {
             CusFamilyMemberBO cusFamilyMemberBO1 = cusFamilyMemberAPI.editCusFamilyMember(cusFamilyMemberTO);
             return ActResult.initialize(BeanTransform.copyProperties(cusFamilyMemberBO1, CusFamilyMemberVO.class, true));

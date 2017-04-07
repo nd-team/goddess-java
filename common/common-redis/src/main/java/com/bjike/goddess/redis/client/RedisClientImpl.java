@@ -186,6 +186,18 @@ public class RedisClientImpl implements RedisClient {
     }
 
     @Override
+    public String getMap(String key, String field) throws SerException {
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.hmget(key, field).get(0);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        } finally {
+            jedis.close();
+        }
+    }
+
+    @Override
     public Map<String, String> getAllMap(String key) throws SerException {
         try {
             jedis = jedisPool.getResource();

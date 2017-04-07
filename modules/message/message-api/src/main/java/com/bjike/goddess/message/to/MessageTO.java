@@ -60,20 +60,20 @@ public class MessageTO extends BaseTO {
     private MsgType msgType;
 
     /**
-     * 发送类型:0消息1邮件2消息及邮件
+     * 发送类型  消息:MSG,邮件:EMAIL,消息及邮件：ALL
      */
     @NotNull(message = "发送类型不能为空", groups = ADD.class)
     private SendType sendType;
 
     /**
-     * 消息范围
+     * 消息范围  公共消息:PUB，个人或多人消息:SPECIFIED，组消息:GROUP
      */
     @NotNull(message = "消息范围不能为空", groups = ADD.class)
     private RangeType rangeType;
 
 
     /**
-     * 接收人id
+     * 接收人id（用户id）
      */
     private String[] receivers;
 

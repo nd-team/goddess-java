@@ -91,7 +91,7 @@ public class CusEmailBO extends BaseBO {
     /**
      * 个数
      */
-    private int counts;
+    private Integer counts;
 
     /**
      * 数据库枚举转换
@@ -223,6 +223,14 @@ public class CusEmailBO extends BaseBO {
         this.modifyTime = modifyTime;
     }
 
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
+    }
+
     public int getEnumConvert() {
         return enumConvert;
     }
@@ -231,13 +239,7 @@ public class CusEmailBO extends BaseBO {
         this.enumConvert = enumConvert;
     }
 
-    public int getCounts() {
-        return counts;
-    }
 
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
 
     public List<Map<String, String>> getAreaMap() {
         return areaMap;

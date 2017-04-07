@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class CusFamilyMemberSerImpl extends ServiceImpl<CusFamilyMember, CusFamilyMemberDTO> implements CusFamilyMemberSer {
 
-    @Cacheable
+    
     @Override
     public List<CusFamilyMemberBO> listCusFamilyMember(CusFamilyMemberDTO cusFamilyMemberDTO) throws SerException {
         return null;

@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.OperateDTO;
 import com.bjike.goddess.organize.entity.Operate;
 import com.bjike.goddess.organize.to.OperateTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,11 +31,12 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
     public List<OperateBO> findStatus() throws SerException {
         OperateDTO dto = new OperateDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Operate> list = super.findByCis(dto, false);
+        List<Operate> list = super.findByCis(dto);
         List<OperateBO> bos = BeanTransform.copyProperties(list, OperateBO.class);
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public OperateBO save(OperateTO to) throws SerException {
         Operate operate = BeanTransform.copyProperties(to, Operate.class);
@@ -44,6 +46,7 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         return BeanTransform.copyProperties(operate, OperateBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public OperateBO update(OperateTO to) throws SerException {
         Operate operate = super.findById(to.getId());

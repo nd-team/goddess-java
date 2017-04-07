@@ -7,6 +7,8 @@ import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 客户基本信息
  *
@@ -17,16 +19,18 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class CustomerBaseInfoTO extends BaseTO {
+    public interface TESTCustomerBaseInfo{}
 
     /**
      * 客户信息编号
      */
-    @NotBlank
+    @NotBlank(message = "客户信息编号不能为空")
     private String customerNum;
 
     /**
      * 客户姓名
      */
+    @NotBlank(message = "客户信息编号不能为空,且唯一")
     private String customerName;
 
     /**
@@ -37,6 +41,7 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 性别
      */
+    @NotNull(message = "性别不能为空")
     private CustomerSex customerSex;
 
     /**
@@ -57,7 +62,8 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 客户级别
      */
-    private CustomerLevelTO customerLevelTO;
+    @NotBlank(message = "客户级别不能为空")
+    private String customerLevelName;
 
     /**
      * 客户来源
@@ -227,12 +233,12 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.relation = relation;
     }
 
-    public CustomerLevelTO getCustomerLevelTO() {
-        return customerLevelTO;
+    public String getCustomerLevelName() {
+        return customerLevelName;
     }
 
-    public void setCustomerLevelTO(CustomerLevelTO customerLevelTO) {
-        this.customerLevelTO = customerLevelTO;
+    public void setCustomerLevelName(String customerLevelName) {
+        this.customerLevelName = customerLevelName;
     }
 
     public String getOrigin() {

@@ -40,7 +40,7 @@ public class BiddingAnswerQuestions extends BaseEntity {
     private LocalDate officeHour;
 
     /**
-     *
+     * 解答单位
      */
     @Column(name = "answersUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT ''")
     private String answersUnit;

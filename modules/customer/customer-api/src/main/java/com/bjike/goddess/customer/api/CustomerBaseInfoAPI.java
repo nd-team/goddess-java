@@ -27,6 +27,13 @@ public interface CustomerBaseInfoAPI {
     default CustomerBaseInfoBO generateCustomerNum() throws SerException {
         return null;
     }
+    /**
+     * 客户基本信息列表总条数
+     *
+     */
+    default Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 客户基本信息列表
@@ -91,6 +98,16 @@ public interface CustomerBaseInfoAPI {
     ;
 
     /**
+     * 获取所有编号
+     *
+     * @return class String
+     */
+    default List<String> getCustomerBaseInfoCusNum() throws SerException {
+        return null;
+    }
+
+
+    /**
      * 获取地区
      *
      * @return class String
@@ -126,6 +143,15 @@ public interface CustomerBaseInfoAPI {
      * @return class CustomerBaseInfoBO
      */
     default CustomerBaseInfoBO getCustomerInfoByNum( String customerNum) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取行业数组
+     *
+     * @return class String
+     */
+    default List<String> getCustomerBaseInfoWorks() throws SerException {
         return null;
     }
 

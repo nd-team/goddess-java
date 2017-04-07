@@ -44,7 +44,7 @@ public class BidOpeningInfoAction {
     public Result findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws ActException {
         try {
             List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.findListBidOpeningInfo(bidOpeningInfoDTO), BidOpeningInfoVO.class, true);
+                    bidOpeningInfoAPI.findListBidOpeningInfo(bidOpeningInfoDTO), BidOpeningInfoVO.class);
             return ActResult.initialize(bidOpeningInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

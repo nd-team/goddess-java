@@ -11,6 +11,7 @@ import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,13 +80,17 @@ public class MessageAction {
     /**
      * 读取消息
      *
-     * @param dto 组消息查询对象
+     * @param userId 用户id
+     * @param msgType 消息类型
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated(GET.class) MessageDTO dto) throws ActException {
+    public Result list(@PathVariable String userId,MsgType msgType) throws ActException {
         try {
+            MessageDTO dto = new MessageDTO();
+            dto.setUserId(userId);
+            dto.setMsgType(msgType);
             List<MessageBO> messageBOS = messageAPI.list(dto);
             return ActResult.initialize(messageBOS);
         } catch (SerException e) {
@@ -137,7 +142,6 @@ public class MessageAction {
     @PutMapping("v1/delete/{messageId}")
     public Result delete(@PathVariable String messageId) throws ActException {
         try {
-
             messageAPI.remove(messageId);
             return new ActResult("delete is success");
         } catch (SerException e) {

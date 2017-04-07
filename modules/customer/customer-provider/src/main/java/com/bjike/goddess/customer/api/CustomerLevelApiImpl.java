@@ -27,6 +27,11 @@ public class CustomerLevelApiImpl implements CustomerLevelAPI {
     private CustomerLevelSer customerLevelSer;
 
     @Override
+    public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        return customerLevelSer.countCustomerLevel(customerLevelDTO);
+    }
+
+    @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
         return customerLevelSer.listCustomerLevel(customerLevelDTO);
     }

@@ -45,7 +45,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Autowired
     private CredentialSer credentialAPI;
 
-    @Cacheable
+    
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         //TODO: tanghaixiang 2017-03-10 未做根据 entryRegisterdtO 分页查询所有
@@ -53,7 +53,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         return entryRegisters;
     }
 
-    @Cacheable
+    
     @Override
     public EntryRegisterBO getEntryRegister(String id) throws SerException {
 

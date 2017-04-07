@@ -22,6 +22,14 @@ public interface CusEmailSer extends Ser<CusEmail, CusEmailDTO> {
 
 
     /**
+     * 客户汇总邮件列表总条数
+     *
+     */
+    default Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 客户邮件汇总列表
      *
      * @return class CusEmailBO
@@ -90,7 +98,7 @@ public interface CusEmailSer extends Ser<CusEmail, CusEmailDTO> {
      * @param works works
      * @return class CusEmailBO
      */
-    default CusEmailBO collectCusEmail(String[] works) throws SerException {
+    default List<CusEmailBO> collectCusEmail(String[] works) throws SerException {
         return null;
     }
 
