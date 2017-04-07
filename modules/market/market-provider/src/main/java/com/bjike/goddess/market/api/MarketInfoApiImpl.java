@@ -1,6 +1,7 @@
 package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.service.MarketInfoSer;
@@ -8,6 +9,9 @@ import com.bjike.goddess.market.to.MarketInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -31,6 +35,7 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
 
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
+        marketInfoTO.setEndTime(DateUtil.dateToString(LocalDate.now()));
         return marketInfoSer.insertMarketInfo(marketInfoTO);
     }
 
