@@ -9,7 +9,6 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.constant.UserCommon;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.to.UserRegisterTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -56,7 +55,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             //generateCode()
             String code = "123456";
             phone = "13457910241";
-            redis.appendToMap(UserCommon.REG_AUTH_CODE, phone, code,Integer.parseInt(env.getProperty("phonecode.timeout")));
+            redis.appendToMap(UserCommon.REG_AUTH_CODE, phone, code, Integer.parseInt(env.getProperty("phonecode.timeout")));
 
         } else {
             throw new SerException("该手机号码已注册！");
@@ -76,33 +75,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
         } else {
             throw new SerException("输入密码不一致！");
         }
-        String phoneCode = null;
-        if(true){  //暂时不验证
-            saveUserByDTO(registerTO);
-
-        }else {
-
-            if (StringUtils.isNotBlank(registerTO.getPhoneCode())) {
-                //通过手机号码获得系统生成的验证码对象
-                phoneCode = redis.getMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
-                if (StringUtils.isNotBlank(phoneCode)) {
-                    if (phoneCode.equalsIgnoreCase(registerTO.getPhoneCode())) { //验证成功
-                        saveUserByDTO(registerTO);
-                        redis.removeMap(UserCommon.REG_AUTH_CODE, registerTO.getPhone());
-                    } else {
-                        throw new SerException("手机验证码不正确！");
-                    }
-
-                } else {
-                    throw new SerException("手机验证码已过期！");
-                }
-            } else {
-                throw new SerException("手机验证码为空！");
-            }
-        }
-
-
-
+        saveUserByDTO(registerTO);
     }
 
     /**
@@ -116,7 +89,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             User user = new User();
             user.setUsername(registerTO.getUsername());
             user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
-            user.setPhone(registerTO.getPhone());
             user.setCreateTime(LocalDateTime.now());
             user.setStatus(Status.THAW);
             user.setEmployeeNumber("IKE" + new Random().nextInt(999999));

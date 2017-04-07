@@ -27,15 +27,7 @@ public class UserRegisterTO extends BaseTO {
      */
     @NotBlank(message = "重复密码不能为空")
     private String rePassword;
-    /**
-     * 注册手机
-     */
-    @NotBlank(message = "手机不能为空")
-    private String phone;
-    /**
-     * 手机验证码
-     */
-    private String phoneCode;
+
     /**
      * 验证码
      */
@@ -63,22 +55,6 @@ public class UserRegisterTO extends BaseTO {
 
     public void setRePassword(String rePassword) {
         this.rePassword = rePassword;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhoneCode() {
-        return phoneCode;
-    }
-
-    public void setPhoneCode(String phoneCode) {
-        this.phoneCode = phoneCode;
     }
 
     public String getAuthCode() {

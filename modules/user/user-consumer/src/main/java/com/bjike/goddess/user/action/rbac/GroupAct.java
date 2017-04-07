@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/group")
+@RequestMapping("group")
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;

@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/role")
+@RequestMapping("role")
 public class RoleAct {
     @Autowired
     private RoleAPI roleAPI;
