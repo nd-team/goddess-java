@@ -31,7 +31,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/customerbaseinfo")
+@RequestMapping("customerbaseinfo")
 public class CustomerBaseInfoAction {
 
 

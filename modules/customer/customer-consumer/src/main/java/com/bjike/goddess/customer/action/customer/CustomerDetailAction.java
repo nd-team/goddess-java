@@ -34,7 +34,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/customerdetail")
+@RequestMapping("customerdetail")
 public class CustomerDetailAction {
 
     @Autowired
