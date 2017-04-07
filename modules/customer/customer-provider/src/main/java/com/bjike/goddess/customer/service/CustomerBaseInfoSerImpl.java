@@ -384,8 +384,10 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         CustomerBaseInfo customerBaseInfo = super.findOne(dto);
 
         CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
-        customerBaseInfoBO.setCustomerLevelBO( BeanTransform.copyProperties(
-                customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class));
+        if(customerBaseInfoBO != null ){
+            customerBaseInfoBO.setCustomerLevelBO( BeanTransform.copyProperties(
+                    customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class));
+        }
         return customerBaseInfoBO;
     }
 

@@ -33,7 +33,6 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
 @RequestMapping("customer/customerdetail")
 public class CustomerDetailAction {
@@ -123,6 +122,7 @@ public class CustomerDetailAction {
      * @return class CustomerDetailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
@@ -142,6 +142,7 @@ public class CustomerDetailAction {
      * @return class CustomerDetailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
@@ -159,6 +160,7 @@ public class CustomerDetailAction {
      * @des 根据id删除客户详细信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
