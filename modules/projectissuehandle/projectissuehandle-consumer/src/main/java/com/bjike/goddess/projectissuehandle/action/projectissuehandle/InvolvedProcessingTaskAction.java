@@ -99,7 +99,7 @@ public class InvolvedProcessingTaskAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeInvolvedProcessingTask(String id) throws ActException {
+    public Result removeInvolvedProcessingTask(@PathVariable String id) throws ActException {
         try {
             involvedProcessingTaskAPI.removeInvolvedProcessingTask(id);
             return new ActResult("delete success");
@@ -157,9 +157,5 @@ public class InvolvedProcessingTaskAction {
         }
 
     }
-
-
-    //TODO: xiazhili 2017-03-25 未做导出
-    //TODO: xiazhili 2017-03-25 未做上传
 
 }

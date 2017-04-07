@@ -8,6 +8,7 @@ import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
     @Override
     public InvolvedProcessingTaskBO insertInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {
         InvolvedProcessingTask involvedProcessingTask = BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTask.class, true);
-        involvedProcessingTaskTO.setId(involvedProcessingTask.getId());
+        involvedProcessingTask.setCreateTime(LocalDateTime.now());
         super.save(involvedProcessingTask);
         return BeanTransform.copyProperties(involvedProcessingTask, InvolvedProcessingTaskBO.class);
     }
@@ -47,10 +48,15 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InvolvedProcessingTaskBO editInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {
-        InvolvedProcessingTask involvedProcessingTask = BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTask.class, true);
-        involvedProcessingTask.setModifyTime(LocalDateTime.now());
-        super.update(involvedProcessingTask);
-        return BeanTransform.copyProperties(involvedProcessingTask, InvolvedProcessingTaskBO.class);
+        if (!StringUtils.isEmpty(involvedProcessingTaskTO.getId())) {
+            InvolvedProcessingTask involvedProcessingTask = super.findById(involvedProcessingTaskTO.getId());
+            BeanTransform.copyProperties(involvedProcessingTaskTO, involvedProcessingTask, true);
+            involvedProcessingTask.setModifyTime(LocalDateTime.now());
+            super.update(involvedProcessingTask);
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTaskBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
