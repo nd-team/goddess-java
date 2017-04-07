@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/cusfamilymember")
+@RequestMapping("cusfamilymember")
 public class CusFamilyMemberAction {
 
     @Autowired
