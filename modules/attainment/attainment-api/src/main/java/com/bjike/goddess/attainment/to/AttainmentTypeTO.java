@@ -1,7 +1,11 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研类型
@@ -17,6 +21,7 @@ public class AttainmentTypeTO extends BaseTO {
     /**
      * 类型
      */
+    @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
@@ -27,6 +32,7 @@ public class AttainmentTypeTO extends BaseTO {
     /**
      * 是否定期
      */
+    @NotNull(message = "是否定期不能为空", groups = {ADD.class, EDIT.class})
     private Boolean regular;
 
     /**
@@ -56,6 +62,14 @@ public class AttainmentTypeTO extends BaseTO {
     }
 
     public void isRegular(Boolean regular) {
+        this.regular = regular;
+    }
+
+    public Boolean getRegular() {
+        return regular;
+    }
+
+    public void setRegular(Boolean regular) {
         this.regular = regular;
     }
 

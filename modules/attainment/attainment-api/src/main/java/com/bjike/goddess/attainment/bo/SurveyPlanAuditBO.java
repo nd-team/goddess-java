@@ -49,6 +49,14 @@ public class SurveyPlanAuditBO extends BaseBO {
     private String auditTime;
 
 
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
     public String getPlan_id() {
         return plan_id;
     }

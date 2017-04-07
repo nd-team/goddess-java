@@ -112,6 +112,14 @@ public class SurveyPlanAuditVO {
         return auditTime;
     }
 
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
     public void setAuditTime(String auditTime) {
         this.auditTime = auditTime;
     }

@@ -46,6 +46,14 @@ public class AttainmentWayVO {
         this.id = id;
     }
 
+    public Boolean getEmploy() {
+        return employ;
+    }
+
+    public void setEmploy(Boolean employ) {
+        this.employ = employ;
+    }
+
     public String getType() {
         return type;
     }

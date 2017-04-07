@@ -1,7 +1,11 @@
 package com.bjike.goddess.attainment.to;
 
 import com.bjike.goddess.attainment.enums.SurveyStatus;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研实施记录
@@ -17,6 +21,7 @@ public class SurveyActualizeTO extends BaseTO {
     /**
      * 调研计划id
      */
+    @NotNull(message = "调研计划id不能为空", groups = {ADD.class, EDIT.class})
     private String plan_id;
 
     /**

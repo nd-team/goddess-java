@@ -20,31 +20,78 @@ import java.util.List;
  */
 public interface AttainmentTypeSer extends Ser<AttainmentType, AttainmentTypeDTO> {
 
-
+    /**
+     * 保存
+     *
+     * @param to 调研类型传输对象
+     * @return
+     * @throws SerException
+     */
     default AttainmentTypeBO save(AttainmentTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 调研类型传输对象
+     * @return
+     * @throws SerException
+     */
     default AttainmentTypeBO update(AttainmentTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 调研类型数据id
+     * @return
+     * @throws SerException
+     */
     default AttainmentTypeBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 冻结
+     *
+     * @param id 调研类型数据id
+     * @return
+     * @throws SerException
+     */
     default AttainmentTypeBO congeal(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 解冻
+     *
+     * @param id 调研类型数据id
+     * @return
+     * @throws SerException
+     */
     default AttainmentTypeBO thaw(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 查询未冻结数据
+     *
+     * @return
+     * @throws SerException
+     */
     default List<AttainmentTypeBO> findThaw() throws SerException {
         return null;
     }
 
+    /**
+     * 查询定期或不定期数据
+     *
+     * @param regular 定期或不定期
+     * @return
+     * @throws SerException
+     */
     default List<AttainmentTypeBO> findRegular(Boolean regular) throws SerException {
         return null;
     }

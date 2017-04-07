@@ -34,6 +34,13 @@ public class AttainmentWayBO extends BaseBO {
      */
     private Status status;
 
+    public Boolean getEmploy() {
+        return employ;
+    }
+
+    public void setEmploy(Boolean employ) {
+        this.employ = employ;
+    }
 
     public String getType() {
         return type;

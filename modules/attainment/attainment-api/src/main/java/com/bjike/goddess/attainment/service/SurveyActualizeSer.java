@@ -18,18 +18,46 @@ import com.bjike.goddess.common.api.service.Ser;
  */
 public interface SurveyActualizeSer extends Ser<SurveyActualize, SurveyActualizeDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 调研实施记录传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 调研实施记录传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyActualizeBO update(SurveyActualizeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 调研实施记录数据id
+     * @return
+     * @throws SerException
+     */
     default SurveyActualizeBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 结束调研
+     *
+     * @param id 调研实施记录数据id
+     * @return
+     * @throws SerException
+     */
     default SurveyActualizeBO over(String id) throws SerException {
         return null;
     }

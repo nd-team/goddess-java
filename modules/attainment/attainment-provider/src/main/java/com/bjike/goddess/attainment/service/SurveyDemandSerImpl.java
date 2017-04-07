@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.SurveyDemandBO;
 import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.entity.SurveyDemand;
+import com.bjike.goddess.attainment.enums.ScopeType;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
@@ -10,8 +11,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.api.DepartmentAPI;
-import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +40,6 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     private AttainmentTypeSer attainmentTypeSer;
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private PositionAPI positionAPI;
-    @Autowired
-    private DepartmentAPI departmentAPI;
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
@@ -71,9 +66,13 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
         entity.setUsername(userAPI.currentUser().getUsername());
         entity.setLaunch(LocalDateTime.now());
         String scope = "";
-        for (String name : to.getScopeNames())
-            scope += name + ",";
+        if (entity.getScope().equals(ScopeType.COMPANY))
+            scope = "公司";
+        else
+            for (String name : to.getScopeNames())
+                scope += name + ",";
         entity.setScopeName(scope);
+
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -89,8 +88,11 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
                 entity.setType(attainmentTypeSer.findById(to.getType_id()));
                 entity.setModifyTime(LocalDateTime.now());
                 String scope = "";
-                for (String name : to.getScopeNames())
-                    scope += name + ",";
+                if (entity.getScope().equals(ScopeType.COMPANY))
+                    scope = "公司";
+                else
+                    for (String name : to.getScopeNames())
+                        scope += name + ",";
                 entity.setScopeName(scope);
                 super.update(entity);
                 return this.transformBO(entity);

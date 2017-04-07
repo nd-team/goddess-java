@@ -1,7 +1,11 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研方式
@@ -17,6 +21,7 @@ public class AttainmentWayTO extends BaseTO {
     /**
      * 类型
      */
+    @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
@@ -27,6 +32,7 @@ public class AttainmentWayTO extends BaseTO {
     /**
      * 是否使用问卷调查
      */
+    @NotNull(message = "是否使用问卷调查不能为空", groups = {ADD.class, EDIT.class})
     private Boolean employ;
 
     /**
@@ -65,5 +71,13 @@ public class AttainmentWayTO extends BaseTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Boolean getEmploy() {
+        return employ;
+    }
+
+    public void setEmploy(Boolean employ) {
+        this.employ = employ;
     }
 }

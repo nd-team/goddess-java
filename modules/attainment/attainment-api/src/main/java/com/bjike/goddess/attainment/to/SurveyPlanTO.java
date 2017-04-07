@@ -1,7 +1,11 @@
 package com.bjike.goddess.attainment.to;
 
 import com.bjike.goddess.attainment.enums.AuditType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研计划
@@ -17,26 +21,31 @@ public class SurveyPlanTO extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 需求id
      */
+    @NotNull(message = "需求id不能为空", groups = {ADD.class, EDIT.class})
     private String demand_id;
 
     /**
      * 调研计划开始时间
      */
+    @NotNull(message = "调研计划开始时间不能为空", groups = {ADD.class, EDIT.class})
     private String startTime;
 
     /**
      * 调研计划结束时间
      */
+    @NotNull(message = "调研计划结束时间不能为空", groups = {ADD.class, EDIT.class})
     private String endTime;
 
     /**
      * 调研表制作完成时间
      */
+    @NotNull(message = "调研表制作完成时间不能为空", groups = {ADD.class, EDIT.class})
     private String finishTime;
 
     /**
