@@ -1,4 +1,4 @@
-package com.bjike.goddess.customer;
+package com.bjike.goddess.financeinit;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Copy: [org.ndshop]
  */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.bjike.goddess.projectprocing.dao"})//jpa 所在包
+@EnableJpaRepositories(basePackages = {"com.bjike.goddess.financeinit.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
 @PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
-@ComponentScan(basePackages = {"com.bjike.goddess.projectprocing"},
+@ComponentScan(basePackages = {"com.bjike.goddess.financeinit"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})

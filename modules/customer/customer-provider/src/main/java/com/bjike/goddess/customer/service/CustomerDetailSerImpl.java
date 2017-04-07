@@ -14,13 +14,11 @@ import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

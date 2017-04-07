@@ -1,9 +1,6 @@
 package com.bjike.goddess.customer.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.customer.entity.CusFamilyMember;
-import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;

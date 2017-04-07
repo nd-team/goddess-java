@@ -1,8 +1,6 @@
 package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.customer.entity.CusFamilyMember;
-import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 
 import java.util.List;
 

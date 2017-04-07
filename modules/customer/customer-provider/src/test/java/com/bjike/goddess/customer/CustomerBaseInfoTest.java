@@ -1,29 +1,24 @@
 package com.bjike.goddess.customer;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
 import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
-import com.bjike.goddess.customer.to.CustomerLevelTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

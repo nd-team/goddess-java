@@ -3,12 +3,12 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerLevelAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
-import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,6 +27,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+@LoginAuth
 @RestController
 @RequestMapping("customer/customerlevel")
 public class CustomerLevelAction {

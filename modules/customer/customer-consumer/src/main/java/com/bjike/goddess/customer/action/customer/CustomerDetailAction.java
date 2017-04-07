@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
@@ -10,19 +11,16 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CustomerLevel;
-import com.bjike.goddess.customer.service.CustomerDetailSer;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +33,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+@LoginAuth
 @RestController
 @RequestMapping("customer/customerdetail")
 public class CustomerDetailAction {
