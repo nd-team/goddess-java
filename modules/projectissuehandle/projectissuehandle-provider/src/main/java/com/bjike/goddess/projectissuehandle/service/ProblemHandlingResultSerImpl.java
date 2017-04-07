@@ -6,12 +6,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
-import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
-import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -42,8 +40,8 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class);
-        problemHandlingResultTO.setId(problemHandlingResult.getId());
+        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class,true);
+        problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
         return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
     }
@@ -51,10 +49,15 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class);
-        problemHandlingResult.setModifyTime(LocalDateTime.now());
-        super.update(problemHandlingResult);
-        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
+        if (!StringUtils.isEmpty(problemHandlingResultTO.getId())) {
+            ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
+            BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true);
+            problemHandlingResult.setModifyTime(LocalDateTime.now());
+            super.update(problemHandlingResult);
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResultBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
