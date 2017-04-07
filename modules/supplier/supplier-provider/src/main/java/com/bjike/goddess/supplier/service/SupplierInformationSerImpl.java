@@ -98,7 +98,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO update(SupplierInformationTO to) throws SerException {
-        SupplierInformation entity = super.findById(to.getId());
+        SupplierInformation entity = super.findById(to.getId()),information = super.findById(to.getId());
         String id = entity.getId();
         LocalDateTime createTime = entity.getCreateTime();
         entity.setName(to.getName());
@@ -113,6 +113,10 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         entity.setFax(to.getFax());
         entity.setExecution(this.countExecution(entity));
         entity.setCreateTime(createTime);
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != information)
+            entity.setCreateTime(information.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         entity.setId(id);
         super.update(entity);
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
@@ -125,7 +129,10 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         entity.setSerialNumber(information.getSerialNumber());
         entity.setExecution(this.countExecution(entity));
         entity.setId(information.getId());
-        entity.setCreateTime(information.getCreateTime());
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != information)
+            entity.setCreateTime(information.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
     }

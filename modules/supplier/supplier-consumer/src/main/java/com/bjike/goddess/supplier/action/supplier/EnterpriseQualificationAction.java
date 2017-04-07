@@ -6,7 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.api.EnterpriseQualificationAPI;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
 import com.bjike.goddess.supplier.vo.EnterpriseQualificationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +32,8 @@ public class EnterpriseQualificationAction {
      * 根据供应商基本信息ID查询企业资质
      *
      * @param info_id 供应商基本信息ID
-     * @version v1
      * @return class EnterpriseQualificationVO
+     * @version v1
      */
     @GetMapping("v1/findByInformation/{info_id}")
     public Result findByInformation(@PathVariable String info_id) throws ActException {
@@ -51,11 +51,11 @@ public class EnterpriseQualificationAction {
      * 保存供应商企业资质数据
      *
      * @param to 供应商企业资质传输对象
-     * @version v1
      * @return class EnterpriseQualificationVO
+     * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated ContactSituationTO to) throws ActException {
+    public Result save(@Validated EnterpriseQualificationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.save(to), EnterpriseQualificationVO.class));
         } catch (SerException e) {
@@ -67,11 +67,11 @@ public class EnterpriseQualificationAction {
      * 修改供应商企业资质数据
      *
      * @param to 供应商企业资质传输对象
-     * @version v1
      * @return class EnterpriseQualificationVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated ContactSituationTO to) throws ActException {
+    public Result update(@Validated EnterpriseQualificationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.update(to), EnterpriseQualificationVO.class));
         } catch (SerException e) {
@@ -83,8 +83,8 @@ public class EnterpriseQualificationAction {
      * 删除供应商企业资质数据
      *
      * @param id 供应商企业资质id
-     * @version v1
      * @return class EnterpriseQualificationVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {

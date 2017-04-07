@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.dto.EnterpriseQualificationDTO;
 import com.bjike.goddess.supplier.entity.EnterpriseQualification;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
      * @return
      * @throws SerException
      */
-    default EnterpriseQualificationBO save(ContactSituationTO to) throws SerException {
+    default EnterpriseQualificationBO save(EnterpriseQualificationTO to) throws SerException {
         return null;
     }
 
@@ -49,7 +49,7 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
      * @return
      * @throws SerException
      */
-    default EnterpriseQualificationBO update(ContactSituationTO to) throws SerException {
+    default EnterpriseQualificationBO update(EnterpriseQualificationTO to) throws SerException {
         return null;
     }
 

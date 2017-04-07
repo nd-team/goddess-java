@@ -1,8 +1,8 @@
 package com.bjike.goddess.contacts.vo;
 
-import com.bjike.goddess.contacts.enums.CustomerSex;
-import com.bjike.goddess.contacts.enums.CustomerStatus;
-import com.bjike.goddess.contacts.enums.CustomerType;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
