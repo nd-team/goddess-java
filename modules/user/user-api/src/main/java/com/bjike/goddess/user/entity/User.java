@@ -29,7 +29,7 @@ public class User extends BaseEntity {
     /**
      * 登录手机(注册验证手机)
      */
-    @Column(unique = true, length = 11, nullable = false, columnDefinition = "VARCHAR(11) COMMENT '手机号码' ")
+    @Column(unique = true, length = 11,  columnDefinition = "VARCHAR(11) COMMENT '手机号码' ")
     private String phone;
     /**
      * 登录邮箱
