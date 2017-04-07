@@ -6,17 +6,20 @@ import com.bjike.goddess.attainment.entity.SurveyDemand;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,28 +48,18 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
-        StringBuilder sb;
-        switch (bo.getScope()) {
-            case DEPARTMENT:
-                sb = new StringBuilder(0);
-                for (String id : bo.getScope_ids().split(","))
-                    sb.append(departmentAPI.).append(",");
-                break;
-            case POSITION:
-                sb = new StringBuilder(0);
-                for (String id : bo.getScope_ids().split(","))
-                    sb.append(positionAPI.findById(id).getName()).append(",");
-                break;
-            case PERSONAL:
-                sb = new StringBuilder(0);
-                for (String id : bo.getScope_ids().split(","))
-                    sb.append(id).append(",");
-                break;
-            default:
-                sb = new StringBuilder("全部");
-                break;
-        }
-        bo.setScopeName(sb.toString());
+        bo.setDemand_id(entity.getDemand().getId());
+        bo.setDemandName(entity.getDemand().getType());
+        bo.setType_id(entity.getType().getId());
+        bo.setTypeName(entity.getType().getType());
+        return bo;
+    }
+
+    private List<SurveyDemandBO> transformBOList(List<SurveyDemand> list) throws SerException {
+        List<SurveyDemandBO> bos = new ArrayList<>(list.size());
+        for (SurveyDemand entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
     }
 
 
@@ -78,46 +71,56 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
         entity.setUsername(userAPI.currentUser().getUsername());
         entity.setLaunch(LocalDateTime.now());
         String scope = "";
-        for (String id : to.getScopeIds())
-            scope += id + ",";
-        entity.setScope_ids(scope);
+        for (String name : to.getScopeNames())
+            scope += name + ",";
+        entity.setScopeName(scope);
         super.save(entity);
-        return BeanTransform.copyProperties(entity, SurveyDemandBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
     public SurveyDemandBO update(SurveyDemandTO to) throws SerException {
-        SurveyDemand entity = BeanTransform.copyProperties(to, SurveyDemand.class, true), demand = super.findById(to.getId());
-        if (null == demand)
-            throw new SerException("程序错误,请刷新重试");
-        entity.setUsername(demand.getUsername());
-        entity.setLaunch(demand.getLaunch());
-        entity.setCreateTime(demand.getCreateTime());
-        entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
-        entity.setType(attainmentTypeSer.findById(to.getType_id()));
-        entity.setModifyTime(LocalDateTime.now());
-        String scope = "";
-        for (String id : to.getScopeIds())
-            scope += id + ",";
-        entity.setScope_ids(scope);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, SurveyDemandBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                SurveyDemand entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
+                entity.setType(attainmentTypeSer.findById(to.getType_id()));
+                entity.setModifyTime(LocalDateTime.now());
+                String scope = "";
+                for (String name : to.getScopeNames())
+                    scope += name + ",";
+                entity.setScopeName(scope);
+                super.update(entity);
+                return this.transformBO(entity);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Override
     public SurveyDemandBO delete(String id) throws SerException {
         SurveyDemand entity = super.findById(id);
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, SurveyDemandBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
     public SurveyDemandBO close(CloseDemandTO to) throws SerException {
-        return null;
+        SurveyDemand entity = super.findById(to.getId());
+        entity.setCloseReason(to.getCloseReason());
+        entity.setHandle(userAPI.currentUser().getUsername());
+        return this.transformBO(entity);
     }
 
     @Override
-    public List<SurveyDemand> findByStatus(SurveyStatus status) throws SerException {
-        return null;
+    public List<SurveyDemandBO> findByStatus(SurveyStatus status) throws SerException {
+        SurveyDemandDTO dto = new SurveyDemandDTO();
+        dto.getConditions().add(Restrict.eq("surveyStatus", status));
+        List<SurveyDemand> list = super.findByCis(dto);
+        return this.transformBOList(list);
     }
 }

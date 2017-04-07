@@ -56,11 +56,6 @@ public class SurveyDemandBO extends BaseBO {
     private ScopeType scope;
 
     /**
-     * 调研范围准确对象
-     */
-    private String scope_ids;
-
-    /**
      * 调研对象
      */
     private String scopeName;
@@ -162,14 +157,6 @@ public class SurveyDemandBO extends BaseBO {
 
     public void setScope(ScopeType scope) {
         this.scope = scope;
-    }
-
-    public String getScope_ids() {
-        return scope_ids;
-    }
-
-    public void setScope_ids(String scope_ids) {
-        this.scope_ids = scope_ids;
     }
 
     public String getUsername() {

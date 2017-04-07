@@ -41,4 +41,8 @@ public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
         return null;
     }
 
+    default SurveyPlanBO findBOById(String id) throws SerException {
+        return null;
+    }
+
 }

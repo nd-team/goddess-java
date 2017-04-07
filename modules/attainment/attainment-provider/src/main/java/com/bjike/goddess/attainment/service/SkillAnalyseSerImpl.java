@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.dto.SkillAnalyseDTO;
 import com.bjike.goddess.attainment.entity.SkillAnalyse;
@@ -9,6 +10,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,20 +43,24 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
 
     @Override
     public SkillAnalyseBO update(SkillAnalyseTO to) throws SerException {
-        SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyseTO.class, true), analyse = super.findById(to.getId());
-        if (null == analyse)
-            throw new SerException("程序错误,请刷新重试");
-        entity.setCreateTime(analyse.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
-        entity.setWriter(analyse.getWriter());
-        entity.setWriterTime(analyse.getWriterTime());
-        UserBO user = userAPI.currentUser();
-        if (!user.getUsername().equals(entity.getWriter())) {
-            entity.setWriter(user.getUsername());
-            entity.setWriterTime(LocalDateTime.now());
-        }
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                SkillAnalyse entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                UserBO user = userAPI.currentUser();
+                if (!user.getUsername().equals(entity.getWriter())) {
+                    entity.setWriter(user.getUsername());
+                    entity.setWriterTime(LocalDateTime.now());
+                }
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Override

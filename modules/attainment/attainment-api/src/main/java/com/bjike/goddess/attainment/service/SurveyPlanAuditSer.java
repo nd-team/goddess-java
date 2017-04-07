@@ -20,11 +20,11 @@ import java.util.List;
  */
 public interface SurveyPlanAuditSer extends Ser<SurveyPlanAudit, SurveyPlanAuditDTO> {
 
-    default SurveyPlanAuditBO save(SurveyPlanAuditTO to) throws SerException {
+    default SurveyPlanAuditBO update(SurveyPlanAuditTO to) throws SerException {
         return null;
     }
 
-    default SurveyPlanAuditBO update(SurveyPlanAuditTO to) throws SerException {
+    default SurveyPlanAuditBO findByUserPlan(String plan_id, String auditor) throws SerException {
         return null;
     }
 

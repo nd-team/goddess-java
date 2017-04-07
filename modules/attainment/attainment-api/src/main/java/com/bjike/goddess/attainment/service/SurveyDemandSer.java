@@ -38,10 +38,9 @@ public interface SurveyDemandSer extends Ser<SurveyDemand, SurveyDemandDTO> {
         return null;
     }
 
-    default List<SurveyDemand> findByStatus(SurveyStatus status) throws SerException {
+    default List<SurveyDemandBO> findByStatus(SurveyStatus status) throws SerException {
         return null;
     }
-
 
 
 }

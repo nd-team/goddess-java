@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +39,19 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
 
     @Override
     public AttainmentTypeBO update(AttainmentTypeTO to) throws SerException {
-        AttainmentType entity = BeanTransform.copyProperties(to, AttainmentType.class), type = super.findById(to.getId());
-        if (null == type)
-            throw new SerException("程序错误,请刷新重试");
-        entity.setStatus(type.getStatus());
-        entity.setCreateTime(type.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
-        return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                AttainmentType entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Override

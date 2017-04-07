@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.bo.SurveyActualizeBO;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.entity.SurveyActualize;
@@ -8,6 +9,7 @@ import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,13 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     @Autowired
     private SurveyPlanSer surveyPlanSer;
 
+    private SurveyActualizeBO transformBO(SurveyActualize entity) throws SerException {
+        SurveyActualizeBO bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+//        bo.setPlan_id();
+
+        return bo;
+    }
+
     @Override
     public SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {
         SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class, true);
@@ -42,16 +51,18 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
 
     @Override
     public SurveyActualizeBO update(SurveyActualizeTO to) throws SerException {
-        SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class), actualize = super.findById(to.getId());
-        if (null == actualize)
-            throw new SerException("程序错误,请刷新重试");
-        entity.setSurvey(actualize.getSurvey());
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
-        entity.setStartTime(actualize.getStartTime());
-        entity.setCreateTime(actualize.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                SurveyActualize entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Override

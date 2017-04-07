@@ -43,7 +43,7 @@ public class SurveyDemandTO extends BaseTO {
     /**
      * 调研范围准确对象
      */
-    private String[] scopeIds;
+    private String[] scopeNames;
 
     /**
      * 发起人
@@ -71,12 +71,12 @@ public class SurveyDemandTO extends BaseTO {
     private SurveyStatus surveyStatus;
 
 
-    public String[] getScopeIds() {
-        return scopeIds;
+    public String[] getScopeNames() {
+        return scopeNames;
     }
 
-    public void setScopeIds(String[] scopeIds) {
-        this.scopeIds = scopeIds;
+    public void setScopeNames(String[] scopeNames) {
+        this.scopeNames = scopeNames;
     }
 
     public String getType_id() {

@@ -1,5 +1,6 @@
 package com.bjike.goddess.attainment.service;
 
+import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -43,14 +45,18 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
 
     @Override
     public SurveyAnalyseBO update(SurveyAnalyseTO to) throws SerException {
-        SurveyAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class), analyse = super.findById(to.getId());
-        if (null == analyse)
-            throw new SerException("程序错误,请刷新重试");
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
-        entity.setCreateTime(analyse.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                SurveyAnalyse entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Override
