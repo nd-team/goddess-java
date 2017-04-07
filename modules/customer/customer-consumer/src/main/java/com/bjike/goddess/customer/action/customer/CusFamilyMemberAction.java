@@ -25,7 +25,6 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
 @RequestMapping("customer/cusfamilymember")
 public class CusFamilyMemberAction {
@@ -60,6 +59,7 @@ public class CusFamilyMemberAction {
      * @return class CusFamilyMemberVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCusFamilyMember( CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
         try {
@@ -79,6 +79,7 @@ public class CusFamilyMemberAction {
      * @return class CusFamilyMemberVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result editCusFamilyMember( CusFamilyMemberTO cusFamilyMemberTO) throws ActException {
         try {
@@ -96,6 +97,7 @@ public class CusFamilyMemberAction {
      * @return class CusFamilyMemberVO
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
@@ -114,6 +116,7 @@ public class CusFamilyMemberAction {
      * @des 根据id冻结客户基本信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -132,6 +135,7 @@ public class CusFamilyMemberAction {
      * @des 根据id解冻客户基本信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {
