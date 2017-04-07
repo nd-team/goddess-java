@@ -7,7 +7,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.dto.CooperationSituationDTO;
 import com.bjike.goddess.supplier.entity.CooperationSituation;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.CooperationSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CooperationSituationBO save(ContactSituationTO to) throws SerException {
+    public CooperationSituationBO save(CooperationSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
         super.save(entity);
@@ -66,7 +66,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CooperationSituationBO update(ContactSituationTO to) throws SerException {
+    public CooperationSituationBO update(CooperationSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
         super.update(entity);

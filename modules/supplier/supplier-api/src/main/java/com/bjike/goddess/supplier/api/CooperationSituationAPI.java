@@ -2,7 +2,7 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.CooperationSituationTO;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public interface CooperationSituationAPI {
      * @return
      * @throws SerException
      */
-    default CooperationSituationBO save(ContactSituationTO to) throws SerException {
+    default CooperationSituationBO save(CooperationSituationTO to) throws SerException {
         return null;
     }
 
@@ -46,7 +46,7 @@ public interface CooperationSituationAPI {
      * @return
      * @throws SerException
      */
-    default CooperationSituationBO update(ContactSituationTO to) throws SerException {
+    default CooperationSituationBO update(CooperationSituationTO to) throws SerException {
         return null;
     }
 
