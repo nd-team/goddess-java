@@ -7,12 +7,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.dto.RewardSituationDTO;
 import com.bjike.goddess.supplier.entity.RewardSituation;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.RewardSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +58,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public RewardSituationBO save(ContactSituationTO to) throws SerException {
-        RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class);
+    public RewardSituationBO save(RewardSituationTO to) throws SerException {
+        RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class, true);
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
         super.save(entity);
         return this.transformBO(entity);
@@ -66,9 +67,13 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public RewardSituationBO update(ContactSituationTO to) throws SerException {
-        RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class);
+    public RewardSituationBO update(RewardSituationTO to) throws SerException {
+        RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class, true), situation = super.findById(to.getId());
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != situation)
+            entity.setCreateTime(situation.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
     }

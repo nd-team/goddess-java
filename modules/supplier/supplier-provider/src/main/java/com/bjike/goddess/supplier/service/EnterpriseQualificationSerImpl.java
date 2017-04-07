@@ -7,12 +7,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.dto.EnterpriseQualificationDTO;
 import com.bjike.goddess.supplier.entity.EnterpriseQualification;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public EnterpriseQualificationBO save(ContactSituationTO to) throws SerException {
+    public EnterpriseQualificationBO save(EnterpriseQualificationTO to) throws SerException {
         EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
         super.save(entity);
@@ -66,9 +67,13 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public EnterpriseQualificationBO update(ContactSituationTO to) throws SerException {
-        EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
+    public EnterpriseQualificationBO update(EnterpriseQualificationTO to) throws SerException {
+        EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class), qualification = super.findById(to.getId());
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != qualification)
+            entity.setCreateTime(qualification.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
     }

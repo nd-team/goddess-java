@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +69,12 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO update(ContactSituationTO to) throws SerException {
-        ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
+        ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class),situation = super.findById(to.getId());
         entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != situation)
+            entity.setCreateTime(situation.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
     }

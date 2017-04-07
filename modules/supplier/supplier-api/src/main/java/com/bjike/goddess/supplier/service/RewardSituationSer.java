@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.dto.RewardSituationDTO;
 import com.bjike.goddess.supplier.entity.RewardSituation;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.RewardSituationTO;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public interface RewardSituationSer extends Ser<RewardSituation, RewardSituation
      * @return
      * @throws SerException
      */
-    default RewardSituationBO save(ContactSituationTO to) throws SerException {
+    default RewardSituationBO save(RewardSituationTO to) throws SerException {
         return null;
     }
 
@@ -50,7 +50,7 @@ public interface RewardSituationSer extends Ser<RewardSituation, RewardSituation
      * @return
      * @throws SerException
      */
-    default RewardSituationBO update(ContactSituationTO to) throws SerException {
+    default RewardSituationBO update(RewardSituationTO to) throws SerException {
         return null;
     }
 
