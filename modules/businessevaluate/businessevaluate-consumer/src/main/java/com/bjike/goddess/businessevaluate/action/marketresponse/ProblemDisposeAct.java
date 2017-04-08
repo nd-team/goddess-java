@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessevaluate/problemdispose")
+@RequestMapping("problemdispose")
 public class ProblemDisposeAct {
 
     @Autowired

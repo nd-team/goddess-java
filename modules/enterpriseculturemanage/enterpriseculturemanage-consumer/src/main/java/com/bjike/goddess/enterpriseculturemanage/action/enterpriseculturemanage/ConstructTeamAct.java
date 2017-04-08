@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("enterpriseculturemanage/constructteam")
+@RequestMapping("constructteam")
 public class ConstructTeamAct {
 
     @Autowired

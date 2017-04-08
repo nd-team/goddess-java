@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessevaluate/abilitygrowup")
+@RequestMapping("abilitygrowup")
 public class AbilityGrowUpAct {
 
     @Autowired
