@@ -3,14 +3,11 @@ package com.bjike.goddess.market.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,8 +28,6 @@ import java.util.List;
 @CacheConfig(cacheNames = "marketSerCache")
 @Service
 public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> implements MarketInfoSer {
-    @Autowired
-    private CustomerBaseInfoAPI customerBaseInfoAPI;
 
     @Cacheable
     @Override
@@ -44,7 +39,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class);
+        MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class,true);
         try {
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
@@ -66,23 +61,28 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class);
-        try {
+      /*  try {
             String customerNum = "";
             CustomerBaseInfoBO customerBaseInfoBO = customerBaseInfoAPI.getCustomerInfoByNum(customerNum);
             if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerName())) {
                 customerBaseInfoAPI.generateCustomerNum();
             } else if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerNum())) {
                 customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
-            } else {
-                marketInfo.setModifyTime(LocalDateTime.now());
-                super.update(marketInfo);
-            }
+            } else {*/
+        if (!StringUtils.isEmpty(marketInfoTO.getId())) {
+            MarketInfo marketInfo = super.findById(marketInfoTO.getId());
+            BeanTransform.copyProperties(marketInfoTO, marketInfo, true);
+            marketInfo.setModifyTime(LocalDateTime.now());
+            super.update(marketInfo);
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(marketInfoTO, MarketInfoBO.class);
+        /*    }
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
-
-        return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
+*/
     }
 
     @Transactional(rollbackFor = SerException.class)

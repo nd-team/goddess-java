@@ -1,9 +1,7 @@
 package com.bjike.goddess.customer.service;
 
-import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.RestrictionType;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -12,7 +10,6 @@ import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -94,7 +94,7 @@ public class ProblemAcceptAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeProblemAccept(String id) throws ActException {
+    public Result removeProblemAccept(@PathVariable String id) throws ActException {
         try {
             problemAcceptAPI.removeProblemAccept(id);
             return new ActResult("delete success");

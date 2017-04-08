@@ -1,9 +1,9 @@
 package com.bjike.goddess.contacts.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.contacts.enums.CustomerSex;
-import com.bjike.goddess.contacts.enums.CustomerStatus;
-import com.bjike.goddess.contacts.enums.CustomerType;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 
 /**
  * 商务通讯录业务传输对象

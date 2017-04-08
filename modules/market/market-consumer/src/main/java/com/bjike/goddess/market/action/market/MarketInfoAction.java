@@ -93,7 +93,7 @@ public class MarketInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeMarketInfo(String id) throws ActException {
+    public Result removeMarketInfo(@PathVariable String id) throws ActException {
         try {
             marketInfoAPI.removeMarketInfo(id);
             return new ActResult("delete success");

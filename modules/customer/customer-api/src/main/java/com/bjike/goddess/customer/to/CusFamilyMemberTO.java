@@ -1,7 +1,6 @@
 package com.bjike.goddess.customer.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.customer.to.CustomerDetailTO;
 
 /**
  * 客户家庭成员

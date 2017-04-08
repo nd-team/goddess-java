@@ -3,7 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.service.CooperationSituationSer;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.CooperationSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +30,12 @@ public class CooperationSituationApiImpl implements CooperationSituationAPI {
     }
 
     @Override
-    public CooperationSituationBO save(ContactSituationTO to) throws SerException {
+    public CooperationSituationBO save(CooperationSituationTO to) throws SerException {
         return cooperationSituationSer.save(to);
     }
 
     @Override
-    public CooperationSituationBO update(ContactSituationTO to) throws SerException {
+    public CooperationSituationBO update(CooperationSituationTO to) throws SerException {
         return cooperationSituationSer.update(to);
     }
 

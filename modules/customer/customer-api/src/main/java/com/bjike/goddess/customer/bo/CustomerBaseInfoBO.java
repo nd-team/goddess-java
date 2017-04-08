@@ -2,13 +2,9 @@ package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.entity.CustomerDetail;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
-
-import java.time.LocalDateTime;
 
 /**
  * 客户基本信息业务传输对象

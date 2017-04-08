@@ -3,7 +3,6 @@ package com.bjike.goddess.customer.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
-import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import org.springframework.beans.factory.annotation.Autowired;

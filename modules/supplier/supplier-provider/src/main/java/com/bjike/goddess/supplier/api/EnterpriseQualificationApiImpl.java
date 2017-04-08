@@ -3,7 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.service.EnterpriseQualificationSer;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +30,12 @@ public class EnterpriseQualificationApiImpl implements EnterpriseQualificationAP
     }
 
     @Override
-    public EnterpriseQualificationBO save(ContactSituationTO to) throws SerException {
+    public EnterpriseQualificationBO save(EnterpriseQualificationTO to) throws SerException {
         return enterpriseQualificationSer.save(to);
     }
 
     @Override
-    public EnterpriseQualificationBO update(ContactSituationTO to) throws SerException {
+    public EnterpriseQualificationBO update(EnterpriseQualificationTO to) throws SerException {
         return enterpriseQualificationSer.update(to);
     }
 

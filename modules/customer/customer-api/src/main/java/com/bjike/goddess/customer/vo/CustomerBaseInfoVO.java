@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
-import com.bjike.goddess.customer.to.CustomerLevelTO;
 
 /**
  * 客户基本信息表现层对象

@@ -3,7 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.service.RewardSituationSer;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.RewardSituationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +30,12 @@ public class RewardSituationApiImpl implements RewardSituationAPI {
     }
 
     @Override
-    public RewardSituationBO save(ContactSituationTO to) throws SerException {
+    public RewardSituationBO save(RewardSituationTO to) throws SerException {
         return rewardSituationSer.save(to);
     }
 
     @Override
-    public RewardSituationBO update(ContactSituationTO to) throws SerException {
+    public RewardSituationBO update(RewardSituationTO to) throws SerException {
         return rewardSituationSer.update(to);
     }
 

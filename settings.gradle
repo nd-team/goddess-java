@@ -30,7 +30,7 @@ include ':modules:message:message-provider'
 include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
-////#staffentry 员工入职
+////#staffentry 员工入职tanghaixiang
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
 include ':modules:staffentry:staffentry-provider'
@@ -38,11 +38,7 @@ include ':modules:staffentry:staffentry-provider'
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
-//#客户信息
-//include ':modules:accommodation:accommodation-api'
-//include ':modules:accommodation:accommodation-consumer'
-//include ':modules:accommodation:accommodation-provider'
-//#客户信息
+//#客户信息tanghaixiang
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
@@ -92,11 +88,11 @@ include ':modules:market:market-provider'
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
 include ':modules:competitormanage:competitormanage-provider'
-//#商务项目合同管理
+//#商务项目合同管理tanghaixiang
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
-//#商业能力展示
+//#商业能力展示tanghaixiang
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
@@ -126,19 +122,19 @@ include ':modules:projectissuehandle:projectissuehandle-provider'
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
-//#商业能力互动
+//#商业能力互动tanghaixiang
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
-//#财务初始化
+//#财务初始化tanghaixiang
 include ':modules:financeinit:financeinit-api'
 include ':modules:financeinit:financeinit-consumer'
 include ':modules:financeinit:financeinit-provider'
-//#项目验收、签字、结算进度管理
+//#项目验收、签字、结算进度管理tanghaixiang
 include ':modules:projectprocing:projectprocing-api'
 include ':modules:projectprocing:projectprocing-consumer'
 include ':modules:projectprocing:projectprocing-provider'
-//#法定节假日
+//#法定节假日tanghaixiang
 include ':modules:festival:festival-api'
 include ':modules:festival:festival-consumer'
 include ':modules:festival:festival-provider'
@@ -175,4 +171,13 @@ include ':modules:eggert:eggert-api'
 include ':modules:eggert:eggert-consumer'
 include ':modules:eggert:eggert-provider'
 
+//#借款与报销tanghaixiang
+//include ':modules:lendreimbursement:lendreimbursement-api'
+//include ':modules:lendreimbursement:lendreimbursement-consumer'
+//include ':modules:lendreimbursement:lendreimbursement-provider'
+
+//#attainment 综合素养调研
+include ':modules:attainment:attainment-api'
+include ':modules:attainment:attainment-consumer'
+include ':modules:attainment:attainment-provider'
 

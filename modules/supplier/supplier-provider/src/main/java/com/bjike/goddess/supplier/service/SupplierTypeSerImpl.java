@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -48,9 +49,13 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO update(SupplierTypeTO to) throws SerException {
-        SupplierType entity = super.findById(to.getId());
+        SupplierType entity = super.findById(to.getId()),type = super.findById(to.getId());
         entity.setName(to.getName());
         entity.setDescription(to.getDescription());
+        entity.setCreateTime(LocalDateTime.now());
+        if (null != type)
+            entity.setCreateTime(type.getCreateTime());
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
