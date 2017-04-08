@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("staffentry/entrybasicinfo")
+@RequestMapping("entrybasicinfo")
 public class EntryBasicInfoAction {
 
     @Autowired

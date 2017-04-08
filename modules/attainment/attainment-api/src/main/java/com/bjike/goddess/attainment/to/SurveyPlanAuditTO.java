@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研计划审核记录
@@ -16,6 +20,7 @@ public class SurveyPlanAuditTO extends BaseTO {
     /**
      * 调研计划
      */
+    @NotNull(message = "调研计划不能为空", groups = {ADD.class, EDIT.class})
     private String plan_id;
 
     /**
@@ -36,11 +41,13 @@ public class SurveyPlanAuditTO extends BaseTO {
     /**
      * 是否通过
      */
+    @NotNull(message = "是否通过不能为空", groups = {ADD.class, EDIT.class})
     private Boolean pass;
 
     /**
      * 审核意见
      */
+    @NotNull(message = "审核意见不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**
@@ -103,5 +110,13 @@ public class SurveyPlanAuditTO extends BaseTO {
 
     public void setAuditTime(String auditTime) {
         this.auditTime = auditTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
     }
 }

@@ -70,6 +70,14 @@ public class AttainmentTypeVO {
         this.regular = regular;
     }
 
+    public Boolean getRegular() {
+        return regular;
+    }
+
+    public void setRegular(Boolean regular) {
+        this.regular = regular;
+    }
+
     public Status getStatus() {
         return status;
     }

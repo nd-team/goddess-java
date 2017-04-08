@@ -70,6 +70,14 @@ public class AttainmentWay extends BaseEntity {
         this.employ = employ;
     }
 
+    public Boolean getEmploy() {
+        return employ;
+    }
+
+    public void setEmploy(Boolean employ) {
+        this.employ = employ;
+    }
+
     public Status getStatus() {
         return status;
     }

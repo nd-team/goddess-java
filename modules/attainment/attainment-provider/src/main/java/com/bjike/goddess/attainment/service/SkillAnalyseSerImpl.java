@@ -35,7 +35,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
 
     @Override
     public SkillAnalyseBO save(SkillAnalyseTO to) throws SerException {
-        SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyseTO.class, true);
+        SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
         entity.setWriter(userAPI.currentUser().getUsername());
         entity.setWriterTime(LocalDateTime.now());
         return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);

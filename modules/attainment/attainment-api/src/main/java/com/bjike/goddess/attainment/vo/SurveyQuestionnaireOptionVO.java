@@ -1,11 +1,11 @@
 package com.bjike.goddess.attainment.vo;
 
 /**
- * 调研表 -> 问题 -> 选项表现层对象
+ * 调研表问题选项表现层对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:26 ]
- * @Description: [ 调研表 -> 问题 -> 选项表现层对象 ]
+ * @Description: [ 调研表问题选项表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

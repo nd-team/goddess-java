@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研分析
@@ -16,6 +20,7 @@ public class SurveyAnalyseTO extends BaseTO {
     /**
      * 调研计划id
      */
+    @NotNull(message = "调研计划id不能为空", groups = {ADD.class, EDIT.class})
     private String plan_id;
 
     /**
@@ -26,6 +31,7 @@ public class SurveyAnalyseTO extends BaseTO {
     /**
      * 分析结果1
      */
+    @NotNull(message = "分析结果1不能为空", groups = {ADD.class, EDIT.class})
     private String resultOne;
 
     /**

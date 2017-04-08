@@ -168,4 +168,8 @@ include ':modules:eggert:eggert-provider'
 //include ':modules:lendreimbursement:lendreimbursement-consumer'
 //include ':modules:lendreimbursement:lendreimbursement-provider'
 
+//#attainment 综合素养调研
+include ':modules:attainment:attainment-api'
+include ':modules:attainment:attainment-consumer'
+include ':modules:attainment:attainment-provider'
 

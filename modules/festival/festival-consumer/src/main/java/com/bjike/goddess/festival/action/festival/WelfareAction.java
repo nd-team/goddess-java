@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("festival/welfare")
+@RequestMapping("welfare")
 public class WelfareAction {
 
     @Autowired

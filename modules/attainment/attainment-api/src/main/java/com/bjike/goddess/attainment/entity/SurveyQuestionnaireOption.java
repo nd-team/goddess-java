@@ -6,11 +6,11 @@ import javax.persistence.*;
 
 
 /**
- * 调研表 -> 问题 -> 选项
+ * 调研表问题选项
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:26 ]
- * @Description: [ 调研表 -> 问题 -> 选项 ]
+ * @Description: [ 调研表问题选项 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

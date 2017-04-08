@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketdevelopment/marketmeasure")
+@RequestMapping("marketmeasure")
 public class MarketMeasureAction {
 
     @Autowired

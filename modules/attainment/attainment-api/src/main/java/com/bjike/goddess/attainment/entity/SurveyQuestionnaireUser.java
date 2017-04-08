@@ -23,7 +23,7 @@ public class SurveyQuestionnaireUser extends BaseEntity {
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "actualize_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '问卷'")
-    private SurveyActualize questionnaire;
+    private SurveyActualize actualize;
 
     /**
      * 用户
@@ -32,12 +32,12 @@ public class SurveyQuestionnaireUser extends BaseEntity {
     private String user;
 
 
-    public SurveyActualize getQuestionnaire() {
-        return questionnaire;
+    public SurveyActualize getActualize() {
+        return actualize;
     }
 
-    public void setQuestionnaire(SurveyActualize questionnaire) {
-        this.questionnaire = questionnaire;
+    public void setActualize(SurveyActualize actualize) {
+        this.actualize = actualize;
     }
 
     public String getUser() {

@@ -1,17 +1,57 @@
 package com.bjike.goddess.attainment.api;
 
+import com.bjike.goddess.attainment.bo.AttainmentWayBO;
+import com.bjike.goddess.attainment.service.AttainmentWaySer;
+import com.bjike.goddess.attainment.to.AttainmentWayTO;
+import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
-* 调研方式业务接口实现
-* @Author:			[ dengjunren ]
-* @Date:			[  2017-04-06 09:51 ]
-* @Description:	[ 调研方式业务接口实现 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-@Service("attainmentWayApiImpl")
-public class AttainmentWayApiImpl implements AttainmentWayAPI  { 
+import java.util.List;
 
- }
+/**
+ * 调研方式业务接口实现
+ *
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-04-06 09:51 ]
+ * @Description: [ 调研方式业务接口实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@Service("attainmentWayApiImpl")
+public class AttainmentWayApiImpl implements AttainmentWayAPI {
+
+    @Autowired
+    private AttainmentWaySer attainmentWaySer;
+
+    @Override
+    public AttainmentWayBO save(AttainmentWayTO to) throws SerException {
+        return attainmentWaySer.save(to);
+    }
+
+    @Override
+    public AttainmentWayBO update(AttainmentWayTO to) throws SerException {
+        return attainmentWaySer.update(to);
+    }
+
+    @Override
+    public AttainmentWayBO delete(String id) throws SerException {
+        return attainmentWaySer.delete(id);
+    }
+
+    @Override
+    public AttainmentWayBO congeal(String id) throws SerException {
+        return attainmentWaySer.congeal(id);
+    }
+
+    @Override
+    public AttainmentWayBO thaw(String id) throws SerException {
+        return attainmentWaySer.thaw(id);
+    }
+
+    @Override
+    public List<AttainmentWayBO> findThaw() throws SerException {
+        return attainmentWaySer.findThaw();
+    }
+
+}

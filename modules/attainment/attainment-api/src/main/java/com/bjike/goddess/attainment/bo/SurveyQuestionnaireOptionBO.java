@@ -3,11 +3,11 @@ package com.bjike.goddess.attainment.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 调研表 -> 问题 -> 选项业务传输对象
+ * 调研表问题选项业务传输对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:26 ]
- * @Description: [ 调研表 -> 问题 -> 选项业务传输对象 ]
+ * @Description: [ 调研表问题选项业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

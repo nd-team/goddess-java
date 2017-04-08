@@ -2,7 +2,11 @@ package com.bjike.goddess.attainment.to;
 
 import com.bjike.goddess.attainment.enums.ScopeType;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研需求
@@ -18,31 +22,37 @@ public class SurveyDemandTO extends BaseTO {
     /**
      * 调研类型id
      */
+    @NotNull(message = "调研类型id不能为空", groups = {ADD.class, EDIT.class})
     private String type_id;
 
     /**
      * 调研需求类型id
      */
+    @NotNull(message = "调研需求类型id不能为空", groups = {ADD.class, EDIT.class})
     private String demand_id;
 
     /**
      * 调研主题
      */
+    @NotNull(message = "调研主题不能为空", groups = {ADD.class, EDIT.class})
     private String theme;
 
     /**
      * 调研目的
      */
+    @NotNull(message = "调研目的不能为空", groups = {ADD.class, EDIT.class})
     private String purpose;
 
     /**
      * 调研范围
      */
+    @NotNull(message = "调研范围不能为空", groups = {ADD.class, EDIT.class})
     private ScopeType scope;
 
     /**
      * 调研范围准确对象
      */
+    @NotNull(message = "调研范围准确对象不能为空", groups = {ADD.class, EDIT.class})
     private String[] scopeNames;
 
     /**

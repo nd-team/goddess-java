@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketdevelopment/weekplan")
+@RequestMapping("weekplan")
 public class WeekPlanAction {
 
     @Autowired

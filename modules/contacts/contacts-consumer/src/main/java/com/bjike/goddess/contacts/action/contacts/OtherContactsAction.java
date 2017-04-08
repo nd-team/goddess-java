@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("contacts/othercontacts")
+@RequestMapping("othercontacts")
 public class OtherContactsAction {
 
     @Autowired

@@ -23,7 +23,7 @@ public class SurveyPlanAudit extends BaseEntity {
      * 调研计划
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @Column(name = "plan_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '调研计划'")
+    @JoinColumn(name = "plan_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '调研计划'")
     private SurveyPlan plan;
 
     /**
@@ -113,6 +113,14 @@ public class SurveyPlanAudit extends BaseEntity {
 
     public LocalDateTime getAuditTime() {
         return auditTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
     }
 
     public void setAuditTime(LocalDateTime auditTime) {
