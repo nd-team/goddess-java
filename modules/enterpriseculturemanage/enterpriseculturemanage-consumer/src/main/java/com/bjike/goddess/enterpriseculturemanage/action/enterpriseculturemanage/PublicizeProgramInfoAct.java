@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("enterpriseculturemanage/publicizeprograminfo")
+@RequestMapping("publicizeprograminfo")
 public class PublicizeProgramInfoAct {
 
     @Autowired

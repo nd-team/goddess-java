@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
  * Created by huanghuanlai on 2017/1/13.
  */
 @Component
-public class AppEntityScan extends EntityToScanImpl<AppRoot>{
-
+public class AppEntityScan extends EntityToScanImpl<AppRoot> {
+    @Override
+    public String[] entityScan() {
+        return new String[]{"com.bjike.goddess.oilcardmanage"};
+    }
 }

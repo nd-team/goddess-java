@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("businessevaluate/labourcost")
+@RequestMapping("labourcost")
 public class LabourCostAct {
 
     @Autowired
