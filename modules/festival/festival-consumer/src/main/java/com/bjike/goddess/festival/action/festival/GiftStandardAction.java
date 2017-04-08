@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("festival/giftstandard")
+@RequestMapping("giftstandard")
 public class GiftStandardAction {
 
     @Autowired

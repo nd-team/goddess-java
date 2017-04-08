@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectprocing/projectsituation")
+@RequestMapping("projectsituation")
 public class ProjectSituationAction {
 
 

@@ -29,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessinteraction/talkdetail")
+@RequestMapping("talkdetail")
 public class TalkDetailAction {
     @Autowired
     private TalkDetailAPI talkDetailAPI;

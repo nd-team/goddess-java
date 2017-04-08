@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectprocing/projectacceptance")
+@RequestMapping("projectacceptance")
 public class ProjectAcceptanceAction {
 
 

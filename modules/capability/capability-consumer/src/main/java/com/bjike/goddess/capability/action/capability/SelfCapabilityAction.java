@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("capability/selfcapability")
+@RequestMapping("selfcapability")
 public class SelfCapabilityAction {
     @Autowired
     private SelfCapabilityAPI selfCapabilityAPI;

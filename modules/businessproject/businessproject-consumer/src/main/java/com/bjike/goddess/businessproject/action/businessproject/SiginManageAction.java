@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessproject/siginmanage")
+@RequestMapping("siginmanage")
 public class SiginManageAction {
 
     @Autowired

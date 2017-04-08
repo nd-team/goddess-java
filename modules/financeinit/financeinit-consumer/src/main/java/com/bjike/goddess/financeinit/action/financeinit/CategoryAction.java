@@ -29,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("financeinit/category")
+@RequestMapping("category")
 public class CategoryAction {
 
 
