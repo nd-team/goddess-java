@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("festival/noticething")
+@RequestMapping("noticething")
 public class NoticeThingAction {
 
     @Autowired

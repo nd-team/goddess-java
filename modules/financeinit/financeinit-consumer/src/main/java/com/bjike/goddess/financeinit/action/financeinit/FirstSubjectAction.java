@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("financeinit/firstsubject")
+@RequestMapping("firstsubject")
 public class FirstSubjectAction {
 
 

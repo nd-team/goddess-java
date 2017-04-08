@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("competitormanage/competitor")
+@RequestMapping("competitor")
 public class CompetitorAct {
     @Autowired
     private CompetitorAPI competitorAPI;
