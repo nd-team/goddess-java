@@ -27,9 +27,8 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
-@RequestMapping("customer/customerlevel")
+@RequestMapping("customerlevel")
 public class CustomerLevelAction {
 
     @Autowired
@@ -79,6 +78,7 @@ public class CustomerLevelAction {
      * @return  class CustomerLevelVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerLevel(@Validated CustomerLevelTO customerLevelTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +98,7 @@ public class CustomerLevelAction {
      * @return  class CustomerLevelVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerLevel(@Validated CustomerLevelTO customerLevelTO) throws ActException {
         try {
@@ -115,6 +116,7 @@ public class CustomerLevelAction {
      * @des 根据id删除客户等级信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCustomerLevel(@PathVariable String id) throws ActException {
         try {
@@ -152,6 +154,7 @@ public class CustomerLevelAction {
      * @des 根据id冻结客户等级记录
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -170,6 +173,7 @@ public class CustomerLevelAction {
      * @des 根据id解冻客户等级记录
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {

@@ -8,6 +8,7 @@ import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,8 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class);
-        problemAcceptTO.setId(problemAccept.getId());
+        ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class,true);
+        problemAccept.setCreateTime(LocalDateTime.now());
         super.save(problemAccept);
         return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
     }
@@ -47,10 +48,15 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class);
-        problemAccept.setModifyTime(LocalDateTime.now());
-        super.update(problemAccept);
-        return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
+        if (!StringUtils.isEmpty(problemAcceptTO.getId())) {
+            ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
+            BeanTransform.copyProperties(problemAcceptTO, problemAccept, true);
+            problemAccept.setModifyTime(LocalDateTime.now());
+            super.update(problemAccept);
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(problemAcceptTO, ProblemAcceptBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

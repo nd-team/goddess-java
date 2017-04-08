@@ -27,9 +27,8 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
-@RequestMapping("customer/cusemail")
+@RequestMapping("cusemail")
 public class CusEmailAction {
 
     @Autowired
@@ -79,6 +78,7 @@ public class CusEmailAction {
      * @return  class CusEmailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCusEmail( @Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +98,7 @@ public class CusEmailAction {
      * @return  class CusEmailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCusEmail(@Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
@@ -115,6 +116,7 @@ public class CusEmailAction {
      * @des 根据id删除客户邮件汇总信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCusEmail(@PathVariable String id) throws ActException {
         try {
@@ -133,6 +135,7 @@ public class CusEmailAction {
      * @des 根据id冻结客户邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +154,7 @@ public class CusEmailAction {
      * @des 根据id解冻客户邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {

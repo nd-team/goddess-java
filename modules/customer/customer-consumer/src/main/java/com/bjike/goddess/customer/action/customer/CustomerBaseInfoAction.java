@@ -1,5 +1,6 @@
 package com.bjike.goddess.customer.action.customer;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -29,9 +30,8 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
-@RequestMapping("customer/customerbaseinfo")
+@RequestMapping("customerbaseinfo")
 public class CustomerBaseInfoAction {
 
 
@@ -105,6 +105,7 @@ public class CustomerBaseInfoAction {
      * @des 添加客户基本信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -124,6 +125,7 @@ public class CustomerBaseInfoAction {
      * @des 添加客户基本
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO) throws ActException {
         try {
@@ -141,6 +143,7 @@ public class CustomerBaseInfoAction {
      * @des 根据id删除客户基本信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCustomerBaseInfo(@PathVariable String id) throws ActException {
         try {
@@ -159,6 +162,7 @@ public class CustomerBaseInfoAction {
      * @des 根据id冻结客户基本信息记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -177,6 +181,7 @@ public class CustomerBaseInfoAction {
      * @des 根据id解冻客户基本信息记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
