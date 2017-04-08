@@ -14,9 +14,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class SurveyQuestionnaireUserBO extends BaseBO {
 
     /**
-     * 问卷id
+     * 调研实施id
      */
-    private String questionnaire_id;
+    private String actualize_id;
 
     /**
      * 问卷
@@ -29,12 +29,12 @@ public class SurveyQuestionnaireUserBO extends BaseBO {
     private String user;
 
 
-    public String getQuestionnaire_id() {
-        return questionnaire_id;
+    public String getActualize_id() {
+        return actualize_id;
     }
 
-    public void setQuestionnaire_id(String questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+    public void setActualize_id(String actualize_id) {
+        this.actualize_id = actualize_id;
     }
 
     public String getQuestionnaireName() {

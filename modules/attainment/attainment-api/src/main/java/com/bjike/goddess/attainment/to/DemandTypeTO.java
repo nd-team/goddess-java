@@ -1,7 +1,11 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 调研需求类型
@@ -17,6 +21,7 @@ public class DemandTypeTO extends BaseTO {
     /**
      * 类型
      */
+    @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**

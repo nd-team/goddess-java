@@ -6,11 +6,11 @@ import javax.persistence.*;
 
 
 /**
- * 调研表 -> 问题
+ * 调研表问题
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:23 ]
- * @Description: [ 调研表 -> 问题 ]
+ * @Description: [ 调研表问题 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -32,7 +32,7 @@ public class SurveyQuestionnaire extends BaseEntity {
     private String questionnaire;
 
     /**
-     * 单选/多选
+     * 单选多选
      */
     @Column(name = "is_multiple", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '单选/多选'", insertable = false)
     private Boolean multiple;

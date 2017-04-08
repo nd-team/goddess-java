@@ -3,11 +3,11 @@ package com.bjike.goddess.attainment.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 调研表 -> 问题业务传输对象
+ * 调研表问题业务传输对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:23 ]
- * @Description: [ 调研表 -> 问题业务传输对象 ]
+ * @Description: [ 调研表问题业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -24,7 +24,7 @@ public class SurveyQuestionnaireBO extends BaseBO {
     private String questionnaire;
 
     /**
-     * 单选/多选
+     * 单选多选
      */
     private Boolean multiple;
 
@@ -64,4 +64,6 @@ public class SurveyQuestionnaireBO extends BaseBO {
     public void setNum(Integer num) {
         this.num = num;
     }
+
+
 }

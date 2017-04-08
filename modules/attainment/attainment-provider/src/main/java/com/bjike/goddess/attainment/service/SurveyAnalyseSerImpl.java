@@ -1,6 +1,5 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
@@ -17,6 +16,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,12 +35,26 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
     @Autowired
     private SurveyPlanSer surveyPlanSer;
 
+    private SurveyAnalyseBO transformBO(SurveyAnalyse entity) throws SerException {
+        SurveyAnalyseBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyAnalyseBO.class);
+        bo.setPlan_id(entity.getPlan().getId());
+        BeanTransform.copyProperties(entity, bo, true);
+        return bo;
+    }
+
+    private List<SurveyAnalyseBO> transformBOList(List<SurveyAnalyse> list) throws SerException {
+        List<SurveyAnalyseBO> bos = new ArrayList<>(list.size());
+        for (SurveyAnalyse entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
     @Override
     public SurveyAnalyseBO save(SurveyAnalyseTO to) throws SerException {
-        SurveyAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class);
+        SurveyAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
         entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
         super.save(entity);
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
@@ -51,7 +65,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
-                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+                return this.transformBO(entity);
             } catch (SerException e) {
                 throw new SerException("数据对象不能为空");
             }
@@ -63,7 +77,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
     public SurveyAnalyseBO delete(String id) throws SerException {
         SurveyAnalyse entity = super.findById(id);
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        return this.transformBO(entity);
     }
 
     @Override

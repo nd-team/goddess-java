@@ -20,18 +20,35 @@ import java.util.List;
  */
 public interface SurveyQuestionnaireOptionUserSer extends Ser<SurveyQuestionnaireOptionUser, SurveyQuestionnaireOptionUserDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 问卷填写信息传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyQuestionnaireOptionUserBO save(SurveyQuestionnaireOptionUserTO to) throws SerException {
         return null;
     }
 
-    default SurveyQuestionnaireOptionUserBO update(SurveyQuestionnaireOptionUserTO to) throws SerException {
+    /**
+     * 删除
+     *
+     * @param id 问卷填写信息数据id
+     * @return
+     * @throws SerException
+     */
+    default SurveyQuestionnaireOptionUserBO delete(String id) throws SerException {
         return null;
     }
 
-    default SurveyQuestionnaireOptionUserBO delete(SurveyQuestionnaireOptionUserTO to) throws SerException {
-        return null;
-    }
-
+    /**
+     * 根据选项查询问卷填写记录
+     *
+     * @param option_id 调研问卷选项数据id
+     * @return
+     * @throws SerException
+     */
     default List<SurveyQuestionnaireOptionUserBO> findByOption(String option_id) throws SerException {
         return null;
     }

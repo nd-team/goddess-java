@@ -20,18 +20,46 @@ import java.util.List;
  */
 public interface SurveyAnalyseSer extends Ser<SurveyAnalyse, SurveyAnalyseDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 调研分析传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyAnalyseBO save(SurveyAnalyseTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 更新
+     *
+     * @param to 调研分析传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyAnalyseBO update(SurveyAnalyseTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 调研分析数据id
+     * @return
+     * @throws SerException
+     */
     default SurveyAnalyseBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据调研计划查询调研分析
+     *
+     * @param plan_id 调研计划数据id
+     * @return
+     * @throws SerException
+     */
     default List<SurveyAnalyseBO> findByPlan(String plan_id) throws SerException {
         return null;
     }

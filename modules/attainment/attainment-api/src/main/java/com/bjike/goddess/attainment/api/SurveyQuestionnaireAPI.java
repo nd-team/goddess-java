@@ -1,13 +1,65 @@
 package com.bjike.goddess.attainment.api;
 
-/**
-* 调研表 -> 问题业务接口
-* @Author:			[ dengjunren ]
-* @Date:			[  2017-04-06 11:23 ]
-* @Description:	[ 调研表 -> 问题业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public interface SurveyQuestionnaireAPI  { 
+import com.bjike.goddess.attainment.bo.SurveyQuestionnaireBO;
+import com.bjike.goddess.attainment.to.SurveyQuestionnaireTO;
+import com.bjike.goddess.common.api.exception.SerException;
 
- }
+import java.util.List;
+
+/**
+ * 调研表问题业务接口
+ *
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-04-06 11:23 ]
+ * @Description: [ 调研表问题业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface SurveyQuestionnaireAPI {
+
+    /**
+     * 保存
+     *
+     * @param to 调研问题数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default SurveyQuestionnaireBO save(SurveyQuestionnaireTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改
+     *
+     * @param to 调研问题数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default SurveyQuestionnaireBO update(SurveyQuestionnaireTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 调研问题数据id
+     * @return
+     * @throws SerException
+     */
+    default SurveyQuestionnaireBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据调研实施查询调研问题
+     *
+     * @param actualize_id 调研实施id
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyQuestionnaireBO> findByActualize(String actualize_id) throws SerException {
+        return null;
+    }
+
+
+}

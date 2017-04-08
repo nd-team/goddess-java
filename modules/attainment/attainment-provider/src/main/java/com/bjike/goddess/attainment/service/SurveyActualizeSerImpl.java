@@ -1,6 +1,5 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.bo.SurveyActualizeBO;
 import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.entity.SurveyActualize;
@@ -33,9 +32,12 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     private SurveyPlanSer surveyPlanSer;
 
     private SurveyActualizeBO transformBO(SurveyActualize entity) throws SerException {
-        SurveyActualizeBO bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
-//        bo.setPlan_id();
-
+        SurveyActualizeBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyActualizeBO.class);
+        bo.setPlan_id(entity.getPlan().getId());
+        bo.setStart(bo.getStartTime());
+        bo.setEnd(bo.getEndTime());
+        bo.setFinish(bo.getFinishTime());
+        BeanTransform.copyProperties(entity, bo, true);
         return bo;
     }
 
@@ -46,7 +48,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         entity.setStartTime(LocalDateTime.now());
         entity.setSurvey(SurveyStatus.UNDERWAY);
         super.save(entity);
-        return BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
-                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+                return this.transformBO(entity);
             } catch (SerException e) {
                 throw new SerException("数据对象不能为空");
             }
@@ -69,7 +71,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     public SurveyActualizeBO delete(String id) throws SerException {
         SurveyActualize entity = super.findById(id);
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
@@ -78,6 +80,6 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         entity.setSurvey(SurveyStatus.FINISH);
         entity.setEndTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
+        return this.transformBO(entity);
     }
 }

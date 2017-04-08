@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 问卷填写信息表
@@ -26,6 +30,7 @@ public class SurveyQuestionnaireOptionUserTO extends BaseTO {
     /**
      * 选择选项id
      */
+    @NotNull(message = "选择选项id不能为空", groups = {ADD.class, EDIT.class})
     private String option_id;
 
 

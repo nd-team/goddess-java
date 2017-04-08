@@ -18,18 +18,37 @@ import com.bjike.goddess.common.api.service.Ser;
  */
 public interface SkillAnalyseSer extends Ser<SkillAnalyse, SkillAnalyseDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 技能分析传输对象
+     * @return
+     * @throws SerException
+     */
     default SkillAnalyseBO save(SkillAnalyseTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 技能分析传输对象
+     * @return
+     * @throws SerException
+     */
     default SkillAnalyseBO update(SkillAnalyseTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 技能分析数据ID
+     * @return
+     * @throws SerException
+     */
     default SkillAnalyseBO delete(String id) throws SerException {
         return null;
     }
-
-    //@TODO 汇总
 
 }

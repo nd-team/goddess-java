@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 问卷调查历史记录
@@ -16,7 +20,8 @@ public class SurveyQuestionnaireUserTO extends BaseTO {
     /**
      * 调研实施id
      */
-    private String questionnaire_id;
+    @NotNull(message = "调研实施id不能为空", groups = {ADD.class, EDIT.class})
+    private String actualize_id;
 
     /**
      * 用户
@@ -24,12 +29,12 @@ public class SurveyQuestionnaireUserTO extends BaseTO {
     private String user;
 
 
-    public String getQuestionnaire_id() {
-        return questionnaire_id;
+    public String getActualize_id() {
+        return actualize_id;
     }
 
-    public void setQuestionnaire_id(String questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+    public void setActualize_id(String actualize_id) {
+        this.actualize_id = actualize_id;
     }
 
     public String getUser() {
