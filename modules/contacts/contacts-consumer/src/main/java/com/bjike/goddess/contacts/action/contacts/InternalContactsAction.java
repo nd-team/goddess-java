@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("contacts/internalcontacts")
+@RequestMapping("internalcontacts")
 public class InternalContactsAction {
 
     @Autowired

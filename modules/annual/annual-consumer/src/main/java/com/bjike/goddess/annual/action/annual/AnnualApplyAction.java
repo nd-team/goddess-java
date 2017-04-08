@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("annual/annualapply")
+@RequestMapping("annualapply")
 public class AnnualApplyAction {
 
     @Autowired

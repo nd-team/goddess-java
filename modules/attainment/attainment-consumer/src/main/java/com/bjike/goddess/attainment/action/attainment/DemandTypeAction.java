@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("attainment/demandtype")
+@RequestMapping("demandtype")
 public class DemandTypeAction {
 
     @Autowired

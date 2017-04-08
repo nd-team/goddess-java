@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("contacts/commercemember")
+@RequestMapping("commercemember")
 public class CommerceMemberAction {
 
     @Autowired

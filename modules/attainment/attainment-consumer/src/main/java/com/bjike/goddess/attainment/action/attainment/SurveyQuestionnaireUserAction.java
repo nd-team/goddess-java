@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("attainment/surveyquestionnaireuser")
+@RequestMapping("surveyquestionnaireuser")
 public class SurveyQuestionnaireUserAction {
 
     @Autowired

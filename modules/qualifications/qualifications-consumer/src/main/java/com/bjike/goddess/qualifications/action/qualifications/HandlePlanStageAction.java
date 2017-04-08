@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("qualifications/handleplanstage")
+@RequestMapping("handleplanstage")
 public class HandlePlanStageAction {
 
     @Autowired

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("annual/annualarrangementstandard")
+@RequestMapping("annualarrangementstandard")
 public class AnnualArrangementStandardAction {
 
     @Autowired

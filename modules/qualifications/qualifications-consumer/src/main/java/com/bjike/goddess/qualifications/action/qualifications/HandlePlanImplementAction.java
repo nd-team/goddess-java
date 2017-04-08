@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("qualifications/handleplanimplement")
+@RequestMapping("handleplanimplement")
 public class HandlePlanImplementAction {
 
     @Autowired
