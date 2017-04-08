@@ -15,7 +15,10 @@ import com.bjike.goddess.projectmeasure.type.CycleType;
  */
 public class ProjectMeasureSummaryTO extends BaseTO {
 
-
+    /**
+     * 地区
+     */
+    private String[] areas;
 
     /**
      * 项目组
@@ -67,6 +70,13 @@ public class ProjectMeasureSummaryTO extends BaseTO {
      */
     private Status status;
 
+    public String[] getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String[] areas) {
+        this.areas = areas;
+    }
 
     public String getProjectGroups() {
         return projectGroups;

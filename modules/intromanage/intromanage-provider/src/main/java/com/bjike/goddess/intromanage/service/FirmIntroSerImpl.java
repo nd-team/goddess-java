@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -315,11 +316,32 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Override
     @Transactional
     public void update(FirmIntroTO to) throws SerException {
-        FirmIntro entity = BeanTransform.copyProperties(to, FirmIntro.class, true);
-        super.update(entity);
-        String firmId = to.getId();//公司简介记录id
-        removeSubObj(firmId);//删除所有与公司简介相关的子对象
-        saveSubObj(to, firmId);//保存子对象
+        String firmId = to.getId();
+        if (StringUtils.isNotEmpty(firmId)) {
+            FirmIntro model = super.findById(firmId);
+            if (model != null) {
+                updateFirmIntro(to, model);
+                removeSubObj(firmId);//删除所有与公司简介相关的子对象
+                saveSubObj(to, firmId);//保存子对象
+            } else {
+                throw new SerException("您好,更新对象为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新公司简介信息
+     *
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateFirmIntro(FirmIntroTO to, FirmIntro model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**

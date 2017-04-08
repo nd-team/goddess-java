@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -369,11 +370,32 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Override
     @Transactional
     public void update(IndividualResumeTO to) throws SerException {
-        IndividualResume entity = BeanTransform.copyProperties(to, IndividualResume.class, true);
-        super.update(entity);
-        String staffId = to.getId();//员工id
-        removeSubObj(staffId); //删除所有的子对象
-        saveSubObj(to, staffId); //保存所有的子对象
+        String staffId = to.getId();
+        if (StringUtils.isNotEmpty(staffId)) {
+            IndividualResume model = super.findById(staffId);
+            if (model != null) {
+                updateIndividualResume(to, model);
+                removeSubObj(staffId);//删除所有与个人简介相关的子对象
+                saveSubObj(to, staffId);//保存子对象
+            } else {
+                throw new SerException("您好,更新对象为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新个人简介信息
+     *
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateIndividualResume(IndividualResumeTO to, IndividualResume model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
