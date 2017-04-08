@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("supplier/cooperationsituation")
+@RequestMapping("cooperationsituation")
 public class CooperationSituationAction {
 
     @Autowired

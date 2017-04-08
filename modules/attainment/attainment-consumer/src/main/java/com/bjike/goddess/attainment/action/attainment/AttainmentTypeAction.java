@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("attainment/attainmenttype")
+@RequestMapping("attainmenttype")
 public class AttainmentTypeAction {
 
     @Autowired

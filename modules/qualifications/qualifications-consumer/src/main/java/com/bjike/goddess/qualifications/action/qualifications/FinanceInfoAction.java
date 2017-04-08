@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("qualifications/financeinfo")
+@RequestMapping("financeinfo")
 public class FinanceInfoAction {
 
     @Autowired

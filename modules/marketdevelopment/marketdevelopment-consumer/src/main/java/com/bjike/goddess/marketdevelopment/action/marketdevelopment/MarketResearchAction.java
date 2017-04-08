@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketdevelopment/marketresearch")
+@RequestMapping("marketresearch")
 public class MarketResearchAction {
 
     @Autowired

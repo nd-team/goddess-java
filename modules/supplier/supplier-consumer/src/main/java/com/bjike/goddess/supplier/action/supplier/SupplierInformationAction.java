@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("supplier/supplierinformation")
+@RequestMapping("supplierinformation")
 public class SupplierInformationAction {
 
     @Autowired

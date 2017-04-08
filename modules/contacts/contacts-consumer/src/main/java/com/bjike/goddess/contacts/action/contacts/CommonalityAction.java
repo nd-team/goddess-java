@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("contacts/commonality")
+@RequestMapping("commonality")
 public class CommonalityAction {
 
     @Autowired
