@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: [dengjunren]
@@ -14,6 +18,7 @@ public class CloseDemandTO extends BaseTO {
     /**
      * 关闭原因
      */
+    @NotNull(message = "关闭原因不能为空", groups = {ADD.class, EDIT.class})
     private String closeReason;
 
     public String getCloseReason() {

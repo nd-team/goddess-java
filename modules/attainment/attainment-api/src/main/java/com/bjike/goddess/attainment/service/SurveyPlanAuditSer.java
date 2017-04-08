@@ -20,18 +20,47 @@ import java.util.List;
  */
 public interface SurveyPlanAuditSer extends Ser<SurveyPlanAudit, SurveyPlanAuditDTO> {
 
+    /**
+     * 更新
+     *
+     * @param to 调研计划审核传输对象
+     * @return
+     * @throws SerException
+     */
     default SurveyPlanAuditBO update(SurveyPlanAuditTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 根据调研计划及审核人查询审核数据
+     *
+     * @param plan_id 调研计划数据id
+     * @param auditor 审核人
+     * @return
+     * @throws SerException
+     */
     default SurveyPlanAuditBO findByUserPlan(String plan_id, String auditor) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 调研计划审核数据id
+     * @return
+     * @throws SerException
+     */
     default SurveyPlanAuditBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据调研计划查询审核数据
+     *
+     * @param plan_id 调研计划数据id
+     * @return
+     * @throws SerException
+     */
     default List<SurveyPlanAuditBO> findByPlan(String plan_id) throws SerException {
         return null;
     }

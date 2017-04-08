@@ -1,13 +1,17 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 
+import javax.validation.constraints.NotNull;
+
 /**
- * 调研表 -> 问题
+ * 调研表问题
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:23 ]
- * @Description: [ 调研表 -> 问题 ]
+ * @Description: [ 调研表问题 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -16,21 +20,25 @@ public class SurveyQuestionnaireTO extends BaseTO {
     /**
      * 调研实施id
      */
+    @NotNull(message = "调研实施id不能为空", groups = {ADD.class, EDIT.class})
     private String actualize_id;
 
     /**
      * 问题
      */
+    @NotNull(message = "问题不能为空", groups = {ADD.class, EDIT.class})
     private String questionnaire;
 
     /**
-     * 单选/多选
+     * 单选多选
      */
+    @NotNull(message = "单选/多选不能为空", groups = {ADD.class, EDIT.class})
     private Boolean multiple;
 
     /**
      * 题号
      */
+    @NotNull(message = "题号不能为空", groups = {ADD.class, EDIT.class})
     private Integer num;
 
 
@@ -65,4 +73,6 @@ public class SurveyQuestionnaireTO extends BaseTO {
     public void setNum(Integer num) {
         this.num = num;
     }
+
+
 }

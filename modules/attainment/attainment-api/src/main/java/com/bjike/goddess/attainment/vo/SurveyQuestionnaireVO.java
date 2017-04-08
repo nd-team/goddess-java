@@ -1,11 +1,11 @@
 package com.bjike.goddess.attainment.vo;
 
 /**
- * 调研表 -> 问题表现层对象
+ * 调研表问题表现层对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:23 ]
- * @Description: [ 调研表 -> 问题表现层对象 ]
+ * @Description: [ 调研表问题表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -24,10 +24,10 @@ public class SurveyQuestionnaireVO {
     /**
      * 问题
      */
-    private String questionnaire;
+    private String questionnaireName;
 
     /**
-     * 单选/多选
+     * 单选多选
      */
     private Boolean multiple;
 
@@ -53,12 +53,12 @@ public class SurveyQuestionnaireVO {
         this.actualize_id = actualize_id;
     }
 
-    public String getQuestionnaire() {
-        return questionnaire;
+    public String getQuestionnaireName() {
+        return questionnaireName;
     }
 
-    public void setQuestionnaire(String questionnaire) {
-        this.questionnaire = questionnaire;
+    public void setQuestionnaireName(String questionnaireName) {
+        this.questionnaireName = questionnaireName;
     }
 
     public Boolean getMultiple() {

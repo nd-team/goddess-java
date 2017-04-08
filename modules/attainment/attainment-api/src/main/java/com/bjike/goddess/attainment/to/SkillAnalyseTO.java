@@ -1,6 +1,10 @@
 package com.bjike.goddess.attainment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 技能分析表
@@ -16,26 +20,31 @@ public class SkillAnalyseTO extends BaseTO {
     /**
      * 员工
      */
+    @NotNull(message = "员工不能为空", groups = {ADD.class, EDIT.class})
     private String user;
 
     /**
      * 调研编号
      */
+    @NotNull(message = "调研编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 调研类型
      */
+    @NotNull(message = "调研类型不能为空", groups = {ADD.class, EDIT.class})
     private String surveyType;
 
     /**
      * 技能名称
      */
+    @NotNull(message = "技能名称不能为空", groups = {ADD.class, EDIT.class})
     private String skill;
 
     /**
      * 技能水平
      */
+    @NotNull(message = "技能水平不能为空", groups = {ADD.class, EDIT.class})
     private String skillLevel;
 
     /**
