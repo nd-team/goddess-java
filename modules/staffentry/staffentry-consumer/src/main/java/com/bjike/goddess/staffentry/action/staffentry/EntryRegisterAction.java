@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("staffentry/entryregister")
+@RequestMapping("entryregister")
 public class EntryRegisterAction {
 
     @Autowired

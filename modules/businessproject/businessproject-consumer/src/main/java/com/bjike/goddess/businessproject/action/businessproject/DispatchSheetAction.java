@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessproject/dispatchsheet")
+@RequestMapping("dispatchsheet")
 public class DispatchSheetAction {
     @Autowired
     private DispatchSheetAPI dispatchSheetAPI;

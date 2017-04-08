@@ -29,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessproject/collectemail")
+@RequestMapping("collectemail")
 public class CollectEmailAction {
 
     @Autowired

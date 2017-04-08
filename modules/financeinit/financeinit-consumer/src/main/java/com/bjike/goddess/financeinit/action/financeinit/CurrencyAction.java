@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("financeinit/currency")
+@RequestMapping("currency")
 public class CurrencyAction {
 
 

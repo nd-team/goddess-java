@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessinteraction/leavingmessage")
+@RequestMapping("leavingmessage")
 public class LeavingMessageAction {
 
     @Autowired

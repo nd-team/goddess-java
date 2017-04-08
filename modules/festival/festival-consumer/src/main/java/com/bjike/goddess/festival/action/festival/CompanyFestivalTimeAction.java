@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("festival/companyfestivaltime")
+@RequestMapping("companyfestivaltime")
 public class CompanyFestivalTimeAction {
 
     @Autowired
