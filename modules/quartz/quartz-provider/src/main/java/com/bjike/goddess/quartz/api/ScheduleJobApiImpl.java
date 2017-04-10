@@ -2,7 +2,7 @@ package com.bjike.goddess.quartz.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.quartz.bo.ScheduleJobBO;
-import com.bjike.goddess.quartz.service.ScheduledJobSer;
+import com.bjike.goddess.quartz.service.ScheduleJobSer;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,25 +19,25 @@ import org.springframework.stereotype.Service;
 @Service("scheduleJobApiImpl")
 public class ScheduleJobApiImpl implements ScheduleJobAPI {
     @Autowired
-    private ScheduledJobSer scheduledJobSer;
+    private ScheduleJobSer scheduleJobSer;
 
     @Override
     public ScheduleJobBO add(ScheduleJobTO scheduledJobTO) throws SerException {
-        return scheduledJobSer.add(scheduledJobTO);
+        return scheduleJobSer.add(scheduledJobTO);
     }
 
     @Override
     public void edit(ScheduleJobTO scheduledJobTO) throws SerException {
-        scheduledJobSer.edit(scheduledJobTO);
+        scheduleJobSer.edit(scheduledJobTO);
     }
 
     @Override
     public void delete(String id) throws SerException {
-        scheduledJobSer.delete(id);
+        scheduleJobSer.delete(id);
     }
 
     @Override
     public void enable(String id, boolean enable) throws SerException {
-        scheduledJobSer.enable(id, enable);
+        scheduleJobSer.enable(id, enable);
     }
 }

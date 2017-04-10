@@ -7,6 +7,8 @@ import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 
+import java.util.List;
+
 /**
  * 任务调度业务接口
  *
@@ -16,7 +18,7 @@ import com.bjike.goddess.quartz.to.ScheduleJobTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface ScheduledJobSer extends Ser<ScheduleJob, ScheduleJobDTO> {
+public interface ScheduleJobSer extends Ser<ScheduleJob, ScheduleJobDTO> {
 
     /**
      * 添加任务调度
@@ -54,4 +56,14 @@ public interface ScheduledJobSer extends Ser<ScheduleJob, ScheduleJobDTO> {
     default void enable(String id, boolean enable) throws SerException {
 
     }
+
+    /**
+     * 获取有效的调度任务
+     * @return
+     * @throws SerException
+     */
+    default List<ScheduleJob> findScheduleJobs() throws SerException {
+        return null;
+    }
+
 }

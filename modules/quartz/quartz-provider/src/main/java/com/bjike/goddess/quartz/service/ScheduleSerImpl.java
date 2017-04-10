@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,9 +23,25 @@ import java.util.Set;
  * @Copy: [com.bjike]
  */
 @Service
-public class SchedulerSerImpl implements ScheduleSer {
+public class ScheduleSerImpl implements ScheduleSer {
+
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
+
+    @Autowired
+    private ScheduleJobSer scheduleJobSer;
+
+    /**
+     * 启动所用定时器
+     * @throws SerException
+     */
+    @PostConstruct
+    private void init() throws SerException{
+       List<ScheduleJob> scheduleJobs =  scheduleJobSer.findScheduleJobs();
+        for(ScheduleJob scheduleJob :scheduleJobs){
+            this.add(scheduleJob,true);
+        }
+    }
 
     public CronScheduleBuilder verifyTrigger(ScheduleJob scheduleJob) throws SerException {
         CronScheduleBuilder scheduleBuilder = null;

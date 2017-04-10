@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 任务调度业务实现
@@ -26,9 +27,9 @@ import java.lang.reflect.Method;
  */
 @CacheConfig(cacheNames = "quartzSerCache")
 @Service
-public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO> implements ScheduledJobSer {
+public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO> implements ScheduleJobSer {
     @Autowired
-    private ScheduleSer schedulerSer;
+    private ScheduleSer scheduleSer;
     @Autowired
     private ScheduleJobGroupSer scheduleJobGroupSer;
 
@@ -36,14 +37,14 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
     public ScheduleJobBO add(ScheduleJobTO scheduleJobTO) throws SerException {
         ScheduleJob scheduleJob = BeanTransform.copyProperties(scheduleJobTO, ScheduleJob.class);
         scheduleJob.setUserId("111");
-        schedulerSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
         this.verifySchedule(scheduleJob);
         super.save(scheduleJob);
         if (scheduleJob.getEnable()) {
             ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
             dto.getConditions().add(Restrict.eq("id", scheduleJobTO.getScheduleJobGroupId()));
             scheduleJob.setScheduleJobGroup(scheduleJobGroupSer.findOne(dto));
-            schedulerSer.add(scheduleJob, true);
+            scheduleSer.add(scheduleJob, true);
         }
         return BeanTransform.copyProperties(scheduleJob, ScheduleJobBO.class);
     }
@@ -53,8 +54,8 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
         ScheduleJob scheduleJob = super.findById(scheduleJobTO.getId());
         BeanTransform.copyProperties(scheduleJobTO, scheduleJob);
         this.verifySchedule(scheduleJob);
-        schedulerSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
-        schedulerSer.restart(scheduleJob);
+        scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        scheduleSer.restart(scheduleJob);
         super.update(scheduleJob);
     }
 
@@ -63,7 +64,7 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
         ScheduleJobDTO dto = new ScheduleJobDTO();
         dto.getConditions().add(Restrict.eq("id", id));
         ScheduleJob scheduleJob = super.findOne(dto);
-        schedulerSer.stop(scheduleJob);
+        scheduleSer.stop(scheduleJob);
         super.remove(id);
     }
 
@@ -72,9 +73,9 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
         ScheduleJob scheduleJob = super.findById(id);
         if (null != scheduleJob) {
             if (enable) {
-                schedulerSer.restart(scheduleJob);
+                scheduleSer.restart(scheduleJob);
             } else {
-                schedulerSer.stop(scheduleJob);
+                scheduleSer.stop(scheduleJob);
             }
             scheduleJob.setEnable(enable);
         } else {
@@ -83,6 +84,13 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
         super.update(scheduleJob);
     }
 
+    @Override
+    public List<ScheduleJob> findScheduleJobs() throws SerException {
+        ScheduleJobDTO dto = new ScheduleJobDTO();
+        dto.getConditions().add(Restrict.eq("scheduleJobGroup.enable", 0));
+        dto.getConditions().add(Restrict.eq("enable", 0));
+        return findByCis(dto);
+    }
 
     private void verifySchedule(ScheduleJob scheduleJob) throws SerException {
         Class<?> clazz = classExists(scheduleJob.getClazz());
@@ -104,7 +112,7 @@ public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO
     private Class<?> classExists(String className) {
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if (null == classLoader) classLoader = ScheduledJobSerImpl.class.getClassLoader();
+            if (null == classLoader) classLoader = ScheduleJobSerImpl.class.getClassLoader();
             return classLoader.loadClass(className);
         } catch (Exception e) {
             return null;

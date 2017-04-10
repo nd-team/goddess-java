@@ -35,7 +35,7 @@ public class ScheduleJobGroup extends BaseEntity {
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
+    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
     private Boolean enable;
 
 

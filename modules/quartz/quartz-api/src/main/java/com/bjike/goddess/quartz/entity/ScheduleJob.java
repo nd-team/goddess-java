@@ -57,13 +57,13 @@ public class ScheduleJob extends BaseEntity {
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
+    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
     private Boolean enable;
 
     /**
      * 任务调度组
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "scheduleJobGroup",nullable = false ,columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
     private ScheduleJobGroup scheduleJobGroup;
 
