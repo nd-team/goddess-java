@@ -7,10 +7,12 @@ import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -65,8 +67,30 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
     @Override
     @Transactional
     public void update(CustomerInfoTO to) throws SerException {
-        CustomerInfo customerInfo = BeanTransform.copyProperties(to, CustomerInfo.class, true);
-        super.update(customerInfo);
+        if (StringUtils.isNotEmpty(to.getId())){
+            CustomerInfo model = super.findById(to.getId());
+            if (model != null) {
+                updateCustomerInfo(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+
+    }
+
+    /**
+     * 更新客户信息
+     *
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateCustomerInfo(CustomerInfoTO to, CustomerInfo model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**

@@ -1,13 +1,12 @@
-模块名:quartz
-类名:ScheduledJobGroup
-作者:liguiqin
-描述:任务调度组
+模块名:intromanage
+类名:IndividualDisplayUser
+作者:sunfengtao
+描述:个人简介显示用户名称集合
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String name 组名;
-String description 描述;
-Boolean enable 是否启用;
+String usernames 用户姓名集合;
+String displayId 个人简介显示字段id;
 )
