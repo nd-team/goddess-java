@@ -11,6 +11,9 @@ public class UserFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String userToken = invocation.getAttachment("userToken");
         //某些方法并不需要token，亦可访问调用
-        return invoker.invoke(invocation);
+        Result result = invoker.invoke(invocation);
+//        RpcContext.getContext().setAttachment("userToken",userToken);
+        result.getAttachments().put("userToken",userToken);
+                return result;
     }
 }

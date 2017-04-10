@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("annual/annualinfo")
+@RequestMapping("annualinfo")
 public class AnnualInfoAction {
 
     @Autowired

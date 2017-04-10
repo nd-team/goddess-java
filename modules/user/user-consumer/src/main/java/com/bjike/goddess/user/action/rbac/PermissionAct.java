@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rbac/permission")
+@RequestMapping("permission")
 public class PermissionAct {
     @Autowired
     private PermissionAPI permissionAPI;

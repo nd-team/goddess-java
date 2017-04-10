@@ -52,7 +52,7 @@ public class UserApiImpl implements UserAPI {
             }
             throw new SerException("登录已过期!");
         }
-        throw new SerException("用户未登录!");
+        throw new SerException("notLogin");
     }
 
 

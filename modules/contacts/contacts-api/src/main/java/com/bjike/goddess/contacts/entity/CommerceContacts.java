@@ -1,13 +1,15 @@
 package com.bjike.goddess.contacts.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.customer.entity.CustomerLevel;
+
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -68,9 +70,8 @@ public class CommerceContacts extends BaseEntity {
     /**
      * 客户级别
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "customerLevel_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
-    private CustomerLevel customerLevel;
+    @Column(name = "customerLevel_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
+    private String customerLevel;
 
     /**
      * 客户来源
@@ -189,11 +190,11 @@ public class CommerceContacts extends BaseEntity {
         this.relation = relation;
     }
 
-    public CustomerLevel getCustomerLevel() {
+    public String getCustomerLevel() {
         return customerLevel;
     }
 
-    public void setCustomerLevel(CustomerLevel customerLevel) {
+    public void setCustomerLevel(String customerLevel) {
         this.customerLevel = customerLevel;
     }
 

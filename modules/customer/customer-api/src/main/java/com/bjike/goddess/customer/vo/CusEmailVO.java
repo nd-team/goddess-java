@@ -5,7 +5,6 @@ import com.bjike.goddess.customer.enums.CustomerCollectUnit;
 import com.bjike.goddess.customer.enums.CustomerSendUnit;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 客户邮件发送定制表现层对象

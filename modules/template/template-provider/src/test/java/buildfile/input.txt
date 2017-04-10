@@ -1,17 +1,13 @@
 模块名:quartz
-类名:ScheduledJob
+类名:ScheduledJobGroup
 作者:liguiqin
-描述:人员信息资料
+描述:任务调度组
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String userId 制定人;
-String clazz 执行类;
-String name 任务名;
-String method 执行方法;
-String expression 表达式;
+String name 组名;
 String description 描述;
 Boolean enable 是否启用;
 )

@@ -6,7 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.api.RewardSituationAPI;
-import com.bjike.goddess.supplier.to.ContactSituationTO;
+import com.bjike.goddess.supplier.to.RewardSituationTO;
 import com.bjike.goddess.supplier.vo.RewardSituationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("supplier/rewardsituation")
+@RequestMapping("rewardsituation")
 public class RewardSituationAction {
 
 
@@ -56,7 +56,7 @@ public class RewardSituationAction {
      * @return class RewardSituationVO
      */
     @PostMapping("v1/save")
-    public Result save(@Validated ContactSituationTO to) throws ActException {
+    public Result save(@Validated RewardSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.save(to), RewardSituationVO.class));
         } catch (SerException e) {
@@ -72,7 +72,7 @@ public class RewardSituationAction {
      * @return class RewardSituationVO
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated ContactSituationTO to) throws ActException {
+    public Result update(@Validated RewardSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.update(to), RewardSituationVO.class));
         } catch (SerException e) {

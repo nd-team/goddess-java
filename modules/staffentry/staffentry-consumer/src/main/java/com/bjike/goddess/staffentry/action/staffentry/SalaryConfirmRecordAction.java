@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("staffentry/salaryconfirmrecord")
+@RequestMapping("salaryconfirmrecord")
 public class SalaryConfirmRecordAction {
 
     @Autowired

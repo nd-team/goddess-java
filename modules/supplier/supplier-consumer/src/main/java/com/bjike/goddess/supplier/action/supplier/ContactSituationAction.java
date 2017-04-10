@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("supplier/contactsituation")
+@RequestMapping("contactsituation")
 public class ContactSituationAction {
 
     @Autowired
@@ -32,8 +32,8 @@ public class ContactSituationAction {
      * 根据供应商基本信息ID查询联系情况
      *
      * @param info_id 供应商基本信息ID
-     * @version v1
      * @return class ContactSituationVO
+     * @version v1
      */
     @GetMapping("v1/findByInformation/{info_id}")
     public Result findByInformation(@PathVariable String info_id) throws ActException {
@@ -51,8 +51,8 @@ public class ContactSituationAction {
      * 保存供应商联系情况数据
      *
      * @param to 供应商联系情况传输对象
-     * @version v1
      * @return class ContactSituationVO
+     * @version v1
      */
     @PostMapping("v1/save")
     public Result save(@Validated ContactSituationTO to) throws ActException {
@@ -67,8 +67,8 @@ public class ContactSituationAction {
      * 修改供应商联系情况数据
      *
      * @param to 供应商联系情况传输对象
-     * @version v1
      * @return class ContactSituationVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
     public Result update(@Validated ContactSituationTO to) throws ActException {
@@ -83,8 +83,8 @@ public class ContactSituationAction {
      * 删除供应商联系情况数据
      *
      * @param id 供应商联系情况id
-     * @version v1
      * @return class ContactSituationVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {

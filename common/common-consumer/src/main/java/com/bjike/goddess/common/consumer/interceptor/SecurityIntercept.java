@@ -35,6 +35,7 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        handlerStorageToken(request);
         String token = handlerToken(request);
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
             return validateLogin(token, response);
@@ -53,6 +54,8 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
         if (StringUtils.isNotBlank(token)) {
             return true;
         } else {
+
+            handlerNotHasLogin(response, "用户未登录！");
             return false;
         }
 
@@ -69,11 +72,25 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
         Object token = request.getParameter("userToken");
         if (null != token) {
             RpcContext.getContext().setAttachment("userToken", String.valueOf(token));
-            LOGGER.info("token:" + token);
             return String.valueOf(token);
         }
+
         return null;
     }
+
+    /**
+     * 处理存儲登录token
+     *
+     * @param request
+     * @return
+     */
+    private void handlerStorageToken(HttpServletRequest request) {
+        Object storageToken = request.getParameter("storageToken");
+        if (null != storageToken) {
+            RpcContext.getContext().setAttachment("storageToken", String.valueOf(storageToken));
+        }
+    }
+
 
     /**
      * 未登录处理

@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
@@ -10,19 +11,16 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CustomerLevel;
-import com.bjike.goddess.customer.service.CustomerDetailSer;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
 import com.bjike.goddess.customer.vo.CustomerBaseInfoVO;
 import com.bjike.goddess.customer.vo.CustomerDetailVO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +34,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/customerdetail")
+@RequestMapping("customerdetail")
 public class CustomerDetailAction {
 
     @Autowired
@@ -124,6 +122,7 @@ public class CustomerDetailAction {
      * @return class CustomerDetailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
@@ -143,6 +142,7 @@ public class CustomerDetailAction {
      * @return class CustomerDetailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
@@ -160,6 +160,7 @@ public class CustomerDetailAction {
      * @des 根据id删除客户详细信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {

@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("capability/coopercapability")
+@RequestMapping("coopercapability")
 public class CooperCapabilityAction {
     @Autowired
     private CooperCapabilityAPI cooperCapabilityAPI;

@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("enterpriseculturemanage/enterprisecultureinfo")
+@RequestMapping("enterprisecultureinfo")
 public class EnterpriseCultureInfoAct {
 
     @Autowired

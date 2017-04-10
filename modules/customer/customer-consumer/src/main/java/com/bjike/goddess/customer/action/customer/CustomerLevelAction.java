@@ -3,12 +3,12 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerLevelAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
-import com.bjike.goddess.customer.service.CustomerLevelSer;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
 import com.bjike.goddess.customer.vo.CustomerLevelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/customerlevel")
+@RequestMapping("customerlevel")
 public class CustomerLevelAction {
 
     @Autowired
@@ -79,6 +78,7 @@ public class CustomerLevelAction {
      * @return  class CustomerLevelVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerLevel(@Validated CustomerLevelTO customerLevelTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +98,7 @@ public class CustomerLevelAction {
      * @return  class CustomerLevelVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerLevel(@Validated CustomerLevelTO customerLevelTO) throws ActException {
         try {
@@ -115,6 +116,7 @@ public class CustomerLevelAction {
      * @des 根据id删除客户等级信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCustomerLevel(@PathVariable String id) throws ActException {
         try {
@@ -152,6 +154,7 @@ public class CustomerLevelAction {
      * @des 根据id冻结客户等级记录
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -170,6 +173,7 @@ public class CustomerLevelAction {
      * @des 根据id解冻客户等级记录
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {

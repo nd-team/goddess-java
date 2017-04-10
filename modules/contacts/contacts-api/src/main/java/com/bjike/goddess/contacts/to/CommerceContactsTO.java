@@ -2,9 +2,9 @@ package com.bjike.goddess.contacts.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.contacts.enums.CustomerSex;
-import com.bjike.goddess.contacts.enums.CustomerStatus;
-import com.bjike.goddess.contacts.enums.CustomerType;
+import com.bjike.goddess.customer.enums.CustomerSex;
+import com.bjike.goddess.customer.enums.CustomerStatus;
+import com.bjike.goddess.customer.enums.CustomerType;
 
 import javax.validation.constraints.NotNull;
 

@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessproject/baseinfomanage")
+@RequestMapping("baseinfomanage")
 public class BaseInfoManageAction {
 
     @Autowired

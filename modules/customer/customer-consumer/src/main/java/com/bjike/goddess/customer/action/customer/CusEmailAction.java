@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CusEmailAPI;
@@ -10,13 +11,11 @@ import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.to.CusEmailTO;
 import com.bjike.goddess.customer.vo.CusEmailVO;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("customer/cusemail")
+@RequestMapping("cusemail")
 public class CusEmailAction {
 
     @Autowired
@@ -79,6 +78,7 @@ public class CusEmailAction {
      * @return  class CusEmailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCusEmail( @Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +98,7 @@ public class CusEmailAction {
      * @return  class CusEmailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCusEmail(@Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
         try {
@@ -115,6 +116,7 @@ public class CusEmailAction {
      * @des 根据id删除客户邮件汇总信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCusEmail(@PathVariable String id) throws ActException {
         try {
@@ -133,6 +135,7 @@ public class CusEmailAction {
      * @des 根据id冻结客户邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +154,7 @@ public class CusEmailAction {
      * @des 根据id解冻客户邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {

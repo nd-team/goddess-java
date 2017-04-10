@@ -17,6 +17,6 @@ public class AppEntityToScan extends EntityToScanImpl<AppRoot> {
 
     @Override
     public String[] entityScan() {
-        return new String[]{"com.bjike.goddess.customer","com.bjike.goddess.user"};
+        return new String[]{"com.bjike.goddess.customer"};
     }
 }
