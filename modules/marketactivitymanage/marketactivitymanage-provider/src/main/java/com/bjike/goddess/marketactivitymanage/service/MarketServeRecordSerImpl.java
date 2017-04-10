@@ -16,6 +16,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -85,9 +86,30 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional
     public void update(MarketServeRecordTO to) throws SerException {
-        MarketServeRecord entity = BeanTransform.copyProperties(to, MarketServeRecord.class, true);
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
+        if (StringUtils.isNotEmpty(to.getId())){
+            MarketServeRecord model = super.findById(to.getId());
+            if (model != null) {
+                updateMarketServeRecord(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+
+    }
+
+    /**
+     * 更新市场招待记录
+     *
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateMarketServeRecord(MarketServeRecordTO to, MarketServeRecord model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
