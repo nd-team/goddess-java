@@ -7,13 +7,11 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
-import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
 import com.bjike.goddess.projectmeasure.entity.*;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -213,8 +211,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         Integer sSProjectNo = 0;
         for (String projectName : projectNameSet) {
             for (SingleProjectSingleUI ssUI : sSList) {
-                if (projectName.equals(ssUI.getProjectName())){
-                    sSProjectNo ++;
+                if (projectName.equals(ssUI.getProjectName())) {
+                    sSProjectNo++;
                 }
             }
         }
@@ -233,8 +231,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         Integer smProjectNo = 0;
         for (String projectName : projectNameSet) {
             for (SingleProjectMultipleUI smUI : sMList) {
-                if (projectName.equals(smUI.getProjectName())){
-                    smProjectNo ++;
+                if (projectName.equals(smUI.getProjectName())) {
+                    smProjectNo++;
                 }
             }
         }
@@ -253,8 +251,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         Integer msProjectNo = 0;
         for (String projectName : projectNameSet) {
             for (MultipleProjectSingleUI msUI : mSList) {
-                if (projectName.equals(msUI.getProjectName())){
-                    msProjectNo ++;
+                if (projectName.equals(msUI.getProjectName())) {
+                    msProjectNo++;
                 }
             }
         }
@@ -273,8 +271,8 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         Integer mmProjectNo = 0;
         for (String projectName : projectNameSet) {
             for (MultipleProjectMultipleUI mmUI : mMList) {
-                if (projectName.equals(mmUI.getProjectName())){
-                    mmProjectNo ++;
+                if (projectName.equals(mmUI.getProjectName())) {
+                    mmProjectNo++;
                 }
             }
         }
