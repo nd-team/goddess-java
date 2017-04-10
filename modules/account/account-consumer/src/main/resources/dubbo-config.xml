@@ -16,9 +16,7 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true" id="rentalPreceptApiImpl" interface="com.bjike.goddess.accommodation.api.RentalPreceptAPI" />
-	<dubbo:reference  validation="true" id="rentalApplyApiImpl" interface="com.bjike.goddess.accommodation.api.RentalApplyAPI" />
-	<dubbo:reference  validation="true" id="rentalApiImpl" interface="com.bjike.goddess.accommodation.api.RentalAPI" />
-	<dubbo:reference  validation="true" id="dormitoryApiImpl" interface="com.bjike.goddess.accommodation.api.DormitoryAPI" />
+	<dubbo:reference  validation="true" id="accountInfoApiImpl" interface="com.bjike.goddess.account.api.AccountInfoAPI" />
+
 
 </beans>

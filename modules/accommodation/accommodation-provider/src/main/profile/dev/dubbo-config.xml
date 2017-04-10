@@ -11,14 +11,19 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
 	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true" id="rentalPreceptApiImpl" interface="com.bjike.goddess.accommodation.api.RentalPreceptAPI" />
-	<dubbo:reference  validation="true" id="rentalApplyApiImpl" interface="com.bjike.goddess.accommodation.api.RentalApplyAPI" />
-	<dubbo:reference  validation="true" id="rentalApiImpl" interface="com.bjike.goddess.accommodation.api.RentalAPI" />
-	<dubbo:reference  validation="true" id="dormitoryApiImpl" interface="com.bjike.goddess.accommodation.api.DormitoryAPI" />
+
+	<!--发布接口,供其他模块调用-->
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalPreceptAPI" ref="rentalPreceptApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalApplyAPI" ref="rentalApplyApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.RentalAPI" ref="rentalApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.accommodation.api.DormitoryAPI" ref="dormitoryApiImpl" />
+	<!--其他模块业务接口-->
+
 
 </beans>
