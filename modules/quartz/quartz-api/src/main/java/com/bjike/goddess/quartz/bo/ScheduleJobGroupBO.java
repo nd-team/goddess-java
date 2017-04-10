@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ScheduledJobGroupBO extends BaseBO {
+public class ScheduleJobGroupBO extends BaseBO {
 
     /**
      * 组名

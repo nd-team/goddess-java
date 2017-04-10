@@ -3,6 +3,9 @@ package com.bjike.goddess.quartz.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 任务调度
@@ -13,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ScheduledJobTO extends BaseTO {
+public class ScheduleJobTO extends BaseTO {
 
 
     /**
@@ -49,7 +52,7 @@ public class ScheduledJobTO extends BaseTO {
     /**
      * 是否启用
      */
-    @NotBlank(message = "是否启用不能为空", groups = ADD.class)
+    @NotNull(message = "是否启用不能为空", groups = ADD.class)
     private Boolean enable;
 
 
@@ -57,7 +60,7 @@ public class ScheduledJobTO extends BaseTO {
      * 任务所属调度组
      */
     @NotBlank(message = "任务所属调度组不能为空", groups = ADD.class)
-    private String scheduledJobGroupId;
+    private String scheduleJobGroupId;
 
     public String getClazz() {
         return clazz;
@@ -107,11 +110,11 @@ public class ScheduledJobTO extends BaseTO {
         this.enable = enable;
     }
 
-    public String getScheduledJobGroupId() {
-        return scheduledJobGroupId;
+    public String getScheduleJobGroupId() {
+        return scheduleJobGroupId;
     }
 
-    public void setScheduledJobGroupId(String scheduledJobGroupId) {
-        this.scheduledJobGroupId = scheduledJobGroupId;
+    public void setScheduleJobGroupId(String scheduleJobGroupId) {
+        this.scheduleJobGroupId = scheduleJobGroupId;
     }
 }

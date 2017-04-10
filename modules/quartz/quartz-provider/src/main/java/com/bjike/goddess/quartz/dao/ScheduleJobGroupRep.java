@@ -1,8 +1,8 @@
 package com.bjike.goddess.quartz.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.quartz.dto.ScheduledJobGroupDTO;
-import com.bjike.goddess.quartz.entity.ScheduledJobGroup;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
 
 /**
  * 任务调度组持久化接口, 继承基类可使用ｊｐａ命名查询
@@ -13,6 +13,6 @@ import com.bjike.goddess.quartz.entity.ScheduledJobGroup;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface ScheduledJobGroupRep extends JpaRep<ScheduledJobGroup, ScheduledJobGroupDTO> {
+public interface ScheduleJobGroupRep extends JpaRep<ScheduleJobGroup, ScheduleJobGroupDTO> {
 
 }

@@ -1,8 +1,8 @@
 package com.bjike.goddess.quartz.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.quartz.bo.ScheduledJobGroupBO;
-import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
+import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 
 /**
  * 任务调度组业务接口
@@ -13,7 +13,7 @@ import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface ScheduledJobGroupAPI {
+public interface ScheduleJobGroupAPI {
 
 
     /**
@@ -22,7 +22,7 @@ public interface ScheduledJobGroupAPI {
      * @param jobGroupTO
      * @return
      */
-    default ScheduledJobGroupBO add(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    default ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
         return null;
     }
 
@@ -31,7 +31,7 @@ public interface ScheduledJobGroupAPI {
      *
      * @param jobGroupTO
      */
-    default void edit(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    default void edit(ScheduleJobGroupTO jobGroupTO) throws SerException {
 
     }
 

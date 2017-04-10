@@ -3,10 +3,10 @@ package com.bjike.goddess.quartz.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.quartz.bo.ScheduledJobGroupBO;
-import com.bjike.goddess.quartz.dto.ScheduledJobGroupDTO;
-import com.bjike.goddess.quartz.entity.ScheduledJobGroup;
-import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
+import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +21,17 @@ import org.springframework.stereotype.Service;
  */
 @CacheConfig(cacheNames = "quartzSerCache")
 @Service
-public class ScheduledJobGroupSerImpl extends ServiceImpl<ScheduledJobGroup, ScheduledJobGroupDTO> implements ScheduledJobGroupSer {
+public class ScheduledJobGroupSerImpl extends ServiceImpl<ScheduleJobGroup, ScheduleJobGroupDTO> implements ScheduleJobGroupSer {
     @Override
-    public ScheduledJobGroupBO add(ScheduledJobGroupTO jobGroupTO) throws SerException {
-        ScheduledJobGroup jobGroup = BeanTransform.copyProperties(jobGroupTO, ScheduledJobGroup.class);
+    public ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
+        ScheduleJobGroup jobGroup = BeanTransform.copyProperties(jobGroupTO, ScheduleJobGroup.class);
         super.save(jobGroup);
-        return BeanTransform.copyProperties(jobGroup, ScheduledJobGroupBO.class);
+        return BeanTransform.copyProperties(jobGroup, ScheduleJobGroupBO.class);
     }
 
     @Override
-    public void edit(ScheduledJobGroupTO jobGroupTO) throws SerException {
-        ScheduledJobGroup jobGroup = super.findById(jobGroupTO.getId());
+    public void edit(ScheduleJobGroupTO jobGroupTO) throws SerException {
+        ScheduleJobGroup jobGroup = super.findById(jobGroupTO.getId());
         BeanTransform.copyProperties(jobGroupTO, jobGroup);
         super.update(jobGroup);
     }
@@ -43,7 +43,7 @@ public class ScheduledJobGroupSerImpl extends ServiceImpl<ScheduledJobGroup, Sch
 
     @Override
     public void enable(String id, boolean enable) throws SerException {
-        ScheduledJobGroup jobGroup = super.findById(id);
+        ScheduleJobGroup jobGroup = super.findById(id);
         if (null != jobGroup) {
             jobGroup.setEnable(enable);
         } else {

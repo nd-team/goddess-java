@@ -1,9 +1,9 @@
 package com.bjike.goddess.quartz.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.quartz.bo.ScheduledJobGroupBO;
-import com.bjike.goddess.quartz.service.ScheduledJobGroupSer;
-import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
+import com.bjike.goddess.quartz.service.ScheduleJobGroupSer;
+import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +16,18 @@ import org.springframework.stereotype.Service;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("scheduledJobGroupApiImpl")
-public class ScheduledJobGroupApiImpl implements ScheduledJobGroupAPI {
+@Service("scheduleJobGroupApiImpl")
+public class ScheduledJobGroupApiImpl implements ScheduleJobGroupAPI {
     @Autowired
-    private ScheduledJobGroupSer scheduledJobGroupSer;
+    private ScheduleJobGroupSer scheduledJobGroupSer;
 
     @Override
-    public ScheduledJobGroupBO add(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    public ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
         return scheduledJobGroupSer.add(jobGroupTO);
     }
 
     @Override
-    public void edit(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    public void edit(ScheduleJobGroupTO jobGroupTO) throws SerException {
         scheduledJobGroupSer.edit(jobGroupTO);
     }
 

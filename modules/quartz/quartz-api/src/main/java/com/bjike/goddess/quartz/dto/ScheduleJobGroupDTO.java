@@ -9,6 +9,6 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public class ScheduledJobGroupDTO extends BaseDTO { 
+public class ScheduleJobGroupDTO extends BaseDTO {
 
  }

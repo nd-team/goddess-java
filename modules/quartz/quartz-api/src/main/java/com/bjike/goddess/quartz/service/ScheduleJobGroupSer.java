@@ -2,10 +2,10 @@ package com.bjike.goddess.quartz.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.quartz.bo.ScheduledJobGroupBO;
-import com.bjike.goddess.quartz.dto.ScheduledJobGroupDTO;
-import com.bjike.goddess.quartz.entity.ScheduledJobGroup;
-import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
+import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 
 /**
  * 任务调度组业务接口
@@ -16,7 +16,7 @@ import com.bjike.goddess.quartz.to.ScheduledJobGroupTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface ScheduledJobGroupSer extends Ser<ScheduledJobGroup, ScheduledJobGroupDTO> {
+public interface ScheduleJobGroupSer extends Ser<ScheduleJobGroup, ScheduleJobGroupDTO> {
 
     /**
      * 添加任务调度组
@@ -24,7 +24,7 @@ public interface ScheduledJobGroupSer extends Ser<ScheduledJobGroup, ScheduledJo
      * @param jobGroupTO
      * @return
      */
-    default ScheduledJobGroupBO add(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    default ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
         return null;
     }
 
@@ -33,7 +33,7 @@ public interface ScheduledJobGroupSer extends Ser<ScheduledJobGroup, ScheduledJo
      *
      * @param jobGroupTO
      */
-    default void edit(ScheduledJobGroupTO jobGroupTO) throws SerException {
+    default void edit(ScheduleJobGroupTO jobGroupTO) throws SerException {
 
     }
 

@@ -1,14 +1,19 @@
 package com.bjike.goddess.quartz.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.quartz.bo.ScheduledJobBO;
-import com.bjike.goddess.quartz.dto.ScheduledJobDTO;
-import com.bjike.goddess.quartz.entity.ScheduledJob;
-import com.bjike.goddess.quartz.to.ScheduledJobTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobBO;
+import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
+import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
+import com.bjike.goddess.quartz.entity.ScheduleJob;
+import com.bjike.goddess.quartz.to.ScheduleJobTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Method;
 
 /**
  * 任务调度业务实现
@@ -21,34 +26,115 @@ import org.springframework.stereotype.Service;
  */
 @CacheConfig(cacheNames = "quartzSerCache")
 @Service
-public class ScheduledJobSerImpl extends ServiceImpl<ScheduledJob, ScheduledJobDTO> implements ScheduledJobSer {
+public class ScheduledJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO> implements ScheduledJobSer {
+    @Autowired
+    private ScheduleSer schedulerSer;
+    @Autowired
+    private ScheduleJobGroupSer scheduleJobGroupSer;
+
     @Override
-    public ScheduledJobBO add(ScheduledJobTO scheduledJobTO) throws SerException {
-        ScheduledJob scheduledJob = BeanTransform.copyProperties(scheduledJobTO, ScheduledJob.class);
-        super.save(scheduledJob);
-        return BeanTransform.copyProperties(scheduledJob, ScheduledJobBO.class);
+    public ScheduleJobBO add(ScheduleJobTO scheduleJobTO) throws SerException {
+        ScheduleJob scheduleJob = BeanTransform.copyProperties(scheduleJobTO, ScheduleJob.class);
+        scheduleJob.setUserId("111");
+        schedulerSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        this.verifySchedule(scheduleJob);
+        super.save(scheduleJob);
+        if (scheduleJob.getEnable()) {
+            ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
+            dto.getConditions().add(Restrict.eq("id", scheduleJobTO.getScheduleJobGroupId()));
+            scheduleJob.setScheduleJobGroup(scheduleJobGroupSer.findOne(dto));
+            schedulerSer.add(scheduleJob, true);
+        }
+        return BeanTransform.copyProperties(scheduleJob, ScheduleJobBO.class);
     }
 
     @Override
-    public void edit(ScheduledJobTO scheduledJobTO) throws SerException {
-        ScheduledJob scheduledJob = super.findById(scheduledJobTO.getId());
-        BeanTransform.copyProperties(scheduledJobTO, scheduledJob);
-        super.update(scheduledJob);
+    public void edit(ScheduleJobTO scheduleJobTO) throws SerException {
+        ScheduleJob scheduleJob = super.findById(scheduleJobTO.getId());
+        BeanTransform.copyProperties(scheduleJobTO, scheduleJob);
+        this.verifySchedule(scheduleJob);
+        schedulerSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        schedulerSer.restart(scheduleJob);
+        super.update(scheduleJob);
     }
 
     @Override
     public void delete(String id) throws SerException {
+        ScheduleJobDTO dto = new ScheduleJobDTO();
+        dto.getConditions().add(Restrict.eq("id", id));
+        ScheduleJob scheduleJob = super.findOne(dto);
+        schedulerSer.stop(scheduleJob);
         super.remove(id);
     }
 
     @Override
     public void enable(String id, boolean enable) throws SerException {
-        ScheduledJob scheduledJob = super.findById(id);
-        if (null != scheduledJob) {
-            scheduledJob.setEnable(enable);
+        ScheduleJob scheduleJob = super.findById(id);
+        if (null != scheduleJob) {
+            if (enable) {
+                schedulerSer.restart(scheduleJob);
+            } else {
+                schedulerSer.stop(scheduleJob);
+            }
+            scheduleJob.setEnable(enable);
         } else {
             throw new SerException("该任务调度组不存在");
         }
-        super.update(scheduledJob);
+        super.update(scheduleJob);
     }
+
+
+    private void verifySchedule(ScheduleJob scheduleJob) throws SerException {
+        Class<?> clazz = classExists(scheduleJob.getClazz());
+        if (clazz != null) {
+            Method method = methodExists(clazz, scheduleJob.getMethod());
+            if (null != method) {
+                if (!parameterTypesExists(method)) {
+                    throw new SerException("执行方法中不能存有任何参数.");
+                }
+            } else {
+                throw new SerException("执行方法不存在此调用类中.");
+            }
+        } else {
+            throw new SerException("调用类不存在此系统中.");
+        }
+    }
+
+
+    private Class<?> classExists(String className) {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (null == classLoader) classLoader = ScheduledJobSerImpl.class.getClassLoader();
+            return classLoader.loadClass(className);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Method methodExists(Class<?> clazz, String methodName) {
+        try {
+            Method[] methods = clazz.getDeclaredMethods();
+            for (Method method : methods) {
+                if (method.getName().equals(methodName)) {
+                    return method;
+                }
+            }
+            return null;
+        } catch (SecurityException e) {
+            return null;
+        }
+    }
+
+    public boolean parameterTypesExists(Method method) {
+        try {
+            Class<?>[] cc = method.getParameterTypes();
+            if (0 == cc.length) {
+                return true;
+            }
+            return false;
+        } catch (SecurityException e) {
+            return false;
+        }
+    }
+
 }

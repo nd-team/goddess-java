@@ -1,71 +1,54 @@
-package com.bjike.goddess.quartz.entity;
+package com.bjike.goddess.quartz.bo;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
-
-import javax.persistence.*;
-
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 任务调度
+ * 任务调度业务传输对象
  *
  * @Author: [ liguiqin ]
  * @Date: [ 2017-04-06 02:24 ]
- * @Description: [ 任务调度 ]
+ * @Description: [ 任务调度业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "quartz_scheduledjob")
-public class ScheduledJob extends BaseEntity {
+public class ScheduleJobBO extends BaseBO {
 
     /**
      * 制定人
      */
-    @Column(name = "userId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '制定人'")
     private String userId;
 
     /**
      * 执行类
      */
-    @Column(name = "clazz", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行类'")
     private String clazz;
 
     /**
      * 任务名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务名'")
     private String name;
 
     /**
      * 执行方法
      */
-    @Column(name = "method", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行方法'")
     private String method;
 
     /**
      * 表达式
      */
-    @Column(name = "expression", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '表达式'")
     private String expression;
 
     /**
      * 描述
      */
-    @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String description;
 
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
     private Boolean enable;
 
-    /**
-     * 任务调度组
-     */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "scheduledJobGroup", columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
-    private ScheduledJobGroup scheduledJobGroup;
+
 
 
     public String getUserId() {
@@ -124,11 +107,5 @@ public class ScheduledJob extends BaseEntity {
         this.enable = enable;
     }
 
-    public ScheduledJobGroup getScheduledJobGroup() {
-        return scheduledJobGroup;
-    }
 
-    public void setScheduledJobGroup(ScheduledJobGroup scheduledJobGroup) {
-        this.scheduledJobGroup = scheduledJobGroup;
-    }
 }

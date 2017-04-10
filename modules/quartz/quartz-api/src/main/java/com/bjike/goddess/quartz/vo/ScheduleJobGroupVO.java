@@ -1,43 +1,43 @@
-package com.bjike.goddess.quartz.entity;
-
-import com.bjike.goddess.common.api.entity.BaseEntity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+package com.bjike.goddess.quartz.vo;
 
 /**
- * 任务调度组
+ * 任务调度组表现层对象
  *
  * @Author: [ liguiqin ]
  * @Date: [ 2017-04-06 02:26 ]
- * @Description: [ 任务调度组 ]
+ * @Description: [ 任务调度组表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "quartz_scheduledjob_group")
-public class ScheduledJobGroup extends BaseEntity {
+public class ScheduleJobGroupVO {
 
+    /**
+     * id
+     */
+    private String id;
     /**
      * 组名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '组名'")
     private String name;
 
     /**
      * 描述
      */
-    @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String description;
 
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
     private Boolean enable;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

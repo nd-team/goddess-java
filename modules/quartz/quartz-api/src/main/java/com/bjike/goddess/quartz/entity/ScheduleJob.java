@@ -1,54 +1,71 @@
-package com.bjike.goddess.quartz.bo;
+package com.bjike.goddess.quartz.entity;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+
+import javax.persistence.*;
+
 
 /**
- * 任务调度业务传输对象
+ * 任务调度
  *
  * @Author: [ liguiqin ]
  * @Date: [ 2017-04-06 02:24 ]
- * @Description: [ 任务调度业务传输对象 ]
+ * @Description: [ 任务调度 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ScheduledJobBO extends BaseBO {
+@Entity
+@Table(name = "quartz_schedulejob")
+public class ScheduleJob extends BaseEntity {
 
     /**
      * 制定人
      */
+    @Column(name = "userId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '制定人'")
     private String userId;
 
     /**
      * 执行类
      */
+    @Column(name = "clazz", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行类'")
     private String clazz;
 
     /**
      * 任务名
      */
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务名'")
     private String name;
 
     /**
      * 执行方法
      */
+    @Column(name = "method", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行方法'")
     private String method;
 
     /**
      * 表达式
      */
+    @Column(name = "expression", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '表达式'")
     private String expression;
 
     /**
      * 描述
      */
+    @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String description;
 
     /**
      * 是否启用
      */
+    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
     private Boolean enable;
 
-
+    /**
+     * 任务调度组
+     */
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "scheduleJobGroup",nullable = false ,columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
+    private ScheduleJobGroup scheduleJobGroup;
 
 
     public String getUserId() {
@@ -107,5 +124,11 @@ public class ScheduledJobBO extends BaseBO {
         this.enable = enable;
     }
 
+    public ScheduleJobGroup getScheduleJobGroup() {
+        return scheduleJobGroup;
+    }
 
+    public void setScheduleJobGroup(ScheduleJobGroup scheduleJobGroup) {
+        this.scheduleJobGroup = scheduleJobGroup;
+    }
 }

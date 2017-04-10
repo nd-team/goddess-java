@@ -1,8 +1,8 @@
 package com.bjike.goddess.quartz.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.quartz.bo.ScheduledJobBO;
-import com.bjike.goddess.quartz.to.ScheduledJobTO;
+import com.bjike.goddess.quartz.bo.ScheduleJobBO;
+import com.bjike.goddess.quartz.to.ScheduleJobTO;
 
 /**
  * 任务调度业务接口
@@ -13,24 +13,24 @@ import com.bjike.goddess.quartz.to.ScheduledJobTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface ScheduledJobAPI {
+public interface ScheduleJobAPI {
 
     /**
      * 添加任务调度
      *
-     * @param scheduledJobTO
+     * @param scheduleJobTO
      * @return
      */
-    default ScheduledJobBO add(ScheduledJobTO scheduledJobTO) throws SerException {
+    default ScheduleJobBO add(ScheduleJobTO scheduleJobTO) throws SerException {
         return null;
     }
 
     /**
      * 编辑任务调度
      *
-     * @param scheduledJobTO
+     * @param scheduleJobTO
      */
-    default void edit(ScheduledJobTO scheduledJobTO) throws SerException {
+    default void edit(ScheduleJobTO scheduleJobTO) throws SerException {
 
     }
 

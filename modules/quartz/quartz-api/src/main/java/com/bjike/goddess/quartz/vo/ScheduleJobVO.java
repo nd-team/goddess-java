@@ -9,7 +9,7 @@ package com.bjike.goddess.quartz.vo;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ScheduledJobVO {
+public class ScheduleJobVO {
 
     /**
      * id
