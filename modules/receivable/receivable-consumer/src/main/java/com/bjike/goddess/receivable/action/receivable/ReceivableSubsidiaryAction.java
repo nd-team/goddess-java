@@ -99,7 +99,7 @@ public class ReceivableSubsidiaryAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeReceivableSubsidiary(String id) throws ActException {
+    public Result removeReceivableSubsidiary(@PathVariable String id) throws ActException {
         try {
             receivableSubsidiaryAPI.removeReceivableSubsidiary(id);
             return new ActResult("delete success");
@@ -171,24 +171,7 @@ public class ReceivableSubsidiaryAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 汇总地区详情
-     *
-     * @param area 地区
-     * @des 根据地区汇总
-     * @return  class ReceivableSubsidiaryVO
-     * @version v1
-     */
-    @GetMapping("v1/collectAreaDetail")
-    public Result collectAreaDetail ( @NotBlank String[] area ) throws ActException {
-        try {
-            List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties(
-                    receivableSubsidiaryAPI.collectAreaDetail(area),ReceivableSubsidiaryVO.class,true);
-            return ActResult.initialize(receivableSubsidiaryVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
     /**
      * 汇总项目名称
      *
@@ -207,24 +190,7 @@ public class ReceivableSubsidiaryAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 汇总项目名称详情
-     *
-     * @param innerName 项目名称
-     * @des 根据项目名称汇总
-     * @return  class ReceivableSubsidiaryVO
-     * @version v1
-     */
-    @GetMapping("v1/collectInnerNameDetail")
-    public Result collectInnerNameDetail ( @NotBlank String[] innerName ) throws ActException {
-        try {
-            List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties(
-                    receivableSubsidiaryAPI.collectInnerNameDetail(innerName),ReceivableSubsidiaryVO.class,true);
-            return ActResult.initialize(receivableSubsidiaryVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
     /**
      * 汇总总包单位
      *
@@ -243,24 +209,7 @@ public class ReceivableSubsidiaryAction {
             throw new ActException(e.getMessage());
         }
     }
-    /**
-     * 汇总总包单位详情
-     *
-     * @param contractor 总包单位
-     * @des 根据总包单位汇总
-     * @return  class ReceivableSubsidiaryVO
-     * @version v1
-     */
-    @GetMapping("v1/collectContractorDetail")
-    public Result collectContractorDetail ( @NotBlank String[] contractor ) throws ActException {
-        try {
-            List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties(
-                    receivableSubsidiaryAPI.collectContractorDetail(contractor),ReceivableSubsidiaryVO.class,true);
-            return ActResult.initialize(receivableSubsidiaryVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
     /**
      * 对比汇总
      *

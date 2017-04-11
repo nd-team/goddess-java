@@ -50,7 +50,7 @@ public interface RentalApplyAPI {
      * @return class rentalPrecept
      * @throws SerException
      */
-    default List<RentalApplyBO> listRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+    default List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
         return null;
     }
 

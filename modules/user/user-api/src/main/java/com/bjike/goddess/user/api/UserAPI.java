@@ -136,4 +136,13 @@ public interface UserAPI {
     default List<UserBO> findByGroup(String ...  groups) throws SerException{
         return null;
     }
+
+    /**
+     * 查询所有用户
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findAllUser() throws SerException{
+        return null;
+    }
 }

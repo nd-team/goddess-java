@@ -52,7 +52,7 @@ public interface DormitoryAPI {
      * @return class rental
      * @throws SerException
      */
-    default List<Dormitory> listDormitory(DormitoryDTO dormitoryDTO) throws SerException {
+    default List<DormitoryBO> findListDormitory(DormitoryDTO dormitoryDTO) throws SerException {
         return null;
     }
     /**
