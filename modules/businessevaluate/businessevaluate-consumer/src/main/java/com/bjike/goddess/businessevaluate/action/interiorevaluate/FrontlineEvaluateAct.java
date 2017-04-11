@@ -25,7 +25,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessevaluate/frontlineevaluate")
+@RequestMapping("frontlineevaluate")
 public class FrontlineEvaluateAct {
 
     @Autowired

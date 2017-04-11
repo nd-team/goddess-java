@@ -114,4 +114,9 @@ public class UserApiImpl implements UserAPI {
     public List<UserBO> findByGroup(String... groups) throws SerException {
         return userSer.findByGroup(groups);
     }
+
+    @Override
+    public List<UserBO> findAllUser() throws SerException {
+        return userSer.findAllUser();
+    }
 }

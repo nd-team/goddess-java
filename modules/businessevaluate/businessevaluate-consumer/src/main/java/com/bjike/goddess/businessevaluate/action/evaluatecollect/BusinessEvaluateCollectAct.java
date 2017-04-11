@@ -26,7 +26,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessevaluate/businessevaluatecollect")
+@RequestMapping("businessevaluatecollect")
 public class BusinessEvaluateCollectAct {
 
     @Autowired

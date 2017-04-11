@@ -67,13 +67,17 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
         List<Predicate> or_preList = new ArrayList<>(); //or 条件列表
         Class clazz = null;
         Join<BE, Object> join = null;
-        if (null!=conditions){
+        if (null != conditions) {
             try {
                 for (Condition model : conditions) {
                     Boolean isOrPre = false; //是否为or查询
                     Predicate predicate = null;
                     if (null != model.getValue()) {
+                        if (model.getValue() instanceof Boolean) {
+                            model.setValue(Boolean.TRUE == model.getValue() ? "0" : "1");
+                        }
                         clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
+
                     } else {
                         clazz = String.class;
                     }
@@ -155,7 +159,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                 predicate = cb.or(or_preList.toArray(or_pres));
             }
             return predicate;
-        }else {
+        } else {
             return null;
         }
 

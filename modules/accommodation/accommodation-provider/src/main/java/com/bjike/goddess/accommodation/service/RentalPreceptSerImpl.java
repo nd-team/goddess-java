@@ -7,6 +7,7 @@ import com.bjike.goddess.accommodation.to.RentalPreceptTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@CacheConfig(cacheNames = "rentalPreceptSerCache")
+@CacheConfig(cacheNames = "accommodationSerCache")
 @Service
 public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept,RentalPreceptDTO> implements RentalPreceptSer {
 
@@ -46,15 +47,15 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept,RentalPrecep
     @Override
     public RentalPreceptBO editPecept(RentalPreceptTO preceptTO) throws SerException {
 
-        RentalPrecept precept = BeanTransform.copyProperties(preceptTO, RentalPrecept.class, true);
-        try {
-            precept.setModifyTime(LocalDateTime.now());
-            super.update(precept);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(!StringUtils.isEmpty(preceptTO.getId())){
+            RentalPrecept rentalPrecept = super.findById(preceptTO.getId());
+            BeanTransform.copyProperties(preceptTO,rentalPrecept,true);
+            rentalPrecept.setModifyTime(LocalDateTime.now());
+            super.update(rentalPrecept);
+        }else{
+            throw new SerException("更新ID不能为空!");
         }
-
-        return BeanTransform.copyProperties(precept, RentalPreceptBO.class);
+        return BeanTransform.copyProperties(preceptTO,RentalPreceptBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -68,11 +69,10 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept,RentalPrecep
     }
     @Cacheable
     @Override
-    public List<RentalPrecept> listRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+    public List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
 
-        //TODO: xiazhili 2017-03-10 未做根据 rentalPreceptDTO 分页查询所有
-        List<RentalPrecept> rentalPrecepts = super.findByPage(rentalPreceptDTO);
-        return rentalPrecepts;
+        List<RentalPrecept> rentalPrecepts = super.findByCis(rentalPreceptDTO,true);
+        return BeanTransform.copyProperties(rentalPrecepts,RentalPreceptBO.class);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override

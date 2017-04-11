@@ -94,7 +94,7 @@ public class CareerPlanningCustomAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeCareerPlanningCustom(String id) throws ActException {
+    public Result removeCareerPlanningCustom(@PathVariable String id) throws ActException {
         try {
             careerPlanningCustomAPI.removeCareerPlanningCustom(id);
             return new ActResult("delete success");
