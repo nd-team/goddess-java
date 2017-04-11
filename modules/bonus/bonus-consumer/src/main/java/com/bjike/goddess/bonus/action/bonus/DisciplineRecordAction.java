@@ -4,12 +4,15 @@ import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
 import com.bjike.goddess.bonus.vo.*;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,11 +36,11 @@ public class DisciplineRecordAction {
      * 保存
      *
      * @param to 奖罚记录传输对象
-     * @return class  disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(DisciplineRecordTO to) throws ActException {
+    public Result save(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
         } catch (SerException e) {
@@ -49,11 +52,11 @@ public class DisciplineRecordAction {
      * 奖励
      *
      * @param to 奖罚记录传输对象
-     * @return class  disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @PostMapping("v1/reward")
-    public Result reward(DisciplineRecordTO to) throws ActException {
+    public Result reward(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
         try {
             to.setStatus(Boolean.TRUE);
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
@@ -66,11 +69,11 @@ public class DisciplineRecordAction {
      * 处罚
      *
      * @param to 奖罚记录传输对象
-     * @return class  disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @PostMapping("v1/push")
-    public Result push(DisciplineRecordTO to) throws ActException {
+    public Result push(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
         try {
             to.setStatus(Boolean.FALSE);
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
@@ -83,11 +86,11 @@ public class DisciplineRecordAction {
      * 修改
      *
      * @param to 奖罚记录传输对象
-     * @return class disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(DisciplineRecordTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) DisciplineRecordTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.update(to), DisciplineRecordVO.class));
         } catch (SerException e) {
@@ -99,7 +102,7 @@ public class DisciplineRecordAction {
      * 删除
      *
      * @param id 奖罚记录传输对象
-     * @return class disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -227,7 +230,7 @@ public class DisciplineRecordAction {
      * 根据过滤条件查询奖罚记录
      *
      * @param to 过滤条件传输对象
-     * @return class disciplineRecordVO
+     * @return class DisciplineRecordVO
      * @version v1
      */
     @GetMapping("v1/findByFilter")

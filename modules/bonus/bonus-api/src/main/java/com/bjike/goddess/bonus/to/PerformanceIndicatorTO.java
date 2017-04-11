@@ -1,6 +1,10 @@
 package com.bjike.goddess.bonus.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 绩效指标
@@ -16,31 +20,37 @@ public class PerformanceIndicatorTO extends BaseTO {
     /**
      * 项目名称
      */
+    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 项目类别
      */
+    @NotNull(message = "项目类别不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 项目名称
      */
+    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 指标描述
      */
+    @NotNull(message = "指标描述不能为空", groups = {ADD.class, EDIT.class})
     private String description;
 
     /**
      * 计分方式
      */
+    @NotNull(message = "计分方式不能为空", groups = {ADD.class, EDIT.class})
     private String way;
 
     /**
      * 参考目标值
      */
+    @NotNull(message = "参考目标值不能为空", groups = {ADD.class, EDIT.class})
     private String target;
 
     /**
@@ -61,6 +71,7 @@ public class PerformanceIndicatorTO extends BaseTO {
     /**
      * 系统或人工
      */
+    @NotNull(message = "系统或人工不能为空", groups = {ADD.class, EDIT.class})
     private Boolean difference;
 
     /**

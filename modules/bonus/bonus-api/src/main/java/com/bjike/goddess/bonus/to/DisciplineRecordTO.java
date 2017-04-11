@@ -1,6 +1,10 @@
 package com.bjike.goddess.bonus.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 奖罚记录
@@ -31,6 +35,7 @@ public class DisciplineRecordTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotNull(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
@@ -46,11 +51,13 @@ public class DisciplineRecordTO extends BaseTO {
     /**
      * 原因
      */
+    @NotNull(message = "原因不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**
      * 分数
      */
+    @NotNull(message = "分数不能为空", groups = {ADD.class, EDIT.class})
     private Double ballot;
 
     /**
