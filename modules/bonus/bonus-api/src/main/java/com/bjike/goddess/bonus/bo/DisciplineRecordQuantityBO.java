@@ -1,5 +1,7 @@
 package com.bjike.goddess.bonus.bo;
 
+import java.io.Serializable;
+
 /**
  * 奖励处罚人数汇总传输对象
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.bonus.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DisciplineRecordQuantityBO {
+public class DisciplineRecordQuantityBO  implements Serializable {
 
     /**
      * 开始时间
@@ -30,11 +32,6 @@ public class DisciplineRecordQuantityBO {
      * 地区
      */
     private String area;
-
-    /**
-     * 奖罚指标
-     */
-    private String target;
 
     /**
      * 奖励人数
@@ -81,14 +78,6 @@ public class DisciplineRecordQuantityBO {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
     }
 
     public Integer getReward() {

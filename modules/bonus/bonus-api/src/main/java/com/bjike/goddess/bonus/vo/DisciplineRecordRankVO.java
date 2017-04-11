@@ -44,7 +44,7 @@ public class DisciplineRecordRankVO {
     /**
      * 总次数
      */
-    private String frequency;
+    private Integer frequency;
 
     /**
      * 总分
@@ -104,11 +104,11 @@ public class DisciplineRecordRankVO {
         this.serialNumber = serialNumber;
     }
 
-    public String getFrequency() {
+    public Integer getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(String frequency) {
+    public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
 

@@ -42,22 +42,22 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
 
     @Override
     public List<DisciplineRecordRankBO> projectRewardRank(CollectFilterTO to) throws SerException {
-        return disciplineRecordSer.projectRewardRank(to);
+        return disciplineRecordSer.projectRank(to, true);
     }
 
     @Override
     public List<DisciplineRecordRankBO> projectPushRank(CollectFilterTO to) throws SerException {
-        return disciplineRecordSer.projectPushRank(to);
+        return disciplineRecordSer.projectRank(to, false);
     }
 
     @Override
     public List<DisciplineRecordRankBO> personalRewardRank(CollectFilterTO to) throws SerException {
-        return disciplineRecordSer.personalRewardRank(to);
+        return disciplineRecordSer.personalRank(to, true);
     }
 
     @Override
     public List<DisciplineRecordRankBO> personalPushRank(CollectFilterTO to) throws SerException {
-        return disciplineRecordSer.personalPushRank(to);
+        return disciplineRecordSer.personalRank(to, false);
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,10 +50,25 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
         DisciplineRecord entity = BeanTransform.copyProperties(to, DisciplineRecord.class, true);
-        UserBO user = userAPI.findByUsername(to.getUsername());
+        entity = this.checkEntity(entity);
+        if (StringUtils.isBlank(entity.getLaunch()))
+            entity.setLaunch(userAPI.currentUser().getUsername());
+        super.save(entity);
+        return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
+    }
+
+    /**
+     * 检测奖罚记录实体规范
+     *
+     * @param entity 奖罚记录实体数据
+     * @return
+     * @throws SerException
+     */
+    private DisciplineRecord checkEntity(DisciplineRecord entity) throws SerException {
+        UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null == user)
             throw new SerException("该用户不存在");
-        UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());
+        UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());//获取用户详细信息
         entity.setSerialNumber(user.getEmployeeNumber());
         if (null != userDetail) {
             entity.setProject(userDetail.getDepartmentName());
@@ -60,12 +76,16 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             if (departmentDetail != null)
                 entity.setArea(departmentDetail.getArea());
         }
-        if (StringUtils.isBlank(entity.getLaunch()))
-            entity.setLaunch(userAPI.currentUser().getUsername());
+        if (entity.getStatus()) {//检测奖罚分数填写是否符合规范 true 为奖励 false 为处罚
+            if (entity.getBallot() < 0)
+                entity.setBallot(-entity.getBallot());
+        } else {
+            if (entity.getBallot() > 0)
+                entity.setBallot(-entity.getBallot());
+        }
         if (entity.getOccurrence() == null)
             entity.setOccurrence(LocalDateTime.now());
-        super.save(entity);
-        return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
+        return entity;
     }
 
     @Override
@@ -78,23 +98,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             if (!user.getUsername().equals(entity.getLaunch()))
                 throw new SerException("不要修改他人的数据");
             BeanTransform.copyProperties(to, entity, true);
-            user = userAPI.findByUsername(to.getUsername());
-            if (null == user)
-                throw new SerException("该用户不存在");
-            UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());
-            entity.setSerialNumber(user.getEmployeeNumber());
-            if (null != userDetail) {
-                entity.setProject(userDetail.getDepartmentName());
-                DepartmentDetailBO departmentDetail = departmentDetailAPI.findByDepartment(userDetail.getDepartmentId());
-                if (departmentDetail != null)
-                    entity.setArea(departmentDetail.getArea());
-            }
-            if (entity.getOccurrence() == null)
-                entity.setOccurrence(LocalDateTime.now());
+            entity = this.checkEntity(entity);
             entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
             return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
-
         } else
             throw new SerException("数据ID不能为空");
     }
@@ -110,48 +117,190 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     }
 
     @Override
-    public List<DisciplineRecordRankBO> projectRewardRank(CollectFilterTO to) throws SerException {
-        List<DisciplineRecordBO> list = this.findByFilter(to).stream()
-                .filter(d -> d.getStatus() == Boolean.TRUE)
-                .sorted(Comparator.comparing(DisciplineRecordBO::getArea).thenComparing(DisciplineRecordBO::getProject))
+    public List<DisciplineRecordRankBO> projectRank(CollectFilterTO to, Boolean status) throws SerException {
+        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+                .filter(d -> d.getStatus() == status)
+                .sorted(Comparator.comparing(DisciplineRecord::getProject))
                 .collect(Collectors.toList());
-
-
-        return null;
+        List<DisciplineRecordRankBO> rankBOs = new ArrayList<>(0);
+        String project = "";
+        for (DisciplineRecord entity : list)
+            if (!entity.getProject().equals(project)) {
+                project = entity.getProject();
+                DisciplineRecordRankBO rank = new DisciplineRecordRankBO();
+                rank.setArea(entity.getArea());
+                rank.setDepartment(entity.getProject());
+                rank.setStart(to.getStart());
+                rank.setEnd(to.getEnd());
+                List<DisciplineRecord> countList = list.stream()
+                        .filter(d -> d.getProject().equals(entity.getProject()))
+                        .collect(Collectors.toList());
+                rank.setFrequency(countList.size());
+                rank.setTotal(countList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                rankBOs.add(rank);
+            }
+        if (status)
+            rankBOs = rankBOs.stream()
+                    .sorted(Comparator.comparing(DisciplineRecordRankBO::getTotal).reversed()
+                            .thenComparing(DisciplineRecordRankBO::getFrequency))
+                    .collect(Collectors.toList());
+        else
+            rankBOs = rankBOs.stream()
+                    .sorted(Comparator.comparing(DisciplineRecordRankBO::getTotal)
+                            .thenComparing(DisciplineRecordRankBO::getFrequency))
+                    .collect(Collectors.toList());
+        for (int i = 0, size = rankBOs.size(); i < size; )
+            rankBOs.get(i).setRank(++i);
+        return rankBOs;
     }
 
     @Override
-    public List<DisciplineRecordRankBO> projectPushRank(CollectFilterTO to) throws SerException {
-        return null;
-    }
-
-    @Override
-    public List<DisciplineRecordRankBO> personalRewardRank(CollectFilterTO to) throws SerException {
-        return null;
-    }
-
-    @Override
-    public List<DisciplineRecordRankBO> personalPushRank(CollectFilterTO to) throws SerException {
-        return null;
+    public List<DisciplineRecordRankBO> personalRank(CollectFilterTO to, Boolean status) throws SerException {
+        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+                .filter(d -> d.getStatus() == status)
+                .sorted(Comparator.comparing(DisciplineRecord::getUsername))
+                .collect(Collectors.toList());
+        List<DisciplineRecordRankBO> rankBOs = new ArrayList<>(0);
+        String username = "";
+        for (DisciplineRecord entity : list)
+            if (!entity.getUsername().equals(entity.getProject())) {
+                DisciplineRecordRankBO rank = new DisciplineRecordRankBO();
+                rank.setArea(entity.getArea());
+                rank.setDepartment(entity.getProject());
+                rank.setStart(to.getStart());
+                rank.setEnd(to.getEnd());
+                rank.setSerialNumber(entity.getSerialNumber());
+                rank.setUsername(entity.getUsername());
+                List<DisciplineRecord> countList = list.stream()
+                        .filter(d -> d.getUsername().equals(entity.getUsername()))
+                        .collect(Collectors.toList());
+                rank.setFrequency(countList.size());
+                rank.setTotal(countList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                rankBOs.add(rank);
+            }
+        if (status)
+            rankBOs = rankBOs.stream()
+                    .sorted(Comparator.comparing(DisciplineRecordRankBO::getTotal).reversed())
+                    .collect(Collectors.toList());
+        else
+            rankBOs = rankBOs.stream()
+                    .sorted(Comparator.comparing(DisciplineRecordRankBO::getTotal))
+                    .collect(Collectors.toList());
+        for (int i = 0, size = rankBOs.size(); i < size; )
+            rankBOs.get(i).setRank(++i);
+        return rankBOs;
     }
 
     @Override
     public List<DisciplineRecordDetailBO> disciplineDetailCollect(CollectFilterTO to) throws SerException {
-        return null;
+        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+                .sorted(Comparator.comparing(DisciplineRecord::getOccurrence).reversed()
+                        .thenComparing(DisciplineRecord::getUsername))
+                .collect(Collectors.toList());
+        List<DisciplineRecordDetailBO> detailBOs = new ArrayList<>(0);
+        String occurrence = "", username = "";
+        for (DisciplineRecord entity : list)
+            if (!entity.getOccurrence().toLocalDate().toString().equals(occurrence) || !entity.getUsername().equals(username)) {
+                occurrence = entity.getOccurrence().toLocalDate().toString();
+                username = entity.getUsername();
+                DisciplineRecordDetailBO detail = BeanTransform.copyProperties(entity, DisciplineRecordDetailBO.class, true);
+                String time = occurrence;
+                List<DisciplineRecord> pushList = list.stream()
+                        .filter(d -> d.getOccurrence().toLocalDate().toString().equals(time)
+                                && d.getUsername().equals(entity.getUsername())
+                                && d.getStatus() == Boolean.FALSE)
+                        .collect(Collectors.toList()), rewardList = list.stream()
+                        .filter(d -> d.getOccurrence().toLocalDate().toString().equals(time)
+                                && d.getUsername().equals(entity.getUsername())
+                                && d.getStatus() == Boolean.TRUE)
+                        .collect(Collectors.toList());
+                detail.setOccurrence(occurrence);
+                detail.setPush(pushList.size());
+                detail.setPushTotal(pushList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                detail.setReward(rewardList.size());
+                detail.setRewardTotal(rewardList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                detail.setTotal(detail.getPushTotal() + detail.getRewardTotal());
+                detailBOs.add(detail);
+            }
+        return detailBOs;
     }
 
     @Override
     public List<DisciplineRecordQuantityBO> disciplineQuantityCollect(CollectFilterTO to) throws SerException {
-        return null;
+        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+                .sorted(Comparator.comparing(DisciplineRecord::getArea)
+                        .thenComparing(DisciplineRecord::getProject))
+                .collect(Collectors.toList());
+        List<DisciplineRecordQuantityBO> quantityBOs = new ArrayList<>(0);
+        String area = "", project = "";
+        for (DisciplineRecord entity : list)
+            if (!entity.getArea().equals(area) || !entity.getProject().equals(project)) {
+                project = entity.getProject();
+                area = entity.getArea();
+                DisciplineRecordQuantityBO quantity = new DisciplineRecordQuantityBO();
+                quantity.setStart(to.getStart());
+                quantity.setEnd(to.getEnd());
+                quantity.setDepartment(entity.getProject());
+                quantity.setArea(entity.getArea());
+                quantity.setReward(list.stream()
+                        .filter(d -> d.getProject().equals(entity.getProject()) && d.getStatus() == Boolean.TRUE)
+                        .collect(Collectors.toList()).size());
+                quantity.setPush(list.stream()
+                        .filter(d -> d.getProject().equals(entity.getProject()) && d.getStatus() == Boolean.FALSE)
+                        .collect(Collectors.toList()).size());
+                quantity.setTotal(list.stream()
+                        .filter(d -> d.getProject().equals(entity.getProject()))
+                        .mapToDouble(DisciplineRecord::getBallot).sum());
+                quantityBOs.add(quantity);
+            }
+        return quantityBOs;
     }
 
     @Override
     public List<DisciplineRecordScoreBO> disciplineScoreCollect(CollectFilterTO to) throws SerException {
-        return null;
+        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+                .sorted(Comparator.comparing(DisciplineRecord::getArea)
+                        .thenComparing(DisciplineRecord::getProject)
+                        .thenComparing(DisciplineRecord::getUsername)
+                        .thenComparing(DisciplineRecord::getName))
+                .collect(Collectors.toList());
+        List<DisciplineRecordScoreBO> scoreBOs = new ArrayList<>(0);
+        String area = "", project = "", username = "", target = "";
+        for (DisciplineRecord entity : list)
+            if (!entity.getArea().equals(area) || !entity.getProject().equals(project)
+                    || !entity.getUsername().equals(username) || !entity.getName().equals(target)) {
+                area = entity.getArea();
+                project = entity.getProject();
+                username = entity.getUsername();
+                target = entity.getName();
+                DisciplineRecordScoreBO score = BeanTransform.copyProperties(entity, DisciplineRecordScoreBO.class, true);
+                List<DisciplineRecord> rewardList = list.stream()
+                        .filter(d -> d.getArea().equals(entity.getArea()) && d.getName().equals(entity.getName())
+                                && d.getProject().equals(entity.getProject()) && d.getStatus().equals(Boolean.TRUE)
+                                && d.getUsername().equals(entity.getUsername()))
+                        .collect(Collectors.toList()), pushList = list.stream()
+                        .filter(d -> d.getArea().equals(entity.getArea()) && d.getName().equals(entity.getName())
+                                && d.getProject().equals(entity.getProject()) && d.getStatus().equals(Boolean.FALSE)
+                                && d.getUsername().equals(entity.getUsername()))
+                        .collect(Collectors.toList());
+                score.setPush(pushList.size());
+                score.setPushTotal(pushList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                score.setReward(rewardList.size());
+                score.setRewardTotal(rewardList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                score.setTotal(score.getPushTotal() + score.getRewardTotal());
+                scoreBOs.add(score);
+            }
+        return scoreBOs;
     }
 
-    @Override
-    public List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
+    /**
+     * 根据过滤条件传获取数据
+     *
+     * @param to 过滤条件传输对象
+     * @return
+     * @throws SerException
+     */
+    private List<DisciplineRecord> getListByFilter(CollectFilterTO to) throws SerException {
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
         if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
             LocalDateTime start = LocalDateTime.parse(to.getStart(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
@@ -165,7 +314,12 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             dto.getConditions().add(Restrict.eq("project", to.getProject()));
         if (StringUtils.isNotBlank(to.getTarget()))
             dto.getConditions().add(Restrict.eq("name", to.getTarget()));
-        List<DisciplineRecord> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list, DisciplineRecordBO.class);
+        dto.getSorts().add("occurrence=desc");
+        return super.findByCis(dto);
+    }
+
+    @Override
+    public List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
+        return BeanTransform.copyProperties(this.getListByFilter(to), DisciplineRecordBO.class);
     }
 }

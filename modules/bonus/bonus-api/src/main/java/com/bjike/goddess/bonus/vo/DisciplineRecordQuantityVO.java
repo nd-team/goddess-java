@@ -32,11 +32,6 @@ public class DisciplineRecordQuantityVO {
     private String area;
 
     /**
-     * 奖罚指标
-     */
-    private String target;
-
-    /**
      * 奖励人数
      */
     private Integer reward;
@@ -81,14 +76,6 @@ public class DisciplineRecordQuantityVO {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
     }
 
     public Integer getReward() {

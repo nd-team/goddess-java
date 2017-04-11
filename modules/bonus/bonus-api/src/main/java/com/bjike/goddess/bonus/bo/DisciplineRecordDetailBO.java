@@ -1,5 +1,7 @@
 package com.bjike.goddess.bonus.bo;
 
+import java.io.Serializable;
+
 /**
  * 奖励处罚明细传输对象
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.bonus.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DisciplineRecordDetailBO {
+public class DisciplineRecordDetailBO implements Serializable {
 
     /**
      * 发生时间
@@ -24,7 +26,7 @@ public class DisciplineRecordDetailBO {
     /**
      * 项目组
      */
-    private String group;
+    private String project;
 
     /**
      * 姓名
@@ -77,12 +79,12 @@ public class DisciplineRecordDetailBO {
         this.area = area;
     }
 
-    public String getGroup() {
-        return group;
+    public String getProject() {
+        return project;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getUsername() {

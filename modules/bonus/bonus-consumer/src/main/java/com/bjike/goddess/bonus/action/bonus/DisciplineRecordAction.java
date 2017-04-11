@@ -46,6 +46,40 @@ public class DisciplineRecordAction {
     }
 
     /**
+     * 奖励
+     *
+     * @param to 奖罚记录传输对象
+     * @return class  disciplineRecordVO
+     * @version v1
+     */
+    @PostMapping("v1/reward")
+    public Result reward(DisciplineRecordTO to) throws ActException {
+        try {
+            to.setStatus(Boolean.TRUE);
+            return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 处罚
+     *
+     * @param to 奖罚记录传输对象
+     * @return class  disciplineRecordVO
+     * @version v1
+     */
+    @PostMapping("v1/push")
+    public Result push(DisciplineRecordTO to) throws ActException {
+        try {
+            to.setStatus(Boolean.FALSE);
+            return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 修改
      *
      * @param to 奖罚记录传输对象

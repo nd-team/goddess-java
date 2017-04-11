@@ -24,7 +24,7 @@ public class DisciplineRecordDetailVO {
     /**
      * 项目组
      */
-    private String group;
+    private String project;
 
     /**
      * 姓名
@@ -77,12 +77,12 @@ public class DisciplineRecordDetailVO {
         this.area = area;
     }
 
-    public String getGroup() {
-        return group;
+    public String getProject() {
+        return project;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getUsername() {

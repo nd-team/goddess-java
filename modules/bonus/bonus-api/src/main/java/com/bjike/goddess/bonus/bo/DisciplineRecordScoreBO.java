@@ -1,5 +1,7 @@
 package com.bjike.goddess.bonus.bo;
 
+import java.io.Serializable;
+
 /**
  * 奖励处罚分数汇总传输对象
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.bonus.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DisciplineRecordScoreBO {
+public class DisciplineRecordScoreBO  implements Serializable {
 
     /**
      * 开始时间
@@ -24,7 +26,17 @@ public class DisciplineRecordScoreBO {
     /**
      * 项目组
      */
-    private String department;
+    private String project;
+
+    /**
+     * 姓名
+     */
+    private String username;
+
+    /**
+     * 工号
+     */
+    private String serialNumber;
 
     /**
      * 地区
@@ -32,9 +44,9 @@ public class DisciplineRecordScoreBO {
     private String area;
 
     /**
-     * 奖罚指标
+     * 指标名称
      */
-    private String target;
+    private String name;
 
     /**
      * 奖励总次数
@@ -77,12 +89,36 @@ public class DisciplineRecordScoreBO {
         this.end = end;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getProject() {
+        return project;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getArea() {
@@ -131,13 +167,5 @@ public class DisciplineRecordScoreBO {
 
     public void setTotal(Double total) {
         this.total = total;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
     }
 }

@@ -55,46 +55,26 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
     }
 
     /**
-     * 项目组奖励排名
+     * 项目组排名
      *
-     * @param to 汇总过滤条件传输对象
+     * @param to     汇总过滤条件传输对象
+     * @param status 奖励或处罚
      * @return
      * @throws SerException
      */
-    default List<DisciplineRecordRankBO> projectRewardRank(CollectFilterTO to) throws SerException {
+    default List<DisciplineRecordRankBO> projectRank(CollectFilterTO to, Boolean status) throws SerException {
         return null;
     }
 
     /**
-     * 项目组处罚排名
+     * 个人排名
      *
-     * @param to 汇总过滤条件传输对象
+     * @param to     汇总过滤条件传输对象
+     * @param status 奖励或处罚
      * @return
      * @throws SerException
      */
-    default List<DisciplineRecordRankBO> projectPushRank(CollectFilterTO to) throws SerException {
-        return null;
-    }
-
-    /**
-     * 个人奖励排名
-     *
-     * @param to 汇总过滤条件传输对象
-     * @return
-     * @throws SerException
-     */
-    default List<DisciplineRecordRankBO> personalRewardRank(CollectFilterTO to) throws SerException {
-        return null;
-    }
-
-    /**
-     * 个人处罚排名
-     *
-     * @param to 汇总过滤条件传输对象
-     * @return
-     * @throws SerException
-     */
-    default List<DisciplineRecordRankBO> personalPushRank(CollectFilterTO to) throws SerException {
+    default List<DisciplineRecordRankBO> personalRank(CollectFilterTO to, Boolean status) throws SerException {
         return null;
     }
 

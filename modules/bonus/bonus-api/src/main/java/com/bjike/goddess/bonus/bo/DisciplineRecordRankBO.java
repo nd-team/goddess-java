@@ -1,5 +1,7 @@
 package com.bjike.goddess.bonus.bo;
 
+import java.io.Serializable;
+
 /**
  * 奖罚记录排名传输对象
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.bonus.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DisciplineRecordRankBO {
+public class DisciplineRecordRankBO implements Serializable {
 
     /**
      * 开始时间
@@ -44,7 +46,7 @@ public class DisciplineRecordRankBO {
     /**
      * 总次数
      */
-    private String frequency;
+    private Integer frequency;
 
     /**
      * 总分
@@ -104,11 +106,11 @@ public class DisciplineRecordRankBO {
         this.serialNumber = serialNumber;
     }
 
-    public String getFrequency() {
+    public Integer getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(String frequency) {
+    public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
 

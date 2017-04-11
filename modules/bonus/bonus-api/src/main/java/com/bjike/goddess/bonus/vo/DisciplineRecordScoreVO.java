@@ -24,17 +24,27 @@ public class DisciplineRecordScoreVO {
     /**
      * 项目组
      */
-    private String department;
+    private String project;
+
+    /**
+     * 姓名
+     */
+    private String username;
+
+    /**
+     * 工号
+     */
+    private String serialNumber;
+
+    /**
+     * 指标名称
+     */
+    private String name;
 
     /**
      * 地区
      */
     private String area;
-
-    /**
-     * 奖罚指标
-     */
-    private String target;
 
     /**
      * 奖励总次数
@@ -77,12 +87,36 @@ public class DisciplineRecordScoreVO {
         this.end = end;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getProject() {
+        return project;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getArea() {
@@ -133,11 +167,4 @@ public class DisciplineRecordScoreVO {
         this.total = total;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
 }
