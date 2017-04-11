@@ -44,7 +44,7 @@ public class RentalAct {
     public Result findListRental(RentalDTO rentalDTO) throws ActException {
         try {
             List<RentalVO> rentalVOS = BeanTransform.copyProperties(
-                    rentalAPI.listRental(rentalDTO), RentalVO.class, true);
+                    rentalAPI.findListRental(rentalDTO), RentalVO.class, true);
             return ActResult.initialize(rentalVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

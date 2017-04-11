@@ -53,7 +53,7 @@ public interface RentalApplySer extends Ser<RentalApply,RentalApplyDTO> {
      * @return class rentalApply
      * @throws SerException
      */
-    default List<RentalApply> listRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+    default List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
         return null;
     }
     /**

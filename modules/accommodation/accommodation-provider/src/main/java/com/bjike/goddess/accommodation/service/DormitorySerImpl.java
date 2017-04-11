@@ -7,6 +7,8 @@ import com.bjike.goddess.accommodation.to.DormitoryTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@CacheConfig(cacheNames = "accommodationSerCache")
 @Service
 public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implements DormitorySer{
 
@@ -30,12 +33,8 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
     @Override
     public DormitoryBO insertDormitory(DormitoryTO dormitoryTO) throws SerException {
         Dormitory dormitory = BeanTransform.copyProperties(dormitoryTO,Dormitory.class,true);
-        try {
-            dormitory.setCreateTime(LocalDateTime.now());
-            super.save(dormitory);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        dormitory.setCreateTime(LocalDateTime.now());
+        super.save(dormitory);
         return BeanTransform.copyProperties(dormitory, DormitoryBO.class);
     }
 
@@ -44,15 +43,16 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
     @Override
     public DormitoryBO editDormitory(DormitoryTO dormitoryTO) throws SerException {
 
-        Dormitory dormitory = BeanTransform.copyProperties(dormitoryTO, Dormitory.class, true);
-        try {
+        if(!StringUtils.isEmpty(dormitoryTO.getId())){
+            Dormitory dormitory = super.findById(dormitoryTO.getId());
+            BeanTransform.copyProperties(dormitoryTO,dormitory,true);
             dormitory.setModifyTime(LocalDateTime.now());
             super.update(dormitory);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        }else{
+            throw new SerException("更新ID不能为空!");
         }
+        return BeanTransform.copyProperties(dormitoryTO,DormitoryBO.class);
 
-        return BeanTransform.copyProperties(dormitory, DormitoryBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -66,11 +66,10 @@ public class DormitorySerImpl extends ServiceImpl<Dormitory,DormitoryDTO> implem
     }
     @Cacheable
     @Override
-    public List<Dormitory> listDormitory(DormitoryDTO dormitoryDTO) throws SerException {
+    public List<DormitoryBO> findListDormitory(DormitoryDTO dormitoryDTO) throws SerException {
 
-        //TODO: xiazhili 2017-03-10 未做根据 dormitoryDTO 分页查询所有
-        List<Dormitory> dormitories = super.findByPage(dormitoryDTO);
-        return dormitories;
+        List<Dormitory> dormitories = super.findByCis(dormitoryDTO,true);
+        return BeanTransform.copyProperties(dormitories,DormitoryBO.class);
     }
 
     /**
