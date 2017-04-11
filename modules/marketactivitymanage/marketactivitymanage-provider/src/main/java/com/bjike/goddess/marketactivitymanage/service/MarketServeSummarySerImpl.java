@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -83,10 +84,32 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
+    @Transactional
     public void update(MarketServeSummaryTO to) throws SerException {
-        MarketServeSummary entity = BeanTransform.copyProperties(to, MarketServeSummary.class, true);
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
+        if (StringUtils.isNotEmpty(to.getId())){
+            MarketServeSummary model = super.findById(to.getId());
+            if (model != null) {
+                updateMarketServeSummary(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+
+    }
+
+    /**
+     * 更新市场招待汇总
+     *
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateMarketServeSummary(MarketServeSummaryTO to, MarketServeSummary model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**

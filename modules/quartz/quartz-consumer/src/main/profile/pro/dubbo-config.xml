@@ -16,7 +16,7 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.quartz.api.ScheduledJobAPI" id="scheduledJobApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.quartz.api.ScheduledJobGroupAPI" id="scheduledJobGroupApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.quartz.api.ScheduleJobAPI" id="scheduleJobApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI" id="scheduleJobGroupApiImpl"/>
 
 </beans>

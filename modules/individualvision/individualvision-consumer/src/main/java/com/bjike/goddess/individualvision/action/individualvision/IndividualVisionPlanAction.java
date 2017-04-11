@@ -94,7 +94,7 @@ public class IndividualVisionPlanAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeIndividualVisionPlan(String id) throws ActException {
+    public Result removeIndividualVisionPlan(@PathVariable String id) throws ActException {
         try {
             individualVisionPlanAPI.removeIndividualVisionPlan(id);
             return new ActResult("delete success");

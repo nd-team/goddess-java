@@ -38,9 +38,8 @@ public class RentalApiImpl implements RentalAPI{
     }
 
     @Override
-    public List<RentalBO> listRental(RentalDTO rentalDTO) throws SerException {
-        List<Rental> rentals = rentalSer.listRental(rentalDTO);
-        return BeanTransform.copyProperties(rentals, RentalBO.class, true);
+    public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+        return rentalSer.findListRental(rentalDTO);
     }
     /**
      * 上传附件

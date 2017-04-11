@@ -20,14 +20,6 @@ import java.util.List;
  */
 public interface UserSer extends Ser<User, UserDTO> {
 
-    /**
-     * 用户列表
-     * @return
-     * @throws SerException
-     */
-    default List<UserBO> list() throws SerException {
-        return null;
-    }
 
     /**
      * 添加用户
@@ -95,6 +87,15 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @throws SerException
      */
     default List<UserBO> findByGroup(String ...  groups) throws SerException{
+        return null;
+    }
+
+    /**
+     * 查询所有用户
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findAllUser() throws SerException{
         return null;
     }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.individualvision.bo.IndividualVisionPlanBO;
 import com.bjike.goddess.individualvision.dto.IndividualVisionPlanDTO;
 import com.bjike.goddess.individualvision.entity.IndividualVisionPlan;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,15 @@ public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPla
     @Transactional(rollbackFor = SerException.class)
     @Override
     public IndividualVisionPlanBO editIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
-        IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class);
-        individualVisionPlan.setModifyTime(LocalDateTime.now());
-        super.update(individualVisionPlan);
-        return BeanTransform.copyProperties(individualVisionPlan, IndividualVisionPlanBO.class);
+        if(!StringUtils.isEmpty(individualVisionPlanTO.getId())){
+            IndividualVisionPlan individualVisionPlan = super.findById(individualVisionPlanTO.getId());
+            BeanTransform.copyProperties(individualVisionPlanTO,individualVisionPlan,true);
+            individualVisionPlan.setModifyTime(LocalDateTime.now());
+            super.update(individualVisionPlan);
+        }else{
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(individualVisionPlanTO,IndividualVisionPlanBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
