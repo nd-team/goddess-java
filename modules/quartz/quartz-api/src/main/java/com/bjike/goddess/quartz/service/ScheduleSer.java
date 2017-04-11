@@ -24,7 +24,7 @@ public interface ScheduleSer {
         return null;
     }
 
-    default void add(ScheduleJob scheduleJob, boolean start) throws SerException {
+    default void start(ScheduleJob scheduleJob) throws SerException {
 
 
     }

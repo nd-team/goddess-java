@@ -25,6 +25,13 @@ public class ScheduleJob extends BaseEntity {
     private String userId;
 
     /**
+     * 地址
+     */
+    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地址:ip+端口'")
+    private String address;
+
+
+    /**
      * 执行类
      */
     @Column(name = "clazz", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '执行类'")
@@ -54,19 +61,19 @@ public class ScheduleJob extends BaseEntity {
     @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String description;
 
+
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否启用'", insertable = false)
+    @Column(name = "is_enable", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否启用'")
     private Boolean enable;
 
     /**
      * 任务调度组
      */
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "scheduleJobGroup",nullable = false ,columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
+    @JoinColumn(name = "scheduleJobGroup", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
     private ScheduleJobGroup scheduleJobGroup;
-
 
     public String getUserId() {
         return userId;
@@ -74,6 +81,14 @@ public class ScheduleJob extends BaseEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getClazz() {

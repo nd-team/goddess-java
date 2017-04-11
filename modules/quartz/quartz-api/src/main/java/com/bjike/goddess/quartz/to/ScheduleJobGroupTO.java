@@ -1,6 +1,7 @@
 package com.bjike.goddess.quartz.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -31,7 +32,7 @@ public class ScheduleJobGroupTO extends BaseTO {
     /**
      * 是否启用
      */
-    @NotNull(message = "是否启用不能为空", groups = ADD.class)
+    @NotNull(message = "是否启用不能为空", groups = {ADD.class, EDIT.class})
     private Boolean enable;
 
 

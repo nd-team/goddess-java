@@ -1,5 +1,7 @@
 package com.bjike.goddess.quartz.scheduled;
 
+import com.alibaba.dubbo.config.ReferenceConfig;
+import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -8,8 +10,6 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,29 +33,37 @@ public class QuartzJobFactory implements Job {
             if (maps.containsKey(className)) {
                 exec = maps.get(className);
             } else {
-                ClassLoader clazz = Thread.currentThread().getContextClassLoader();
-                if (null == clazz) clazz = QuartzJobFactory.class.getClassLoader();
-                exec = clazz.loadClass(className);
+                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                if (null == classLoader) {
+                    classLoader = QuartzJobFactory.class.getClassLoader();
+                }
+                exec = classLoader.loadClass(className);
                 maps.put(className, exec);
             }
             try {
-                Method method = exec.getMethod(scheduledJob.getMethod());
-                method.invoke(exec.newInstance());
-            } catch (NoSuchMethodException e1) {
+                invokeDubbo(scheduledJob);
+
+            } catch (Exception e1) {
                 e1.printStackTrace();
-            } catch (SecurityException e1) {
-                e1.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
             }
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void invokeDubbo(ScheduleJob scheduleJob) throws SerException {
+        try {
+            String url = "dubbo://" + scheduleJob.getAddress() + "/" + scheduleJob.getClazz();//Dubbo服务暴露的ip地址&端口
+            ReferenceConfig referenceConfig = new ReferenceConfig();
+            referenceConfig.setTimeout(3000);
+            referenceConfig.setInterface(Class.forName(scheduleJob.getClazz()));
+            referenceConfig.setUrl(url);
+            Object obj = referenceConfig.get();
+            Method clazzMethod = obj.getClass().getMethod(scheduleJob.getMethod());
+            Object o = clazzMethod.invoke(obj);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
         }
     }
 }

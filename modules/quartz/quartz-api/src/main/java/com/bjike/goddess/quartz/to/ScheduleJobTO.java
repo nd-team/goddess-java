@@ -1,9 +1,9 @@
 package com.bjike.goddess.quartz.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
@@ -52,14 +52,14 @@ public class ScheduleJobTO extends BaseTO {
     /**
      * 是否启用
      */
-    @NotNull(message = "是否启用不能为空", groups = ADD.class)
+    @NotNull(message = "是否启用不能为空", groups = {ADD.class, EDIT.class})
     private Boolean enable;
 
 
     /**
      * 任务所属调度组
      */
-    @NotBlank(message = "任务所属调度组不能为空", groups = ADD.class)
+    @NotBlank(message = "任务所属调度组不能为空", groups = {ADD.class, EDIT.class})
     private String scheduleJobGroupId;
 
     public String getClazz() {

@@ -9,6 +9,7 @@ import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
 import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,12 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         scheduleJob.setUserId("111");
         scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
         this.verifySchedule(scheduleJob);
+        ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
+        dto.getConditions().add(Restrict.eq("id", scheduleJobTO.getScheduleJobGroupId()));
+        scheduleJob.setScheduleJobGroup(scheduleJobGroupSer.findOne(dto));
         super.save(scheduleJob);
         if (scheduleJob.getEnable()) {
-            ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
-            dto.getConditions().add(Restrict.eq("id", scheduleJobTO.getScheduleJobGroupId()));
-            scheduleJob.setScheduleJobGroup(scheduleJobGroupSer.findOne(dto));
-            scheduleSer.add(scheduleJob, true);
+            scheduleSer.start(scheduleJob);
         }
         return BeanTransform.copyProperties(scheduleJob, ScheduleJobBO.class);
     }
@@ -55,8 +56,14 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         BeanTransform.copyProperties(scheduleJobTO, scheduleJob);
         this.verifySchedule(scheduleJob);
         scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
-        scheduleSer.restart(scheduleJob);
         super.update(scheduleJob);
+        if (scheduleJob.getEnable()) {
+            scheduleSer.restart(scheduleJob);
+        } else {
+            scheduleSer.stop(scheduleJob);
+        }
+
+
     }
 
     @Override
@@ -79,7 +86,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
             }
             scheduleJob.setEnable(enable);
         } else {
-            throw new SerException("该任务调度组不存在");
+            throw new SerException("该任务调度不存在");
         }
         super.update(scheduleJob);
     }
@@ -92,19 +99,26 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         return findByCis(dto);
     }
 
+    @Override
+    public List<ScheduleJob> findByGroupId(String id) throws SerException {
+        ScheduleJobDTO dto = new ScheduleJobDTO();
+        dto.getConditions().add(Restrict.eq("scheduleJobGroup.id", id));
+        return findByCis(dto);
+    }
+
     private void verifySchedule(ScheduleJob scheduleJob) throws SerException {
         Class<?> clazz = classExists(scheduleJob.getClazz());
         if (clazz != null) {
             Method method = methodExists(clazz, scheduleJob.getMethod());
             if (null != method) {
                 if (!parameterTypesExists(method)) {
-                    throw new SerException("执行方法中不能存有任何参数.");
+                    throw new SerException("执行方法中不能存有任何参数");
                 }
             } else {
-                throw new SerException("执行方法不存在此调用类中.");
+                throw new SerException("执行方法不存在此调用类中");
             }
         } else {
-            throw new SerException("调用类不存在此系统中.");
+            throw new SerException("调用类不存在此系统中");
         }
     }
 

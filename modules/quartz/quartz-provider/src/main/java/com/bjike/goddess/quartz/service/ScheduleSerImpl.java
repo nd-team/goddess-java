@@ -10,7 +10,6 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,13 +32,14 @@ public class ScheduleSerImpl implements ScheduleSer {
 
     /**
      * 启动所用定时器
+     *
      * @throws SerException
      */
     @PostConstruct
-    private void init() throws SerException{
-       List<ScheduleJob> scheduleJobs =  scheduleJobSer.findScheduleJobs();
-        for(ScheduleJob scheduleJob :scheduleJobs){
-            this.add(scheduleJob,true);
+    private void init() throws SerException {
+        List<ScheduleJob> scheduleJobs = scheduleJobSer.findScheduleJobs();
+        for (ScheduleJob scheduleJob : scheduleJobs) {
+            this.start(scheduleJob);
         }
     }
 
@@ -82,7 +82,7 @@ public class ScheduleSerImpl implements ScheduleSer {
         return jobList;
     }
 
-    public void add(ScheduleJob scheduleJob, boolean start) throws SerException {
+    public void start(ScheduleJob scheduleJob) throws SerException {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         TriggerKey triggerKey = TriggerKey.triggerKey(String.valueOf(scheduleJob.getId()), String.valueOf(scheduleJob.getScheduleJobGroup().getId()));//组合名称（定时器名称+分组名称）
 
@@ -109,9 +109,7 @@ public class ScheduleSerImpl implements ScheduleSer {
 
             try {
                 scheduler.scheduleJob(jobDetail, trigger);
-                if (!start) {
-                    stop(scheduleJob);
-                }
+
             } catch (SchedulerException e) {
                 throw new SerException(e.getMessage());
             }
@@ -126,9 +124,6 @@ public class ScheduleSerImpl implements ScheduleSer {
             // 按新的trigger重新设置job执行
             try {
                 scheduler.rescheduleJob(triggerKey, trigger);
-                if (!start) {
-                    stop(scheduleJob);
-                }
             } catch (SchedulerException e) {
                 throw new SerException("trigger执行失败.");
             }

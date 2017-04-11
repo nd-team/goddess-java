@@ -59,10 +59,21 @@ public interface ScheduleJobSer extends Ser<ScheduleJob, ScheduleJobDTO> {
 
     /**
      * 获取有效的调度任务
+     *
      * @return
      * @throws SerException
      */
     default List<ScheduleJob> findScheduleJobs() throws SerException {
+        return null;
+    }
+
+    /**
+     * 通过组id获取定制任务
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<ScheduleJob> findByGroupId(String id) throws SerException {
         return null;
     }
 
