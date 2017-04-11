@@ -1,0 +1,43 @@
+package com.bjike.goddess.lendreimbursement.service;
+
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
+import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 借款审核人员业务实现
+ *
+ * @Author: [ tanghaixiang ]
+ * @Date: [ 2017-04-06 10:06 ]
+ * @Description: [ 借款审核人员业务实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@CacheConfig(cacheNames = "lendreimbursementSerCache")
+@Service
+public class LendAuditDetailSerImpl extends ServiceImpl<LendAuditDetail, LendAuditDetailDTO> implements LendAuditDetailSer {
+
+    @Override
+    public Long countDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {
+        lendAuditDetailDTO.getSorts().add("modifyTime=desc");
+        Long counts = super.count( lendAuditDetailDTO);
+        return counts;
+    }
+
+    @Override
+    public List<LendAuditDetailBO> listLendAuditDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {
+        lendAuditDetailDTO.getSorts().add("modifyTime=desc");
+        List<LendAuditDetail> lendAuditDetails = super.findByCis( lendAuditDetailDTO);
+        List<LendAuditDetailBO> lendAuditDetailBOS = BeanTransform.copyProperties(lendAuditDetails,LendAuditDetailBO.class);
+        return lendAuditDetailBOS;
+    }
+
+
+}
