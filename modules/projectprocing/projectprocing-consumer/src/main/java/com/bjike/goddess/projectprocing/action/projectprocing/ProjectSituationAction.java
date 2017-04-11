@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.action.projectprocing;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.ProjectSituationAPI;
@@ -79,6 +80,7 @@ public class ProjectSituationAction {
      * @return  class ProjectSituationVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectSituation(@Validated({ProjectSituationTO.TESTAddAndEdit.class}) ProjectSituationTO projectSituationTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +100,7 @@ public class ProjectSituationAction {
      * @return  class ProjectSituationVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editProjectSituation(@Validated({ProjectSituationTO.TESTAddAndEdit.class}) ProjectSituationTO projectSituationTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class ProjectSituationAction {
      * @des 根据id删除项目情况信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteProjectSituation(@PathVariable String id) throws ActException {
         try {

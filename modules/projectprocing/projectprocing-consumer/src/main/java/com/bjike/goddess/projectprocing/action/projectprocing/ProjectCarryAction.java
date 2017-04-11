@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.action.projectprocing;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.ProjectCarryAPI;
@@ -79,6 +80,7 @@ public class ProjectCarryAction {
      * @return  class ProjectCarryVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectCarry(@Validated({ProjectCarryTO.TESTAddAndEdit.class}) ProjectCarryTO projectCarryTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +100,7 @@ public class ProjectCarryAction {
      * @return  class ProjectCarryVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editProjectCarry(@Validated({ProjectCarryTO.TESTAddAndEdit.class}) ProjectCarryTO projectCarryTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class ProjectCarryAction {
      * @des 根据id删除项目实施信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteProjectCarry(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +155,7 @@ public class ProjectCarryAction {
      * @des 导入项目实施
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel( ) throws ActException {
         return  null;
@@ -162,6 +167,7 @@ public class ProjectCarryAction {
      * @des 导出项目实施
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/exportExcel")
     public Result exportExcel( ) throws ActException {
         return  null;

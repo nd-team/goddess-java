@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.action.projectprocing;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.ProjectCarryAuditAPI;
@@ -79,6 +80,7 @@ public class ProjectCarryAuditAction {
      * @return  class ProjectCarryAuditVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectCarryAudit(@Validated({ProjectCarryAuditTO.TESTAddAndEdit.class}) ProjectCarryAuditTO projectCarryAuditTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +100,7 @@ public class ProjectCarryAuditAction {
      * @return  class ProjectCarryAuditVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editProjectCarryAudit(@Validated({ProjectCarryAuditTO.TESTAddAndEdit.class}) ProjectCarryAuditTO projectCarryAuditTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class ProjectCarryAuditAction {
      * @des 根据id删除项目实施审核信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteProjectCarryAudit(@PathVariable String id) throws ActException {
         try {

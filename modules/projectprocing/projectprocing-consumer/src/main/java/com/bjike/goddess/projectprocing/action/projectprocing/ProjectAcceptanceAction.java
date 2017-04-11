@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.action.projectprocing;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.ProjectAcceptanceAPI;
@@ -79,6 +80,7 @@ public class ProjectAcceptanceAction {
      * @return  class ProjectAcceptanceVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectAcceptance(@Validated({ProjectAcceptanceTO.TESTAddAndEdit.class}) ProjectAcceptanceTO projectAcceptanceTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +100,7 @@ public class ProjectAcceptanceAction {
      * @return  class ProjectAcceptanceVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editProjectAcceptance(@Validated({ProjectAcceptanceTO.TESTAddAndEdit.class}) ProjectAcceptanceTO projectAcceptanceTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class ProjectAcceptanceAction {
      * @des 根据id删除项目验收情况信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteProjectAcceptance(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +155,7 @@ public class ProjectAcceptanceAction {
      * @des 导入项目验收情况
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel( ) throws ActException {
         return  null;
@@ -162,6 +167,7 @@ public class ProjectAcceptanceAction {
      * @des 导出项目验收情况
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/exportExcel")
     public Result exportExcel( ) throws ActException {
         return  null;
