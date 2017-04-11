@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -31,6 +32,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
+@LoginAuth
 @RequestMapping("message")
 public class MessageAction {
     @Autowired
