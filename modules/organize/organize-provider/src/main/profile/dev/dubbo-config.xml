@@ -39,6 +39,7 @@
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
     否则不需要配置-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.PositionAPI" id="positionApiImpl"/>
     <dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 

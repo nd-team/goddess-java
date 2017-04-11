@@ -185,3 +185,7 @@ include ':modules:attainment:attainment-api'
 include ':modules:attainment:attainment-consumer'
 include ':modules:attainment:attainment-provider'
 
+//#bonus 项目奖金包
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
