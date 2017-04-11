@@ -41,7 +41,7 @@ public class RentalPreceptAct {
     public Result findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws ActException {
         try {
             List<RentalPreceptVO> rentalPreceptVOList = BeanTransform.copyProperties(
-                    rentalPreceptAPI.listRentalPrecept(rentalPreceptDTO),RentalPreceptVO.class,true);
+                    rentalPreceptAPI.findListRentalPrecept(rentalPreceptDTO),RentalPreceptVO.class,true);
             return ActResult.initialize( rentalPreceptVOList );
         } catch (SerException e) {
             throw  new ActException( e.getMessage());

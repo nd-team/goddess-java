@@ -50,7 +50,7 @@ public interface RentalPreceptAPI {
      * @return class entryBasicInfo
      * @throws SerException
      */
-    default List<RentalPreceptBO> listRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+    default List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
         return null;
     }
 

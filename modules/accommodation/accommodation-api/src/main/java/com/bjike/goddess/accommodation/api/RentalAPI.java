@@ -50,10 +50,9 @@ public interface RentalAPI {
      * @return class rental
      * @throws SerException
      */
-    default List<RentalBO> listRental(RentalDTO rentalDTO) throws SerException {
+    default List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
         return null;
     }
-
     /**
      * 上传附件
      */
