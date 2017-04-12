@@ -189,3 +189,8 @@ include ':modules:attainment:attainment-provider'
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
+
+//#staffactivity 员工活动
+include ':modules:staffactivity:staffactivity-api'
+include ':modules:staffactivity:staffactivity-consumer'
+include ':modules:staffactivity:staffactivity-provider'
