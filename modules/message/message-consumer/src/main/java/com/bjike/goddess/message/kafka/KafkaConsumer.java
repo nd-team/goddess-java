@@ -11,6 +11,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
+import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,23 +29,24 @@ public class KafkaConsumer {
 
 
     public static EmailAPI emailAPI;
+    public static Environment env;
 
     public void consumer() {
         Properties props = new Properties();
         //zookeeper 配置
-        props.put("zookeeper.connect", "zookeeper:2181");
+        props.put("zookeeper.connect", env.getProperty("zookeeper.connect"));
 
         //group 代表一个消费组
-        props.put("group.id", "group1");
+        props.put("group.id", env.getProperty("group.id"));
 
         //zk连接超时
-        props.put("zookeeper.session.timeout.ms", "4000");
-        props.put("zookeeper.sync.time.ms", "200");
+        props.put("zookeeper.session.timeout.ms", env.getProperty("zookeeper.session.timeout.ms"));
+        props.put("zookeeper.sync.time.ms", env.getProperty("zookeeper.sync.time.ms"));
         //自动提交偏移量时间
-        props.put("auto.commit.interval.ms", "1000");
-        props.put("auto.offset.reset", "smallest");
+        props.put("auto.commit.interval.ms", env.getProperty("auto.commit.interval.ms"));
+        props.put("auto.offset.reset", env.getProperty("auto.offset.reset"));
         //序列化类
-        props.put("serializer.class", "kafka.serializer.StringEncoder");
+        props.put("serializer.class", env.getProperty("serializer.class"));
 
         ConsumerConfig config = new ConsumerConfig(props);
 
@@ -62,16 +64,16 @@ public class KafkaConsumer {
         while (it.hasNext()) {
             String msg = new String(it.next().message());
             MessageTO to = JSON.parseObject(msg, MessageTO.class);
-            Email email = new Email(to.getTitle(), to.getContent());
-            email.setReceiver(to.getReceivers());
-            try {
-                emailAPI.send(email);
-                System.out.println("收到消息：" + msg);
-            } catch (SerException e) {
-                System.out.println(e.getMessage());
+            if(null!=to.getReceivers()){
+                Email email = new Email(to.getTitle(), to.getContent());
+                email.setReceiver(to.getReceivers());
+                try {
+                    emailAPI.send(email);
+                    System.out.println("收到消息：" + msg);
+                } catch (SerException e) {
+                    System.out.println(e.getMessage());
+                }
             }
-
-
         }
 
     }

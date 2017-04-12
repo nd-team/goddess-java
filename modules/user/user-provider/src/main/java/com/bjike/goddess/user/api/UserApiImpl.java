@@ -37,6 +37,13 @@ public class UserApiImpl implements UserAPI {
 
     @Override
     public UserBO currentUser() throws SerException {
+        String nickname = userSer.findByMaxField("nickname", User.class);
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("nickname", nickname));
+        if (null != dto) {
+            return BeanTransform.copyProperties(userSer.findOne(dto), UserBO.class);
+
+        } //获取当前用户直接给无需登录
 
         Object token = RpcContext.getContext().getAttachment("userToken");
         if (null != token) {

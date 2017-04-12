@@ -16,6 +16,7 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +41,13 @@ public class MessageAction {
     private MessageAPI messageAPI;
     @Autowired
     private EmailAPI emailAPI;
+    @Autowired
+    private Environment env;
 
     @PostConstruct
     public void init() {
         KafkaConsumer.emailAPI = emailAPI;
+        KafkaConsumer.env = env;
     }
 
     /**
