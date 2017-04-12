@@ -1,6 +1,8 @@
 package com.bjike.goddess.interiorrecommend.enums;
 
 /**
+ * 考核方式
+ *
  * @Author: [Jason]
  * @Date: [17-4-9 下午3:22]
  * @Description: []
