@@ -23,7 +23,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("staffentry/staffentryregister")
+@RequestMapping("staffentryregister")
 public class StaffEntryRegisterAction {
 
     @Autowired
@@ -120,10 +120,10 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 發送郵件
+     * 发送邮件
      * @param id           用户id
      * @param emailAccount 用户入职注册个人邮箱
-     * @des 發送郵件
+     * @des 发送邮件
      * @version v1
      */
     @PutMapping("v1/sendAccountToEmplore")

@@ -7,6 +7,8 @@ import com.bjike.goddess.accommodation.to.RentalTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@CacheConfig(cacheNames = "accommodationSerCache")
 @Service
 public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements RentalSer{
     @Transactional(rollbackFor = SerException.class)
@@ -43,15 +46,15 @@ public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements Rent
     @Override
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
 
-        Rental rental = BeanTransform.copyProperties(rentalTO, Rental.class, true);
-        try {
+        if(!StringUtils.isEmpty(rentalTO.getId())){
+            Rental rental = super.findById(rentalTO.getId());
+            BeanTransform.copyProperties(rentalTO,rental,true);
             rental.setModifyTime(LocalDateTime.now());
             super.update(rental);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        }else{
+            throw new SerException("更新ID不能为空!");
         }
-
-        return BeanTransform.copyProperties(rental, RentalBO.class);
+        return BeanTransform.copyProperties(rentalTO,RentalBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -65,11 +68,10 @@ public class RentalSerImpl extends ServiceImpl<Rental,RentalDTO> implements Rent
     }
     @Cacheable
     @Override
-    public List<Rental> listRental(RentalDTO rentalDTO) throws SerException {
+    public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
 
-        //TODO: xiazhili 2017-03-10 未做根据 rentalDTO 分页查询所有
-        List<Rental> rentals = super.findByPage(rentalDTO);
-        return rentals;
+        List<Rental> rentals = super.findByCis(rentalDTO,true);
+        return BeanTransform.copyProperties(rentals,RentalBO.class);
     }
 
     /**

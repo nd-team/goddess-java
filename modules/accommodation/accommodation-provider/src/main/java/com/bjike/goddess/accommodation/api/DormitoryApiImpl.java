@@ -38,9 +38,8 @@ public class DormitoryApiImpl implements DormitoryAPI{
     }
 
     @Override
-    public List<Dormitory> listDormitory(DormitoryDTO dormitoryDTO) throws SerException {
-        List<Dormitory> dormitories = dormitorySer.listDormitory(dormitoryDTO);
-        return BeanTransform.copyProperties(dormitories, DormitoryBO.class, true);
+    public List<DormitoryBO> findListDormitory(DormitoryDTO dormitoryDTO) throws SerException {
+        return dormitorySer.findListDormitory(dormitoryDTO);
     }
 
     /**

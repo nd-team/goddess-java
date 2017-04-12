@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketdevelopment/demandanalysis")
+@RequestMapping("demandanalysis")
 public class DemandAnalysisAction {
 
     @Autowired

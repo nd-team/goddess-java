@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("festival/arearelationer")
+@RequestMapping("arearelationer")
 public class AreaRelationerAction {
 
     @Autowired

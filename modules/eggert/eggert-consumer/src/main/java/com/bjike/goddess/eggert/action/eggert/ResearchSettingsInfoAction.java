@@ -96,7 +96,7 @@ public class ResearchSettingsInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeResearchSettingsInfo(String id) throws ActException {
+    public Result removeResearchSettingsInfo(@PathVariable String id) throws ActException {
         try {
             researchSettingsInfoAPI.removeResearchSettingsInfo(id);
             return new ActResult("delete success");

@@ -53,7 +53,7 @@ public interface DormitorySer extends Ser<Dormitory,DormitoryDTO>{
      * @return class dormitory
      * @throws SerException
      */
-    default List<Dormitory> listDormitory(DormitoryDTO dormitoryDTO) throws SerException {
+    default List<DormitoryBO> findListDormitory(DormitoryDTO dormitoryDTO) throws SerException {
         return null;
     }
 

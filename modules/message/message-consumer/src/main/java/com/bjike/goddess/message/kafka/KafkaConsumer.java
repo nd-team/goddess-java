@@ -32,7 +32,7 @@ public class KafkaConsumer {
     public void consumer() {
         Properties props = new Properties();
         //zookeeper 配置
-        props.put("zookeeper.connect", "localhost:2181");
+        props.put("zookeeper.connect", "zookeeper:2181");
 
         //group 代表一个消费组
         props.put("group.id", "group1");

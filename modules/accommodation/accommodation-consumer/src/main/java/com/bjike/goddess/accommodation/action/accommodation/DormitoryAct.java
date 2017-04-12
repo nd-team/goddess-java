@@ -41,7 +41,7 @@ public class DormitoryAct {
     public Result findListDormitory(DormitoryDTO dormitoryDTO) throws ActException {
         try {
             List<DormitoryVO> dormitoryVOS = BeanTransform.copyProperties(
-                    dormitoryAPI.listDormitory(dormitoryDTO),DormitoryVO.class,true);
+                    dormitoryAPI.findListDormitory(dormitoryDTO),DormitoryVO.class,true);
             return ActResult.initialize( dormitoryVOS );
         } catch (SerException e) {
             throw  new ActException( e.getMessage());

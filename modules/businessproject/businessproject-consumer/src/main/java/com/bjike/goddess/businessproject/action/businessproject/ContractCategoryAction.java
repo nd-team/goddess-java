@@ -27,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessproject/contractcategory")
+@RequestMapping("contractcategory")
 public class ContractCategoryAction {
 
     @Autowired

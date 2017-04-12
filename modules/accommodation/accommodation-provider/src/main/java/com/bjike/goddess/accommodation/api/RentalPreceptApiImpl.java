@@ -39,9 +39,8 @@ public class RentalPreceptApiImpl implements RentalPreceptAPI{
     }
 
     @Override
-    public List<RentalPreceptBO> listRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
-        List<RentalPrecept> rentalPrecepts = rentalPreceptSer.listRentalPrecept(rentalPreceptDTO);
-        return BeanTransform.copyProperties(rentalPrecepts, RentalPreceptBO.class, true);
+    public List<RentalPreceptBO> findListRentalPrecept(RentalPreceptDTO rentalPreceptDTO) throws SerException {
+        return rentalPreceptSer.findListRentalPrecept(rentalPreceptDTO);
     }
     @Override
     public void audit(RentalPreceptTO preceptTO) throws  SerException {

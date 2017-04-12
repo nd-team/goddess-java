@@ -7,6 +7,7 @@ import com.bjike.goddess.accommodation.to.RentalApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@CacheConfig(cacheNames = "rentalApplySerCache")
+@CacheConfig(cacheNames = "accommodationSerCache")
 @Service
 public class RentalApplySerImpl extends ServiceImpl<RentalApply,RentalApplyDTO> implements RentalApplySer{
     @Transactional(rollbackFor = SerException.class)
@@ -45,15 +46,16 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply,RentalApplyDTO> 
     @Override
     public RentalApplyBO editApply(RentalApplyTO applyTO) throws SerException {
 
-        RentalApply apply = BeanTransform.copyProperties(applyTO, RentalApply.class, true);
-        try {
-            apply.setModifyTime(LocalDateTime.now());
-            super.update(apply);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(!StringUtils.isEmpty(applyTO.getId())){
+            RentalApply rentalApply = super.findById(applyTO.getId());
+            BeanTransform.copyProperties(applyTO,rentalApply,true);
+            rentalApply.setModifyTime(LocalDateTime.now());
+            super.update(rentalApply);
+        }else{
+            throw new SerException("更新ID不能为空!");
         }
+        return BeanTransform.copyProperties(applyTO,RentalApplyBO.class);
 
-        return BeanTransform.copyProperties(apply, RentalApplyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -67,11 +69,10 @@ public class RentalApplySerImpl extends ServiceImpl<RentalApply,RentalApplyDTO> 
     }
     @Cacheable
     @Override
-    public List<RentalApply> listRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
+    public List<RentalApplyBO> findListRentalApply(RentalApplyDTO rentalApplyDTO) throws SerException {
 
-        //TODO: xiazhili 2017-03-10 未做根据 rentalApplyDTO 分页查询所有
-        List<RentalApply> rentalApplies = super.findByPage(rentalApplyDTO);
-        return rentalApplies;
+        List<RentalApply> rentalApplies = super.findByCis(rentalApplyDTO,true);
+        return BeanTransform.copyProperties(rentalApplies,RentalApplyBO.class);
     }
 
     /**

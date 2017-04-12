@@ -30,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("financeinit/account")
+@RequestMapping("account")
 public class AccountAction {
 
     @Autowired

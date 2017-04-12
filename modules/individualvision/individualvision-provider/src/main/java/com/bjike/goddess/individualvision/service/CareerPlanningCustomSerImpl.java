@@ -7,6 +7,7 @@ import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
 import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -46,10 +47,15 @@ public class CareerPlanningCustomSerImpl extends ServiceImpl<CareerPlanningCusto
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CareerPlanningCustomBO editCareerPlanningCustom(CareerPlanningCustomTO careerPlanningCustomTO) throws SerException {
-        CareerPlanningCustom careerPlanningCustom = BeanTransform.copyProperties(careerPlanningCustomTO, CareerPlanningCustom.class);
-        careerPlanningCustom.setModifyTime(LocalDateTime.now());
-        super.update(careerPlanningCustom);
-        return BeanTransform.copyProperties(careerPlanningCustom, CareerPlanningCustomBO.class);
+        if(!StringUtils.isEmpty(careerPlanningCustomTO.getId())){
+            CareerPlanningCustom careerPlanningCustom = super.findById(careerPlanningCustomTO.getId());
+            BeanTransform.copyProperties(careerPlanningCustomTO,careerPlanningCustom,true);
+            careerPlanningCustom.setModifyTime(LocalDateTime.now());
+            super.update(careerPlanningCustom);
+        }else{
+            throw new SerException("更新ID不能为空!");
+        }
+        return BeanTransform.copyProperties(careerPlanningCustomTO,CareerPlanningCustomBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

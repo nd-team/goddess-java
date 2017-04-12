@@ -46,7 +46,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Cacheable
     @Override
-    public List<UserBO> list() throws SerException {
+    public List<UserBO> findAllUser() throws SerException {
         List<User> users = super.findAll();
         List<UserBO> userBOS = BeanTransform.copyProperties(users, UserBO.class);
         return userBOS;

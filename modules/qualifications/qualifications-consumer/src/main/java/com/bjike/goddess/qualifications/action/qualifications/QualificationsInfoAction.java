@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("qualifications/qualificationsinfo")
+@RequestMapping("qualificationsinfo")
 public class QualificationsInfoAction {
 
     @Autowired

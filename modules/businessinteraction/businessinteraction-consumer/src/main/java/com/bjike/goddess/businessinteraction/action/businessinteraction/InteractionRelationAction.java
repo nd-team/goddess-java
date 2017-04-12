@@ -28,7 +28,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("businessinteraction/interactionrelation")
+@RequestMapping("interactionrelation")
 public class InteractionRelationAction {
 
     @Autowired
