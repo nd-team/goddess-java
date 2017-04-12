@@ -77,7 +77,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         customerBaseInfoDTO.getSorts().add("customerPosition=asc");
-        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO);
+        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO,true);
 
         List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
         list.stream().forEach(str->{
