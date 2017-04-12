@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.service;
 
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.user.session.auth_code.AuthCode;
@@ -15,10 +14,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
@@ -70,7 +66,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                     //保存登录用户到session
                     saveToSession(user, token);
                     //记录登录日志
-                    saveLoginLog(loginTO,user);
+                    saveLoginLog(loginTO, user);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
@@ -83,7 +79,7 @@ public class UserLoginSerImpl implements UserLoginSer {
         return token;
     }
 
-    private void saveLoginLog(UserLoginTO loginTO,User user) throws SerException {
+    private void saveLoginLog(UserLoginTO loginTO, User user) throws SerException {
         UserLoginLogTO userLoginLogTO = new UserLoginLogTO();
         userLoginLogTO.setLoginIp(loginTO.getIp());
         userLoginLogTO.setLoginType(loginTO.getLoginType());

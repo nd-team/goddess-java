@@ -49,7 +49,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             //generateCode()
             String code = "123456";
             phone = "13457910241";
-            AuthCodeSession.put( phone, code);
+            AuthCodeSession.put(phone, code);
 
         } else {
             throw new SerException("该手机号码已注册！");

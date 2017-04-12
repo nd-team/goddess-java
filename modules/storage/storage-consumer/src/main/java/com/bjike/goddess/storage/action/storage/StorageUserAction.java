@@ -72,7 +72,7 @@ public class StorageUserAction {
     @PostMapping("v1/signOut")
     public Result signOut() throws ActException {
         try {
-             Boolean result = storageUserAPI.signOut();
+            Boolean result = storageUserAPI.signOut();
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

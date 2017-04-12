@@ -69,7 +69,7 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.eq("user.id", userId));
         UserDetail detail = super.findOne(detailDTO);
-        if(null!=detail){
+        if (null != detail) {
             UserDetailBO userDetailBO = BeanTransform.copyProperties(detail, UserDetailBO.class);
             Department department = detail.getDepartment();
             Group group = detail.getGroup();
@@ -86,7 +86,7 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
                 userDetailBO.setPositionId(detail.getPosition().getId());
                 userDetailBO.setPositionName(detail.getPosition().getName());
             }
-            return  userDetailBO;
+            return userDetailBO;
         }
 
         return null;

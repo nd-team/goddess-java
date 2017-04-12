@@ -5,16 +5,16 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -49,13 +49,13 @@ public class UserLoginLogSerImpl extends ServiceImpl<UserLoginLog, UserLoginLogD
         List<UserLoginLog> loginLogs = findByCis(dto);
         if (null != loginLogs && loginLogs.size() >= 10) {
             UserLoginLog old_log = loginLogs.get(0); //更新最旧的数据为最新的
-            old_log.setLoginTime(LocalDateTime.now());
+            old_log.setLoginTime(DateUtil.parseDateTime(loginLogTO.getLoginTime()));
             old_log.setLoginIp(loginLogTO.getLoginIp());
             old_log.setLoginType(loginLogTO.getLoginType());
             old_log.setLoginAddress(loginLogTO.getLoginAddress());
             super.update(old_log);
         } else {
-            UserLoginLog loginLog = BeanTransform.copyProperties(loginLogTO,UserLoginLog.class,true);
+            UserLoginLog loginLog = BeanTransform.copyProperties(loginLogTO, UserLoginLog.class, true);
             loginLog.setUser(userSer.findById(loginLog.getUser().getId()));
             super.save(loginLog);
         }
