@@ -26,10 +26,10 @@ public interface UserLoginLogSer extends Ser<UserLoginLog, UserLoginLogDTO> {
      */
     default void saveLoginLog(UserLoginLogTO loginLogTO) throws SerException{
 
-    };
+    }
 
     /**
-     * 获取用户登录日志，默认前5条（最多保存也是5条）
+     * 获取用户登录日志，默认前10条（最多保存也是10条）
      *
      * @return
      */

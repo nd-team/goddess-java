@@ -11,15 +11,16 @@ import com.bjike.goddess.common.user.session.valid_err.PwdErrSession;
 import com.bjike.goddess.common.user.session.valid_right.LoginUser;
 import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
-import com.bjike.goddess.user.dto.ext.UserLoginDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserLoginLog;
 import com.bjike.goddess.user.enums.LoginType;
+import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 用户登陆业务实现
@@ -70,7 +70,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                     //保存登录用户到session
                     saveToSession(user, token);
                     //记录登录日志
-                    saveLoginLog(user,loginTO);
+                    saveLoginLog(loginTO,user);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
@@ -83,39 +83,15 @@ public class UserLoginSerImpl implements UserLoginSer {
         return token;
     }
 
-    private void saveLoginLog(User user,UserLoginTO loginTO)throws SerException{
-
-
-        UserLoginLog loginLog = null;
-
-        //只保存10条登录记录
-        UserLoginLogDTO loginLogDTO = new UserLoginLogDTO();
-        loginLogDTO.setPage(1);
-        loginLogDTO.setLimit(10);
-        loginLogDTO.getConditions().add(Restrict.eq("user.id", user.getId()));
-        loginLogDTO.getSorts().add("loginTime=ASC");
-        List<UserLoginLog> userLoginLogs = userLoginLogSer.findByCis(loginLogDTO);
-        if(userLoginLogs.size()==10){
-            loginLog = userLoginLogs.get(0);
-            loginLog.setLoginType(loginTO.getLoginType());
-            loginLog.setLoginIp(loginTO.getIp());
-            loginLog.setLoginAddress("xxx");
-            loginLog.setLoginType(LoginType.PC);
-            loginLog.setLoginTime(LocalDateTime.now());
-            userLoginLogSer.update(loginLog);
-        }else {
-            UserDTO dto = new UserDTO();
-            dto.getConditions().add(Restrict.eq("id", user.getId()));
-            user = userSer.findOne(dto);
-            loginLog = new UserLoginLog();
-            loginLog.setUser(user);
-            loginLog.setLoginIp(loginTO.getIp());
-            loginLog.setLoginTime(LocalDateTime.now());
-            loginLog.setLoginType(loginTO.getLoginType());
-            loginLog.setLoginAddress("not has address");
-            loginLog.setLoginType(LoginType.PC);
-            userLoginLogSer.save(loginLog);
-        }
+    private void saveLoginLog(UserLoginTO loginTO,User user) throws SerException {
+        UserLoginLogTO userLoginLogTO = new UserLoginLogTO();
+        userLoginLogTO.setLoginIp(loginTO.getIp());
+        userLoginLogTO.setLoginType(loginTO.getLoginType());
+        userLoginLogTO.setLoginAddress("not has address");
+        userLoginLogTO.setLoginType(LoginType.PC);
+        userLoginLogTO.setUser(user);
+        userLoginLogTO.setLoginTime(DateUtil.dateToString(LocalDateTime.now()));
+        userLoginLogSer.saveLoginLog(userLoginLogTO);
 
     }
 
