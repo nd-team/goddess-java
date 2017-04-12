@@ -11,6 +11,7 @@ import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.user.vo.DepartmentVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,7 +59,7 @@ public class DepartmentAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) DepartmentTO departmentTO) throws ActException {
+    public Result add(@Validated({ADD.class}) DepartmentTO departmentTO, BindingResult result) throws ActException {
         try {
             DepartmentVO vo = BeanTransform.copyProperties(departmentAPI.save(departmentTO), DepartmentVO.class);
             return ActResult.initialize(vo);
@@ -91,7 +92,7 @@ public class DepartmentAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DepartmentTO departmentTO) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DepartmentTO departmentTO, BindingResult result) throws ActException {
         try {
             departmentAPI.update(departmentTO);
             return new ActResult("edit success!");

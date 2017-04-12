@@ -9,6 +9,7 @@ import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.storage.bo.StorageUserBO;
 import com.bjike.goddess.storage.to.StorageUserTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,7 @@ public class StorageUserAction {
      * @version v1
      */
     @PostMapping("v1/register")
-    public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO) throws ActException {
+    public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result) throws ActException {
         try {
             StorageUserBO storageUserBO = storageUserAPI.register(storageUserTO);
             return ActResult.initialize(storageUserBO);
@@ -54,7 +55,7 @@ public class StorageUserAction {
      * @version v1
      */
     @PostMapping("v1/login")
-    public Result login(@Validated(StorageUserTO.LOGIN.class) StorageUserTO storageUserTO) throws ActException {
+    public Result login(@Validated(StorageUserTO.LOGIN.class) StorageUserTO storageUserTO, BindingResult result) throws ActException {
         try {
             String token = storageUserAPI.login(storageUserTO);
             return ActResult.initialize(token);

@@ -11,6 +11,7 @@ import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 import com.bjike.goddess.user.vo.rbac.PermissionVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +57,7 @@ public class PermissionAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) PermissionTO permissionTO) throws ActException {
+    public Result add(@Validated({ADD.class}) PermissionTO permissionTO, BindingResult result) throws ActException {
         try {
             PermissionVO vo = BeanTransform.copyProperties(permissionAPI.save(permissionTO), PermissionVO.class);
             return ActResult.initialize(vo);
@@ -89,7 +90,7 @@ public class PermissionAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) PermissionTO permissionTO) throws ActException {
+    public Result edit(@Validated({EDIT.class}) PermissionTO permissionTO, BindingResult result) throws ActException {
         try {
             permissionAPI.update(permissionTO);
             return new ActResult("edit success!");

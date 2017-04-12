@@ -10,6 +10,7 @@ import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.CheckMobile;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,7 @@ public class LoginAct {
      * @version v1
      */
     @PostMapping("v1/login")
-    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request) throws ActException {
+    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request, BindingResult result) throws ActException {
         try {
 //            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
 //            LoginType type = LoginType.PC;
