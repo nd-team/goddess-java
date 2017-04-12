@@ -3,6 +3,7 @@ package com.bjike.goddess.festival.action.festival;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.CompanyFestivalTimeAPI;
@@ -78,6 +79,7 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCompanyFestivalTime(@Validated({CompanyFestivalTimeTO.TESTAddAndEdit.class}) CompanyFestivalTimeTO companyFestivalTimeTO, BindingResult bindingResult) throws ActException {
         try {
@@ -97,6 +99,7 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCompanyFestivalTime(@Validated({CompanyFestivalTimeTO.TESTAddAndEdit.class}) CompanyFestivalTimeTO companyFestivalTimeTO) throws ActException {
         try {
@@ -114,6 +117,7 @@ public class CompanyFestivalTimeAction {
      * @des 根据id删除公司放假时间安排信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCompanyFestivalTime(@PathVariable String id) throws ActException {
         try {
