@@ -4,6 +4,7 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,6 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
         if (StringUtils.isNotBlank(token)) {
             return true;
         } else {
-
             handlerNotHasLogin(response, "用户未登录！");
             return false;
         }

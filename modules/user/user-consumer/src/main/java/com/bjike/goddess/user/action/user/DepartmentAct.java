@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("user/department")
+@RequestMapping("department")
 public class DepartmentAct {
 
     @Autowired

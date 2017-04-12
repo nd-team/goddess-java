@@ -3,16 +3,14 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.common.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.common.utils.regex.Validator;
-import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.constant.UserCommon;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,10 +32,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
 
     @Autowired
     private UserSer userSer;
-    @Autowired
-    private RedisClient redis;
-    @Autowired
-    private Environment env;
 
 
     @Cacheable
@@ -55,7 +49,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             //generateCode()
             String code = "123456";
             phone = "13457910241";
-            redis.appendToMap(UserCommon.REG_AUTH_CODE, phone, code, Integer.parseInt(env.getProperty("phonecode.timeout")));
+            AuthCodeSession.put( phone, code);
 
         } else {
             throw new SerException("该手机号码已注册！");

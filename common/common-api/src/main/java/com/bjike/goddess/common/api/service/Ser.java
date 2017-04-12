@@ -62,14 +62,14 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
 
     /**
      * 根据条件询对象列表
-     * 是否分页,排序
+     * 是否分页
      *
      * @param dto
-     * @param pageAndSort 排序分页
+     * @param page 分页
      * @return
      * @throws SerException
      */
-    default List<BE> findByCis(BD dto, Boolean pageAndSort) throws SerException {
+    default List<BE> findByCis(BD dto, Boolean page) throws SerException {
         return null;
     }
 

@@ -142,6 +142,7 @@ public interface RedisClient {
 
     }
 
+
     /**
      * @param key     存入redis的key，不重复
      * @param map     保存多个key val

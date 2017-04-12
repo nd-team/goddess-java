@@ -6,10 +6,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.dto.rbac.GroupDTO;
-import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
 import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
+import com.bjike.goddess.user.dto.rbac.GroupDTO;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -79,7 +79,7 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
     @Override
     public void update(GroupTO groupTO) throws SerException {
         Group group = super.findById(groupTO.getId());
-        BeanTransform.copyProperties(groupTO,group,true);
+        BeanTransform.copyProperties(groupTO, group, true);
         group.setModifyTime(LocalDateTime.now());
         super.update(group);
     }

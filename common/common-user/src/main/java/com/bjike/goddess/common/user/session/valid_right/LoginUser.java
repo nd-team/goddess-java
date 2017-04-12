@@ -1,18 +1,19 @@
-package com.bjike.goddess.user.session;
+package com.bjike.goddess.common.user.session.valid_right;
 
-import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.user.enums.LoginType;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-01-07 10:20]
- * @Description: []
+ * @Date: [2017-04-12 08:59]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CurrentUser {
+public class LoginUser implements Serializable {
+    /**
+     * 用户id
+     */
     private String id;
     /**
      * 用户名
@@ -46,33 +47,15 @@ public class CurrentUser {
     private String employeeNumber;
 
     /**
-     * 用户状态
+     * 注册时间
      */
-    private Status status;
-    /**
-     * 是否记住我
-     */
-    private Boolean remember;
-    /**
-     * 登录ip
-     */
-    private String ip;
-    /**
-     * 已登录类型
-     */
-    private LoginType loginType;
-    /**
-     * 上次连接时间
-     */
-    private LocalDateTime accessTime;
+    private LocalDateTime createTime;
 
-    public String getId() {
-        return id;
-    }
+    /**
+     * 登录token
+     */
+    private LocalDateTime accessTime = LocalDateTime.now();
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -130,36 +113,20 @@ public class CurrentUser {
         this.employeeNumber = employeeNumber;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getId() {
+        return id;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Boolean isRemember() {
-        return remember;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setRemember(Boolean remember) {
-        this.remember = remember;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public LoginType getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(LoginType loginType) {
-        this.loginType = loginType;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public LocalDateTime getAccessTime() {
