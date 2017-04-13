@@ -3,7 +3,6 @@ package com.bjike.goddess.storage.action.storage;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.storage.bo.StorageUserBO;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
 @RequestMapping("storage/user")
 public class StorageUserAction {

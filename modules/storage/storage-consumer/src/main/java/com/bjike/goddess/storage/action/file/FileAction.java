@@ -33,7 +33,6 @@ import java.util.Map;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@LoginAuth
 @RestController
 @RequestMapping("storage/file")
 public class FileAction {

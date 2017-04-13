@@ -172,11 +172,16 @@ public class UserLoginSerImpl implements UserLoginSer {
 
     @Override
     public Boolean loginOut(String token) throws SerException {
-        LoginUser loginUser = UserSession.get(token);
-        UserSession.remove(token);
-        redis.removeMap(UserCommon.LOGIN_USER, token);
-        redis.removeMap(UserCommon.USERID_TOKEN, loginUser.getId());
-        return true;
+        if (StringUtils.isNotBlank(token)) {
+            LoginUser loginUser = UserSession.get(token);
+            UserSession.remove(token);
+            redis.removeMap(UserCommon.LOGIN_USER, token);
+            if (null != loginUser) {
+                redis.removeMap(UserCommon.USERID_TOKEN, loginUser.getId());
+            }
+            return true;
+        }
+        throw new SerException("userToken can not null!");
     }
 
 
