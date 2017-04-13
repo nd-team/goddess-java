@@ -2,7 +2,7 @@ package com.bjike.goddess.user.vo;
 
 
 
-/**
+/**部门值实体
  * @Author: [liguiqin]
  * @Date: [2017-03-02 15:53]
  * @Description: [ ]

@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
+ * 权限传输对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:00]
  * @Description: [ ]

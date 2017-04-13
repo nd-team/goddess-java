@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
+ * 组角色传输
+ *
  * @Author: [liguiqin]
  * @Date: [2017-04-13 13:55]
  * @Description: [ ]

@@ -25,10 +25,15 @@ public class PublicKeyAct {
     @Autowired
     private UserAPI userAPI;
 
+    /**
+     * 获取公钥
+     *
+     * @version v1
+     */
     @GetMapping("v1/key")
     public Result key() throws ActException {
         try {
-            return  ActResult.initialize(userAPI.publicKey());
+            return ActResult.initialize(userAPI.publicKey());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
