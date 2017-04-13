@@ -2,20 +2,20 @@ package com.bjike.goddess.user.vo.rbac;
 
 /**
  * @Author: [liguiqin]
- * @Date: [2017-04-13 14:00]
+ * @Date: [2017-04-13 16:43]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupRoleVO {
+public class UserRoleVO {
     /**
-     * 组角色id
+     * 用户角色id
      */
     private String id;
     /**
-     * 组id
+     * 用户id
      */
-    private String groupId;
+    private String userId;
     /**
      * 角色id
      */
@@ -29,12 +29,12 @@ public class GroupRoleVO {
         this.id = id;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getRoleId() {

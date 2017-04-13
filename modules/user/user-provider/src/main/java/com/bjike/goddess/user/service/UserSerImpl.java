@@ -26,9 +26,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -43,6 +48,35 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
+    public static String PUBLIC_KEY;
+    public static String PRIVATE_KEY;
+    private static  Logger logger = Logger.getLogger(UserSerImpl.class.getName());
+
+    /**
+     * 初始化公钥私钥
+     */
+    static {
+        File file = new File("/files/key.properties");
+        try {
+            if (file.exists()) {
+                Reader rd = new FileReader(file);
+                BufferedReader reader = new BufferedReader(rd);
+                String line = null;
+                while (null != (line = reader.readLine())) {
+                    if (line.startsWith("publicKey")) {
+                        PUBLIC_KEY = line.split("=")[1].trim();
+                    }
+                    if (line.startsWith("privateKey")) {
+                        PRIVATE_KEY = line.split("=")[1].trim();
+                    }
+                }
+            } else {
+                logger.info("配置文件不存在,请先创建!");
+            }
+        } catch (Exception e) {
+            logger.info("公钥读取异常!");
+        }
+    }
 
     @Autowired
     private UserRep userRep;
@@ -51,6 +85,15 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Autowired
     private RedisClient redis;
 
+    @Override
+    public String publicKey() throws SerException {
+        return PUBLIC_KEY;
+    }
+
+    @Override
+    public String privateKey() throws SerException {
+        return PRIVATE_KEY;
+    }
 
     @Cacheable
     @Override

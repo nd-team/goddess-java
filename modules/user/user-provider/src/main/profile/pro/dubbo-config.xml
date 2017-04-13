@@ -30,6 +30,8 @@
 	<dubbo:service interface="com.bjike.goddess.user.api.rbac.PermissionAPI" ref="permissionApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.user.api.rbac.GroupRoleAPI" ref="groupRoleApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.user.api.rbac.RolePermissionAPI" ref="rolePermissionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.user.api.rbac.UserRoleAPI" ref="userRoleApiImpl"/>
+
 
 
 </beans>

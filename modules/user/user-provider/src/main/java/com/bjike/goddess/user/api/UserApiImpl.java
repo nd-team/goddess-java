@@ -16,8 +16,13 @@ import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -36,10 +41,23 @@ public class UserApiImpl implements UserAPI {
     private RedisClient redis;
 
     @Override
+    public String publicKey() throws SerException {
+       return userSer.publicKey();
+
+    }
+
+    @Override
+    public String privateKey() throws SerException {
+       return  userSer.privateKey();
+
+    }
+
+
+    @Override
     public UserBO currentUser() throws SerException {
-        String nickname = userSer.findByMaxField("nickname", User.class);
+        String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
         UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("nickname", nickname));
+        dto.getConditions().add(Restrict.eq("employeeNumber", employeeNumber));
         if (null != dto) {
             return BeanTransform.copyProperties(userSer.findOne(dto), UserBO.class);
 

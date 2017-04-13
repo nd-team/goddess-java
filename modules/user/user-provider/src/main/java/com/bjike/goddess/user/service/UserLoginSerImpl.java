@@ -18,6 +18,7 @@ import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
+import com.bjike.goddess.user.utils.RSACoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,11 @@ public class UserLoginSerImpl implements UserLoginSer {
         String token = null;
         String account = loginTO.getAccount();
         try {
-            if (PasswordHash.validatePassword(loginTO.getPassword(), persistUser.getPassword())) {
+            //该密码经过公钥加密
+            byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword(),
+                    userSer.privateKey());
+            String password = new String(decodedData); //得到明文密码
+            if (PasswordHash.validatePassword(password, persistUser.getPassword())) {
                 token = redis.getMap(UserCommon.USERID_TOKEN, persistUser.getId());
                 if (StringUtils.isNotBlank(token)) { //已登录过
                     if (null == UserSession.get(token)) { //重新设置登录用户到session

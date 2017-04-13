@@ -8,8 +8,17 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class RolePermissionVO {
+    /**
+     * 角色权限id
+     */
     private String id;
+    /**
+     * 角色id
+     */
     private String roleId;
+    /**
+     * 权限id
+     */
     private String permissionId;
 
     public String getId() {
