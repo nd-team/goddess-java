@@ -61,11 +61,11 @@ public class LoginAct {
      * @version v1
      */
 
-    @PostMapping("v1/logout")
-    public Result logout( String userToken) throws ActException {
+    @PostMapping("v1/signOut")
+    public Result signOut( String userToken) throws ActException {
         try {
 
-            Boolean result = userLoginAPI.loginOut(userToken);
+            Boolean result = userLoginAPI.signOut(userToken);
             return ActResult.initialize(result);
 
         } catch (SerException e) {

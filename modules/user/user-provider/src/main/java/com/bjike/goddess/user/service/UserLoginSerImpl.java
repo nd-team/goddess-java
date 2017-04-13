@@ -171,7 +171,7 @@ public class UserLoginSerImpl implements UserLoginSer {
     }
 
     @Override
-    public Boolean loginOut(String token) throws SerException {
+    public Boolean signOut(String token) throws SerException {
         if (StringUtils.isNotBlank(token)) {
             LoginUser loginUser = UserSession.get(token);
             UserSession.remove(token);
