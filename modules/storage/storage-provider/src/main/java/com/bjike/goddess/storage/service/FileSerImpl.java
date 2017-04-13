@@ -203,7 +203,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 realPath = PathCommon.RECYCLE_PATH + realPath;
                 realPath = StringUtils.substringBeforeLast(realPath, PathCommon.SEPARATOR);//去掉一层目录
                 java.io.File dir = new java.io.File(realPath);
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, true);
+                 //没有存在回收目录直接移动目录
+                 org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, !file.exists());
             }
         } catch (Exception e) {
             throw new SerException(e.getMessage());

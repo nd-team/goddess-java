@@ -34,4 +34,5 @@ dependencies {
     compile(project(":common:common-redis")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 }

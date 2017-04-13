@@ -16,9 +16,7 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RoleAPI" id="roleApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupAPI" id="groupApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
@@ -26,5 +24,10 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserRegisterAPI" id="userRegisterApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAuthCodeAPI" id="userAuthCodeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginLogAPI" id="userLoginLogApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupRoleAPI" id="groupRoleApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RolePermissionAPI" id="rolePermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RoleAPI" id="roleApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupAPI" id="groupApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 
 </beans>
