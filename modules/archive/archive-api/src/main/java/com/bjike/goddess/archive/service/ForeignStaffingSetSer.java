@@ -21,30 +21,79 @@ import java.util.List;
  */
 public interface ForeignStaffingSetSer extends Ser<ForeignStaffingSet, ForeignStaffingSetDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 对外人员基本信息设置传输对象
+     * @return
+     * @throws SerException
+     */
     default ForeignStaffingSetBO save(ForeignStaffingSetTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 对外人员基本信息设置传输对象
+     * @return
+     * @throws SerException
+     */
     default ForeignStaffingSetBO update(ForeignStaffingSetTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 对外人员基本信息设置数据id
+     * @return
+     * @throws SerException
+     */
     default ForeignStaffingSetBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 冻结
+     *
+     * @param id 对外人员基本信息设置数据id
+     * @return
+     * @throws SerException
+     */
     default ForeignStaffingSetBO congeal(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 解冻
+     *
+     * @param id 对外人员基本信息设置数据id
+     * @return
+     * @throws SerException
+     */
     default ForeignStaffingSetBO thaw(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据状态查询对外人员基本信息设置数据
+     *
+     * @param status 状态
+     * @return
+     * @throws SerException
+     */
     default List<ForeignStaffingSetBO> findByStatus(Status status) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 对外人员基本信息设置数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<ForeignStaffingSetBO> maps(ForeignStaffingSetDTO dto) throws SerException {
         return null;
     }

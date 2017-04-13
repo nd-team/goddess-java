@@ -1,12 +1,21 @@
-模块名:intromanage
-类名:IndividualDisplayUser
-作者:sunfengtao
-描述:个人简介显示用户名称集合
+模块名:archive
+类名:ArchiveAccess
+作者:dengjunren
+描述:档案调阅
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String usernames 用户姓名集合;
-String displayId 个人简介显示字段id;
+String username 姓名;
+LocalDate start 开始日期;
+LocalDate end 结束日期;
+String access 调阅人;
+String reason 原因;
+String welfare 福利模块;
+String welfareOpinion 福利审核意见;
+String manage 总经办;
+String manageOpinion 总经办审核意见;
+AuditType audit 审核状态;
+Boolean overdue 是否到期;
 )

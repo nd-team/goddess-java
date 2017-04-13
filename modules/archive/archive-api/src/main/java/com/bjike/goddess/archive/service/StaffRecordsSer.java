@@ -16,6 +16,11 @@ import com.bjike.goddess.common.api.service.Ser;
  */
 public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
 
+    /**
+     * 上传数据
+     *
+     * @throws SerException
+     */
     void upload() throws SerException;
 
 }

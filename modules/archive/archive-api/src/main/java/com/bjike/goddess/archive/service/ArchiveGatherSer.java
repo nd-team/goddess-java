@@ -20,18 +20,46 @@ import java.util.List;
  */
 public interface ArchiveGatherSer extends Ser<ArchiveGather, ArchiveGatherDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 档案收集传输对象
+     * @return
+     * @throws SerException
+     */
     default ArchiveGatherBO save(ArchiveGatherTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 档案收集传输对象
+     * @return
+     * @throws SerException
+     */
     default ArchiveGatherBO update(ArchiveGatherTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 档案收集传输对象
+     * @return
+     * @throws SerException
+     */
     default ArchiveGatherBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 档案收集数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<ArchiveGatherBO> maps(ArchiveGatherDTO dto) throws SerException {
         return null;
     }

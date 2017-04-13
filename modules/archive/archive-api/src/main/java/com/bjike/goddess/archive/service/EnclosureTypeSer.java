@@ -21,30 +21,72 @@ import java.util.List;
  */
 public interface EnclosureTypeSer extends Ser<EnclosureType, EnclosureTypeDTO> {
 
+    /**
+     * 保存
+     * @param to 附件类型传输对象
+     * @return
+     * @throws SerException
+     */
     default EnclosureTypeBO save(EnclosureTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     * @param to 附件类型传输对象
+     * @return
+     * @throws SerException
+     */
     default EnclosureTypeBO update(EnclosureTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     * @param id 附件类型数据id
+     * @return
+     * @throws SerException
+     */
     default EnclosureTypeBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 冻结
+     * @param id 附件类型数据id
+     * @return
+     * @throws SerException
+     */
     default EnclosureTypeBO congeal(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 解冻
+     * @param id 附件类型数据id
+     * @return
+     * @throws SerException
+     */
     default EnclosureTypeBO thaw(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据状态查询附件类型数据
+     * @param status 状态
+     * @return
+     * @throws SerException
+     */
     default List<EnclosureTypeBO> findByStatus(Status status) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     * @param dto 附件类型数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<EnclosureTypeBO> maps(EnclosureTypeDTO dto) throws SerException {
         return null;
     }

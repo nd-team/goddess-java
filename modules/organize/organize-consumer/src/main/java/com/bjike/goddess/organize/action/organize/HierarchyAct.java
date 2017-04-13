@@ -32,6 +32,7 @@ public class HierarchyAct {
      * 保存体系信息
      *
      * @param to 体系传输对象
+     * @return class HierarchyVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -48,6 +49,7 @@ public class HierarchyAct {
      * 修改体系信息
      *
      * @param to 体系传输对象
+     * @return class HierarchyVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

@@ -21,30 +21,79 @@ import java.util.List;
  */
 public interface SocialSecurityTypeSer extends Ser<SocialSecurityType, SocialSecurityTypeDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 公司社保购买类型传输对象
+     * @return
+     * @throws SerException
+     */
     default SocialSecurityTypeBO save(SocialSecurityTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 公司社保购买类型传输对象
+     * @return
+     * @throws SerException
+     */
     default SocialSecurityTypeBO update(SocialSecurityTypeTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 公司社保购买类型数据id
+     * @return
+     * @throws SerException
+     */
     default SocialSecurityTypeBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 冻结
+     *
+     * @param id 公司社保购买类型数据id
+     * @return
+     * @throws SerException
+     */
     default SocialSecurityTypeBO congeal(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 解冻
+     *
+     * @param id 公司社保购买类型数据id
+     * @return
+     * @throws SerException
+     */
     default SocialSecurityTypeBO thaw(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据状态查询公司社保购买类型数据
+     *
+     * @param status 状态
+     * @return
+     * @throws SerException
+     */
     default List<SocialSecurityTypeBO> findByStatus(Status status) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 公司社保购买类型数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<SocialSecurityTypeBO> maps(SocialSecurityTypeDTO dto) throws SerException {
         return null;
     }

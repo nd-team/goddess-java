@@ -20,18 +20,46 @@ import java.util.List;
  */
 public interface PersonnelQualificationSer extends Ser<PersonnelQualification, PersonnelQualificationDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 人员资质传输对象
+     * @return
+     * @throws SerException
+     */
     default PersonnelQualificationBO save(PersonnelQualificationTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 人员资质传输对象
+     * @return
+     * @throws SerException
+     */
     default PersonnelQualificationBO update(PersonnelQualificationTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 人员资质数据id
+     * @return
+     * @throws SerException
+     */
     default PersonnelQualificationBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 人员资质数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<PersonnelQualificationBO> maps(PersonnelQualificationDTO dto) throws SerException {
         return null;
     }

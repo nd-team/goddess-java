@@ -20,22 +20,57 @@ import java.util.List;
  */
 public interface ArchiveDetailSer extends Ser<ArchiveDetail, ArchiveDetailDTO> {
 
+    /**
+     * 保存
+     *
+     * @param to 档案明细传输对象
+     * @return
+     * @throws SerException
+     */
     default ArchiveDetailBO save(ArchiveDetailTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 修改
+     *
+     * @param to 档案明细传输对象
+     * @return
+     * @throws SerException
+     */
     default ArchiveDetailBO update(ArchiveDetailTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 档案明细数据id
+     * @return
+     * @throws SerException
+     */
     default ArchiveDetailBO delete(String id) throws SerException {
         return null;
     }
 
+    /**
+     * 根据姓名查询档案明细
+     *
+     * @param username 姓名
+     * @return
+     * @throws SerException
+     */
     default ArchiveDetailBO findByUsername(String username) throws SerException {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 档案明细数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<ArchiveDetailBO> maps(ArchiveDetailDTO dto) throws SerException {
         return null;
     }
