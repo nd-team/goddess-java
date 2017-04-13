@@ -11,6 +11,7 @@ import com.bjike.goddess.quartz.api.ScheduleJobGroupAPI;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobGroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class ScheduleJobGroupAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) ScheduleJobGroupTO jobGroupTO) throws ActException {
+    public Result add(@Validated(ADD.class) ScheduleJobGroupTO jobGroupTO, BindingResult result) throws ActException {
         try {
             ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.add(jobGroupTO), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVO);
@@ -53,7 +54,7 @@ public class ScheduleJobGroupAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ScheduleJobGroupTO jobGroupTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) ScheduleJobGroupTO jobGroupTO, BindingResult result) throws ActException {
         try {
             scheduleJobGroupAPI.edit(jobGroupTO);
             return ActResult.initialize("编辑成功");

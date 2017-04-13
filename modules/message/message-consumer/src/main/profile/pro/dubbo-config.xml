@@ -17,5 +17,6 @@
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.EmailAPI" id="emailApiImpl"/>
 
 </beans>

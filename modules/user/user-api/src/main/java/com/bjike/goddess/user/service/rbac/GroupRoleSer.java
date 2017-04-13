@@ -2,8 +2,10 @@ package com.bjike.goddess.user.service.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.rbac.GroupRoleBO;
 import com.bjike.goddess.user.dto.rbac.GroupRoleDTO;
 import com.bjike.goddess.user.entity.rbac.GroupRole;
+import com.bjike.goddess.user.to.rbac.GroupRoleTO;
 
 import java.util.List;
 
@@ -25,6 +27,17 @@ public interface GroupRoleSer extends Ser<GroupRole, GroupRoleDTO> {
      * @throws SerException
      */
     default List<GroupRole> findByGroupIds(String ... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 保存组
+     *
+     * @param groupRoleTO
+     * @return
+     * @throws SerException
+     */
+    default GroupRoleBO saveByTO(GroupRoleTO groupRoleTO) throws SerException {
         return null;
     }
 

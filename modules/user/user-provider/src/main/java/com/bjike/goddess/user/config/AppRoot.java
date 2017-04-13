@@ -5,6 +5,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.PostConstruct;
+
 /**
  * 配置项扫描
  *
@@ -25,5 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 public class AppRoot {
+
 
 }

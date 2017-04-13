@@ -10,7 +10,8 @@ import com.bjike.goddess.common.api.type.Status;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserVO   {
+public class UserVO {
+    private String id;
     /**
      * 用户名
      */
@@ -109,5 +110,13 @@ public class UserVO   {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

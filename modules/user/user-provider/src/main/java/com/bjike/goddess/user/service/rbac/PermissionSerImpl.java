@@ -133,7 +133,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
     @Override
     public void update(PermissionTO permissionTO) throws SerException {
         Permission permission = super.findById(permissionTO.getId());
-        BeanTransform.copyProperties(permissionTO, permission,true);
+        BeanTransform.copyProperties(permissionTO, permission, true);
         permission.setModifyTime(LocalDateTime.now());
         super.update(permission);
     }

@@ -18,6 +18,23 @@ import java.util.List;
  */
 public interface UserAPI {
     /**
+     * 获取公钥
+     * @return
+     * @throws SerException
+     */
+    default String publicKey() throws SerException{
+        return null;
+    }
+    /**
+     * 获取私钥
+     * @return
+     * @throws SerException
+     */
+    default String privateKey() throws SerException{
+        return null;
+    }
+
+    /**
      * 获取当前用户
      *
      * @return

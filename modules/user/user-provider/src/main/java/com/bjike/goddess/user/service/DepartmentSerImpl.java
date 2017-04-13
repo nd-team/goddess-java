@@ -73,7 +73,7 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
         Department department = BeanTransform.copyProperties(departmentTO, Department.class, true);
         super.save(department);
         departmentTO.setId(department.getId());//复制id
-        return BeanTransform.copyProperties(departmentTO,DepartmentBO.class);
+        return BeanTransform.copyProperties(departmentTO, DepartmentBO.class);
     }
 
     @Override

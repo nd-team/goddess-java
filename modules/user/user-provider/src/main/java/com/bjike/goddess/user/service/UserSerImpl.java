@@ -1,11 +1,16 @@
 package com.bjike.goddess.user.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.user.session.constant.UserCommon;
+import com.bjike.goddess.common.user.session.valid_right.LoginUser;
+import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -14,15 +19,21 @@ import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -37,12 +48,52 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
+    public static String PUBLIC_KEY;
+    public static String PRIVATE_KEY;
+    private static  Logger logger = Logger.getLogger(UserSerImpl.class.getName());
+
+    /**
+     * 初始化公钥私钥
+     */
+    static {
+        File file = new File("/files/key.properties");
+        try {
+            if (file.exists()) {
+                Reader rd = new FileReader(file);
+                BufferedReader reader = new BufferedReader(rd);
+                String line = null;
+                while (null != (line = reader.readLine())) {
+                    if (line.startsWith("publicKey")) {
+                        PUBLIC_KEY = line.split("=")[1].trim();
+                    }
+                    if (line.startsWith("privateKey")) {
+                        PRIVATE_KEY = line.split("=")[1].trim();
+                    }
+                }
+            } else {
+                logger.info("配置文件不存在,请先创建!");
+            }
+        } catch (Exception e) {
+            logger.info("公钥读取异常!");
+        }
+    }
 
     @Autowired
     private UserRep userRep;
     @Autowired
     private UserDetailSer userDetailSer;
+    @Autowired
+    private RedisClient redis;
 
+    @Override
+    public String publicKey() throws SerException {
+        return PUBLIC_KEY;
+    }
+
+    @Override
+    public String privateKey() throws SerException {
+        return PRIVATE_KEY;
+    }
 
     @Cacheable
     @Override
@@ -107,19 +158,25 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Override
     public void update(UserTO userTO) throws SerException {
         User user = super.findById(userTO.getId());
-        BeanTransform.copyProperties(userTO,user,true);
+        BeanTransform.copyProperties(userTO, user, true);
         user.setModifyTime(LocalDateTime.now());
         super.update(user);
+        //更新session及缓存
+        String token = redis.getMap(UserCommon.USERID_TOKEN, user.getId());
+        LoginUser loginUser = new LoginUser();
+        BeanUtils.copyProperties(user, loginUser);
+        redis.appendToMap(UserCommon.USERID_TOKEN, token, JSON.toJSONString(loginUser));
+        UserSession.put(token, loginUser);
     }
 
     @Override
     public List<UserBO> findByGroup(String... groups) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
-        detailDTO.getConditions().add(Restrict.in("group.id",groups));
+        detailDTO.getConditions().add(Restrict.in("group.id", groups));
         List<UserDetail> userDetails = userDetailSer.findByCis(detailDTO);
         List<UserBO> userBOS = new ArrayList<>(userDetails.size());
-        userDetails.stream().forEach(detail->{
-            UserBO userBO = BeanTransform.copyProperties(detail.getUser(),UserBO.class);
+        userDetails.stream().forEach(detail -> {
+            UserBO userBO = BeanTransform.copyProperties(detail.getUser(), UserBO.class);
             userBOS.add(userBO);
         });
         return userBOS;

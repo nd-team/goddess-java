@@ -105,9 +105,9 @@ public class FileUtils {
     public static FileType getFileType(File file) {
         FileType type = null;
         if (file.isFile()) {
-            String suffix = file.getName().split("\\.")[1];
-            suffix = suffix.toUpperCase();
             try {
+                String suffix = file.getName().split("\\.")[1];
+                suffix = suffix.toUpperCase();
                 type = FileType.valueOf(suffix);
             } catch (Exception e) {
                 type = FileType.UNKNOW;

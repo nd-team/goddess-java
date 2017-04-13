@@ -11,6 +11,7 @@ import com.bjike.goddess.quartz.api.ScheduleJobAPI;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class ScheduleJobAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) ScheduleJobTO scheduleJobTO) throws ActException {
+    public Result add(@Validated(ADD.class) ScheduleJobTO scheduleJobTO, BindingResult result) throws ActException {
         try {
             ScheduleJobVO scheduleJobVO = BeanTransform.copyProperties(scheduleJobAPI.add(scheduleJobTO), ScheduleJobVO.class);
             return ActResult.initialize(scheduleJobVO);
@@ -53,7 +54,7 @@ public class ScheduleJobAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ScheduleJobTO scheduleJobTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) ScheduleJobTO scheduleJobTO, BindingResult result) throws ActException {
         try {
             scheduleJobAPI.edit(scheduleJobTO);
             return ActResult.initialize("编辑成功");
