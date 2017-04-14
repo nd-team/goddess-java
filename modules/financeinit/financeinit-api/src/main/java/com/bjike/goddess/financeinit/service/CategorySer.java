@@ -58,4 +58,17 @@ public interface CategorySer extends Ser<Category, CategoryDTO> {
     default List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {return null;}
 
 
+    /**
+     * 类别列表
+     * @return class CategoryBO
+     */
+    default List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {return null;}
+
+    /**
+     * 根据id查一级和二级列表
+     * @return class CategoryBO
+     */
+    default CategoryBO listById (String id) throws SerException {return null;}
+
+
 }

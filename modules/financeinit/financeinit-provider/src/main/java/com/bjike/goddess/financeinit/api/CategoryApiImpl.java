@@ -45,4 +45,16 @@ public class CategoryApiImpl implements CategoryAPI {
     public void deleteCategory(String id) throws SerException {
         categorySer.deleteCategory(id);
     }
+
+    @Override
+    public List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {
+        return categorySer.listAllCategory(categoryDTO);
+    }
+
+    @Override
+    public CategoryBO listById(String id) throws SerException {
+        return categorySer.listById(id);
+    }
+
+
 }
