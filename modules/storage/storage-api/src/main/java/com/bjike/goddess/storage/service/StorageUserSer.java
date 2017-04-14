@@ -42,7 +42,7 @@ public interface StorageUserSer extends Ser<StorageUser, StorageUserDTO> {
      *
      * @return
      */
-    default Boolean signOut( ) throws SerException {
+    default Boolean signOut(String storageToken ) throws SerException {
         return null;
     }
 

@@ -68,7 +68,7 @@ public final class UserSession {
      * @return 是否已经登录
      */
     public static void put(String token, LoginUser loginUser) {
-        if (null != token && !"".equals(token.trim())) {
+        if (StringUtils.isNotBlank(token)) {
             USER_SESSION.put(token, loginUser);
         } else {
             throw TOKEN_NOT_NULL;
@@ -84,7 +84,7 @@ public final class UserSession {
      * @return 是否删除成功
      */
     public static void remove(String token) {
-        if (null != token && !"".equals(token.trim())) {
+        if (StringUtils.isNotBlank(token)) {
             USER_SESSION.invalidate(token);
         } else {
 

@@ -21,10 +21,7 @@ public class UserAuthCodeSerImpl implements UserAuthCodeSer {
     public Boolean showAuthCode(String account) throws SerException {
 
         int count = PwdErrSession.get(account);
-        if (count >= 5) { //验证次数大于5次需要验证码
-            return true;
-        }
-        return false;
+        return count >= 5;  //验证次数大于5次需要验证码
     }
 
 

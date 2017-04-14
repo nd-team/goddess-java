@@ -3,6 +3,8 @@ package com.bjike.goddess.user.session.valid_right;
 import java.io.Serializable;
 
 /**
+ * 登录用户
+ *
  * @Author: [liguiqin]
  * @Date: [2017-04-12 08:59]
  * @Description: [ ]

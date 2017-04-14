@@ -80,7 +80,7 @@ public final class PwdErrSession {
                 return PWD_ERR_SESSION.get(account);
             }
         } catch (Exception e) {
-            return null;
+            return 0;
         }
 
         throw ACCOUNT_NOT_NULL;

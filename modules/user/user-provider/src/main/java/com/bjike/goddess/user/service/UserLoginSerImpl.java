@@ -53,7 +53,6 @@ public class UserLoginSerImpl implements UserLoginSer {
     public String login(UserLoginTO loginTO) throws SerException {
         String token = null;
         String account = loginTO.getAccount();
-        loginTO.setIp("192.168.0.1");
         UserBO userBO = userSer.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
         if (null != userBO) {
             User user = BeanTransform.copyProperties(userBO, User.class, true);
@@ -82,7 +81,7 @@ public class UserLoginSerImpl implements UserLoginSer {
         userLoginLogTO.setLoginIp(loginTO.getIp());
         userLoginLogTO.setLoginType(loginTO.getLoginType());
         userLoginLogTO.setLoginAddress("not has address");
-        userLoginLogTO.setLoginType(LoginType.PC);
+        userLoginLogTO.setLoginType(loginTO.getLoginType());
         userLoginLogTO.setUser(user);
         userLoginLogTO.setLoginTime(DateUtil.dateToString(LocalDateTime.now()));
         userLoginLogSer.saveLoginLog(userLoginLogTO);
@@ -139,7 +138,7 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @return
      */
     private String createToken(User persistUser, UserLoginTO loginTO) throws SerException {
-        String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
+        String token = TokenUtil.create(loginTO.getIp(), persistUser.getUsername());
         saveToSessionAndRedis(persistUser, token);
         PwdErrSession.remove(loginTO.getAccount());//删除密码验证错误次数统计
         return token;
@@ -168,7 +167,6 @@ public class UserLoginSerImpl implements UserLoginSer {
     @Override
     public Boolean signOut(String token) throws SerException {
         if (StringUtils.isNotBlank(token)) {
-            LoginUser loginUser = UserSession.get(token);
             UserSession.remove(token);
             redis.removeMap(UserCommon.LOGIN_USER, token);
             return true;

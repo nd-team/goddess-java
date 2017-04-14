@@ -4,8 +4,12 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.user.api.UserLoginAPI;
+import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.to.UserLoginTO;
+import com.bjike.goddess.user.utils.CheckMobile;
+import com.bjike.goddess.user.utils.IpUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,12 +45,13 @@ public class LoginAct {
     @PostMapping("v1/login")
     public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request, BindingResult result) throws ActException {
         try {
-//            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-//            LoginType type = LoginType.PC;
-//            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
-//                type = LoginType.MOBILE;
-//            }
-//            loginTO.setLoginType(type);
+            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+            LoginType type = LoginType.PC;
+            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
+                type = LoginType.MOBILE;
+            }
+            loginTO.setLoginType(type);
+            loginTO.setIp(IpUtils.getIp(request));
             String token = userLoginAPI.login(loginTO);
             return ActResult.initialize(token);
 
