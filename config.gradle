@@ -64,5 +64,8 @@ allprojects {
         druid_version = '1.0.26'
         hibernate_jpa_version = '1.0.0.Final'
         hibernate_ehcache_version = '5.2.2.Final'
+        guava_version = '21.0'
+        codec_version = '1.10'
+        japi_version = '1.0'
     }
 }

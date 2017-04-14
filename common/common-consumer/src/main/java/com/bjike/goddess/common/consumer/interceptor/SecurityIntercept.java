@@ -4,11 +4,8 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.common.user.session.valid_right.UserSession;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -30,9 +27,13 @@ import java.lang.reflect.Method;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Component
 public class SecurityIntercept extends HandlerInterceptorAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityIntercept.class);
+
+    public SecurityIntercept(UserAPI userAPI) {
+        this.userAPI = userAPI;
+    }
+
+    private UserAPI userAPI;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -52,12 +53,17 @@ public class SecurityIntercept extends HandlerInterceptorAdapter {
     }
 
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
-        if (StringUtils.isNotBlank(token)) {
-            return true;
-        } else {
-            handlerNotHasLogin(response, "用户未登录！");
-            return false;
+        try {
+            if (StringUtils.isNotBlank(token) && null != userAPI.currentUser(token)) {
+                return true;
+            } else {
+                handlerNotHasLogin(response, "用户未登录！");
+                return false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
+
 
     }
 

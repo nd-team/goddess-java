@@ -34,12 +34,13 @@ public class AngleAct {
      * 保存角度信息
      *
      * @param to 角度传输对象
+     * @return class AngleVO
      * @version v1
      */
     @PostMapping("v1/save")
     public Result save(AngleTO to) throws ActException {
         try {
-            return ActResult.initialize(angleAPI.saveAsTo(to));
+            return ActResult.initialize(BeanTransform.copyProperties(angleAPI.saveAsTo(to), AngleVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -50,6 +51,7 @@ public class AngleAct {
      *
      * @param id 角度ID
      * @param to 角度传输对象
+     * @return class AngleVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
@@ -58,7 +60,7 @@ public class AngleAct {
             AngleBO bo = BeanTransform.copyProperties(to, AngleBO.class, true);
             to.setId(id);
             angleAPI.updateAsTo(to);
-            return ActResult.initialize(to);
+            return ActResult.initialize(BeanTransform.copyProperties(to, AngleVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

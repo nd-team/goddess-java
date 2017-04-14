@@ -1,14 +1,9 @@
 package com.bjike.goddess.user.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
-import com.bjike.goddess.common.user.session.auth_code.AuthCode;
-import com.bjike.goddess.common.user.session.auth_code.AuthCodeSession;
-import com.bjike.goddess.common.user.session.constant.UserCommon;
-import com.bjike.goddess.common.user.session.valid_err.PwdErrSession;
-import com.bjike.goddess.common.user.session.valid_right.LoginUser;
-import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
@@ -16,9 +11,13 @@ import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.LoginType;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
+import com.bjike.goddess.user.session.constant.UserCommon;
+import com.bjike.goddess.user.session.valid_err.PwdErrSession;
+import com.bjike.goddess.user.session.valid_right.LoginUser;
+import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
-import com.bjike.goddess.user.utils.RSACoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
                     PwdErrSession.remove(account);//删除密码验证错误次数统计
                     AuthCodeSession.remove(account);//清除验证码
-                    saveToSession(user, token); //保存登录用户到session
+                    saveToSessionAndRedis(user, token); //保存登录用户到session和redis
                     saveLoginLog(loginTO, user);  //记录登录日志
                 } else {
                     throw new SerException("账号或者密码错误");
@@ -91,16 +90,17 @@ public class UserLoginSerImpl implements UserLoginSer {
     }
 
     /**
-     * 保存登录用户到Session
+     * 保存登录用户到Session redis
      *
      * @param user
      * @param token
      * @throws SerException
      */
-    private void saveToSession(User user, String token) throws SerException {
+    private void saveToSessionAndRedis(User user, String token) throws SerException {
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(user, loginUser);
         UserSession.put(token, loginUser);
+        redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser), UserCommon.LOGIN_TIMEOUT);
     }
 
 
@@ -114,19 +114,11 @@ public class UserLoginSerImpl implements UserLoginSer {
         String account = loginTO.getAccount();
         try {
             //该密码经过公钥加密
-            byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword(),
-                    userSer.privateKey());
-            String password = new String(decodedData); //得到明文密码
-            if (PasswordHash.validatePassword(password, persistUser.getPassword())) {
-                token = redis.getMap(UserCommon.USERID_TOKEN, persistUser.getId());
-                if (StringUtils.isNotBlank(token)) { //已登录过
-                    if (null == UserSession.get(token)) { //重新设置登录用户到session
-                        UserSession.put(token, BeanTransform.copyProperties(persistUser, LoginUser.class));
-                    }
-                    return token;
-                } else {
-                    token = createToken(persistUser, loginTO);
-                }
+//            byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword(),
+//                    userSer.privateKey());
+//            String password = new String(decodedData); //得到明文密码
+            if (PasswordHash.validatePassword(loginTO.getPassword(), persistUser.getPassword())) {
+                token = createToken(persistUser, loginTO);
             } else { //密码错误
                 PwdErrSession.put(account);
                 return null;
@@ -148,7 +140,7 @@ public class UserLoginSerImpl implements UserLoginSer {
      */
     private String createToken(User persistUser, UserLoginTO loginTO) throws SerException {
         String token = TokenUtil.create("192.168.0.148", persistUser.getUsername());
-        saveToSession(persistUser, token);
+        saveToSessionAndRedis(persistUser, token);
         PwdErrSession.remove(loginTO.getAccount());//删除密码验证错误次数统计
         return token;
     }
@@ -161,12 +153,12 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @return
      */
     private boolean validateAuthCode(String account, String authCode) throws SerException {
-        AuthCode code = AuthCodeSession.get(account);
+        String code = AuthCodeSession.get(account);
         boolean pass = false;
         if (null == code) {
             pass = true;
         } else {
-            if (code.getCode().equals(authCode)) {
+            if (code.equals(authCode)) {
                 pass = true;
             }
         }
@@ -179,9 +171,6 @@ public class UserLoginSerImpl implements UserLoginSer {
             LoginUser loginUser = UserSession.get(token);
             UserSession.remove(token);
             redis.removeMap(UserCommon.LOGIN_USER, token);
-            if (null != loginUser) {
-                redis.removeMap(UserCommon.USERID_TOKEN, loginUser.getId());
-            }
             return true;
         }
         throw new SerException("userToken can not null!");

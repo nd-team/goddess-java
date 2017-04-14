@@ -7,7 +7,6 @@ include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
 include ':common:common-redis'
-include ':common:common-user'
 //$demo 参考模块
 include ':demo:demo-ticket:demo-ticket-api'
 include ':demo:demo-ticket:demo-ticket-consumer'
@@ -191,6 +190,11 @@ include ':modules:bonus:bonus-provider'
 include ':modules:interiorrecommend:interiorrecommend-api'
 include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
+//#archive 员工档案
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
+
 //#assistance 公司补助tanghaixiang
 //include ':modules:assistance:assistance-api'
 //include ':modules:assistance:assistance-consumer'

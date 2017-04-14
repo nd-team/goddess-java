@@ -2,7 +2,7 @@ apply from: '../../config.gradle'
 
 dependencies {
     compile project(":common:common-api")
-    compile project(":common:common-user")
+    compile project(":modules:user:user-api")
     compile group: 'com.alibaba', name: 'fastjson', version: "$fastjson_version"
     compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commons_version"
     compile group: 'com.alibaba', name: 'dubbo', version: "$dubbo_version"
@@ -12,5 +12,7 @@ dependencies {
     compile group: 'org.aspectj', name: 'aspectjrt', version: "$aspectjrt_version"
     compile group: 'org.aspectj', name: 'aspectjweaver', version: "$aspectjrt_version"
     compile group: 'com.101tec', name: 'zkclient', version: "$zkclient_version"
-    compile group: 'com.dounine.japi', name: 'client', version: "1.0"
+    compile group: 'com.dounine.japi', name: 'client', version: "$japi_version"
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
+
 }

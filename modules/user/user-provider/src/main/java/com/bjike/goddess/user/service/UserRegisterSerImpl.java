@@ -3,7 +3,7 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
-import com.bjike.goddess.common.user.session.auth_code.AuthCodeSession;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;

@@ -1,8 +1,8 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.user.session.auth_code.AuthCodeSession;
-import com.bjike.goddess.common.user.session.valid_err.PwdErrSession;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
+import com.bjike.goddess.user.session.valid_err.PwdErrSession;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +20,7 @@ public class UserAuthCodeSerImpl implements UserAuthCodeSer {
     @Override
     public Boolean showAuthCode(String account) throws SerException {
 
-        int count = PwdErrSession.get(account).getCount();
+        int count = PwdErrSession.get(account);
         if (count >= 5) { //验证次数大于5次需要验证码
             return true;
         }

@@ -32,6 +32,7 @@ public class DepartmentDetailAct {
      * 保存部门项目组详细信息
      *
      * @param to 部门项目组传输对象
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -48,6 +49,7 @@ public class DepartmentDetailAct {
      * 修改部门项目组详细信息
      *
      * @param to 部门项目组传输对象
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
