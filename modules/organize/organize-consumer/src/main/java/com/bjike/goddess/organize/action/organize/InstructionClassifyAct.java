@@ -31,6 +31,7 @@ public class InstructionClassifyAct {
      * 保存岗位说明书分类信息
      *
      * @param to 岗位说明书传输对象
+     * @return class InstructionClassifyVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -46,6 +47,7 @@ public class InstructionClassifyAct {
      * 修改岗位说明书分类信息
      *
      * @param to 岗位说明书分类传输对象
+     * @return class InstructionClassifyVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

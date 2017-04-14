@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * 继承扫描jpa
  *
- * @Author: [liguiqin]
+ * @Author: [dengjunren]
  * @Date: [2016-11-23 15:47]
  * @Description: []
  * @Version: [1.0.0]

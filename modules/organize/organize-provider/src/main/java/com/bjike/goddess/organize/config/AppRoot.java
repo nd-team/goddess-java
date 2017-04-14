@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * 配置项扫描
  *
- * @Author: [liguiqin]
+ * @Author: [dengjunren]
  * @Date: [2016-12-28 15:47]
  * @Description: []
  * @Version: [1.0.0]

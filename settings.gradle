@@ -194,3 +194,8 @@ include ':modules:bonus:bonus-provider'
 include ':modules:interiorrecommend:interiorrecommend-api'
 include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
+
+//#archive 员工档案
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'

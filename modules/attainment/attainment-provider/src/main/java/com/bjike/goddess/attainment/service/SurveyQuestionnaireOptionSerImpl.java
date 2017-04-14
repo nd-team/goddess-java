@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionBO save(SurveyQuestionnaireOptionTO to) throws SerException {
         SurveyQuestionnaireOption entity = BeanTransform.copyProperties(to, SurveyQuestionnaireOption.class);
@@ -55,6 +57,7 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionBO update(SurveyQuestionnaireOptionTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -72,6 +75,7 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
             throw new SerException("数据ID不能为空");
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionBO delete(String id) throws SerException {
         SurveyQuestionnaireOption entity = super.findById(id);

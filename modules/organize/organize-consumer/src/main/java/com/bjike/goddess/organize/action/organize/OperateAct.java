@@ -31,6 +31,7 @@ public class OperateAct {
      * 保存操作类型信息
      *
      * @param to 操作类型传输对象
+     * @return class OperateVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -46,6 +47,7 @@ public class OperateAct {
      * 修改操作类型信息
      *
      * @param to 操作类型传输对象
+     * @return class OperateVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

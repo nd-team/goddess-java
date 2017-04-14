@@ -13,6 +13,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.List;
 @Service
 public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentWayDTO> implements AttainmentWaySer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO save(AttainmentWayTO to) throws SerException {
         AttainmentWay entity = BeanTransform.copyProperties(to, AttainmentWay.class);
@@ -38,6 +40,7 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO update(AttainmentWayTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -55,6 +58,7 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
             throw new SerException("数据ID不能为空");
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO delete(String id) throws SerException {
         AttainmentWay entity = super.findById(id);
@@ -62,6 +66,7 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO congeal(String id) throws SerException {
         AttainmentWay entity = super.findById(id);
@@ -71,6 +76,7 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO thaw(String id) throws SerException {
         AttainmentWay entity = super.findById(id);

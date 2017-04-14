@@ -1,0 +1,6 @@
+apply from: '../../../config.gradle'
+dependencies {
+    compile project(":common:common-api")
+    compile project(":modules:annual:annual-api")
+    compile project(":common:common-utils")
+}
