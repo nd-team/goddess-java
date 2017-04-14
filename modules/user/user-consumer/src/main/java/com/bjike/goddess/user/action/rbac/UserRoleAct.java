@@ -6,15 +6,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.api.rbac.GroupRoleAPI;
 import com.bjike.goddess.user.api.rbac.UserRoleAPI;
-import com.bjike.goddess.user.bo.rbac.GroupRoleBO;
 import com.bjike.goddess.user.bo.rbac.UserRoleBO;
-import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.entity.rbac.UserRole;
-import com.bjike.goddess.user.to.rbac.GroupRoleTO;
 import com.bjike.goddess.user.to.rbac.UserRoleTO;
-import com.bjike.goddess.user.vo.rbac.GroupRoleVO;
 import com.bjike.goddess.user.vo.rbac.UserRoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 用户角色操作
+ *
  * @Author: [liguiqin]
  * @Date: [2017-04-13 13:44]
  * @Description: [ ]

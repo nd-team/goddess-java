@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
+ * 角色传输对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 13:59]
  * @Description: [ ]

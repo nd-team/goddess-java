@@ -4,6 +4,8 @@ package com.bjike.goddess.user.vo;
 import com.bjike.goddess.common.api.type.Status;
 
 /**
+ * 用户值实体
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-02 09:16]
  * @Description: [ ]

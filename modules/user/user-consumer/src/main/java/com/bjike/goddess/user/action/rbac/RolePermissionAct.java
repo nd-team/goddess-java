@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 角色权限操作
+ *
  * @Author: [liguiqin]
  * @Date: [2017-04-13 13:44]
  * @Description: [ ]
