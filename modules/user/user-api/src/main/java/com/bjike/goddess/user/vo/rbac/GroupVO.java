@@ -2,13 +2,15 @@ package com.bjike.goddess.user.vo.rbac;
 
 
 /**
+ * 组值实体
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-02 17:01]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupVO   {
+public class GroupVO {
     private String id;
     /**
      * 部门名

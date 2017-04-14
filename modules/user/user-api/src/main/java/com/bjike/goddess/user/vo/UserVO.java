@@ -4,13 +4,16 @@ package com.bjike.goddess.user.vo;
 import com.bjike.goddess.common.api.type.Status;
 
 /**
+ * 用户值实体
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-02 09:16]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserVO   {
+public class UserVO {
+    private String id;
     /**
      * 用户名
      */
@@ -109,5 +112,13 @@ public class UserVO   {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

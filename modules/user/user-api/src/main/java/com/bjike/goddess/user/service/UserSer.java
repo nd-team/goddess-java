@@ -20,6 +20,22 @@ import java.util.List;
  */
 public interface UserSer extends Ser<User, UserDTO> {
 
+    /**
+     * 获取公钥
+     * @return
+     * @throws SerException
+     */
+    default String publicKey() throws SerException{
+        return null;
+    }
+    /**
+     * 获取私钥
+     * @return
+     * @throws SerException
+     */
+    default String privateKey() throws SerException{
+        return null;
+    }
 
     /**
      * 添加用户

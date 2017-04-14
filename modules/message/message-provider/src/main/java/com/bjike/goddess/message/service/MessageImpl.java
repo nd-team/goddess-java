@@ -75,6 +75,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
         saveMessage(messageTO, message);
+        messageTO.setId(message.getId());
         List<UserBO> userBOS = getReceivers(messageTO);
         String[] receivers =null;
         String[] receiversEmail =null;

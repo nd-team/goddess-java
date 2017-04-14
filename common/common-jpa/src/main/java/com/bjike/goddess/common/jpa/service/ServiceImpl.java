@@ -79,7 +79,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     }
 
     @Override
-    public List<BE> findByCis(BD dto, Boolean pageAndSort) throws SerException {
+    public List<BE> findByCis(BD dto, Boolean page) throws SerException {
         JpaSpecification JpaSpecification = new JpaSpecification<BE, BD>(dto);
         PageRequest pageRequest = JpaSpecification.getPageRequest(dto);
         return rep.findAll(JpaSpecification, pageRequest).getContent();

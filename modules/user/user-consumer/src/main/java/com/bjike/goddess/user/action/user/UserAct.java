@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +52,6 @@ public class UserAct {
      */
     @GetMapping("v1/existUsername/{username}")
     public Result existUsername(@PathVariable String username) throws ActException {
-
         try {
             Boolean result = (null != userAPI.findByUsername(username));
             return ActResult.initialize(result);

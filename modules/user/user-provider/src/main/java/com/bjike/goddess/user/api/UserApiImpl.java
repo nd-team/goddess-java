@@ -4,18 +4,25 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.user.session.constant.UserCommon;
+import com.bjike.goddess.common.user.session.valid_right.LoginUser;
+import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.constant.UserCommon;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -34,22 +41,41 @@ public class UserApiImpl implements UserAPI {
     private RedisClient redis;
 
     @Override
+    public String publicKey() throws SerException {
+       return userSer.publicKey();
+
+    }
+
+    @Override
+    public String privateKey() throws SerException {
+       return  userSer.privateKey();
+
+    }
+
+
+    @Override
     public UserBO currentUser() throws SerException {
-        String nickname = userSer.findByMaxField("nickname", User.class);
+        String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
         UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("nickname", nickname));
-        if (true) {
+        dto.getConditions().add(Restrict.eq("employeeNumber", employeeNumber));
+        if (null != dto) {
             return BeanTransform.copyProperties(userSer.findOne(dto), UserBO.class);
 
         } //获取当前用户直接给无需登录
 
         Object token = RpcContext.getContext().getAttachment("userToken");
         if (null != token) {
-            String userBo_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
-            if (StringUtils.isNotBlank(userBo_str)) {
-                return JSON.parseObject(userBo_str, UserBO.class);
-
+            LoginUser loginUser = UserSession.get(token.toString());
+            if (null != loginUser) {
+                return BeanTransform.copyProperties(loginUser, UserBO.class);
+            } else { //从redis获取
+                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
+                if (StringUtils.isNotBlank(loginUser_str)) {
+                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
+                    return BeanTransform.copyProperties(loginUser, UserBO.class);
+                }
             }
+
             throw new SerException("登录已过期!");
         }
         throw new SerException("notLogin");
@@ -61,10 +87,17 @@ public class UserApiImpl implements UserAPI {
         if (null == userToken) {
             throw new SerException("用户未登录!");
         } else {
-            String userBo_str = redis.getMap(UserCommon.LOGIN_USER, userToken.toString());
-            if (StringUtils.isNotBlank(userBo_str)) {
-                return JSON.parseObject(userBo_str, UserBO.class);
-
+            // 从会话session获取
+            LoginUser loginUser = UserSession.get(userToken.toString());
+            if (null == loginUser) {
+                // 从redis缓存获取
+                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, userToken.toString());
+                if (StringUtils.isNotBlank(loginUser_str)) {
+                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
+                    return BeanTransform.copyProperties(loginUser, UserBO.class);
+                }
+            } else {
+                return BeanTransform.copyProperties(loginUser, UserBO.class);
             }
             throw new SerException("登录已过期!");
         }
