@@ -48,6 +48,7 @@ public class PositionWorkDetailAct {
      * 添加岗位工作明细信息
      *
      * @param to 岗位工作明细传输对象
+     * @return class PositionWorkDetailVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -63,6 +64,7 @@ public class PositionWorkDetailAct {
      * 修改岗位工作明细信息
      *
      * @param to 岗位工作明细传输对象
+     * @return class PositionWorkDetailVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

@@ -13,6 +13,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.List;
 @Service
 public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> implements DemandTypeSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO save(DemandTypeTO to) throws SerException {
         DemandType entity = BeanTransform.copyProperties(to, DemandType.class);
@@ -38,6 +40,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
         return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO update(DemandTypeTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -54,6 +57,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
             throw new SerException("数据ID不能为空");
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO delete(String id) throws SerException {
         DemandType entity = super.findById(id);
@@ -61,6 +65,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
         return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO congeal(String id) throws SerException {
         DemandType entity = super.findById(id);
@@ -70,6 +75,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
         return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO thaw(String id) throws SerException {
         DemandType entity = super.findById(id);

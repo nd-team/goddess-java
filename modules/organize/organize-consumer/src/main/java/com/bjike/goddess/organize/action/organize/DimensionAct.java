@@ -32,6 +32,7 @@ public class DimensionAct {
      * 保存维度信息
      *
      * @param to 维度传输对象
+     * @return class DimensionVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -48,6 +49,7 @@ public class DimensionAct {
      * 修改维度信息
      *
      * @param to 维度传输对象
+     * @return class DimensionVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

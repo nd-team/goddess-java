@@ -49,6 +49,7 @@ public class ReflectAct {
      * 修改体现类型信息
      *
      * @param to 体现类型传输对象
+     * @return class ReflectVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
@@ -63,6 +64,7 @@ public class ReflectAct {
     /**
      * 获取正常状态的体现类型信息
      *
+     * @return class ReflectVO
      * @version v1
      */
     @GetMapping("v1/findStatus")

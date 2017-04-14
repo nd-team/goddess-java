@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * 扫描entity
  *
- * @Author: [liguiqin]
+ * @Author: [dengjunren]
  * @Date: [2017-01-11 17:15]
  * @Description: []
  * @Version: [1.0.0]

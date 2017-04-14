@@ -64,6 +64,7 @@ public class PositionInstructionAct {
      * 保存说明书信息
      *
      * @param to 说明书传输对象
+     * @return class PositionInstructionVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -80,6 +81,7 @@ public class PositionInstructionAct {
      * 修改说明书信息
      *
      * @param to 说明书传输对象
+     * @return class PositionInstructionVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

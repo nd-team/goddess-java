@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 @Service
 public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, AttainmentTypeDTO> implements AttainmentTypeSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentTypeBO save(AttainmentTypeTO to) throws SerException {
         AttainmentType entity = BeanTransform.copyProperties(to, AttainmentType.class);
@@ -37,6 +39,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
         return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentTypeBO update(AttainmentTypeTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -54,6 +57,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
             throw new SerException("数据ID不能为空");
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentTypeBO delete(String id) throws SerException {
         AttainmentType entity = super.findById(id);
@@ -61,6 +65,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
         return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentTypeBO congeal(String id) throws SerException {
         AttainmentType entity = super.findById(id);
@@ -70,6 +75,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
         return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentTypeBO thaw(String id) throws SerException {
         AttainmentType entity = super.findById(id);
