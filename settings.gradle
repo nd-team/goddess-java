@@ -194,3 +194,8 @@ include ':modules:bonus:bonus-provider'
 include ':modules:staffactivity:staffactivity-api'
 include ':modules:staffactivity:staffactivity-consumer'
 include ':modules:staffactivity:staffactivity-provider'
+
+//#firmreward 公司奖励
+include ':modules:firmreward:firmreward-api'
+include ':modules:firmreward:firmreward-consumer'
+include ':modules:firmreward:firmreward-provider'
