@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.user.session.constant;
+package com.bjike.goddess.user.session.constant;
 
 /**
  * @Author: [liguiqin]
@@ -13,10 +13,6 @@ public class UserCommon {
      */
     public static final String LOGIN_USER = "loginUser";
 
-    /**
-     * 登录用户TOKEN索引
-     */
-    public static final String USERID_TOKEN = "userIdToken";
 
     /**
      * 登录失效时间 1天

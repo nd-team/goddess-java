@@ -1,7 +1,6 @@
-package com.bjike.goddess.common.user.session.valid_right;
+package com.bjike.goddess.user.session.valid_right;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @Author: [liguiqin]
@@ -45,17 +44,6 @@ public class LoginUser implements Serializable {
      * 员工编号
      */
     private String employeeNumber;
-
-    /**
-     * 注册时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 登录token
-     */
-    private LocalDateTime accessTime = LocalDateTime.now();
-
 
     public String getUsername() {
         return username;
@@ -121,19 +109,4 @@ public class LoginUser implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getAccessTime() {
-        return accessTime;
-    }
-
-    public void setAccessTime(LocalDateTime accessTime) {
-        this.accessTime = accessTime;
-    }
 }

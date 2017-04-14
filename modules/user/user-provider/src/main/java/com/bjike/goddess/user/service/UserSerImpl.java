@@ -1,13 +1,14 @@
 package com.bjike.goddess.user.service;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.user.session.constant.UserCommon;
-import com.bjike.goddess.common.user.session.valid_right.LoginUser;
-import com.bjike.goddess.common.user.session.valid_right.UserSession;
+import com.bjike.goddess.user.session.constant.UserCommon;
+import com.bjike.goddess.user.session.valid_right.LoginUser;
+import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.redis.client.RedisClient;
@@ -19,6 +20,8 @@ import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,7 +36,6 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 /**
@@ -50,7 +52,7 @@ import java.util.logging.Logger;
 public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     public static String PUBLIC_KEY;
     public static String PRIVATE_KEY;
-    private static  Logger logger = Logger.getLogger(UserSerImpl.class.getName());
+    private static Logger LOGGER = LoggerFactory.getLogger(UserSerImpl.class);
 
     /**
      * 初始化公钥私钥
@@ -71,10 +73,10 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
                     }
                 }
             } else {
-                logger.info("配置文件不存在,请先创建!");
+                LOGGER.info("配置文件不存在,请先创建!");
             }
         } catch (Exception e) {
-            logger.info("公钥读取异常!");
+            LOGGER.info("公钥读取异常!");
         }
     }
 
@@ -157,16 +159,21 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void update(UserTO userTO) throws SerException {
-        User user = super.findById(userTO.getId());
-        BeanTransform.copyProperties(userTO, user, true);
-        user.setModifyTime(LocalDateTime.now());
-        super.update(user);
-        //更新session及缓存
-        String token = redis.getMap(UserCommon.USERID_TOKEN, user.getId());
-        LoginUser loginUser = new LoginUser();
-        BeanUtils.copyProperties(user, loginUser);
-        redis.appendToMap(UserCommon.USERID_TOKEN, token, JSON.toJSONString(loginUser));
-        UserSession.put(token, loginUser);
+        String token = RpcContext.getContext().getAttachment("userToken");
+        if(StringUtils.isNotBlank(token)){
+            User user = super.findById(userTO.getId());
+            BeanTransform.copyProperties(userTO, user, true);
+            user.setModifyTime(LocalDateTime.now());
+            super.update(user);
+            //更新session及缓存
+            LoginUser loginUser = new LoginUser();
+            BeanUtils.copyProperties(user, loginUser);
+            redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
+            UserSession.put(token, loginUser);
+        }else {
+            throw  new SerException("userToken is null,登录异常");
+        }
+
     }
 
     @Override
