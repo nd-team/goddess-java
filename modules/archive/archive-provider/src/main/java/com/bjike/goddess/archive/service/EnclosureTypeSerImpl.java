@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 @Service
 public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTypeDTO> implements EnclosureTypeSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnclosureTypeBO save(EnclosureTypeTO to) throws SerException {
         EnclosureType entity = BeanTransform.copyProperties(to, EnclosureType.class);
@@ -37,6 +39,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnclosureTypeBO update(EnclosureTypeTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -60,6 +63,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnclosureTypeBO congeal(String id) throws SerException {
         EnclosureType entity = super.findById(id);
@@ -68,6 +72,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public EnclosureTypeBO thaw(String id) throws SerException {
         EnclosureType entity = super.findById(id);

@@ -1,7 +1,11 @@
 package com.bjike.goddess.archive.to;
 
 import com.bjike.goddess.annual.enums.AuditType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 档案调阅
@@ -17,26 +21,31 @@ public class ArchiveAccessTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotNull(message = "姓名不能为空",groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
      * 开始日期
      */
+    @NotNull(message = "开始日期不能为空",groups = {ADD.class, EDIT.class})
     private String start;
 
     /**
      * 结束日期
      */
+    @NotNull(message = "结束日期不能为空",groups = {ADD.class, EDIT.class})
     private String end;
 
     /**
      * 调阅人
      */
+    @NotNull(message = "调阅人不能为空",groups = {ADD.class, EDIT.class})
     private String[] accessNames;
 
     /**
      * 原因
      */
+    @NotNull(message = "原因不能为空",groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**

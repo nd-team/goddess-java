@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,8 +49,10 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (user != null) {
             UserDetailBO detailBO = userDetailAPI.findByUserId(user.getId());
-            bo.setSex(detailBO.getSex() == SexType.MAN ? "男" : "女");
-            bo.setIdentityCard(detailBO.getIdCard());
+            if (null != detailBO) {
+                bo.setSex(detailBO.getSex() == SexType.MAN ? "男" : "女");
+                bo.setIdentityCard(detailBO.getIdCard());
+            }
         }
         bo.setSocial_id(entity.getSocial().getId());
         bo.setSocialName(entity.getSocial().getName());
@@ -65,6 +68,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PersonnelQualificationBO save(PersonnelQualificationTO to) throws SerException {
         PersonnelQualification entity = BeanTransform.copyProperties(to, PersonnelQualification.class);
@@ -74,6 +78,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public PersonnelQualificationBO update(PersonnelQualificationTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {

@@ -4,6 +4,8 @@ import com.bjike.goddess.archive.api.EnclosureTypeAPI;
 import com.bjike.goddess.archive.dto.EnclosureTypeDTO;
 import com.bjike.goddess.archive.to.EnclosureTypeTO;
 import com.bjike.goddess.archive.vo.EnclosureTypeVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +13,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,7 +40,7 @@ public class EnclosureTypeAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(EnclosureTypeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) EnclosureTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enclosureTypeAPI.save(to), EnclosureTypeVO.class));
         } catch (SerException e) {
@@ -53,7 +56,7 @@ public class EnclosureTypeAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(EnclosureTypeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) EnclosureTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enclosureTypeAPI.update(to), EnclosureTypeVO.class));
         } catch (SerException e) {

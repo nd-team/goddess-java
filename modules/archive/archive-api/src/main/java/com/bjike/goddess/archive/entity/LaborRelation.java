@@ -30,7 +30,7 @@ public class LaborRelation extends BaseEntity {
     /**
      * 描述
      */
-    @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
+    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String description;
 
     /**

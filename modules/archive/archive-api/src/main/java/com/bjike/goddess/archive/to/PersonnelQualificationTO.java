@@ -1,6 +1,10 @@
 package com.bjike.goddess.archive.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 人员资质
@@ -16,31 +20,37 @@ public class PersonnelQualificationTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotNull(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
      * 劳动关系类型
      */
+    @NotNull(message = "劳动关系类型不能为空", groups = {ADD.class, EDIT.class})
     private String labor_id;
 
     /**
      * 社保购买类型
      */
+    @NotNull(message = "社保购买类型不能为空", groups = {ADD.class, EDIT.class})
     private String social_id;
 
     /**
      * 资质证书1
      */
+    @NotNull(message = "资质证书1不能为空", groups = {ADD.class, EDIT.class})
     private String certificateOne;
 
     /**
      * 查询网站链接1
      */
+    @NotNull(message = "查询网站链接1不能为空", groups = {ADD.class, EDIT.class})
     private String websiteOne;
 
     /**
      * 证件有效期限1
      */
+    @NotNull(message = "证件有效期限1不能为空", groups = {ADD.class, EDIT.class})
     private String effectiveOne;
 
     /**

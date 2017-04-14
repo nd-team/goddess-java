@@ -1,16 +1,29 @@
 package com.bjike.goddess.archive.action.archive;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.archive.api.ArchiveDetailAPI;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.to.ArchiveDetailTO;
 import com.bjike.goddess.archive.vo.ArchiveDetailVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.api.FileAPI;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 档案明细
@@ -27,6 +40,8 @@ public class ArchiveDetailAction {
 
     @Autowired
     private ArchiveDetailAPI archiveDetailAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 保存
@@ -36,7 +51,7 @@ public class ArchiveDetailAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(ArchiveDetailTO to) throws ActException {
+    public Result save(@Validated(ADD.class) ArchiveDetailTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveDetailAPI.save(to), ArchiveDetailVO.class));
         } catch (SerException e) {
@@ -52,7 +67,7 @@ public class ArchiveDetailAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(ArchiveDetailTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) ArchiveDetailTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveDetailAPI.update(to), ArchiveDetailVO.class));
         } catch (SerException e) {
@@ -103,6 +118,35 @@ public class ArchiveDetailAction {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveDetailAPI.maps(dto), ArchiveDetailVO.class));
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 上传附件
+     *
+     * @param request  上传请求
+     * @param username 员工姓名(创建对应文件夹使用)
+     * @return
+     * @version v1
+     */
+    @PostMapping("v1/uploadEnclosure/{username}")
+    public Result uploadEnclosure(HttpServletRequest request, @PathVariable String username) throws ActException {
+        try {
+            Object o = RpcContext.getContext().getAttachment("storageToken");
+
+            String path = "/" + username;
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            List<MultipartFile> multipartFiles = multiRequest.getFiles("file");
+            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
+
+            for (MultipartFile multipartFile : multipartFiles) {
+                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
+                map.put(multipartFile.getOriginalFilename(), bytes);
+            }
+            fileAPI.upload(map, path);
+            return new ActResult("上传成功");
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

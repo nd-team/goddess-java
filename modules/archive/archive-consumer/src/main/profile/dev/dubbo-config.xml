@@ -16,11 +16,28 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualApplyAPI" id="annualApplyApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualArrangementStandardAPI"
-                     id="annualArrangementStandardApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualInfoAPI" id="annualInfoApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualStandardAPI"
-                     id="annualStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ArchiveAccessAPI"
+                     id="archiveAccessApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ArchiveDetailAPI"
+                     id="archiveDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ArchiveGatherAPI"
+                     id="archiveGatherApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.EnclosureTypeAPI"
+                     id="enclosureTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ForeignStaffingAPI"
+                     id="foreignStaffingApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ForeignStaffingSetAPI"
+                     id="foreignStaffingSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.LaborRelationAPI"
+                     id="laborRelationApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.PersonnelQualificationAPI"
+                     id="personnelQualificationApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.SocialSecurityTypeAPI"
+                     id="socialSecurityTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.StaffRecordsAPI"
+                     id="staffRecordsApiImpl"/>
+
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+
 
 </beans>

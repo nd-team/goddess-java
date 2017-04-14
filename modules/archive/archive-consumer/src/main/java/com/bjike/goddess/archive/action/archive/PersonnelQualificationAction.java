@@ -5,6 +5,8 @@ import com.bjike.goddess.archive.api.PersonnelQualificationAPI;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
 import com.bjike.goddess.archive.vo.PersonnelQualificationVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -13,6 +15,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -48,7 +51,7 @@ public class PersonnelQualificationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(PersonnelQualificationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) PersonnelQualificationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.save(to), PersonnelQualificationVO.class));
         } catch (SerException e) {
@@ -64,7 +67,7 @@ public class PersonnelQualificationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(PersonnelQualificationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) PersonnelQualificationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.update(to), PersonnelQualificationVO.class));
         } catch (SerException e) {

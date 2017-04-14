@@ -1,7 +1,11 @@
 package com.bjike.goddess.archive.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 附件类型
@@ -17,6 +21,7 @@ public class EnclosureTypeTO extends BaseTO {
     /**
      * 类型名称
      */
+    @NotNull(message = "类型名称不能为空",groups = {ADD.class, EDIT.class})
     private String name;
 
     /**

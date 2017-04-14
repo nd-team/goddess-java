@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,14 +47,16 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingBO save(ForeignStaffingTO to) throws SerException {
         ForeignStaffing entity = BeanTransform.copyProperties(to, ForeignStaffing.class, true);
-        entity.setType(foreignStaffingSetSer.findById(to.getId()));
+        entity.setType(foreignStaffingSetSer.findById(to.getType_id()));
         super.save(entity);
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingBO update(ForeignStaffingTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     @Autowired
     private UserDetailAPI userDetailAPI;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveAccessBO save(ArchiveAccessTO to) throws SerException {
         ArchiveAccess entity = BeanTransform.copyProperties(to, ArchiveAccess.class, true);
@@ -47,10 +49,12 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
         for (String name : to.getAccessNames())
             sb.append(name).append(",");
         entity.setAccess(sb.toString());
+        entity.setAudit(AuditType.NONE);
         super.save(entity);
         return BeanTransform.copyProperties(entity, ArchiveAccessBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveAccessBO update(ArchiveAccessTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -78,6 +82,7 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
         return BeanTransform.copyProperties(entity, ArchiveAccessBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveAccessBO audit(AccessAuditTO to) throws SerException {
         if (StringUtils.isBlank(to.getId()))

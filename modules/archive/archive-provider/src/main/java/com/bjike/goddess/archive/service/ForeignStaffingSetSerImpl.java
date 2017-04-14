@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 @Service
 public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, ForeignStaffingSetDTO> implements ForeignStaffingSetSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingSetBO save(ForeignStaffingSetTO to) throws SerException {
         ForeignStaffingSet entity = BeanTransform.copyProperties(to, ForeignStaffingSet.class);
@@ -37,6 +39,7 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingSetBO update(ForeignStaffingSetTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -60,6 +63,7 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingSetBO congeal(String id) throws SerException {
         ForeignStaffingSet entity = super.findById(id);
@@ -68,6 +72,7 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ForeignStaffingSetBO thaw(String id) throws SerException {
         ForeignStaffingSet entity = super.findById(id);

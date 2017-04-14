@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveDetailBO save(ArchiveDetailTO to) throws SerException {
         ArchiveDetail entity = BeanTransform.copyProperties(to, ArchiveDetail.class);
@@ -73,6 +75,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveDetailBO update(ArchiveDetailTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {

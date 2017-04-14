@@ -4,6 +4,8 @@ import com.bjike.goddess.archive.api.SocialSecurityTypeAPI;
 import com.bjike.goddess.archive.dto.SocialSecurityTypeDTO;
 import com.bjike.goddess.archive.to.SocialSecurityTypeTO;
 import com.bjike.goddess.archive.vo.SocialSecurityTypeVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +13,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,7 +40,7 @@ public class SocialSecurityTypeAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(SocialSecurityTypeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SocialSecurityTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(socialSecurityTypeAPI.save(to), SocialSecurityTypeVO.class));
         } catch (SerException e) {
@@ -53,7 +56,7 @@ public class SocialSecurityTypeAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(SocialSecurityTypeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SocialSecurityTypeTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(socialSecurityTypeAPI.update(to), SocialSecurityTypeVO.class));
         } catch (SerException e) {

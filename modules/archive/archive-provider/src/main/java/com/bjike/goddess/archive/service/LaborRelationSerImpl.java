@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 @Service
 public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelationDTO> implements LaborRelationSer {
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public LaborRelationBO save(LaborRelationTO to) throws SerException {
         LaborRelation entity = BeanTransform.copyProperties(to, LaborRelation.class);
@@ -37,6 +39,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public LaborRelationBO update(LaborRelationTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -60,6 +63,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public LaborRelationBO congeal(String id) throws SerException {
         LaborRelation entity = super.findById(id);
@@ -68,6 +72,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public LaborRelationBO thaw(String id) throws SerException {
         LaborRelation entity = super.findById(id);

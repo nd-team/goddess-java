@@ -1,6 +1,10 @@
 package com.bjike.goddess.archive.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 档案收集
@@ -16,16 +20,19 @@ public class ArchiveGatherTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotNull(message = "姓名不能为空",groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
      * 自愿放弃购买社保协议书
      */
+    @NotNull(message = "自愿放弃购买社保协议书不能为空",groups = {ADD.class, EDIT.class})
     private Boolean abandon;
 
     /**
      * 转正定级档案收集
      */
+    @NotNull(message = "转正定级档案收集不能为空",groups = {ADD.class, EDIT.class})
     private Boolean become;
 
     /**
