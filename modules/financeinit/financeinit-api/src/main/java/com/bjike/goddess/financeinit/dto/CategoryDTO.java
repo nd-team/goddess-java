@@ -25,6 +25,16 @@ public class CategoryDTO extends BaseDTO {
      */
     private String secondSubject;
 
+    /**
+     * 三级科目
+     */
+    private String thirdSubject;
+
+    /**
+     * 说明
+     */
+    private String remark;
+
 
     public String getFirstSubjectName() {
         return firstSubjectName;
@@ -40,5 +50,21 @@ public class CategoryDTO extends BaseDTO {
 
     public void setSecondSubject(String secondSubject) {
         this.secondSubject = secondSubject;
+    }
+
+    public String getThirdSubject() {
+        return thirdSubject;
+    }
+
+    public void setThirdSubject(String thirdSubject) {
+        this.thirdSubject = thirdSubject;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

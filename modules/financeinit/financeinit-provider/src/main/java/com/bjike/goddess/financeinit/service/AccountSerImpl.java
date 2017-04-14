@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 账户来源业务实现
@@ -100,5 +101,14 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         cdto.setSecondSubject(accountDTO.getSecondSubject());
         List<String> list = categorySer.getThirdSubject(cdto);
         return list;
+    }
+
+    @Override
+    public List<String> listAccountOrigin() throws SerException {
+        AccountDTO accountDTO = new AccountDTO();
+        List<Account> list = super.findByCis(accountDTO);
+
+        List<String> accountOrigin = list.stream().map(Account::getName).collect(Collectors.toList());
+        return accountOrigin;
     }
 }

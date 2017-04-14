@@ -281,4 +281,29 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
         return code;
     }
+
+    @Override
+    public List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {
+        List<Category> list = super.findByCis(categoryDTO);
+        List<CategoryBO> categoryBOList = new ArrayList<>();
+        list.stream().forEach(str -> {
+            FirstSubjectBO firstSubjectBO = BeanTransform.copyProperties(str.getFirstSubject(), FirstSubjectBO.class);
+            CategoryBO cb = BeanTransform.copyProperties(str, CategoryBO.class);
+            cb.setFirstSubjectBO(firstSubjectBO);
+            categoryBOList.add(cb);
+        });
+        return categoryBOList;
+    }
+
+    @Override
+    public CategoryBO listById(String id) throws SerException {
+        Category category = super.findById(id);
+        FirstSubjectBO firstSubjectBO = BeanTransform.copyProperties(category.getFirstSubject(), FirstSubjectBO.class);
+        CategoryBO cb = BeanTransform.copyProperties(category, CategoryBO.class);
+        cb.setFirstSubjectBO(firstSubjectBO);
+        return cb;
+    }
+
+
+
 }

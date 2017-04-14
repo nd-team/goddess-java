@@ -55,4 +55,10 @@ public class AccountApiImpl implements AccountAPI {
     public List<String> getThirdSubject(AccountDTO accountDTO) throws SerException {
         return accountSer.getThirdSubject(accountDTO );
     }
+
+
+    @Override
+    public List<String> listAccountOrigin() throws SerException {
+        return accountSer.listAccountOrigin();
+    }
 }
