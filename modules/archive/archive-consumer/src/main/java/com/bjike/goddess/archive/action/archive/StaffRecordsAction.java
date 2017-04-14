@@ -44,6 +44,7 @@ public class StaffRecordsAction {
     /**
      * 上传数据
      *
+     * @return class Result
      * @version v1
      */
     @PostMapping("v1/upload")
@@ -61,7 +62,7 @@ public class StaffRecordsAction {
      *
      * @param request 上传请求
      * @param to      员工档案附件上传
-     * @return
+     * @return class Result
      * @version v1
      */
     @PostMapping("v1/uploadEnclosure/{username}")

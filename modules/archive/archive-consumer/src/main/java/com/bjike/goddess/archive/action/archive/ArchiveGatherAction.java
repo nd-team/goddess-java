@@ -113,7 +113,7 @@ public class ArchiveGatherAction {
      *
      * @param request  上传请求
      * @param username 员工姓名(创建对应文件夹使用)
-     * @return
+     * @return class Result
      * @version v1
      */
     @PostMapping("v1/uploadEnclosure/{username}")

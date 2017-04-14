@@ -98,6 +98,7 @@ public class ArchiveDetailAction {
      * @return class ArchiveDetailVO
      * @version v1
      */
+    @GetMapping("v1/findByUsername")
     public Result findByUsername(String username) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveDetailAPI.findByUsername(username), ArchiveDetailVO.class));
@@ -127,7 +128,7 @@ public class ArchiveDetailAction {
      *
      * @param request  上传请求
      * @param username 员工姓名(创建对应文件夹使用)
-     * @return
+     * @return class Result
      * @version v1
      */
     @PostMapping("v1/uploadEnclosure/{username}")
