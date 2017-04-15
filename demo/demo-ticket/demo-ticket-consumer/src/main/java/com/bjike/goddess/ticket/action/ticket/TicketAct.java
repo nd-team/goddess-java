@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("demo/ticket")
-//@DefaultProperties(defaultFallback = "fallback")
+@DefaultProperties(defaultFallback = "fallback")
 public class TicketAct {
 
     @Autowired

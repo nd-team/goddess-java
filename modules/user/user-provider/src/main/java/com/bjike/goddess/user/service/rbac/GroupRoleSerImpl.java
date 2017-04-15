@@ -45,26 +45,37 @@ public class GroupRoleSerImpl extends ServiceImpl<GroupRole, GroupRoleDTO> imple
 
     @Override
     public GroupRoleBO saveByTO(GroupRoleTO groupRoleTO) throws SerException {
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.getConditions().add(Restrict.eq("id", groupRoleTO.getGroupId()));
-        Group group = groupSer.findOne(groupDTO);
-        if (null == group) {
-            throw new SerException("组信息不存在");
+        String groupId = groupRoleTO.getGroupId();
+        String roleId = groupRoleTO.getRoleId();
+        GroupRoleDTO dto = new GroupRoleDTO();
+        dto.getConditions().add(Restrict.eq("group.id", groupId));
+        dto.getConditions().add(Restrict.eq("role.id", roleId));
+        if (null == super.findOne(dto)) {
+            GroupDTO groupDTO = new GroupDTO();
+            groupDTO.getConditions().add(Restrict.eq("id", groupId));
+            Group group = groupSer.findOne(groupDTO);
+            if (null == group) {
+                throw new SerException("组信息不存在!");
+            }
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.getConditions().add(Restrict.eq("id", roleId));
+            Role role = roleSer.findOne(roleDTO);
+            if (null == role) {
+                throw new SerException("角色信息不存在!");
+            }
+            GroupRole groupRole = new GroupRole();
+            groupRole.setGroup(group);
+            groupRole.setRole(role);
+            super.save(groupRole);
+            GroupRoleBO groupRoleBO = new GroupRoleBO();
+            groupRoleBO.setId(groupRole.getId());
+            groupRoleBO.setGroupId(group.getId());
+            groupRoleBO.setRoleId(role.getId());
+            return groupRoleBO;
+        } else {
+            throw new SerException("组角色信息已存在!");
         }
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.getConditions().add(Restrict.eq("id", groupRoleTO.getRoleId()));
-        Role role = roleSer.findOne(roleDTO);
-        if (null == role) {
-            throw new SerException("角色信息不存在");
-        }
-        GroupRole groupRole = new GroupRole();
-        groupRole.setGroup(group);
-        groupRole.setRole(role);
-        super.save(groupRole);
-        GroupRoleBO groupRoleBO = new GroupRoleBO();
-        groupRoleBO.setId(groupRole.getId());
-        groupRoleBO.setGroupId(group.getId());
-        groupRoleBO.setRoleId(role.getId());
-        return groupRoleBO;
+
+
     }
 }

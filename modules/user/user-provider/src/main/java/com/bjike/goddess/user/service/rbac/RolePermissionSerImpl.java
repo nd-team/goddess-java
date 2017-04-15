@@ -47,26 +47,36 @@ public class RolePermissionSerImpl extends ServiceImpl<RolePermission, RolePermi
 
     @Override
     public RolePermissionBO saveByTO(RolePermissionTO rolePermissionTO) throws SerException {
-        PermissionDTO permissionDTO = new PermissionDTO();
-        permissionDTO.getConditions().add(Restrict.eq("id", rolePermissionTO.getPermissionId()));
-        Permission permission = permissionSer.findOne(permissionDTO);
-        if (null == permission) {
-            throw new SerException("权限信息不存在");
+        String permissionId = rolePermissionTO.getPermissionId();
+        String roleId = rolePermissionTO.getRoleId();
+        RolePermissionDTO dto = new RolePermissionDTO();
+        dto.getConditions().add(Restrict.eq("permission.id", permissionId));
+        dto.getConditions().add(Restrict.eq("role.id", roleId));
+        if (null == super.findOne(dto)) {
+            PermissionDTO permissionDTO = new PermissionDTO();
+            permissionDTO.getConditions().add(Restrict.eq("id", permissionId));
+            Permission permission = permissionSer.findOne(permissionDTO);
+            if (null == permission) {
+                throw new SerException("权限信息不存在!");
+            }
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.getConditions().add(Restrict.eq("id", roleId));
+            Role role = roleSer.findOne(roleDTO);
+            if (null == role) {
+                throw new SerException("角色信息不存在!");
+            }
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setPermission(permission);
+            rolePermission.setRole(role);
+            super.save(rolePermission);
+            RolePermissionBO rolePermissionBO = new RolePermissionBO();
+            rolePermissionBO.setId(rolePermission.getId());
+            rolePermissionBO.setPermissionId(permission.getId());
+            rolePermissionBO.setRoleId(role.getId());
+            return rolePermissionBO;
+        } else {
+            throw new SerException("角色权限已存在!");
         }
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.getConditions().add(Restrict.eq("id", rolePermissionTO.getRoleId()));
-        Role role = roleSer.findOne(roleDTO);
-        if (null == role) {
-            throw new SerException("角色信息不存在");
-        }
-        RolePermission rolePermission = new RolePermission();
-        rolePermission.setPermission(permission);
-        rolePermission.setRole(role);
-        super.save(rolePermission);
-        RolePermissionBO rolePermissionBO = new RolePermissionBO();
-        rolePermissionBO.setId(rolePermission.getId());
-        rolePermissionBO.setPermissionId(permission.getId());
-        rolePermissionBO.setRoleId(role.getId());
-        return rolePermissionBO;
+
     }
 }

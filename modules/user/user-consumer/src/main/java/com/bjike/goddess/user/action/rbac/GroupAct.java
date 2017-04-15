@@ -5,11 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
-import com.bjike.goddess.common.consumer.interceptor.SecurityIntercept;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.rbac.GroupAPI;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import com.bjike.goddess.user.vo.rbac.GroupVO;
@@ -18,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -35,8 +31,6 @@ import java.util.List;
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
-    @Autowired
-    private UserAPI userAPI;
 
     /**
      * 获取组树结构
@@ -45,7 +39,6 @@ public class GroupAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/treeData")
     public Result treeData(String id) throws ActException {
         try {
