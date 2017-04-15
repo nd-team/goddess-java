@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.action.marketdevelopment;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,8 @@ import com.bjike.goddess.marketdevelopment.api.MarketChannelAPI;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import com.bjike.goddess.marketdevelopment.vo.MarketChannelVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,7 +39,7 @@ public class MarketChannelAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(MarketChannelTO to) throws ActException {
+    public Result save(@Validated(ADD.class) MarketChannelTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.save(to), MarketChannelVO.class));
         } catch (SerException e) {
@@ -51,7 +55,7 @@ public class MarketChannelAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(MarketChannelTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) MarketChannelTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.update(to), MarketChannelVO.class));
         } catch (SerException e) {

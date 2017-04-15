@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 年计划
@@ -20,49 +21,51 @@ public class YearPlanTO extends BaseTO {
     /**
      * 年份
      */
-    @NotNull(message = "年份不能为空",groups = {ADD.class, EDIT.class})
+    @Size(max = 2999, min = 1990)
+    @NotNull(message = "年份不能为空", groups = {ADD.class, EDIT.class})
     private Integer year;
 
     /**
      * 业务类型
      */
-    @NotNull(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "业务类型不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 工作量权重
      */
-    @NotNull(message = "工作量权重不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "工作量权重不能为空", groups = {ADD.class, EDIT.class})
     private Double workloadWeight;
 
     /**
      * 业务方向科目
      */
-    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "业务方向科目不能为空", groups = {ADD.class, EDIT.class})
     private String course;
 
     /**
      * 可发展对象
      */
-    @NotNull(message = "可发展对象不能为空",groups = {ADD.class, EDIT.class})
+    @Size(max = 9999, min = 0)
+    @NotNull(message = "可发展对象不能为空", groups = {ADD.class, EDIT.class})
     private Integer development;
 
     /**
      * 同一类业务类型中占比
      */
-    @NotNull(message = "同一类业务类型中占比不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "同一类业务类型中占比不能为空", groups = {ADD.class, EDIT.class})
     private Double businessAccounted;
 
     /**
      * 各业务科目年度占比
      */
-    @NotNull(message = "各业务科目年度占比不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "各业务科目年度占比不能为空", groups = {ADD.class, EDIT.class})
     private Double courseAccounted;
 
     /**
      * 年任务量
      */
-    @NotNull(message = "年任务量不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "年任务量不能为空", groups = {ADD.class, EDIT.class})
     private Double quota;
 
 

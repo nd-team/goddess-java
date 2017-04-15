@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.action.marketdevelopment;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,8 @@ import com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessCourseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,7 +39,7 @@ public class BusinessCourseAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(BusinessCourseTO to) throws ActException {
+    public Result save(@Validated(ADD.class) BusinessCourseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.save(to), BusinessCourseVO.class));
         } catch (SerException e) {
@@ -51,7 +55,7 @@ public class BusinessCourseAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(BusinessCourseTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) BusinessCourseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.update(to), BusinessCourseVO.class));
         } catch (SerException e) {
