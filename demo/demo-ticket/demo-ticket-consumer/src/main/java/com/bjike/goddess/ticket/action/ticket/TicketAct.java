@@ -48,11 +48,13 @@ public class TicketAct {
 
 
     @GetMapping("test1")
+    @HystrixCommand(commandKey = "a")
     public Result aa(){
         return new ActResult("success");
     }
 
     @GetMapping("test2")
+    @HystrixCommand(commandKey = "a")
     public Result aa1(){
         return new ActResult("success");
     }

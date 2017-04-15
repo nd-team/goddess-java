@@ -72,12 +72,11 @@ public class HystrixCommandAdvice {
     private HystrixCommand.Setter setter(ProceedingJoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         HystrixCommand.Setter setter = null;
-        String groupName = "",commandKey= "";
+        String groupName = signature.getDeclaringTypeName(),commandKey= "";
         if(signature.getDeclaringType().isAnnotationPresent(DefaultProperties.class)){
             DefaultProperties defaultProperties = (DefaultProperties)signature.getDeclaringType().getDeclaredAnnotation(DefaultProperties.class);
-            groupName = defaultProperties.groupKey();
-            if(StringUtils.isBlank(groupName)){
-                groupName = signature.getDeclaringTypeName();
+            if(StringUtils.isNotBlank(defaultProperties.groupKey())){
+                groupName = defaultProperties.groupKey();
             }
             defaultProperties.commandProperties();
             MethodSignature methodSignature = (MethodSignature) joinPoint
@@ -89,10 +88,10 @@ public class HystrixCommandAdvice {
                     groupName =  hystrixCommand.groupKey();
                 }
                 if(StringUtils.isNotBlank(hystrixCommand.commandKey())){
-                    commandKey = hystrixCommand.commandKey();
+                    commandKey = groupName+"/"+hystrixCommand.commandKey();
                 }
             }
-            setter = HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupName)).andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));
+            setter = HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("group/"+groupName)).andCommandKey(HystrixCommandKey.Factory.asKey("key/"+(StringUtils.isBlank(commandKey)?groupName:commandKey)));
             HystrixProperty[] hyps = defaultProperties.commandProperties();
             if(null!=hyps&&hyps.length>0){
                 Optional<HystrixProperty> hystrixProperty = Arrays.asList(hyps).stream().filter(h->h.name().equals("execution.isolation.thread.timeoutInMilliseconds")).findFirst();
@@ -103,7 +102,8 @@ public class HystrixCommandAdvice {
             }
         }else{
             setter = HystrixCommand.Setter
-                    .withGroupKey(HystrixCommandGroupKey.Factory.asKey("default")).andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));
+                    .withGroupKey(HystrixCommandGroupKey.Factory.asKey("group/default"))
+                    .andCommandKey(HystrixCommandKey.Factory.asKey("key/"+(StringUtils.isBlank(commandKey)?groupName:commandKey)));
         }
         return setter;
     }
