@@ -2,6 +2,7 @@ package com.bjike.goddess.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.context.annotation.*;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.IOException;
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
+@EnableCircuitBreaker
 public class Application {
 
     public static void main(String[] args) throws IOException {

@@ -35,7 +35,8 @@ public final class UserSession {
             .removalListener(new RemovalListener<String, LoginUser>() {
                 @Override
                 public void onRemoval(RemovalNotification<String, LoginUser> notification) {
-                    removeByRedis(notification.getKey());
+                    System.out.println(notification.getKey());
+                  //  removeByRedis(notification.getKey());
                     logger.info("remove:" + notification.getKey());
 
                 }

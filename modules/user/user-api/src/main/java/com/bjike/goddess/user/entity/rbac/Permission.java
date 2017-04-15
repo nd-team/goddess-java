@@ -32,7 +32,7 @@ public class Permission extends BaseEntity {
     /**
      * 请求资源
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '请求资源' ")
+    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '请求资源' ")
     private String resource;
     /**
      * 状态
