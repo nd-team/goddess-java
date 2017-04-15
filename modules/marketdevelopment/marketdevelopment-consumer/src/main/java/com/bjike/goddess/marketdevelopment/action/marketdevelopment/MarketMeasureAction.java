@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.action.marketdevelopment;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,8 @@ import com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import com.bjike.goddess.marketdevelopment.vo.MarketMeasureVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,7 +39,7 @@ public class MarketMeasureAction {
      * @version v1
      */
     @PostMapping("v1/save/{id}")
-    public Result save(MarketMeasureTO to) throws ActException {
+    public Result save(@Validated(ADD.class) MarketMeasureTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.save(to), MarketMeasureVO.class));
         } catch (SerException e) {
@@ -51,7 +55,7 @@ public class MarketMeasureAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(MarketMeasureTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) MarketMeasureTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.update(to), MarketMeasureVO.class));
         } catch (SerException e) {
