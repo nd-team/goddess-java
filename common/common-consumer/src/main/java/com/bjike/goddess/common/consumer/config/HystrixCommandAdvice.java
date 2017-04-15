@@ -1,8 +1,12 @@
 package com.bjike.goddess.common.consumer.config;
 
+import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.exception.HystrixBadRequestException;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,13 +38,18 @@ public class HystrixCommandAdvice {
     }
 
     private HystrixCommand<Object> wrapWithHystrixCommnad(final ProceedingJoinPoint pjp) {
+
         return new HystrixCommand<Object>(setter()) {
             @Override
             protected Object run() throws Exception {
                 try {
                     return pjp.proceed();
                 } catch (Throwable throwable) {
-                    throw (Exception) throwable;
+                    if(throwable instanceof ActException){
+                        throw new HystrixBadRequestException(throwable.getMessage());
+                    }else{
+                        throw (Exception) throwable;
+                    }
                 }
             }
 
@@ -52,7 +61,8 @@ public class HystrixCommandAdvice {
     }
 
     private HystrixCommand.Setter setter() {
-        return HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupName));
+        return HystrixCommand.Setter
+                .withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupName));
     }
 
     public void setGroupName(String groupName) {
