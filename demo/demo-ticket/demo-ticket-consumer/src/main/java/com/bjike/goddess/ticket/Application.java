@@ -16,7 +16,6 @@ import java.io.IOException;
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 @ImportResource({"classpath:app.xml"})
-@EnableCircuitBreaker
 public class Application {
 
 
