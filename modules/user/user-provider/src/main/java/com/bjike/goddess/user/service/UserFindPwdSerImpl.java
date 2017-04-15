@@ -1,8 +1,7 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.user.session.auth_code.AuthCode;
-import com.bjike.goddess.common.user.session.auth_code.AuthCodeSession;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserSimpleBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,8 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
         if (null == userBO) {
             throw new SerException("用户不存在");
         }
-        AuthCode code = AuthCodeSession.get(account);
-        if (null == code && !code.getCode().equalsIgnoreCase(authCode)) {
+        String code = AuthCodeSession.get(account);
+        if (null == code && !code.equalsIgnoreCase(authCode)) {
             throw new SerException("验证码不正确");
         }
         UserSimpleBO simpleBO = new UserSimpleBO();
@@ -57,8 +56,8 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
         UserBO bo = userSer.findByNickname(nickname);
         if (null != bo) {
-            AuthCode code = AuthCodeSession.get(nickname);
-            if (null == code && !code.getCode().equalsIgnoreCase(phoneCode)) {
+            String code = AuthCodeSession.get(nickname);
+            if (null == code && !code.equalsIgnoreCase(phoneCode)) {
                 throw new SerException("手机校验码错误");
             }
             return true;

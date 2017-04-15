@@ -7,7 +7,6 @@ include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
 include ':common:common-redis'
-include ':common:common-user'
 //$demo 参考模块
 include ':demo:demo-ticket:demo-ticket-api'
 include ':demo:demo-ticket:demo-ticket-consumer'
@@ -175,28 +174,29 @@ include ':modules:individualvision:individualvision-provider'
 include ':modules:eggert:eggert-api'
 include ':modules:eggert:eggert-consumer'
 include ':modules:eggert:eggert-provider'
-
 //#借款与报销tanghaixiang
-//include ':modules:lendreimbursement:lendreimbursement-api'
-//include ':modules:lendreimbursement:lendreimbursement-consumer'
-//include ':modules:lendreimbursement:lendreimbursement-provider'
-
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
 //#attainment 综合素养调研
 include ':modules:attainment:attainment-api'
 include ':modules:attainment:attainment-consumer'
 include ':modules:attainment:attainment-provider'
-
 //#bonus 项目奖金包
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
-
 //#interior-recommend 内部推荐
 include ':modules:interiorrecommend:interiorrecommend-api'
 include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
-
 //#archive 员工档案
 include ':modules:archive:archive-api'
 include ':modules:archive:archive-consumer'
 include ':modules:archive:archive-provider'
+
+//#assistance 公司补助tanghaixiang
+//include ':modules:assistance:assistance-api'
+//include ':modules:assistance:assistance-consumer'
+//include ':modules:assistance:assistance-provider'
+

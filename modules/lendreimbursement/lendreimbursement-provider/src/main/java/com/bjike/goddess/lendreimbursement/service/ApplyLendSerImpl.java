@@ -464,7 +464,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         //负责人确认冻结
         applyLendDTO.getConditions().add(Restrict.or("lendStatus",LendStatus.CHARGECONGEL));*/
 
-        applyLendDTO.getConditions().add(Restrict.or("lendError", 9));
+        applyLendDTO.getConditions().add(Restrict.eq("lendError", 9));
         applyLendDTO.getConditions().add(Restrict.or("lendStatus", LendStatus.CHARGESURECONGEL));
 
         if( StringUtils.isNotBlank(applyLendDTO.getLender())){
@@ -486,7 +486,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listApplyError(ApplyLendDTO applyLendDTO) throws SerException {
-        applyLendDTO.getConditions().add(Restrict.or("lendError", 9));
+        applyLendDTO.getConditions().add(Restrict.eq("lendError", 9));
         applyLendDTO.getConditions().add(Restrict.or("lendStatus", LendStatus.CHARGESURECONGEL));
 
         if( StringUtils.isNotBlank(applyLendDTO.getLender())){
@@ -593,7 +593,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public List<ApplyLendBO> listHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
         ApplyLendDTO dto = new ApplyLendDTO();
-        dto.getConditions().add(Restrict.or("managerPass", "是"));
+        dto.getConditions().add(Restrict.eq("managerPass", "是"));
         dto.getConditions().add(Restrict.or("fincerPass", "是"));
         dto.getConditions().add(Restrict.or("chargerPass", "是"));
         dto.getConditions().add(Restrict.ne("lendStatus", LendStatus.CHARGESURECONGEL));
@@ -607,7 +607,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public List<ApplyLendBO> listWaitPay(ApplyLendDTO applyLendDTO) throws SerException {
         ApplyLendDTO dto = new ApplyLendDTO();
-        dto.getConditions().add(Restrict.or("lendStatus", LendStatus.FINACEPASS));
+        dto.getConditions().add(Restrict.eq("lendStatus", LendStatus.FINACEPASS));
         dto.getConditions().add(Restrict.or("lendStatus", LendStatus.MANAGEPASS));
         dto.getConditions().add(Restrict.ne("payCondition", "否"));
         List<ApplyLend> applyLend = super.findByCis(dto);
@@ -641,7 +641,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
         String userName = userAPI.currentUser().getUsername();
         ApplyLendDTO dto = new ApplyLendDTO();
-        dto.getConditions().add(Restrict.or("fillSingler", userName));
+        dto.getConditions().add(Restrict.eq("fillSingler", userName));
         dto.getConditions().add(Restrict.or("lender", userName));
         List<ApplyLend> applyLend = super.findByCis(dto);
         return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
@@ -956,7 +956,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             sb.append("SELECT  lender,  area, projectGroup,")
                     .append("  projectName,  firstSubject,  secondSubject, ")
                     .append("  thirdSubject, payCondition, money ")
-                    .append("   FROM lendreimbursement_applylend where lender = '"+applyLendDTO.getLender().trim()+"'");
+                    .append("   FROM lendreimbursement_applylend where lender = '"+applyLendDTO.getLender().trim()+"' order by payCondition desc ");
             collectDataBOList = super.findBySql(sb.toString(), CollectDataBO.class,fields );
         } else {
             fields = new String[]{"lender","money"};

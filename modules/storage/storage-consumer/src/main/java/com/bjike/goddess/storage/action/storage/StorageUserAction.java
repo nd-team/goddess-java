@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -67,10 +68,10 @@ public class StorageUserAction {
      *
      * @version v1
      */
-    @PostMapping("v1/signOut")
-    public Result signOut() throws ActException {
+    @PostMapping("v1/signOut/{storageToken}")
+    public Result signOut(@RequestParam  String storageToken) throws ActException {
         try {
-            Boolean result = storageUserAPI.signOut();
+            Boolean result = storageUserAPI.signOut(storageToken);
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -13,6 +13,7 @@ import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
+import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
 import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
 import com.bjike.goddess.lendreimbursement.vo.LendAuditDetailVO;
@@ -633,15 +634,15 @@ public class ApplyLendAction {
      * 借款记录生成记账凭证
      *
      * @param id 申请借款信息id
-     * @return class ApplyLendVO
+     * @return class AccountVoucherVO
      * @des 借款记录生成记账凭证
      * @version v1
      */
-    @GetMapping("v1/listAccountVoucher")
+    @GetMapping("v1/listAccountVoucher/{id}")
     public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
-            List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByRecord(id), ApplyLendVO.class, true);
+            List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
+                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -710,15 +711,15 @@ public class ApplyLendAction {
      * 借款记录生成记账凭证
      *
      * @param id 申请借款信息id
-     * @return class ApplyLendVO
+     * @return class AccountVoucherVO
      * @des 借款记录生成记账凭证
      * @version v1
      */
-    @GetMapping("v1/listAccountVoucherByReturn")
+    @GetMapping("v1/listAccountVoucherByReturn/{id}")
     public Result listVoucherReturn(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
-            List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByReturnMoney(id), ApplyLendVO.class, true);
+            List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
+                    applyLendAPI.listAccountVoucherByReturnMoney(id), AccountVoucherVO.class, true);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

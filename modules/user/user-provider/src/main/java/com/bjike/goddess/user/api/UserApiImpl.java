@@ -4,25 +4,20 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.user.session.constant.UserCommon;
-import com.bjike.goddess.common.user.session.valid_right.LoginUser;
-import com.bjike.goddess.common.user.session.valid_right.UserSession;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.session.constant.UserCommon;
+import com.bjike.goddess.user.session.valid_right.LoginUser;
+import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.List;
 
 /**
@@ -42,13 +37,13 @@ public class UserApiImpl implements UserAPI {
 
     @Override
     public String publicKey() throws SerException {
-       return userSer.publicKey();
+        return userSer.publicKey();
 
     }
 
     @Override
     public String privateKey() throws SerException {
-       return  userSer.privateKey();
+        return userSer.privateKey();
 
     }
 
@@ -72,6 +67,7 @@ public class UserApiImpl implements UserAPI {
                 String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
                 if (StringUtils.isNotBlank(loginUser_str)) {
                     loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
+                    UserSession.put(token.toString(), loginUser); //设置到session
                     return BeanTransform.copyProperties(loginUser, UserBO.class);
                 }
             }
@@ -94,6 +90,7 @@ public class UserApiImpl implements UserAPI {
                 String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, userToken.toString());
                 if (StringUtils.isNotBlank(loginUser_str)) {
                     loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
+                    UserSession.put(userToken,loginUser);
                     return BeanTransform.copyProperties(loginUser, UserBO.class);
                 }
             } else {

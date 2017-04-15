@@ -19,7 +19,7 @@ import javax.persistence.*;
 public class Account extends BaseEntity {
 
     /**
-     * 用户名称
+     * 用户名称(账户来源)
      */
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户名称'")
     private String name;
