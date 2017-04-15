@@ -51,26 +51,37 @@ public class UserRoleSerImpl extends ServiceImpl<UserRole, UserRoleDTO> implemen
 
     @Override
     public UserRoleBO saveByTO(UserRoleTO userRoleTO) throws SerException {
-        UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq("id", userRoleTO.getUserId()));
-        User user = userSer.findOne(userDTO);
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.getConditions().add(Restrict.eq("id", userRoleTO.getRoleId()));
-        Role role = roleSer.findOne(roleDTO);
-        if (null == user) {
-            throw new SerException("用户不存在!");
+        String userId = userRoleTO.getUserId();
+        String roleId = userRoleTO.getRoleId();
+        UserRoleDTO dto = new UserRoleDTO();
+        dto.getConditions().add(Restrict.eq("user.id", userId));
+        dto.getConditions().add(Restrict.eq("role.id", roleId));
+        if (null == super.findOne(dto)) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("id", userId));
+            User user = userSer.findOne(userDTO);
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.getConditions().add(Restrict.eq("id", roleId));
+            Role role = roleSer.findOne(roleDTO);
+            if (null == user) {
+                throw new SerException("用户不存在!");
+            }
+            if (null == role) {
+                throw new SerException("角色不存在!");
+            }
+            UserRole userRole = new UserRole();
+            userRole.setUser(user);
+            userRole.setRole(role);
+            super.save(userRole);
+            UserRoleBO userRoleBO = new UserRoleBO();
+            userRoleBO.setId(userRole.getId());
+            userRoleBO.setRoleId(role.getId());
+            userRoleBO.setUserId(user.getId());
+            return userRoleBO;
+        } else {
+            throw new SerException("用户角色已存在!");
         }
-        if (null == role) {
-            throw new SerException("角色不存在!");
-        }
-        UserRole userRole = new UserRole();
-        userRole.setUser(user);
-        userRole.setRole(role);
-        super.save(userRole);
-        UserRoleBO userRoleBO = new UserRoleBO();
-        userRoleBO.setId(userRole.getId());
-        userRoleBO.setRoleId(role.getId());
-        userRoleBO.setUserId(user.getId());
-        return userRoleBO;
+
+
     }
 }
