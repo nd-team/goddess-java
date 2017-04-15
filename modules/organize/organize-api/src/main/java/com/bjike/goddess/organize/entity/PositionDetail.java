@@ -1,7 +1,6 @@
 package com.bjike.goddess.organize.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.user.entity.Position;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -49,8 +48,9 @@ public class PositionDetail extends BaseEntity {
     /**
      * 模块
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '模块'")
-    private String module;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "module_id", columnDefinition = "VARCHAR(36) COMMENT '模块'")
+    private ModuleType module;
 
     /**
      * 岗位名称
@@ -95,11 +95,11 @@ public class PositionDetail extends BaseEntity {
         this.pool = pool;
     }
 
-    public String getModule() {
+    public ModuleType getModule() {
         return module;
     }
 
-    public void setModule(String module) {
+    public void setModule(ModuleType module) {
         this.module = module;
     }
 

@@ -13,6 +13,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class AnnualApplyAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) AnnualApplyTO to) throws ActException {
+    public Result save(@Validated(ADD.class) AnnualApplyTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualApplyAPI.save(to), AnnualApplyVO.class));
         } catch (SerException e) {
@@ -72,7 +73,7 @@ public class AnnualApplyAction {
      * @version v1
      */
     @PutMapping("v1/audit/{id}")
-    public Result audit(@Validated(EDIT.class) AnnualApplyAuditTo to) throws ActException {
+    public Result audit(@Validated(EDIT.class) AnnualApplyAuditTo to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualApplyAPI.audit(to), AnnualApplyVO.class));
         } catch (SerException e) {

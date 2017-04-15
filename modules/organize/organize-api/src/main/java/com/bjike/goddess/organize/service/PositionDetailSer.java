@@ -7,6 +7,7 @@ import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -129,5 +130,14 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
         return null;
     }
 
-
+    /**
+     * 转换岗位详细传输对象
+     *
+     * @param list 岗位详细数据对象集合
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
 }

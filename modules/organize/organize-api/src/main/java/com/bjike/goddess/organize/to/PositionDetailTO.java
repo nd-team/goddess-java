@@ -19,24 +19,9 @@ public class PositionDetailTO extends BaseTO {
     private String serialNumber;
 
     /**
-     * 体系
-     */
-    private String hierarchyName;
-
-    /**
-     * 所属地区
-     */
-    private String area;
-
-    /**
      * 部门id
      */
     private String department_id;
-
-    /**
-     * 部门
-     */
-    private String departmentName;
 
     /**
      * 层级ID
@@ -44,29 +29,19 @@ public class PositionDetailTO extends BaseTO {
     private String arrangement_id;
 
     /**
-     * 层级
-     */
-    private String arrangementName;
-
-    /**
      * 资源池
      */
     private String pool;
 
     /**
-     * 模块
+     * 模块id
      */
-    private String module;
+    private String module_id;
 
     /**
      * 岗位ID
      */
     private String position_id;
-
-    /**
-     * 岗位名称
-     */
-    private String positionName;
 
     /**
      * 人员编制数
@@ -96,36 +71,12 @@ public class PositionDetailTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchyName() {
-        return hierarchyName;
-    }
-
-    public void setHierarchyName(String hierarchyName) {
-        this.hierarchyName = hierarchyName;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getDepartment_id() {
         return department_id;
     }
 
     public void setDepartment_id(String department_id) {
         this.department_id = department_id;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
     }
 
     public String getArrangement_id() {
@@ -136,22 +87,6 @@ public class PositionDetailTO extends BaseTO {
         this.arrangement_id = arrangement_id;
     }
 
-    public String getArrangementName() {
-        return arrangementName;
-    }
-
-    public void setArrangementName(String arrangementName) {
-        this.arrangementName = arrangementName;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
-    }
-
     public String getPool() {
         return pool;
     }
@@ -160,12 +95,12 @@ public class PositionDetailTO extends BaseTO {
         this.pool = pool;
     }
 
-    public String getModule() {
-        return module;
+    public String getModule_id() {
+        return module_id;
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public void setModule_id(String module_id) {
+        this.module_id = module_id;
     }
 
     public String getPosition_id() {
