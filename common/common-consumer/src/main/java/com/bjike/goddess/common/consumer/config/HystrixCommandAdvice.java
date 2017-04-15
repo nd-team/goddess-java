@@ -46,7 +46,7 @@ public class HystrixCommandAdvice {
                     return pjp.proceed();
                 } catch (Throwable throwable) {
                     if(throwable instanceof ActException){
-                        throw new HystrixBadRequestException(throwable.getMessage());
+                        throw new HystrixBadRequestException(throwable.getMessage(),throwable);
                     }else{
                         throw (Exception) throwable;
                     }
