@@ -94,4 +94,14 @@ public interface EntryBasicInfoAPI {
     default List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 根据名字查找信息
+     * @param  name name
+     * @return class entryBasicInfoBO
+     * @throws SerException
+     */
+    default EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+        return null;
+    }
 }
