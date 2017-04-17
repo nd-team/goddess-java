@@ -11,6 +11,7 @@ import com.bjike.goddess.user.service.rbac.PermissionSer;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,12 +64,14 @@ public class PermissionApiImpl implements PermissionAPI {
             return permissions;
         } else {
             String token = RpcContext.getContext().getAttachment("userToken");
-            UserBO userBO = userSer.currentUser(token);
-            permissions = permissionSer.findPermissions(userBO.getId());
-            if (null != permissions && permissions.size() > 0) {
-                LoginUser loginUser = BeanTransform.copyProperties(userBO, LoginUser.class);
-                loginUser.setPermissions(permissions);
-                UserSession.put(token, loginUser);
+            if(StringUtils.isNotBlank(token)){
+                UserBO userBO = userSer.currentUser(token);
+                permissions = permissionSer.findPermissions(userBO.getId());
+                if (null != permissions && permissions.size() > 0) {
+                    LoginUser loginUser = BeanTransform.copyProperties(userBO, LoginUser.class);
+                    loginUser.setPermissions(permissions);
+                    UserSession.put(token, loginUser);
+                }
             }
             return permissions;
         }
