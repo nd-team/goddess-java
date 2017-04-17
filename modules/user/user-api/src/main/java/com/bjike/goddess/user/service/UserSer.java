@@ -38,6 +38,38 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
+     * 获取当前用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default UserBO currentUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户权限
+     *
+     * @return
+     * @throws SerException
+     */
+    default List currentPermissions() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取当前用户
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    default UserBO currentUser(String userToken) throws SerException {
+        return null;
+    }
+
+    /**
      * 添加用户
      * @param userTO
      * @return

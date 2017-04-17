@@ -1,6 +1,10 @@
 package com.bjike.goddess.user.session.valid_right;
 
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
+import com.bjike.goddess.user.entity.rbac.Permission;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 登录用户
@@ -46,6 +50,9 @@ public class LoginUser implements Serializable {
      * 员工编号
      */
     private String employeeNumber;
+
+
+    private List<String> permissions;
 
     public String getUsername() {
         return username;
@@ -111,4 +118,11 @@ public class LoginUser implements Serializable {
         this.id = id;
     }
 
+    public List<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<String> permissions) {
+        this.permissions = permissions;
+    }
 }

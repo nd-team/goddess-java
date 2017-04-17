@@ -10,6 +10,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.GroupAPI;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import com.bjike.goddess.user.vo.rbac.GroupVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +42,7 @@ public class GroupAct {
      * @version v1
      */
     @GetMapping("v1/treeData")
+    @HystrixCommand
     public Result treeData(String id) throws ActException {
         try {
             List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);

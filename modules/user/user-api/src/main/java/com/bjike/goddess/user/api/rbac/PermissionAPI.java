@@ -69,4 +69,14 @@ public interface PermissionAPI {
     default void update(PermissionTO permissionTO)throws SerException{
 
     }
+    /**
+     * 当前登录用户所有权限
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> currentPermissions() throws SerException {
+        return null;
+    }
+
 }
