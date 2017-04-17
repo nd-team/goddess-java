@@ -20,7 +20,6 @@ public interface CusEmailAPI {
 
     /**
      * 客户汇总邮件列表总条数
-     *
      */
     default Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
         return null;
@@ -101,6 +100,17 @@ public interface CusEmailAPI {
 
     ;
 
+    /**
+     * 某个
+     *
+     * @param id id
+     * @return class CusEmailBO
+     */
+    default CusEmailBO getCusEmailById(String id) throws SerException {
+        return null;
+    }
+
+    ;
 
 
 }

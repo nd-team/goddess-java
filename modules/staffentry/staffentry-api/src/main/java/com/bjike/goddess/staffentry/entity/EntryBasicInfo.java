@@ -47,7 +47,7 @@ public class EntryBasicInfo extends BaseEntity {
     /**
      *姓名
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '姓名'")
+    @Column(nullable = false, unique =  true ,columnDefinition = "VARCHAR(255) COMMENT '姓名'")
     private String name;
     /**
      *员工编号
