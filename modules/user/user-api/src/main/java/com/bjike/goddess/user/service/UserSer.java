@@ -2,6 +2,7 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.bo.UserBO;
@@ -21,11 +22,51 @@ import java.util.List;
 public interface UserSer extends Ser<User, UserDTO> {
 
     /**
-     * 用户列表
+     * 获取公钥
      * @return
      * @throws SerException
      */
-    default List<UserBO> list() throws SerException {
+    default String publicKey() throws SerException{
+        return null;
+    }
+    /**
+     * 获取私钥
+     * @return
+     * @throws SerException
+     */
+    default String privateKey() throws SerException{
+        return null;
+    }
+
+    /**
+     * 获取当前用户
+     *
+     * @return
+     * @throws SerException
+     */
+    default UserBO currentUser() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户权限
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<PermissionBO> currentPermissions() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取当前用户
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    default UserBO currentUser(String userToken) throws SerException {
         return null;
     }
 
@@ -95,6 +136,15 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @throws SerException
      */
     default List<UserBO> findByGroup(String ...  groups) throws SerException{
+        return null;
+    }
+
+    /**
+     * 查询所有用户
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findAllUser() throws SerException{
         return null;
     }
 }

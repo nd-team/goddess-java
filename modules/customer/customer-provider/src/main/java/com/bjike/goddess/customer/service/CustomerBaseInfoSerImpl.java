@@ -77,7 +77,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         customerBaseInfoDTO.getSorts().add("customerPosition=asc");
-        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO);
+        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO,true);
 
         List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
         list.stream().forEach(str->{
@@ -222,20 +222,26 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<String> getCustomerBaseInfoArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select area,1 from customer_customerbaseinfo order by area asc ", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct area,1 from customer_customerbaseinfo group by area  order by area asc ", CustomerBaseInfoBO.class, fields);
 
         List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+        List<String> areas = new ArrayList<>();
+        areaList.stream().forEach(str->{
+            str = str.trim();
+            if( ! areas.contains(str)){
+                areas.add( str );
+            }
+        });
 
-
-        return areaList;
+        return areas;
     }
 
     
     @Override
     public List<String> getCustomerBaseInfoName() throws SerException {
         String[] fields = new String[]{"customerName"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
 
         List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());

@@ -26,7 +26,7 @@ public class File extends BaseEntity {
     private String name;
 
     /**
-     * 文件路径
+     * 文件路径(从模块名起)
      */
     @Column(columnDefinition = "VARCHAR(255)   COMMENT '文件路径'")
     private String path;

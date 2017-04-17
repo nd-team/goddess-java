@@ -31,6 +31,6 @@ public interface UserLoginAPI {
      * @return
      * @throws SerException
      */
-    Boolean loginOut(String token) throws SerException;
+    Boolean signOut(String token) throws SerException;
 
 }

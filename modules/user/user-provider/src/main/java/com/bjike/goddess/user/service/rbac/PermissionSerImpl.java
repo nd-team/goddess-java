@@ -45,6 +45,43 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
 
     @Override
     public List<PermissionBO> findByUserId(String userId) throws SerException {
+        Set<String> role_ids = allRoleId(userId);
+        //查询角色资源权限
+        Set<Permission> permissions = new HashSet<>();
+        if (0 < role_ids.size()) {
+            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
+            rolePermissions.stream().forEach(rolePermission -> {
+                permissions.add(rolePermission.getPermission());
+            });
+        }
+        return BeanTransform.copyProperties(permissions, PermissionBO.class);
+    }
+
+    @Override
+    public List<PermissionBO> findPermissions(String userId) throws SerException {
+        Set<String> role_ids = allRoleId(userId);
+        //查询角色资源权限
+        List<PermissionBO> permissionList = null;
+        if (0 < role_ids.size()) {
+            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
+            Set<Permission> permissionSet = new HashSet<>();
+            for (RolePermission rolePermission : rolePermissions) { // 去重
+                permissionSet.add(rolePermission.getPermission());
+            }
+            permissionList = new ArrayList<>(permissionSet.size());
+            for (Permission permission : permissionSet) {
+                PermissionBO bo = new PermissionBO();
+                bo.setId(permission.getId());
+                bo.setName(permission.getName());
+                bo.setResource(permission.getResource());
+                bo.setHasChild(0 < this.getChild(permission.getId()).size());
+                permissionList.add(bo);
+            }
+        }
+        return permissionList;
+    }
+
+    private Set<String> allRoleId(String userId) throws SerException {
         //通过角色(用户角色,组角色)查询其拥有的权限
         Set<String> role_ids = new HashSet<>();
         List<UserRole> userRoles = userRoleSer.findByUserId(userId);
@@ -67,15 +104,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
                 role_ids.add(groupRole.getRole().getId());
             });
         }
-        //查询角色资源权限
-        Set<Permission> permissions = new HashSet<>();
-        if (0 < role_ids.size()) {
-            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
-            rolePermissions.stream().forEach(rolePermission -> {
-                permissions.add(rolePermission.getPermission());
-            });
-        }
-        return BeanTransform.copyProperties(permissions, PermissionBO.class);
+        return role_ids;
     }
 
     @Override
@@ -133,8 +162,17 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
     @Override
     public void update(PermissionTO permissionTO) throws SerException {
         Permission permission = super.findById(permissionTO.getId());
-        BeanTransform.copyProperties(permissionTO, permission,true);
+        BeanTransform.copyProperties(permissionTO, permission, true);
         permission.setModifyTime(LocalDateTime.now());
         super.update(permission);
     }
+
+    @Override
+    public List<Permission> getChild(String id) throws SerException {
+        PermissionDTO dto = new PermissionDTO();
+        dto.getConditions().add(Restrict.eq("parent.id", id));
+        List<Permission> children = findByCis(dto);
+        return children;
+    }
+
 }

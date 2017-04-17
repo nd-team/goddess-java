@@ -18,18 +18,22 @@ include ':demo:demo-card:demo-card-provider'
 //#template 生成类模板
 include ':modules:template:template-api'
 include ':modules:template:template-provider'
-//#user 用户模块
+//#user 用户模块-liguiqin
 include ':modules:user:user-api'
 include ':modules:user:user-consumer'
 include ':modules:user:user-provider'
-//#message 消息模块
+//#message 消息模块-liguiqin
 include ':modules:message:message-api'
 include ':modules:message:message-consumer'
 include ':modules:message:message-provider'
-//#storage 存储模块
+//#storage 存储模块-liguiqin
 include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
+//#quartz 任务调度模块-liguiqin
+include ':modules:quartz:quartz-api'
+include ':modules:quartz:quartz-consumer'
+include ':modules:quartz:quartz-provider'
 ////#staffentry 员工入职tanghaixiang
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
@@ -94,14 +98,18 @@ include ':modules:businessproject:businessproject-provider'
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
-
+//
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
 include ':modules:contractquotemanager:contractquotemanager-provider'
-
+//
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
+//#简介管理
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
 //#marketdevelopment 市场计划进度管理
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
@@ -162,14 +170,28 @@ include ':modules:individualvision:individualvision-provider'
 include ':modules:eggert:eggert-api'
 include ':modules:eggert:eggert-consumer'
 include ':modules:eggert:eggert-provider'
-
 //#借款与报销tanghaixiang
-//include ':modules:lendreimbursement:lendreimbursement-api'
-//include ':modules:lendreimbursement:lendreimbursement-consumer'
-//include ':modules:lendreimbursement:lendreimbursement-provider'
-
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
 //#attainment 综合素养调研
 include ':modules:attainment:attainment-api'
 include ':modules:attainment:attainment-consumer'
 include ':modules:attainment:attainment-provider'
+//#bonus 项目奖金包
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
+//#interior-recommend 内部推荐
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+//#archive 员工档案
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
+//#assistance 公司补助tanghaixiang
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
 

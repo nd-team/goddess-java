@@ -8,12 +8,15 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.storage.bo.StorageUserBO;
 import com.bjike.goddess.storage.constant.StorageCommon;
 import com.bjike.goddess.storage.dto.StorageUserDTO;
 import com.bjike.goddess.storage.entity.StorageUser;
+import com.bjike.goddess.storage.session.LoginUser;
+import com.bjike.goddess.storage.session.StorageSession;
 import com.bjike.goddess.storage.to.StorageUserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,26 +65,13 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
         StorageUserDTO dto = new StorageUserDTO();
         dto.getConditions().add(Restrict.eq("account", storageUserTO.getAccount()));
         StorageUser storageUser = findOne(dto);
-        String token;
         if (null != storageUser) {
             try {
                 if (PasswordHash.validatePassword(storageUserTO.getPassword(), storageUser.getPassword())) {
-                    token = redis.get(storageUser.getId()); //通过用户id获取token
-                    if (StringUtils.isNotBlank(token)) { //是否已登录过
-                        String str_loginUser = redis.getMap(StorageCommon.STORAGE_USER, token);//通过获取token用户信息
-                        if (StringUtils.isNotBlank(str_loginUser)) {
-                            redis.save(storageUser.getId(), token, 60 * 60 * 24 * 7); //更新登录失效时间
-                            redis.appendToMap(StorageCommon.STORAGE_USER, storageUser.getId(), str_loginUser, 60 * 60 * 24 * 7);//更新登录失效时间
-                            return token;
-                        } else {
-                            return login(storageUser);
-                        }
-                    } else {
-                        return login(storageUser);
-                    }
-                } else {
-                    throw new SerException("登录账号或者密码错误！");
+                    return login(storageUser);
                 }
+                throw new SerException("登录账号或者密码错误！");
+
             } catch (Exception e) {
                 throw new SerException("登录账号或者密码错误！");
             }
@@ -92,19 +82,19 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     private String login(StorageUser storageUser) throws SerException {
-        String token = TokenUtil.create("192.168.0.148", storageUser.getAccount());
-        StorageUserBO loginUser = BeanTransform.copyProperties(storageUser, StorageUserBO.class);
-        redis.save(storageUser.getId(), token);
+        String token = TokenUtil.create("192.168.0.1", storageUser.getAccount());
+        LoginUser loginUser = BeanTransform.copyProperties(storageUser, LoginUser.class);
+        StorageSession.put(token, loginUser);
         String str_loginUser = JSON.toJSONString(loginUser);
-        redis.appendToMap(StorageCommon.STORAGE_USER, token, str_loginUser, 60 * 60 * 24 * 7);
+        redis.appendToMap(StorageCommon.LOGIN_USER, token, str_loginUser, StorageCommon.LOGIN_TIMEOUT);
         return token;
     }
 
     @Override
-    public Boolean signOut() throws SerException {
+    public Boolean signOut(String storageToken) throws SerException {
         StorageUserBO userBO = getCurrentUser();
-        redis.remove(userBO.getId());
-        redis.removeMap(StorageCommon.STORAGE_USER, userBO.getId());
+        StorageSession.remove(storageToken);
+        redis.removeMap(StorageCommon.LOGIN_USER, userBO.getId());
         return true;
     }
 
@@ -113,12 +103,18 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     public StorageUserBO getCurrentUser() throws SerException {
         Object obj = RpcContext.getContext().getAttachment("storageToken");
         if (null != obj) {
-            String str_storage = redis.getMap(StorageCommon.STORAGE_USER, obj.toString());
-            if (StringUtils.isNotBlank(str_storage)) {
-                return JSON.parseObject(str_storage, StorageUserBO.class);
-
+            String token = obj.toString();
+            LoginUser loginUser = StorageSession.get(token);
+            if (null != loginUser) {
+                return BeanTransform.copyProperties(loginUser, StorageUserBO.class);
             } else {
-                throw new SerException("登录已失效！");
+                String login_user = redis.getMap(StorageCommon.LOGIN_USER, token);
+                if (StringUtils.isNotBlank(login_user)) {
+                    loginUser = JSON.parseObject(login_user, LoginUser.class);
+                    return BeanTransform.copyProperties(loginUser, StorageUserBO.class);
+                } else {
+                    throw new SerException("登录已失效！");
+                }
             }
         }
         throw new SerException("存储用户未登录！");

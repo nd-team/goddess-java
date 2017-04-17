@@ -8,11 +8,14 @@ import com.bjike.goddess.user.api.UserLoginAPI;
 import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.CheckMobile;
+import com.bjike.goddess.user.utils.IpUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -39,14 +42,15 @@ public class LoginAct {
      * @version v1
      */
     @PostMapping("v1/login")
-    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request) throws ActException {
+    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request, BindingResult result) throws ActException {
         try {
-//            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-//            LoginType type = LoginType.PC;
-//            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
-//                type = LoginType.MOBILE;
-//            }
-//            loginTO.setLoginType(type);
+            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+            LoginType type = LoginType.PC;
+            if (CheckMobile.check(userAgent)) { //判断是否为移动端访问
+                type = LoginType.MOBILE;
+            }
+            loginTO.setLoginType(type);
+            loginTO.setIp(IpUtils.getIp(request));
             String token = userLoginAPI.login(loginTO);
             return ActResult.initialize(token);
 
@@ -55,5 +59,23 @@ public class LoginAct {
         }
     }
 
+    /**
+     * 退出登录
+     *
+     * @param userToken 登录用户token
+     * @version v1
+     */
+
+    @PostMapping("v1/signOut/{userToken}")
+    public Result signOut(@RequestParam String userToken) throws ActException {
+        try {
+
+            Boolean result = userLoginAPI.signOut(userToken);
+            return ActResult.initialize(result);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

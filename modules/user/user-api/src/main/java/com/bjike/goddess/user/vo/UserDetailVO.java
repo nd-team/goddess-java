@@ -3,7 +3,7 @@ package com.bjike.goddess.user.vo;
 import com.bjike.goddess.user.enums.SexType;
 import com.bjike.goddess.user.enums.UserType;
 
-/**
+/**用户详情值实体
  * @Author: [liguiqin]
  * @Date: [2017-03-02 09:17]
  * @Description: [ ]

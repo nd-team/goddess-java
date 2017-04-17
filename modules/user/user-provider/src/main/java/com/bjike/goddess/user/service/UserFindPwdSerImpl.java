@@ -1,13 +1,10 @@
 package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.redis.client.RedisClient;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserSimpleBO;
-import com.bjike.goddess.user.constant.UserCommon;
-import com.bjike.goddess.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,10 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserFindPwdSerImpl implements UserFindPwdSer {
     @Autowired
     private UserSer userSer;
-    @Autowired
-    private RedisClient redis;
-    @Autowired
-    private Environment env;
+
 
     @Override
     public UserSimpleBO verifyAccount(String account, String authCode) throws SerException {
@@ -34,8 +28,7 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
         if (null == userBO) {
             throw new SerException("用户不存在");
         }
-        String code =null;
-        code =  redis.getMap(UserCommon.AUTH_CODE,account);
+        String code = AuthCodeSession.get(account);
         if (null == code && !code.equalsIgnoreCase(authCode)) {
             throw new SerException("验证码不正确");
         }
@@ -52,8 +45,7 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
         UserBO bo = userSer.findByNickname(nickname);
         if (null != bo) {
             String code = "123456";
-            redis.appendToMap(UserCommon.PHONE_CODE,nickname,code,Integer.parseInt(env.getProperty("phonecode.timeout")));
-
+            AuthCodeSession.put(nickname, code);
             return true;
         } else {
             throw new SerException();
@@ -62,11 +54,10 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
 
     @Override
     public Boolean verifyPhoneCode(String nickname, String phoneCode) throws SerException {
-        User user = null;
         UserBO bo = userSer.findByNickname(nickname);
         if (null != bo) {
-            String code = redis.getMap(UserCommon.PHONE_CODE,nickname);
-            if (null != code && !phoneCode.equalsIgnoreCase(code)) {
+            String code = AuthCodeSession.get(nickname);
+            if (null == code && !code.equalsIgnoreCase(phoneCode)) {
                 throw new SerException("手机校验码错误");
             }
             return true;

@@ -17,6 +17,7 @@ import com.bjike.goddess.user.bo.UserDetailBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyPlanAuditBO update(SurveyPlanAuditTO to) throws SerException {
         UserBO user = userAPI.currentUser();
@@ -98,6 +100,7 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyPlanAuditBO delete(String id) throws SerException {
         SurveyPlanAudit entity = super.findById(id);

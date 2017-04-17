@@ -39,10 +39,10 @@ public class LoginLogAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/{id}/logs")
+    @GetMapping("v1/{userId}/logs")
     public Result logs(@PathVariable String id) throws ActException {
         try {
-            List<UserLoginLogBO> loginLogs = userLoginLogAPI.findByUserId("userId");
+            List<UserLoginLogBO> loginLogs = userLoginLogAPI.findByUserId(id);
             return ActResult.initialize(loginLogs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = {"com.bjike.goddess.quartz.dao"})//jpa 所在包
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableCaching
-@PropertySource({"classpath:config.properties","classpath:quartz.properties"})
+@PropertySource({"classpath:config.properties"})
 @ImportResource({"classpath:application.xml"})
 @ComponentScan(basePackages = {"com.bjike.goddess.quartz"},
         excludeFilters = {@ComponentScan.Filter(

@@ -57,4 +57,12 @@ public interface AccountAPI {
     default List<String> getThirdSubject(AccountDTO accountDTO) throws SerException {return null;}
 
 
+    /**
+     * 账户来源
+     * @return class AccountBO
+     */
+    default List<String> listAccountOrigin () throws SerException {return null;}
+
+
+
 }

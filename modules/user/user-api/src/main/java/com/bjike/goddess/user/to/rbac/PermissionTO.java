@@ -2,9 +2,12 @@ package com.bjike.goddess.user.to.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
+ * 权限传输对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:00]
  * @Description: [ ]
@@ -12,11 +15,17 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [com.bjike]
  */
 public class PermissionTO extends BaseTO {
-
+    /**
+     * 权限名
+     */
     @NotBlank(message = "资源名不能为空", groups = ADD.class)
     private String name;
+    /**
+     * 资源
+     */
     @NotBlank(message = "资源不能为空", groups = ADD.class)
     private String resource;
+
 
     public String getName() {
         return name;

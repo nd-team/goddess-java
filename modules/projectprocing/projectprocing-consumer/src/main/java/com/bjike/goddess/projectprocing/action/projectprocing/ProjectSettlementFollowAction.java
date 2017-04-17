@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.action.projectprocing;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.ProjectSettlementFollowAPI;
@@ -79,6 +80,7 @@ public class ProjectSettlementFollowAction {
      * @des 添加项目结算跟进
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectSettlementFollow(@Validated({ProjectSettlementFollowTO.TESTAddAndEdit.class}) ProjectSettlementFollowTO projectSettlementFollowTO, BindingResult bindingResult) throws ActException {
         try {
@@ -98,6 +100,7 @@ public class ProjectSettlementFollowAction {
      * @des 添加项目结算跟进
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editProjectSettlementFollow(@Validated({ProjectSettlementFollowTO.TESTAddAndEdit.class}) ProjectSettlementFollowTO projectSettlementFollowTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class ProjectSettlementFollowAction {
      * @des 根据id删除项目结算跟进信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteProjectSettlementFollow(@PathVariable String id) throws ActException {
         try {

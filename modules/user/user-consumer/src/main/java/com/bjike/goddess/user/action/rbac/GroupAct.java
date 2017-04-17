@@ -5,13 +5,15 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.GroupAPI;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import com.bjike.goddess.user.vo.rbac.GroupVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +41,8 @@ public class GroupAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
-    @LoginAuth
     @GetMapping("v1/treeData")
+    @HystrixCommand
     public Result treeData(String id) throws ActException {
         try {
             List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
@@ -57,7 +59,7 @@ public class GroupAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) GroupTO groupTO) throws ActException {
+    public Result add(@Validated({ADD.class}) GroupTO groupTO, BindingResult result) throws ActException {
         try {
             GroupVO vo = BeanTransform.copyProperties(groupAPI.save(groupTO), GroupVO.class);
             return ActResult.initialize(vo);
@@ -90,7 +92,7 @@ public class GroupAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) GroupTO groupTO) throws ActException {
+    public Result edit(@Validated({EDIT.class}) GroupTO groupTO, BindingResult result) throws ActException {
         try {
             groupAPI.update(groupTO);
             return new ActResult("edit success!");

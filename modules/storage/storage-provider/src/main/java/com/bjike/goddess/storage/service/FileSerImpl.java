@@ -53,7 +53,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         String realPath = getRealPath(path);
         java.io.File dir = new java.io.File(realPath);
         java.io.File[] files = dir.listFiles();
-        return getFileBo(files, module,PathCommon.ROOT_PATH);
+        return getFileBo(files, module, PathCommon.ROOT_PATH);
 
     }
 
@@ -75,6 +75,9 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 myFile.setName(fileName);
                 myFile.setSize(FileUtils.getFileSize(file));
                 myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+                if (path.equals("/")) {
+                    path = "";
+                }
                 myFile.setPath(module + path + PathCommon.SEPARATOR + fileName); //保存路径为模块起始
                 myFile.setModule(module);
                 myFile.setUserId(userId);
@@ -200,7 +203,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 realPath = PathCommon.RECYCLE_PATH + realPath;
                 realPath = StringUtils.substringBeforeLast(realPath, PathCommon.SEPARATOR);//去掉一层目录
                 java.io.File dir = new java.io.File(realPath);
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, true);
+                 //没有存在回收目录直接移动目录
+                 org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, !file.exists());
             }
         } catch (Exception e) {
             throw new SerException(e.getMessage());
@@ -241,7 +245,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         String recycleRealPath = getRecycleRealPath(path);
         java.io.File dir = new java.io.File(recycleRealPath);
         java.io.File[] files = dir.listFiles();
-        return getFileBo(files, module,PathCommon.RECYCLE_PATH);
+        return getFileBo(files, module, PathCommon.RECYCLE_PATH);
     }
 
     /**
@@ -269,7 +273,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
      * @param files
      * @return
      */
-    private List<FileBO> getFileBo(java.io.File[] files, String module,String root) throws SerException {
+    private List<FileBO> getFileBo(java.io.File[] files, String module, String root) throws SerException {
         String rootPath = root;
         if (null != module) {
             rootPath += (PathCommon.SEPARATOR + module);
@@ -307,11 +311,16 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     private String getRealPath(String path) throws SerException {
         String realPath = null;
         String module = storageUserAPI.getCurrentModule(); //网盘登录用户
+        if (path.equals("/")) {
+            path = "";
+        }
         if (!"admin".equals(module)) {
+
             realPath = PathCommon.ROOT_PATH + PathCommon.SEPARATOR + module + path;
         } else {
             realPath = PathCommon.ROOT_PATH + path;
         }
+
         return realPath;
     }
 

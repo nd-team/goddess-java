@@ -11,6 +11,7 @@ import com.bjike.goddess.user.api.rbac.RoleAPI;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 import com.bjike.goddess.user.vo.rbac.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +56,7 @@ public class RoleAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RoleTO roleTO) throws ActException {
+    public Result add(@Validated({ADD.class}) RoleTO roleTO, BindingResult result) throws ActException {
         try {
             RoleVO vo = BeanTransform.copyProperties(roleAPI.save(roleTO), RoleVO.class);
 
@@ -89,7 +90,7 @@ public class RoleAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) RoleTO roleTO) throws ActException {
+    public Result edit(@Validated({EDIT.class}) RoleTO roleTO, BindingResult result) throws ActException {
         try {
             roleAPI.update(roleTO);
             return new ActResult("edit success!");
