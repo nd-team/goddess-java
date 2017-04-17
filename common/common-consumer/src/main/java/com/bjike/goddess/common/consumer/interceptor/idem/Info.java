@@ -11,8 +11,6 @@ public class Info {
     public enum Status{
         PRE,AFTER
     }
-    @NotBlank(message = "not blank")
-    private String username;
     private Status status;
 
     private Object result;
@@ -33,11 +31,4 @@ public class Info {
         this.status = status;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

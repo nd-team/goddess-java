@@ -9,6 +9,7 @@ import com.dounine.japi.act.ResultImpl;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -74,8 +75,12 @@ public class IdempotencyRequestInterceptor implements HandlerInterceptor {
                 ResponseContext.get().getWriter().print(actResult.toString());
                 return false;
             }
-            if(null==info){
+            if(null==info.getStatus()){
                 info.setStatus(Info.Status.PRE);
+            }else if(Info.Status.PRE.equals(info.getStatus())){
+                actResult.setMsg("请求处理中,请稍后");
+                ResponseContext.get().getWriter().print(actResult.toString());
+                return false;
             }else if(Info.Status.AFTER.equals(info.getStatus())){
                 actResult.setMsg("请求已处理结束");
                 ResponseContext.get().getWriter().print(actResult.toString());
