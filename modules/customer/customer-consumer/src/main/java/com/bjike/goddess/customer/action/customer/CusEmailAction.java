@@ -174,12 +174,31 @@ public class CusEmailAction {
      * @return  class CusEmailVO
      * @version v1
      */
-    @GetMapping("v1/Collect")
+    @GetMapping("v1/collect")
     public Result CollectSign (@RequestParam String[] works ) throws ActException {
         try {
             List<CusEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     cusEmailAPI.collectCusEmail(works), CusEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个客户邮件
+     *
+     * @param id id
+     * @des 获取所有客户邮件汇总信息
+     * @return  class CusEmailVO
+     * @version v1
+     */
+    @GetMapping("v1/getCusEmailById/{id}")
+    public Result getCusEmailById(@PathVariable String id) throws ActException {
+        try {
+            CusEmailVO cusEmailVOList = BeanTransform.copyProperties(
+                    cusEmailAPI.getCusEmailById(id), CusEmailVO.class, true);
+            return ActResult.initialize(cusEmailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
