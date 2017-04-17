@@ -75,7 +75,7 @@ public interface PermissionAPI {
      * @return
      * @throws SerException
      */
-    default List<String> currentPermissions() throws SerException {
+    default List<PermissionBO> currentPermissions() throws SerException {
         return null;
     }
 

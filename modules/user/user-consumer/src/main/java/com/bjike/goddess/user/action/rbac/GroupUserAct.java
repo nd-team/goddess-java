@@ -36,7 +36,7 @@ public class GroupUserAct {
      * 添加组用户
      *
      * @param groupUserTO 组用户信息
-     * @return class GroupRoleVO
+     * @return class GroupUserVO
      * @version v1
      */
     @PostMapping("v1/add")

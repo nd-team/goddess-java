@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.user.api.UserLoginAPI;
 import com.bjike.goddess.user.enums.LoginType;
 import com.bjike.goddess.user.to.UserLoginTO;
@@ -67,7 +66,7 @@ public class LoginAct {
      * @version v1
      */
 
-    @PostMapping("v1/signOut")
+    @PostMapping("v1/signOut/{userToken}")
     public Result signOut(@RequestParam String userToken) throws ActException {
         try {
 

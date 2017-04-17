@@ -23,7 +23,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @Component
-public class MyIntercept implements Interceptor {
+public class CustomIntercept implements Interceptor {
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -45,10 +45,18 @@ public class MyIntercept implements Interceptor {
         /**
          * 权限拦截器
          */
-        AuthIntercept authIntercept = new AuthIntercept(permissionAPI);
-        String[] excludes = new String[]{"*/login", "*/register"};
+        String[] excludes = new String[]{
+                "*/login",
+                "*/register",
+                "/user/version/verifyPhone/*",
+                "/user/version/register/*",
+                "public/version/key"
+        };
         HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI,excludes), "/**");
 
+        /**
+         * 顺序
+         */
         return Arrays.asList(smoothInfo, loginInfo, authInfo);
     }
 }

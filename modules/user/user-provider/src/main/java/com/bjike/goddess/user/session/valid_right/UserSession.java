@@ -2,9 +2,7 @@ package com.bjike.goddess.user.session.valid_right;
 
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
-import com.bjike.goddess.user.session.constant.UserCommon;
 import com.google.common.cache.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 public final class UserSession {
     private static final RuntimeException TOKEN_NOT_NULL = new RuntimeException("token令牌不能为空");
     private static Logger logger = LoggerFactory.getLogger(AuthCodeSession.class);
-    public static RedisClient redisClient;
 
     private UserSession() {
     }
@@ -35,10 +32,9 @@ public final class UserSession {
             .removalListener(new RemovalListener<String, LoginUser>() {
                 @Override
                 public void onRemoval(RemovalNotification<String, LoginUser> notification) {
-                    System.out.println(notification.getKey());
-                  //  removeByRedis(notification.getKey());
-                    logger.info("remove:" + notification.getKey());
-
+                    if (!notification.getCause().equals(RemovalCause.REPLACED)) {
+                        logger.info("remove:" + notification.getKey());
+                    }
                 }
             })
             .build(new CacheLoader<String, LoginUser>() {
@@ -48,18 +44,6 @@ public final class UserSession {
                 }
             });
 
-    /**
-     * 移除redis
-     *
-     * @param token
-     */
-    private static void removeByRedis(String token) {
-        try {
-            redisClient.removeMap(UserCommon.LOGIN_USER, token);
-        } catch (SerException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 新增用户会话信息

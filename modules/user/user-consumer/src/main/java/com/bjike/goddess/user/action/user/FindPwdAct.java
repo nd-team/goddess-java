@@ -6,10 +6,8 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.bo.UserSimpleBO;
 import com.bjike.goddess.user.service.UserFindPwdSer;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 找回密码
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("findPwd")
 public class FindPwdAct {
 
+    @Autowired
     private UserFindPwdSer userFindPwdAPI;
 
     /**
@@ -33,8 +32,8 @@ public class FindPwdAct {
      * @param authCode 验证码
      * @version v1
      */
-    @GetMapping("v1/verifyAccount")
-    public Result verifyAccount(String account, String authCode) throws ActException {
+    @GetMapping("v1/verify{account}/{authCode}")
+    public Result verifyAccount(@RequestParam String account, @RequestParam String authCode) throws ActException {
         try {
             UserSimpleBO simpleBO = userFindPwdAPI.verifyAccount(account, authCode);
             return ActResult.initialize(simpleBO);

@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dao.UserRep;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserDetailDTO;
@@ -87,8 +88,6 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
 
-
-
     @Override
     public String publicKey() throws SerException {
         return PUBLIC_KEY;
@@ -135,7 +134,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
-    public List<String> currentPermissions() throws SerException {
+    public List<PermissionBO> currentPermissions() throws SerException {
         Object token = RpcContext.getContext().getAttachment("userToken");
         LoginUser loginUser = currentLoginUser(token);
         return loginUser.getPermissions();

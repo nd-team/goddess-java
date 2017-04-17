@@ -1,9 +1,8 @@
 package com.bjike.goddess.user.to.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
-
-import java.io.Serializable;
 
 /**
  * 组用户传输
@@ -14,10 +13,15 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class GroupUserTO implements Serializable {
+public class GroupUserTO extends BaseTO {
+    /**
+     * 组id
+     */
     @NotBlank(message = "组id不能为空", groups = ADD.class)
     private String groupId;
-
+    /**
+     * 用戶id
+     */
     @NotBlank(message = "用户id不能为空", groups = ADD.class)
     private String userId;
 

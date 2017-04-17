@@ -2,6 +2,7 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.bo.UserBO;
@@ -53,7 +54,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default List currentPermissions() throws SerException {
+    default List<PermissionBO> currentPermissions() throws SerException {
         return null;
     }
 

@@ -16,6 +16,7 @@ public class PermissionBO extends BaseBO {
 
     private String name;
     private String resource;
+    private Boolean hasChild;
 
     public String getName() {
         return name;
@@ -31,5 +32,13 @@ public class PermissionBO extends BaseBO {
 
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

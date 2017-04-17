@@ -11,6 +11,7 @@ import com.bjike.goddess.user.bo.rbac.GroupRoleBO;
 import com.bjike.goddess.user.to.rbac.GroupRoleTO;
 import com.bjike.goddess.user.vo.rbac.GroupRoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,7 @@ public class GroupRoleAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) GroupRoleTO groupRoleTO) throws ActException {
+    public Result add(@Validated({ADD.class}) GroupRoleTO groupRoleTO, BindingResult result) throws ActException {
         try {
             GroupRoleBO groupRoleBO = groupRoleAPI.saveByTO(groupRoleTO);
             return ActResult.initialize(BeanTransform.copyProperties(groupRoleBO, GroupRoleVO.class));

@@ -8,8 +8,6 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
-import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 import com.bjike.goddess.user.vo.rbac.PermissionVO;
 import org.springframework.beans.factory.annotation.Autowired;

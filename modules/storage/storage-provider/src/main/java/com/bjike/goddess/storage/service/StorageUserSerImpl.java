@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.storage.bo.StorageUserBO;
@@ -81,7 +82,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     private String login(StorageUser storageUser) throws SerException {
-        String token = TokenUtil.create("192.168.0.148", storageUser.getAccount());
+        String token = TokenUtil.create("192.168.0.1", storageUser.getAccount());
         LoginUser loginUser = BeanTransform.copyProperties(storageUser, LoginUser.class);
         StorageSession.put(token, loginUser);
         String str_loginUser = JSON.toJSONString(loginUser);

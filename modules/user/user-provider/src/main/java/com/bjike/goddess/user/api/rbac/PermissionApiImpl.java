@@ -56,9 +56,9 @@ public class PermissionApiImpl implements PermissionAPI {
     }
 
     @Override
-    public List<String> currentPermissions() throws SerException {
+    public List<PermissionBO> currentPermissions() throws SerException {
 
-        List<String> permissions = userSer.currentPermissions();
+        List<PermissionBO> permissions = userSer.currentPermissions();
         if (null != permissions) {
             return permissions;
         } else {

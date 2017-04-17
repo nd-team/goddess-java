@@ -10,4 +10,4 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-public class MyHystrixCommand extends HystrixCommandAdvice {}
+public class CustomHystrixCommand extends HystrixCommandAdvice {}

@@ -40,7 +40,7 @@ public interface PermissionSer extends Ser<Permission, PermissionDTO> {
      * @return
      * @throws SerException
      */
-    default List<String> findPermissions(String userId) throws SerException {
+    default List<PermissionBO> findPermissions(String userId) throws SerException {
         return null;
     }
 
@@ -78,5 +78,14 @@ public interface PermissionSer extends Ser<Permission, PermissionDTO> {
      */
     default void update(PermissionTO permissionTO)throws SerException{
 
+    }
+
+    /**
+     * 获取子资源
+     * @param id
+     * @throws SerException
+     */
+    default  public List<Permission> getChild(String id)throws SerException{
+        return  null;
     }
 }

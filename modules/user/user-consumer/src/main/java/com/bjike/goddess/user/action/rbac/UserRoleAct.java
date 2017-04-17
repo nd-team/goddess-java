@@ -11,6 +11,7 @@ import com.bjike.goddess.user.bo.rbac.UserRoleBO;
 import com.bjike.goddess.user.to.rbac.UserRoleTO;
 import com.bjike.goddess.user.vo.rbac.UserRoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,7 @@ public class UserRoleAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) UserRoleTO userRoleTO) throws ActException {
+    public Result add(@Validated({ADD.class}) UserRoleTO userRoleTO, BindingResult result) throws ActException {
         try {
             UserRoleBO userRoleBO = userRoleAPI.saveByTO(userRoleTO);
             return ActResult.initialize(BeanTransform.copyProperties(userRoleBO, UserRoleVO.class));
