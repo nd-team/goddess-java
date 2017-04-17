@@ -113,7 +113,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             }
             throw new SerException("登录已过期!");
         } else {
-            throw new SerException("notLogin");
+            throw new SerException("登录未登录");
         }
     }
 
@@ -136,8 +136,15 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Override
     public List<PermissionBO> currentPermissions() throws SerException {
         Object token = RpcContext.getContext().getAttachment("userToken");
-        LoginUser loginUser = currentLoginUser(token);
-        return loginUser.getPermissions();
+        if(null != token){
+            try {
+                LoginUser loginUser = currentLoginUser(token);
+                return loginUser.getPermissions();
+            }catch (SerException e){
+                return new ArrayList<>(0);
+            }
+        }
+        return new ArrayList<>(0);
     }
 
     @Override

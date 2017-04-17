@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.user.api.UserFindPwdAPI;
 import com.bjike.goddess.user.bo.UserSimpleBO;
 import com.bjike.goddess.user.service.UserFindPwdSer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class FindPwdAct {
 
     @Autowired
-    private UserFindPwdSer userFindPwdAPI;
+    private UserFindPwdAPI userFindPwdAPI;
 
     /**
      * 验证码验证

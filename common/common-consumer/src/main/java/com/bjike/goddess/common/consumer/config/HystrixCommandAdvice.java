@@ -73,6 +73,7 @@ public class HystrixCommandAdvice {
         Signature signature = joinPoint.getSignature();
         HystrixCommand.Setter setter = null;
         String groupName = signature.getDeclaringTypeName(),commandKey= "";
+        int timeOut = 10000;
         if(signature.getDeclaringType().isAnnotationPresent(DefaultProperties.class)){
             DefaultProperties defaultProperties = (DefaultProperties)signature.getDeclaringType().getDeclaredAnnotation(DefaultProperties.class);
             if(StringUtils.isNotBlank(defaultProperties.groupKey())){
@@ -93,16 +94,18 @@ public class HystrixCommandAdvice {
             }
             setter = HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("group/"+groupName)).andCommandKey(HystrixCommandKey.Factory.asKey("key/"+(StringUtils.isBlank(commandKey)?groupName:commandKey)));
             HystrixProperty[] hyps = defaultProperties.commandProperties();
+
             if(null!=hyps&&hyps.length>0){
                 Optional<HystrixProperty> hystrixProperty = Arrays.asList(hyps).stream().filter(h->h.name().equals("execution.isolation.thread.timeoutInMilliseconds")).findFirst();
                 if(hystrixProperty.isPresent()){
-                    setter.andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutEnabled(true));
-                    setter.andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(Integer.parseInt(hystrixProperty.get().value())));
+                    timeOut = Integer.parseInt(hystrixProperty.get().value());
                 }
             }
+            setter.andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(timeOut));
         }else{
             setter = HystrixCommand.Setter
                     .withGroupKey(HystrixCommandGroupKey.Factory.asKey("group/default"))
+                    .andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(timeOut))
                     .andCommandKey(HystrixCommandKey.Factory.asKey("key/"+(StringUtils.isBlank(commandKey)?groupName:commandKey)));
         }
         return setter;

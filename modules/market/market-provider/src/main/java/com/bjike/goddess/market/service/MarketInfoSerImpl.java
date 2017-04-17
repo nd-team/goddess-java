@@ -39,7 +39,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class,true);
+        MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class, true);
         try {
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
