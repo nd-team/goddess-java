@@ -16,7 +16,8 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--<dubbo:service validation="true" interface="com.bjike.goddess.firmreward.api.AwardDetailAPI" ref="awardDetailApiImpl"></dubbo:service>-->
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 	<dubbo:service validation="true" interface="com.bjike.goddess.regularization.api.PerformanceScoreAPI" ref="performanceScoreApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.regularization.api.RegularizationAPI" ref="regularizationApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.regularization.api.ScoreFormulaSetAPI" ref="scoreFormulaSetApiImpl"></dubbo:service>

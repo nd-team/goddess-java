@@ -2,14 +2,16 @@ package com.bjike.goddess.regularization.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.TimeCriteriaSetBO;
 import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
 import com.bjike.goddess.regularization.entity.TimeCriteriaSet;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,7 +35,9 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      */
     @Override
     public List<TimeCriteriaSetBO> list(TimeCriteriaSetDTO dto) throws SerException {
-        return null;
+        List<TimeCriteriaSet> list = super.findByPage(dto);
+        List<TimeCriteriaSetBO> listBO = BeanTransform.copyProperties(list, TimeCriteriaSetBO.class);
+        return listBO;
     }
 
     /**
@@ -45,7 +49,10 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      */
     @Override
     public TimeCriteriaSetBO save(TimeCriteriaSetTO to) throws SerException {
-        return null;
+        TimeCriteriaSet entity = BeanTransform.copyProperties(to, TimeCriteriaSet.class, true);
+        entity = super.save(entity);
+        TimeCriteriaSetBO bo = BeanTransform.copyProperties(entity, TimeCriteriaSetBO.class);
+        return bo;
     }
 
     /**
@@ -67,6 +74,28 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      */
     @Override
     public void update(TimeCriteriaSetTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())){
+            TimeCriteriaSet model = super.findById(to.getId());
+            if (model != null) {
+                updateTimeCriteriaSet(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
 
+    /**
+     * 更新时间条件设置
+     *
+     * @param to 时间条件设置to
+     * @param model
+     * @throws SerException
+     */
+    private void updateTimeCriteriaSet(TimeCriteriaSetTO to, TimeCriteriaSet model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 }

@@ -173,6 +173,16 @@ public class RegularizationTO extends BaseTO {
      */
     private String posFacialInfor;
 
+    /**
+     * 管理层意见
+     */
+    private String opinion;
+
+    /**
+     * 评分等级
+     */
+    private String scoreGrade;
+
 
     public String getName() {
         return name;
@@ -428,5 +438,21 @@ public class RegularizationTO extends BaseTO {
 
     public void setPosFacialInfor(String posFacialInfor) {
         this.posFacialInfor = posFacialInfor;
+    }
+
+    public String getOpinion() {
+        return opinion;
+    }
+
+    public void setOpinion(String opinion) {
+        this.opinion = opinion;
+    }
+
+    public String getScoreGrade() {
+        return scoreGrade;
+    }
+
+    public void setScoreGrade(String scoreGrade) {
+        this.scoreGrade = scoreGrade;
     }
 }
