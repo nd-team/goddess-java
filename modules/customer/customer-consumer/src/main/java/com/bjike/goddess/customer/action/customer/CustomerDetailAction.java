@@ -99,8 +99,8 @@ public class CustomerDetailAction {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.getCustomerDetailByNum(customerNum);
 
             CustomerBaseInfoBO customerBaseInfoBO = customerDetailBO1.getCustomerBaseInfoBO();
-            CustomerBaseInfoVO baseInfoVO = BeanTransform.copyProperties(customerBaseInfoBO.getCustomerLevelBO(),CustomerBaseInfoVO.class);
-            CustomerLevelVO clevel = BeanTransform.copyProperties( customerBaseInfoBO.getCustomerLevelBO(), CustomerLevel.class);
+            CustomerBaseInfoVO baseInfoVO = BeanTransform.copyProperties(customerBaseInfoBO,CustomerBaseInfoVO.class);
+            CustomerLevelVO clevel = BeanTransform.copyProperties( customerBaseInfoBO.getCustomerLevelBO(), CustomerLevelVO.class);
             baseInfoVO.setCustomerLevelVO( clevel );
             List<CusFamilyMemberVO> family =  BeanTransform.copyProperties(customerDetailBO1.getCusFamilyMemberBOList(),CusFamilyMemberVO.class);
 

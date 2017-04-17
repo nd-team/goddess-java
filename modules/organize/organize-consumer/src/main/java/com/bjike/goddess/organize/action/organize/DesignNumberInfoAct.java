@@ -35,6 +35,7 @@ public class DesignNumberInfoAct {
      * 保存编号设计信息
      *
      * @param to 编号设计信息传输对象
+     * @return class DesignNumberInfoVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -51,6 +52,7 @@ public class DesignNumberInfoAct {
      * 修改编号设计信息
      *
      * @param to 编号设计信息传输对象
+     * @return class DesignNumberInfoVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

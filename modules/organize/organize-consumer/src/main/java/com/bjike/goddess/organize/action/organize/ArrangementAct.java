@@ -50,12 +50,13 @@ public class ArrangementAct {
      * 保存岗位层级数据
      *
      * @param to 岗位层级传输对象
+     * @return class ArrangementVO
      * @version v1
      */
     @PostMapping("v1/save")
     public Result save(ArrangementTO to) throws ActException {
         try {
-            return ActResult.initialize(arrangementAPI.save(to));
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.save(to), ArrangementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -65,12 +66,13 @@ public class ArrangementAct {
      * 修改岗位层级信息
      *
      * @param to 岗位层级传输对象
+     * @return class ArrangementVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
     public Result update(ArrangementTO to) throws ActException {
         try {
-            return ActResult.initialize(arrangementAPI.update(to));
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.update(to), ArrangementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

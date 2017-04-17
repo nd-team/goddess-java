@@ -42,4 +42,18 @@ public interface CategoryAPI {
      * @param id id
      */
     default void deleteCategory(String id ) throws SerException {return;};
+
+    /**
+     * 类别列表
+     * @return class CategoryBO
+     */
+    default List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {return null;}
+
+    /**
+     * 根据id查一级和二级列表
+     * @return class CategoryBO
+     */
+    default CategoryBO listById (String id) throws SerException {return null;}
+
+
 }

@@ -83,6 +83,7 @@ public class WorkRangeAct {
      * 部门详细增加工作范围
      *
      * @param to 部门工作范围传输对象
+     * @return class WorkRangeVO
      * @version v1
      */
     @PostMapping("v1/departmentAddRange")
@@ -148,6 +149,7 @@ public class WorkRangeAct {
      * 保存工作范围信息
      *
      * @param to 工作范围传输对象
+     * @return class WorkRangeVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -163,6 +165,7 @@ public class WorkRangeAct {
      * 修改工作范围信息
      *
      * @param to 工作范围传输对象
+     * @return class WorkRangeVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

@@ -39,19 +39,6 @@ public class RegisterTest {
         userRegisterAPI.verifyAndSendCode(phone);
     }
 
-    @Test
-    public void verifyCodeAndReg() throws SerException {
-        UserRegisterTO to = new UserRegisterTO();
-        to.setPhoneCode("123");
-        userRegisterAPI.verifyCodeAndReg(to);
-    }
-
-    @Test
-    public void saveUser() throws SerException {
-        UserRegisterTO to = new UserRegisterTO();
-        to.setPhoneCode("123");
-        userRegisterAPI.verifyCodeAndReg(to);
-    }
 
 
 }

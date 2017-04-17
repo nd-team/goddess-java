@@ -185,7 +185,7 @@ include ':modules:attainment:attainment-api'
 include ':modules:attainment:attainment-consumer'
 include ':modules:attainment:attainment-provider'
 
-//#bonus 项目奖金包staffactivity
+//#bonus 项目奖金包
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
@@ -199,3 +199,8 @@ include ':modules:staffactivity:staffactivity-provider'
 include ':modules:firmreward:firmreward-api'
 include ':modules:firmreward:firmreward-consumer'
 include ':modules:firmreward:firmreward-provider'
+
+//#regularization 员工转正
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'

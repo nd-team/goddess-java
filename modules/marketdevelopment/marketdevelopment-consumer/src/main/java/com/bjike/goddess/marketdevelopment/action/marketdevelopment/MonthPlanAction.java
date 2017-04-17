@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.action.marketdevelopment;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,8 @@ import com.bjike.goddess.marketdevelopment.api.MonthPlanAPI;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.MonthPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,7 +39,7 @@ public class MonthPlanAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(MonthPlanTO to) throws ActException {
+    public Result save(@Validated(ADD.class) MonthPlanTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.save(to), MonthPlanVO.class));
         } catch (SerException e) {
@@ -51,7 +55,7 @@ public class MonthPlanAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(MonthPlanTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) MonthPlanTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.update(to), MonthPlanVO.class));
         } catch (SerException e) {

@@ -149,6 +149,7 @@ public class BonusBudgetAct {
      * @param ratioId 奖励项目id
      * @return class RewardProgramRatioVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/checkRewardProgramRatios")
     public Result checkRewardProgramRatios(String ratioId) throws ActException {

@@ -5,9 +5,10 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.dto.UserLoginLogDTO;
 import com.bjike.goddess.user.entity.UserLoginLog;
-import com.bjike.goddess.user.bo.UserLoginLogBO;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -43,16 +44,18 @@ public class UserLoginLogSerImpl extends ServiceImpl<UserLoginLog, UserLoginLogD
     @Override
     public void saveLoginLog(UserLoginLogTO loginLogTO) throws SerException {
         UserLoginLogDTO dto = new UserLoginLogDTO();
-        String userId = "";
-        dto.getConditions().add(Restrict.eq("user.id", userId));
-        dto.getSorts().add("loginTime=DESC");
+        dto.getConditions().add(Restrict.eq("user.id", loginLogTO.getUser().getId()));
+        dto.getSorts().add("loginTime=ASC");
         List<UserLoginLog> loginLogs = findByCis(dto);
-        if (null != loginLogs && loginLogs.size() >= 5) {
-            UserLoginLog old_log = loginLogs.get(4); //更新最旧的数据为最新的
-            BeanTransform.copyProperties(loginLogTO, old_log, "id"); //复制属性忽略id
+        if (null != loginLogs && loginLogs.size() >= 10) {
+            UserLoginLog old_log = loginLogs.get(0); //更新最旧的数据为最新的
+            old_log.setLoginTime(DateUtil.parseDateTime(loginLogTO.getLoginTime()));
+            old_log.setLoginIp(loginLogTO.getLoginIp());
+            old_log.setLoginType(loginLogTO.getLoginType());
+            old_log.setLoginAddress(loginLogTO.getLoginAddress());
             super.update(old_log);
         } else {
-            UserLoginLog loginLog = BeanTransform.copyProperties(loginLogTO,UserLoginLog.class);
+            UserLoginLog loginLog = BeanTransform.copyProperties(loginLogTO, UserLoginLog.class, true);
             loginLog.setUser(userSer.findById(loginLog.getUser().getId()));
             super.save(loginLog);
         }

@@ -3,6 +3,7 @@ package com.bjike.goddess.festival.action.festival;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.HolidayProgrammeAPI;
@@ -78,6 +79,7 @@ public class HolidayProgrammeAction {
      * @return  class HolidayProgrammeVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO, BindingResult bindingResult) throws ActException {
         try {
@@ -97,6 +99,7 @@ public class HolidayProgrammeAction {
      * @return  class HolidayProgrammeVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO) throws ActException {
         try {
@@ -114,6 +117,7 @@ public class HolidayProgrammeAction {
      * @des 根据id删除法定节假日放假方案信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteHolidayProgramme(@PathVariable String id) throws ActException {
         try {

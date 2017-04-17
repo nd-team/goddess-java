@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +34,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     @Autowired
     private UserAPI userAPI;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillAnalyseBO save(SkillAnalyseTO to) throws SerException {
         SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
@@ -41,6 +43,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
         return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillAnalyseBO update(SkillAnalyseTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
@@ -63,6 +66,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
             throw new SerException("数据ID不能为空");
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillAnalyseBO delete(String id) throws SerException {
         SkillAnalyse entity = super.findById(id);

@@ -16,6 +16,8 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +41,13 @@ public class MessageAction {
     private MessageAPI messageAPI;
     @Autowired
     private EmailAPI emailAPI;
+    @Autowired
+    private Environment env;
 
     @PostConstruct
     public void init() {
         KafkaConsumer.emailAPI = emailAPI;
+        KafkaConsumer.env = env;
     }
 
     /**
@@ -53,7 +58,7 @@ public class MessageAction {
      * @version v1
      */
     @PostMapping("v1/send")
-    public Result send(@Validated(ADD.class) MessageTO messageTO) throws ActException {
+    public Result send(@Validated(ADD.class) MessageTO messageTO, BindingResult result) throws ActException {
         try {
             messageAPI.send(messageTO);
             return new ActResult("send message success!");
@@ -125,7 +130,7 @@ public class MessageAction {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) MessageTO messageTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) MessageTO messageTO, BindingResult result) throws ActException {
         try {
             messageAPI.edit(messageTO);
             return new ActResult("edit is success");

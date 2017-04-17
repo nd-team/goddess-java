@@ -2,8 +2,10 @@ package com.bjike.goddess.user.service.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.rbac.RolePermissionBO;
 import com.bjike.goddess.user.dto.rbac.RolePermissionDTO;
 import com.bjike.goddess.user.entity.rbac.RolePermission;
+import com.bjike.goddess.user.to.rbac.RolePermissionTO;
 
 import java.util.List;
 
@@ -27,5 +29,14 @@ public interface RolePermissionSer extends Ser<RolePermission, RolePermissionDTO
         return null;
     }
 
-    ;
+    /**
+     * 保存角色权限
+     *
+     * @param rolePermissionTO
+     * @return
+     * @throws SerException
+     */
+    default RolePermissionBO saveByTO(RolePermissionTO rolePermissionTO) throws SerException {
+        return null;
+    }
 }

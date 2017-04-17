@@ -13,6 +13,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionUserBO save(SurveyQuestionnaireOptionUserTO to) throws SerException {
         SurveyQuestionnaireOptionUser entity = new SurveyQuestionnaireOptionUser();
@@ -62,6 +64,7 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionUserBO delete(String id) throws SerException {
         SurveyQuestionnaireOptionUser entity = super.findById(id);

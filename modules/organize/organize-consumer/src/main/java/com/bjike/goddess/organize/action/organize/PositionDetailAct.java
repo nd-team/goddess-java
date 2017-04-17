@@ -159,6 +159,7 @@ public class PositionDetailAct {
      * 增加岗位详细信息
      *
      * @param to 岗位详细传输对象
+     * @return class PositionDetailVO
      * @version v1
      */
     @PostMapping("v1/save")
@@ -175,6 +176,7 @@ public class PositionDetailAct {
      * 修改职位详细信息
      *
      * @param to 岗位详细传输对象
+     * @return class PositionDetailVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")

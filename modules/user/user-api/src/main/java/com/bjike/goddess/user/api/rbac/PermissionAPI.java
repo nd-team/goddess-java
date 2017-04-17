@@ -30,16 +30,6 @@ public interface PermissionAPI {
         return null;
     }
 
-    /**
-     * 通过角色id查询其所拥有的所有权限资源
-     *
-     * @param roleId
-     * @return
-     * @throws SerException
-     */
-    default List<PermissionBO> findByRoleId(String roleId) throws SerException {
-        return null;
-    }
 
     /**
      * 逐层查询,逐层加载
@@ -79,4 +69,14 @@ public interface PermissionAPI {
     default void update(PermissionTO permissionTO)throws SerException{
 
     }
+    /**
+     * 当前登录用户所有权限
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<PermissionBO> currentPermissions() throws SerException {
+        return null;
+    }
+
 }

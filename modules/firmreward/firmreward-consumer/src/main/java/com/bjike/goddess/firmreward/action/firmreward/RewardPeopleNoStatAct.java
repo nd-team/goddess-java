@@ -130,6 +130,7 @@ public class RewardPeopleNoStatAct {
      *
      * @param to 奖励人数统计to
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/updateAwardDetails")
     public Result updateAwardDetails(RewardPeopleNoStatTO to) throws ActException {
@@ -145,8 +146,9 @@ public class RewardPeopleNoStatAct {
      * 查看获奖明细
      *
      * @param statId 奖励人数统计id
-     * @return class RewardProgramRatioBO
+     * @return class AwardDetailVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/checkAwardDetails")
     public Result checkAwardDetails(String statId) throws ActException {

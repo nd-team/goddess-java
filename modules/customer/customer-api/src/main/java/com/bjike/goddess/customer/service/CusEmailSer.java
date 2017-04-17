@@ -104,4 +104,18 @@ public interface CusEmailSer extends Ser<CusEmail, CusEmailDTO> {
 
     ;
 
+    /**
+     * 某个
+     *
+     * @param id id
+     * @return class CusEmailBO
+     */
+    default CusEmailBO getCusEmailById(String id) throws SerException {
+        return null;
+    }
+
+    ;
+
+
+
 }

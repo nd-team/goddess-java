@@ -8,5 +8,10 @@ package com.bjike.goddess.storage.constant;
  * @Copy: [com.bjike]
  */
 public class StorageCommon {
-    public static  final  String STORAGE_USER="storageUser";
+    public static final String LOGIN_USER = "loginUser";
+
+    /**
+     * redis登录失效时间 7天
+     */
+    public static final Integer LOGIN_TIMEOUT = 60 * 60 * 24 * 7;
 }

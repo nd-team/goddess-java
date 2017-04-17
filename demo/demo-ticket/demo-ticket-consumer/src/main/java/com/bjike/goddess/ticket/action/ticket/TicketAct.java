@@ -9,6 +9,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.ticket.api.TicketAPI;
 import com.bjike.goddess.ticket.bo.TicketBO;
 import com.bjike.goddess.ticket.vo.TicketVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +29,35 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("demo/ticket")
+@DefaultProperties
 public class TicketAct {
 
     @Autowired
     private TicketAPI ticketAPI;
+
+    private int cc = 0;
+    @GetMapping("test")
+    public Result tt() throws ActException{
+        cc++;
+        System.out.println(cc);
+        if(cc<=20){
+            throw new RuntimeException("tt exception");
+        }
+        return new ActResult("success");
+    }
+
+
+    @GetMapping("test1")
+    @HystrixCommand(commandKey = "a")
+    public Result aa(){
+        return new ActResult("success");
+    }
+
+    @GetMapping("test2")
+    @HystrixCommand(commandKey = "a")
+    public Result aa1(){
+        return new ActResult("success");
+    }
 
     /**
      * 初始化创建车票

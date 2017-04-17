@@ -3,20 +3,20 @@ apply from: '../../../config.gradle'
 jar {
     String buildDir = project.buildDir
     manifest {
-        attributes (
+        attributes(
                 "Main-Class": "com.bjike.goddess.user.Application",//main主函数加载入口
-                "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
+                "Class-Path": new File(buildDir + '/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }
 }
 
-task copyJars(type:Copy) {
+task copyJars(type: Copy) {
     from configurations.runtime
     into new File('build/libs/lib') // 目标位置
 }
 build.dependsOn copyJars
 
-def env = hasProperty("pro")?"pro":(hasProperty("dev")?"dev":null)
+def env = hasProperty("pro") ? "pro" : (hasProperty("dev") ? "dev" : null)
 sourceSets {
     main {
         resources {
@@ -33,4 +33,7 @@ dependencies {
     compile(project(":common:common-redis")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
+    compile group: 'commons-codec', name: 'commons-codec', version: "$codec_version"
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
+
 }

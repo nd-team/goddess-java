@@ -63,4 +63,9 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     public List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         return entryBasicInfoSer.collectEntryBasicInfo(entryBasicInfoDTO);
     }
+
+    @Override
+    public EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+        return entryBasicInfoSer.getEntryBasicInfoByName(name);
+    }
 }

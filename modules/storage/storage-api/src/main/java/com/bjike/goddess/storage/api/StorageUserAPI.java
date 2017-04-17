@@ -41,7 +41,7 @@ public interface StorageUserAPI {
      *
      * @return
      */
-    default Boolean signOut() throws SerException {
+    default Boolean signOut(String storageToken) throws SerException {
         return null;
     }
 

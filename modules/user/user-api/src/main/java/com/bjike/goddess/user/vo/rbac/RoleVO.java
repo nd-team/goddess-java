@@ -1,7 +1,7 @@
 package com.bjike.goddess.user.vo.rbac;
 
 
-/**
+/**角色值实体
  * @Author: [liguiqin]
  * @Date: [2017-03-02 17:01]
  * @Description: [ ]

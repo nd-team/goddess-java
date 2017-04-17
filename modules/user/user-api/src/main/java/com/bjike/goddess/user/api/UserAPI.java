@@ -18,6 +18,26 @@ import java.util.List;
  */
 public interface UserAPI {
     /**
+     * 获取公钥
+     *
+     * @return
+     * @throws SerException
+     */
+    default String publicKey() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取私钥
+     *
+     * @return
+     * @throws SerException
+     */
+    default String privateKey() throws SerException {
+        return null;
+    }
+
+    /**
      * 获取当前用户
      *
      * @return
@@ -35,6 +55,16 @@ public interface UserAPI {
      * @throws SerException
      */
     default UserBO currentUser(String userToken) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户Token
+     *
+     * @return
+     * @throws SerException
+     */
+    default String currentToken() throws SerException {
         return null;
     }
 
@@ -127,22 +157,25 @@ public interface UserAPI {
     default UserBO findByAccountNumber(String accountNumber) throws SerException {
         return null;
     }
+
     /**
      * 通过组查寻用户
+     *
      * @param groups
      * @return
      * @throws SerException
      */
-    default List<UserBO> findByGroup(String ...  groups) throws SerException{
+    default List<UserBO> findByGroup(String... groups) throws SerException {
         return null;
     }
 
     /**
      * 查询所有用户
+     *
      * @return
      * @throws SerException
      */
-    default List<UserBO> findAllUser() throws SerException{
+    default List<UserBO> findAllUser() throws SerException {
         return null;
     }
 }

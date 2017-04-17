@@ -56,7 +56,7 @@ public class ActionCreate {
          @RequestMapping("staffentry/entrybasicinfo")
          */
         sb.append("@RestController\n")
-                .append("@RequestMapping(" + className.toLowerCase() + ")\n");
+                .append("@RequestMapping(\"" + className.toLowerCase() + "\")\n");
         //类创建
         sb.append("public class " + className + "Action { \n\n");
 
