@@ -1,20 +1,11 @@
 package com.bjike.goddess.user.api;
 
-import com.alibaba.dubbo.rpc.RpcContext;
-import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.service.UserSer;
-import com.bjike.goddess.user.session.constant.UserCommon;
-import com.bjike.goddess.user.session.valid_right.LoginUser;
-import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +23,6 @@ public class UserApiImpl implements UserAPI {
     @Autowired
     private UserSer userSer;
 
-    @Autowired
-    private RedisClient redis;
 
     @Override
     public String publicKey() throws SerException {
@@ -50,55 +39,15 @@ public class UserApiImpl implements UserAPI {
 
     @Override
     public UserBO currentUser() throws SerException {
-        String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
-        UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("employeeNumber", employeeNumber));
-        if (null != dto) {
-            return BeanTransform.copyProperties(userSer.findOne(dto), UserBO.class);
-
-        } //获取当前用户直接给无需登录
-
-        Object token = RpcContext.getContext().getAttachment("userToken");
-        if (null != token) {
-            LoginUser loginUser = UserSession.get(token.toString());
-            if (null != loginUser) {
-                return BeanTransform.copyProperties(loginUser, UserBO.class);
-            } else { //从redis获取
-                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
-                if (StringUtils.isNotBlank(loginUser_str)) {
-                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
-                    UserSession.put(token.toString(), loginUser); //设置到session
-                    return BeanTransform.copyProperties(loginUser, UserBO.class);
-                }
-            }
-
-            throw new SerException("登录已过期!");
-        }
-        throw new SerException("notLogin");
+        return userSer.currentUser();
     }
 
 
     @Override
     public UserBO currentUser(String userToken) throws SerException {
-        if (null == userToken) {
-            throw new SerException("用户未登录!");
-        } else {
-            // 从会话session获取
-            LoginUser loginUser = UserSession.get(userToken.toString());
-            if (null == loginUser) {
-                // 从redis缓存获取
-                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, userToken.toString());
-                if (StringUtils.isNotBlank(loginUser_str)) {
-                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
-                    UserSession.put(userToken,loginUser);
-                    return BeanTransform.copyProperties(loginUser, UserBO.class);
-                }
-            } else {
-                return BeanTransform.copyProperties(loginUser, UserBO.class);
-            }
-            throw new SerException("登录已过期!");
-        }
+        return userSer.currentUser(userToken);
     }
+
 
     @Override
     public UserBO add(UserTO userTO) throws SerException {

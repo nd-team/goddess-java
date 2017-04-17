@@ -34,6 +34,17 @@ public interface PermissionSer extends Ser<Permission, PermissionDTO> {
     }
 
     /**
+     * 通过用户id查询其所拥有的所有权限资源
+     *
+     * @param userId
+     * @return
+     * @throws SerException
+     */
+    default List<String> findPermissions(String userId) throws SerException {
+        return null;
+    }
+
+    /**
      * 通过角色id查询其所拥有的所有权限资源
      *
      * @param roleId

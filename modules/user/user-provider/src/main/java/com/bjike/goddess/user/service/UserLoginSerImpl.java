@@ -9,8 +9,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.enums.LoginType;
+import com.bjike.goddess.user.service.rbac.PermissionSer;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_err.PwdErrSession;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户登陆业务实现
@@ -46,6 +49,8 @@ public class UserLoginSerImpl implements UserLoginSer {
     private UserLoginLogSer userLoginLogSer;
     @Autowired
     private RedisClient redis;
+    @Autowired
+    private PermissionSer permissionSer;
 
 
     @Transactional
@@ -62,8 +67,9 @@ public class UserLoginSerImpl implements UserLoginSer {
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
                     PwdErrSession.remove(account);//删除密码验证错误次数统计
                     AuthCodeSession.remove(account);//清除验证码
-                    saveToSessionAndRedis(user, token); //保存登录用户到session和redis
                     saveLoginLog(loginTO, user);  //记录登录日志
+                    LoginUser loginUser =saveToSessionAndRedis(user, token); //保存登录用户到session和redis
+                    setPermission(loginUser,token);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
@@ -74,6 +80,16 @@ public class UserLoginSerImpl implements UserLoginSer {
             throw new SerException("账号或者密码错误");
         }
         return token;
+    }
+
+    @Override
+    public Boolean signOut(String token) throws SerException {
+        if (StringUtils.isNotBlank(token)) {
+            UserSession.remove(token);
+            redis.removeMap(UserCommon.LOGIN_USER, token);
+            return true;
+        }
+        throw new SerException("userToken can not null!");
     }
 
     private void saveLoginLog(UserLoginTO loginTO, User user) throws SerException {
@@ -95,11 +111,12 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @param token
      * @throws SerException
      */
-    private void saveToSessionAndRedis(User user, String token) throws SerException {
+    private LoginUser saveToSessionAndRedis(User user, String token) throws SerException {
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(user, loginUser);
         UserSession.put(token, loginUser);
         redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser), UserCommon.LOGIN_TIMEOUT);
+        return loginUser;
     }
 
 
@@ -164,15 +181,12 @@ public class UserLoginSerImpl implements UserLoginSer {
         return pass;
     }
 
-    @Override
-    public Boolean signOut(String token) throws SerException {
-        if (StringUtils.isNotBlank(token)) {
-            UserSession.remove(token);
-            redis.removeMap(UserCommon.LOGIN_USER, token);
-            return true;
+    private void setPermission(LoginUser loginUser,String token) throws SerException {
+        List<String> permissions = permissionSer.findPermissions(loginUser.getId());
+        if (null != permissions && permissions.size() > 0) {
+            loginUser.setPermissions(permissions);
         }
-        throw new SerException("userToken can not null!");
+        UserSession.put(token,loginUser);
     }
-
 
 }

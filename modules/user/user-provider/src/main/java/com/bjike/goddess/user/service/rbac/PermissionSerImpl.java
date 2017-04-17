@@ -45,6 +45,35 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
 
     @Override
     public List<PermissionBO> findByUserId(String userId) throws SerException {
+        Set<String> role_ids = allRoleId(userId);
+        //查询角色资源权限
+        Set<Permission> permissions = new HashSet<>();
+        if (0 < role_ids.size()) {
+            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
+            rolePermissions.stream().forEach(rolePermission -> {
+                permissions.add(rolePermission.getPermission());
+            });
+        }
+        return BeanTransform.copyProperties(permissions, PermissionBO.class);
+    }
+
+    @Override
+    public List<String> findPermissions(String userId) throws SerException {
+        Set<String> role_ids = allRoleId(userId);
+        //查询角色资源权限
+        Set<String> permissions = new HashSet<>();
+        if (0 < role_ids.size()) {
+            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
+            rolePermissions.stream().forEach(rolePermission -> {
+                permissions.add(rolePermission.getPermission().getResource());
+            });
+        }
+        List<String> permissionList = new ArrayList<>();
+        permissionList.addAll(permissions);
+        return permissionList;
+    }
+
+    private Set<String> allRoleId(String userId) throws SerException {
         //通过角色(用户角色,组角色)查询其拥有的权限
         Set<String> role_ids = new HashSet<>();
         List<UserRole> userRoles = userRoleSer.findByUserId(userId);
@@ -67,15 +96,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
                 role_ids.add(groupRole.getRole().getId());
             });
         }
-        //查询角色资源权限
-        Set<Permission> permissions = new HashSet<>();
-        if (0 < role_ids.size()) {
-            List<RolePermission> rolePermissions = rolePermissionSer.findByRoleIds(role_ids.toArray(new String[role_ids.size()]));
-            rolePermissions.stream().forEach(rolePermission -> {
-                permissions.add(rolePermission.getPermission());
-            });
-        }
-        return BeanTransform.copyProperties(permissions, PermissionBO.class);
+        return role_ids;
     }
 
     @Override

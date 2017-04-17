@@ -1,9 +1,15 @@
 package com.bjike.goddess.user.api.rbac;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
+import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.service.rbac.PermissionSer;
+import com.bjike.goddess.user.session.valid_right.LoginUser;
+import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- *
- *
  * @Author: [liguiqin]
  * @Date: [2017-03-11 14:20]
  * @Description: [ ]
@@ -23,6 +27,8 @@ import java.util.List;
 public class PermissionApiImpl implements PermissionAPI {
     @Autowired
     private PermissionSer permissionSer;
+    @Autowired
+    private UserSer userSer;
 
     @Override
     public List<PermissionBO> findByUserId(String userId) throws SerException {
@@ -47,5 +53,25 @@ public class PermissionApiImpl implements PermissionAPI {
     @Override
     public void update(PermissionTO permissionTO) throws SerException {
         permissionSer.update(permissionTO);
+    }
+
+    @Override
+    public List<String> currentPermissions() throws SerException {
+
+        List<String> permissions = userSer.currentPermissions();
+        if (null != permissions) {
+            return permissions;
+        } else {
+            String token = RpcContext.getContext().getAttachment("userToken");
+            UserBO userBO = userSer.currentUser(token);
+            permissions = permissionSer.findPermissions(userBO.getId());
+            if (null != permissions && permissions.size() > 0) {
+                LoginUser loginUser = BeanTransform.copyProperties(userBO, LoginUser.class);
+                loginUser.setPermissions(permissions);
+                UserSession.put(token, loginUser);
+            }
+            return permissions;
+        }
+
     }
 }
