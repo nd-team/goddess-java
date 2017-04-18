@@ -11,6 +11,9 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class GroupVO {
+    /**
+     * id
+     */
     private String id;
     /**
      * 部门名

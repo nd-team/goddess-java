@@ -30,6 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("group")
+@DefaultProperties
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
@@ -39,10 +40,10 @@ public class GroupAct {
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @des 逐层加载, 参考ztree
+     * @return class GroupVO
      * @version v1
      */
     @GetMapping("v1/tree")
-    @HystrixCommand
     public Result treeData(String id) throws ActException {
         try {
             List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
@@ -56,6 +57,7 @@ public class GroupAct {
      * 添加组
      *
      * @param groupTO 新的组信息
+     * @return class GroupVO
      * @version v1
      */
     @PostMapping("v1/add")

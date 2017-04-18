@@ -13,6 +13,9 @@ import com.bjike.goddess.common.api.type.Status;
  * @Copy: [com.bjike]
  */
 public class UserVO {
+    /**
+     * id
+     */
     private String id;
     /**
      * 用户名

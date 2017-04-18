@@ -1,7 +1,9 @@
 package com.bjike.goddess.storage;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
 
@@ -17,6 +19,7 @@ import java.io.IOException;
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
+@EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
     @Bean
     public MultipartConfigElement multipartConfigElement() {

@@ -57,6 +57,7 @@ public class HystrixCommandAdvice {
                     if(throwable instanceof ActException){
                         throw new HystrixBadRequestException(throwable.getMessage(),throwable);
                     }else{
+                        throwable.printStackTrace();
                         throw (Exception) throwable;
                     }
                 }

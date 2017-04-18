@@ -1,15 +1,19 @@
 package com.bjike.goddess.user.vo;
 
 
-
-/**部门值实体
+/**
+ * 部门值实体
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-02 15:53]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentVO   {
+public class DepartmentVO {
+    /**
+     * id
+     */
     private String id;
 
 
@@ -25,7 +29,7 @@ public class DepartmentVO   {
     /**
      * 创建时间
      */
-    private String createTime ;
+    private String createTime;
 
     public String getName() {
         return name;

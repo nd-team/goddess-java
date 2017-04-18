@@ -37,7 +37,7 @@ public class AuthCodeAct {
      * 登录是否需要验证码
      *
      * @param account 账号email,username,phone
-     * @des true代表需要要验证, false代表不需要验证码
+     * @des true代表需要要验证, false代表不需要验证码,返回true时调用generate-code方法生成验证码
      * @version v1
      */
     @GetMapping("v1/show/{account}")
@@ -52,7 +52,6 @@ public class AuthCodeAct {
     }
 
     /**
-     * show返回true时调用该方法生成验证码
      * 生成验证码
      *
      * @param account 账号email,username,phone

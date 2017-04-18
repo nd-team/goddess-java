@@ -36,6 +36,7 @@ public class PermissionAct {
      * 获取权限资源树
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
+     * @return class PermissionVO
      * @des 逐层加载, 参考ztree
      * @version v1
      */
@@ -53,6 +54,7 @@ public class PermissionAct {
      * 添加资源
      *
      * @param permissionTO 新的资源信息
+     * @return class PermissionVO
      * @des 返回资源信息
      * @version v1
      */

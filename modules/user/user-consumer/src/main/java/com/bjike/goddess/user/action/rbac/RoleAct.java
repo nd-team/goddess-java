@@ -36,6 +36,7 @@ public class RoleAct {
      * 获取角色树结构
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
+     * @return class RoleVO
      * @des 逐层加载, 参考ztree
      * @version v1
      */
@@ -53,6 +54,7 @@ public class RoleAct {
      * 添加角色
      *
      * @param roleTO 新的角色信息
+     * @return class RoleVO
      * @version v1
      */
     @PostMapping("v1/add")
