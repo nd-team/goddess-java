@@ -48,4 +48,9 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         return monthPlanSer.findByYear(year);
     }
+
+    @Override
+    public MonthPlanBO getById(String id) throws SerException {
+        return monthPlanSer.getById(id);
+    }
 }

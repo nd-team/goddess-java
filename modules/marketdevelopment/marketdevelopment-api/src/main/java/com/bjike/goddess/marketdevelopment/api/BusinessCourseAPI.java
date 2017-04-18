@@ -93,4 +93,14 @@ public interface BusinessCourseAPI {
         return null;
     }
 
+    /**
+     * 根据id获取业务方向科目
+     * @param id 业务方向科目数据id
+     * @return
+     * @throws SerException
+     */
+    default BusinessCourseBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

@@ -73,4 +73,14 @@ public interface DayPlanAPI {
         return null;
     }
 
+    /**
+     * 根据id获取天计划数据
+     *
+     * @param id 天计划数据id
+     * @return
+     * @throws SerException
+     */
+    default DayPlanBO getById(String id) throws SerException {
+        return null;
+    }
 }

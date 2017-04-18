@@ -48,4 +48,9 @@ public class WeekPlanApiImpl implements WeekPlanAPI {
     public List<WeekPlanBO> findByDate(String startDate, String endDate) throws SerException {
         return weekPlanSer.findByDate(startDate, endDate);
     }
+
+    @Override
+    public WeekPlanBO getById(String id) throws SerException {
+        return weekPlanSer.getById(id);
+    }
 }

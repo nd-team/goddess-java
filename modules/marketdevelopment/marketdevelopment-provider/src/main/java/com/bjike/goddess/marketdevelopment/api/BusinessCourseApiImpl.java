@@ -58,4 +58,9 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     public List<BusinessCourseBO> findThaw() throws SerException {
         return businessCourseSer.findThaw();
     }
+
+    @Override
+    public BusinessCourseBO getById(String id) throws SerException {
+        return businessCourseSer.getById(id);
+    }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.service.DayPlanSer;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
@@ -47,5 +48,10 @@ public class DayPlanApiImpl implements DayPlanAPI {
     @Override
     public List<DayPlanBO> findByDate(String date) throws SerException {
         return dayPlanSer.findByDate(date);
+    }
+
+    @Override
+    public DayPlanBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(dayPlanSer.findById(id), DayPlanBO.class);
     }
 }

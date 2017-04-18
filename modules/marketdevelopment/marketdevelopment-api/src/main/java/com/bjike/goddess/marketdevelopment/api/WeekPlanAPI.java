@@ -73,4 +73,15 @@ public interface WeekPlanAPI {
         return null;
     }
 
+
+    /**
+     * 根据id获取周计划
+     *
+     * @param id 周计划数据id
+     * @return
+     * @throws SerException
+     */
+    default WeekPlanBO getById(String id) throws SerException {
+        return null;
+    }
 }

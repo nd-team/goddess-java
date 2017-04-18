@@ -84,4 +84,15 @@ public interface MarketResearchAPI {
         return null;
     }
 
+    /**
+     * 根据id获取市场调研数据
+     *
+     * @param id 市场调研数据id
+     * @return
+     * @throws SerException
+     */
+    default MarketResearchBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

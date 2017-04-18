@@ -1,6 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
 import com.bjike.goddess.marketdevelopment.service.DemandAnalysisSer;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
@@ -52,5 +55,10 @@ public class DemandAnalysisApiImpl implements DemandAnalysisAPI {
     @Override
     public List<DemandAnalysisBO> findByCourseType(String type, String course) throws SerException {
         return demandAnalysisSer.findByCourseType(type, course);
+    }
+
+    @Override
+    public DemandAnalysisBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(demandAnalysisSer.findById(id), DemandAnalysisBO.class);
     }
 }

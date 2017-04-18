@@ -1,6 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.service.TargetInformationSer;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
@@ -57,5 +60,10 @@ public class TargetInformationApiImpl implements TargetInformationAPI {
     @Override
     public List<TargetInformationBO> findByArea(String area) throws SerException {
         return targetInformationSer.findByArea(area);
+    }
+
+    @Override
+    public TargetInformationBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(targetInformationSer.findById(id), TargetInformationBO.class);
     }
 }

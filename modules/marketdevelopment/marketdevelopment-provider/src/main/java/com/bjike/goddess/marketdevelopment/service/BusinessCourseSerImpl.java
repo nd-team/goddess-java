@@ -119,4 +119,12 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         List<BusinessCourse> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
+
+    @Override
+    public BusinessCourseBO getById(String id) throws SerException {
+        try {
+            return this.transformBO(super.findById(id));
+        } catch (SerException e) {
+            throw new SerException("数据对象不能为空");
+        }    }
 }

@@ -84,4 +84,14 @@ public interface MarketChannelAPI {
         return null;
     }
 
+    /**
+     * 根据id获取市场挖掘数据
+     *
+     * @param id 市场挖掘数据id
+     * @return
+     * @throws SerException
+     */
+    default MarketChannelBO getById(String id) throws SerException {
+        return null;
+    }
 }

@@ -75,4 +75,14 @@ public interface MonthPlanSer extends Ser<MonthPlan, MonthPlanDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取月计划数据
+     * @param id 月计划数据id
+     * @return
+     * @throws SerException
+     */
+    default MonthPlanBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

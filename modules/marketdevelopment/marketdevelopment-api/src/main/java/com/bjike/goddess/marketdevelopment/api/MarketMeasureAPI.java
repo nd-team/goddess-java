@@ -84,4 +84,15 @@ public interface MarketMeasureAPI {
         return null;
     }
 
+    /**
+     * 根据id获取市场测算数据
+     *
+     * @param id 市场测算数据id
+     * @return
+     * @throws SerException
+     */
+    default MarketMeasureBO getById(String id) throws SerException {
+        return null;
+    }
+
 }
