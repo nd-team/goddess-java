@@ -43,9 +43,15 @@ public class Permission extends BaseEntity {
     /**
      * 父节点
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '资源上级' ")
     private Permission parent;
+
+    /**
+     * 是否有子节点
+     */
+    @Column(name = "is_hasChild",columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
+    private Boolean hasChild;
 
     public String getName() {
         return name;
@@ -86,5 +92,13 @@ public class Permission extends BaseEntity {
 
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

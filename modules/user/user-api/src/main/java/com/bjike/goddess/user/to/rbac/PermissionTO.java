@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.to.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,14 +19,18 @@ public class PermissionTO extends BaseTO {
     /**
      * 权限名
      */
-    @NotBlank(message = "资源名不能为空", groups = ADD.class)
+    @NotBlank(message = "资源名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
     /**
      * 资源
      */
-    @NotBlank(message = "资源不能为空", groups = ADD.class)
+    @NotBlank(message = "资源不能为空", groups = {ADD.class, EDIT.class})
     private String resource;
 
+    /**
+     * 父资源
+     */
+    private String parentId;
 
     public String getName() {
         return name;
@@ -43,5 +48,11 @@ public class PermissionTO extends BaseTO {
         this.resource = resource;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
 
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 }
