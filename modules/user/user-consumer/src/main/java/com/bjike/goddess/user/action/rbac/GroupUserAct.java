@@ -10,6 +10,7 @@ import com.bjike.goddess.user.api.rbac.GroupUserAPI;
 import com.bjike.goddess.user.bo.rbac.GroupUserBO;
 import com.bjike.goddess.user.to.rbac.GroupUserTO;
 import com.bjike.goddess.user.vo.rbac.GroupUserVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("group-user")
 public class GroupUserAct {
