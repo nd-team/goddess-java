@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.FacilityInformationAPI;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
 import com.bjike.goddess.qualifications.vo.FacilityInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class FacilityInformationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) FacilityInformationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) FacilityInformationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.save(to), FacilityInformationVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class FacilityInformationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) FacilityInformationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) FacilityInformationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.update(to), FacilityInformationVO.class));
         } catch (SerException e) {

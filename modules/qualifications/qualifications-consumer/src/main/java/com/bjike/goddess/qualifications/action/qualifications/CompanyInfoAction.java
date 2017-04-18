@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.CompanyInfoAPI;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
 import com.bjike.goddess.qualifications.vo.CompanyInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class CompanyInfoAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) CompanyInfoTO to) throws ActException {
+    public Result save(@Validated(ADD.class) CompanyInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(companyInfoAPI.save(to), CompanyInfoVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class CompanyInfoAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) CompanyInfoTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) CompanyInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(companyInfoAPI.update(to), CompanyInfoVO.class));
         } catch (SerException e) {

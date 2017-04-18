@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.HandlePlanStageAPI;
 import com.bjike.goddess.qualifications.to.HandlePlanStageTO;
 import com.bjike.goddess.qualifications.vo.HandlePlanStageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class HandlePlanStageAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) HandlePlanStageTO to) throws ActException {
+    public Result save(@Validated(ADD.class) HandlePlanStageTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.save(to), HandlePlanStageVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class HandlePlanStageAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) HandlePlanStageTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) HandlePlanStageTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.update(to), HandlePlanStageVO.class));
         } catch (SerException e) {
@@ -81,14 +82,14 @@ public class HandlePlanStageAction {
     /**
      * 根据办理计划id集合查询计划阶段
      *
-     * @param plan_ids
+     * @param ids
      * @return class HandlePlanStageVO
      * @version v1
      */
     @GetMapping("v1/findByPlan")
-    public Result findByPlanIds(String[] plan_ids) throws ActException {
+    public Result findByPlanIds(String[] ids) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlanIds(plan_ids), HandlePlanStageVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlanIds(ids), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -97,14 +98,14 @@ public class HandlePlanStageAction {
     /**
      * 根据办理计划id查询计划阶段
      *
-     * @param plan_id 办理计划ID
+     * @param id 办理计划ID
      * @return class HandlePlanStageVO
      * @version v1
      */
-    @GetMapping("v1/findByPlan/{plan_id}")
-    public Result findByPlan(@PathVariable String plan_id) throws ActException {
+    @GetMapping("v1/findByPlan/{id}")
+    public Result findByPlan(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlan(plan_id), HandlePlanStageVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlan(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -113,14 +114,14 @@ public class HandlePlanStageAction {
     /**
      * 根据资质办理ID查询计划阶段
      *
-     * @param handle_id 资质办理ID
+     * @param id 资质办理ID
      * @return class HandlePlanStageVO
      * @version v1
      */
-    @GetMapping("v1/findByHandle/{handle_id}")
-    public Result findByHandle(@PathVariable String handle_id) throws ActException {
+    @GetMapping("v1/findByHandle/{id}")
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByHandle(handle_id), HandlePlanStageVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByHandle(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -13,6 +13,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class LaborRelationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) LaborRelationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) LaborRelationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.save(to), LaborRelationVO.class));
         } catch (SerException e) {
@@ -56,7 +57,7 @@ public class LaborRelationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) LaborRelationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) LaborRelationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.update(to), LaborRelationVO.class));
         } catch (SerException e) {
@@ -72,7 +73,7 @@ public class LaborRelationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.delete(id), LaborRelationVO.class));
         } catch (SerException e) {
@@ -88,7 +89,7 @@ public class LaborRelationAction {
      * @version v1
      */
     @PatchMapping("v1/congeal/{id}")
-    public Result congeal(String id) throws ActException {
+    public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.congeal(id), LaborRelationVO.class));
         } catch (SerException e) {
@@ -104,7 +105,7 @@ public class LaborRelationAction {
      * @version v1
      */
     @PatchMapping("v1/thaw/{id}")
-    public Result thaw(String id) throws ActException {
+    public Result thaw(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.thaw(id), LaborRelationVO.class));
         } catch (SerException e) {

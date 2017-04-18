@@ -82,14 +82,14 @@ public class MonthPlanAction {
     /**
      * 根据年计划ID查询月计划数据
      *
-     * @param year_id 年计划ID
+     * @param id 年计划ID
      * @return class MonthPlanVO
      * @version v1
      */
-    @GetMapping("v1/findByYearId/{year_id}")
-    public Result findByYearID(@PathVariable String year_id) throws ActException {
+    @GetMapping("v1/findByYearId/{id}")
+    public Result findByYearID(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYearID(year_id), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYearID(id), MonthPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

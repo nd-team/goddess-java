@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.QualificationsHandlePlanAPI;
 import com.bjike.goddess.qualifications.to.QualificationsHandlePlanTO;
 import com.bjike.goddess.qualifications.vo.QualificationsHandlePlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class QualificationsHandlePlanAction {
      * @version v1
      */
     @PostMapping("V1/save")
-    public Result save(@Validated(ADD.class) QualificationsHandlePlanTO to) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsHandlePlanTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.save(to), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class QualificationsHandlePlanAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsHandlePlanTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsHandlePlanTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.update(to), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
@@ -81,14 +82,14 @@ public class QualificationsHandlePlanAction {
     /**
      * 根据资质办理查询计划
      *
-     * @param handle_id 资质办理ID
+     * @param id 资质办理ID
      * @return class QualificationsHandlePlanVO
      * @version v1
      */
-    @GetMapping("v1/findByHandle/{handle_id}")
-    public Result findByHandle(@PathVariable String handle_id) throws ActException {
+    @GetMapping("v1/findByHandle/{id}")
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.findByHandle(handle_id), QualificationsHandlePlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.findByHandle(id), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

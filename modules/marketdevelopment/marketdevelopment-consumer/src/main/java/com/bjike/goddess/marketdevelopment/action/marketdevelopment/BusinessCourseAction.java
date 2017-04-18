@@ -114,14 +114,14 @@ public class BusinessCourseAction {
     /**
      * 查询对应业务类型的业务方向科目数据
      *
-     * @param type_id 业务类型ID
+     * @param id 业务类型ID
      * @return class BusinessCourseVO
      * @version v1
      */
-    @GetMapping("v1/findByType/{type_id}")
-    public Result findByType(@PathVariable String type_id) throws ActException {
+    @GetMapping("v1/findByType/{id}")
+    public Result findByType(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findByType(type_id), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findByType(id), BusinessCourseVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

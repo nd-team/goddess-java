@@ -102,7 +102,7 @@ public class YearPlanAction {
      * @version v1
      */
     @GetMapping("v1/findByYear")
-    public Result findByYear(Integer year) throws ActException {
+    public Result findByYear(int year) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findByYear(year), YearPlanVO.class));
         } catch (SerException e) {

@@ -100,14 +100,14 @@ public class AnnualApplyAction {
     /**
      * 根据年假信息查询年假申请记录
      *
-     * @param info_id 年假信息ID
+     * @param id 年假信息ID
      * @return class AnnualApplyVO
      * @version v1
      */
-    @GetMapping("v1/findByInfo/{info_id}")
-    public Result findByInfo(@PathVariable String info_id) throws ActException {
+    @GetMapping("v1/findByInfo/{id}")
+    public Result findByInfo(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(annualApplyAPI.findByInfo(info_id), AnnualApplyVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(annualApplyAPI.findByInfo(id), AnnualApplyVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

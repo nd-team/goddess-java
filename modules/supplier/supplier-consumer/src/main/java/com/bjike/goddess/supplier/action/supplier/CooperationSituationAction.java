@@ -1,5 +1,7 @@
 package com.bjike.goddess.supplier.action.supplier;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.supplier.api.CooperationSituationAPI;
 import com.bjike.goddess.supplier.to.CooperationSituationTO;
 import com.bjike.goddess.supplier.vo.CooperationSituationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,16 +34,16 @@ public class CooperationSituationAction {
     /**
      * 根据供应商基本信息ID查询合作情况
      *
-     * @param info_id 供应商基本信息ID
+     * @param id 供应商基本信息ID
      * @version v1
      * @return class CooperationSituationVO
      */
-    @GetMapping("v1/findByInformation/{info_id}")
-    public Result findByInformation(@PathVariable String info_id) throws ActException {
+    @GetMapping("v1/findByInformation/{id}")
+    public Result findByInformation(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
-                            cooperationSituationAPI.findByInformation(info_id)
+                            cooperationSituationAPI.findByInformation(id)
                             , CooperationSituationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -55,7 +58,7 @@ public class CooperationSituationAction {
      * @return class CooperationSituationVO
      */
     @PostMapping("v1/save")
-    public Result save(@Validated CooperationSituationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) CooperationSituationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.save(to), CooperationSituationVO.class));
         } catch (SerException e) {
@@ -71,7 +74,7 @@ public class CooperationSituationAction {
      * @return class CooperationSituationVO
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated CooperationSituationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) CooperationSituationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.update(to), CooperationSituationVO.class));
         } catch (SerException e) {

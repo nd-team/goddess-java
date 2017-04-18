@@ -1,6 +1,10 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 用户职位
@@ -16,6 +20,7 @@ public class PositionDetailUserTO extends BaseTO {
     /**
      * 用户信息
      */
+    @NotNull(message = "用户信息不能为空", groups = {ADD.class, EDIT.class})
     private String user_id;
 
     /**

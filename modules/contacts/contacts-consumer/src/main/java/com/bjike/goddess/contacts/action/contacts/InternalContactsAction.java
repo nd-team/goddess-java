@@ -12,6 +12,7 @@ import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import com.bjike.goddess.contacts.vo.InternalContactsVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class InternalContactsAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) InternalContactsTO to) throws ActException {
+    public Result save(@Validated(ADD.class) InternalContactsTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.save(to), InternalContactsVO.class));
         } catch (SerException e) {
@@ -55,7 +56,7 @@ public class InternalContactsAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) InternalContactsTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) InternalContactsTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.update(to), InternalContactsVO.class));
         } catch (SerException e) {

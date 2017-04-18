@@ -13,6 +13,7 @@ import com.bjike.goddess.qualifications.to.QualificationsHandleForeignTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandleTO;
 import com.bjike.goddess.qualifications.vo.QualificationsHandleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class QualificationsHandleAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsHandleTO to) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsHandleTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.save(to), QualificationsHandleVO.class));
         } catch (SerException e) {
@@ -56,7 +57,7 @@ public class QualificationsHandleAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsHandleTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsHandleTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.update(to), QualificationsHandleVO.class));
         } catch (SerException e) {

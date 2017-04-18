@@ -13,6 +13,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class ArchiveAccessAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ArchiveAccessTO to) throws ActException {
+    public Result save(@Validated(ADD.class) ArchiveAccessTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveAccessAPI.save(to), ArchiveAccessVO.class));
         } catch (SerException e) {
@@ -56,7 +57,7 @@ public class ArchiveAccessAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) ArchiveAccessTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) ArchiveAccessTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveAccessAPI.update(to), ArchiveAccessVO.class));
         } catch (SerException e) {
@@ -72,7 +73,7 @@ public class ArchiveAccessAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveAccessAPI.delete(id), ArchiveAccessVO.class));
         } catch (SerException e) {

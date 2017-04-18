@@ -38,7 +38,7 @@ public class AnnualArrangementStandardAction {
      * @return class AnnualArrangementStandardVO
      * @version v1
      */
-    @PutMapping("v1/update/{standard_id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) AnnualArrangementStandardTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualArrangementStandardAPI.update(to), AnnualArrangementStandardVO.class));
@@ -50,14 +50,14 @@ public class AnnualArrangementStandardAction {
     /**
      * 根据年假标准查询年假层级标准
      *
-     * @param standard_id 年假标准id
+     * @param id 年假标准id
      * @return class AnnualArrangementStandardVO
      * @version v1
      */
-    @GetMapping("v1/findByStandard/{standard_id}")
-    public Result findByStandard(@PathVariable String standard_id) throws ActException {
+    @GetMapping("v1/findByStandard/{id}")
+    public Result findByStandard(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(annualArrangementStandardAPI.findByStandard(standard_id), AnnualArrangementStandardVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(annualArrangementStandardAPI.findByStandard(id), AnnualArrangementStandardVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

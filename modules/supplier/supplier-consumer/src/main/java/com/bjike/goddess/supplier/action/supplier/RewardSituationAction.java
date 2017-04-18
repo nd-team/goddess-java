@@ -1,5 +1,7 @@
 package com.bjike.goddess.supplier.action.supplier;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.supplier.api.RewardSituationAPI;
 import com.bjike.goddess.supplier.to.RewardSituationTO;
 import com.bjike.goddess.supplier.vo.RewardSituationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,16 +35,16 @@ public class RewardSituationAction {
     /**
      * 根据供应商基本信息ID查询获奖情况
      *
-     * @param info_id 供应商基本信息ID
-     * @version v1
+     * @param id 供应商基本信息ID
      * @return class RewardSituationVO
+     * @version v1
      */
-    @GetMapping("v1/findByInformation/{info_id}")
-    public Result findByInformation(@PathVariable String info_id) throws ActException {
+    @GetMapping("v1/findByInformation/{id}")
+    public Result findByInformation(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
-                            rewardSituationAPI.findByInformation(info_id)
+                            rewardSituationAPI.findByInformation(id)
                             , RewardSituationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -52,11 +55,11 @@ public class RewardSituationAction {
      * 保存供应商获奖情况数据
      *
      * @param to 供应商获奖情况传输对象
-     * @version v1
      * @return class RewardSituationVO
+     * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated RewardSituationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) RewardSituationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.save(to), RewardSituationVO.class));
         } catch (SerException e) {
@@ -68,11 +71,11 @@ public class RewardSituationAction {
      * 修改供应商获奖情况数据
      *
      * @param to 供应商获奖情况传输对象
-     * @version v1
      * @return class RewardSituationVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated RewardSituationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) RewardSituationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.update(to), RewardSituationVO.class));
         } catch (SerException e) {
@@ -84,8 +87,8 @@ public class RewardSituationAction {
      * 删除供应商获奖情况数据
      *
      * @param id 供应商获奖情况id
-     * @version v1
      * @return class RewardSituationVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {

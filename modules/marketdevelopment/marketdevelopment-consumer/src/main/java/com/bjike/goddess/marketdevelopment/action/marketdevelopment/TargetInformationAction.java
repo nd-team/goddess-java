@@ -135,8 +135,8 @@ public class TargetInformationAction {
      * @return class TargetInformationVO
      * @version v1
      */
-    @GetMapping("v1/findByArea/{area}")
-    public Result findByArea(@PathVariable String area) throws ActException {
+    @GetMapping("v1/findByArea")
+    public Result findByArea(String area) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByArea(area), TargetInformationVO.class));
         } catch (SerException e) {

@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.AuditMaterialAPI;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
 import com.bjike.goddess.qualifications.vo.AuditMaterialVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class AuditMaterialAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) AuditMaterialTO to) throws ActException {
+    public Result save(@Validated(ADD.class) AuditMaterialTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(auditMaterialAPI.save(to), AuditMaterialVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class AuditMaterialAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) AuditMaterialTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) AuditMaterialTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(auditMaterialAPI.update(to), AuditMaterialVO.class));
         } catch (SerException e) {

@@ -12,6 +12,7 @@ import com.bjike.goddess.qualifications.dto.QualificationsGatherDTO;
 import com.bjike.goddess.qualifications.to.QualificationsGatherTO;
 import com.bjike.goddess.qualifications.vo.QualificationsGatherVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class QualificationsGatherAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsGatherTO to) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsGatherTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.save(to), QualificationsGatherVO.class));
         } catch (SerException e) {
@@ -55,7 +56,7 @@ public class QualificationsGatherAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsGatherTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsGatherTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.update(to), QualificationsGatherVO.class));
         } catch (SerException e) {

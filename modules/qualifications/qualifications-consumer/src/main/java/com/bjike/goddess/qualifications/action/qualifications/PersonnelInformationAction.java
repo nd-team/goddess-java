@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.PersonnelInformationAPI;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
 import com.bjike.goddess.qualifications.vo.PersonnelInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class PersonnelInformationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) PersonnelInformationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) PersonnelInformationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.save(to), PersonnelInformationVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class PersonnelInformationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) PersonnelInformationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) PersonnelInformationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.update(to), PersonnelInformationVO.class));
         } catch (SerException e) {

@@ -1,5 +1,7 @@
 package com.bjike.goddess.supplier.action.supplier;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.supplier.api.SupplierTypeAPI;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import com.bjike.goddess.supplier.vo.SupplierTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +55,7 @@ public class SupplierTypeAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated SupplierTypeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SupplierTypeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.save(to), SupplierTypeVO.class));
         } catch (SerException e) {
@@ -68,7 +71,7 @@ public class SupplierTypeAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated SupplierTypeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SupplierTypeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.update(to), SupplierTypeVO.class));
         } catch (SerException e) {

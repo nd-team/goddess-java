@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,6 +12,8 @@ import com.bjike.goddess.organize.dto.PositionInstructionDTO;
 import com.bjike.goddess.organize.to.PositionInstructionTO;
 import com.bjike.goddess.organize.vo.PositionInstructionVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -68,7 +72,7 @@ public class PositionInstructionAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(PositionInstructionTO to) throws ActException {
+    public Result save(@Validated(ADD.class) PositionInstructionTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionInstructionAPI.save(to), PositionInstructionVO.class));
         } catch (SerException e) {
@@ -85,7 +89,7 @@ public class PositionInstructionAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(PositionInstructionTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) PositionInstructionTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionInstructionAPI.update(to), PositionInstructionVO.class));
         } catch (SerException e) {

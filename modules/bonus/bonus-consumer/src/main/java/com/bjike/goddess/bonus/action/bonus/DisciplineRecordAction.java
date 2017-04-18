@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class DisciplineRecordAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
+    public Result save(@Validated(ADD.class) DisciplineRecordTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
         } catch (SerException e) {
@@ -56,7 +57,7 @@ public class DisciplineRecordAction {
      * @version v1
      */
     @PostMapping("v1/reward")
-    public Result reward(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
+    public Result reward(@Validated(ADD.class) DisciplineRecordTO to, BindingResult result) throws ActException {
         try {
             to.setStatus(Boolean.TRUE);
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
@@ -73,7 +74,7 @@ public class DisciplineRecordAction {
      * @version v1
      */
     @PostMapping("v1/push")
-    public Result push(@Validated(ADD.class) DisciplineRecordTO to) throws ActException {
+    public Result push(@Validated(ADD.class) DisciplineRecordTO to, BindingResult result) throws ActException {
         try {
             to.setStatus(Boolean.FALSE);
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.save(to), DisciplineRecordVO.class));
@@ -90,7 +91,7 @@ public class DisciplineRecordAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DisciplineRecordTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) DisciplineRecordTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.update(to), DisciplineRecordVO.class));
         } catch (SerException e) {

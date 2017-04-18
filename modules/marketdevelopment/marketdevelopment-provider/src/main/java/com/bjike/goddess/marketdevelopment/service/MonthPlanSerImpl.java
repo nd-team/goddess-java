@@ -99,7 +99,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public List<MonthPlanBO> findByYearID(String year_id) throws SerException {
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.eq("year.id", year_id));
+        dto.getConditions().add(Restrict.eq("year_id", year_id));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
@@ -108,7 +108,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         List<String> yearPlanIdList = yearPlanSer.findByYear(year).stream().map(YearPlanBO::getId).collect(Collectors.toList());
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.eq("year.id", yearPlanIdList));
+        dto.getConditions().add(Restrict.eq("year_id", yearPlanIdList));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

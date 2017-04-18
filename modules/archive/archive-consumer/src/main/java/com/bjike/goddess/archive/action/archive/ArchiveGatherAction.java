@@ -15,6 +15,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,7 +53,7 @@ public class ArchiveGatherAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ArchiveGatherTO to) throws ActException {
+    public Result save(@Validated(ADD.class) ArchiveGatherTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveGatherAPI.save(to), ArchiveGatherVO.class));
         } catch (SerException e) {
@@ -68,7 +69,7 @@ public class ArchiveGatherAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) ArchiveGatherTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) ArchiveGatherTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveGatherAPI.update(to), ArchiveGatherVO.class));
         } catch (SerException e) {
@@ -84,7 +85,7 @@ public class ArchiveGatherAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveGatherAPI.delete(id), ArchiveGatherVO.class));
         } catch (SerException e) {
@@ -116,8 +117,8 @@ public class ArchiveGatherAction {
      * @return class Result
      * @version v1
      */
-    @PostMapping("v1/uploadEnclosure/{username}")
-    public Result uploadEnclosure(HttpServletRequest request, @PathVariable String username) throws ActException {
+    @PostMapping("v1/uploadEnclosure")
+    public Result uploadEnclosure(HttpServletRequest request, String username) throws ActException {
         try {
             Object o = RpcContext.getContext().getAttachment("storageToken");
 

@@ -12,6 +12,7 @@ import com.bjike.goddess.contacts.dto.CommerceMemberDTO;
 import com.bjike.goddess.contacts.to.CommerceMemberTO;
 import com.bjike.goddess.contacts.vo.CommerceMemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class CommerceMemberAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) CommerceMemberTO to) throws ActException {
+    public Result save(@Validated(ADD.class) CommerceMemberTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commerceMemberAPI.save(to), CommerceMemberVO.class));
         } catch (SerException e) {
@@ -55,7 +56,7 @@ public class CommerceMemberAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) CommerceMemberTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) CommerceMemberTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commerceMemberAPI.update(to), CommerceMemberVO.class));
         } catch (SerException e) {

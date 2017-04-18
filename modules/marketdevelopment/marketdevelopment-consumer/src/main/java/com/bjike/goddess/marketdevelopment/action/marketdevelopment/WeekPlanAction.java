@@ -82,14 +82,14 @@ public class WeekPlanAction {
     /**
      * 根据月计划ID查询周计划数据
      *
-     * @param month_id 月计划ID
+     * @param id 月计划ID
      * @return class WeekPlanVO
      * @version v1
      */
-    @GetMapping("v1/findByMonth/{month_id}")
-    public Result findByMonth(@PathVariable String month_id) throws ActException {
+    @GetMapping("v1/findByMonth/{id}")
+    public Result findByMonth(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByMonth(month_id), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByMonth(id), WeekPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -11,6 +11,7 @@ import com.bjike.goddess.qualifications.api.HandlePlanImplementAPI;
 import com.bjike.goddess.qualifications.to.HandlePlanImplementTO;
 import com.bjike.goddess.qualifications.vo.HandlePlanImplementVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class HandlePlanImplementAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) HandlePlanImplementTO to) throws ActException {
+    public Result save(@Validated(ADD.class) HandlePlanImplementTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.save(to), HandlePlanImplementVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class HandlePlanImplementAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) HandlePlanImplementTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) HandlePlanImplementTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.update(to), HandlePlanImplementVO.class));
         } catch (SerException e) {
@@ -97,14 +98,14 @@ public class HandlePlanImplementAction {
     /**
      * 根据计划阶段ID查询实施工作记录
      *
-     * @param stage_id 计划阶段ID
+     * @param id 计划阶段ID
      * @return class HandlePlanImplementVO
      * @version v1
      */
-    @GetMapping("v1/findByStage/{stage_id}")
-    public Result findByStage(@PathVariable String stage_id) throws ActException {
+    @GetMapping("v1/findByStage/{id}")
+    public Result findByStage(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStage(stage_id), HandlePlanImplementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStage(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -113,14 +114,14 @@ public class HandlePlanImplementAction {
     /**
      * 根据资质办理查询实施工作记录
      *
-     * @param handle_id 资质办理ID
+     * @param id 资质办理ID
      * @return class HandlePlanImplementVO
      * @version v1
      */
-    @GetMapping("v1/findByHandle/{handle_id}")
-    public Result findByHandle(@PathVariable String handle_id) throws ActException {
+    @GetMapping("v1/findByHandle/{id}")
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByHandle(handle_id), HandlePlanImplementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByHandle(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

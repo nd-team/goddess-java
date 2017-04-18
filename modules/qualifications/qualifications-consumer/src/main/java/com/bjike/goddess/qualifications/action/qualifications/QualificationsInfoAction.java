@@ -13,6 +13,7 @@ import com.bjike.goddess.qualifications.to.QualificationsInfoStatusTO;
 import com.bjike.goddess.qualifications.to.QualificationsInfoTO;
 import com.bjike.goddess.qualifications.vo.QualificationsInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,7 @@ public class QualificationsInfoAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsInfoTO to) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsInfoAPI.save(to), QualificationsInfoVO.class));
         } catch (SerException e) {
@@ -56,7 +57,7 @@ public class QualificationsInfoAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsInfoTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsInfoTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsInfoAPI.update(to), QualificationsInfoVO.class));
         } catch (SerException e) {
@@ -88,7 +89,7 @@ public class QualificationsInfoAction {
      * @version v1
      */
     @PutMapping("v1/updateStatus/{id}")
-    public Result updateStatus(@Validated(EDIT.class) QualificationsInfoStatusTO to) throws ActException {
+    public Result updateStatus(@Validated(EDIT.class) QualificationsInfoStatusTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsInfoAPI.updateStatus(to), QualificationsInfoVO.class));
         } catch (SerException e) {

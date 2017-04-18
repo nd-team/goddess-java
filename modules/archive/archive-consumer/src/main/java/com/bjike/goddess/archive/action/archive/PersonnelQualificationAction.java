@@ -15,6 +15,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +52,7 @@ public class PersonnelQualificationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) PersonnelQualificationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) PersonnelQualificationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.save(to), PersonnelQualificationVO.class));
         } catch (SerException e) {
@@ -67,7 +68,7 @@ public class PersonnelQualificationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) PersonnelQualificationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) PersonnelQualificationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.update(to), PersonnelQualificationVO.class));
         } catch (SerException e) {
@@ -83,7 +84,7 @@ public class PersonnelQualificationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.delete(id), PersonnelQualificationVO.class));
         } catch (SerException e) {
@@ -115,8 +116,8 @@ public class PersonnelQualificationAction {
      * @return class Result
      * @version v1
      */
-    @PostMapping("v1/uploadEnclosure/{username}")
-    public Result uploadEnclosure(HttpServletRequest request, @PathVariable String username) throws ActException {
+    @PostMapping("v1/uploadEnclosure")
+    public Result uploadEnclosure(HttpServletRequest request, String username) throws ActException {
         try {
             Object o = RpcContext.getContext().getAttachment("storageToken");
 

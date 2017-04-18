@@ -1,5 +1,7 @@
 package com.bjike.goddess.supplier.action.supplier;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.supplier.api.ContactSituationAPI;
 import com.bjike.goddess.supplier.to.ContactSituationTO;
 import com.bjike.goddess.supplier.vo.ContactSituationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,16 +34,16 @@ public class ContactSituationAction {
     /**
      * 根据供应商基本信息ID查询联系情况
      *
-     * @param info_id 供应商基本信息ID
+     * @param id 供应商基本信息ID
      * @return class ContactSituationVO
      * @version v1
      */
-    @GetMapping("v1/findByInformation/{info_id}")
-    public Result findByInformation(@PathVariable String info_id) throws ActException {
+    @GetMapping("v1/findByInformation/{id}")
+    public Result findByInformation(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
-                            contactSituationAPI.findByInformation(info_id)
+                            contactSituationAPI.findByInformation(id)
                             , ContactSituationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -55,7 +58,7 @@ public class ContactSituationAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated ContactSituationTO to) throws ActException {
+    public Result save(@Validated(ADD.class) ContactSituationTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.save(to), ContactSituationVO.class));
         } catch (SerException e) {
@@ -71,7 +74,7 @@ public class ContactSituationAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated ContactSituationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) ContactSituationTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.update(to), ContactSituationVO.class));
         } catch (SerException e) {

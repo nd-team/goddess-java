@@ -12,6 +12,7 @@ import com.bjike.goddess.contacts.dto.OtherContactsDTO;
 import com.bjike.goddess.contacts.to.OtherContactsTO;
 import com.bjike.goddess.contacts.vo.OtherContactsVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class OtherContactsAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) OtherContactsTO to) throws ActException {
+    public Result save(@Validated(ADD.class) OtherContactsTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.save(to), OtherContactsVO.class));
         } catch (SerException e) {
@@ -55,7 +56,7 @@ public class OtherContactsAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) OtherContactsTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) OtherContactsTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.update(to), OtherContactsVO.class));
         } catch (SerException e) {

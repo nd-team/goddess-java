@@ -12,6 +12,7 @@ import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.to.CommonalityTO;
 import com.bjike.goddess.contacts.vo.CommonalityVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class CommonalityAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) CommonalityTO to) throws ActException {
+    public Result save(@Validated(ADD.class) CommonalityTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.save(to), CommonalityVO.class));
         } catch (SerException e) {
@@ -55,7 +56,7 @@ public class CommonalityAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) CommonalityTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) CommonalityTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.update(to), CommonalityVO.class));
         } catch (SerException e) {

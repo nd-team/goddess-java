@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,6 +12,8 @@ import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.vo.PositionDetailUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -36,7 +40,7 @@ public class PositionDetailUserAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(PositionDetailUserTO to) throws ActException {
+    public Result save(@Validated(ADD.class) PositionDetailUserTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.save(to), PositionDetailUserVO.class));
         } catch (SerException e) {
@@ -52,7 +56,7 @@ public class PositionDetailUserAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(PositionDetailUserTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) PositionDetailUserTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.update(to), PositionDetailUserVO.class));
         } catch (SerException e) {
@@ -79,14 +83,14 @@ public class PositionDetailUserAction {
     /**
      * 根据用户id查询职位详细数据
      *
-     * @param user_id 用户id
+     * @param id 用户id
      * @return class PositionDetailUserVO
      * @version v1
      */
-    @GetMapping("v1/findPositionByUser/{user_id}")
-    public Result findPositionByUser(@PathVariable String user_id) throws ActException {
+    @GetMapping("v1/findPositionByUser/{id}")
+    public Result findPositionByUser(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findPositionByUser(user_id), PositionDetailUserVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findPositionByUser(id), PositionDetailUserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -95,14 +99,14 @@ public class PositionDetailUserAction {
     /**
      * 获取用户职位数据
      *
-     * @param user_id 用户id
+     * @param id 用户id
      * @return class PositionDetailUserVO
      * @version v1
      */
-    @GetMapping("v1/findOneByUser/{user_id}")
-    public Result findOneByUser(@PathVariable String user_id) throws ActException {
+    @GetMapping("v1/findOneByUser/{id}")
+    public Result findOneByUser(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findOneByUser(user_id), PositionDetailUserVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findOneByUser(id), PositionDetailUserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
