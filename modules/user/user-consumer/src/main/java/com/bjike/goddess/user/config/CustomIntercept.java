@@ -22,7 +22,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Component
+//@Component 测试去掉拦截器
 public class CustomIntercept implements Interceptor {
     @Autowired
     private UserAPI userAPI;

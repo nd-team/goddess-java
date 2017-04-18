@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.to.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,12 +18,12 @@ public class GroupRoleTO extends BaseTO {
     /**
      * 组id
      */
-    @NotBlank(message = "组id不能为空", groups = ADD.class)
+    @NotBlank(message = "组id不能为空", groups = {ADD.class, EDIT.class})
     private String groupId;
     /**
      * 角色id
      */
-    @NotBlank(message = "角色id不能为空", groups = ADD.class)
+    @NotBlank(message = "角色id不能为空", groups = {ADD.class, EDIT.class})
     private String roleId;
 
     public String getGroupId() {

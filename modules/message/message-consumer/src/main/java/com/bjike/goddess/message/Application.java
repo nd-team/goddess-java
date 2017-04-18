@@ -2,7 +2,9 @@ package com.bjike.goddess.message;
 
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.context.annotation.*;
 
 import java.io.IOException;
@@ -17,7 +19,7 @@ import java.io.IOException;
                 value = {Configuration.class})})
 @ImportResource("classpath:app.xml")
 @PropertySource({"classpath:kafka.properties"})
-
+@EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 
     public static void main(String[] args) throws IOException {

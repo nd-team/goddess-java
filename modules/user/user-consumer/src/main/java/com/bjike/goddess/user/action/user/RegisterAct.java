@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserRegisterAPI;
 import com.bjike.goddess.user.to.UserRegisterTO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("user")
 public class RegisterAct {
@@ -51,7 +53,7 @@ public class RegisterAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/verifyAndSendCode/{phone}")
+    @GetMapping("v1/verify-code/{phone}")
     public Result sendCodeToPhone(@PathVariable String phone) throws ActException {
         try {
             userRegisterAPI.verifyAndSendCode(phone);

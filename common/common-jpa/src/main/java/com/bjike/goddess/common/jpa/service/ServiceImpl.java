@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -246,6 +246,29 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         }
 
         return list;
+    }
+
+    @Override
+    public String getTableName(Class clazz) throws SerException {
+        try {
+            if (clazz.isAnnotationPresent(Table.class)) {
+                Annotation annotation = clazz.getAnnotation(Table.class);
+                Method[] methods = annotation.annotationType().getMethods();
+                for (Method method : methods) {
+                    if (!method.isAccessible()) {
+                        method.setAccessible(true);
+                    }
+                    if ("name".equals(method.getName())) {
+                        Object invoke = method.invoke(annotation);
+                        return invoke.toString();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+        throw new SerException("解析表名错误!");
     }
 
     /**

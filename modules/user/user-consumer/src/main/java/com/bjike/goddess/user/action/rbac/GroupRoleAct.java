@@ -10,6 +10,7 @@ import com.bjike.goddess.user.api.rbac.GroupRoleAPI;
 import com.bjike.goddess.user.bo.rbac.GroupRoleBO;
 import com.bjike.goddess.user.to.rbac.GroupRoleTO;
 import com.bjike.goddess.user.vo.rbac.GroupRoleVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,8 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
-@RequestMapping("groupRole")
+@RequestMapping("group-role")
 public class GroupRoleAct {
 
     @Autowired

@@ -66,7 +66,7 @@ public class PermissionApiImpl implements PermissionAPI {
             String token = RpcContext.getContext().getAttachment("userToken");
             if(StringUtils.isNotBlank(token)){
                 UserBO userBO = userSer.currentUser(token);
-                permissions = permissionSer.findPermissions(userBO.getId());
+                permissions = permissionSer.findByUserId(userBO.getId());
                 if (null != permissions && permissions.size() > 0) {
                     LoginUser loginUser = BeanTransform.copyProperties(userBO, LoginUser.class);
                     loginUser.setPermissions(permissions);

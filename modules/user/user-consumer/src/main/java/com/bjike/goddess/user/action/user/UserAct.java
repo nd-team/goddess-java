@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("user")
 public class UserAct {
@@ -34,7 +36,7 @@ public class UserAct {
      * @param phone 手机号码
      * @version v1
      */
-    @GetMapping("v1/existPhone/{phone}")
+    @GetMapping("v1/phone/{phone}/exists")
     public Result existPhone(@PathVariable String phone) throws ActException {
         try {
             Boolean result = (null != userAPI.findByPhone(phone));
@@ -50,7 +52,7 @@ public class UserAct {
      * @param username 用户名
      * @version v1
      */
-    @GetMapping("v1/existUsername/{username}")
+    @GetMapping("v1/username/{username}/exists")
     public Result existUsername(@PathVariable String username) throws ActException {
         try {
             Boolean result = (null != userAPI.findByUsername(username));

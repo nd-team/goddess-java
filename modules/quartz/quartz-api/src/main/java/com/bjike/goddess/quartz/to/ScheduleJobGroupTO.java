@@ -21,7 +21,7 @@ public class ScheduleJobGroupTO extends BaseTO {
     /**
      * 组名
      */
-    @NotBlank(message = "组名不能为空", groups = ADD.class)
+    @NotBlank(message = "组名不能为空", groups = {ADD.class,EDIT.class})
     private String name;
 
     /**
