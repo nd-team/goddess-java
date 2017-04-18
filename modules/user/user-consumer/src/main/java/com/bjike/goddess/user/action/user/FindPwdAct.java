@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserFindPwdAPI;
 import com.bjike.goddess.user.bo.UserSimpleBO;
-import com.bjike.goddess.user.service.UserFindPwdSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("findPwd")
+@RequestMapping("pwd")
 public class FindPwdAct {
 
     @Autowired
@@ -50,7 +49,7 @@ public class FindPwdAct {
      * @version v1
      */
 
-    @GetMapping("v1/sendCode/{nickname}")
+    @GetMapping("v1/send-code/{nickname}")
     public Result sendCode(@PathVariable String nickname) throws ActException {
         try {
             Boolean result = userFindPwdAPI.sendCodeByNickname(nickname);

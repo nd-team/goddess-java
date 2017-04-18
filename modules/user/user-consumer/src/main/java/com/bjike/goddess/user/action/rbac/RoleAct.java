@@ -39,7 +39,7 @@ public class RoleAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
-    @GetMapping("v1/treeData")
+    @GetMapping("v1/tree")
     public Result treeData(String id) throws ActException {
         try {
             List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id), RoleVO.class);

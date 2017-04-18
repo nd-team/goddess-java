@@ -34,7 +34,7 @@ import java.util.Map;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("storage/file")
+@RequestMapping("file")
 public class FileAction {
     @Autowired
     private FileAPI fileAPI;
@@ -224,7 +224,7 @@ public class FileAction {
      * @param path 文件夹路径
      * @version v1
      */
-    @GetMapping("v1/recycleList")
+    @GetMapping("v1/recycle-list")
     public Result recycleList(@RequestParam String path) throws ActException {
         try {
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.recycleList(path), FileVO.class);

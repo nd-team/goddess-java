@@ -35,11 +35,12 @@ public class LoginLogAct {
     /**
      * 获取登录日志列表
      *
+     * @param id 用户id
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/{userId}/logs")
+    @GetMapping("v1/{id}/logs")
     public Result logs(@PathVariable String id) throws ActException {
         try {
             List<UserLoginLogBO> loginLogs = userLoginLogAPI.findByUserId(id);

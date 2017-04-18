@@ -51,7 +51,7 @@ public class RegisterAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/verifyAndSendCode/{phone}")
+    @GetMapping("v1/verify-code/{phone}")
     public Result sendCodeToPhone(@PathVariable String phone) throws ActException {
         try {
             userRegisterAPI.verifyAndSendCode(phone);

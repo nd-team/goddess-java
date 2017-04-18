@@ -62,15 +62,15 @@ public class LoginAct {
     /**
      * 退出登录
      *
-     * @param userToken 登录用户token
+     * @param token 登录用户userToken
      * @version v1
      */
 
-    @PostMapping("v1/signOut/{userToken}")
-    public Result signOut(@RequestParam String userToken) throws ActException {
+    @PostMapping("v1/sign-out/{token}")
+    public Result signOut(@RequestParam String token) throws ActException {
         try {
 
-            Boolean result = userLoginAPI.signOut(userToken);
+            Boolean result = userLoginAPI.signOut(token);
             return ActResult.initialize(result);
 
         } catch (SerException e) {

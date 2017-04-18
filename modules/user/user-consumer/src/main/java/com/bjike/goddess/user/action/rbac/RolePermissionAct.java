@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("rolePermission")
+@RequestMapping("role-permission")
 public class RolePermissionAct {
 
     @Autowired
