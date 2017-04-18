@@ -19,6 +19,15 @@ import java.util.List;
 public interface ManagementScoreAPI {
 
     /**
+     * 根据id查询管理层评分
+     *
+     * @param id 管理层评分id
+     * @return class ManagementScoreBO
+     * @throws SerException
+     */
+    ManagementScoreBO findById(String id) throws SerException;
+
+    /**
      * 分页查询管理层评分
      *
      * @return class ManagementScoreBO

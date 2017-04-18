@@ -19,6 +19,15 @@ import java.util.List;
 public interface PerformanceScoreAPI {
 
     /**
+     * 根据id查询工作表现评分
+     *
+     * @param id 工作表现评分
+     * @return class PerformanceScoreBO
+     * @throws SerException
+     */
+    PerformanceScoreBO findById(String id) throws SerException;
+
+    /**
      * 分页查询工作表现评分
      *
      * @return class PerformanceScoreBO

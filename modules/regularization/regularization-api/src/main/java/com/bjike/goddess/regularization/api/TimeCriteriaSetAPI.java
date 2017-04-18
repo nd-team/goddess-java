@@ -19,6 +19,15 @@ import java.util.List;
 public interface TimeCriteriaSetAPI {
 
     /**
+     * 根据id查询时间条件设置
+     *
+     * @param id 时间条件设置唯一标识
+     * @return class TimeCriteriaSetBO
+     * @throws SerException
+     */
+    TimeCriteriaSetBO findById(String id) throws SerException;
+
+    /**
      * 分页查询时间条件设置
      *
      * @return class TimeCriteriaSetBO

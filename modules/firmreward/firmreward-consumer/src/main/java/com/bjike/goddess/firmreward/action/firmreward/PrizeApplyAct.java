@@ -12,6 +12,7 @@ import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 import com.bjike.goddess.firmreward.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(PrizeApplyDTO dto) throws ActException {
+    public Result list(@Validated PrizeApplyDTO dto, BindingResult result) throws ActException {
         try {
             List<PrizeApplyBO> boList = prizeApplyAPI.list(dto);
             List<PrizeApplyVO> voList = BeanTransform.copyProperties(boList, PrizeApplyVO.class);
@@ -62,7 +63,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) PrizeApplyTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             PrizeApplyBO bo = prizeApplyAPI.save(to);
             PrizeApplyVO vo = BeanTransform.copyProperties(bo, PrizeApplyVO.class);
@@ -97,7 +98,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(PrizeApplyTO to) throws ActException {
+    public Result edit(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.update(to);
             return new ActResult("edit success!");
@@ -114,7 +115,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @PostMapping("v1/addPrizeDetails")
-    public Result addPrizeDetails(PrizeApplyTO to) throws ActException {
+    public Result addPrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.addPrizeDetails(to);
             return new ActResult("addPrizeDetails success!");
@@ -131,7 +132,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @PostMapping("v1/updatePrizeDetails")
-    public Result updatePrizeDetails(PrizeApplyTO to) throws ActException {
+    public Result updatePrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.updatePrizeDetails(to);
             return new ActResult("updatePrizeDetails success!");

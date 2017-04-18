@@ -11,6 +11,7 @@ import com.bjike.goddess.regularization.bo.ScoreFormulaSetBO;
 import com.bjike.goddess.regularization.dto.ScoreFormulaSetDTO;
 import com.bjike.goddess.regularization.to.ScoreFormulaSetTO;
 import com.bjike.goddess.regularization.vo.ScoreFormulaSetVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("scoreformulaset")
+@DefaultProperties
 public class ScoreFormulaSetAct {
 
     @Autowired
@@ -39,12 +41,13 @@ public class ScoreFormulaSetAct {
      * 分页查询工作表现计分方式设置
      *
      * @param dto 工作表现计分方式设置dto
+     * @param result
      * @return class ScoreFormulaSetVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ScoreFormulaSetDTO dto) throws ActException {
+    public Result list(@Validated ScoreFormulaSetDTO dto, BindingResult result) throws ActException {
         try {
             List<ScoreFormulaSetBO> boList = scoreFormulaSetAPI.list(dto);
             List<ScoreFormulaSetVO> voList = BeanTransform.copyProperties(boList, ScoreFormulaSetVO.class);
@@ -58,6 +61,7 @@ public class ScoreFormulaSetAct {
      * 添加工作表现计分方式设置
      *
      * @param to 工作表现计分方式设置to
+     * @param result
      * @return class ScoreFormulaSetVO
      * @throws ActException
      * @version v1
@@ -94,11 +98,12 @@ public class ScoreFormulaSetAct {
      * 编辑工作表现计分方式设置
      *
      * @param to 工作表现计分方式设置to
+     * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(ScoreFormulaSetTO to) throws ActException {
+    public Result edit(@Validated ScoreFormulaSetTO to, BindingResult result) throws ActException {
         try {
             scoreFormulaSetAPI.update(to);
             return new ActResult("edit success!");

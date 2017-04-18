@@ -21,7 +21,7 @@ public class TimeCriteriaSet extends BaseEntity {
     /**
      * 参数名称
      */
-    @Column(name = "parameterName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '参数名称'")
+    @Column(name = "parameterName", unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '参数名称'")
     private String parameterName;
 
     /**

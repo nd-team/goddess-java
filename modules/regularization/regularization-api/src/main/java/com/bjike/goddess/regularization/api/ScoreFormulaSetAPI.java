@@ -19,6 +19,15 @@ import java.util.List;
 public interface ScoreFormulaSetAPI {
 
     /**
+     * 根据id查询工作表现计分方式设置
+     *
+     * @param id 工作表现计分方式设置id
+     * @return class ScoreFormulaSetBO
+     * @throws SerException
+     */
+    ScoreFormulaSetBO findById(String id) throws SerException;
+
+    /**
      * 分页查询工作表现计分方式
      *
      * @return class ScoreFormulaSetBO

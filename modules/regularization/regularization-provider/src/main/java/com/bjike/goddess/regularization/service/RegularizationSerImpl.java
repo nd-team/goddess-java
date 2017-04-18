@@ -139,10 +139,12 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         String username = getCurUsername();
         String opinion = to.getOpinion();//获取管理层意见
         String scoreGrade = to.getScoreGrade();//获取评分等级
+        Integer specificScore = to.getSpecificScore();//获取具体评价分数
         ManagementScore model = new ManagementScore();
         model.setManagement(username);
         model.setOpinion(opinion);
         model.setScoreGrade(scoreGrade);
+        model.setSpecificScore(specificScore);
         model.setRegularizationId(regularizationId);
         managementScoreSer.save(model);
     }

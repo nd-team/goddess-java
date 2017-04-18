@@ -1,8 +1,10 @@
 package com.bjike.goddess.regularization.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
+import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.service.ManagementScoreSer;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,19 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
 
     @Autowired
     private ManagementScoreSer managementScoreSer;
+
+    /**
+     * 根据id查询管理层评分
+     *
+     * @param id 管理层评分id
+     * @return class ManagementScoreBO
+     * @throws SerException
+     */
+    @Override
+    public ManagementScoreBO findById(String id) throws SerException {
+        ManagementScore model = managementScoreSer.findById(id);
+        return BeanTransform.copyProperties(model, ManagementScoreBO.class);
+    }
 
     /**
      * 分页查询管理层评分

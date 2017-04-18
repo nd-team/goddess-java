@@ -12,6 +12,7 @@ import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
 import com.bjike.goddess.regularization.entity.TimeCriteriaSet;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 import com.bjike.goddess.regularization.vo.TimeCriteriaSetVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("timecriteriaset")
+@DefaultProperties
 public class TimeCriteriaSetAct {
 
     @Autowired
@@ -39,12 +41,13 @@ public class TimeCriteriaSetAct {
      * 分页查询时间条件设置
      *
      * @param dto 时间条件设置dto
+     * @param result
      * @return class TimeCriteriaSetVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(TimeCriteriaSetDTO dto) throws ActException {
+    public Result list(@Validated TimeCriteriaSetDTO dto, BindingResult result) throws ActException {
         try {
             List<TimeCriteriaSetBO> boList = timeCriteriaSetAPI.list(dto);
             List<TimeCriteriaSetVO> voList = BeanTransform.copyProperties(boList, TimeCriteriaSetVO.class);
@@ -58,6 +61,7 @@ public class TimeCriteriaSetAct {
      * 添加时间条件设置
      *
      * @param to 时间条件设置to
+     * @param result
      * @return class PerformanceScoreVO
      * @throws ActException
      * @version v1
@@ -94,11 +98,12 @@ public class TimeCriteriaSetAct {
      * 编辑时间条件设置
      *
      * @param to 时间条件设置to
+     * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(TimeCriteriaSetTO to) throws ActException {
+    public Result edit(@Validated TimeCriteriaSetTO to, BindingResult result) throws ActException {
         try {
             timeCriteriaSetAPI.update(to);
             return new ActResult("edit success!");

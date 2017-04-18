@@ -1,8 +1,10 @@
 package com.bjike.goddess.regularization.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.TimeCriteriaSetBO;
 import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
+import com.bjike.goddess.regularization.entity.TimeCriteriaSet;
 import com.bjike.goddess.regularization.service.TimeCriteriaSetSer;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,19 @@ public class TimeCriteriaSetApiImpl implements TimeCriteriaSetAPI {
 
     @Autowired
     private TimeCriteriaSetSer timeCriteriaSetSer;
+
+    /**
+     * 根据id查询时间条件设置
+     *
+     * @param id 时间条件设置唯一标识
+     * @return class TimeCriteriaSetBO
+     * @throws SerException
+     */
+    @Override
+    public TimeCriteriaSetBO findById(String id) throws SerException {
+        TimeCriteriaSet model = timeCriteriaSetSer.findById(id);
+        return BeanTransform.copyProperties(model, TimeCriteriaSetBO.class);
+    }
 
     /**
      * 分页查询时间条件设置

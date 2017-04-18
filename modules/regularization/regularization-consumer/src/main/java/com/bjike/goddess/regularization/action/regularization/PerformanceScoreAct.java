@@ -11,6 +11,7 @@ import com.bjike.goddess.regularization.bo.PerformanceScoreBO;
 import com.bjike.goddess.regularization.dto.PerformanceScoreDTO;
 import com.bjike.goddess.regularization.to.PerformanceScoreTO;
 import com.bjike.goddess.regularization.vo.PerformanceScoreVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("performancescore")
+@DefaultProperties
 public class PerformanceScoreAct {
 
     @Autowired
@@ -39,12 +41,13 @@ public class PerformanceScoreAct {
      * 分页查询工作表现评分
      *
      * @param dto 工作表现评分dto
+     * @param bindingResult
      * @return class PerformanceScoreVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(PerformanceScoreDTO dto) throws ActException {
+    public Result list(@Validated PerformanceScoreDTO dto, BindingResult bindingResult) throws ActException {
         try {
             List<PerformanceScoreBO> boList = performanceScoreAPI.list(dto);
             List<PerformanceScoreVO> voList = BeanTransform.copyProperties(boList, PerformanceScoreVO.class);
@@ -58,6 +61,7 @@ public class PerformanceScoreAct {
      * 添加工作表现评分
      *
      * @param to 工作表现评分to
+     * @param result
      * @return class PerformanceScoreVO
      * @throws ActException
      * @version v1
@@ -94,11 +98,12 @@ public class PerformanceScoreAct {
      * 编辑工作表现评分
      *
      * @param to 工作表现评分to
+     * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(PerformanceScoreTO to) throws ActException {
+    public Result edit(@Validated PerformanceScoreTO to, BindingResult result) throws ActException {
         try {
             performanceScoreAPI.update(to);
             return new ActResult("edit success!");

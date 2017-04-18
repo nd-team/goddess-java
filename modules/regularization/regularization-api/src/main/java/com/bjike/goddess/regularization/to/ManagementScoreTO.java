@@ -24,9 +24,14 @@ public class ManagementScoreTO extends BaseTO {
     private String opinion;
 
     /**
-     * 评分等级Integer
+     * 评分等级
      */
     private String scoreGrade;
+
+    /**
+     * 具体分数
+     */
+    private Integer specificScore;
 
     /**
      * 员工转正id
@@ -56,6 +61,14 @@ public class ManagementScoreTO extends BaseTO {
 
     public void setScoreGrade(String scoreGrade) {
         this.scoreGrade = scoreGrade;
+    }
+
+    public Integer getSpecificScore() {
+        return specificScore;
+    }
+
+    public void setSpecificScore(Integer specificScore) {
+        this.specificScore = specificScore;
     }
 
     public String getRegularizationId() {

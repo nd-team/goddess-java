@@ -50,6 +50,8 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
     @Override
     public ScoreFormulaSetBO save(ScoreFormulaSetTO to) throws SerException {
         ScoreFormulaSet entity = BeanTransform.copyProperties(to, ScoreFormulaSet.class, true);
+        String scoreRange = String.valueOf(entity.getLowestScore()) + "~" + String.valueOf(entity.getHighestScore());
+        entity.setScoreRange(scoreRange);
         entity = super.save(entity);
         ScoreFormulaSetBO bo = BeanTransform.copyProperties(entity, ScoreFormulaSetBO.class);
         return bo;
@@ -85,6 +87,8 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
     private void updateScoreFormulaSet(ScoreFormulaSetTO to, ScoreFormulaSet model) throws SerException {
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
+        String scoreRange = String.valueOf(model.getLowestScore()) + "~" + String.valueOf(model.getHighestScore());
+        model.setScoreRange(scoreRange);
         super.update(model);
     }
 

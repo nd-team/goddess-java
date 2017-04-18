@@ -15,6 +15,7 @@ import com.bjike.goddess.firmreward.vo.BonusBudgetVO;
 import com.bjike.goddess.firmreward.vo.RewardProgramRatioVO;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(BonusBudgetDTO dto) throws ActException {
+    public Result list(@Validated BonusBudgetDTO dto, BindingResult result) throws ActException {
         try {
             List<BonusBudgetBO> boList = bonusBudgetAPI.list(dto);
             List<BonusBudgetVO> voList = BeanTransform.copyProperties(boList, BonusBudgetVO.class);
@@ -65,7 +66,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) BonusBudgetTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) BonusBudgetTO to, BindingResult result) throws ActException {
         try {
             BonusBudgetBO bo = bonusBudgetAPI.save(to);
             BonusBudgetVO vo = BeanTransform.copyProperties(bo, BonusBudgetVO.class);
@@ -100,7 +101,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(BonusBudgetTO to) throws ActException {
+    public Result edit(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.update(to);
             return new ActResult("edit success!");
@@ -117,7 +118,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PostMapping("v1/addRewardProgramRatios")
-    public Result addRewardProgramRatios(BonusBudgetTO to) throws ActException {
+    public Result addRewardProgramRatios(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.addRewardProgramRatios(to);
             return new ActResult("addRewardProgramRatios success!");
@@ -134,7 +135,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PostMapping("v1/updateRewardProgramRatios")
-    public Result updateRewardProgramRatios(BonusBudgetTO to) throws ActException {
+    public Result updateRewardProgramRatios(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.updateRewardProgramRatios(to);
             return new ActResult("updateRewardProgramRatios success!");
@@ -151,8 +152,8 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/checkRewardProgramRatios")
-    public Result checkRewardProgramRatios(String ratioId) throws ActException {
+    @GetMapping("v1/checkRewardProgramRatios/{ratioId}")
+    public Result checkRewardProgramRatios(@Validated String ratioId, BindingResult result) throws ActException {
         try {
             List<RewardProgramRatioBO> boList = bonusBudgetAPI.checkRewardProgramRatios(ratioId);
             List<RewardProgramRatioVO> voList = BeanTransform.copyProperties(boList, RewardProgramRatioVO.class);

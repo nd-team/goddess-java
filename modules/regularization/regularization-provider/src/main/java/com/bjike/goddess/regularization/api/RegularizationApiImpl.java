@@ -1,9 +1,11 @@
 package com.bjike.goddess.regularization.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
+import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.service.RegularizationSer;
 import com.bjike.goddess.regularization.to.RegularizationTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,19 @@ public class RegularizationApiImpl implements RegularizationAPI {
 
     @Autowired
     private RegularizationSer regularizationSer;
+
+    /**
+     * 根据id查询员工转正
+     *
+     * @param id 员工转正id
+     * @return class RegularizationBO
+     * @throws SerException
+     */
+    @Override
+    public RegularizationBO findById(String id) throws SerException {
+        Regularization model = regularizationSer.findById(id);
+        return BeanTransform.copyProperties(model, RegularizationBO.class);
+    }
 
     /**
      * 分页查询员工转正

@@ -14,6 +14,7 @@ import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
 import com.bjike.goddess.firmreward.vo.AwardDetailVO;
 import com.bjike.goddess.firmreward.vo.RewardPeopleNoStatVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(RewardPeopleNoStatDTO dto) throws ActException {
+    public Result list(@Validated RewardPeopleNoStatDTO dto, BindingResult result) throws ActException {
         try {
             List<RewardPeopleNoStatBO> boList = rewardPeopleNoStatAPI.list(dto);
             List<RewardPeopleNoStatVO> voList = BeanTransform.copyProperties(boList, RewardPeopleNoStatVO.class);
@@ -64,7 +65,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.save(to);
             RewardPeopleNoStatVO vo = BeanTransform.copyProperties(bo, RewardPeopleNoStatVO.class);
@@ -99,7 +100,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(RewardPeopleNoStatTO to) throws ActException {
+    public Result edit(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.update(to);
             return new ActResult("edit success!");
@@ -116,7 +117,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @PostMapping("v1/addAwardDetails")
-    public Result addAwardDetails(RewardPeopleNoStatTO to) throws ActException {
+    public Result addAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.addAwardDetails(to);
             return new ActResult("addAwardDetails success!");
@@ -133,7 +134,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @PostMapping("v1/updateAwardDetails")
-    public Result updateAwardDetails(RewardPeopleNoStatTO to) throws ActException {
+    public Result updateAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.updateAwardDetails(to);
             return new ActResult("updateAwardDetails success!");

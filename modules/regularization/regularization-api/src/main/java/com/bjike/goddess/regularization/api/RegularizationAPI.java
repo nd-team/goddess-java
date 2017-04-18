@@ -20,6 +20,15 @@ import java.util.List;
 public interface RegularizationAPI {
 
     /**
+     * 根据id查询员工转正
+     *
+     * @param id 员工转正id
+     * @return class RegularizationBO
+     * @throws SerException
+     */
+    RegularizationBO findById(String id) throws SerException;
+
+    /**
      * 分页查询员工转正
      *
      * @return class RegularizationBO

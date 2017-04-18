@@ -31,10 +31,13 @@ public class ManagementScore extends BaseEntity {
     private String opinion;
 
     /**
-     * 评分等级Integer
+     * 评分等级
      */
-    @Column(name = "scoreGrade", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '评分等级Integer'")
+    @Column(name = "scoreGrade", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '评分等级'")
     private String scoreGrade;
+
+    @Column(name = "specificScore", nullable = false, columnDefinition = "INT(11) COMMENT '具体分数'")
+    private Integer specificScore;
 
     /**
      * 员工转正id
@@ -73,5 +76,13 @@ public class ManagementScore extends BaseEntity {
 
     public void setRegularizationId(String regularizationId) {
         this.regularizationId = regularizationId;
+    }
+
+    public Integer getSpecificScore() {
+        return specificScore;
+    }
+
+    public void setSpecificScore(Integer specificScore) {
+        this.specificScore = specificScore;
     }
 }

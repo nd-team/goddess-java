@@ -12,6 +12,7 @@ import com.bjike.goddess.firmreward.dto.RewardIndicatorDTO;
 import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
 import com.bjike.goddess.firmreward.vo.RewardIndicatorVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class RewardIndicatorAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(RewardIndicatorDTO dto) throws ActException {
+    public Result list(@Validated RewardIndicatorDTO dto, BindingResult result) throws ActException {
         try {
             List<RewardIndicatorBO> boList = rewardIndicatorAPI.list(dto);
             List<RewardIndicatorVO> voList = BeanTransform.copyProperties(boList, RewardIndicatorVO.class);
@@ -62,7 +63,7 @@ public class RewardIndicatorAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RewardIndicatorTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) RewardIndicatorTO to, BindingResult result) throws ActException {
         try {
             RewardIndicatorBO bo = rewardIndicatorAPI.save(to);
             RewardIndicatorVO vo = BeanTransform.copyProperties(bo, RewardIndicatorVO.class);
@@ -97,7 +98,7 @@ public class RewardIndicatorAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(RewardIndicatorTO to) throws ActException {
+    public Result edit(@Validated RewardIndicatorTO to, BindingResult result) throws ActException {
         try {
             rewardIndicatorAPI.update(to);
             return new ActResult("edit success!");
