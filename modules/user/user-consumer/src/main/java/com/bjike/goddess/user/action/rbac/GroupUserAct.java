@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("groupUser")
+@RequestMapping("group-user")
 public class GroupUserAct {
 
     @Autowired

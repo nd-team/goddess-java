@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("userRole")
+@RequestMapping("user-role")
 public class UserRoleAct {
 
     @Autowired

@@ -181,7 +181,7 @@ public class UserLoginSerImpl implements UserLoginSer {
     }
 
     private void setPermission(LoginUser loginUser, String token) throws SerException {
-        List<PermissionBO> permissions = permissionSer.findPermissions(loginUser.getId());
+        List<PermissionBO> permissions = permissionSer.findByUserId(loginUser.getId());
         if (null != permissions && permissions.size() > 0) {
             loginUser.setPermissions(permissions);
         }

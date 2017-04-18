@@ -70,14 +70,14 @@ public class MessageAction {
     /**
      * 读取消息
      *
-     * @param messageId 消息id
+     * @param id 消息id
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/read/{messageId}")
-    public Result read(@PathVariable String messageId) throws ActException {
+    @GetMapping("v1/read/{id}")
+    public Result read(@PathVariable String id) throws ActException {
         try {
-            messageAPI.read(messageId);
+            messageAPI.read(id);
             return ActResult.initialize("read success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -108,14 +108,14 @@ public class MessageAction {
     /**
      * 未读消息
      *
-     * @param userId 用户id
+     * @param id 用户id
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/unreadList/{userId}")
-    public Result list(@PathVariable String userId) throws ActException {
+    @GetMapping("v1/unread-list/{id}")
+    public Result list(@PathVariable String id) throws ActException {
         try {
-            List<MessageBO> messageBOS = messageAPI.unreadList(userId);
+            List<MessageBO> messageBOS = messageAPI.unreadList(id);
             return ActResult.initialize(messageBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -142,14 +142,14 @@ public class MessageAction {
     /**
      * 消息删除
      *
-     * @param messageId 消息id
+     * @param id 消息id
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/delete/{messageId}")
-    public Result delete(@PathVariable String messageId) throws ActException {
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            messageAPI.remove(messageId);
+            messageAPI.remove(id);
             return new ActResult("delete is success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

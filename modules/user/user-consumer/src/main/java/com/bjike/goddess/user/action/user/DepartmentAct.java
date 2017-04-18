@@ -41,7 +41,7 @@ public class DepartmentAct {
      * @param id 通id不为空时查询下层子节点,参数为空时查询最顶层
      * @version v1
      */
-    @GetMapping("v1/treeData")
+    @GetMapping("v1/tree")
     public Result treeData(String id) throws ActException {
         try {
             List<DepartmentVO> vos = BeanTransform.copyProperties(departmentAPI.treeData(id), DepartmentVO.class);
@@ -91,7 +91,7 @@ public class DepartmentAct {
      * @param departmentTO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) DepartmentTO departmentTO, BindingResult result) throws ActException {
         try {
             departmentAPI.update(departmentTO);

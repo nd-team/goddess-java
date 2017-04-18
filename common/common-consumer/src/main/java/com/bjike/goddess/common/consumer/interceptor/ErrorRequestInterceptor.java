@@ -1,6 +1,7 @@
 package com.bjike.goddess.common.consumer.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.dounine.japi.act.Result;
 import com.dounine.japi.act.ResultImpl;
 import com.dounine.japi.exception.JapiException;
@@ -21,7 +22,7 @@ public class ErrorRequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         if(200!=httpServletResponse.getStatus()){
-            ResultImpl result = new ResultImpl();
+            ActResult result = new ActResult();
             httpServletResponse.setHeader("Content-Type","application/json;charset=UTF-8");
             if(httpServletResponse.getStatus()==404){
                 result.setMsg("访问的请求不存在.");
@@ -33,7 +34,7 @@ public class ErrorRequestInterceptor implements HandlerInterceptor {
                 result.setMsg("请求方式不支持,请检查.");
             }
             result.setCode(httpServletResponse.getStatus());
-            httpServletResponse.getWriter().print(JSON.toJSONString(result));
+            httpServletResponse.getWriter().print(result.toString());
             return false;
         }
         return true;

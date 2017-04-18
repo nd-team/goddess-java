@@ -34,7 +34,7 @@ public class UserAct {
      * @param phone 手机号码
      * @version v1
      */
-    @GetMapping("v1/existPhone/{phone}")
+    @GetMapping("v1/phone/{phone}/exists")
     public Result existPhone(@PathVariable String phone) throws ActException {
         try {
             Boolean result = (null != userAPI.findByPhone(phone));
@@ -50,7 +50,7 @@ public class UserAct {
      * @param username 用户名
      * @version v1
      */
-    @GetMapping("v1/existUsername/{username}")
+    @GetMapping("v1/username/{username}/exists")
     public Result existUsername(@PathVariable String username) throws ActException {
         try {
             Boolean result = (null != userAPI.findByUsername(username));

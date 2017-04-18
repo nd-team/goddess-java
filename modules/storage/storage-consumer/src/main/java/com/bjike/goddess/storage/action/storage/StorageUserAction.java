@@ -66,12 +66,13 @@ public class StorageUserAction {
     /**
      * 退出
      *
+     * @param token 登录存储用户storageToken
      * @version v1
      */
-    @PostMapping("v1/signOut/{storageToken}")
-    public Result signOut(@RequestParam  String storageToken) throws ActException {
+    @PostMapping("v1/sign-out/{token}")
+    public Result signOut(@RequestParam String token) throws ActException {
         try {
-            Boolean result = storageUserAPI.signOut(storageToken);
+            Boolean result = storageUserAPI.signOut(token);
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

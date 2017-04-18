@@ -39,7 +39,7 @@ public class PermissionAct {
      * @des 逐层加载, 参考ztree
      * @version v1
      */
-    @GetMapping("v1/treeData")
+    @GetMapping("v1/tree")
     public Result treeData(String id) throws ActException {
         try {
             List<PermissionVO> vos = BeanTransform.copyProperties(permissionAPI.treeData(id), PermissionVO.class);
@@ -89,7 +89,7 @@ public class PermissionAct {
      * @param permissionTO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) PermissionTO permissionTO, BindingResult result) throws ActException {
         try {
             permissionAPI.update(permissionTO);

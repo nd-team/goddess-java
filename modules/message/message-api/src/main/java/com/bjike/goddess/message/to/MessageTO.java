@@ -1,6 +1,7 @@
 package com.bjike.goddess.message.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -31,12 +32,12 @@ public class MessageTO extends BaseTO {
     /**
      * 消息标题
      */
-    @NotBlank(message = "消息标题不能为空", groups = ADD.class)
+    @NotBlank(message = "消息标题不能为空", groups = {ADD.class, EDIT.class})
     private String title;
     /**
      * 发送内容
      */
-    @NotBlank(message = "消息内容不能为空", groups = ADD.class)
+    @NotBlank(message = "消息内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
@@ -56,19 +57,19 @@ public class MessageTO extends BaseTO {
     /**
      * 消息类型
      */
-    @NotNull(message = "消息类型不能为空", groups = ADD.class)
+    @NotNull(message = "消息类型不能为空", groups = {ADD.class, EDIT.class})
     private MsgType msgType;
 
     /**
      * 发送类型  消息:MSG,邮件:EMAIL,消息及邮件：ALL
      */
-    @NotNull(message = "发送类型不能为空", groups = ADD.class)
+    @NotNull(message = "发送类型不能为空", groups = {ADD.class, EDIT.class})
     private SendType sendType;
 
     /**
      * 消息范围  公共消息:PUB，个人或多人消息:SPECIFIED，组消息:GROUP
      */
-    @NotNull(message = "消息范围不能为空", groups = ADD.class)
+    @NotNull(message = "消息范围不能为空", groups = {ADD.class, EDIT.class})
     private RangeType rangeType;
 
 
