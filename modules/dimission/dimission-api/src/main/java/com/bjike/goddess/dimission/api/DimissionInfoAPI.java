@@ -165,6 +165,12 @@ public interface DimissionInfoAPI {
         return null;
     }
 
+    /**
+     * 获取全部离职信息
+     *
+     * @return
+     * @throws SerException
+     */
     default List<DimissionInfoBO> all() throws SerException {
         return null;
     }

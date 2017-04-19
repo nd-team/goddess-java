@@ -1,5 +1,7 @@
 package com.bjike.goddess.dimission.action.dimission;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +13,8 @@ import com.bjike.goddess.dimission.to.HandoverSuccessTO;
 import com.bjike.goddess.dimission.to.WorkHandoverTO;
 import com.bjike.goddess.dimission.vo.WorkHandoverVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,7 +41,7 @@ public class WorkHandoverAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(WorkHandoverTO to) throws ActException {
+    public Result save(@Validated(ADD.class) WorkHandoverTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(workHandoverAPI.save(to), WorkHandoverVO.class));
         } catch (SerException e) {
@@ -53,7 +57,7 @@ public class WorkHandoverAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(WorkHandoverTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) WorkHandoverTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(workHandoverAPI.update(to), WorkHandoverVO.class));
         } catch (SerException e) {
@@ -78,15 +82,33 @@ public class WorkHandoverAct {
     }
 
     /**
-     * 确认
+     * 交接人确认
      *
      * @param to 工作交接确认信息传输对象
      * @return class WorkHandoverVO
      * @version v1
      */
     @PutMapping("v1/success/{id}")
-    public Result success(HandoverSuccessTO to) throws ActException {
+    public Result success(@Validated(EDIT.class) HandoverSuccessTO to, BindingResult result) throws ActException {
         try {
+            to.setAuthority(Boolean.FALSE);
+            return ActResult.initialize(BeanTransform.copyProperties(workHandoverAPI.success(to), WorkHandoverVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 福利模块负责人确认
+     *
+     * @param to 工作交接确认信息传输对象
+     * @return class WorkHandoverVO
+     * @version v1
+     */
+    @PutMapping("v1/authority/{id}")
+    public Result authority(@Validated(EDIT.class) HandoverSuccessTO to, BindingResult result) throws ActException {
+        try {
+            to.setAuthority(Boolean.TRUE);
             return ActResult.initialize(BeanTransform.copyProperties(workHandoverAPI.success(to), WorkHandoverVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

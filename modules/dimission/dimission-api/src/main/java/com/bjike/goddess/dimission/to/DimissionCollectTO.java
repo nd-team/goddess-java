@@ -11,12 +11,24 @@ package com.bjike.goddess.dimission.to;
  */
 public class DimissionCollectTO {
 
+    /**
+     * 部门
+     */
     private String department;
 
+    /**
+     * 岗位
+     */
     private String position;
 
+    /**
+     * 汇总开始时间
+      */
     private String start;
 
+    /**
+     * 汇总结束时间
+      */
     private String end;
 
     public String getDepartment() {

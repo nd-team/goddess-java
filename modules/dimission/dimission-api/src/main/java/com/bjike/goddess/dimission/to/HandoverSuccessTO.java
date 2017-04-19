@@ -1,6 +1,10 @@
 package com.bjike.goddess.dimission.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 工作交接确认信息传输对象
@@ -16,6 +20,7 @@ public class HandoverSuccessTO extends BaseTO {
     /**
      * 意见或内容
      */
+    @NotNull(message = "意见或内容不能为空", groups = {ADD.class, EDIT.class})
     private String opinion;
 
     /**

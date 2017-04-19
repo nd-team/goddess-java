@@ -1,6 +1,10 @@
 package com.bjike.goddess.dimission.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 离职面谈信息传输对象
@@ -16,11 +20,13 @@ public class DimissionInterviewTo extends BaseTO {
     /**
      * 内容
      */
+    @NotNull(message = "内容不能为空", groups = ADD.class)
     private String content;
 
     /**
      * 意见
      */
+    @NotNull(message = "意见不能为空", groups = {ADD.class, EDIT.class})
     private String opinion;
 
     /**

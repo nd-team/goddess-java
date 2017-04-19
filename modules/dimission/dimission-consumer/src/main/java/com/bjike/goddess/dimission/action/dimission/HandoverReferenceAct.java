@@ -1,5 +1,7 @@
 package com.bjike.goddess.dimission.action.dimission;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,6 +12,8 @@ import com.bjike.goddess.dimission.dto.HandoverReferenceDTO;
 import com.bjike.goddess.dimission.to.HandoverReferenceTO;
 import com.bjike.goddess.dimission.vo.HandoverReferenceVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,10 +37,10 @@ public class HandoverReferenceAct {
      *
      * @param to 交接信息传输对象
      * @return class HandoverReferenceVO
-     * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(HandoverReferenceTO to) throws ActException {
+    public Result save(@Validated(ADD.class) HandoverReferenceTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handoverReferenceAPI.save(to), HandoverReferenceVO.class));
         } catch (SerException e) {
@@ -48,11 +52,11 @@ public class HandoverReferenceAct {
      * 修改
      *
      * @param to 交接信息传输对象
-     * @return
-     * @throws ActException
+     * @return class HandoverReferenceVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(HandoverReferenceTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) HandoverReferenceTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handoverReferenceAPI.update(to), HandoverReferenceVO.class));
         } catch (SerException e) {
@@ -64,8 +68,8 @@ public class HandoverReferenceAct {
      * 删除
      *
      * @param id 交接信息数据id
-     * @return
-     * @throws ActException
+     * @return class HandoverReferenceVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
@@ -80,8 +84,8 @@ public class HandoverReferenceAct {
      * 列表
      *
      * @param dto 交接信息参考数据传输对象
-     * @return
-     * @throws ActException
+     * @return class HandoverReferenceVO
+     * @version v1
      */
     @GetMapping("v1/maps")
     public Result maps(HandoverReferenceDTO dto) throws ActException {
