@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.IdempotencyRequestInterceptor;
+import com.bjike.goddess.common.consumer.http.ResponseContext;
+import com.bjike.goddess.common.consumer.interceptor.idem.IdempotencyInterceptor;
 import com.bjike.goddess.common.consumer.interceptor.idem.Info;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -14,23 +15,19 @@ import com.bjike.goddess.ticket.bo.TicketBO;
 import com.bjike.goddess.ticket.vo.TicketVO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 购票信息
@@ -45,27 +42,28 @@ public class TicketAct {
 
     private int cc = 0;
     @PostMapping(value = "test",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Result tt(@RequestBody Info j, String a) throws ActException{
-        return tt1(j,a);
+    public Result tt(@Validated @RequestBody Info j, BindingResult result) throws ActException{
+        return tt1(j,result);
     }
 
     @PostMapping(value = "test")
-    public Result tt1(Info j, String a) throws ActException{
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public Result tt1(@Validated Info j, BindingResult result) throws ActException{
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         System.out.println(JSON.toJSON(j));
         System.out.println("进来了");
         return new ActResult("yes");
     }
 
 
-    @GetMapping("test1")
+    @PostMapping("test1")
     @HystrixCommand(commandKey = "a")
-    public Result aa(){
-        return new ActResult("success");
+    public void aa(HttpServletRequest request,HttpServletResponse response){
+        ResponseContext.writeData(response,new ActResult("success"));
+        IdempotencyInterceptor.UpdateRepeatResult(request,new ActResult("success"));
     }
 
     @GetMapping("test2")

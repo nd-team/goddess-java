@@ -44,7 +44,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
                 //判断是否为新项目
-                if (marketInfo.getProjectNature().equals("")) {
+                if (!StringUtils.isNotEmpty(marketInfo.getProjectNature())) {
                     marketInfo.setProjectNature("新项目");
                 }
                 marketInfo.setEffective(true);
@@ -69,14 +69,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             } else if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerNum())) {
                 customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
             } else {*/
-        if (!StringUtils.isEmpty(marketInfoTO.getId())) {
-            MarketInfo marketInfo = super.findById(marketInfoTO.getId());
-            BeanTransform.copyProperties(marketInfoTO, marketInfo, true);
-            marketInfo.setModifyTime(LocalDateTime.now());
-            super.update(marketInfo);
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
+        MarketInfo marketInfo = super.findById(marketInfoTO.getId());
+        BeanTransform.copyProperties(marketInfoTO, marketInfo, true);
+        marketInfo.setModifyTime(LocalDateTime.now());
+        super.update(marketInfo);
         return BeanTransform.copyProperties(marketInfoTO, MarketInfoBO.class);
         /*    }
         } catch (SerException e) {
