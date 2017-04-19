@@ -11,6 +11,7 @@ import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import com.bjike.goddess.market.vo.MarketInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class MarketInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addMarketInfo(MarketInfoTO marketInfoTO) throws ActException {
+    public Result addMarketInfo(@Validated MarketInfoTO marketInfoTO) throws ActException {
         try {
             MarketInfoBO marketInfoBO = marketInfoAPI.insertMarketInfo(marketInfoTO);
             return ActResult.initialize(marketInfoBO);
@@ -76,7 +77,7 @@ public class MarketInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editMarketInfo(MarketInfoTO marketInfoTO) throws ActException {
+    public Result editMarketInfo(@Validated MarketInfoTO marketInfoTO) throws ActException {
         try {
             MarketInfoBO marketInfoBO = marketInfoAPI.editMarketInfo(marketInfoTO);
             return ActResult.initialize(marketInfoBO);

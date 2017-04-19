@@ -1,5 +1,6 @@
 package com.bjike.goddess.common.consumer.interceptor.auth;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

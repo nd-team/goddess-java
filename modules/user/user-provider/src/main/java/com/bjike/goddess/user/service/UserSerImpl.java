@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.redis.client.RedisClient;
@@ -98,25 +99,6 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return PRIVATE_KEY;
     }
 
-    private LoginUser currentLoginUser(Object token) throws SerException {
-        if (null != token) {
-            LoginUser loginUser = UserSession.get(token.toString());
-            if (null != loginUser) {
-                return loginUser;
-            } else { //redis 获取
-                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
-                if (StringUtils.isNotBlank(loginUser_str)) {
-                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
-                    UserSession.put(token.toString(), loginUser); //设置到session
-                    return loginUser;
-                }
-            }
-            throw new SerException("登录已过期!");
-        } else {
-            throw new SerException("登录未登录");
-        }
-    }
-
 
     @Override
     public UserBO currentUser() throws SerException {
@@ -127,15 +109,21 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             return BeanTransform.copyProperties(this.findOne(dto), UserBO.class);
 
         } //获取当前用户直接给无需登录
-        Object token = RpcContext.getContext().getAttachment("userToken");
+        String token =  RpcTransmit.getUserToken();
         LoginUser loginUser = currentLoginUser(token);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
 
     }
 
     @Override
+    public UserBO currentUser(String userToken) throws SerException {
+        LoginUser loginUser  = currentLoginUser(userToken);
+        return BeanTransform.copyProperties(loginUser, UserBO.class);
+    }
+
+    @Override
     public List<PermissionBO> currentPermissions() throws SerException {
-        Object token = RpcContext.getContext().getAttachment("userToken");
+        String token =  RpcTransmit.getUserToken();
         if(null != token){
             try {
                 LoginUser loginUser = currentLoginUser(token);
@@ -147,11 +135,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return new ArrayList<>(0);
     }
 
-    @Override
-    public UserBO currentUser(String userToken) throws SerException {
-        LoginUser loginUser = UserSession.get(userToken);
-        return BeanTransform.copyProperties(loginUser, UserBO.class);
-    }
+
 
     @Cacheable
     @Override
@@ -215,7 +199,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void update(UserTO userTO) throws SerException {
-        String token = RpcContext.getContext().getAttachment("userToken");
+          String token =  RpcTransmit.getUserToken();
         if (StringUtils.isNotBlank(token)) {
             User user = super.findById(userTO.getId());
             BeanTransform.copyProperties(userTO, user, true);
@@ -243,6 +227,27 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             userBOS.add(userBO);
         });
         return userBOS;
+    }
+
+
+
+    private LoginUser currentLoginUser(Object token) throws SerException {
+        if (null != token) {
+            LoginUser loginUser = UserSession.get(token.toString());
+            if (null != loginUser) {
+                return loginUser;
+            } else { //redis 获取
+                String loginUser_str = redis.getMap(UserCommon.LOGIN_USER, token.toString());
+                if (StringUtils.isNotBlank(loginUser_str)) {
+                    loginUser = JSON.parseObject(loginUser_str, LoginUser.class);
+                    UserSession.put(token.toString(), loginUser); //设置到session
+                    return loginUser;
+                }
+            }
+            throw new SerException("登录已过期!");
+        } else {
+            throw new SerException("登录未登录");
+        }
     }
 
 
