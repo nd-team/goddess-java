@@ -1,13 +1,9 @@
 package com.bjike.goddess.common.consumer.interceptor.idem;
 
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.IdempotencyRequestInterceptor;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import org.apache.commons.lang3.StringUtils;
-import org.mengyun.tcctransaction.api.UuidUtils;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +16,18 @@ import java.util.UUID;
 @RestController
 public class IdemAct {
 
+    @Autowired(required = false)
+    private IdempotencyInterceptor idempotencyFilter;
+
     @GetMapping("rtoken")
     public Result idem(HttpServletRequest request, HttpServletResponse response){
+        if(null==idempotencyFilter){
+            ActResult actResult = new ActResult("请联系管理员开启请求幂等功能",null);
+            actResult.setCode(1);
+            return actResult;
+        }
         String uuid = UUID.randomUUID().toString();
-        IdempotencyRequestInterceptor.getLoadingCache().put(uuid,new Info());
+        IdempotencyInterceptor.getLoadingCache().put(uuid,new Info());
         return new ActResult(null,uuid);
     }
 

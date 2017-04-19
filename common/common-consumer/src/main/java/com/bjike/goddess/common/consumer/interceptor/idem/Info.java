@@ -13,6 +13,7 @@ public class Info {
     }
     private Status status;
 
+    @NotNull
     private Object result;
 
     public Object getResult() {

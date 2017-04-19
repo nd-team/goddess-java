@@ -1,7 +1,13 @@
-package com.bjike.goddess.common.consumer.interceptor;
+package com.bjike.goddess.common.consumer.aspect;
 
+import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.consumer.http.RequestContext;
 import com.bjike.goddess.common.consumer.http.ResponseContext;
+import com.bjike.goddess.common.consumer.interceptor.idem.IdempotencyInterceptor;
+import com.bjike.goddess.common.consumer.interceptor.JsrTip;
+import com.bjike.goddess.common.consumer.interceptor.idem.Info;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,23 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by huanghuanlai on 2017/1/14.
  */
-@Order(Integer.MIN_VALUE)
+@Order(Integer.MIN_VALUE+1)
 @Aspect
 @Component
 public class ActionJSR303 {
 
-    @Autowired
-    private Validator validator;
+    @Autowired(required = false)
+    private IdempotencyInterceptor idempotencyFilter;
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.GetMapping)" +
@@ -41,32 +46,19 @@ public class ActionJSR303 {
     }
 
     @Around("pointCut()")
-    public Object doAround(ProceedingJoinPoint joinPoint)
-            throws Throwable {
+    public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+
         BindingResult result = null;
         MethodSignature methodSignature = (MethodSignature) joinPoint
                 .getSignature();
         Method method = methodSignature.getMethod();
-        Annotation[] annotationList = method.getAnnotations();
         Annotation[][] argAnnotations = method.getParameterAnnotations();
-        String[] argNames = methodSignature.getParameterNames();
         Object[] args = joinPoint.getArgs();//获取参数值
 
-        if(method.getName().equals("errorHtml")){//springmvc 错误请求
+        if (method.getName().equals("errorHtml")) {//springmvc 错误请求
             return joinPoint.proceed(args);
         }
-
-
-        methodSignature = null;//gc
-
-        method = null;//gc
         for (int i = 0, len = args.length; i < len; i++) {
-//            if (hasValidAnnotations(argAnnotations[i])) {
-//                Object ret = validateArg(args[i], argNames[i]);
-//                if (null != ret) {
-//                    return ret;
-//                }
-//            }
             Object object = args[i];
             if (null != object) {
                 if (null == result && object instanceof BindingResult) {
@@ -84,8 +76,6 @@ public class ActionJSR303 {
             return null;
         }
 
-        annotationList = null;//gc
-        argAnnotations = null;//gc
         return joinPoint.proceed(args);
     }
 
@@ -95,50 +85,27 @@ public class ActionJSR303 {
             if (null != fieldErrors && fieldErrors.size() > 0) {
                 ActResult actResult = new ActResult();
                 actResult.setCode(1);
-                actResult.setMsg(fieldErrors.get(0).getField() + ":" + fieldErrors.get(0).getDefaultMessage());
-                ResponseContext.writeData(actResult.toString());
+                actResult.setMsg("参数检验不通过");
+                actResult.setData(new JsrTip(fieldErrors.get(0).getField(), fieldErrors.get(0).getDefaultMessage()));
+                ResponseContext.writeData(JSON.toJSONString(actResult));
+                if(null!=idempotencyFilter){//幂等拦截器打开
+                    String rtoken = RequestContext.get().getHeader("rtoken");
+                    if(StringUtils.isNotBlank(rtoken)){
+                        Info info = null;
+                        try {
+                            info = IdempotencyInterceptor.getLoadingCache().get(rtoken);
+                            info.setResult(actResult);
+                            info.setStatus(Info.Status.AFTER);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
                 return true;
             }
         }
         return false;
     }
 
-    private boolean hasValidAnnotations(Annotation[] annotations) {
-        boolean hasValid = false;
-        for (Annotation annotation : annotations) {
-            if (Valid.class.isInstance(annotation)) {
-                hasValid = true;
-                break;
-            }
-        }
-        return hasValid;
-    }
-
-    private boolean hasRequestBodyAnnotations(Annotation[] annotations) {
-        for (Annotation annotation : annotations) {
-            if (ResponseBody.class.isInstance(annotation)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private ActResult validateArg(Object arg, String argName) {
-        BindingResult result = getBindingResult(arg, argName);
-        validator.validate(arg, result);
-        if (result.hasErrors()) {
-            ActResult actResult = new ActResult();
-            actResult.setCode(1);
-            List<ObjectError> objectErrors = result.getAllErrors();
-            actResult.setMsg(objectErrors.get(0).getDefaultMessage());
-            result = null;//gc
-            return actResult;
-        }
-        result = null;//gc
-        return null;
-    }
-
-    private BindingResult getBindingResult(Object target, String targetName) {
-        return new BeanPropertyBindingResult(target, targetName);
-    }
 }

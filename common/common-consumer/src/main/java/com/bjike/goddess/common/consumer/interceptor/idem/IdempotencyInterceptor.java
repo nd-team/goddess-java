@@ -1,35 +1,37 @@
-package com.bjike.goddess.common.consumer.interceptor;
+package com.bjike.goddess.common.consumer.interceptor.idem;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.http.ResponseContext;
-import com.bjike.goddess.common.consumer.interceptor.idem.Info;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.dounine.japi.act.ResultImpl;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by huanghuanlai on 2017/2/27.
  */
-@Component
-public class IdempotencyRequestInterceptor implements HandlerInterceptor {
+public class IdempotencyInterceptor implements HandlerInterceptor{
 
+
+    private static Logger LOGGER = LoggerFactory.getLogger(IdempotencyInterceptor.class);
+    private String[] excludePathPatterns = {};
+    private String[] pathPatterns = {"/**"};
     private static final String[] RID_METHODS = {"POST","PUT","PATCH","DELETE"};
     private static final LoadingCache<String,Info> loadingCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.HOURS)
+            .expireAfterAccess(3,TimeUnit.MINUTES)
          .build(new CacheLoader<String, Info>() {
         @Override
         public Info load(String key) throws Exception {
@@ -64,7 +66,6 @@ public class IdempotencyRequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         if(checkMethod(httpServletRequest)){
-            ResponseContext.get().setContentType("application/json;charset=UTF-8");
             ActResult actResult = new ActResult();
             actResult.setCode(5);
             Info info = null;
@@ -72,7 +73,7 @@ public class IdempotencyRequestInterceptor implements HandlerInterceptor {
                 info = getInfo(httpServletRequest);
             }catch (Exception e){
                 actResult.setMsg(e.getMessage());
-                ResponseContext.get().getWriter().print(actResult.toString());
+                ResponseContext.writeData(actResult.toString());
                 return false;
             }
             if(null==info.getStatus()){
@@ -82,8 +83,13 @@ public class IdempotencyRequestInterceptor implements HandlerInterceptor {
                 ResponseContext.get().getWriter().print(actResult.toString());
                 return false;
             }else if(Info.Status.AFTER.equals(info.getStatus())){
-                actResult.setMsg("请求已处理结束");
-                ResponseContext.get().getWriter().print(actResult.toString());
+                LOGGER.info("请求重复提交,忽略处理");
+                actResult.setMsg("请不要重复提交");
+                if(null!=info.getResult()){
+                    actResult = (ActResult) info.getResult();
+                    actResult.setCode(0);
+                }
+                ResponseContext.writeData(actResult);
                 return false;
             }
         }
@@ -97,13 +103,40 @@ public class IdempotencyRequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        if(checkMethod(httpServletRequest)){
-            Info info = getInfo(httpServletRequest);
-            info.setStatus(Info.Status.AFTER);
-        }
+
     }
 
     public static LoadingCache<String,Info> getLoadingCache(){
         return loadingCache;
+    }
+
+    public static void UpdateRepeatResult(HttpServletRequest request,ActResult actResult) {
+        String rtoken = request.getHeader("rtoken");
+        if(StringUtils.isNotBlank(rtoken)){
+            try {
+                Info info = getLoadingCache().get(rtoken);
+                info.setResult(actResult);
+                info.setStatus(Info.Status.AFTER);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public String[] getExcludePathPatterns() {
+        return excludePathPatterns;
+    }
+
+    public void setExcludePathPatterns(String[] excludePathPatterns) {
+        this.excludePathPatterns = excludePathPatterns;
+    }
+
+    public String[] getPathPatterns() {
+        return pathPatterns;
+    }
+
+    public void setPathPatterns(String[] pathPatterns) {
+        this.pathPatterns = pathPatterns;
     }
 }

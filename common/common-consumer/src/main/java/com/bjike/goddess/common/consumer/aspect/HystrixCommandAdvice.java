@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.consumer.config;
+package com.bjike.goddess.common.consumer.aspect;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
