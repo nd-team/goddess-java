@@ -10,9 +10,8 @@ import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.vo.DispatchCollectVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,8 +38,8 @@ public class CollectAct {
      * @param collectType 分页条件
      * @version v1
      */
-    @GetMapping("v1/dispatchCollect")
-    public Result dispatchCollect(CollectType collectType) throws ActException {
+    @GetMapping("v1/dispatchCollect/{collectType}")
+    public Result dispatchCollect(@PathVariable CollectType collectType) throws ActException {
         try {
             List<DispatchCollectVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.dispatchCollect(collectType), DispatchCollectVO.class);
             return ActResult.initialize(voList);
