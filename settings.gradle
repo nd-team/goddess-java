@@ -206,21 +206,17 @@ include ':modules:voucher:voucher-api'
 include ':modules:voucher:voucher-consumer'
 include ':modules:voucher:voucher-provider'
 //#socialfee 社会缴费tanghaixiang
-include ':modules:socialfee:socialfee-api'
-include ':modules:socialfee:socialfee-consumer'
-include ':modules:socialfee:socialfee-provider'
->>>>>>> Stashed changes
-
+//include ':modules:socialfee:socialfee-api'
+//include ':modules:socialfee:socialfee-consumer'
+//include ':modules:socialfee:socialfee-provider'
 //#staffactivity 员工活动
 include ':modules:staffactivity:staffactivity-api'
 include ':modules:staffactivity:staffactivity-consumer'
 include ':modules:staffactivity:staffactivity-provider'
-
 //#firmreward 公司奖励
 include ':modules:firmreward:firmreward-api'
 include ':modules:firmreward:firmreward-consumer'
 include ':modules:firmreward:firmreward-provider'
-
 //#regularization 员工转正
 include ':modules:regularization:regularization-api'
 include ':modules:regularization:regularization-consumer'
