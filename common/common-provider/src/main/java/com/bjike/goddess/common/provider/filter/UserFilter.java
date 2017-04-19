@@ -13,7 +13,7 @@ public class UserFilter implements Filter {
         //某些方法并不需要token，亦可访问调用
         Result result = invoker.invoke(invocation);
 //        RpcContext.getContext().setAttachment("userToken",userToken);
-        result.getAttachments().put("userToken",userToken);
-                return result;
+        result.getAttachments().put("userToken", userToken);
+        return result;
     }
 }

@@ -2,7 +2,6 @@ package com.bjike.goddess.user.config;
 
 import com.bjike.goddess.common.consumer.config.HystrixCommandAdvice;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**

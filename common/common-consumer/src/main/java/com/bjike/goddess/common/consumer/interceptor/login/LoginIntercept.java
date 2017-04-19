@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
  * @Copy: [com.bjike]
  */
 public class LoginIntercept extends HandlerInterceptorAdapter {
-
     public LoginIntercept(UserAPI userAPI) {
         this.userAPI = userAPI;
     }
@@ -37,18 +36,28 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        handlerStorageToken(request);
-        String token = handlerUserToken(request);
+        Object obj = request.getParameter("userToken");
+        String token = null;
+        if (null != obj) {
+            token = obj.toString();
+        }
+        Boolean pass = false;
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            return validateLogin(token, response);
+            pass = validateLogin(token, response);
         }
-        final Method method = ((HandlerMethod) handler).getMethod();
-        final Class<?> clazz = method.getDeclaringClass();
-        //该类或者方法上是否有登录安全认证注解
-        if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
-            return validateLogin(token, response);
+        if (!pass) {
+            Method method = ((HandlerMethod) handler).getMethod();
+            Class<?> clazz = method.getDeclaringClass();
+            //该类或者方法上是否有登录安全认证注解
+            if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
+                pass = validateLogin(token, response);
+            }
+
         }
-        return true;
+        handlerUserToken(token);
+        handlerStorageToken(request);
+
+        return pass;
     }
 
 
@@ -63,10 +72,9 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
     }
 
 
-
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
         try {
-            if (StringUtils.isNotBlank(token) && null != userAPI.currentUser(token)) {
+            if (StringUtils.isNotBlank(token) && null != userAPI.currentUser()) {
                 return true;
             } else {
                 handlerNotHasLogin(response, "用户未登录！");
@@ -83,17 +91,13 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
     /**
      * 处理用户token
      *
-     * @param request
      * @return
      */
-    private String handlerUserToken(HttpServletRequest request) {
-        Object token = request.getParameter("userToken");
-        if (null != token) {
-            RpcContext.getContext().setAttachment("userToken", String.valueOf(token));
-            return String.valueOf(token);
-        }
+    private void handlerUserToken(String token) {
+        if (StringUtils.isNotBlank(token)) {
+            RpcContext.getContext().setAttachment("userToken", token);
 
-        return null;
+        }
     }
 
     /**
