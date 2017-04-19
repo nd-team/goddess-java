@@ -27,6 +27,16 @@ public class CooperCapabilityApiImpl implements CooperCapabilityAPI {
     private CooperCapabilitySer cooperCapabilitySer;
 
     @Override
+    public Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+        return cooperCapabilitySer.counts(cooperCapabilityDTO);
+    }
+
+    @Override
+    public CooperCapabilityBO getOne(String id) throws SerException {
+        return  cooperCapabilitySer.getOne(id);
+    }
+
+    @Override
     public List<CooperCapabilityBO> listCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
         return cooperCapabilitySer.listCooperCapability(cooperCapabilityDTO);
     }

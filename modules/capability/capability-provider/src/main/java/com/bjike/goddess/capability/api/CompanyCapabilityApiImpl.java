@@ -27,6 +27,16 @@ public class CompanyCapabilityApiImpl implements CompanyCapabilityAPI {
     private CompanyCapabilitySer companyCapabilitySer;
 
     @Override
+    public Long counts(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        return companyCapabilitySer.counts(companyCapabilityDTO);
+    }
+
+    @Override
+    public CompanyCapabilityBO getOne(String id) throws SerException {
+        return companyCapabilitySer.getOne(id);
+    }
+
+    @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
         return companyCapabilitySer.listCompanyCapability(companyCapabilityDTO);
     }

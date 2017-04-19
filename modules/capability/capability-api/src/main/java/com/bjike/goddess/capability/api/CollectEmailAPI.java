@@ -1,6 +1,7 @@
 package com.bjike.goddess.capability.api;
 
 import com.bjike.goddess.capability.bo.CollectEmailBO;
+import com.bjike.goddess.capability.bo.CollectEmailBO;
 import com.bjike.goddess.capability.dto.CollectEmailDTO;
 import com.bjike.goddess.capability.to.CollectEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -18,6 +19,12 @@ import java.util.List;
  */
 public interface CollectEmailAPI {
 
+    /**
+     * 总条数
+     */
+    default Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 商业能力邮件汇总列表
@@ -28,6 +35,12 @@ public interface CollectEmailAPI {
         return null;
     }
 
+    /**
+     * 一个个邮件
+     * @return class CollectEmailBO
+     */
+    default CollectEmailBO getOne(String id) throws SerException {return null;}
+    
     /**
      * 添加
      *

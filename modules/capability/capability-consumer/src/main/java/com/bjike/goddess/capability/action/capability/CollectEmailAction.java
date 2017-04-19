@@ -8,6 +8,7 @@ import com.bjike.goddess.capability.vo.CollectEmailVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.hibernate.validator.constraints.NotBlank;
@@ -32,6 +33,41 @@ public class CollectEmailAction {
 
     @Autowired
     private CollectEmailAPI collectEmailAPI;
+
+    /**
+     * 总条数
+     *
+     * @param collectEmailDTO
+     * @des 获取总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CollectEmailDTO collectEmailDTO) throws ActException {
+        try {
+            Long count = collectEmailAPI.counts(collectEmailDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个商业能力
+     *
+     * @param id
+     * @des 获取一个商业能力
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            CollectEmailBO collectEmailBO = collectEmailAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO , CollectEmailVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 商业能力邮件汇总列表
@@ -60,6 +96,7 @@ public class CollectEmailAction {
      * @return  class CollectEmailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCollectEmail(@Validated CollectEmailTO collectEmailTO) throws ActException {
         try {
@@ -79,6 +116,7 @@ public class CollectEmailAction {
      * @return  class CollectEmailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCollectEmail(@Validated  CollectEmailTO collectEmailTO) throws ActException {
         try {
@@ -96,6 +134,7 @@ public class CollectEmailAction {
      * @des 根据id删除商业能力邮件汇总信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCollectEmail(@PathVariable String id) throws ActException {
         try {
@@ -114,6 +153,7 @@ public class CollectEmailAction {
      * @des 根据id冻结商业能力邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -132,6 +172,7 @@ public class CollectEmailAction {
      * @des 根据id解冻商业能力邮件汇总记录
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw/{id}")
     public Result thaw (@PathVariable String id) throws ActException {
         try {

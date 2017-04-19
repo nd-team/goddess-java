@@ -8,6 +8,7 @@ import com.bjike.goddess.capability.vo.CompanyCapabilityVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,40 @@ public class CompanyCapabilityAction {
 
     @Autowired
     private CompanyCapabilityAPI companyCapabilityAPI;
+
+    /**
+     * 公司能力总条数
+     *
+     * @param companyCapabilityDTO
+     * @des 获取所有公司能力总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CompanyCapabilityDTO companyCapabilityDTO) throws ActException {
+        try {
+            Long count = companyCapabilityAPI.counts(companyCapabilityDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个公司能力
+     *
+     * @param id
+     * @des 获取一个公司能力
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            CompanyCapabilityBO companyCapabilityBO = companyCapabilityAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(companyCapabilityBO,CompanyCapabilityVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 公司能力列表
@@ -60,6 +95,7 @@ public class CompanyCapabilityAction {
      * @return  class CompanyCapabilityVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCompanyCapability(@Validated CompanyCapabilityTO companyCapabilityTO) throws ActException {
         try {
@@ -79,6 +115,7 @@ public class CompanyCapabilityAction {
      * @return  class CompanyCapabilityVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCompanyCapability(@Validated  CompanyCapabilityTO companyCapabilityTO) throws ActException {
         try {
@@ -96,6 +133,7 @@ public class CompanyCapabilityAction {
      * @des 根据id删除公司能力信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCompanyCapability(@PathVariable String id) throws ActException {
         try {
@@ -134,6 +172,7 @@ public class CompanyCapabilityAction {
      * @return  class CompanyCapabilityVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcelCCapability(@Validated CompanyCapabilityTO companyCapabilityTO) throws ActException {
         return null;

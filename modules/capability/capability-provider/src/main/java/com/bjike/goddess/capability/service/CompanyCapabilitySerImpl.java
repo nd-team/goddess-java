@@ -9,6 +9,7 @@ import com.bjike.goddess.capability.dto.CompanyCapabilityDTO;
 import com.bjike.goddess.capability.entity.CompanyCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,22 @@ import java.util.List;
 @Service
 public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, CompanyCapabilityDTO> implements CompanyCapabilitySer {
 
-    
+    @Override
+    public Long counts(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        Long count = super.count(companyCapabilityDTO);
+        return count;
+    }
+
+    @Override
+    public CompanyCapabilityBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        CompanyCapability selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,CompanyCapabilityBO.class);
+
+    }
+
     @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
         List<CompanyCapability> list = super.findByCis(companyCapabilityDTO, true);
@@ -51,9 +67,14 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyCapabilityBO editCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException {
+        if (StringUtils.isBlank(companyCapabilityTO.getId() )) {
+            throw new SerException("id不能为空");
+        }
+        CompanyCapability temp = super.findById(companyCapabilityTO.getId());
         CompanyCapability companyCapability = BeanTransform.copyProperties(companyCapabilityTO,CompanyCapability.class,true);
-        companyCapability.setModifyTime(LocalDateTime.now());
-        super.update( companyCapability );
+        BeanUtils.copyProperties(companyCapability,temp,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+        super.update( temp );
         return BeanTransform.copyProperties(companyCapability, CompanyCapabilityBO.class);
     }
 

@@ -54,6 +54,17 @@ public interface CategoryAPI {
      * @return class CategoryBO
      */
     default CategoryBO listById (String id) throws SerException {return null;}
+    /**
+     * 通过一级查二级级别列表
+     * @return class String
+     */
+    default List<String> getSecondSubject(CategoryDTO categoryDTO) throws SerException {return null;}
+
+    /**
+     * 通过一级和二级查询三级级别列表
+     * @return class String
+     */
+    default List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {return null;}
 
 
 }

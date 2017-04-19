@@ -32,7 +32,21 @@ import java.util.stream.Collectors;
 @Service
 public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapabilityDTO> implements SelfCapabilitySer {
 
-    
+    @Override
+    public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        Long count = super.count(selfCapabilityDTO);
+        return count;
+    }
+
+    @Override
+    public SelfCapabilityBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        SelfCapability selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,SelfCapabilityBO.class);
+    }
+
     @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
         List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
