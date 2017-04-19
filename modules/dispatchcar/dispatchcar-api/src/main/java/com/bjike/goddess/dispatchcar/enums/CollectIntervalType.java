@@ -1,24 +1,39 @@
 package com.bjike.goddess.dispatchcar.enums;
 
 /**
- * 汇总类型
+ * 汇总条件
  *
  * @Author: [Jason]
- * @Date: [17-4-19 下午5:16]
+ * @Date: [17-4-14 下午3:04]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public enum CollectType {
+public enum CollectIntervalType {
     /**
-     * 地区
+     * 日
      */
-    AREA(0),
-    DRIVER(1);
+    DAY(0),
+    /**
+     * 周
+     */
+    WEEK(1),
+    /**
+     * 月
+     */
+    MONTH(2),
+    /**
+     * 季度
+     */
+    QUARTER(3),
+    /**
+     * 年
+     */
+    YEAR(4);
 
     private int code;
 
-    CollectType(int code) {
+    CollectIntervalType(int code) {
         this.code = code;
     }
 

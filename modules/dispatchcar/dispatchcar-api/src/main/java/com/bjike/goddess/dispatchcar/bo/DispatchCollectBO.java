@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class DispatchCollectBO extends BaseBO {
 
     /**
+     * 司机
+     */
+    private String driver;
+
+    /**
      * 地区
      */
     private String area;
@@ -87,6 +92,14 @@ public class DispatchCollectBO extends BaseBO {
      * 费用差异对比
      */
     private Double costSubtract;
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
 
     public String getArea() {
         return area;
