@@ -2,6 +2,9 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserDetailBO;
+import com.bjike.goddess.user.dto.UserDetailDTO;
+
+import java.util.List;
 
 /**
  * 对外提供用户详情接口
@@ -23,4 +26,14 @@ public interface UserDetailAPI {
     default UserDetailBO findByUserId(String userId) throws SerException {
         return null;
     }
+
+    /**
+     * 根据月份分页查询用户详细信息
+     *
+     * @param dto 用户详细信息
+     * @return 用户详细信息结果集
+     */
+    List<UserDetailBO> findByMonth(UserDetailDTO dto, Integer month) throws SerException;
+
+
 }
