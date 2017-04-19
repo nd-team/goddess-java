@@ -1,6 +1,7 @@
 package com.bjike.goddess.common.consumer.http;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,43 +23,40 @@ public final class ResponseContext {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//springmvc 自带
     }
 
-    public static void writeData(String data){
+    private static HttpServletResponse init(){
         HttpServletResponse response = get();
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
+        return response;
+    }
+
+    public static void writeData(String data){
         try {
-            response.getWriter().print(data);
+            init().getWriter().print(data);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
     public static void writeData(Object data){
-        HttpServletResponse response = get();
-        response.setContentType("application/json;charset=UTF-8");
-        response.setCharacterEncoding("utf-8");
         try {
-            response.getWriter().print(JSON.toJSONString(data));
+            init().getWriter().print(JSON.toJSONString(data,SerializerFeature.WriteNullStringAsEmpty));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
     public static void writeData(HttpServletResponse response,Object data){
-        response.setContentType("application/json;charset=UTF-8");
-        response.setCharacterEncoding("utf-8");
         try {
-            response.getWriter().print(JSON.toJSONString(data));
+            init().getWriter().print(JSON.toJSONString(data,SerializerFeature.WriteNullStringAsEmpty));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
     }
 
     public static void writeData(HttpServletResponse response,String data){
-        response.setContentType("application/json;charset=UTF-8");
-        response.setCharacterEncoding("utf-8");
         try {
-            response.getWriter().print(data);
+            init().getWriter().print(data);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
