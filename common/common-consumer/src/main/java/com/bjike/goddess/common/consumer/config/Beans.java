@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ImportResource;
  * Created by lake on 17-4-19.
  */
 @Configuration
-public class beans {
+public class Beans {
 
 //    @Bean
     public IdempotencyInterceptor idempotencyInterceptor(){

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 文件存储拦截器,必须加入该拦截器
+ *
  * @Author: [liguiqin]
  * @Date: [2017-04-19 14:04]
  * @Description: [ ]
