@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.WeekPlanAPI;
+import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.WeekPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +125,22 @@ public class WeekPlanAct {
     public Result findById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.getById(id), WeekPlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 周计划数据传输对象
+     * @return class WeekPlanVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(WeekPlanDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.maps(dto), WeekPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

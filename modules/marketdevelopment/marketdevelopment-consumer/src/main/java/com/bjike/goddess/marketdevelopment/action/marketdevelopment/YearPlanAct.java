@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.YearPlanAPI;
+import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,23 @@ public class YearPlanAct {
     public Result findById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getById(id), YearPlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 年计划数据传输对象
+     * @return class YearPlanVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(YearPlanDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.maps(dto), YearPlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

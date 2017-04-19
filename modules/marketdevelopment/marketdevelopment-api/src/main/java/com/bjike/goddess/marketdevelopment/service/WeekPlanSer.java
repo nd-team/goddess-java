@@ -86,4 +86,15 @@ public interface WeekPlanSer extends Ser<WeekPlan, WeekPlanDTO> {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 周计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        return null;
+    }
+
 }

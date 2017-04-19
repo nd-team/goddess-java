@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MonthPlanAPI;
+import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.MonthPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class MonthPlanAct {
 
     @Autowired
     private MonthPlanAPI monthPlanAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 月计划数据传输对象
+     * @return class MonthPlanVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(MonthPlanDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.maps(dto), MonthPlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存月计划数据

@@ -104,4 +104,9 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
             throw new SerException("数据对象不能为空");
         }
     }
+
+    @Override
+    public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        return this.transformBOList(super.findByPage(dto));
+    }
 }

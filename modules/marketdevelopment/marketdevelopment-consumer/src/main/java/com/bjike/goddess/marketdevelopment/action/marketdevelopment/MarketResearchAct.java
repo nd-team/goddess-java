@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MarketResearchAPI;
+import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 import com.bjike.goddess.marketdevelopment.vo.MarketResearchVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class MarketResearchAct {
 
     @Autowired
     private MarketResearchAPI marketResearchAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 市场调研数据传输对象
+     * @return class MarketResearchVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(MarketResearchDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(marketResearchAPI.maps(dto), MarketResearchVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存市场调研数据

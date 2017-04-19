@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 
 import java.util.List;
@@ -92,6 +93,17 @@ public interface MarketMeasureAPI {
      * @throws SerException
      */
     default MarketMeasureBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 市场测算数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<MarketMeasureBO> maps(MarketMeasureDTO dto) throws SerException {
         return null;
     }
 

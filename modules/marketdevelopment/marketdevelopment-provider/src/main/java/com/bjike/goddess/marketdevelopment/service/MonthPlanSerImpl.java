@@ -121,4 +121,9 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
             throw new SerException("数据对象不能为空");
         }
     }
+
+    @Override
+    public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
+        return this.transformBOList(super.findByPage(dto));
+    }
 }

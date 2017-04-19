@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 
 import java.util.List;
@@ -95,11 +96,23 @@ public interface BusinessCourseAPI {
 
     /**
      * 根据id获取业务方向科目
+     *
      * @param id 业务方向科目数据id
      * @return
      * @throws SerException
      */
     default BusinessCourseBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 业务方向科目数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
         return null;
     }
 

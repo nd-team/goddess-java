@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.MonthPlanSer;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,10 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
     @Override
     public MonthPlanBO getById(String id) throws SerException {
         return monthPlanSer.getById(id);
+    }
+
+    @Override
+    public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
+        return monthPlanSer.maps(dto);
     }
 }

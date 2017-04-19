@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
+import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.WeekPlanSer;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,10 @@ public class WeekPlanApiImpl implements WeekPlanAPI {
     @Override
     public WeekPlanBO getById(String id) throws SerException {
         return weekPlanSer.getById(id);
+    }
+
+    @Override
+    public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        return weekPlanSer.maps(dto);
     }
 }

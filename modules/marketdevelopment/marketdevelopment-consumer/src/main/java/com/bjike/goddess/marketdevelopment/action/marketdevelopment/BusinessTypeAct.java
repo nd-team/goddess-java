@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
+import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class BusinessTypeAct {
 
     @Autowired
     private BusinessTypeAPI businessTypeAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 业务类型数据传输对象
+     * @return class BusinessTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(BusinessTypeDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.maps(dto), BusinessTypeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存业务类型数据

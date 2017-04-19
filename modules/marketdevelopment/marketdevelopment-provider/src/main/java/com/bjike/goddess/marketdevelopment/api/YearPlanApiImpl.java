@@ -2,10 +2,8 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
-import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
-import com.bjike.goddess.marketdevelopment.entity.YearPlan;
+import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.YearPlanSer;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +54,10 @@ public class YearPlanApiImpl implements YearPlanAPI {
     @Override
     public YearPlanBO getById(String id) throws SerException {
         return BeanTransform.copyProperties(yearPlanSer.findById(id), YearPlanBO.class);
+    }
+
+    @Override
+    public List<YearPlanBO> maps(YearPlanDTO dto) throws SerException {
+        return BeanTransform.copyProperties(yearPlanSer.findByPage(dto), YearPlanBO.class);
     }
 }

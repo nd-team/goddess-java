@@ -8,8 +8,8 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.DemandAnalysisAPI;
+import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
-import com.bjike.goddess.marketdevelopment.vo.BusinessCourseVO;
 import com.bjike.goddess.marketdevelopment.vo.DemandAnalysisVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -31,6 +31,23 @@ public class DemandAnalysisAct {
 
     @Autowired
     private DemandAnalysisAPI demandAnalysisAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 市场需求分析数据传输对象
+     * @return class DemandAnalysisVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(DemandAnalysisDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.maps(dto), DemandAnalysisVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存市场需求分析数据

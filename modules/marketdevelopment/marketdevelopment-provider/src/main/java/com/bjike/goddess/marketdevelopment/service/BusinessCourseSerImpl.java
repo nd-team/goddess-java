@@ -126,5 +126,11 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             return this.transformBO(super.findById(id));
         } catch (SerException e) {
             throw new SerException("数据对象不能为空");
-        }    }
+        }
+    }
+
+    @Override
+    public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
+        return this.transformBOList(super.findByPage(dto));
+    }
 }

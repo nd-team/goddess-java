@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MarketChannelAPI;
+import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import com.bjike.goddess.marketdevelopment.vo.MarketChannelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class MarketChannelAct {
 
     @Autowired
     private MarketChannelAPI marketChannelAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 市场挖掘数据传输对象
+     * @return class MarketChannelVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(MarketChannelDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.maps(dto), MarketChannelVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存市场挖掘数据

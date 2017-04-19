@@ -105,4 +105,15 @@ public interface BusinessCourseSer extends Ser<BusinessCourse, BusinessCourseDTO
     default BusinessCourseBO getById(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 列表
+     *
+     * @param dto 业务方向科目数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
+        return null;
+    }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.service.BusinessCourseSer;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,10 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     @Override
     public BusinessCourseBO getById(String id) throws SerException {
         return businessCourseSer.getById(id);
+    }
+
+    @Override
+    public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
+        return businessCourseSer.maps(dto);
     }
 }

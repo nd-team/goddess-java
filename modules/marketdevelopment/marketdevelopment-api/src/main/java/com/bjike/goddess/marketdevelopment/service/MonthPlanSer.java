@@ -85,4 +85,15 @@ public interface MonthPlanSer extends Ser<MonthPlan, MonthPlanDTO> {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 月计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
+        return null;
+    }
+
 }

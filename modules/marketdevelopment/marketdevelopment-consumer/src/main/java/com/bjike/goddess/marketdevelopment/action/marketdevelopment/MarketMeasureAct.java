@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI;
+import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import com.bjike.goddess.marketdevelopment.vo.MarketMeasureVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class MarketMeasureAct {
 
     @Autowired
     private MarketMeasureAPI marketMeasureAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 市场测算数据传输对象
+     * @return class MarketMeasureVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(MarketMeasureDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.maps(dto), MarketMeasureVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存市场测算数据

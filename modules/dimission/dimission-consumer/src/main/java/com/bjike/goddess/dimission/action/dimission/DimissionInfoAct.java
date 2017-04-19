@@ -8,15 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
-* 工作交接
+* 离职信息
 * @Author:			[ dengjunren ]
-* @Date:			[  2017-04-17 02:24 ]
-* @Description:	[ 工作交接 ]
+* @Date:			[  2017-04-17 02:12 ]
+* @Description:	[ 离职信息 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
 @RestController
-@RequestMapping("workhandover")
-public class WorkHandoverAction { 
+@RequestMapping("dimissioninfo")
+public class DimissionInfoAct {
+
+
 
  }

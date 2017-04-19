@@ -8,8 +8,8 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.TargetInformationAPI;
+import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
-import com.bjike.goddess.marketdevelopment.vo.BusinessCourseVO;
 import com.bjike.goddess.marketdevelopment.vo.TargetInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -31,6 +31,23 @@ public class TargetInformationAct {
 
     @Autowired
     private TargetInformationAPI targetInformationAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 确定目标信息数据传输对象
+     * @return class TargetInformationVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(TargetInformationDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.maps(dto), TargetInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存确定目标信息数据

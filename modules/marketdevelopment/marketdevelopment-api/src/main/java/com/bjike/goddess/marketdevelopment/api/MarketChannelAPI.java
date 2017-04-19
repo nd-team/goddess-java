@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
+import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 
 import java.util.List;
@@ -92,6 +93,17 @@ public interface MarketChannelAPI {
      * @throws SerException
      */
     default MarketChannelBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 工作交接数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<MarketChannelBO> maps(MarketChannelDTO dto) throws SerException {
         return null;
     }
 }

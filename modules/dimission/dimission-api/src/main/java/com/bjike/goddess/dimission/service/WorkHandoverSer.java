@@ -42,6 +42,12 @@ public interface WorkHandoverSer extends Ser<WorkHandover, WorkHandoverDTO> {
         return null;
     }
 
+    /**
+     * 删除
+     * @param id 工作交接数据id
+     * @return
+     * @throws SerException
+     */
     default WorkHandoverBO delete(String id) throws SerException {
         return null;
     }
@@ -57,7 +63,12 @@ public interface WorkHandoverSer extends Ser<WorkHandover, WorkHandoverDTO> {
         return null;
     }
 
-
+    /**
+     * 列表
+     * @param dto 工作交接数据传输对象
+     * @return
+     * @throws SerException
+     */
     default List<WorkHandoverBO> maps(WorkHandoverDTO dto) throws SerException {
         return null;
     }

@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
+import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 
 import java.util.List;
@@ -82,6 +83,17 @@ public interface WeekPlanAPI {
      * @throws SerException
      */
     default WeekPlanBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 周计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
         return null;
     }
 }

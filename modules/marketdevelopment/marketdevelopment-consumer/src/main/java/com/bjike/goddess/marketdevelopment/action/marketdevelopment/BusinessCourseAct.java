@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI;
+import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessCourseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,23 @@ public class BusinessCourseAct {
 
     @Autowired
     private BusinessCourseAPI businessCourseAPI;
+
+
+    /**
+     * 列表
+     *
+     * @param dto 业务方向科目数据传输对象
+     * @return class BusinessCourseVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(BusinessCourseDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.maps(dto), BusinessCourseVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存业务方向科目数据

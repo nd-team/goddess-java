@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
+import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketChannelSer;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,10 @@ public class MarketChannelApiImpl implements MarketChannelAPI {
     @Override
     public MarketChannelBO getById(String id) throws SerException {
         return BeanTransform.copyProperties(marketChannelSer.findById(id), MarketChannelBO.class);
+    }
+
+    @Override
+    public List<MarketChannelBO> maps(MarketChannelDTO dto) throws SerException {
+        return BeanTransform.copyProperties(marketChannelSer.findByPage(dto), MarketChannelBO.class);
     }
 }
