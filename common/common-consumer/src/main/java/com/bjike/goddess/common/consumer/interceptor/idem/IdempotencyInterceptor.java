@@ -1,6 +1,7 @@
 package com.bjike.goddess.common.consumer.interceptor.idem;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.consumer.http.RequestContext;
 import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.google.common.cache.CacheBuilder;
@@ -78,11 +79,22 @@ public class IdempotencyInterceptor implements HandlerInterceptor{
             }
             if(null==info.getStatus()){
                 info.setStatus(Info.Status.PRE);
+                info.setUrl(RequestContext.get().getRequestURI());
             }else if(Info.Status.PRE.equals(info.getStatus())){
+                if(!info.getUrl().equals(RequestContext.get().getRequestURI())){
+                    actResult.setMsg("请求已失效,请重新操作");
+                    ResponseContext.writeData(actResult.toString());
+                    return false;
+                }
                 actResult.setMsg("请求处理中,请稍后");
-                ResponseContext.get().getWriter().print(actResult.toString());
+                ResponseContext.writeData(actResult.toString());
                 return false;
             }else if(Info.Status.AFTER.equals(info.getStatus())){
+                if(!info.getUrl().equals(RequestContext.get().getRequestURI())){
+                    actResult.setMsg("请求已失效,请重新操作");
+                    ResponseContext.writeData(actResult.toString());
+                    return false;
+                }
                 LOGGER.info("请求重复提交,忽略处理");
                 actResult.setMsg("请不要重复提交");
                 if(null!=info.getResult()){

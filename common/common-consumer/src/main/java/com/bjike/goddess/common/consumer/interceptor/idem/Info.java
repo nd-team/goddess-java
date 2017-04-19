@@ -13,6 +13,8 @@ public class Info {
     }
     private Status status;
 
+    private String url;
+
     private Object result;
 
     public Object getResult() {
@@ -31,4 +33,11 @@ public class Info {
         this.status = status;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

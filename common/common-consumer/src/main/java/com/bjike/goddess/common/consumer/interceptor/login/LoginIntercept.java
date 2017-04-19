@@ -55,8 +55,6 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
         }
         handlerUserToken(token);
-        handlerStorageToken(request);
-
         return pass;
     }
 
@@ -87,7 +85,6 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
     }
 
-
     /**
      * 处理用户token
      *
@@ -99,20 +96,6 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
         }
     }
-
-    /**
-     * 处理存儲登录token
-     *
-     * @param request
-     * @return
-     */
-    private void handlerStorageToken(HttpServletRequest request) {
-        Object storageToken = request.getParameter("storageToken");
-        if (null != storageToken) {
-            RpcContext.getContext().setAttachment("storageToken", String.valueOf(storageToken));
-        }
-    }
-
 
     /**
      * 未登录处理
