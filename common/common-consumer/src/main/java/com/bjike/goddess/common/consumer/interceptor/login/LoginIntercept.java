@@ -41,21 +41,18 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
         if (null != obj) {
             token = obj.toString();
         }
-        Boolean pass = false;
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            pass = validateLogin(token, response);
+            return validateLogin(token, response);
         }
-        if (!pass) {
-            Method method = ((HandlerMethod) handler).getMethod();
-            Class<?> clazz = method.getDeclaringClass();
-            //该类或者方法上是否有登录安全认证注解
-            if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
-                pass = validateLogin(token, response);
-            }
-
+        Method method = ((HandlerMethod) handler).getMethod();
+        Class<?> clazz = method.getDeclaringClass();
+        //该类或者方法上是否有登录安全认证注解
+        if (clazz.isAnnotationPresent(LoginAuth.class) || method.isAnnotationPresent(LoginAuth.class)) {
+            return validateLogin(token, response);
         }
         handlerUserToken(token);
-        return pass;
+        return true;
+
     }
 
 
@@ -73,6 +70,7 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
         try {
             if (StringUtils.isNotBlank(token) && null != userAPI.currentUser()) {
+                handlerUserToken(token);
                 return true;
             } else {
                 handlerNotHasLogin(response, "用户未登录！");
