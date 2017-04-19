@@ -109,7 +109,6 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
     }
 
 
-
     /**
      * 保存对象列表
      *
@@ -204,7 +203,27 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
         return null;
     }
 
+    /**
+     * sql查询
+     *
+     * @param sql    sql语句
+     * @param clazz  查询结果映射类
+     * @param fields 查询的字段
+     * @param
+     * @return
+     * @throws SerException
+     */
     default <T> List<T> findBySql(String sql, Class clazz, String[] fields) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取
+     *
+     * @param clazz
+     * @return
+     */
+    default String getTableName(Class clazz) throws SerException {
         return null;
     }
 

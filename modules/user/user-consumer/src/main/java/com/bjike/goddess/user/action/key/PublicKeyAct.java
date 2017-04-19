@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("public")
 public class PublicKeyAct {

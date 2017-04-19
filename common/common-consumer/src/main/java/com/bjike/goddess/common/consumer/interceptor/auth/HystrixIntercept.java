@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
  * @Copy: [com.bjike]
  */
 public class HystrixIntercept extends HandlerInterceptorAdapter {
-    private static  final String[] AUTH_URL =new String[]{"/user/*","/group*"};
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         wrapWithHystrixCommnad(handler);
@@ -36,9 +35,9 @@ public class HystrixIntercept extends HandlerInterceptorAdapter {
                 try {
                     return handler;
                 } catch (Throwable throwable) {
-                    if(throwable instanceof ActException){
-                        throw new HystrixBadRequestException(throwable.getMessage(),throwable);
-                    }else{
+                    if (throwable instanceof ActException) {
+                        throw new HystrixBadRequestException(throwable.getMessage(), throwable);
+                    } else {
                         throw (Exception) throwable;
                     }
                 }

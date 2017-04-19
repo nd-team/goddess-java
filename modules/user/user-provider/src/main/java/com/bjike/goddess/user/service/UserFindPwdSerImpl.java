@@ -21,7 +21,6 @@ public class UserFindPwdSerImpl implements UserFindPwdSer {
     @Autowired
     private UserSer userSer;
 
-
     @Override
     public UserSimpleBO verifyAccount(String account, String authCode) throws SerException {
         UserBO userBO = userSer.findByAccountNumber(account);

@@ -1,12 +1,12 @@
 package com.bjike.goddess.storage.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
@@ -81,7 +81,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     private String login(StorageUser storageUser) throws SerException {
-        String token = TokenUtil.create("192.168.0.148", storageUser.getAccount());
+        String token = TokenUtil.create("192.168.0.1", storageUser.getAccount());
         LoginUser loginUser = BeanTransform.copyProperties(storageUser, LoginUser.class);
         StorageSession.put(token, loginUser);
         String str_loginUser = JSON.toJSONString(loginUser);
@@ -100,9 +100,8 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
 
     @Override
     public StorageUserBO getCurrentUser() throws SerException {
-        Object obj = RpcContext.getContext().getAttachment("storageToken");
-        if (null != obj) {
-            String token = obj.toString();
+        String token = RpcTransmit.getStorageToken();
+        if (StringUtils.isNotBlank(token)) {
             LoginUser loginUser = StorageSession.get(token);
             if (null != loginUser) {
                 return BeanTransform.copyProperties(loginUser, StorageUserBO.class);

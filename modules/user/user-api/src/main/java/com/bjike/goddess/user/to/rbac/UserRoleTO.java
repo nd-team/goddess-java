@@ -1,9 +1,9 @@
 package com.bjike.goddess.user.to.rbac;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
-
-import java.io.Serializable;
 
 /**
  * 用户角色传输对象
@@ -14,12 +14,16 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class UserRoleTO implements Serializable {
-
-    @NotBlank(message = "用户id不能为空", groups = ADD.class)
+public class UserRoleTO extends BaseTO {
+    /**
+     * 用户id
+     */
+    @NotBlank(message = "用户id不能为空", groups = {ADD.class, EDIT.class})
     private String userId;
-
-    @NotBlank(message = "角色id不能为空", groups = ADD.class)
+    /**
+     * 角色id
+     */
+    @NotBlank(message = "角色id不能为空", groups ={ADD.class, EDIT.class})
     private String roleId;
 
     public String getUserId() {

@@ -1,11 +1,14 @@
 package com.bjike.goddess.common.consumer.interceptor.auth;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
+import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -41,7 +44,8 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
         if (null != excludes) {
             for (String exclude : excludes) { //过滤请求资源
                 String last_suffix = StringUtils.substringAfterLast(exclude, "/");
-                if (uri.endsWith(last_suffix)) {
+                String pass_url = StringUtils.substringBeforeLast(uri, "/") + "/*";
+                if (uri.endsWith(last_suffix) || exclude.equals(pass_url) || uri.equals(exclude)) {
                     pass = true;
                     break;
                 }
@@ -50,30 +54,40 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
                 return super.preHandle(request, response, handler);
             }
         }
-
-        List<String> permissions = permissionAPI.currentPermissions();
-        for (String per : permissions) {
+        List<PermissionBO> permissions = permissionAPI.currentPermissions();
+        for (PermissionBO per : permissions) {
             /**
              * url 完全相匹配
              */
-            if (per.equals(uri)) {
-                pass = true;
-                break;
+            String resource = per.getResource();
+            if (resource.equals(uri)) {
+                return super.preHandle(request, response, handler);
             }
             /**
              * 权限资源没有子资源且前缀相匹配
              */
-            String per_url = StringUtils.substringBeforeLast(per,"/*");
-            if(StringUtils.isNotBlank(per_url) && uri.indexOf(per_url)!=-1){
+            String per_url = StringUtils.substringBeforeLast(resource, "/*");
+            if (StringUtils.isNotBlank(per_url) && uri.indexOf(per_url) != -1) {
                 pass = true;
-                break;
+                if (per.getHasChild()) { //如存在子资源,通配符*无效
+                    pass = false;
+                    for (PermissionBO p : permissions) {
+                        if (p.getResource().equals(uri)) { //子资源匹配
+                            pass = true;
+                            break;
+                        }
+                    }
+                    if (pass) {
+                        break;
+                    }
+                }
+
             }
         }
 
         if (pass) {
             return super.preHandle(request, response, handler);
         }
-        //  System.out.println(permissionBOS);
         throw new SerException("该权限资源受限:" + uri);
 
     }

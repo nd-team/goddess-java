@@ -10,7 +10,9 @@ import com.bjike.goddess.user.api.rbac.RolePermissionAPI;
 import com.bjike.goddess.user.bo.rbac.RolePermissionBO;
 import com.bjike.goddess.user.to.rbac.RolePermissionTO;
 import com.bjike.goddess.user.vo.rbac.RolePermissionVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
-@RequestMapping("rolePermission")
+@RequestMapping("role-permission")
 public class RolePermissionAct {
 
     @Autowired
@@ -40,7 +43,7 @@ public class RolePermissionAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RolePermissionTO rolePermissionTO) throws ActException {
+    public Result add(@Validated({ADD.class}) RolePermissionTO rolePermissionTO, BindingResult result) throws ActException {
         try {
             RolePermissionBO rolePermissionBO = rolePermissionAPI.saveByTO(rolePermissionTO);
             return ActResult.initialize(BeanTransform.copyProperties(rolePermissionBO, RolePermissionVO.class));

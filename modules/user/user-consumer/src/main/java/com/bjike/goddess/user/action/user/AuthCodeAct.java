@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAuthCodeAPI;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,9 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
-@RequestMapping("authCode")
+@RequestMapping("auth-code")
 public class AuthCodeAct {
     @Autowired
     private UserAuthCodeAPI userAuthCodeAPI;
@@ -37,10 +39,10 @@ public class AuthCodeAct {
      * 登录是否需要验证码
      *
      * @param account 账号email,username,phone
-     * @des true代表需要要验证,false代表不需要验证码
+     * @des true代表需要要验证, false代表不需要验证码,返回true时调用generate-code方法生成验证码
      * @version v1
      */
-    @GetMapping("v1/showAuthCode/{account}")
+    @GetMapping("v1/show/{account}")
     public Result showAuthCode(@PathVariable String account) throws ActException {
         try {
             Boolean needCode = userAuthCodeAPI.showAuthCode(account);
@@ -54,12 +56,12 @@ public class AuthCodeAct {
     /**
      * 生成验证码
      *
-     * @param account  账号email,username,phone
-     * @des 登录找回密码注册,验证码图片流
-     * @return  {name:'testName',type:'string',defaultValue:'',description:'图片流.'}
+     * @param account 账号email,username,phone
+     * @return {name:'testName',type:'string',defaultValue:'',description:'图片流.'}
+     * @des 登录找回密码注册, 验证码图片流
      * @version v1
      */
-    @GetMapping("v1/generateCode/{account}")
+    @GetMapping("v1/generate-code/{account}")
     public void generateCode(@PathVariable String account, HttpServletResponse response) throws ActException {
         response.setContentType("image/jpeg");
         response.setDateHeader("expries", -1);

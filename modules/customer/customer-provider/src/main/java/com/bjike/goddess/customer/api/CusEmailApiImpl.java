@@ -64,4 +64,9 @@ public class CusEmailApiImpl implements CusEmailAPI {
     public List<CusEmailBO> collectCusEmail(String[] works) throws SerException {
         return cusEmailSer.collectCusEmail(works);
     }
+
+    @Override
+    public CusEmailBO getCusEmailById(String id) throws SerException {
+        return cusEmailSer.getCusEmailById(id);
+    }
 }

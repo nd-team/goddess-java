@@ -82,12 +82,10 @@ include ':modules:projectmeasure:projectmeasure-provider'
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
-
 //#市场信息管理
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
-
 //#竞争对手管理
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
@@ -100,20 +98,18 @@ include ':modules:businessproject:businessproject-provider'
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
-
+//
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
 include ':modules:contractquotemanager:contractquotemanager-provider'
-
+//
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
-
 //#简介管理
 include ':modules:intromanage:intromanage-api'
 include ':modules:intromanage:intromanage-consumer'
 include ':modules:intromanage:intromanage-provider'
-
 //#marketdevelopment 市场计划进度管理
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
@@ -194,9 +190,8 @@ include ':modules:interiorrecommend:interiorrecommend-provider'
 include ':modules:archive:archive-api'
 include ':modules:archive:archive-consumer'
 include ':modules:archive:archive-provider'
-
 //#assistance 公司补助tanghaixiang
-//include ':modules:assistance:assistance-api'
-//include ':modules:assistance:assistance-consumer'
-//include ':modules:assistance:assistance-provider'
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
 

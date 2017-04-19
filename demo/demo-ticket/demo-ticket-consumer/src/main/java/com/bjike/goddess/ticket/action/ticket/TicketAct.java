@@ -1,8 +1,11 @@
 package com.bjike.goddess.ticket.action.ticket;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.IdempotencyRequestInterceptor;
+import com.bjike.goddess.common.consumer.interceptor.idem.Info;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
@@ -13,16 +16,21 @@ import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 购票信息
@@ -36,14 +44,21 @@ public class TicketAct {
     private TicketAPI ticketAPI;
 
     private int cc = 0;
-    @GetMapping("test")
-    public Result tt() throws ActException{
-        cc++;
-        System.out.println(cc);
-        if(cc<=20){
-            throw new RuntimeException("tt exception");
+    @PostMapping(value = "test",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Result tt(@RequestBody Info j, String a) throws ActException{
+        return tt1(j,a);
+    }
+
+    @PostMapping(value = "test")
+    public Result tt1(Info j, String a) throws ActException{
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return new ActResult("success");
+        System.out.println(JSON.toJSON(j));
+        System.out.println("进来了");
+        return new ActResult("yes");
     }
 
 

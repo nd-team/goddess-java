@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.enums.CustomerCollectUnit;
 import com.bjike.goddess.customer.enums.CustomerSendUnit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户邮件发送定制表现层对象
@@ -90,7 +91,7 @@ public class CusEmailVO {
     /**
      * 个数
      */
-    private int counts;
+    private Integer counts;
 
     /**
      * 数据库枚举转换
@@ -100,22 +101,22 @@ public class CusEmailVO {
     /**
      * 行业地区汇总集合
      */
-    private String areaMap;
+    private List<Map<String, String>> areaMap;
 
     /**
      * 行业客户级别汇总集合
      */
-    private String levelMap;
+    private List<Map<String, String>> levelMap;
 
     /**
      * 行业客户类别汇总集合
      */
-    private String cusTypeMap;
+    private List<Map<String, String>> cusTypeMap;
 
     /**
      * 行业客户状态汇总集合
      */
-    private String cusStatusMap;
+    private List<Map<String, String>> cusStatusMap;
 
 
     public String getId() {
@@ -230,11 +231,11 @@ public class CusEmailVO {
         this.modifyTime = modifyTime;
     }
 
-    public int getCounts() {
+    public Integer getCounts() {
         return counts;
     }
 
-    public void setCounts(int counts) {
+    public void setCounts(Integer counts) {
         this.counts = counts;
     }
 
@@ -246,35 +247,35 @@ public class CusEmailVO {
         this.enumConvert = enumConvert;
     }
 
-    public String getAreaMap() {
+    public List<Map<String, String>> getAreaMap() {
         return areaMap;
     }
 
-    public void setAreaMap(String areaMap) {
+    public void setAreaMap(List<Map<String, String>> areaMap) {
         this.areaMap = areaMap;
     }
 
-    public String getLevelMap() {
+    public List<Map<String, String>> getLevelMap() {
         return levelMap;
     }
 
-    public void setLevelMap(String levelMap) {
+    public void setLevelMap(List<Map<String, String>> levelMap) {
         this.levelMap = levelMap;
     }
 
-    public String getCusTypeMap() {
+    public List<Map<String, String>> getCusTypeMap() {
         return cusTypeMap;
     }
 
-    public void setCusTypeMap(String cusTypeMap) {
+    public void setCusTypeMap(List<Map<String, String>> cusTypeMap) {
         this.cusTypeMap = cusTypeMap;
     }
 
-    public String getCusStatusMap() {
+    public List<Map<String, String>> getCusStatusMap() {
         return cusStatusMap;
     }
 
-    public void setCusStatusMap(String cusStatusMap) {
+    public void setCusStatusMap(List<Map<String, String>> cusStatusMap) {
         this.cusStatusMap = cusStatusMap;
     }
 }

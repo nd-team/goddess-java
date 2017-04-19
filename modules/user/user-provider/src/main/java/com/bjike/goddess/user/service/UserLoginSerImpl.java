@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户登陆业务实现
@@ -68,8 +67,8 @@ public class UserLoginSerImpl implements UserLoginSer {
                     PwdErrSession.remove(account);//删除密码验证错误次数统计
                     AuthCodeSession.remove(account);//清除验证码
                     saveLoginLog(loginTO, user);  //记录登录日志
-                    LoginUser loginUser =saveToSessionAndRedis(user, token); //保存登录用户到session和redis
-                    setPermission(loginUser,token);
+                    LoginUser loginUser = saveToSessionAndRedis(user, token); //保存登录用户到session和redis
+                    setPermission(loginUser, token);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
@@ -181,12 +180,12 @@ public class UserLoginSerImpl implements UserLoginSer {
         return pass;
     }
 
-    private void setPermission(LoginUser loginUser,String token) throws SerException {
-        List<String> permissions = permissionSer.findPermissions(loginUser.getId());
+    private void setPermission(LoginUser loginUser, String token) throws SerException {
+        List<PermissionBO> permissions = permissionSer.findByUserId(loginUser.getId());
         if (null != permissions && permissions.size() > 0) {
             loginUser.setPermissions(permissions);
         }
-        UserSession.put(token,loginUser);
+        UserSession.put(token, loginUser);
     }
 
 }

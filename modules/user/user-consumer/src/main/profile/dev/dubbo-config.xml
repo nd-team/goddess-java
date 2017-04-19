@@ -24,6 +24,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserRegisterAPI" id="userRegisterApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAuthCodeAPI" id="userAuthCodeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginLogAPI" id="userLoginLogApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserFindPwdAPI" id="userFindPwdApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupRoleAPI" id="groupRoleApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RolePermissionAPI" id="rolePermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.RoleAPI" id="roleApiImpl"/>

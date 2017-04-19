@@ -79,7 +79,7 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result editEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO);
@@ -115,8 +115,8 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
-    @GetMapping("v1/getEntryBasicInfo")
-    public Result findOneEntryBasicInfo(@RequestParam String id) throws ActException {
+    @GetMapping("v1/getEntryBasicInfo/{id}")
+    public Result findOneEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
             EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.getEntryBasicInfo(id), EntryBasicInfoVO.class, true);
@@ -164,9 +164,51 @@ public class EntryBasicInfoAction {
         }
     }
 
-    //TODO: tanghaixiang 2017-03-10 上传附件
+    /**
+     * 根据姓名查找入职信息
+     *
+     * @param name name
+     * @des 根据姓名查找入职信息
+     * @return class EntryBasicInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/getInfoByName/{name}")
+    public Result getInfoByName(@PathVariable String name) throws ActException {
+        try {
+            EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
+                    entryBasicInfoAPI.getEntryBasicInfoByName(name), EntryBasicInfoVO.class, true);
+            return ActResult.initialize(entryBasicInfoVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
-    //TODO: tanghaixiang 2017-03-10 查看附件
+
+    /**
+     * 上传附件
+     *
+     * @des 上传附件
+     * @return class EntryBasicInfoVO
+     * @version v1
+     */
+    @PutMapping("v1/uploadFile")
+    public Result uploadFile( ) throws ActException {
+        //TODO: tanghaixiang 2017-03-10 上传附件
+        return ActResult.initialize(null);
+    }
+
+    /**
+     * 查看附件
+     *
+     * @des 查看附件
+     * @return class EntryBasicInfoVO
+     * @version v1
+     */
+    @PutMapping("v1/getFile")
+    public Result getFile( ) throws ActException {
+        //TODO: tanghaixiang 2017-03-10 查看附件
+        return ActResult.initialize(null);
+    }
 
 
 }
