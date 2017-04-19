@@ -56,5 +56,13 @@ public class CategoryApiImpl implements CategoryAPI {
         return categorySer.listById(id);
     }
 
+    @Override
+    public List<String> getSecondSubject(CategoryDTO categoryDTO) throws SerException {
+        return categorySer.getSecondSubject(categoryDTO);
+    }
 
+    @Override
+    public List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {
+        return categorySer.getThirdSubject(categoryDTO);
+    }
 }

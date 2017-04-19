@@ -23,6 +23,14 @@
 	<dubbo:service  ref="lendAuditDetailApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendAuditDetailAPI" />
 	<dubbo:service  ref="lendEditContentApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendEditContentAPI" />
 
+
+	<dubbo:service  ref="finoddinforApiImpl" interface="com.bjike.goddess.lendreimbursement.api.FinoddinforAPI" />
+	<dubbo:service  ref="reimburseAnalisisorApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAnalisisorAPI" />
+	<dubbo:service  ref="reimburseAuditLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI" />
+	<dubbo:service  ref="reimburseRecordApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI" />
+	<dubbo:service  ref="reimburseRecordLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordLogAPI" />
+
+
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 

@@ -10,6 +10,8 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -41,8 +43,22 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Autowired
     private SelfCapabilitySer selfCapabilityAPI;
 
+    @Override
+    public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        Long count = super.count(collectEmailDTO);
+        return count;
+    }
 
-    
+    @Override
+    public CollectEmailBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        CollectEmail selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,CollectEmailBO.class);
+
+    }
+
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
         List<CollectEmail> list = super.findByCis(collectEmailDTO, true);
@@ -88,6 +104,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        if (StringUtils.isBlank(collectEmailTO.getId() )) {
+            throw new SerException("id不能为空");
+        }
+        CollectEmail temp = super.findById(collectEmailTO.getId());
+
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -96,7 +117,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             }
         }
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
-        collectEmail.setModifyTime(LocalDateTime.now());
+        BeanUtils.copyProperties( collectEmail,temp ,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
 //        collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置汇总公司名和人名
@@ -104,17 +126,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         for(String str : collectEmailTO.getCompanyOrNames()){
             companyOrName += str+",";
         }
-        collectEmail.setCompanyOrName( companyOrName );
+        temp.setCompanyOrName( companyOrName );
 
         //设置发送间隔
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
-        collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
+        temp.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
         //设置发送对象
-        collectEmail.setSendObject(String.valueOf(emails));
+        temp.setSendObject(String.valueOf(emails));
 
-        super.update(collectEmail);
-        return BeanTransform.copyProperties(collectEmail, CollectEmailBO.class);
+        super.update(temp);
+        return BeanTransform.copyProperties(temp, CollectEmailBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
