@@ -15,10 +15,7 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.business.action","com.bjike.goddess.business.config", "com.bjike.goddess.common.consumer"}
-        ,excludeFilters = {@ComponentScan.Filter(
-        type = FilterType.ANNOTATION,
-        value = {Configuration.class})})
+@ComponentScan(basePackages = {"com.bjike.goddess.business.action", "com.bjike.goddess.common.consumer"})
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
