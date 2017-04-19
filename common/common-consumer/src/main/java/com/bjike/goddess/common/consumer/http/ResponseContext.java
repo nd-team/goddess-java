@@ -1,5 +1,8 @@
 package com.bjike.goddess.common.consumer.http;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,11 +23,40 @@ public final class ResponseContext {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//springmvc 自带
     }
 
-    public static void writeData(String data){
+    private static HttpServletResponse init(){
         HttpServletResponse response = get();
+        response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
+        return response;
+    }
+
+    public static void writeData(String data){
         try {
-            response.getWriter().print(data);
+            init().getWriter().print(data);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    public static void writeData(Object data){
+        try {
+            init().getWriter().print(JSON.toJSONString(data));
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    public static void writeData(HttpServletResponse response,Object data){
+        try {
+            init().getWriter().print(JSON.toJSONString(data));
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    public static void writeData(HttpServletResponse response,String data){
+        try {
+            init().getWriter().print(data);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

@@ -13,8 +13,7 @@ public class Info {
     }
     private Status status;
 
-    @NotBlank
-    private String username;
+    private String url;
 
     private Object result;
 
@@ -34,11 +33,11 @@ public class Info {
         this.status = status;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

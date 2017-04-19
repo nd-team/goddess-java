@@ -60,13 +60,17 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSettlementFollowBO editProjectSettlementFollow(ProjectSettlementFollowTO projectSettlementFollowTO) throws SerException {
-        if (StringUtils.isBlank(projectSettlementFollowTO.getId())) {
+        if (StringUtils.isBlank(projectSettlementFollowTO.getId()) || projectSettlementFollowTO.getId()==null ) {
             throw new SerException("编号不能为空");
         }
         ProjectSettlementFollow projectSettlementFollow = super.findById(projectSettlementFollowTO.getId());
+        if( projectSettlementFollow == null ){
+            throw  new SerException("编辑失败，您填写的数据可能有错");
+        }
         ProjectSettlementFollow temp = BeanTransform.copyProperties(projectSettlementFollowTO, ProjectSettlementFollow.class, true);
         BeanUtils.copyProperties(temp, projectSettlementFollow, "id", "createTime", "outerNameId", "innerNameId", "saleNumId", "businessId");
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+        projectSettlementFollow.setModifyTime(LocalDateTime.now());
         super.update(projectSettlementFollow);
         return BeanTransform.copyProperties(projectSettlementFollow, ProjectSettlementFollowBO.class);
     }

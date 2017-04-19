@@ -54,4 +54,9 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     public void remove(String id) throws SerException {
         driverInfoSer.remove(id);
     }
+
+    @Override
+    public DriverInfoBO findByDriver(String driverName) throws SerException {
+        return driverInfoSer.findByDriver(driverName);
+    }
 }

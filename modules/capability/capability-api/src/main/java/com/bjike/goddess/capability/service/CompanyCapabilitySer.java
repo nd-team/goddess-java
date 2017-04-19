@@ -21,6 +21,20 @@ import java.util.List;
 public interface CompanyCapabilitySer extends Ser<CompanyCapability, CompanyCapabilityDTO> {
 
     /**
+     * 总条数
+     */
+    default Long counts(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个个公司能力
+     * @return class CompanyCapabilityBO
+     */
+    default CompanyCapabilityBO getOne(String id) throws SerException {return null;}
+
+
+    /**
      * 公司能力展示列表
      * @return class CompanyCapabilityBO
      */

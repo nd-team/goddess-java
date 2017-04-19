@@ -59,9 +59,14 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
             throw  new SerException("编号不能为空");
         }
         ProjectCarry projectCarry = super.findById( projectCarryTO.getId() );
+        if( projectCarry == null ){
+            throw  new SerException("编辑失败，您填写的数据可能有错");
+        }
         ProjectCarry temp = BeanTransform.copyProperties(projectCarryTO,ProjectCarry.class,true);
         BeanUtils.copyProperties(temp,projectCarry,"id","createTime","outerNameId","innerNameId","saleNumId");
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+
+        projectCarry.setModifyTime(LocalDateTime.now());
         super.update( projectCarry );
         return BeanTransform.copyProperties(projectCarry,ProjectCarryBO.class);
     }

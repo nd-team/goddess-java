@@ -50,4 +50,11 @@ public class FirstSubjectApiImpl implements FirstSubjectAPI {
     public FirstSubjectBO getFirstSubject(String firstSubjectName) throws SerException {
         return firstSubjectSer.getFirstSubject(firstSubjectName);
     }
+
+    @Override
+    public List<String> listAllFirst() throws SerException {
+        return firstSubjectSer.listAllFirst();
+    }
+
+
 }
