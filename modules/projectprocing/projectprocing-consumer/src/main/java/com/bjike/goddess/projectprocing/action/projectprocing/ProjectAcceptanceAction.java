@@ -96,7 +96,7 @@ public class ProjectAcceptanceAction {
      * 编辑项目验收情况
      *
      * @param projectAcceptanceTO 项目验收情况基本信息数据bo
-     * @des 添加项目验收情况
+     * @des 编辑项目验收情况
      * @return  class ProjectAcceptanceVO
      * @version v1
      */

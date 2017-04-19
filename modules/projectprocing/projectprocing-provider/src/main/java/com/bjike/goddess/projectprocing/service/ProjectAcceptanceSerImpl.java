@@ -57,9 +57,13 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
             throw  new SerException("编号不能为空");
         }
         ProjectAcceptance projectAcceptance = super.findById( projectAcceptanceTO.getId() );
+        if( projectAcceptance == null ){
+            throw  new SerException("编辑失败，您填写的数据可能有错");
+        }
         ProjectAcceptance temp = BeanTransform.copyProperties(projectAcceptanceTO,ProjectAcceptance.class,true);
         BeanUtils.copyProperties(temp,projectAcceptance,"id","createTime","outerNameId","innerNameId","saleNumId");
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+        projectAcceptance.setModifyTime(LocalDateTime.now());
         super.update( projectAcceptance );
         return BeanTransform.copyProperties(projectAcceptance,ProjectAcceptanceBO.class);
     }

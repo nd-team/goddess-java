@@ -50,6 +50,11 @@ public interface FirstSubjectAPI {
      */
     default FirstSubjectBO getFirstSubject(String firstSubjectName) throws SerException { return null;}
 
+    /**
+     * 获取所有一级科目列表
+     */
+    default List<String> listAllFirst( ) throws SerException {return null;}
+
 
 
 }

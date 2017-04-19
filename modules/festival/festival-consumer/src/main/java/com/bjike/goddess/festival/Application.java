@@ -13,12 +13,10 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.festival.action", "com.bjike.goddess.common.consumer"},
-        excludeFilters = {@ComponentScan.Filter(
-                type = FilterType.ANNOTATION,
-                value = {Configuration.class})})
+@ComponentScan(basePackages = {"com.bjike.goddess.festival.action", "com.bjike.goddess.festival.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
 public class Application {
+
 
 
     public static void main(String[] args) throws IOException {

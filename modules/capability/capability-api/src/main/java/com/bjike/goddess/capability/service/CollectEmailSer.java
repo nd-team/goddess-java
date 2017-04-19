@@ -22,6 +22,21 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
 
     /**
+     * 总条数
+     */
+    default Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 一个个邮件
+     * @return class CollectEmailBO
+     */
+    default CollectEmailBO getOne(String id) throws SerException {return null;}
+
+
+    /**
      * 商业能力邮件汇总列表
      *
      * @return class CollectEmailBO

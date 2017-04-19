@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,21 @@ import java.util.List;
 @Service
 public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, CooperCapabilityDTO> implements CooperCapabilitySer {
 
-    
+    @Override
+    public Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+        Long count = super.count(cooperCapabilityDTO);
+        return count;
+    }
+
+    @Override
+    public CooperCapabilityBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        CooperCapability selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,CooperCapabilityBO.class);
+    }
+
     @Override
     public List<CooperCapabilityBO> listCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
         List<CooperCapability> list = super.findByCis(cooperCapabilityDTO, true);
