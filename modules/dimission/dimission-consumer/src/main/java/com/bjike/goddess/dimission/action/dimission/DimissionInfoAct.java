@@ -293,7 +293,7 @@ public class DimissionInfoAct extends BaseFileAction {
      * 部门离职汇总
      *
      * @param to 离职信息汇总传输对象
-     * @return
+     * @return class DimissionInfoCollectVO
      * @version v1
      */
     @GetMapping("v1/departmentCollect")
