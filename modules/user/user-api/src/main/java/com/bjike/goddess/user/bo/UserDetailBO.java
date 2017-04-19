@@ -68,6 +68,11 @@ public class UserDetailBO extends BaseBO {
      */
     private String positionName;
 
+    /**
+     * 生日月份
+     */
+    private Integer birthMonth;
+
     public SexType getSex() {
         return sex;
     }
@@ -170,5 +175,13 @@ public class UserDetailBO extends BaseBO {
 
     public void setPositionName(String positionName) {
         this.positionName = positionName;
+    }
+
+    public Integer getBirthMonth() {
+        return birthMonth;
+    }
+
+    public void setBirthMonth(Integer birthMonth) {
+        this.birthMonth = birthMonth;
     }
 }

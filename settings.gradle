@@ -204,3 +204,18 @@ include ':modules:firmreward:firmreward-provider'
 include ':modules:regularization:regularization-api'
 include ':modules:regularization:regularization-consumer'
 include ':modules:regularization:regularization-provider'
+
+//#interior-recommend 内部推荐
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+
+//#staffwelfaremanage 员工福利
+include ':modules:staffwelfare:staffwelfaremanage-api'
+include ':modules:staffwelfare:staffwelfaremanage-consumer'
+include ':modules:staffwelfare:staffwelfaremanage-provider'
+//#dispatchcar 出车管理
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+
