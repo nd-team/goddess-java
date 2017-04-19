@@ -236,3 +236,8 @@ include ':modules:dispatchcar:dispatchcar-api'
 include ':modules:dispatchcar:dispatchcar-consumer'
 include ':modules:dispatchcar:dispatchcar-provider'
 
+//#materialbuy 物资购买
+include ':modules:materialbuy:materialbuy-api'
+include ':modules:materialbuy:materialbuy-consumer'
+include ':modules:materialbuy:materialbuy-provider'
+
