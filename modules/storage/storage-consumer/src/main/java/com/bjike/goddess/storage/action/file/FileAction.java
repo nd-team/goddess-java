@@ -3,18 +3,16 @@ package com.bjike.goddess.storage.action.file;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +33,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("file")
-public class FileAction {
+public class FileAction extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 
@@ -232,15 +230,6 @@ public class FileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    }
-
-
-    private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
-        if (null != request && !ServletFileUpload.isMultipartContent(request)) {
-            throw new SerException("上传表单不是multipart/form-data类型");
-        }
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
-        return multiRequest.getFiles("file");
     }
 
 

@@ -29,7 +29,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         if (null != interceptor && interceptor.customerInterceptors() != null) {
             for (HIInfo h : interceptor.customerInterceptors()) {
-                System.out.println(h);
                 registry.addInterceptor(h.getHandlerInterceptor()).addPathPatterns(h.getPath());
             }
         }

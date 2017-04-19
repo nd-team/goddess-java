@@ -13,6 +13,9 @@ public class Info {
     }
     private Status status;
 
+    @NotBlank
+    private String username;
+
     private Object result;
 
     public Object getResult() {
@@ -31,4 +34,11 @@ public class Info {
         this.status = status;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

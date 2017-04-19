@@ -22,7 +22,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-//@Component 测试去掉拦截器
+@Component
 public class CustomIntercept implements Interceptor {
     @Autowired
     private UserAPI userAPI;
@@ -52,7 +52,7 @@ public class CustomIntercept implements Interceptor {
                 "/user/version/register/*",
                 "public/version/key"
         };
-        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI,excludes), "/**");
+        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
          * 顺序

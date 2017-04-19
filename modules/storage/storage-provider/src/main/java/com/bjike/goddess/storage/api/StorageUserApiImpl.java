@@ -2,6 +2,7 @@ package com.bjike.goddess.storage.api;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.storage.bo.StorageUserBO;
 import com.bjike.goddess.storage.entity.StorageUser;
 import com.bjike.goddess.storage.service.StorageUserSer;
@@ -48,4 +49,5 @@ public class StorageUserApiImpl implements StorageUserAPI {
     public String getCurrentModule() throws SerException {
           return storageUserSer.getCurrentModule();
     }
+
 }
