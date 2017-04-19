@@ -82,10 +82,12 @@ include ':modules:projectmeasure:projectmeasure-provider'
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
+
 //#市场信息管理
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
+
 //#竞争对手管理
 include ':modules:competitormanage:competitormanage-api'
 include ':modules:competitormanage:competitormanage-consumer'
@@ -98,18 +100,20 @@ include ':modules:businessproject:businessproject-provider'
 include ':modules:capability:capability-api'
 include ':modules:capability:capability-consumer'
 include ':modules:capability:capability-provider'
-//
+
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
 include ':modules:contractquotemanager:contractquotemanager-provider'
-//
+
 include ':modules:proearlymarketcost:proearlymarketcost-api'
 include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 include ':modules:proearlymarketcost:proearlymarketcost-provider'
+
 //#简介管理
 include ':modules:intromanage:intromanage-api'
 include ':modules:intromanage:intromanage-consumer'
 include ':modules:intromanage:intromanage-provider'
+
 //#marketdevelopment 市场计划进度管理
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
@@ -170,28 +174,33 @@ include ':modules:individualvision:individualvision-provider'
 include ':modules:eggert:eggert-api'
 include ':modules:eggert:eggert-consumer'
 include ':modules:eggert:eggert-provider'
+
 //#借款与报销tanghaixiang
-include ':modules:lendreimbursement:lendreimbursement-api'
-include ':modules:lendreimbursement:lendreimbursement-consumer'
-include ':modules:lendreimbursement:lendreimbursement-provider'
+//include ':modules:lendreimbursement:lendreimbursement-api'
+//include ':modules:lendreimbursement:lendreimbursement-consumer'
+//include ':modules:lendreimbursement:lendreimbursement-provider'
+
 //#attainment 综合素养调研
 include ':modules:attainment:attainment-api'
 include ':modules:attainment:attainment-consumer'
 include ':modules:attainment:attainment-provider'
+
 //#bonus 项目奖金包
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
-//#interior-recommend 内部推荐
-include ':modules:interiorrecommend:interiorrecommend-api'
-include ':modules:interiorrecommend:interiorrecommend-consumer'
-include ':modules:interiorrecommend:interiorrecommend-provider'
-//#archive 员工档案
-include ':modules:archive:archive-api'
-include ':modules:archive:archive-consumer'
-include ':modules:archive:archive-provider'
-//#assistance 公司补助tanghaixiang
-include ':modules:assistance:assistance-api'
-include ':modules:assistance:assistance-consumer'
-include ':modules:assistance:assistance-provider'
 
+//#staffactivity 员工活动
+include ':modules:staffactivity:staffactivity-api'
+include ':modules:staffactivity:staffactivity-consumer'
+include ':modules:staffactivity:staffactivity-provider'
+
+//#firmreward 公司奖励
+include ':modules:firmreward:firmreward-api'
+include ':modules:firmreward:firmreward-consumer'
+include ':modules:firmreward:firmreward-provider'
+
+//#regularization 员工转正
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'

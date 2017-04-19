@@ -11,6 +11,9 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class PermissionVO {
+    /**
+     * id
+     */
     private String id;
 
     /**

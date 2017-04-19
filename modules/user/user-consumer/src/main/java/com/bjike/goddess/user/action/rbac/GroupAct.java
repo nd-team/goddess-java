@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.GroupAPI;
@@ -28,8 +29,10 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @RestController
 @RequestMapping("group")
+@DefaultProperties
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;
@@ -39,10 +42,10 @@ public class GroupAct {
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @des 逐层加载, 参考ztree
+     * @return class GroupVO
      * @version v1
      */
     @GetMapping("v1/tree")
-    @HystrixCommand
     public Result treeData(String id) throws ActException {
         try {
             List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
@@ -56,6 +59,7 @@ public class GroupAct {
      * 添加组
      *
      * @param groupTO 新的组信息
+     * @return class GroupVO
      * @version v1
      */
     @PostMapping("v1/add")

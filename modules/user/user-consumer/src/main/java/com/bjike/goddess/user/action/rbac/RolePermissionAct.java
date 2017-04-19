@@ -10,6 +10,7 @@ import com.bjike.goddess.user.api.rbac.RolePermissionAPI;
 import com.bjike.goddess.user.bo.rbac.RolePermissionBO;
 import com.bjike.goddess.user.to.rbac.RolePermissionTO;
 import com.bjike.goddess.user.vo.rbac.RolePermissionVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("role-permission")
 public class RolePermissionAct {

@@ -12,10 +12,7 @@ import org.springframework.context.annotation.ImportResource;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.ticket.action","com.bjike.goddess.ticket.config", "com.bjike.goddess.common.consumer"}
-,excludeFilters = {@ComponentScan.Filter(
-        type = FilterType.ANNOTATION,
-        value = {Configuration.class})})
+@ComponentScan(basePackages = {"com.bjike.goddess.ticket.action","com.bjike.goddess.ticket.config", "com.bjike.goddess.common.consumer"})
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application{

@@ -52,7 +52,7 @@ public class CustomIntercept implements Interceptor {
                 "/user/version/register/*",
                 "public/version/key"
         };
-        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI,excludes), "/**");
+        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
          * 顺序

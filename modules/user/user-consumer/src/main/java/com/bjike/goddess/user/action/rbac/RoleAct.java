@@ -5,11 +5,13 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.RoleAPI;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 import com.bjike.goddess.user.vo.rbac.RoleVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +28,8 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
+@DefaultProperties
 @RestController
 @RequestMapping("role")
 public class RoleAct {
@@ -36,6 +40,7 @@ public class RoleAct {
      * 获取角色树结构
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
+     * @return class RoleVO
      * @des 逐层加载, 参考ztree
      * @version v1
      */
@@ -53,6 +58,7 @@ public class RoleAct {
      * 添加角色
      *
      * @param roleTO 新的角色信息
+     * @return class RoleVO
      * @version v1
      */
     @PostMapping("v1/add")

@@ -9,6 +9,9 @@ package com.bjike.goddess.user.vo.rbac;
  * @Copy: [com.bjike]
  */
 public class RoleVO   {
+    /**
+     * id
+     */
     private String id;
 
     /**

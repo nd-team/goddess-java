@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAuthCodeAPI;
 import com.bjike.goddess.user.utils.AuthCodeGenerate;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 @RestController
 @RequestMapping("auth-code")
 public class AuthCodeAct {
@@ -37,7 +39,7 @@ public class AuthCodeAct {
      * 登录是否需要验证码
      *
      * @param account 账号email,username,phone
-     * @des true代表需要要验证, false代表不需要验证码
+     * @des true代表需要要验证, false代表不需要验证码,返回true时调用generate-code方法生成验证码
      * @version v1
      */
     @GetMapping("v1/show/{account}")
@@ -52,7 +54,6 @@ public class AuthCodeAct {
     }
 
     /**
-     * show返回true时调用该方法生成验证码
      * 生成验证码
      *
      * @param account 账号email,username,phone

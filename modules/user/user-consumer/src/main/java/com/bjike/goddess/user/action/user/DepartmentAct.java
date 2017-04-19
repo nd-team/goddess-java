@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.to.DepartmentTO;
 import com.bjike.goddess.user.vo.DepartmentVO;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +27,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@DefaultProperties
 
 @RestController
 @RequestMapping("department")
@@ -39,6 +41,7 @@ public class DepartmentAct {
      * 获取部门树结构
      *
      * @param id 通id不为空时查询下层子节点,参数为空时查询最顶层
+     * @return class DepartmentVO
      * @version v1
      */
     @GetMapping("v1/tree")
@@ -54,7 +57,8 @@ public class DepartmentAct {
     /**
      * 添加部门
      *
-     * @param departmentTO 部门bo信息
+     * @param departmentTO 部门信息
+     * @return class DepartmentVO
      * @des 返回部门信息
      * @version v1
      */
@@ -88,7 +92,7 @@ public class DepartmentAct {
     /**
      * 编辑部门信息
      *
-     * @param departmentTO
+     * @param departmentTO 部门信息
      * @version v1
      */
     @PutMapping("v1/edit")
