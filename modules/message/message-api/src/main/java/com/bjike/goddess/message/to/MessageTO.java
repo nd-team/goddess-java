@@ -8,8 +8,6 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 消息推送
  *
@@ -40,6 +38,27 @@ public class MessageTO extends BaseTO {
     @NotBlank(message = "消息内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
+
+    /**
+     * 消息类型:[系统:SYS(默认),文章:ARTICLE,其他:OTHER]
+     */
+    @NotBlank(message = "消息类型不能为空", groups = {EDIT.class})
+    private MsgType msgType;
+
+    /**
+     * 发送类型:[消息:MSG(默认),邮件:EMAIL,消息及邮件：ALL]
+     */
+    @NotBlank(message = "发送类型不能为空", groups = {EDIT.class})
+
+    private SendType sendType;
+
+    /**
+     * 消息范围:[个人或多人消息:SPECIFIED(默认)，公共消息:PUB，组消息:GROUP]
+     */
+    @NotBlank(message = "消息范围不能为空", groups = {EDIT.class})
+
+    private RangeType rangeType;
+
     /**
      * 发送人id无需初始化默认当前用户
      */
@@ -53,25 +72,6 @@ public class MessageTO extends BaseTO {
      * 发送时间无需初始化默认当前时间
      */
     private String createTime;
-
-    /**
-     * 消息类型
-     */
-    @NotNull(message = "消息类型不能为空", groups = {ADD.class, EDIT.class})
-    private MsgType msgType;
-
-    /**
-     * 发送类型  消息:MSG,邮件:EMAIL,消息及邮件：ALL
-     */
-    @NotNull(message = "发送类型不能为空", groups = {ADD.class, EDIT.class})
-    private SendType sendType;
-
-    /**
-     * 消息范围  公共消息:PUB，个人或多人消息:SPECIFIED，组消息:GROUP
-     */
-    @NotNull(message = "消息范围不能为空", groups = {ADD.class, EDIT.class})
-    private RangeType rangeType;
-
 
     /**
      * 接收人id（用户id）

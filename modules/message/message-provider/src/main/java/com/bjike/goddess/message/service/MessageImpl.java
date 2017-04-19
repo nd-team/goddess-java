@@ -1,6 +1,5 @@
 package com.bjike.goddess.message.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -14,6 +13,7 @@ import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.entity.GroupMessage;
 import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.entity.UserMessage;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.kafka.KafkaProducer;
@@ -71,14 +71,17 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setSenderId(userBO.getId());
             messageTO.setSenderName(userBO.getUsername());
         }
+        messageTO.setMsgType(null != messageTO.getMsgType() ? messageTO.getMsgType() : MsgType.SYS);
+        messageTO.setSendType(null != messageTO.getSendType() ? messageTO.getSendType() : SendType.MSG);
+        messageTO.setRangeType(null != messageTO.getRangeType() ? messageTO.getRangeType() : RangeType.SPECIFIED);
+        List<UserBO> userBOS = getReceivers(messageTO);
 
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
         saveMessage(messageTO, message);
         messageTO.setId(message.getId());
-        List<UserBO> userBOS = getReceivers(messageTO);
-        String[] receivers =null;
-        String[] receiversEmail =null;
+        String[] receivers = null;
+        String[] receiversEmail = null;
         if (null != userBOS && userBOS.size() > 0) {
             receivers = new String[userBOS.size()];
             receiversEmail = new String[userBOS.size()];
@@ -207,17 +210,25 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     private List<UserBO> getReceivers(MessageTO messageTO) throws SerException {
         List<UserBO> userBOS = null;
-        String[] receivers = null;
         RangeType rangeType = messageTO.getRangeType();
         UserDTO dto = new UserDTO();
         switch (rangeType) {
             case GROUP:
-                userBOS = userAPI.findByGroup(messageTO.getGroups());
+                if (null != messageTO.getGroups()) {
+                    userBOS = userAPI.findByGroup(messageTO.getGroups());
+                } else {
+                    throw new SerException("消息范围为组消息时,组id不能为空!");
+                }
+
                 break;
             case SPECIFIED:
-                dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-                dto.getConditions().add(Restrict.in("id", messageTO.getReceivers()));
-                userBOS = userAPI.findByCis(dto);
+                if (null != messageTO.getReceivers()) {
+                    dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+                    dto.getConditions().add(Restrict.in("id", messageTO.getReceivers()));
+                    userBOS = userAPI.findByCis(dto);
+                } else {
+                    throw new SerException("消息范围为个人/多人消息时,接收人id不能为空!");
+                }
                 break;
             case PUB:
                 dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
