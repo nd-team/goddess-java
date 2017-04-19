@@ -1,9 +1,11 @@
-package com.bjike.goddess.archive;
+package com.bjike.goddess.dimission;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 
 import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.archive.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.archive.config"})
+@ComponentScan(basePackages = {"com.bjike.goddess.dimission.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.dimission.config"})
 @ImportResource("classpath:app.xml")
 public class Application {
     @Bean

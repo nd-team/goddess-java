@@ -79,7 +79,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Override
     public List<WeekPlanBO> findByMonth(String month_id) throws SerException {
         WeekPlanDTO dto = new WeekPlanDTO();
-        dto.getConditions().add(Restrict.eq("month_id", month_id));
+        dto.getConditions().add(Restrict.eq("month.id", month_id));
         List<WeekPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
