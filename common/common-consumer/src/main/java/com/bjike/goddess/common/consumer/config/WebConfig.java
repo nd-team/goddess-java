@@ -1,12 +1,21 @@
 package com.bjike.goddess.common.consumer.config;
 
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bjike.goddess.common.consumer.interceptor.ErrorRequestInterceptor;
 import com.bjike.goddess.common.consumer.interceptor.idem.IdempotencyInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -22,6 +31,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private Interceptor interceptor;
     @Autowired(required = false)
     private IdempotencyInterceptor idempotencyFilter;
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(new FastJsonHttpMessageConverter());
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

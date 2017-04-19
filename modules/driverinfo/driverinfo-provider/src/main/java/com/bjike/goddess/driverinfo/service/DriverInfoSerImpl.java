@@ -8,8 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.driverinfo.bo.DriverInfoBO;
 import com.bjike.goddess.driverinfo.dto.DriverInfoDTO;
 import com.bjike.goddess.driverinfo.entity.DriverInfo;
-import com.bjike.goddess.driverinfo.to.DriverInfoTO;
 import com.bjike.goddess.driverinfo.enums.DriverInfoType;
+import com.bjike.goddess.driverinfo.to.DriverInfoTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * 租车协议、车辆信息管理业务
+ *
  * @Author: [Jason]
  * @Date: [17-3-8 上午9:43]
  * @Description: []
@@ -28,18 +29,18 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "driverInfoSerImplCache")
 @Service
-public class DriverInfoSerImpl extends ServiceImpl<DriverInfo,DriverInfoDTO> implements DriverInfoSer {
+public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> implements DriverInfoSer {
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DriverInfoBO saveDriverInfo(DriverInfoTO to) throws SerException {
 
-            DriverInfo model = BeanTransform.copyProperties(to, DriverInfo.class ,true);
-            model.setStatus(Status.THAW);
-            model.setPassword("123456");//添加司机初始密码
-            super.save(model);
-            to.setId(model.getId());
-            return BeanTransform.copyProperties(to,DriverInfoBO.class);
+        DriverInfo model = BeanTransform.copyProperties(to, DriverInfo.class, true);
+        model.setStatus(Status.THAW);
+        model.setPassword("123456");//添加司机初始密码
+        super.save(model);
+        to.setId(model.getId());
+        return BeanTransform.copyProperties(to, DriverInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -47,7 +48,7 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo,DriverInfoDTO> imp
     public DriverInfoBO updateDriverInfo(DriverInfoTO to) throws SerException {
 
         updateModel(to);
-        return BeanTransform.copyProperties(to,DriverInfoBO.class);
+        return BeanTransform.copyProperties(to, DriverInfoBO.class);
     }
 
     //审核相当于修改数据，只修改bo非空的值（审核及审核意见）
@@ -56,7 +57,7 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo,DriverInfoDTO> imp
     public DriverInfoBO updateAudit(DriverInfoTO to) throws SerException {
 
         updateModel(to);
-        return BeanTransform.copyProperties(to,DriverInfoBO.class);
+        return BeanTransform.copyProperties(to, DriverInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -69,11 +70,11 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo,DriverInfoDTO> imp
     }
 
     @Override
-    public List<DriverInfoBO> pageList(DriverInfoDTO dto,String type) throws SerException {
+    public List<DriverInfoBO> pageList(DriverInfoDTO dto, String type) throws SerException {
         dto.getConditions().add(Restrict.eq("infoType", DriverInfoType.valueOf(type).getCode()));
         dto.getSorts().add("createTime=desc");
         List<DriverInfo> list = super.findByPage(dto);
-        List<DriverInfoBO> pageList = BeanTransform.copyProperties(list,DriverInfoBO.class);
+        List<DriverInfoBO> pageList = BeanTransform.copyProperties(list, DriverInfoBO.class);
         return pageList;
     }
 
@@ -82,19 +83,32 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo,DriverInfoDTO> imp
         // TODO: 17-3-20
     }
 
+    @Override
+    public DriverInfoBO findByDriver(String driverName) throws SerException {
+        DriverInfoDTO dto = new DriverInfoDTO();
+        dto.getConditions().add(Restrict.eq("driverName", driverName));
+        return BeanTransform.copyProperties(super.findOne(dto), DriverInfoBO.class);
+    }
+
     /**
      * 更新数据（编辑、审核）
+     *
      * @param to
      * @throws SerException
      */
-    public void updateModel(DriverInfoTO to) throws SerException{
+    public void updateModel(DriverInfoTO to) throws SerException {
 
-        if(!StringUtils.isEmpty(to.getId())){
+        if (!StringUtils.isEmpty(to.getId())) {
             DriverInfo model = super.findById(to.getId());
-            BeanTransform.copyProperties(to,model,true);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
-        }else{
+            if (model != null) {
+                BeanTransform.copyProperties(to, model, true);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+
+        } else {
             throw new SerException("更新ID不能为空!");
         }
     }

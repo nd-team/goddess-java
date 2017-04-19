@@ -27,6 +27,16 @@ public class SelfCapabilityApiImpl implements SelfCapabilityAPI {
     private SelfCapabilitySer selfCapabilitySer;
 
     @Override
+    public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        return selfCapabilitySer.counts(selfCapabilityDTO);
+    }
+
+    @Override
+    public SelfCapabilityBO getOne(String id) throws SerException {
+        return selfCapabilitySer.getOne(id);
+    }
+
+    @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
         return selfCapabilitySer.listSelfCapability(selfCapabilityDTO);
     }

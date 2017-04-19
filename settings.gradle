@@ -176,9 +176,9 @@ include ':modules:eggert:eggert-consumer'
 include ':modules:eggert:eggert-provider'
 
 //#借款与报销tanghaixiang
-//include ':modules:lendreimbursement:lendreimbursement-api'
-//include ':modules:lendreimbursement:lendreimbursement-consumer'
-//include ':modules:lendreimbursement:lendreimbursement-provider'
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
 
 //#attainment 综合素养调研
 include ':modules:attainment:attainment-api'
@@ -189,18 +189,50 @@ include ':modules:attainment:attainment-provider'
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
-
+//#interior-recommend 内部推荐
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+//#archive 员工档案
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
+//#assistance 公司补助tanghaixiang
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
+//#voucher 记账凭证tanghaixiang
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
+//#socialfee 社会缴费tanghaixiang
+//include ':modules:socialfee:socialfee-api'
+//include ':modules:socialfee:socialfee-consumer'
+//include ':modules:socialfee:socialfee-provider'
 //#staffactivity 员工活动
 include ':modules:staffactivity:staffactivity-api'
 include ':modules:staffactivity:staffactivity-consumer'
 include ':modules:staffactivity:staffactivity-provider'
-
 //#firmreward 公司奖励
 include ':modules:firmreward:firmreward-api'
 include ':modules:firmreward:firmreward-consumer'
 include ':modules:firmreward:firmreward-provider'
-
 //#regularization 员工转正
 include ':modules:regularization:regularization-api'
 include ':modules:regularization:regularization-consumer'
 include ':modules:regularization:regularization-provider'
+
+//#interior-recommend 内部推荐
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+
+//#staffwelfaremanage 员工福利
+include ':modules:staffwelfare:staffwelfaremanage-api'
+include ':modules:staffwelfare:staffwelfaremanage-consumer'
+include ':modules:staffwelfare:staffwelfaremanage-provider'
+//#dispatchcar 出车管理
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+

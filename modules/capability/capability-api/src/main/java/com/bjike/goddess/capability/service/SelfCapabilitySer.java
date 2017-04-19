@@ -20,6 +20,19 @@ import java.util.List;
  */
 public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO> {
 
+
+    /**
+     * 总条数
+     */
+    default Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个个人能力展示
+     * @return class SelfCapabilityBO
+     */
+    default SelfCapabilityBO getOne(String id) throws SerException {return null;}
+
     /**
      * 个人能力展示列表
      * @return class SelfCapabilityBO

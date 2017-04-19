@@ -59,9 +59,13 @@ public class ProjectCarryAuditSerImpl extends ServiceImpl<ProjectCarryAudit, Pro
             throw  new SerException("编号不能为空");
         }
         ProjectCarryAudit projectCarryAudit = super.findById( projectCarryAuditTO.getId() );
+        if( projectCarryAudit == null ){
+            throw  new SerException("编辑失败，您填写的数据可能有错");
+        }
         ProjectCarryAudit temp = BeanTransform.copyProperties(projectCarryAuditTO,ProjectCarryAudit.class,true);
         BeanUtils.copyProperties(temp,projectCarryAudit,"id","createTime","outerNameId","innerNameId","saleNumId");
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+        projectCarryAudit.setModifyTime(LocalDateTime.now());
         super.update( projectCarryAudit );
         return BeanTransform.copyProperties(projectCarryAudit,ProjectCarryAuditBO.class);
     }

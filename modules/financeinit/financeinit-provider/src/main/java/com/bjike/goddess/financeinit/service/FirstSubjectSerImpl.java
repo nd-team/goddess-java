@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 一级科目业务实现
@@ -95,6 +96,15 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         FirstSubject first = super.findOne( dto );
 
         return BeanTransform.copyProperties(first, FirstSubjectBO.class);
+    }
+
+    @Override
+    public List<String> listAllFirst() throws SerException {
+        String[] field = new String[]{"name"};
+        String sql = " select name ,1 from financeinit_firstsubject group by name ";
+        List<FirstSubject> list = super.findBySql( sql , FirstSubject.class, field);
+        List<String> names  = list.stream().map(FirstSubject::getName).collect(Collectors.toList());
+        return names;
     }
 
     /**

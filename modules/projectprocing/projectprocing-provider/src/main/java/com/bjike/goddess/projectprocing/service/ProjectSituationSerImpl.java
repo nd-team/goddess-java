@@ -55,13 +55,17 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSituationBO editProjectSituation(ProjectSituationTO projectSituationTO) throws SerException {
-        if(StringUtils.isBlank(projectSituationTO.getId()) ){
+        if(StringUtils.isBlank(projectSituationTO.getId()) || projectSituationTO.getId()==null){
             throw  new SerException("编号不能为空");
         }
         ProjectSituation projectSituation = super.findById( projectSituationTO.getId() );
+        if( projectSituation == null ){
+            throw  new SerException("编辑失败，您填写的数据可能有错");
+        }
         ProjectSituation temp = BeanTransform.copyProperties(projectSituationTO,ProjectSituation.class,true);
         BeanUtils.copyProperties(temp,projectSituation,"id","createTime","outerNameId","innerNameId","saleNumId");
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+        projectSituation.setModifyTime(LocalDateTime.now());
         super.update( projectSituation );
         return BeanTransform.copyProperties(projectSituation,ProjectSituationBO.class);
     }
@@ -73,6 +77,10 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
             throw  new SerException("id不能为空");
         }
         //TODO: tanghaixiang 2017-03-31 链接关系没做
+        ProjectSituation projectSituation = super.findById(id);
+        if( projectSituation == null ){
+            throw new SerException("删除失败，可能您传过来的数据有误");
+        }
         super.remove(id);
     }
 
