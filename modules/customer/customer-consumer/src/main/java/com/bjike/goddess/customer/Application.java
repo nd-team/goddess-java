@@ -1,7 +1,9 @@
 package com.bjike.goddess.customer;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -15,6 +17,7 @@ import java.io.IOException;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.customer.action", "com.bjike.goddess.customer.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
+@EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {
 
 
