@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
@@ -126,10 +127,10 @@ public interface DispatchCarInfoAPI {
     /**
      * 出车情况汇总
      *
-     * @param collectType
+     * @param collectIntervalType
      * @return 出车汇总结果集
      */
-    List<DispatchCollectBO> dispatchCollect(CollectType collectType) throws SerException;
+    List<DispatchCollectBO> dispatchCollect(CollectIntervalType collectIntervalType, CollectType collectType) throws SerException;
 
     /**
      * 财务周汇总

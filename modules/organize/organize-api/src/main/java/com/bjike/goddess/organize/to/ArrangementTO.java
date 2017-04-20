@@ -1,7 +1,11 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 岗位层级展示对象
@@ -18,11 +22,13 @@ public class ArrangementTO extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 层级
      */
+    @NotNull(message = "层级不能为空", groups = {ADD.class, EDIT.class})
     private String arrangement;
 
     /**

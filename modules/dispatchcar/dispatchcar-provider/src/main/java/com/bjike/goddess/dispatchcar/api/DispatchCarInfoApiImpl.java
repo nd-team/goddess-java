@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
@@ -94,8 +95,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<DispatchCollectBO> dispatchCollect(CollectType collectType) throws SerException {
-        return dispatchCarInfoSer.dispatchCollect(collectType);
+    public List<DispatchCollectBO> dispatchCollect(CollectIntervalType collectIntervalType, CollectType collectType) throws SerException {
+        return dispatchCarInfoSer.dispatchCollect(collectIntervalType, collectType);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
 
     @Override
     public List<FinanceCollectBO> monthCollect(Integer year, Integer month) throws SerException {
-        return dispatchCarInfoSer.monthCollect(year,month);
+        return dispatchCarInfoSer.monthCollect(year, month);
     }
 
     @Override

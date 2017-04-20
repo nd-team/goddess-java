@@ -3,7 +3,7 @@ package com.bjike.goddess.materialbuy.vo;
 import com.bjike.goddess.materialbuy.type.AuditState;
 
 /**
- * 临时物质需求表现层对象
+ * 临时物资需求表现层对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-19 04:08 ]

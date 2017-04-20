@@ -11,6 +11,7 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.entity.LeaseCarCost;
+import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
@@ -77,11 +78,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             oilWear = oilWear + 0.01;
         }
         to.setOilWear(oilWear);
-        to.setMileageSubtract(to.getEndMileage()-to.getStartMileage());
+        to.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
         to.setAddOilAmount(to.getMileageSubtract() * oilWear);
-        if(to.getOilPrice()!=null){
+        if (to.getOilPrice() != null) {
             to.setOilCost(to.getAddOilAmount() * to.getOilPrice());
-        }else{
+        } else {
             to.setOilCost(0.0);
         }
 
@@ -113,8 +114,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             model.setOverWorkTime(0);
         }
         model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
-        model.setCost(model.getMealCost()+model.getCarRentalCost()+model.getOverWorkCost()+model.getParkCost()+model.getRoadCost());
-        model.setTotalCost(model.getMealCost()+model.getCarRentalCost()+model.getOverWorkCost()+model.getParkCost()+model.getRoadCost()+model.getOilCost());
+        model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
+        model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
         model.setFindType(FindType.WAITAUDIT);
         super.save(model);
         to.setId(model.getId());
@@ -325,26 +326,34 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<DispatchCollectBO> dispatchCollect(CollectType collectType) throws SerException {
+    public List<DispatchCollectBO> dispatchCollect(CollectIntervalType collectIntervalType, CollectType collectType) throws SerException {
 
-        if (collectType == null) {
+        if (collectIntervalType == null) {
             throw new SerException("汇总类型不能为空!");
         }
 
-        //分组查询地区、项目组、项目
-        List<DispatchCarInfo> proejctList = super.findBySql("select area , project_group , project ,1 from dispatchcar_basicinfo group by area , project_group , project ",
-                DispatchCarInfo.class, new String[]{"area", "group", "project"});
+        List<DispatchCarInfo> proejctList = null;
+        if(collectType==CollectType.AREA){
+            //分组查询地区、项目组、项目
+            proejctList = super.findBySql("select area , project_group , project ,1 from dispatchcar_basicinfo group by area , project_group , project ",
+                    DispatchCarInfo.class, new String[]{"area", "group", "project"});
+        }else{
+            //分组查询地区、项目组、项目
+            proejctList = super.findBySql("select driver , project_group , project ,1 from dispatchcar_basicinfo group by driver , project_group , project ",
+                    DispatchCarInfo.class, new String[]{"area", "group", "project"});
+        }
 
         List<DispatchCollectBO> returnList = new ArrayList<DispatchCollectBO>();
 
         //遍历项目组
         for (DispatchCarInfo proejct : proejctList) {
             DispatchCollectBO bo = new DispatchCollectBO();
+            bo.setDriver(proejct.getDriver());
             bo.setArea(proejct.getArea());
             bo.setGroup(proejct.getGroup());
             bo.setProject(proejct.getProject());
 
-            findByType(proejct.getArea(), proejct.getGroup(), proejct.getProject(), bo, collectType);
+            findByType(proejct.getArea(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType);
 
             returnList.add(bo);
         }
@@ -494,10 +503,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             currentDTO.getConditions().add(Restrict.eq("carUser", to.getCarUser()));
             lastDTO.getConditions().add(Restrict.eq("carUser", to.getCarUser()));
         }
-        return financeAnalyze(currentDTO, lastDTO, totoalDTO,to);
+        return financeAnalyze(currentDTO, lastDTO, totoalDTO, to);
     }
 
-    public List<FinanceAnalyzeBO> financeAnalyze(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCarInfoDTO totalDTO ,FinanceCollectTO to) throws SerException {
+    public List<FinanceAnalyzeBO> financeAnalyze(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCarInfoDTO totalDTO, FinanceCollectTO to) throws SerException {
         //查询月份
         List<DispatchCarInfo> currentList = super.findByCis(currentDTO);
         //查询上已月份
@@ -514,31 +523,31 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         Double totalCost = totalList.stream().filter(p -> p.getCost() != null).mapToDouble(p -> p.getCost()).sum();
         Double costSubtract = currentCost - lastCost;
         Double growRate = 0.0;
-        if(lastCost == 0){
+        if (lastCost == 0) {
             growRate = null;
-        }else{
-            growRate= costSubtract / lastCost;
+        } else {
+            growRate = costSubtract / lastCost;
         }
         Double percent = 0.0;
         String percentStr = "";
-        if(percent == 0){
+        if (percent == 0) {
             percent = null;
             percentStr = null;
-        }else{
+        } else {
             percent = currentCost / totalCost * 100;
-            DecimalFormat format= new DecimalFormat("#.00");
-            percentStr = format.format(percent)+"%";
+            DecimalFormat format = new DecimalFormat("#.00");
+            percentStr = format.format(percent) + "%";
         }
 
 
         //根据分析页面(条件)不同返回不同的分析结果
         if (!StringUtils.isEmpty(to.getArea())) {
-            bo=new FinanceAnalyzeBO(to.getArea(),currentCost,lastCost,costSubtract,growRate,percentStr);
-        }else if (!StringUtils.isEmpty(to.getGroup())) {
-            bo=new FinanceAnalyzeBO(to.getGroup(),currentCost,lastCost,costSubtract,growRate,percentStr);
-        }else if (!StringUtils.isEmpty(to.getDriver())) {
-            bo=new FinanceAnalyzeBO(to.getDriver(),currentCost,lastCost,costSubtract,growRate,percentStr);
-        }else{
+            bo = new FinanceAnalyzeBO(to.getArea(), currentCost, lastCost, costSubtract, growRate, percentStr);
+        } else if (!StringUtils.isEmpty(to.getGroup())) {
+            bo = new FinanceAnalyzeBO(to.getGroup(), currentCost, lastCost, costSubtract, growRate, percentStr);
+        } else if (!StringUtils.isEmpty(to.getDriver())) {
+            bo = new FinanceAnalyzeBO(to.getDriver(), currentCost, lastCost, costSubtract, growRate, percentStr);
+        } else {
             throw new SerException("请选择分析的地区或项目组或司机!");
         }
         boList.add(bo);
@@ -597,7 +606,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         return boList;
     }
 
-    public void findByType(String area, String group, String project, DispatchCollectBO bo, CollectType collectType) throws SerException {
+    public void findByType(String area, String group, String project, DispatchCollectBO bo, CollectIntervalType collectIntervalType) throws SerException {
         //查询指定汇总类型的出车情况(昨日/上周/上月/上季度/上年度)
         DispatchCarInfoDTO currentDTO = new DispatchCarInfoDTO();
         currentDTO.getConditions().add(Restrict.eq("area", area));
@@ -609,32 +618,32 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         lastDTO.getConditions().add(Restrict.eq("group", group));
         lastDTO.getConditions().add(Restrict.eq("project", project));
 
-        switch (collectType) {
+        switch (collectIntervalType) {
             case DAY:
-                setDayCondition(currentDTO, lastDTO, bo, CollectType.DAY);
+                setDayCondition(currentDTO, lastDTO, bo, CollectIntervalType.DAY);
                 findByCondition(currentDTO, lastDTO, bo);
                 break;
             case WEEK:
-                setCondition(currentDTO, lastDTO, bo, CollectType.WEEK);
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.WEEK);
                 findByCondition(currentDTO, lastDTO, bo);
                 break;
             case MONTH:
-                setCondition(currentDTO, lastDTO, bo, CollectType.MONTH);
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.MONTH);
                 findByCondition(currentDTO, lastDTO, bo);
                 break;
             case QUARTER:
-                setCondition(currentDTO, lastDTO, bo, CollectType.QUARTER);
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.QUARTER);
                 findByCondition(currentDTO, lastDTO, bo);
                 break;
             case YEAR:
-                setCondition(currentDTO, lastDTO, bo, CollectType.YEAR);
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.YEAR);
                 findByCondition(currentDTO, lastDTO, bo);
                 break;
         }
     }
 
     //查询本天、昨天出车情况
-    public void setDayCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectType collectType) {
+    public void setDayCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectIntervalType collectIntervalType) {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
         currentDTO.getConditions().add(Restrict.like("createTime", today.toString()));
@@ -642,14 +651,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     //查询周、月、季、年
-    public void setCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectType collectType) throws SerException {
+    public void setCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectIntervalType collectIntervalType) throws SerException {
         LocalDateTime currentStarDay = null;
         LocalDateTime currentEndDay = null;
 
         LocalDateTime lastStarDay = null;
         LocalDateTime lastEndDay = null;
 
-        switch (collectType) {
+        switch (collectIntervalType) {
             case WEEK:
                 currentStarDay = changeStartFormat(DateUtil.getStartWeek());
                 currentEndDay = changeStartFormat(DateUtil.getEndWeek());

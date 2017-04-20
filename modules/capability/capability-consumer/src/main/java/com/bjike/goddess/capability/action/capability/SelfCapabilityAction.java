@@ -96,7 +96,7 @@ public class SelfCapabilityAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addSelfCapability(@Validated SelfCapabilityTO selfCapabilityTO) throws ActException {
+    public Result addSelfCapability(@Validated(SelfCapabilityTO.TestAdd.class) SelfCapabilityTO selfCapabilityTO) throws ActException {
         try {
             SelfCapabilityBO selfCapabilityBO1 = selfCapabilityAPI.addSelfCapability(selfCapabilityTO);
             return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO1, SelfCapabilityVO.class, true));
@@ -116,7 +116,7 @@ public class SelfCapabilityAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editSelfCapability(@Validated SelfCapabilityTO selfCapabilityTO) throws ActException {
+    public Result editSelfCapability(@Validated(SelfCapabilityTO.TestAdd.class)  SelfCapabilityTO selfCapabilityTO) throws ActException {
         try {
             SelfCapabilityBO selfCapabilityBO1 = selfCapabilityAPI.editSelfCapability(selfCapabilityTO);
             return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO1, SelfCapabilityVO.class, true));

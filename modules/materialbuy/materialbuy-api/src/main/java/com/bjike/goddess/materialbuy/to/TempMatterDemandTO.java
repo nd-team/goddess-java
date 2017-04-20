@@ -1,10 +1,14 @@
 package com.bjike.goddess.materialbuy.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialbuy.type.AuditState;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * 临时物质需求
+ * 临时物资需求
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-19 04:08 ]
@@ -13,6 +17,11 @@ import com.bjike.goddess.materialbuy.type.AuditState;
  * @Copy: [ com.bjike ]
  */
 public class TempMatterDemandTO extends BaseTO {
+
+    /**
+     * 审核提交字段不为空
+     */
+    public interface Audit{}
 
     /**
      * 地区
@@ -77,11 +86,13 @@ public class TempMatterDemandTO extends BaseTO {
     /**
      * 审核状态
      */
+    @NotNull(groups = {Audit.class},message = "审核状态不能为空")
     private AuditState auditState;
 
     /**
      * 审核意见
      */
+    @NotBlank(groups = {Audit.class},message = "审核意见不能为空")
     private String auditOpinion;
 
 

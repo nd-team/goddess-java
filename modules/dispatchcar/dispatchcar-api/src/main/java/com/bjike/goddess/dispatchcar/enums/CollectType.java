@@ -1,35 +1,20 @@
 package com.bjike.goddess.dispatchcar.enums;
 
 /**
- * 汇总条件
+ * 汇总类型
  *
  * @Author: [Jason]
- * @Date: [17-4-14 下午3:04]
+ * @Date: [17-4-19 下午5:16]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public enum CollectType {
     /**
-     * 日
+     * 地区
      */
-    DAY(0),
-    /**
-     * 周
-     */
-    WEEK(1),
-    /**
-     * 月
-     */
-    MONTH(2),
-    /**
-     * 季度
-     */
-    QUARTER(3),
-    /**
-     * 年
-     */
-    YEAR(4);
+    AREA(0),
+    DRIVER(1);
 
     private int code;
 

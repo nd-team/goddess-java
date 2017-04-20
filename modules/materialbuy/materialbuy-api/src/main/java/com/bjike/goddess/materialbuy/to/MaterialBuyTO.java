@@ -3,6 +3,8 @@ package com.bjike.goddess.materialbuy.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialbuy.type.AuditState;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 物资购买
  *
@@ -13,6 +15,8 @@ import com.bjike.goddess.materialbuy.type.AuditState;
  * @Copy: [ com.bjike ]
  */
 public class MaterialBuyTO extends BaseTO {
+
+    public interface PrincipalAudit{}
 
     /**
      * 地区
@@ -142,11 +146,13 @@ public class MaterialBuyTO extends BaseTO {
     /**
      * 审核状态
      */
+    @NotNull(groups = {PrincipalAudit.class}, message = "审核状态不能为空")
     private AuditState auditState;
 
     /**
      * 审核意见
      */
+    @NotNull(groups = {PrincipalAudit.class}, message = "审核意见不能为空")
     private String auditOpinion;
 
 

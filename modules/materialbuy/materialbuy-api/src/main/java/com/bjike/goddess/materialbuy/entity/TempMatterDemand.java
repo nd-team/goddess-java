@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 
 /**
- * 临时物质需求
+ * 临时物资需求
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-19 04:08 ]

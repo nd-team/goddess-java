@@ -6,7 +6,7 @@ import com.bjike.goddess.materialbuy.type.AuditState;
 import javax.persistence.Column;
 
 /**
- * 临时物质需求业务传输对象
+ * 临时物资需求业务传输对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-19 04:08 ]

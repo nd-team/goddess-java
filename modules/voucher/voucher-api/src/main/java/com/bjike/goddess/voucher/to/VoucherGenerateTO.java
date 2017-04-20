@@ -178,14 +178,6 @@ public class VoucherGenerateTO extends BaseTO {
         this.voucherNum = voucherNum;
     }
 
-    public String getVDate() {
-        return vDate;
-    }
-
-    public void setVDate(String vDate) {
-        this.vDate = vDate;
-    }
-
     public String getvDate() {
         return vDate;
     }

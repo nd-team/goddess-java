@@ -3,7 +3,7 @@ package com.bjike.goddess.materialbuy.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
- * 临时物质需求数据传输对象
+ * 临时物资需求数据传输对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-19 04:08 ]

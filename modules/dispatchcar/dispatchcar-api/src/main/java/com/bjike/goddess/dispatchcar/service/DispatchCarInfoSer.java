@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
+import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
@@ -120,7 +121,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      */
     void pay(String id) throws SerException;
 
-    List<DispatchCollectBO> dispatchCollect(CollectType collectType) throws SerException;
+    List<DispatchCollectBO> dispatchCollect(CollectIntervalType collectIntervalType, CollectType collectType) throws SerException;
 
     /**
      * 财务周汇总

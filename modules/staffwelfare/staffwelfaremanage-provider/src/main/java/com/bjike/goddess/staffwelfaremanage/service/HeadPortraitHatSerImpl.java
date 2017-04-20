@@ -41,7 +41,6 @@ public class HeadPortraitHatSerImpl extends ServiceImpl<HeadPortraitHat, HeadPor
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-
     public HeadPortraitHatBO insertModel(HeadPortraitHatTO to) throws SerException {
         Object o = RpcContext.getContext().getAttachment("storageToken");
 

@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,6 +12,8 @@ import com.bjike.goddess.organize.bo.DimensionBO;
 import com.bjike.goddess.organize.to.DimensionTO;
 import com.bjike.goddess.organize.vo.DimensionVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -36,7 +40,7 @@ public class DimensionAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(DimensionTO to) throws ActException {
+    public Result save(@Validated(ADD.class) DimensionTO to, BindingResult result) throws ActException {
         try {
             DimensionBO bo = dimensionAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, DimensionVO.class));
@@ -53,7 +57,7 @@ public class DimensionAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(DimensionTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) DimensionTO to, BindingResult result) throws ActException {
         try {
             DimensionBO bo = dimensionAPI.update(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, DimensionVO.class));
