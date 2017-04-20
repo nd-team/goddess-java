@@ -37,6 +37,7 @@ public class WishesStatementSerImpl extends ServiceImpl<WishesStatement, WishesS
     private UserAPI userAPI;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public WishesStatementBO insertModel(WishesStatementTO to) throws SerException {
         WishesStatement model = BeanTransform.copyProperties(to, WishesStatement.class, true);
         model.setCreateUser(getCurrentUser().getUsername());
@@ -46,6 +47,7 @@ public class WishesStatementSerImpl extends ServiceImpl<WishesStatement, WishesS
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public WishesStatementBO updateModel(WishesStatementTO to) throws SerException {
         if (!StringUtils.isEmpty(to.getId())) {
             WishesStatement model = super.findById(to.getId());

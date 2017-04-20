@@ -8,6 +8,7 @@ import com.bjike.goddess.staffwelfaremanage.dto.StaffBirthDayWelfareDTO;
 import com.bjike.goddess.staffwelfaremanage.entity.StaffBirthDayWelfare;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
 public class StaffBirthDayWelfareSerImpl extends ServiceImpl<StaffBirthDayWelfare, StaffBirthDayWelfareDTO> implements StaffBirthDayWelfareSer {
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<StaffBirthDayWelfareBO> pageList(StaffBirthDayWelfareDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         List<StaffBirthDayWelfare> list = super.findByPage(dto);
