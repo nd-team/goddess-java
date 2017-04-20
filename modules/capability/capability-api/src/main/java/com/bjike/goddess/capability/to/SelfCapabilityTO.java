@@ -1,6 +1,7 @@
 package com.bjike.goddess.capability.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 个人能力展示
@@ -13,9 +14,11 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class SelfCapabilityTO extends BaseTO {
 
+    public interface TestAdd{}
     /**
      * 姓名
      */
+    @NotBlank(groups = SelfCapabilityTO.TestAdd.class ,message = "姓名不能为空")
     private String name;
 
     /**

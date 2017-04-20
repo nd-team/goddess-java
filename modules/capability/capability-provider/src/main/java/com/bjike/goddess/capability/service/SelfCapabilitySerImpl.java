@@ -85,6 +85,9 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        if( StringUtils.isBlank(selfCapabilityTO.getName())){
+            throw new SerException("失败，姓名不能为空");
+        }
         SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
 
         SelfCapabilityDTO dto = new SelfCapabilityDTO();

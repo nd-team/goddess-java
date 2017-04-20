@@ -34,7 +34,7 @@ public class VoucherGenerateVO {
     /**
      * 凭证日期
      */
-    private LocalDate vDate;
+    private String vDate;
 
     /**
      * 一级科目
@@ -161,11 +161,11 @@ public class VoucherGenerateVO {
         this.voucherNum = voucherNum;
     }
 
-    public LocalDate getVDate() {
+    public String getvDate() {
         return vDate;
     }
 
-    public void setVDate(LocalDate vDate) {
+    public void setvDate(String vDate) {
         this.vDate = vDate;
     }
 
