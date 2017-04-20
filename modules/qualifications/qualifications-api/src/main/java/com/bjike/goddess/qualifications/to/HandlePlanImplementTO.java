@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,31 +21,31 @@ public class HandlePlanImplementTO extends BaseTO {
     /**
      * 办理计划阶段
      */
-    @NotNull(message = "办理计划阶段不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "办理计划阶段不能为空", groups = {ADD.class, EDIT.class})
     private String stage_id;
 
     /**
      * 实施内容
      */
-    @NotNull(message = "实施内容不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "实施内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
      * 完成时间
      */
-    @NotNull(message = "完成时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "完成时间不能为空", groups = {ADD.class, EDIT.class})
     private String finishTime;
 
     /**
      * 协助人员
      */
-    @NotNull(message = "协助人员不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "协助人员不能为空", groups = {ADD.class, EDIT.class})
     private String collaborator;
 
     /**
      * 问题记录
      */
-    @NotNull(message = "问题记录不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "问题记录不能为空", groups = {ADD.class, EDIT.class})
     private String question;
 
     /**

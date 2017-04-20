@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
 import com.bjike.goddess.qualifications.dto.PersonnelInformationDTO;
 import com.bjike.goddess.qualifications.entity.PersonnelInformation;
@@ -60,6 +61,17 @@ public interface PersonnelInformationSer extends Ser<PersonnelInformation, Perso
      * @throws SerException
      */
     default List<PersonnelInformationBO> all() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default PersonnelInformationBO getById(String id) throws SerException {
         return null;
     }
 

@@ -55,4 +55,14 @@ public class QualificationsInfoApiImpl implements QualificationsInfoAPI {
     public List<QualificationsInfoBO> maps(QualificationsInfoDTO dto) throws SerException {
         return qualificationsInfoSer.maps(dto);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return qualificationsInfoSer.getTotal();
+    }
+
+    @Override
+    public QualificationsInfoBO getById(String id) throws SerException {
+        return qualificationsInfoSer.getById(id);
+    }
 }

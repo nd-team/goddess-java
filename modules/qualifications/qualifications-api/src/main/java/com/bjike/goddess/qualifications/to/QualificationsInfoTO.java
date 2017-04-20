@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.qualifications.enums.AptitudeStatus;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,19 +22,19 @@ public class QualificationsInfoTO extends BaseTO {
     /**
      * 资质类别
      */
-    @NotNull(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 办理时间
      */
-    @NotNull(message = "办理时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "办理时间不能为空", groups = {ADD.class, EDIT.class})
     private String handleTime;
 
     /**
      * 审批机构
      */
-    @NotNull(message = "审批机构不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "审批机构不能为空", groups = {ADD.class, EDIT.class})
     private String examineAgency;
 
     /**
@@ -50,7 +51,7 @@ public class QualificationsInfoTO extends BaseTO {
     /**
      * 年审时间
      */
-    @NotNull(message = "年审时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "年审时间不能为空", groups = {ADD.class, EDIT.class})
     private String extendTime;
 
     /**

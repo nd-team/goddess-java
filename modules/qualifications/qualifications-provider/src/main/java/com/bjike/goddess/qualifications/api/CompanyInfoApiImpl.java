@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.CompanyInfoBO;
+import com.bjike.goddess.qualifications.dto.CompanyInfoDTO;
 import com.bjike.goddess.qualifications.service.CompanyInfoSer;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class CompanyInfoApiImpl implements CompanyInfoAPI {
     @Override
     public List<CompanyInfoBO> all() throws SerException {
         return companyInfoSer.all();
+    }
+
+    @Override
+    public List<CompanyInfoBO> maps(CompanyInfoDTO dto) throws SerException {
+        return companyInfoSer.maps(dto);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return companyInfoSer.getTotal();
+    }
+
+    @Override
+    public CompanyInfoBO getById(String id) throws SerException {
+        return companyInfoSer.getById(id);
     }
 }

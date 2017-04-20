@@ -64,4 +64,36 @@ public interface QualificationsHandlePlanSer extends Ser<QualificationsHandlePla
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 资质办理计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<QualificationsHandlePlanBO> maps(QualificationsHandlePlanDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default QualificationsHandlePlanBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

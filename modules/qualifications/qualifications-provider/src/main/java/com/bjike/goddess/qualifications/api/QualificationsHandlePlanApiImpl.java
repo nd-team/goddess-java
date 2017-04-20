@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.QualificationsHandlePlanBO;
+import com.bjike.goddess.qualifications.dto.QualificationsHandlePlanDTO;
 import com.bjike.goddess.qualifications.service.QualificationsHandlePlanSer;
 import com.bjike.goddess.qualifications.to.QualificationsHandlePlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class QualificationsHandlePlanApiImpl implements QualificationsHandlePlan
     @Override
     public List<QualificationsHandlePlanBO> findByHandle(String handle_id) throws SerException {
         return qualificationsHandlePlanSer.findByHandle(handle_id);
+    }
+
+    @Override
+    public List<QualificationsHandlePlanBO> maps(QualificationsHandlePlanDTO dto) throws SerException {
+        return qualificationsHandlePlanSer.maps(dto);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return qualificationsHandlePlanSer.getTotal();
+    }
+
+    @Override
+    public QualificationsHandlePlanBO getById(String id) throws SerException {
+        return qualificationsHandlePlanSer.getById(id);
     }
 }

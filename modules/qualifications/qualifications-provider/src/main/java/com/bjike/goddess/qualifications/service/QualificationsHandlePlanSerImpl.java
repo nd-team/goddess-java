@@ -67,4 +67,19 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
         List<QualificationsHandlePlan> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, QualificationsHandlePlanBO.class);
     }
+
+    @Override
+    public List<QualificationsHandlePlanBO> maps(QualificationsHandlePlanDTO dto) throws SerException {
+        return BeanTransform.copyProperties(super.findByPage(dto), QualificationsHandlePlanBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public QualificationsHandlePlanBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), QualificationsHandlePlanBO.class);
+    }
 }

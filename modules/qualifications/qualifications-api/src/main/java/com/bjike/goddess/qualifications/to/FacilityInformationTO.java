@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,13 +21,13 @@ public class FacilityInformationTO extends BaseTO {
     /**
      * 设备名称
      */
-    @NotNull(message = "设备名称不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "设备名称不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 清单
      */
-    @NotNull(message = "清单不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "清单不能为空", groups = {ADD.class, EDIT.class})
     private String fictitious;
 
     /**
