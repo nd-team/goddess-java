@@ -54,7 +54,7 @@ public class DriverInfo extends BaseEntity {
     /**
      * 司机名称
      */
-    @Column(columnDefinition = "VARCHAR(18) COMMENT '司机名称'")
+    @Column(columnDefinition = "VARCHAR(18) COMMENT '司机名称'", unique = true, nullable = false)
     private String driverName;
 
     /**
@@ -108,13 +108,13 @@ public class DriverInfo extends BaseEntity {
     /**
      * 本车排放量
      */
-    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '本车排放量'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '本车排放量'", nullable = false)
     private Double emissions;
 
     /**
      * 本车耗油
      */
-    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '本车耗油'")
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '本车耗油'",nullable = false)
     private Double carFuel;
 
     /**

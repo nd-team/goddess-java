@@ -90,12 +90,12 @@ public class DriverInfoBO extends BaseBO {
     /**
      * 本车排放量
      */
-    private BigDecimal emissions;
+    private Double emissions;
 
     /**
      * 本车耗油
      */
-    private BigDecimal carFuel;
+    private Double carFuel;
 
     /**
      * 是否签订租车协议
@@ -302,19 +302,19 @@ public class DriverInfoBO extends BaseBO {
         this.useDate = useDate;
     }
 
-    public BigDecimal getEmissions() {
+    public Double getEmissions() {
         return emissions;
     }
 
-    public void setEmissions(BigDecimal emissions) {
+    public void setEmissions(Double emissions) {
         this.emissions = emissions;
     }
 
-    public BigDecimal getCarFuel() {
+    public Double getCarFuel() {
         return carFuel;
     }
 
-    public void setCarFuel(BigDecimal carFuel) {
+    public void setCarFuel(Double carFuel) {
         this.carFuel = carFuel;
     }
 

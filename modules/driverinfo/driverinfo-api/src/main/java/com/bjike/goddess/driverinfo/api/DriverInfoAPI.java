@@ -66,4 +66,12 @@ public interface DriverInfoAPI {
      * @param id
      */
     void remove(String id) throws SerException;
+
+    /**
+     * 根据司机名称查询司机信息
+     *
+     * @param driverName 司机名称
+     * @return 司机信息
+     */
+    DriverInfoBO findByDriver(String driverName) throws SerException;
 }
