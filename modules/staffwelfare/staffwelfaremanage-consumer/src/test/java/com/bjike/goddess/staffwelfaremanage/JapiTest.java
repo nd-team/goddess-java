@@ -19,10 +19,11 @@ public class JapiTest {
         JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
-        JapiClient.setProjectJavaPath("modules/staffwelfaremanage/staffwelfaremanage-consumer");//主项目位置
+        JapiClient.setProjectJavaPath("modules/staffwelfare/staffwelfaremanage-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/staffwelfaremanage/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-                "modules/staffwelfaremanage/staffwelfaremanage-api",
+                "modules/staffwelfare/staffwelfaremanage-api",
+                "modules/user/user-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

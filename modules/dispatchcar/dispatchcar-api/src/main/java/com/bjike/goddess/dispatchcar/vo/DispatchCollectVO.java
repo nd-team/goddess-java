@@ -11,35 +11,93 @@ package com.bjike.goddess.dispatchcar.vo;
  */
 public class DispatchCollectVO {
 
+    /**
+     * 司机
+     */
+    private String driver;
+
+    /**
+     * 地区
+     */
     private String area;
 
+    /**
+     * 项目组
+     */
     private String group;
 
+    /**
+     * 地区
+     */
     private String project;
 
+    /**
+     * 公司出车总量
+     */
     private Long companyDispatch;
 
+    /**
+     * 非公司出车总量
+     */
     private Long uncompanyDispatch;
 
+    /**
+     * 本间隔出车量
+     */
     private Long currentDispatch;
 
+    /**
+     * 上一间隔出车量
+     */
     private Long lastDispatch;
 
+    /**
+     * 出车量差异对比
+     */
     private Long dispatchSubtract;
 
+    /**
+     * 租车费
+     */
     private Double leaseCarCost;
 
+    /**
+     * 停车费
+     */
     private Double parkCarCost;
 
+    /**
+     * 过路费
+     */
     private Double roadCost;
 
+    /**
+     * 餐补费
+     */
     private Double mealCost;
 
+    /**
+     * 本间隔费用
+     */
     private Double currentCost;
 
+    /**
+     * 上一间隔费用
+     */
     private Double lastCost;
 
+    /**
+     * 费用差异对比
+     */
     private Double costSubtract;
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
 
     public String getArea() {
         return area;
