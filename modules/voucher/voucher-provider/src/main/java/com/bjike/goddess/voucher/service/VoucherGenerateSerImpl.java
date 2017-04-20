@@ -94,12 +94,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return num;
     }
 
-    public static void main(String[] args) {
-        LocalDate vDate = LocalDate.parse("2016-04-27");
-        LocalDate start = vDate.with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate last = vDate.with(TemporalAdjusters.lastDayOfMonth());
-        System.out.println(start + "" + last);
-    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
