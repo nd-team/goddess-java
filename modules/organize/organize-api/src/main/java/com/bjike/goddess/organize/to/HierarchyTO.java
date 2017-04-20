@@ -1,7 +1,11 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 体系展示对象
@@ -17,11 +21,13 @@ public class HierarchyTO  extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 体系
      */
+    @NotNull(message = "体系不能为空", groups = {ADD.class, EDIT.class})
     private String hierarchy;
 
     /**

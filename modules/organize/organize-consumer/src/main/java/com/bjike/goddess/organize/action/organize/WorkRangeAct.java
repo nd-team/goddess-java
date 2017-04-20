@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +13,8 @@ import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
 import com.bjike.goddess.organize.vo.WorkRangeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -153,7 +157,7 @@ public class WorkRangeAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(WorkRangeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) WorkRangeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.save(to), WorkRangeVO.class));
         } catch (SerException e) {
@@ -169,9 +173,8 @@ public class WorkRangeAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@PathVariable String id, WorkRangeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) WorkRangeTO to, BindingResult result) throws ActException {
         try {
-            to.setId(id);
             return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.update(to), WorkRangeVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

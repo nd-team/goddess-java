@@ -33,7 +33,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     public DayPlanBO save(DayPlanTO to) throws SerException {
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
         super.save(entity);
-        return BeanTransform.copyProperties(entity, DayPlanBO.class, true);
+        return BeanTransform.copyProperties(entity, DayPlanBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -41,7 +41,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     public DayPlanBO update(DayPlanTO to) throws SerException {
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
         super.update(entity);
-        return BeanTransform.copyProperties(entity, DayPlanBO.class, true);
+        return BeanTransform.copyProperties(entity, DayPlanBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -49,7 +49,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     public DayPlanBO delete(DayPlanTO to) throws SerException {
         DayPlan entity = super.findById(to.getId());
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, DayPlanBO.class, true);
+        return BeanTransform.copyProperties(entity, DayPlanBO.class);
     }
 
     @Override

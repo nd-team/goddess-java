@@ -76,5 +76,11 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
         return BeanTransform.copyProperties(list, TargetInformationBO.class);
     }
 
-
+    @Override
+    public List<TargetInformationBO> findByArea(String area) throws SerException {
+        TargetInformationDTO dto = new TargetInformationDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        List<TargetInformation> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, TargetInformationBO.class);
+    }
 }

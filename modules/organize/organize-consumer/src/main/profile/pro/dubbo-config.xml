@@ -38,6 +38,7 @@
                      id="positionWorkDetailApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.ReflectAPI" id="reflectApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.WorkRangeAPI" id="workRangeApiImpl"/>
-
+    <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
 </beans>
