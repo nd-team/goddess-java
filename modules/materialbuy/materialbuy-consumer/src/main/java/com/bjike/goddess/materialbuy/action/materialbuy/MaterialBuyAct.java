@@ -84,7 +84,7 @@ public class MaterialBuyAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MaterialBuyTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({MaterialBuyTO.MaterialBuyAdd.class}) MaterialBuyTO to, BindingResult result) throws ActException {
         try {
             MaterialBuyBO bo = materialBuyAPI.save(to);
             MaterialBuyVO vo = BeanTransform.copyProperties(bo, MaterialBuyVO.class);
@@ -120,7 +120,7 @@ public class MaterialBuyAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated MaterialBuyTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(MaterialBuyTO.MaterialBuyEdit.class) MaterialBuyTO to, BindingResult result) throws ActException {
         try {
             materialBuyAPI.update(to);
             return new ActResult("edit success!");

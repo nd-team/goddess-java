@@ -83,7 +83,7 @@ public class TempMatterDemandAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) TempMatterDemandTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({TempMatterDemandTO.TempMatterDemandAdd.class}) TempMatterDemandTO to, BindingResult result) throws ActException {
         try {
             TempMatterDemandBO bo = tempMatterDemandAPI.save(to);
             TempMatterDemandVO vo = BeanTransform.copyProperties(bo, TempMatterDemandVO.class);
@@ -119,7 +119,7 @@ public class TempMatterDemandAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated TempMatterDemandTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(TempMatterDemandTO.TempMatterDemandEdit.class) TempMatterDemandTO to, BindingResult result) throws ActException {
         try {
             tempMatterDemandAPI.update(to);
             return new ActResult("edit success!");

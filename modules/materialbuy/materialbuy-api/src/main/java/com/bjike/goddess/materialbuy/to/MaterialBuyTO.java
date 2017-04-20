@@ -2,7 +2,11 @@ package com.bjike.goddess.materialbuy.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialbuy.type.AuditState;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.MessageInterpolator;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -16,71 +20,86 @@ import javax.validation.constraints.NotNull;
  */
 public class MaterialBuyTO extends BaseTO {
 
+    public interface MaterialBuyAdd{}
+    public interface MaterialBuyEdit{}
     public interface PrincipalAudit{}
 
     /**
      * 地区
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "项目组不能为空")
     private String projectTeam;
 
     /**
      * 申购人
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购人不能为空")
     private String requisitioner;
 
     /**
      * 申购日期
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购日期不能为空")
     private String subscribeDate;
 
     /**
      * 设备类型
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购日期不能为空")
     private String deviceType;
 
     /**
      * 设备名称
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
      * 型号
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "型号不能为空")
     private String model;
 
     /**
      * 数量
      */
+    @Min(value = 1, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "数量必须大于0")
     private Integer quantity;
 
     /**
      * 单位
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "单位不能为空")
     private String unit;
 
     /**
      * 购买原因
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "购买原因不能为空")
     private String buyReason;
 
     /**
      * 单价
      */
+    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "单价必须大于0")
     private Double unitPrice;
 
     /**
      * 总额
      */
+    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "总额必须大于0")
     private Double totalSum;
 
     /**
      * 途径
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "途径不能为空")
     private String approach;
 
     /**
@@ -141,6 +160,7 @@ public class MaterialBuyTO extends BaseTO {
     /**
      * 地区审核人
      */
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "地区审核人不能为空")
     private String areaAuditor;
 
     /**
@@ -154,7 +174,6 @@ public class MaterialBuyTO extends BaseTO {
      */
     @NotNull(groups = {PrincipalAudit.class}, message = "审核意见不能为空")
     private String auditOpinion;
-
 
     public String getArea() {
         return area;

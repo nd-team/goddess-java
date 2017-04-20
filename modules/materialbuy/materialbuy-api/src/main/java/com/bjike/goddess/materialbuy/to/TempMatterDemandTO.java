@@ -1,10 +1,10 @@
 package com.bjike.goddess.materialbuy.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialbuy.type.AuditState;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -18,54 +18,62 @@ import javax.validation.constraints.NotNull;
  */
 public class TempMatterDemandTO extends BaseTO {
 
-    /**
-     * 审核提交字段不为空
-     */
+    public interface TempMatterDemandAdd{}
+    public interface TempMatterDemandEdit{}
     public interface Audit{}
 
     /**
      * 地区
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "项目组不能为空")
     private String projectTeam;
 
     /**
      * 需求人
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "需求人不能为空")
     private String needer;
 
     /**
      * 需求日期
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "需求日期不能为空")
     private String requiredDate;
 
     /**
      * 设备类型
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "设备类型不能为空")
     private String deviceType;
 
     /**
      * 设备名称
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
      * 型号
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "型号不能为空")
     private String model;
 
     /**
      * 数量
      */
+    @Min(value = 1, groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "数量必须大于0")
     private Integer quantity;
 
     /**
      * 单位
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "单位不能为空")
     private String unit;
 
     /**
@@ -81,6 +89,7 @@ public class TempMatterDemandTO extends BaseTO {
     /**
      * 地区审核人
      */
+    @NotBlank(groups = {TempMatterDemandAdd.class, TempMatterDemandEdit.class}, message = "地区审核人不能为空")
     private String areaAuditor;
 
     /**

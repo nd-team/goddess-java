@@ -1,6 +1,7 @@
 package com.bjike.goddess.materialbuy.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 设备类型
@@ -13,9 +14,13 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class DeviceTypeTO extends BaseTO {
 
+    public interface DeviceTypeAdd{}
+    public interface DeviceTypeEdit{}
+
     /**
      * 类型
      */
+    @NotBlank(groups = {DeviceTypeAdd.class, DeviceTypeEdit.class}, message = "设备类型不能为空")
     private String type;
 
     /**

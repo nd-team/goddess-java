@@ -1,6 +1,5 @@
 package com.bjike.goddess.materialbuy.action.materialbuy;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -56,7 +55,7 @@ public class DeviceTypeAct {
     /**
      * 分页查询设备类型
      *
-     * @param dto 设备类型dto
+     * @param dto           设备类型dto
      * @param bindingResult
      * @return class DeviceTypeVO
      * @throws ActException
@@ -76,14 +75,14 @@ public class DeviceTypeAct {
     /**
      * 添加设备类型
      *
-     * @param to 设备类型to
+     * @param to     设备类型to
      * @param result
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) DeviceTypeTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({DeviceTypeTO.DeviceTypeAdd.class}) DeviceTypeTO to, BindingResult result) throws ActException {
         try {
             DeviceTypeBO bo = deviceTypeAPI.save(to);
             DeviceTypeVO vo = BeanTransform.copyProperties(bo, DeviceTypeVO.class);
@@ -113,13 +112,13 @@ public class DeviceTypeAct {
     /**
      * 编辑设备类型
      *
-     * @param to 设备类型to
+     * @param to     设备类型to
      * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated DeviceTypeTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(DeviceTypeTO.DeviceTypeEdit.class) DeviceTypeTO to, BindingResult result) throws ActException {
         try {
             deviceTypeAPI.update(to);
             return new ActResult("edit success!");
