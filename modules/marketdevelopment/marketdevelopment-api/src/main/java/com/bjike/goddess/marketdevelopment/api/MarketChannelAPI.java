@@ -106,4 +106,14 @@ public interface MarketChannelAPI {
     default List<MarketChannelBO> maps(MarketChannelDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
 }

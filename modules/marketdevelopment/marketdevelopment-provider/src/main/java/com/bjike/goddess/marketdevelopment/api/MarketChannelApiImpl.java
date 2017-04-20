@@ -67,4 +67,9 @@ public class MarketChannelApiImpl implements MarketChannelAPI {
     public List<MarketChannelBO> maps(MarketChannelDTO dto) throws SerException {
         return BeanTransform.copyProperties(marketChannelSer.findByPage(dto), MarketChannelBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return marketChannelSer.findAll().size();
+    }
 }

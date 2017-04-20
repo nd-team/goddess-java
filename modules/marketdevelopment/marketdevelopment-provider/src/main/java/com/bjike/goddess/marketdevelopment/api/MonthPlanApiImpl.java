@@ -8,7 +8,9 @@ import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 月计划业务接口实现
@@ -57,6 +59,14 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
 
     @Override
     public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
-        return monthPlanSer.maps(dto);
+        return monthPlanSer.maps(dto).stream()
+                .sorted(Comparator.comparing(MonthPlanBO::getYearNumber).reversed()
+                        .thenComparing(MonthPlanBO::getMonth))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return monthPlanSer.findAll().size();
     }
 }
