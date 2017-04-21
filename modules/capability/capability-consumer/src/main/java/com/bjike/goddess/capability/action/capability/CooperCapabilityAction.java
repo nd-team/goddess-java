@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -121,6 +120,58 @@ public class CooperCapabilityAction {
     public Result editCooperCapability(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
         try {
             CooperCapabilityBO cooperCapabilityBO1 = cooperCapabilityAPI.editCooperCapability(cooperCapabilityTO);
+            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO1, CooperCapabilityVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 编辑联系人
+     *
+     * @param cooperCapabilityTO 合作对象能力基本信息数据bo
+     * @return class CooperCapabilityVO
+     * @des 编辑联系人
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/editRelation")
+    public Result editCompanyConnector(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
+        try {
+            CooperCapabilityBO cooperCapabilityBO1 = cooperCapabilityAPI.editCompanyConnector(cooperCapabilityTO);
+            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO1, CooperCapabilityVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 查看联系人
+     *
+     * @param id 合作对象能力基本信息数据id
+     * @return class CooperCapabilityVO
+     * @des 根据id编查看联系人
+     * @version v1
+     */
+    @GetMapping("v1/getRelation/{id}")
+    public Result getCompanyConnector(@PathVariable String id) throws ActException {
+        try {
+            CooperCapabilityBO cooperCapabilityBO1 = cooperCapabilityAPI.getCompanyConnector(id);
+            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO1, CooperCapabilityVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+/**
+     * 查找所有公司名
+     *
+     * @return class CooperCapabilityVO
+     * @des 查找所有公司名
+     * @version v1
+     */
+    @GetMapping("v1/listCompany")
+    public Result listAllCompanyName( ) throws ActException {
+        try {
+            List<CooperCapabilityBO> cooperCapabilityBO1 = cooperCapabilityAPI.listAllCompanyName( );
             return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO1, CooperCapabilityVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

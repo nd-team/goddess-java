@@ -188,13 +188,14 @@ public class CollectEmailAction {
     /**
      * 汇总商业能力
      *
-     * @param companys 公司名称
+     * @param collectEmailDTO collectEmailDTO
      * @des 根据公司名称汇总
      * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/collectCompanyCapability")
-    public Result collectCompanyCapability ( @NotBlank String[] companys ) throws ActException {
+    public Result collectCompanyCapability (@Validated({CollectEmailDTO.TestCompany.class}) CollectEmailDTO collectEmailDTO  ) throws ActException {
+        String[] companys = collectEmailDTO.getCompanys();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
@@ -208,14 +209,15 @@ public class CollectEmailAction {
     /**
      * 汇总个人能力
      *
-     * @param names 姓名
+     * @param collectEmailDTO collectEmailDTO
      * @des 根据姓名汇总
      * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/collectSelfCapability")
-    public Result collectSelfCapability ( @NotBlank String[] names ) throws ActException {
+    public Result collectSelfCapability (@Validated({CollectEmailDTO.TestPerson.class}) CollectEmailDTO collectEmailDTO   ) throws ActException {
         try {
+            String[] names = collectEmailDTO.getNames();
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectSelfEmail(names), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
@@ -227,16 +229,17 @@ public class CollectEmailAction {
     /**
      * 汇总合作能力
      *
-     * @param companyNames 公司名称
+     * @param collectEmailDTO collectEmailDTO
      * @des 根据公司名称汇总
      * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/collectCooperCapability")
-    public Result collectCooperCapability ( @NotBlank String[] companyNames ) throws ActException {
+    public Result collectCooperCapability (@Validated(CollectEmailDTO.TestCompany.class) CollectEmailDTO collectEmailDTO  ) throws ActException {
+        String[] companys = collectEmailDTO.getCompanys();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
-                    collectEmailAPI.collectCompanyEmail(companyNames), CollectEmailVO.class, true);
+                    collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
