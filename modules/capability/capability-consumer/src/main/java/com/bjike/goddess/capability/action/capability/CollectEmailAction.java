@@ -195,7 +195,7 @@ public class CollectEmailAction {
      */
     @GetMapping("v1/collectCompanyCapability")
     public Result collectCompanyCapability (@Validated({CollectEmailDTO.TestCompany.class}) CollectEmailDTO collectEmailDTO  ) throws ActException {
-        String[] companys = collectEmailDTO.getCompanys();
+        String[] companys = new String[]{};
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
@@ -217,7 +217,7 @@ public class CollectEmailAction {
     @GetMapping("v1/collectSelfCapability")
     public Result collectSelfCapability (@Validated({CollectEmailDTO.TestPerson.class}) CollectEmailDTO collectEmailDTO   ) throws ActException {
         try {
-            String[] names = collectEmailDTO.getNames();
+            String[] names = new String[]{};
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectSelfEmail(names), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
@@ -236,7 +236,7 @@ public class CollectEmailAction {
      */
     @GetMapping("v1/collectCooperCapability")
     public Result collectCooperCapability (@Validated(CollectEmailDTO.TestCompany.class) CollectEmailDTO collectEmailDTO  ) throws ActException {
-        String[] companys = collectEmailDTO.getCompanys();
+        String[] companys = new String[]{};
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);

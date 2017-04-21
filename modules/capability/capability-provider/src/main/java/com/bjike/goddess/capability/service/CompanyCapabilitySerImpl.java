@@ -50,7 +50,7 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
 
     @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
-        List<CompanyCapability> list = super.findByCis(companyCapabilityDTO, true);
+        List<CompanyCapability> list = super.findByPage(companyCapabilityDTO);
 
         return BeanTransform.copyProperties(list, CompanyCapabilityBO.class );
     }
