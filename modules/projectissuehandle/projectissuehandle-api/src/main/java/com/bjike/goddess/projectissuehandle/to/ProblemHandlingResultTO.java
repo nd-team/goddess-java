@@ -1,8 +1,9 @@
 package com.bjike.goddess.projectissuehandle.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
+import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
 
-import java.time.LocalDate;
 
 /**
  * 确认问题处理结果
@@ -23,7 +24,7 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 合同外部项目名称
      */
-    private String ExternalContractProjectName;
+    private String externalContractProjectName;
 
     /**
      * 内部项目名称
@@ -48,7 +49,7 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题对象
      */
-    private String problemObject;
+    private ProblemObject problemObject;
 
     /**
      * 问题责任人员
@@ -83,7 +84,7 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题处理结果
      */
-    private String problemProcessingResult;
+    private ProblemProcessingResult problemProcessingResult;
 
     /**
      * 问题总结
@@ -100,11 +101,11 @@ public class ProblemHandlingResultTO extends BaseTO {
     }
 
     public String getExternalContractProjectName() {
-        return ExternalContractProjectName;
+        return externalContractProjectName;
     }
 
-    public void setExternalContractProjectName(String ExternalContractProjectName) {
-        this.ExternalContractProjectName = ExternalContractProjectName;
+    public void setExternalContractProjectName(String externalContractProjectName) {
+        this.externalContractProjectName = externalContractProjectName;
     }
 
     public String getInternalProjectName() {
@@ -139,11 +140,11 @@ public class ProblemHandlingResultTO extends BaseTO {
         this.problemSpecificSituation = problemSpecificSituation;
     }
 
-    public String getProblemObject() {
+    public ProblemObject getProblemObject() {
         return problemObject;
     }
 
-    public void setProblemObject(String problemObject) {
+    public void setProblemObject(ProblemObject problemObject) {
         this.problemObject = problemObject;
     }
 
@@ -195,11 +196,11 @@ public class ProblemHandlingResultTO extends BaseTO {
         this.problemSolveTime = problemSolveTime;
     }
 
-    public String getProblemProcessingResult() {
+    public ProblemProcessingResult getProblemProcessingResult() {
         return problemProcessingResult;
     }
 
-    public void setProblemProcessingResult(String problemProcessingResult) {
+    public void setProblemProcessingResult(ProblemProcessingResult problemProcessingResult) {
         this.problemProcessingResult = problemProcessingResult;
     }
 

@@ -27,6 +27,10 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     private ProblemHandlingResultSer problemHandlingResultSer;
 
     @Override
+    public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        return problemHandlingResultSer.countProblemHandlingResult(problemHandlingResultDTO);
+    }
+    @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return problemHandlingResultSer.findListProblemHandlingResult(problemHandlingResultDTO);
     }

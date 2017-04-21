@@ -30,17 +30,25 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectissuehandleSerCache")
 @Service
 public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingResult, ProblemHandlingResultDTO> implements ProblemHandlingResultSer {
-    @Cacheable
+    @Override
+    public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        problemHandlingResultDTO.getSorts().add("createTime=desc");
+        Long counts = super.count(problemHandlingResultDTO);
+        return counts;
+    }
+
     @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        problemHandlingResultDTO.getSorts().add("createTime=desc");
         List<ProblemHandlingResult> problemHandlingResults = super.findByCis(problemHandlingResultDTO, true);
-        return BeanTransform.copyProperties(problemHandlingResults, ProblemAcceptBO.class);
+        List<ProblemHandlingResultBO> problemHandlingResultBOS = BeanTransform.copyProperties(problemHandlingResults, ProblemHandlingResultBO.class);
+        return problemHandlingResultBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class,true);
+        ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true);
         problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
         return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
@@ -49,14 +57,10 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        if (!StringUtils.isEmpty(problemHandlingResultTO.getId())) {
-            ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
-            BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true);
-            problemHandlingResult.setModifyTime(LocalDateTime.now());
-            super.update(problemHandlingResult);
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
+        ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
+        BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true);
+        problemHandlingResult.setModifyTime(LocalDateTime.now());
+        super.update(problemHandlingResult);
         return BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResultBO.class);
     }
 

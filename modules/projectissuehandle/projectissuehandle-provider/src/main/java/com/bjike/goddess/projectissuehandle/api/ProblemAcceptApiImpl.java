@@ -23,6 +23,10 @@ import java.util.List;
 public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     @Autowired
     private ProblemAcceptSer problemAcceptSer;
+    @Override
+    public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        return problemAcceptSer.countProblemAccept(problemAcceptDTO);
+    }
 
     @Override
     public List<ProblemAcceptBO> findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
