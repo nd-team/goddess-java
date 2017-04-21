@@ -53,7 +53,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Autowired
     private CategoryAPI categoryAPI;
 
+    @Override
+    public VoucherGenerateBO getById(String id) throws SerException {
+        VoucherGenerate vg = super.findById(id);
+        return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
 
+    }
 
     @Override
     public Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
@@ -97,7 +102,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public VoucherGenerateBO addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    public List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
         if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
             throw new SerException("一级科目不能为空");
         }
@@ -143,7 +148,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             list.add(temp);
         }
         super.save(list);
-        return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);
+        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -191,7 +196,24 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
+        VoucherGenerate voucherGenerate = super.findById(id);
+        Double borrow = voucherGenerate.getBorrowMoney();
+        Double loan = voucherGenerate.getLoanMoney();
+
+        String totalId = voucherGenerate.getTotalId();
+        VoucherTotal voucherTotal =  voucherTotalSer.findById( totalId );
+        voucherTotal.setMoney( voucherTotal.getMoney()-borrow-loan );
+        voucherTotal.setCreateTime( LocalDateTime.now() );
+        voucherTotalSer.update( voucherTotal );
         super.remove(id);
+
+        //删掉合计
+        VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
+        vgDTO.getConditions().add(Restrict.eq("totalId",totalId));
+        List<VoucherGenerate> list = super.findByCis( vgDTO );
+        if( list==null ){
+            voucherTotalSer.remove( totalId );
+        }
     }
 
 

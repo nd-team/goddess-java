@@ -9,6 +9,7 @@ import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
 import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,7 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
         return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
     }
 
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
@@ -102,6 +104,19 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
             str.setModifyTime(LocalDateTime.now());
         });
         super.update( selfCapabilityList );
+        return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
+
+        SelfCapability temp = BeanTransform.copyProperties(selfCapabilityTO,SelfCapability.class,true);
+        SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
+        BeanUtils.copyProperties( temp , selfCapability,"id","createTime","name","capacity","selfJobTitle","positionTitle","workYear","selfProject");
+        selfCapability.setModifyTime(LocalDateTime.now());
+
+        super.update( selfCapability );
         return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
     }
 
