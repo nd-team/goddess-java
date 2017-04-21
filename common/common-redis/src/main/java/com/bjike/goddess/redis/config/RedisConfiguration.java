@@ -17,17 +17,6 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisConfiguration {
 
-    @Bean(name = "jedisPoolConfig")
-    public JedisPoolConfig jedisPoolConfig(Environment env) {
-        JedisPoolConfig config = new JedisPoolConfig();
-        int maxTotal = Integer.parseInt(env.getProperty("redis.pool.maxTotal"));
-        int maxIdle = Integer.parseInt(env.getProperty("redis.pool.maxIdle"));
-        int maxWaitMillis = Integer.parseInt(env.getProperty("redis.pool.maxWaitMillis"));
-        config.setMaxTotal(maxTotal);
-        config.setMaxIdle(maxIdle);
-        config.setMaxWaitMillis(maxWaitMillis);
-        return config;
-    }
     /**
      * 配置连接池
      *
