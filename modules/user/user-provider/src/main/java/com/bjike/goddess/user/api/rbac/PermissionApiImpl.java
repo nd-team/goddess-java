@@ -1,8 +1,6 @@
 package com.bjike.goddess.user.api.rbac;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.provider.common.RpcCommon;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
@@ -61,11 +59,11 @@ public class PermissionApiImpl implements PermissionAPI {
     @Override
     public List<PermissionBO> currentPermissions() throws SerException {
         List<PermissionBO> permissions = userSer.currentPermissions();
-        if (null != permissions && permissions.size()>0) {
+        if (null != permissions && permissions.size() > 0) {
             return permissions;
         } else {
             String token = RpcTransmit.getUserToken();
-            if(StringUtils.isNotBlank(token)){
+            if (StringUtils.isNotBlank(token)) {
                 UserBO userBO = userSer.currentUser(token);
                 permissions = permissionSer.findByUserId(userBO.getId());
                 if (null != permissions && permissions.size() > 0) {

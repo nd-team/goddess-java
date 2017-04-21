@@ -16,13 +16,6 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Configuration
 public class RedisConfiguration {
-    @Bean(name = "jedisPool")
-    @Autowired
-    public JedisPool jedisPool(JedisPoolConfig config, Environment env) {
-        String host = env.getProperty("redis.host");
-        int post = Integer.parseInt(env.getProperty("redis.post"));
-        return new JedisPool(config, host, post);
-    }
 
     @Bean(name = "jedisPoolConfig")
     public JedisPoolConfig jedisPoolConfig(Environment env) {
@@ -34,5 +27,25 @@ public class RedisConfiguration {
         config.setMaxIdle(maxIdle);
         config.setMaxWaitMillis(maxWaitMillis);
         return config;
+    }
+    /**
+     * 配置连接池
+     *
+     * @param env
+     * @return
+     */
+    @Autowired
+    @Bean(name = "jedisPool")
+    public JedisPool jedisPool(Environment env) {
+        JedisPoolConfig config = new JedisPoolConfig();
+        String host = env.getProperty("redis.host");
+        int post = Integer.parseInt(env.getProperty("redis.post"));
+        int maxTotal = Integer.parseInt(env.getProperty("redis.pool.maxTotal"));
+        int maxIdle = Integer.parseInt(env.getProperty("redis.pool.maxIdle"));
+        int maxWaitMillis = Integer.parseInt(env.getProperty("redis.pool.maxWaitMillis"));
+        config.setMaxTotal(maxTotal);
+        config.setMaxIdle(maxIdle);
+        config.setMaxWaitMillis(maxWaitMillis);
+        return new JedisPool(config, host, post);
     }
 }
