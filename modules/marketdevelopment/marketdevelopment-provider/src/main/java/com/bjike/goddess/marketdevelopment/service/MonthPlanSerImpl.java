@@ -5,16 +5,21 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,11 +88,21 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO update(MonthPlanTO to) throws SerException {
-        MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
-        entity.setYear(yearPlanSer.findById(to.getYear_id()));
-        entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted() / 100);
-        super.update(entity);
-        return this.transformBO(entity);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                MonthPlan entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setYear(yearPlanSer.findById(to.getYear_id()));
+                entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted() / 100);
+                super.update(entity);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return this.transformBO(entity);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -127,5 +142,22 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public List<MonthPlanChoiceBO> getChoice() throws SerException {
+        List<MonthPlanBO> list = this.findByYear(LocalDate.now().getYear()).stream()
+                .sorted(Comparator.comparing(MonthPlanBO::getYearNumber)
+                        .thenComparing(MonthPlanBO::getMonth))
+                .collect(Collectors.toList());
+        List<MonthPlanChoiceBO> choiceBOs = new ArrayList<>(0);
+        String format = "%d年%s 任务量:%f";
+        for (MonthPlanBO bo : list) {
+            MonthPlanChoiceBO choice = new MonthPlanChoiceBO();
+            choice.setId(bo.getId());
+            choice.setShowValue(String.format(format, bo.getYearNumber(), bo.getMonth().getValueString(), bo.getTotal()));
+            choiceBOs.add(choice);
+        }
+        return choiceBOs;
     }
 }

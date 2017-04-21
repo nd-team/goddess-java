@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.MonthPlanSer;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
@@ -68,5 +69,10 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
     @Override
     public Integer getTotal() throws SerException {
         return monthPlanSer.findAll().size();
+    }
+
+    @Override
+    public List<MonthPlanChoiceBO> getChoice() throws SerException {
+        return monthPlanSer.getChoice();
     }
 }

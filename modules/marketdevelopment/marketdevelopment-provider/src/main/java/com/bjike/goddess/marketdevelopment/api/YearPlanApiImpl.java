@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.service.YearPlanSer;
@@ -69,5 +70,10 @@ public class YearPlanApiImpl implements YearPlanAPI {
     @Override
     public Integer getTotal() throws SerException {
         return yearPlanSer.findAll().size();
+    }
+
+    @Override
+    public List<YearPlanChoiceBO> getChoice() throws SerException {
+        return yearPlanSer.getChoice();
     }
 }

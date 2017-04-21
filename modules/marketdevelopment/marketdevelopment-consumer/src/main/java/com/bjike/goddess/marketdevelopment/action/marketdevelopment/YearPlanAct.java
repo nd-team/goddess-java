@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.YearPlanAPI;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
+import com.bjike.goddess.marketdevelopment.vo.YearPlanChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -153,6 +154,21 @@ public class YearPlanAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(yearPlanAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取年计划选择对象
+     *
+     * @return class YearPlanChoiceVO
+     * @version v1
+     */
+    @GetMapping("v1/getChoice")
+    public Result getChoice() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getChoice(), YearPlanChoiceVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

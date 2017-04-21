@@ -9,11 +9,13 @@ import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessCourse;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,10 +74,19 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO update(BusinessCourseTO to) throws SerException {
-        BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
-        entity.setType(typeSer.findById(to.getType_id()));
-        super.update(entity);
-        return this.transformBO(entity);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                BusinessCourse entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setType(typeSer.findById(to.getType_id()));
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return this.transformBO(entity);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)

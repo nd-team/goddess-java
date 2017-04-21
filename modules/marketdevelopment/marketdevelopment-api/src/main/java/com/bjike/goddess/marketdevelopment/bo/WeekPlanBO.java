@@ -19,6 +19,16 @@ public class WeekPlanBO extends BaseBO {
     private String month_id;
 
     /**
+     * 年份
+     */
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    private String type;
+
+    /**
      * 业务方向科目
      */
     private String course;
@@ -27,6 +37,11 @@ public class WeekPlanBO extends BaseBO {
      * 总任务量
      */
     private Double monthTotal;
+
+    /**
+     * 周期
+     */
+    private String cycle;
 
     /**
      * 周期(开始日期)
@@ -168,5 +183,29 @@ public class WeekPlanBO extends BaseBO {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(String cycle) {
+        this.cycle = cycle;
     }
 }

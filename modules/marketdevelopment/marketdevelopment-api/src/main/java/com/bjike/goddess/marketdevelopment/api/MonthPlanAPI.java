@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 
@@ -102,6 +103,16 @@ public interface MonthPlanAPI {
      * @throws SerException
      */
     default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取月计划选择对象
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MonthPlanChoiceBO> getChoice() throws SerException {
         return null;
     }
 

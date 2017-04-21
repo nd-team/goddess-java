@@ -8,10 +8,12 @@ import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,9 +40,18 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO update(MarketChannelTO to) throws SerException {
-        MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, MarketChannelBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                MarketChannel entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, MarketChannelBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)

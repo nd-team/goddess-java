@@ -8,12 +8,14 @@ import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.WeekPlan;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,9 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         bo.setCourse(entity.getMonth().getYear().getCourse());
         bo.setMonth_id(entity.getMonth().getId());
         bo.setMonthTotal(entity.getMonth().getTotal());
+        bo.setYear(entity.getMonth().getYear().getYear());
+        bo.setType(entity.getMonth().getMonth().getValueString());
+        bo.setCycle(entity.getStartCycle().toString() + "至" + entity.getEndCycle().toString());
         return bo;
     }
 
@@ -61,11 +66,18 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
-        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
-        entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
-        entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
-        super.update(entity);
-        return this.transformBO(entity);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                WeekPlan entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return this.transformBO(entity);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)

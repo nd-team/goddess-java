@@ -8,10 +8,12 @@ import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,9 +40,18 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO update(TargetInformationTO to) throws SerException {
-        TargetInformation entity = BeanTransform.copyProperties(to, TargetInformation.class);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, TargetInformationBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                TargetInformation entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, TargetInformationBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)

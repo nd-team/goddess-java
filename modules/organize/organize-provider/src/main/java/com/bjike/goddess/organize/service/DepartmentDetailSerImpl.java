@@ -110,6 +110,8 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
         department.setHierarchy(hierarchySer.findById(to.getHierarchy_id()));
+        if (department.getHierarchy() == null)
+            throw new SerException("体系不能为空");
         department.setCreateTime(LocalDateTime.now());
         super.save(department);
         return this.transformationToBO(department);

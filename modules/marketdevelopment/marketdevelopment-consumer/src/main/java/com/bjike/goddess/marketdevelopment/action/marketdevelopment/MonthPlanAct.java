@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MonthPlanAPI;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
+import com.bjike.goddess.marketdevelopment.vo.MonthPlanChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.MonthPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -154,6 +155,21 @@ public class MonthPlanAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(monthPlanAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取月计划选择对象
+     *
+     * @return class MonthPlanChoiceVO
+     * @version v1
+     */
+    @GetMapping("v1/getChoice")
+    public Result getChoice() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.getChoice(), MonthPlanChoiceVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

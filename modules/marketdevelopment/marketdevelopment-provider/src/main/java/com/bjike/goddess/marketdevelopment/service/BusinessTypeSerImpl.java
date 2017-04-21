@@ -9,10 +9,12 @@ import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessType;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,16 +43,26 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO update(BusinessTypeTO to) throws SerException {
-        BusinessType entity = BeanTransform.copyProperties(to, BusinessType.class);
-        entity.setStatus(Status.THAW);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                BusinessType entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO congeal(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
@@ -60,6 +72,8 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Override
     public BusinessTypeBO thaw(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
