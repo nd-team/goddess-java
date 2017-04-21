@@ -1,0 +1,9 @@
+apply from: '../../../config.gradle'
+dependencies {
+    compile project(":common:common-api")
+    compile project(":common:common-utils")
+    compile project(":modules:voucher:voucher-api")
+    compile project(":modules:user:user-api")
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.13'
+
+}
