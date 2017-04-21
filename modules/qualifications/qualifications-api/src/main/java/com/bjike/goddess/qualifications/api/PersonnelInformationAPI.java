@@ -60,4 +60,14 @@ public interface PersonnelInformationAPI {
         return null;
     }
 
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default PersonnelInformationBO getById(String id) throws SerException {
+        return null;
+    }
 }

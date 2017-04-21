@@ -1,6 +1,7 @@
 package com.bjike.goddess.common.consumer.handler;
 
 import com.bjike.goddess.common.api.exception.ActException;
+import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,23 +29,23 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
-        if(e instanceof ActException){
+        if (e instanceof ActException) {
             httpServletResponse.setStatus(SUCCESS_STATUS);
-        }else{
+        } else {
             httpServletResponse.setStatus(EXCEPTION_STATUS);
             actResult.setCode(EXCEPTION_CODE);
-            if ("notLogin".equals(e.getMessage())){
+            if ("notLogin".equals(e.getMessage())) {
                 actResult.setCode(403);
             }
             LOGGER.error(e.getMessage());
         }
-        actResult.setMsg(e.getMessage());
-        try {
-            httpServletResponse.getWriter().print(actResult.toString());
-        } catch (IOException e1) {
-            LOGGER.error(e1.getMessage());
-            return new ModelAndView();
+        if(e.getMessage().startsWith("Forbid consumer")){
+            actResult.setMsg("服务调用失败");
+        }else{
+            actResult.setMsg(e.getMessage());
         }
+        ResponseContext.writeData(actResult.toString());
+
         return new ModelAndView();
     }
 }

@@ -72,6 +72,8 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
         entity.setYear(yearPlanSer.findById(to.getYear_id()));
+        if (entity.getYear() == null)
+            throw new SerException("年计划数据为空");
         entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted());
         super.save(entity);
         return this.transformBO(entity);

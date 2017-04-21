@@ -18,7 +18,13 @@ import java.util.List;
  */
 public interface ProblemHandlingResultAPI {
     /**
-     * 获取确认问题处理结果
+     * 确认问题处理结果列表总条数
+     */
+    default Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 确认问题处理结果
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
      * @return class problemHandlingResultBO

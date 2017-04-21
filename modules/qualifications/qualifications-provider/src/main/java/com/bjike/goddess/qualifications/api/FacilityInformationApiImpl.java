@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
+import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.service.FacilityInformationSer;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class FacilityInformationApiImpl implements FacilityInformationAPI {
     @Override
     public List<FacilityInformationBO> all() throws SerException {
         return facilityInformationSer.all();
+    }
+
+    @Override
+    public List<FacilityInformationBO> maps(FacilityInformationDTO dto) throws SerException {
+        return facilityInformationSer.all();
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return facilityInformationSer.getTotal();
+    }
+
+    @Override
+    public FacilityInformationBO getById(String id) throws SerException {
+        return facilityInformationSer.getById(id);
     }
 }

@@ -56,6 +56,7 @@ public class CompanyCapabilityAction {
      *
      * @param id
      * @des 获取一个公司能力
+     * @return  class CompanyCapabilityVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")

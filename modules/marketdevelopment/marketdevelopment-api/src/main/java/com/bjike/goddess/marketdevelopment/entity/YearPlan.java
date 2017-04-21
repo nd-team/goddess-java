@@ -50,7 +50,7 @@ public class YearPlan extends BaseEntity {
      * 可发展对象
      */
     @Range(min = 0, max = 9999) //取范围
-    @Column(name = "development", nullable = false, columnDefinition = "TINYINT   COMMENT '可发展对象'")
+    @Column(name = "development", nullable = false, columnDefinition = "INT(11)   COMMENT '可发展对象'")
     private Integer development;
 
     /**

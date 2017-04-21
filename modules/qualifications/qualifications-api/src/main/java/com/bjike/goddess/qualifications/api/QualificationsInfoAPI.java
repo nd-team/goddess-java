@@ -85,4 +85,24 @@ public interface QualificationsInfoAPI {
         return null;
     }
 
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default QualificationsInfoBO getById(String id) throws SerException {
+        return null;
+    }
 }

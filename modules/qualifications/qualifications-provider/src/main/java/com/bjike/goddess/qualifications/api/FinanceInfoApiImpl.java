@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.FinanceInfoBO;
+import com.bjike.goddess.qualifications.dto.FinanceInfoDTO;
 import com.bjike.goddess.qualifications.service.FinanceInfoSer;
 import com.bjike.goddess.qualifications.to.FinanceInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class FinanceInfoApiImpl implements FinanceInfoAPI {
     @Override
     public List<FinanceInfoBO> all() throws SerException {
         return financeInfoSer.all();
+    }
+
+    @Override
+    public List<FinanceInfoBO> maps(FinanceInfoDTO dto) throws SerException {
+        return financeInfoSer.maps(dto);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return financeInfoSer.getTotal();
+    }
+
+    @Override
+    public FinanceInfoBO getById(String id) throws SerException {
+        return financeInfoSer.getById(id);
     }
 }

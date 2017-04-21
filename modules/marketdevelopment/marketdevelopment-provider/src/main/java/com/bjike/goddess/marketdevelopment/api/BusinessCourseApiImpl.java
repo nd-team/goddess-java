@@ -69,4 +69,9 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
         return businessCourseSer.maps(dto);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return businessCourseSer.findAll().size();
+    }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.QualificationsInfoBO;
 import com.bjike.goddess.qualifications.dto.QualificationsInfoDTO;
 import com.bjike.goddess.qualifications.entity.QualificationsInfo;
@@ -84,6 +85,27 @@ public interface QualificationsInfoSer extends Ser<QualificationsInfo, Qualifica
      * @throws SerException
      */
     default List<QualificationsInfoBO> maps(QualificationsInfoDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default QualificationsInfoBO getById(String id) throws SerException {
         return null;
     }
 

@@ -48,7 +48,7 @@ public class DemandAnalysisApiImpl implements DemandAnalysisAPI {
 
     @Override
     public List<DemandAnalysisBO> findByCourse(String course) throws SerException {
-        return demandAnalysisSer.findByType(course);
+        return demandAnalysisSer.findByCourse(course);
     }
 
     @Override
@@ -64,5 +64,10 @@ public class DemandAnalysisApiImpl implements DemandAnalysisAPI {
     @Override
     public List<DemandAnalysisBO> maps(DemandAnalysisDTO dto) throws SerException {
         return BeanTransform.copyProperties(demandAnalysisSer.findByPage(dto), DemandAnalysisBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return demandAnalysisSer.findAll().size();
     }
 }

@@ -66,4 +66,9 @@ public class BusinessTypeApiImpl implements BusinessTypeAPI {
     public List<BusinessTypeBO> maps(BusinessTypeDTO dto) throws SerException {
         return BeanTransform.copyProperties(businessTypeSer.findByPage(dto), BusinessTypeBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return businessTypeSer.findAll().size();
+    }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectissuehandle.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
+import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
@@ -20,7 +21,13 @@ import java.util.List;
  */
 public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     /**
-     * 获取项目执行中的问题受理
+     * 项目执行中的问题受理列表总条数
+     */
+    default Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 项目执行中的问题受理
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto
      * @return class problemAcceptBO

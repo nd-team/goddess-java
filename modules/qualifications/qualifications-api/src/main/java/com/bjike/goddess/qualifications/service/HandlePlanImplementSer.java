@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.HandlePlanImplementBO;
 import com.bjike.goddess.qualifications.dto.HandlePlanImplementDTO;
 import com.bjike.goddess.qualifications.entity.HandlePlanImplement;
@@ -83,6 +84,17 @@ public interface HandlePlanImplementSer extends Ser<HandlePlanImplement, HandleP
      * @throws SerException
      */
     default List<HandlePlanImplementBO> findByHandle(String handle_id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default HandlePlanImplementBO getById(String id) throws SerException {
         return null;
     }
 }

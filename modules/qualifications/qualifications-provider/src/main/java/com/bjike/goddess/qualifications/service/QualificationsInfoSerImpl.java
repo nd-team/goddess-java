@@ -96,4 +96,14 @@ public class QualificationsInfoSerImpl extends ServiceImpl<QualificationsInfo, Q
         List<QualificationsInfo> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, QualificationsInfoBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public QualificationsInfoBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), QualificationsHandleBO.class);
+    }
 }

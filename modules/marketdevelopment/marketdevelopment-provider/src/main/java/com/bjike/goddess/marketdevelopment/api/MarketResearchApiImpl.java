@@ -65,4 +65,10 @@ public class MarketResearchApiImpl implements MarketResearchAPI {
     public List<MarketResearchBO> maps(MarketResearchDTO dto) throws SerException {
         return BeanTransform.copyProperties(marketResearchSer.findByPage(dto), MarketResearchBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return marketResearchSer.findAll().size();
+    }
+
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 public class RedisClientImpl implements RedisClient {
 
 
-    @Autowired
+    @Autowired(required = false)
     private JedisPool jedisPool;
     private Jedis jedis = null;
 

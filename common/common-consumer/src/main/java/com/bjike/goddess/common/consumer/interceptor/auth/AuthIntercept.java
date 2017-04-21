@@ -1,6 +1,5 @@
 package com.bjike.goddess.common.consumer.interceptor.auth;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
@@ -8,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -72,10 +70,19 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
                 if (per.getHasChild()) { //如存在子资源,通配符*无效
                     pass = false;
                     for (PermissionBO p : permissions) {
-                        if (p.getResource().equals(uri)) { //子资源匹配
+                        resource = p.getResource();
+                        if (resource.equals(uri)) {//子资源匹配
                             pass = true;
                             break;
                         }
+                        if (-1 != resource.lastIndexOf("/*")) {//子资源匹配
+                            per_url = StringUtils.substringBeforeLast(resource, "/*");
+                            if (StringUtils.isNotBlank(per_url) && uri.indexOf(per_url) != -1) {
+                                pass = true;
+                                break;
+                            }
+                        }
+
                     }
                     if (pass) {
                         break;
@@ -95,6 +102,12 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
+    }
+
+    public static void main(String[] args) {
+        String a = StringUtils.substringBeforeLast("/aa/xx", "/*");
+        System.out.println(StringUtils.substringBeforeLast("/aa/xx", "/*"));
+        System.out.println("/aa".indexOf(a));
     }
 
     @Override

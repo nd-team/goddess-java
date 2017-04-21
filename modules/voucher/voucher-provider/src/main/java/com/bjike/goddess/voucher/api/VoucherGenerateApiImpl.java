@@ -27,6 +27,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     private VoucherGenerateSer voucherGenerateSer;
 
     @Override
+    public VoucherGenerateBO getById(String id) throws SerException {
+        return voucherGenerateSer.getById(id);
+    }
+
+    @Override
     public Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return voucherGenerateSer.count(voucherGenerateDTO);
     }
@@ -37,7 +42,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    public List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return voucherGenerateSer.addVoucherGenerate(voucherGenerateTO);
     }
 

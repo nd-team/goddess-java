@@ -42,7 +42,7 @@ public class VoucherGenerateTO extends BaseTO {
      * 凭证日期
      */
     @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "凭证日期不能为空")
-    private String vDate;
+    private String voucherDate;
 
     /**
      * 一级科目
@@ -178,12 +178,12 @@ public class VoucherGenerateTO extends BaseTO {
         this.voucherNum = voucherNum;
     }
 
-    public String getvDate() {
-        return vDate;
+    public String getVoucherDate() {
+        return voucherDate;
     }
 
-    public void setvDate(String vDate) {
-        this.vDate = vDate;
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public List<String> getFirstSubjects() {
