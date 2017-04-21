@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,6 +11,7 @@ import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +39,7 @@ public class DepartmentDetailAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated DepartmentDetailTO to) throws ActException {
+    public Result save(@Validated(ADD.class) DepartmentDetailTO to, BindingResult result) throws ActException {
         try {
             DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.save(to), DepartmentDetailVO.class);
             return ActResult.initialize(vo);
@@ -53,7 +56,7 @@ public class DepartmentDetailAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated DepartmentDetailTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) DepartmentDetailTO to, BindingResult result) throws ActException {
         try {
             DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.update(to), DepartmentDetailVO.class);
             return ActResult.initialize(vo);

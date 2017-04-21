@@ -53,4 +53,9 @@ public class HandlePlanStageApiImpl implements HandlePlanStageAPI {
     public List<HandlePlanStageBO> findByHandle(String handle_id) throws SerException {
         return handlePlanStageSer.findByHandle(handle_id);
     }
+
+    @Override
+    public HandlePlanStageBO getById(String id) throws SerException {
+        return handlePlanStageSer.getById(id);
+    }
 }

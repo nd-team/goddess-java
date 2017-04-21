@@ -98,4 +98,9 @@ public class HandlePlanImplementSerImpl extends ServiceImpl<HandlePlanImplement,
         List<String> stage_ids = planStageSer.findByHandle(handle_id).stream().map(HandlePlanStageBO::getId).collect(Collectors.toList());
         return this.findByStageIds(stage_ids.toArray(new String[0]));
     }
+
+    @Override
+    public HandlePlanImplementBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), HandlePlanImplementBO.class);
+    }
 }

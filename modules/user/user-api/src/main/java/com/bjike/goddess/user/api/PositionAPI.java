@@ -2,6 +2,7 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.PositionBO;
+import com.bjike.goddess.user.dto.PositionDTO;
 
 import java.util.List;
 
@@ -43,6 +44,10 @@ public interface PositionAPI {
      * @return
      */
     default List<PositionBO> findChild(String id) throws SerException {
+        return null;
+    }
+
+    default List<PositionBO> findByCis(PositionDTO dto) throws SerException{
         return null;
     }
 

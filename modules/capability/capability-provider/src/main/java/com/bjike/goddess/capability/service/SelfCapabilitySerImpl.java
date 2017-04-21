@@ -9,6 +9,7 @@ import com.bjike.goddess.capability.dto.SelfCapabilityDTO;
 import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,21 @@ import java.util.stream.Collectors;
 @Service
 public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapabilityDTO> implements SelfCapabilitySer {
 
-    
+    @Override
+    public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        Long count = super.count(selfCapabilityDTO);
+        return count;
+    }
+
+    @Override
+    public SelfCapabilityBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        SelfCapability selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,SelfCapabilityBO.class);
+    }
+
     @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
         List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
@@ -68,9 +83,13 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
         return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
     }
 
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        if( StringUtils.isBlank(selfCapabilityTO.getName())){
+            throw new SerException("失败，姓名不能为空");
+        }
         SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
 
         SelfCapabilityDTO dto = new SelfCapabilityDTO();
@@ -85,6 +104,19 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
             str.setModifyTime(LocalDateTime.now());
         });
         super.update( selfCapabilityList );
+        return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
+
+        SelfCapability temp = BeanTransform.copyProperties(selfCapabilityTO,SelfCapability.class,true);
+        SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
+        BeanUtils.copyProperties( temp , selfCapability,"id","createTime","name","capacity","selfJobTitle","positionTitle","workYear","selfProject");
+        selfCapability.setModifyTime(LocalDateTime.now());
+
+        super.update( selfCapability );
         return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
     }
 

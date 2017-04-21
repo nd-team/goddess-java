@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
+import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 
 import java.util.List;
@@ -84,4 +85,35 @@ public interface DemandAnalysisAPI {
         return null;
     }
 
+    /**
+     * 根据id获取市场需求分析数据
+     *
+     * @param id 市场需求分析数据id
+     * @return
+     * @throws SerException
+     */
+    default DemandAnalysisBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 市场需求分析数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DemandAnalysisBO> maps(DemandAnalysisDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
 }

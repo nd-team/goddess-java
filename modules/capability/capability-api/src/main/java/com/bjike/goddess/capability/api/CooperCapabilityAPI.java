@@ -19,6 +19,19 @@ import java.util.List;
 public interface CooperCapabilityAPI {
 
     /**
+     * 总条数
+     */
+    default Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个合作对象商务展示
+     * @return class CooperCapabilityBO
+     */
+    default CooperCapabilityBO getOne(String id) throws SerException {return null;}
+
+    /**
      * 合作对象商务展示列表
      * @return class CooperCapabilityBO
      */

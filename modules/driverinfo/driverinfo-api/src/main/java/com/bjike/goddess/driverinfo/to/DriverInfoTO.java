@@ -1,5 +1,7 @@
 package com.bjike.goddess.driverinfo.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.driverinfo.enums.DriverInfoType;
@@ -33,7 +35,7 @@ public class DriverInfoTO extends BaseTO {
     /**
      * 地区
      */
-    @NotNull(message = "地区不能为空!")
+    @NotNull(message = "地区不能为空!",groups = {ADD.class,EDIT.class})
     private String area;
 
     /**
@@ -44,7 +46,7 @@ public class DriverInfoTO extends BaseTO {
     /**
      * 司机名称
      */
-    @NotNull(message = "司机名称不能为空!")
+    @NotNull(message = "司机名称不能为空!",groups = {ADD.class, EDIT.class})
     private String driverName;
 
     /**
@@ -90,12 +92,13 @@ public class DriverInfoTO extends BaseTO {
     /**
      * 本车排放量
      */
-    @NotNull(message = "本车排放量不能为空!")
+    @NotNull(message = "本车排放量不能为空!",groups = {ADD.class,EDIT.class})
     private Double emissions;
 
     /**
      * 本车耗油
      */
+    @NotNull(message = "本车排放量不能为空!",groups = {ADD.class,EDIT.class})
     private Double carFuel;
 
     /**
@@ -189,6 +192,7 @@ public class DriverInfoTO extends BaseTO {
      */
     private String createTime;
 
+    @NotNull(message = "租车协议或车辆信息数据类别设置不能为空!",groups = {ADD.class})
     private DriverInfoType infoType;
 
     public Status getStatus() {

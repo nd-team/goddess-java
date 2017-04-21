@@ -1,7 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
+import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
 
 import java.util.List;
@@ -83,4 +85,35 @@ public interface BusinessTypeAPI {
     }
 
 
+    /**
+     * 根据id获取业务类型数据
+     *
+     * @param id 业务类型数据id
+     * @return
+     * @throws SerException
+     */
+    default BusinessCourseBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 工作交接数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<BusinessTypeBO> maps(BusinessTypeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
 }

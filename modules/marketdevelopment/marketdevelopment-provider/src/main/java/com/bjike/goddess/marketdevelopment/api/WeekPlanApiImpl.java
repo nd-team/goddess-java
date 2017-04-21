@@ -2,12 +2,15 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
+import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.WeekPlanSer;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 周计划业务接口实现
@@ -47,5 +50,20 @@ public class WeekPlanApiImpl implements WeekPlanAPI {
     @Override
     public List<WeekPlanBO> findByDate(String startDate, String endDate) throws SerException {
         return weekPlanSer.findByDate(startDate, endDate);
+    }
+
+    @Override
+    public WeekPlanBO getById(String id) throws SerException {
+        return weekPlanSer.getById(id);
+    }
+
+    @Override
+    public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        return weekPlanSer.maps(dto);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return weekPlanSer.findAll().size();
     }
 }

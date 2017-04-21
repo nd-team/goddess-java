@@ -1,8 +1,11 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 /**
  * 岗位说明书展示对象
@@ -19,11 +22,13 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 岗位id
      */
+    @NotNull(message = "岗位id不能为空", groups = {ADD.class, EDIT.class})
     private String positionId;
 
     /**
@@ -74,6 +79,7 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 角度ID
      */
+    @NotNull(message = "角度ID不能为空", groups = {ADD.class, EDIT.class})
     private String angle_id;
 
     /**
@@ -84,6 +90,7 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 维度ID
      */
+    @NotNull(message = "维度ID不能为空", groups = {ADD.class, EDIT.class})
     private String dimension_id;
 
     /**
@@ -94,6 +101,7 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 分类ID
      */
+    @NotNull(message = "分类ID不能为空", groups = {ADD.class, EDIT.class})
     private String classify_id;
 
     /**
@@ -125,6 +133,7 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 工作描述
      */
+    @NotNull(message = "工作描述不能为空", groups = {ADD.class, EDIT.class})
     private String description;
 
     /**

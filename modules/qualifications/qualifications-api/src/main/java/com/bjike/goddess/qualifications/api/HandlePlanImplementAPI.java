@@ -83,4 +83,14 @@ public interface HandlePlanImplementAPI {
         return null;
     }
 
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default HandlePlanImplementBO getById(String id) throws SerException {
+        return null;
+    }
 }

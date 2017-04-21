@@ -8,6 +8,7 @@ import com.bjike.goddess.capability.vo.CooperCapabilityVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,42 @@ public class CooperCapabilityAction {
     private CooperCapabilityAPI cooperCapabilityAPI;
 
     /**
+     * 合作对象能力总条数
+     *
+     * @param cooperCapabilityDTO
+     * @des 获取所有合作对象能力总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CooperCapabilityDTO cooperCapabilityDTO) throws ActException {
+        try {
+            Long count = cooperCapabilityAPI.counts(cooperCapabilityDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 一个合作对象能力
+     *
+     * @param id
+     * @des 获取一个合作对象能力
+     * @return class CooperCapabilityVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            CooperCapabilityBO cooperCapabilityBO = cooperCapabilityAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(cooperCapabilityBO,CooperCapabilityVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 合作对象能力列表
      *
      * @param cooperCapabilityDTO 合作对象能力信息dto
@@ -40,8 +77,8 @@ public class CooperCapabilityAction {
      * @des 获取所有合作对象能力信息
      * @version v1
      */
-    @GetMapping("v1/listCooperCapability")
-    public Result findListCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws ActException {
+    @GetMapping("v1/list")
+    public Result findLists(CooperCapabilityDTO cooperCapabilityDTO) throws ActException {
         try {
             List<CooperCapabilityVO> cooperCapabilityVOList = BeanTransform.copyProperties(
                     cooperCapabilityAPI.listCooperCapability(cooperCapabilityDTO), CooperCapabilityVO.class, true);
@@ -59,6 +96,7 @@ public class CooperCapabilityAction {
      * @des 添加合作对象能力, 公司名称不能为空
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addCooperCapability(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
         try {
@@ -78,6 +116,7 @@ public class CooperCapabilityAction {
      * @des 添加合作对象能力, 公司名称不能为空
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editCooperCapability(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
         try {
@@ -95,6 +134,7 @@ public class CooperCapabilityAction {
      * @des 根据id删除合作对象能力信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCooperCapability(@PathVariable String id) throws ActException {
         try {
@@ -132,6 +172,7 @@ public class CooperCapabilityAction {
      * @return  class CooperCapabilityVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcelCCapability(@Validated CooperCapabilityTO cooperCapabilityTO) throws ActException {
         return null;

@@ -68,4 +68,12 @@ public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
      * 每半个月定时提醒是否需要新增司机招聘
      */
     void isNeedDriver();
+
+    /**
+     * 根据司机名称查询司机信息
+     *
+     * @param driverName 司机名称
+     * @return 司机信息
+     */
+    DriverInfoBO findByDriver(String driverName) throws SerException;
 }

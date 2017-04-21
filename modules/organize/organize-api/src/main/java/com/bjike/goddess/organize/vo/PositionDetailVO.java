@@ -52,9 +52,14 @@ public class PositionDetailVO {
     private String pool;
 
     /**
+     * 模块id
+     */
+    private String module_id;
+
+    /**
      * 模块
      */
-    private String module;
+    private String moduleName;
 
     /**
      * 岗位ID
@@ -158,12 +163,20 @@ public class PositionDetailVO {
         this.pool = pool;
     }
 
-    public String getModule() {
-        return module;
+    public String getModule_id() {
+        return module_id;
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public void setModule_id(String module_id) {
+        this.module_id = module_id;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
     public String getPosition_id() {

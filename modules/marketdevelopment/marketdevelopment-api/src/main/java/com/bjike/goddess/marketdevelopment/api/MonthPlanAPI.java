@@ -1,7 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 
 import java.util.List;
@@ -69,6 +71,37 @@ public interface MonthPlanAPI {
      * @throws SerException
      */
     default List<MonthPlanBO> findByYear(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取月计划
+     * @param id 月计划数据id
+     * @return
+     * @throws SerException
+     */
+    default MonthPlanBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 月计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
         return null;
     }
 

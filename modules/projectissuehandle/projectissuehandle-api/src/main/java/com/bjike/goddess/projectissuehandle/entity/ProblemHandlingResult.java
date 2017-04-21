@@ -30,8 +30,8 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 合同外部项目名称
      */
-    @Column(name = "ExternalContractProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
-    private String ExternalContractProjectName;
+    @Column(name = "externalContractProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    private String externalContractProjectName;
 
     /**
      * 内部项目名称
@@ -114,19 +114,19 @@ public class ProblemHandlingResult extends BaseEntity {
 
     /**
      * 项目执行中的问题受理
-     */
+     *//*
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
     @JoinColumn(name = "problemAccept_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目执行中的问题受理'")
     private ProblemAccept problemAccept;
-
-    public ProblemAccept getProblemAccept() {
+*/
+    /*public ProblemAccept getProblemAccept() {
         return problemAccept;
     }
 
     public void setProblemAccept(ProblemAccept problemAccept) {
         this.problemAccept = problemAccept;
     }
-
+*/
     public String getYear() {
         return year;
     }
@@ -136,11 +136,11 @@ public class ProblemHandlingResult extends BaseEntity {
     }
 
     public String getExternalContractProjectName() {
-        return ExternalContractProjectName;
+        return externalContractProjectName;
     }
 
-    public void setExternalContractProjectName(String ExternalContractProjectName) {
-        this.ExternalContractProjectName = ExternalContractProjectName;
+    public void setExternalContractProjectName(String externalContractProjectName) {
+        this.externalContractProjectName = externalContractProjectName;
     }
 
     public String getInternalProjectName() {

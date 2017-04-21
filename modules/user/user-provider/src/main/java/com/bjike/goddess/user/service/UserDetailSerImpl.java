@@ -21,6 +21,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * 部门业务实现
@@ -90,5 +92,22 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
         }
 
         return null;
+    }
+
+    @Override
+    public List<UserDetailBO> findByMonth(UserDetailDTO dto, Integer month) throws SerException {
+
+        // TODO: 17-4-5 离职尚未处理
+        StringBuilder sql = new StringBuilder();
+        sql.append("select userdetail.realName , department.name as departmentName, usergroup.name as groupName ," +
+                "userdetail.address , MONTH(userdetail.birthday) as birthMonth from user_detail userdetail" +
+                " , user_department department,rbac_group usergroup where userdetail.department_id=department.id and userdetail.group_id=usergroup.id ");
+        if (month != null) {
+            sql.append("and MONTH(userdetail.birthday) = " + month);
+        }
+        String[] fields = new String[]{"realName", "departmentName", "groupName", "address", "birthMonth"};
+        List<UserDetailBO> list = super.findBySql(sql.toString(), UserDetailBO.class, fields);
+
+        return list;
     }
 }

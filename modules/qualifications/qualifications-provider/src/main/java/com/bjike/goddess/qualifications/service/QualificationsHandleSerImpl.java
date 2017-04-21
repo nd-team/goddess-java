@@ -148,4 +148,14 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
         super.update(entity);
         return BeanTransform.copyProperties(entity, QualificationsHandleBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public QualificationsHandleBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), QualificationsHandleBO.class);
+    }
 }

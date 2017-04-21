@@ -1,7 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
+import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketResearchSer;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,4 +55,20 @@ public class MarketResearchApiImpl implements MarketResearchAPI {
     public List<MarketResearchBO> findByCourseType(String type, String course) throws SerException {
         return marketResearchSer.findByCourseType(type, course);
     }
+
+    @Override
+    public MarketResearchBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(marketResearchSer.findById(id), MarketResearchBO.class);
+    }
+
+    @Override
+    public List<MarketResearchBO> maps(MarketResearchDTO dto) throws SerException {
+        return BeanTransform.copyProperties(marketResearchSer.findByPage(dto), MarketResearchBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return marketResearchSer.findAll().size();
+    }
+
 }

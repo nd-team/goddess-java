@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.action.organize;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,6 +12,8 @@ import com.bjike.goddess.organize.bo.AngleBO;
 import com.bjike.goddess.organize.to.AngleTO;
 import com.bjike.goddess.organize.vo.AngleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +42,7 @@ public class AngleAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(AngleTO to) throws ActException {
+    public Result save(@Validated(ADD.class) AngleTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(angleAPI.saveAsTo(to), AngleVO.class));
         } catch (SerException e) {
@@ -49,16 +53,13 @@ public class AngleAct {
     /**
      * 修改角度信息
      *
-     * @param id 角度ID
      * @param to 角度传输对象
      * @return class AngleVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@PathVariable String id, AngleTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) AngleTO to, BindingResult result) throws ActException {
         try {
-            AngleBO bo = BeanTransform.copyProperties(to, AngleBO.class, true);
-            to.setId(id);
             angleAPI.updateAsTo(to);
             return ActResult.initialize(BeanTransform.copyProperties(to, AngleVO.class));
         } catch (SerException e) {

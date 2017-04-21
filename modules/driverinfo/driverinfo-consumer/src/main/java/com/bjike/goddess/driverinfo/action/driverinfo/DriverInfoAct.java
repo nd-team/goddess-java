@@ -1,5 +1,7 @@
 package com.bjike.goddess.driverinfo.action.driverinfo;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,6 +14,7 @@ import com.bjike.goddess.driverinfo.to.DriverInfoTO;
 import com.bjike.goddess.driverinfo.vo.DriverInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +43,7 @@ public class DriverInfoAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(DriverInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated({ADD.class}) DriverInfoTO to, BindingResult bindingResult) throws ActException {
 
         try {
             DriverInfoVO vo = BeanTransform.copyProperties(driverInfoAPI.saveDriverInfo(to), DriverInfoVO.class);
@@ -57,7 +60,7 @@ public class DriverInfoAct {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(DriverInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated({EDIT.class})DriverInfoTO to, BindingResult bindingResult) throws ActException {
 
         try {
             DriverInfoVO vo = BeanTransform.copyProperties(driverInfoAPI.updateDriverInfo(to), DriverInfoVO.class);

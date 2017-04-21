@@ -38,5 +38,9 @@
                      validation="true" id="qualificationsHandlePlanApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.qualifications.api.QualificationsInfoAPI"
                      validation="true" id="qualificationsInfoApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.qualifications.api.QualificationsCollectAPI"
+                     validation="true" id="qualificationsCollectApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI"
+                     validation="true" id="fileApiImpl"/>
 
 </beans>

@@ -1,7 +1,9 @@
 package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.PositionBO;
+import com.bjike.goddess.user.dto.PositionDTO;
 import com.bjike.goddess.user.service.PositionSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,17 @@ public class PositionApiImpl implements PositionAPI {
     }
 
     @Override
-    public PositionBO findParent(String id)  throws SerException{
+    public PositionBO findParent(String id) throws SerException {
         return positionSer.findParent(id);
     }
 
     @Override
     public List<PositionBO> findChild(String id) throws SerException {
         return positionSer.findChild(id);
+    }
+
+    @Override
+    public List<PositionBO> findByCis(PositionDTO dto) throws SerException {
+        return BeanTransform.copyProperties(positionSer.findByCis(dto), PositionBO.class);
     }
 }

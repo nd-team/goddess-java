@@ -1,7 +1,11 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 工作范围信息设置展示对象
@@ -17,26 +21,31 @@ public class WorkRangeTO extends BaseTO {
     /**
      * 方向
      */
+    @NotNull(message = "方向不能为空", groups = {ADD.class, EDIT.class})
     private String direction;
 
     /**
      * 科目
      */
+    @NotNull(message = "科目不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 专业分类
      */
+    @NotNull(message = "专业分类不能为空", groups = {ADD.class, EDIT.class})
     private String classify;
 
     /**
      * 工作范围
      */
+    @NotNull(message = "工作范围不能为空", groups = {ADD.class, EDIT.class})
     private String workRange;
 
     /**
      * 工作界面(节点)
      */
+    @NotNull(message = "工作界面不能为空", groups = {ADD.class, EDIT.class})
     private String node;
 
     /**

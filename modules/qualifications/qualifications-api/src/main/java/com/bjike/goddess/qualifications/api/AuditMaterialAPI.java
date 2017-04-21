@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
+import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
 
 import java.util.List;
@@ -60,4 +61,36 @@ public interface AuditMaterialAPI {
         return null;
     }
 
+
+    /**
+     * 列表
+     *
+     * @param dto 审核资料数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<AuditMaterialBO> maps(AuditMaterialDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default AuditMaterialBO getById(String id) throws SerException {
+        return null;
+    }
 }
