@@ -32,7 +32,7 @@ public class VoucherGenerateBO extends BaseBO {
     /**
      * 凭证日期
      */
-    private String vDate;
+    private String voucherDate;
 
     /**
      * 一级科目
@@ -151,12 +151,12 @@ public class VoucherGenerateBO extends BaseBO {
         this.voucherNum = voucherNum;
     }
 
-    public String getvDate() {
-        return vDate;
+    public String getVoucherDate() {
+        return voucherDate;
     }
 
-    public void setvDate(String vDate) {
-        this.vDate = vDate;
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public String getFirstSubject() {

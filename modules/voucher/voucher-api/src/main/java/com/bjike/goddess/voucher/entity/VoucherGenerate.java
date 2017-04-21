@@ -37,8 +37,8 @@ public class VoucherGenerate extends BaseEntity {
     /**
      * 凭证日期
      */
-    @Column(name = "vDate", nullable = false, columnDefinition = "DATE   COMMENT '凭证日期'")
-    private LocalDate vDate;
+    @Column(name = "voucherDate", nullable = false, columnDefinition = "DATE   COMMENT '凭证日期'")
+    private LocalDate voucherDate;
 
     /**
      * 一级科目
@@ -160,12 +160,12 @@ public class VoucherGenerate extends BaseEntity {
         this.voucherNum = voucherNum;
     }
 
-    public LocalDate getvDate() {
-        return vDate;
+    public LocalDate getVoucherDate() {
+        return voucherDate;
     }
 
-    public void setvDate(LocalDate vDate) {
-        this.vDate = vDate;
+    public void setVoucherDate(LocalDate voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public String getFirstSubject() {

@@ -20,7 +20,7 @@ public class VoucherDataBO implements Serializable {
     /**
      * 日期
      */
-    private String vDate;
+    private String voucherDate;
 
     /**
      * 摘要
@@ -55,12 +55,12 @@ public class VoucherDataBO implements Serializable {
      */
     private String groups;
 
-    public String getvDate() {
-        return vDate;
+    public String getVoucherDate() {
+        return voucherDate;
     }
 
-    public void setvDate(String vDate) {
-        this.vDate = vDate;
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public String getSumary() {

@@ -22,7 +22,7 @@ public class VoucherDataTO implements Serializable {
      * 日期
      */
     @NotBlank(message = "日期不能为空")
-    private String vDate;
+    private String voucherDate;
 
     /**
      * 摘要
@@ -64,13 +64,6 @@ public class VoucherDataTO implements Serializable {
     @NotBlank(message = "项目组不能为空")
     private String groups;
 
-    public String getvDate() {
-        return vDate;
-    }
-
-    public void setvDate(String vDate) {
-        this.vDate = vDate;
-    }
 
     public String getSumary() {
         return sumary;
@@ -82,6 +75,14 @@ public class VoucherDataTO implements Serializable {
 
     public List<String> getSubjects() {
         return subjects;
+    }
+
+    public String getVoucherDate() {
+        return voucherDate;
+    }
+
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public void setSubjects(List<String> subjects) {

@@ -350,7 +350,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
         List<VoucherDataBO> list = new ArrayList<>();
         VoucherDataBO voucherDataBO = new VoucherDataBO();
-        voucherDataBO.setvDate( String.valueOf(vDate) );
+        voucherDataBO.setVoucherDate( String.valueOf(vDate) );
         voucherDataBO.setSumary("缴纳社保");
         voucherDataBO.setSubjects(Arrays.asList("应付职工薪酬-社会保险","银行存款"));
         voucherDataBO.setBorrowMoneys(Arrays.asList(totalMoney,0d));
@@ -373,7 +373,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String projects = voucherDataTO.getProjects();
         String groups = voucherDataTO.getGroups();
 
-        if (StringUtils.isBlank(voucherDataTO.getvDate())) {
+        if (StringUtils.isBlank(voucherDataTO.getVoucherDate())) {
 
             throw new SerException("日期不能为空");
         }
@@ -421,7 +421,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         }
 
         //看是否已经生成过记账凭证 payTimeYear:201704
-        LocalDate time = LocalDate.parse( voucherDataTO.getvDate());
+        LocalDate time = LocalDate.parse( voucherDataTO.getVoucherDate());
         SocialFeeVoucherDTO socialFeeVoucherDTO = new SocialFeeVoucherDTO();
         socialFeeVoucherDTO.getConditions().add(Restrict.eq("payTimeYear", time.getYear()+(time.getMonthValue() <10 ? "0"+time.getMonthValue(): time.getMonthValue()+"")));
         List<SocialFeeVoucher> sfvList = socialFeeVoucherSer.findByCis( socialFeeVoucherDTO );
@@ -435,7 +435,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         //说明该年月没有生成过记账凭证，则只能添加
         VoucherGenerateTO vgTO = new VoucherGenerateTO();
         vgTO.setVoucherWord("记");
-        vgTO.setvDate(voucherDataTO.getvDate());
+        vgTO.setVoucherDate(voucherDataTO.getVoucherDate());
         vgTO.setSumary(sumarys);
         vgTO.setArea(areas);
         vgTO.setProjectName(projects);
