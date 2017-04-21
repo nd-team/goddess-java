@@ -1,7 +1,9 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketMeasureSer;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +54,15 @@ public class MarketMeasureApiImpl implements MarketMeasureAPI {
     @Override
     public List<MarketMeasureBO> findByCourseType(String type, String course) throws SerException {
         return marketMeasureSer.findByCourseType(type, course);
+    }
+
+    @Override
+    public MarketMeasureBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(marketMeasureSer.findById(id), MarketMeasureBO.class);
+    }
+
+    @Override
+    public List<MarketMeasureBO> maps(MarketMeasureDTO dto) throws SerException {
+        return BeanTransform.copyProperties(marketMeasureSer.findByPage(dto), MarketMeasureBO.class);
     }
 }

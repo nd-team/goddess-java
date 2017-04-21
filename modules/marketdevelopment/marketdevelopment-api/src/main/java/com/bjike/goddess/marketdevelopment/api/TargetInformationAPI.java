@@ -1,7 +1,10 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
+import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
+import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 
 import java.util.List;
@@ -92,6 +95,28 @@ public interface TargetInformationAPI {
      * @throws SerException
      */
     default List<TargetInformationBO> findByArea(String area) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取确定目标信息
+     *
+     * @param id 确定目标信息数据id
+     * @return
+     * @throws SerException
+     */
+    default TargetInformationBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 确定目标信息数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<TargetInformationBO> maps(TargetInformationDTO dto) throws SerException {
         return null;
     }
 

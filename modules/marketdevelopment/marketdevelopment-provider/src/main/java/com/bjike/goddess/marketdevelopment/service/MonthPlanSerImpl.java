@@ -108,8 +108,22 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         List<String> yearPlanIdList = yearPlanSer.findByYear(year).stream().map(YearPlanBO::getId).collect(Collectors.toList());
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.eq("year.id", yearPlanIdList));
+        dto.getConditions().add(Restrict.in("year.id", yearPlanIdList));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
+    }
+
+    @Override
+    public MonthPlanBO getById(String id) throws SerException {
+        try {
+            return this.transformBO(super.findById(id));
+        } catch (SerException e) {
+            throw new SerException("数据对象不能为空");
+        }
+    }
+
+    @Override
+    public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
+        return this.transformBOList(super.findByPage(dto));
     }
 }

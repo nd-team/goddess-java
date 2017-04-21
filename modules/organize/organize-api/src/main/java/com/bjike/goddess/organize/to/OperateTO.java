@@ -1,7 +1,11 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 操作类型展示对象
@@ -17,6 +21,7 @@ public class OperateTO extends BaseTO {
     /**
      * 名称
      */
+    @NotNull(message = "名称不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**

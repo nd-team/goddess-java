@@ -1,6 +1,10 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 岗位工作详细展示对象
@@ -16,6 +20,7 @@ public class PositionWorkDetailTO extends BaseTO {
     /**
      * 岗位说明书ID
      */
+    @NotNull(message = "岗位说明书ID不能为空", groups = {ADD.class, EDIT.class})
     private String instructionId;
 
     /**
@@ -76,6 +81,7 @@ public class PositionWorkDetailTO extends BaseTO {
     /**
      * 是否有模板
      */
+    @NotNull(message = "是否有模板不能为空", groups = {ADD.class, EDIT.class})
     private Boolean hasMould;
 
     /**

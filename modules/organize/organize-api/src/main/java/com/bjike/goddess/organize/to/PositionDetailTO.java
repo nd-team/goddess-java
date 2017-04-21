@@ -1,6 +1,10 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 岗位详细展示对象
@@ -16,61 +20,43 @@ public class PositionDetailTO extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
-
-    /**
-     * 体系
-     */
-    private String hierarchyName;
-
-    /**
-     * 所属地区
-     */
-    private String area;
 
     /**
      * 部门id
      */
+    @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
     private String department_id;
-
-    /**
-     * 部门
-     */
-    private String departmentName;
 
     /**
      * 层级ID
      */
+    @NotNull(message = "层级ID不能为空", groups = {ADD.class, EDIT.class})
     private String arrangement_id;
-
-    /**
-     * 层级
-     */
-    private String arrangementName;
 
     /**
      * 资源池
      */
+    @NotNull(message = "资源池不能为空", groups = {ADD.class, EDIT.class})
     private String pool;
 
     /**
-     * 模块
+     * 模块id
      */
-    private String module;
+    @NotNull(message = "模块id不能为空", groups = {ADD.class, EDIT.class})
+    private String module_id;
 
     /**
      * 岗位ID
      */
+    @NotNull(message = "岗位ID不能为空", groups = {ADD.class, EDIT.class})
     private String position_id;
-
-    /**
-     * 岗位名称
-     */
-    private String positionName;
 
     /**
      * 人员编制数
      */
+    @NotNull(message = "人员编制数不能为空", groups = {ADD.class, EDIT.class})
     private Integer staff;
 
     /**
@@ -96,36 +82,12 @@ public class PositionDetailTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchyName() {
-        return hierarchyName;
-    }
-
-    public void setHierarchyName(String hierarchyName) {
-        this.hierarchyName = hierarchyName;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getDepartment_id() {
         return department_id;
     }
 
     public void setDepartment_id(String department_id) {
         this.department_id = department_id;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
     }
 
     public String getArrangement_id() {
@@ -136,22 +98,6 @@ public class PositionDetailTO extends BaseTO {
         this.arrangement_id = arrangement_id;
     }
 
-    public String getArrangementName() {
-        return arrangementName;
-    }
-
-    public void setArrangementName(String arrangementName) {
-        this.arrangementName = arrangementName;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
-    }
-
     public String getPool() {
         return pool;
     }
@@ -160,12 +106,12 @@ public class PositionDetailTO extends BaseTO {
         this.pool = pool;
     }
 
-    public String getModule() {
-        return module;
+    public String getModule_id() {
+        return module_id;
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public void setModule_id(String module_id) {
+        this.module_id = module_id;
     }
 
     public String getPosition_id() {

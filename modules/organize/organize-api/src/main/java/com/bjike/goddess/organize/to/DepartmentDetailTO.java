@@ -1,6 +1,10 @@
 package com.bjike.goddess.organize.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 部门详细展示对象
@@ -17,11 +21,13 @@ public class DepartmentDetailTO extends BaseTO {
     /**
      * 编号
      */
+    @NotNull(message = "编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 体系ID
      */
+    @NotNull(message = "体系ID不能为空", groups = {ADD.class, EDIT.class})
     private String hierarchy_id;
 
     /**
@@ -37,6 +43,7 @@ public class DepartmentDetailTO extends BaseTO {
     /**
      * 项目组/部门id
      */
+    @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
     private String department_id;
 
     /**
@@ -47,11 +54,13 @@ public class DepartmentDetailTO extends BaseTO {
     /**
      * 所属地区
      */
+    @NotNull(message = "所属地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 成本分类
      */
+    @NotNull(message = "成本分类不能为空", groups = {ADD.class, EDIT.class})
     private String classify;
 
     /**
