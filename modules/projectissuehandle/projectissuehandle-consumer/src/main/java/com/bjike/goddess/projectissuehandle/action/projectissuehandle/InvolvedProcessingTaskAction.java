@@ -16,6 +16,7 @@ import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.vo.InvolvedProcessingTaskVO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +36,25 @@ import java.util.List;
 public class InvolvedProcessingTaskAction {
     @Autowired
     private InvolvedProcessingTaskAPI involvedProcessingTaskAPI;
+    /**
+     * 参与处理人员的任务分配列表总条数
+     *
+     * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
+     * @des 获取所有参与处理人员的任务分配总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws ActException {
+        try {
+            Long count = involvedProcessingTaskAPI.countInvolvedProcessingTask(involvedProcessingTaskDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 获取参与处理人员的任务分配
+     * 参与处理人员的任务分配列表
      *
      * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
      * @return class InvolvedProcessingTaskVO
@@ -45,7 +62,7 @@ public class InvolvedProcessingTaskAction {
      * @version v1
      */
     @GetMapping("v1/listInvolvedProcessingTask")
-    public Result findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws ActException {
+    public Result findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO, BindingResult bindingResult) throws ActException {
         try {
             List<InvolvedProcessingTaskVO> involvedProcessingTaskVOS = BeanTransform.copyProperties
                     (involvedProcessingTaskAPI.findListInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class);
@@ -64,7 +81,7 @@ public class InvolvedProcessingTaskAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws ActException {
+    public Result addInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO,BindingResult bindingResult) throws ActException {
         try {
             InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.insertInvolvedProcessingTask(involvedProcessingTaskTO);
             return ActResult.initialize(involvedProcessingTaskBO);

@@ -116,4 +116,14 @@ public interface BusinessCourseAPI {
         return null;
     }
 
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
 }

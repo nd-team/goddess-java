@@ -1,11 +1,20 @@
 apply from: '../../config.gradle'
 
 dependencies {
-    compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
+    compile group: 'redis.clients', name: 'jedis', version: "$jedis_version"
     compile (group: 'org.springframework.boot', name: 'spring-boot-starter-redis', version: '1.4.5.RELEASE'){
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-
+        exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+        exclude group: 'redis.clients', module: 'jedis'
+        exclude group: 'org.springframework', module: 'spring-aop'
+        exclude group: 'org.springframework', module: 'spring-beans'
+        exclude group: 'org.springframework', module: 'spring-core'
+        exclude group: 'org.springframework', module: 'spring-context'
+        exclude group: 'org.springframework', module: 'spring-tx'
+        exclude group: 'org.springframework', module: 'spring-context-support'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter'
 
     }
     compile group: 'org.springframework', name: 'spring-context', version: "$spring_version"

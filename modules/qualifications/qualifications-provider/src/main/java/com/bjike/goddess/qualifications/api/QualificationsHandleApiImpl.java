@@ -85,4 +85,14 @@ public class QualificationsHandleApiImpl implements QualificationsHandleAPI {
     public QualificationsHandleBO saveForeign(QualificationsHandleForeignTO to) throws SerException {
         return qualificationsHandleSer.saveForeign(to);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return qualificationsHandleSer.getTotal();
+    }
+
+    @Override
+    public QualificationsHandleBO getById(String id) throws SerException {
+        return qualificationsHandleSer.getById(id);
+    }
 }

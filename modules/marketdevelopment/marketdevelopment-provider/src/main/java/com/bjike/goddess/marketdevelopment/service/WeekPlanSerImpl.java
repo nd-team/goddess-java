@@ -107,6 +107,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        dto.getSorts().add("startCycle=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 }

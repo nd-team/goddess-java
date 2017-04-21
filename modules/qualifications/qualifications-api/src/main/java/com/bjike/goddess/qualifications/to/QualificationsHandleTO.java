@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.qualifications.enums.HandleStatus;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,7 +22,7 @@ public class QualificationsHandleTO extends BaseTO {
     /**
      * 资质类别
      */
-    @NotNull(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "资质类别不能为空", groups = {ADD.class, EDIT.class})
     private String type;
 
     /**

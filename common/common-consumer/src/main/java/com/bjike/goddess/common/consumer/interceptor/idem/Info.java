@@ -1,9 +1,5 @@
 package com.bjike.goddess.common.consumer.interceptor.idem;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
-
 /**
  * Created by lake on 17-4-17.
  */

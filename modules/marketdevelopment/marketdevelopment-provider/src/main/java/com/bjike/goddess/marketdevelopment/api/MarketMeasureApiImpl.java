@@ -65,4 +65,9 @@ public class MarketMeasureApiImpl implements MarketMeasureAPI {
     public List<MarketMeasureBO> maps(MarketMeasureDTO dto) throws SerException {
         return BeanTransform.copyProperties(marketMeasureSer.findByPage(dto), MarketMeasureBO.class);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return marketMeasureSer.findAll().size();
+    }
 }

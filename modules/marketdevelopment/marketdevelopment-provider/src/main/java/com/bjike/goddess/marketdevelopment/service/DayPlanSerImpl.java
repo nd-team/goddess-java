@@ -70,4 +70,10 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         List<DayPlan> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, DayPlanBO.class);
     }
+
+    @Override
+    public List<DayPlanBO> maps(DayPlanDTO dto) throws SerException {
+        dto.getSorts().add("time=desc");
+        return BeanTransform.copyProperties(super.findByPage(dto), DayPlanBO.class);
+    }
 }

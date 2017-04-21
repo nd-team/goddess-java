@@ -3,6 +3,7 @@ package com.bjike.goddess.qualifications.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
 import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.entity.FacilityInformation;
@@ -56,5 +57,20 @@ public class FacilityInformationSerImpl extends ServiceImpl<FacilityInformation,
     @Override
     public List<FacilityInformationBO> all() throws SerException {
         return BeanTransform.copyProperties(super.findAll(), FacilityInformationBO.class);
+    }
+
+    @Override
+    public List<FacilityInformationBO> maps(FacilityInformationDTO dto) throws SerException {
+        return BeanTransform.copyProperties(super.findByPage(dto), FacilityInformationBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public FacilityInformationBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), FacilityInformationBO.class);
     }
 }

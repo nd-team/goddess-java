@@ -49,4 +49,14 @@ public class QualificationsGatherApiImpl implements QualificationsGatherAPI {
     public List<QualificationsGatherBO> maps(QualificationsGatherDTO dto) throws SerException {
         return qualificationsGatherSer.maps(dto);
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return qualificationsGatherSer.getTotal();
+    }
+
+    @Override
+    public QualificationsGatherBO getById(String id) throws SerException {
+        return qualificationsGatherSer.getById(id);
+    }
 }

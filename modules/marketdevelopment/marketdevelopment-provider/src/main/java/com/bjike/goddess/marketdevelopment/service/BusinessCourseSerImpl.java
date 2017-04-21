@@ -131,6 +131,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
     @Override
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
+        dto.getSorts().add("type_id=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 }

@@ -106,9 +106,9 @@ public class ProblemAccept extends BaseEntity {
     private String affectedDepartment;
     /**
      * 确认问题处理结果
-     */
+     *//*
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "problemAccept", fetch = FetchType.LAZY)
-    private ProblemHandlingResult problemHandlingResult;
+    private ProblemHandlingResult problemHandlingResult;*/
 
 
     public String getYear() {
@@ -223,11 +223,11 @@ public class ProblemAccept extends BaseEntity {
         this.affectedDepartment = affectedDepartment;
     }
 
-    public ProblemHandlingResult getProblemHandlingResult() {
+   /* public ProblemHandlingResult getProblemHandlingResult() {
         return problemHandlingResult;
     }
 
     public void setProblemHandlingResult(ProblemHandlingResult problemHandlingResult) {
         this.problemHandlingResult = problemHandlingResult;
-    }
+    }*/
 }

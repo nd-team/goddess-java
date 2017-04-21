@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
+import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
@@ -23,7 +24,13 @@ import java.util.List;
  */
 public interface ProblemHandlingResultSer extends Ser<ProblemHandlingResult, ProblemHandlingResultDTO> {
     /**
-     * 获取确认问题处理结果
+     * 确认问题处理结果列表总条数
+     */
+    default Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 确认问题处理结果
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
      * @return class problemHandlingResultBO

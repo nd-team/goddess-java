@@ -54,7 +54,6 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         java.io.File dir = new java.io.File(realPath);
         java.io.File[] files = dir.listFiles();
         return getFileBo(files, module, PathCommon.ROOT_PATH);
-
     }
 
 
@@ -70,7 +69,9 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
             String filePath = realPath + PathCommon.SEPARATOR + fileName; //文件保存目录
             java.io.File file = null;
             if (!new java.io.File(filePath).exists()) {
+
                 file = FileUtils.byteToFile(bytes, realPath, fileName);
+                //保存到数据库
                 File myFile = new File();
                 myFile.setName(fileName);
                 myFile.setSize(FileUtils.getFileSize(file));
@@ -203,8 +204,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 realPath = PathCommon.RECYCLE_PATH + realPath;
                 realPath = StringUtils.substringBeforeLast(realPath, PathCommon.SEPARATOR);//去掉一层目录
                 java.io.File dir = new java.io.File(realPath);
-                 //没有存在回收目录直接移动目录
-                 org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, !file.exists());
+                //没有存在回收目录直接移动目录
+                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(file, dir, !file.exists());
             }
         } catch (Exception e) {
             throw new SerException(e.getMessage());
@@ -299,6 +300,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
                 fileBOS.add(fileBO);
             }
+
             return fileBOS;
         }
         return null;

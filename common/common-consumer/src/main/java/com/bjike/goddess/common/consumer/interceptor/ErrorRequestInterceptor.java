@@ -2,9 +2,6 @@ package com.bjike.goddess.common.consumer.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.dounine.japi.act.Result;
-import com.dounine.japi.act.ResultImpl;
-import com.dounine.japi.exception.JapiException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

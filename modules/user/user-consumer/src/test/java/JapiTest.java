@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ImportResource;
 import java.io.IOException;
 
 public class JapiTest {
-
 	public static void main(String[] args) throws IOException {
 		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
