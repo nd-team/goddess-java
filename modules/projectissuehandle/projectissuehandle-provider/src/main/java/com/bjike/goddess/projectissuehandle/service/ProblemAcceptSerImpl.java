@@ -29,17 +29,25 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectissuehandleSerCache")
 @Service
 public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcceptDTO> implements ProblemAcceptSer {
-    @Cacheable
+    @Override
+    public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        problemAcceptDTO.getSorts().add("createTime=desc");
+        Long counts = super.count(problemAcceptDTO);
+        return counts;
+    }
+
     @Override
     public List<ProblemAcceptBO> findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        problemAcceptDTO.getSorts().add("createTime=desc");
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
-        return BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
+        List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
+        return problemAcceptBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class,true);
+        ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class, true);
         problemAccept.setCreateTime(LocalDateTime.now());
         super.save(problemAccept);
         return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
@@ -48,14 +56,10 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
-        if (!StringUtils.isEmpty(problemAcceptTO.getId())) {
-            ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
-            BeanTransform.copyProperties(problemAcceptTO, problemAccept, true);
-            problemAccept.setModifyTime(LocalDateTime.now());
-            super.update(problemAccept);
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
+        ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
+        BeanTransform.copyProperties(problemAcceptTO, problemAccept, true);
+        problemAccept.setModifyTime(LocalDateTime.now());
+        super.update(problemAccept);
         return BeanTransform.copyProperties(problemAcceptTO, ProblemAcceptBO.class);
     }
 

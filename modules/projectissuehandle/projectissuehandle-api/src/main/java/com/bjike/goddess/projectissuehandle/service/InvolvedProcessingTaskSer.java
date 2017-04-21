@@ -24,7 +24,13 @@ import java.util.List;
  */
 public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, InvolvedProcessingTaskDTO> {
     /**
-     * 获取参与处理人员的任务分配
+     * 参与处理人员的任务分配列表总条数
+     */
+    default Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 参与处理人员的任务分配
      *
      * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
      * @return class involvedProcessingTaskBO
