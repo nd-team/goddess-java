@@ -40,7 +40,7 @@ public interface VoucherGenerateAPI {
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    default List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return null;
     }
 
@@ -368,7 +368,14 @@ public interface VoucherGenerateAPI {
      */
     default List<String> listGroup () throws  SerException {return null;}
 
-    
+    /**
+     * 根据id查找记账凭证
+     *
+     * @param id id
+     */
+    default VoucherGenerateBO getById(String id) throws SerException {
+        return null;
+    }
 
 
 

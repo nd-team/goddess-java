@@ -15,6 +15,7 @@ import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemHandlingResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,9 +35,25 @@ import java.util.List;
 public class ProblemHandlingResultAction {
     @Autowired
     private ProblemHandlingResultAPI problemHandlingResultAPI;
+    /**
+     * 确认问题处理结果列表总条数
+     *
+     * @param problemHandlingResultDTO 确认问题处理结果dto
+     * @des 获取所有确认问题处理结果总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ProblemHandlingResultDTO problemHandlingResultDTO) throws ActException {
+        try {
+            Long count = problemHandlingResultAPI.countProblemHandlingResult(problemHandlingResultDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 获取确认问题处理结果
+     * 确认问题处理结果列表
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
      * @return class ProblemHandlingResultVO
@@ -44,7 +61,7 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @GetMapping("v1/listProblemHandlingResult")
-    public Result findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws ActException {
+    public Result findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ProblemHandlingResultVO> problemHandlingResultVOS = BeanTransform.copyProperties
                     (problemHandlingResultAPI.findListProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class);
@@ -63,7 +80,7 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws ActException {
+    public Result addProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO,BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.insertProblemHandlingResult(problemHandlingResultTO);
             return ActResult.initialize(problemHandlingResultBO);

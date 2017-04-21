@@ -11,6 +11,7 @@ import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +31,25 @@ import java.util.List;
 public class ProblemAcceptAction {
     @Autowired
     private ProblemAcceptAPI problemAcceptAPI;
+    /**
+     * 项目执行中的问题受理列表总条数
+     *
+     * @param problemAcceptDTO 项目执行中的问题受理dto
+     * @des 获取所有项目执行中的问题受理总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ProblemAcceptDTO problemAcceptDTO) throws ActException {
+        try {
+            Long count = problemAcceptAPI.countProblemAccept(problemAcceptDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 获取项目执行中的问题受理
+     * 项目执行中的问题受理列表
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto
      * @return class ProblemAcceptVO
@@ -40,7 +57,7 @@ public class ProblemAcceptAction {
      * @version v1
      */
     @GetMapping("v1/listProblemAccept")
-    public Result findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws ActException {
+    public Result findListProblemAccept(ProblemAcceptDTO problemAcceptDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
                     (problemAcceptAPI.findListProblemAccept(problemAcceptDTO), ProblemAcceptVO.class);
@@ -59,7 +76,7 @@ public class ProblemAcceptAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addProblemAccept(ProblemAcceptTO problemAcceptTO) throws ActException {
+    public Result addProblemAccept(ProblemAcceptTO problemAcceptTO,BindingResult bindingResult) throws ActException {
         try {
             ProblemAcceptBO problemAcceptBO = problemAcceptAPI.insertProblemAccept(problemAcceptTO);
             return ActResult.initialize(problemAcceptBO);

@@ -18,7 +18,13 @@ import java.util.List;
  */
 public interface ProblemAcceptAPI {
     /**
-     * 获取项目执行中的问题受理
+     * 项目执行中的问题受理列表总条数
+     */
+    default Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 项目执行中的问题受理
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto
      * @return class problemAcceptBO

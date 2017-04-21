@@ -24,7 +24,7 @@ public class ProblemHandlingResultBO extends BaseBO {
     /**
      * 合同外部项目名称
      */
-    private String ExternalContractProjectName;
+    private String externalContractProjectName;
 
     /**
      * 内部项目名称
@@ -101,11 +101,11 @@ public class ProblemHandlingResultBO extends BaseBO {
     }
 
     public String getExternalContractProjectName() {
-        return ExternalContractProjectName;
+        return externalContractProjectName;
     }
 
-    public void setExternalContractProjectName(String ExternalContractProjectName) {
-        this.ExternalContractProjectName = ExternalContractProjectName;
+    public void setExternalContractProjectName(String externalContractProjectName) {
+        this.externalContractProjectName = externalContractProjectName;
     }
 
     public String getInternalProjectName() {

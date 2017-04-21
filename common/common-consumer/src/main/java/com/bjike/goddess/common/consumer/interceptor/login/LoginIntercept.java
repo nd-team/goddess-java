@@ -69,7 +69,7 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
     private boolean validateLogin(String token, HttpServletResponse response) throws IOException {
         try {
-            if (StringUtils.isNotBlank(token) && null != userAPI.currentUser()) {
+            if (StringUtils.isNotBlank(token) && null != userAPI.currentUser(token)) {
                 handlerUserToken(token);
                 return true;
             } else {

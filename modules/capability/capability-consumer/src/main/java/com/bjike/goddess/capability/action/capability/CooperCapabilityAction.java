@@ -56,6 +56,7 @@ public class CooperCapabilityAction {
      *
      * @param id
      * @des 获取一个合作对象能力
+     * @return class CooperCapabilityVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")

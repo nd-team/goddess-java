@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,9 +47,9 @@ public class GroupAct {
      * @version v1
      */
     @GetMapping("v1/tree")
-    public Result treeData(String id) throws ActException {
+    public Result treeData(String id,HttpServletRequest request) throws ActException {
         try {
-            List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class);
+            List<GroupVO> vos =  BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class,request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

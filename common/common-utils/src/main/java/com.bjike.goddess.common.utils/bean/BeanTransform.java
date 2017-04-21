@@ -3,6 +3,7 @@ package com.bjike.goddess.common.utils.bean;
 
 import com.bjike.goddess.common.utils.date.DateUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -28,9 +29,42 @@ import java.util.List;
 public class BeanTransform {
     private static final Type[] DATE_TYPES = new Type[]{LocalDateTime.class, LocalDate.class, LocalTime.class};
 
-    private BeanTransform() {
 
+    /**
+     * 对象属性复制list 通过request忽略属性
+     *
+     * @param sources 对象源
+     * @param target  目标对象
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
+     */
+    public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, HttpServletRequest request) {
+        String[] excludes = request.getParameterValues("excludes");
+        return copyProperties(sources, target, excludes);
     }
+
+    /**
+     * 对象属性复制 通过request忽略属性
+     *
+     * @param source 源对象
+     * @param target 目标对象
+     * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
+     */
+    public static <TARGET> TARGET copyProperties(Object source, Class target, HttpServletRequest request) {
+        if (null != source) {
+            try {
+                String[] excludes = request.getParameterValues("excludes");
+                Object o_target = target.newInstance();
+                BeanInfo beanInfo = getBeanInfo(source, o_target);
+                beanInfo.setExcludes(excludes);
+                o_target = handlerCopyFields(beanInfo);
+                return (TARGET) o_target;
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 复制列表对象属性
@@ -214,6 +248,10 @@ public class BeanTransform {
             boolean has_ex = false;
             if (null != excludes && excludes.length > 0) {
                 for (String exclude : excludes) {
+                    if (exclude.equals("*") && !"id".equals(t_field.getName())) { //过滤除id外的所有属性
+                        has_ex = true;
+                        break;
+                    }
                     if (exclude.equals(t_field.getName())) {
                         has_ex = true;
                         break;

@@ -29,11 +29,19 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectissuehandleSerCache")
 @Service
 public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessingTask, InvolvedProcessingTaskDTO> implements InvolvedProcessingTaskSer {
-    @Cacheable
+    @Override
+    public Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        involvedProcessingTaskDTO.getSorts().add("createTime=desc");
+        Long counts = super.count(involvedProcessingTaskDTO);
+        return counts;
+    }
+
     @Override
     public List<InvolvedProcessingTaskBO> findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        involvedProcessingTaskDTO.getSorts().add("createTime=desc");
         List<InvolvedProcessingTask> involvedProcessingTasks = super.findByCis(involvedProcessingTaskDTO, true);
-        return BeanTransform.copyProperties(involvedProcessingTasks, InvolvedProcessingTaskBO.class);
+        List<InvolvedProcessingTaskBO> involvedProcessingTaskBOS = BeanTransform.copyProperties(involvedProcessingTasks, InvolvedProcessingTaskBO.class);
+        return involvedProcessingTaskBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -48,14 +56,10 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InvolvedProcessingTaskBO editInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {
-        if (!StringUtils.isEmpty(involvedProcessingTaskTO.getId())) {
-            InvolvedProcessingTask involvedProcessingTask = super.findById(involvedProcessingTaskTO.getId());
-            BeanTransform.copyProperties(involvedProcessingTaskTO, involvedProcessingTask, true);
-            involvedProcessingTask.setModifyTime(LocalDateTime.now());
-            super.update(involvedProcessingTask);
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
+        InvolvedProcessingTask involvedProcessingTask = super.findById(involvedProcessingTaskTO.getId());
+        BeanTransform.copyProperties(involvedProcessingTaskTO, involvedProcessingTask, true);
+        involvedProcessingTask.setModifyTime(LocalDateTime.now());
+        super.update(involvedProcessingTask);
         return BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTaskBO.class);
     }
 
