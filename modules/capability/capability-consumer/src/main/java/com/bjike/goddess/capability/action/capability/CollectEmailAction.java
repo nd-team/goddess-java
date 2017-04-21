@@ -52,10 +52,11 @@ public class CollectEmailAction {
     }
 
     /**
-     * 一个商业能力
+     * 一个汇总
      *
      * @param id
-     * @des 获取一个商业能力
+     * @des 获取一个汇总
+     * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")

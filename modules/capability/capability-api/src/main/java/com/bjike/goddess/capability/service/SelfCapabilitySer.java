@@ -27,68 +27,113 @@ public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO
     default Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个个人能力展示
+     *
      * @return class SelfCapabilityBO
      */
-    default SelfCapabilityBO getOne(String id) throws SerException {return null;}
+    default SelfCapabilityBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 个人能力展示列表
+     *
      * @return class SelfCapabilityBO
      */
-    default List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param selfCapabilityTO 个人能力展示信息
-     * @return class SelfCapabilityBO
-     */
-    default SelfCapabilityBO addSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException { return null;}
+    default List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param selfCapabilityTO 个人能力展示信息
      * @return class SelfCapabilityBO
      */
-    default SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException { return null;}
+    default SelfCapabilityBO addSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 编辑
+     *
+     * @param selfCapabilityTO 个人能力展示信息
+     * @return class SelfCapabilityBO
+     */
+    default SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑社交
+     *
+     * @param selfCapabilityTO 个人能力展示信息
+     * @return class SelfCapabilityBO
+     */
+    default SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除
+     *
      * @param id id
      */
-    default void deleteSelfCapability(String id ) throws SerException {return;};
+    default void deleteSelfCapability(String id) throws SerException {
+        return;
+    }
+
+    ;
 
 
     /**
      * 查看个人社交资源
+     *
      * @return class SelfCapabilityBO
      */
-    default SelfCapabilityBO getSelfConnector(String id ) throws SerException {return null;}
+    default SelfCapabilityBO getSelfConnector(String id) throws SerException {
+        return null;
+    }
 
     /**
-     *  添加或编辑个人社交资源
+     * 添加或编辑个人社交资源
+     *
      * @param selfCapabilityTO 合作对象商务展示信息
      * @return class CooperCapabilityBO
      */
-    default SelfCapabilityBO editSelfConnector(SelfCapabilityTO selfCapabilityTO) throws SerException { return null;}
+    default SelfCapabilityBO editSelfConnector(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        return null;
+    }
 
     /**
      * 搜索
+     *
      * @return class SelfCapabilityBO
      */
-    default List<SelfCapabilityBO> listSelfCapabilityByName(SelfCapabilityDTO selfCapabilityDTO ) throws SerException {return null;}
+    default List<SelfCapabilityBO> listSelfCapabilityByName(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据姓名查找个人能力
+     *
      * @return class SelfCapabilityBO
      */
-    default SelfCapabilityBO getSelf(String name ) throws SerException {return null;}
+    default SelfCapabilityBO getSelf(String name) throws SerException {
+        return null;
+    }
 
     /**
      * 查找所有姓名
+     *
      * @return class SelfCapabilityBO
      */
-    default List<SelfCapabilityBO> listAllSelfName( ) throws SerException {return null;}
+    default List<SelfCapabilityBO> listAllSelfName() throws SerException {
+        return null;
+    }
 
 
 }

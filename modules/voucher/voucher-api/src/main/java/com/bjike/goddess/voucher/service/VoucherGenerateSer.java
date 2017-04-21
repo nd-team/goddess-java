@@ -22,6 +22,15 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
 
     /**
+     * 根据id查找记账凭证
+     *
+     * @param id id
+     */
+    default VoucherGenerateBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 记账凭证列表总条数
      *
      */
@@ -38,7 +47,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
+    default List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
 
     /**
      *  编辑
