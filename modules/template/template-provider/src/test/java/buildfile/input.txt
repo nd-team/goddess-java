@@ -1,25 +1,20 @@
-模块名:dimission
-类名:HandoverReference
+模块名:employee-contract
+类名:ContractChange
 作者:dengjunren
-描述:交接信息参考
+描述:合同变更详细
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String cycle 当前工作范围;
-String purpose 当前工作目的;
-String authority 当前工作范围的权限;
-String material 当前工作资料;
-String detail 文件内容明细;
-String storage 文件存储路径;
-String handoverType 任务交接类型;
-String handoverDetail 任务交接内容明细;
-String handoverModel 设备交接型号;
-String handoverContent 设备交接内容;
-String handoverStorage 设备交接存储内容;
-String stockType 股权或期权交接类型;
-String stockContent 股权或期权交接内容;
-String suppliesType 办公用品交接类型;
-String suppliesContent 办公用品交接内容;
+ContractManage contract 合同信息;
+Boolean sign 是否签订新合同;
+Boolean superinduce 是否添加协议;
+Boolean prune 是否删减协议;
+Boolean renew 是否续签协议;
+Boolean relieve 是否解除合同;
+String reason 变更原因;
+String content 变更内容;
+Boolean affirm 是否确认已变更;
+LocalDate change 变更时间;
 )

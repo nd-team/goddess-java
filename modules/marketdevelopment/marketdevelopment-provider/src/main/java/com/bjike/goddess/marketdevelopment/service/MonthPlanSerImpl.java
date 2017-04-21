@@ -124,8 +124,10 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         List<String> yearPlanIdList = yearPlanSer.findByYear(year).stream().map(YearPlanBO::getId).collect(Collectors.toList());
+        if (yearPlanIdList.size() == 0)
+            return new ArrayList<>(0);
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.in("year.id", yearPlanIdList));
+        dto.getConditions().add(Restrict.in("year.id", yearPlanIdList.toArray(new String[0])));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
