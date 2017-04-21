@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.AuditMaterialAPI;
+import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
 import com.bjike.goddess.qualifications.vo.AuditMaterialVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +94,53 @@ public class AuditMaterialAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 审核资料数据传输对象
+     * @return class AuditMaterialVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(AuditMaterialDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(auditMaterialAPI.maps(dto), AuditMaterialVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(auditMaterialAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return class AuditMaterialVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(auditMaterialAPI.getById(id), AuditMaterialVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

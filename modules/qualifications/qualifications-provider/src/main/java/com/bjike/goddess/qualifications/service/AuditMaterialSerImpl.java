@@ -58,4 +58,18 @@ public class AuditMaterialSerImpl extends ServiceImpl<AuditMaterial, AuditMateri
         return BeanTransform.copyProperties(super.findAll(), AuditMaterialBO.class);
     }
 
+    @Override
+    public List<AuditMaterialBO> maps(AuditMaterialDTO dto) throws SerException {
+        return BeanTransform.copyProperties(super.findByPage(dto), AuditMaterialBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public AuditMaterialBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), AuditMaterialBO.class);
+    }
 }

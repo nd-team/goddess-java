@@ -57,4 +57,9 @@ public class PersonnelInformationSerImpl extends ServiceImpl<PersonnelInformatio
     public List<PersonnelInformationBO> all() throws SerException {
         return BeanTransform.copyProperties(super.findAll(), PersonnelInformationBO.class);
     }
+
+    @Override
+    public PersonnelInformationBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), PersonnelInformationBO.class);
+    }
 }

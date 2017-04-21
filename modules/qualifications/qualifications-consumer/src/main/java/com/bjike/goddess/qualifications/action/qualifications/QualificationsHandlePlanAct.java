@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.QualificationsHandlePlanAPI;
+import com.bjike.goddess.qualifications.dto.QualificationsHandlePlanDTO;
 import com.bjike.goddess.qualifications.to.QualificationsHandlePlanTO;
 import com.bjike.goddess.qualifications.vo.QualificationsHandlePlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,52 @@ public class QualificationsHandlePlanAct {
     public Result findByHandle(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.findByHandle(id), QualificationsHandlePlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表数据
+     *
+     * @param dto 资质办理计划数据传输对象
+     * @return class QualificationsHandlePlanVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(QualificationsHandlePlanDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.maps(dto), QualificationsHandlePlanVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(qualificationsHandlePlanAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return class QualificationsHandlePlanVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.getById(id), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

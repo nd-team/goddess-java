@@ -1,5 +1,7 @@
 package com.bjike.goddess.dimission.to;
 
+import java.io.Serializable;
+
 /**
  * 离职信息汇总传输对象
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.dimission.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DimissionCollectTO {
+public class DimissionCollectTO implements Serializable {
 
     /**
      * 部门

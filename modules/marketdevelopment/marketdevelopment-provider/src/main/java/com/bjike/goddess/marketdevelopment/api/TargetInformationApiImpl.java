@@ -71,4 +71,9 @@ public class TargetInformationApiImpl implements TargetInformationAPI {
         return BeanTransform.copyProperties(targetInformationSer.findByPage(dto), TargetInformationBO.class);
 
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return targetInformationSer.findAll().size();
+    }
 }

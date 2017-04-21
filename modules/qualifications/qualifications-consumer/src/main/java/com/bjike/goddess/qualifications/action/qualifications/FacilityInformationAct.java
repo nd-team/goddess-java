@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.FacilityInformationAPI;
+import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
 import com.bjike.goddess.qualifications.vo.FacilityInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,53 @@ public class FacilityInformationAct {
     public Result all() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.all(), FacilityInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 设备信息数据传输对象
+     * @return class FacilityInformationVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(FacilityInformationDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.maps(dto), FacilityInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(facilityInformationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return class FacilityInformationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.getById(id), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

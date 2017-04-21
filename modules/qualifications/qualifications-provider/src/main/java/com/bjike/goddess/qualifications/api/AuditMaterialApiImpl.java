@@ -2,6 +2,7 @@ package com.bjike.goddess.qualifications.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
+import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.service.AuditMaterialSer;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,20 @@ public class AuditMaterialApiImpl implements AuditMaterialAPI {
     @Override
     public List<AuditMaterialBO> all() throws SerException {
         return auditMaterialSer.all();
+    }
+
+    @Override
+    public List<AuditMaterialBO> maps(AuditMaterialDTO dto) throws SerException {
+        return auditMaterialSer.maps(dto);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return auditMaterialSer.getTotal();
+    }
+
+    @Override
+    public AuditMaterialBO getById(String id) throws SerException {
+        return auditMaterialSer.getById(id);
     }
 }

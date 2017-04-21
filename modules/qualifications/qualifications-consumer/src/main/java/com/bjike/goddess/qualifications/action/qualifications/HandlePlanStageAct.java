@@ -127,4 +127,20 @@ public class HandlePlanStageAct {
         }
     }
 
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return class HandlePlanStageVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.getById(id), HandlePlanStageVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

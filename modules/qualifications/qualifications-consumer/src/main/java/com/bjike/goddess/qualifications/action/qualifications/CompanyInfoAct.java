@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.CompanyInfoAPI;
+import com.bjike.goddess.qualifications.dto.CompanyInfoDTO;
 import com.bjike.goddess.qualifications.to.CompanyInfoTO;
 import com.bjike.goddess.qualifications.vo.CompanyInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,53 @@ public class CompanyInfoAct {
     public Result all() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(companyInfoAPI.all(), CompanyInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 公司基本信息数据传输对象
+     * @return class CompanyInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(CompanyInfoDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(companyInfoAPI.maps(dto), CompanyInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(companyInfoAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return class CompanyInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(companyInfoAPI.getById(id), CompanyInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

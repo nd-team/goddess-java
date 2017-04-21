@@ -89,4 +89,9 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
         else
             return null;
     }
+
+    @Override
+    public HandlePlanStageBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), HandlePlanStageBO.class);
+    }
 }

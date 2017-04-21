@@ -58,7 +58,13 @@ public class DayPlanApiImpl implements DayPlanAPI {
 
     @Override
     public List<DayPlanBO> maps(DayPlanDTO dto) throws SerException {
-        return BeanTransform.copyProperties(dayPlanSer.findByPage(dto), DayPlanBO.class);
+        return dayPlanSer.maps(dto);
 
     }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return dayPlanSer.findAll().size();
+    }
+
 }

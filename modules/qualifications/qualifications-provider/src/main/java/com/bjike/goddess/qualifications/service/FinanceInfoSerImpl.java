@@ -57,4 +57,19 @@ public class FinanceInfoSerImpl extends ServiceImpl<FinanceInfo, FinanceInfoDTO>
     public List<FinanceInfoBO> all() throws SerException {
         return BeanTransform.copyProperties(super.findAll(), FinanceInfoBO.class);
     }
+
+    @Override
+    public List<FinanceInfoBO> maps(FinanceInfoDTO dto) throws SerException {
+        return BeanTransform.copyProperties(super.findByPage(dto), FinanceInfoBO.class);
+    }
+
+    @Override
+    public Integer getTotal() throws SerException {
+        return super.findAll().size();
+    }
+
+    @Override
+    public FinanceInfoBO getById(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), FinanceInfoBO.class);
+    }
 }

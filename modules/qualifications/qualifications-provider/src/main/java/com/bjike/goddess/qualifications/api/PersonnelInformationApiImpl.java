@@ -43,4 +43,9 @@ public class PersonnelInformationApiImpl implements PersonnelInformationAPI {
     public List<PersonnelInformationBO> all() throws SerException {
         return personnelInformationSer.all();
     }
+
+    @Override
+    public PersonnelInformationBO getById(String id) throws SerException {
+        return personnelInformationSer.getById(id);
+    }
 }

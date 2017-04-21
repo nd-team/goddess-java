@@ -2,8 +2,8 @@ package com.bjike.goddess.qualifications.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.FinanceInfoBO;
-import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
 import com.bjike.goddess.qualifications.dto.FinanceInfoDTO;
 import com.bjike.goddess.qualifications.entity.FinanceInfo;
 import com.bjike.goddess.qualifications.to.FinanceInfoTO;
@@ -61,6 +61,38 @@ public interface FinanceInfoSer extends Ser<FinanceInfo, FinanceInfoDTO> {
      * @throws SerException
      */
     default List<FinanceInfoBO> all() throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 财务资料数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<FinanceInfoBO> maps(FinanceInfoDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取数据
+     *
+     * @param id 数据id
+     * @return
+     * @throws SerException
+     */
+    default FinanceInfoBO getById(String id) throws SerException {
         return null;
     }
 

@@ -76,5 +76,16 @@ public interface DayPlanSer extends Ser<DayPlan, DayPlanDTO> {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 天计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DayPlanBO> maps(DayPlanDTO dto) throws SerException {
+        return null;
+    }
+
 
 }
