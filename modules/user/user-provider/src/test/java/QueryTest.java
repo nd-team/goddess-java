@@ -62,6 +62,15 @@ public class QueryTest {
 
     }
 
+    @Test
+    public void in() throws Exception {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.in("username", new String[]{"xxx","222"}));
+        List<User> bo = userAPI.findByCis(dto);
+        System.out.println(bo);
+
+    }
+
 
     /**
      * 查询全部

@@ -125,9 +125,9 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                             Object[] values = PrimitiveUtil.convertValuesByType(model.getValue());
                             if (type == RestrictionType.IN) {
                                 if (existJoin) {
-                                    predicate = (Predicate) method.invoke(cb, join.get(field).as(clazz), values);
+                                    predicate = join.get(field).as(clazz).in(values);
                                 } else {
-                                    predicate = (Predicate) method.invoke(cb, root.get(field).as(clazz), values);
+                                    predicate = root.get(field).as(clazz).in(values);
                                 }
                             } else {
                                 if (existJoin) {
