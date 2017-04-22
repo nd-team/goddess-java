@@ -1,37 +1,14 @@
-模块名:materialbuy
-类名:MaterialBuy
+模块名:materialinstorage
+类名:StockWarning
 作者:sunfengtao
-描述:物资购买
+描述:库存预警
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
 String area 地区;
-String projectTeam 项目组;
-String requisitioner 申购人;
-LocalDate subscribeDate 申购日期;
-String deviceType 设备类型;
-String deviceName 设备名称;
-String model 型号;
-Integer quantity 数量;
-String unit 单位;
-String buyReason 购买原因;
-Double unitPrice 单价;
-Double totalSum 总额;
-String approach 途径;
-String buyAddress 购买网址/店铺;
-String deliveryAddress 收件地址;
-String receiver 收件人;
-String receiverPhone 收件人联系方式;
-String borrower 借款人;
-String borrowManner 借款方式;
-Boolean ifReplaceBorrow 是否为代写借支;
-LocalDateTime planBorrowTime 预计借款时间;
-Boolean ifPayment 是否付款;
-String expressNumber 快递单号;
-String comment 备注(款打到谁的卡);
-String areaAuditor 地区审核人;
-AuditState auditState 审核状态;
-String auditOpinion 审核意见;
+Double lowerValue 下限值;
+Double upperValue 上限值;
+String materialType 物资类型;
 )
