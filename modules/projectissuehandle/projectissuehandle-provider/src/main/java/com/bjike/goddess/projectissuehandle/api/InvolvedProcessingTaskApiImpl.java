@@ -54,8 +54,8 @@ public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI 
     }
 
     @Override
-    public InvolvedProcessingTaskBO searchInvolvedProcessingTask(String internalProjectName, String handler) throws SerException {
-        return involvedProcessingTaskSer.searchInvolvedProcessingTask(internalProjectName, handler);
+    public List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        return involvedProcessingTaskSer.searchInvolvedProcessingTask(involvedProcessingTaskDTO);
     }
 
     @Override

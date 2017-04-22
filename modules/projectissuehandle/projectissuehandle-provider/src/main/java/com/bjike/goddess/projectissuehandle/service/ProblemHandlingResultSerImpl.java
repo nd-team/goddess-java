@@ -84,13 +84,28 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public ProblemHandlingResultBO searchProblemHandlingResult(String internalProjectName, String projectType, String problemObject) throws SerException {
-        ProblemHandlingResultDTO dto = new ProblemHandlingResultDTO();
-        dto.getConditions().add(Restrict.eq("internalProjectName", internalProjectName));
-        dto.getConditions().add(Restrict.eq("projectType", projectType));
-        dto.getConditions().add(Restrict.eq("problemObject", problemObject));
-        ProblemHandlingResultBO problemHandlingResultBO = BeanTransform.copyProperties(super.findOne(dto), ProblemHandlingResultBO.class);
-        return problemHandlingResultBO;
+    public List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        /**
+         * 内部项目名称
+         */
+        if(StringUtils.isNotBlank(problemHandlingResultDTO.getInternalProjectName())){
+            problemHandlingResultDTO.getConditions().add(Restrict.eq("internalProjectName", problemHandlingResultDTO.getInternalProjectName()));
+        }
+        /**
+         * 工程类型
+         */
+        if(StringUtils.isNotBlank(problemHandlingResultDTO.getProjectType())){
+            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectType",problemHandlingResultDTO.getProjectType()));
+        }
+        /**
+         * 问题对象
+         */
+        if(problemHandlingResultDTO.getProblemObject()!=null){
+            problemHandlingResultDTO.getConditions().add(Restrict.eq("problemObject", problemHandlingResultDTO.getProblemObject()));
+        }
+        List<ProblemHandlingResult> problemHandlingResultList = super.findByCis(problemHandlingResultDTO,true);
+        List<ProblemHandlingResultBO> problemHandlingResultBOList = BeanTransform.copyProperties(problemHandlingResultList,ProblemHandlingResultBO.class);
+        return problemHandlingResultBOList;
     }
 
     @Transactional(rollbackFor = SerException.class)
