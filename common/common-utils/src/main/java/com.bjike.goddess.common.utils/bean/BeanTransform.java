@@ -38,7 +38,21 @@ public class BeanTransform {
      * @throws RuntimeException 反射复制属性类异常,时间格式转换异常
      */
     public static <TARGET, SOURCE> List<TARGET> copyProperties(Collection<SOURCE> sources, Class target, HttpServletRequest request) {
-        String[] excludes = request.getParameterValues("excludes");
+        String[] excludes = getExcludes(request);
+        String[] includes = getIncludes(request);
+        if (null != sources && sources.size() > 0) {
+            try {
+                Object o_source = sources.iterator().next();
+                Object o_target = target.newInstance();
+                BeanInfo beanInfo = getBeanInfo(o_source, o_target);
+                beanInfo.setExcludes(excludes);
+                beanInfo.setConvertDate(false);
+                beanInfo.setIncludes(includes);
+                return copyList(sources, beanInfo);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
         return copyProperties(sources, target, excludes);
     }
 
@@ -52,10 +66,12 @@ public class BeanTransform {
     public static <TARGET> TARGET copyProperties(Object source, Class target, HttpServletRequest request) {
         if (null != source) {
             try {
-                String[] excludes = request.getParameterValues("excludes");
+                String[] excludes = getExcludes(request);
+                String[] includes = getIncludes(request);
                 Object o_target = target.newInstance();
                 BeanInfo beanInfo = getBeanInfo(source, o_target);
                 beanInfo.setExcludes(excludes);
+                beanInfo.setIncludes(includes);
                 o_target = handlerCopyFields(beanInfo);
                 return (TARGET) o_target;
             } catch (Exception e) {
@@ -238,6 +254,7 @@ public class BeanTransform {
      */
     private static Object handlerCopyFields(BeanInfo beanInfo) throws Exception {
         String[] excludes = beanInfo.getExcludes();
+        String[] includes = beanInfo.getIncludes();
         Object source = beanInfo.getSource();
         Object target = beanInfo.getTarget();
         List<Field> s_fields = beanInfo.getSourceFields(); //源类属性列表
@@ -245,23 +262,18 @@ public class BeanTransform {
         List<Method> methods = beanInfo.getTargetMethods();//目标类所有方法
         boolean convertDate = beanInfo.isConvertDate();
         for (Field t_field : t_fields) {
-            boolean has_ex = false;
-            if (null != excludes && excludes.length > 0) {
-                for (String exclude : excludes) {
-                    if (exclude.equals("*") && !"id".equals(t_field.getName())) { //过滤除id外的所有属性
-                        has_ex = true;
-                        break;
-                    }
-                    if (exclude.equals(t_field.getName())) {
-                        has_ex = true;
-                        break;
-                    }
-                }
+            if (null != excludes) {
+                boolean has_ex = excludeField(excludes, t_field);
                 if (has_ex) {
                     continue;
                 }
             }
-
+            if (null != includes) {
+                boolean is_in = includeField(excludes, t_field);
+                if (!is_in) {
+                    continue;
+                }
+            }
             for (Field s_field : s_fields) {
                 if (t_field.getName().equals(s_field.getName())) { //同名属性
                     t_field.setAccessible(true);
@@ -316,6 +328,32 @@ public class BeanTransform {
 
     }
 
+    private static boolean excludeField(String[] excludes, Field field) {
+        boolean has_ex = false;
+        for (String exclude : excludes) {
+            if (exclude.equals("*") && !"id".equals(field.getName())) { //过滤除id外的所有属性
+                has_ex = true;
+                break;
+            }
+            if (exclude.equals(field.getName())) {
+                has_ex = true;
+                break;
+            }
+        }
+        return has_ex;
+    }
+
+    private static boolean includeField(String[] includes, Field field) {
+        for (String exclude : includes) {
+            if (exclude.equals(field.getName())) { //过滤除id外的所有属性
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+
     private static String upperCaseFirst(String val) {
         if (!Character.isUpperCase(val.charAt(0))) {
             char[] cs = val.toCharArray();
@@ -354,5 +392,12 @@ public class BeanTransform {
         return beanInfo;
     }
 
+    private static String[] getExcludes(HttpServletRequest request) {
+        return request.getParameterValues("_excludes");
+    }
+
+    private static String[] getIncludes(HttpServletRequest request) {
+        return request.getParameterValues("_includes");
+    }
 
 }

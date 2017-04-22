@@ -33,6 +33,11 @@ public class BeanInfo {
      * 过滤属性
      */
     private String[] excludes;
+
+    /**
+     * 只查属性
+     */
+    private String[] includes;
     /**
      * 目标类属性
      */
@@ -105,5 +110,13 @@ public class BeanInfo {
 
     public void setTargetMethods(List<Method> targetMethods) {
         this.targetMethods = targetMethods;
+    }
+
+    public String[] getIncludes() {
+        return includes;
+    }
+
+    public void setIncludes(String[] includes) {
+        this.includes = includes;
     }
 }
