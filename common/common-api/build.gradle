@@ -4,8 +4,6 @@ dependencies {
 
 
     compile(group: 'org.hibernate', name: 'hibernate-validator', version: "$hibernate_validator_version") {
-        exclude group: 'org.jboss.logging', module: 'jboss-logging'
-        exclude group: 'com.fasterxml', module: 'classmate'
     }
     compile(group: 'org.hibernate', name: 'hibernate-entitymanager', version: "$hibernate_version") {
         exclude group: 'com.fasterxml', module: 'classmate'
