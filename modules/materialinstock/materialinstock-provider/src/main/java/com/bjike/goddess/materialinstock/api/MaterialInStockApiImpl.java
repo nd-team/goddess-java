@@ -86,14 +86,4 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
         materialInStockSer.update(to);
     }
 
-    /**
-     * 文件上传
-     *
-     * @param maps  文件名，byte 文件字节
-     * @param path 上传路径
-     */
-    @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-        materialInStockSer.upload(maps, path);
-    }
 }

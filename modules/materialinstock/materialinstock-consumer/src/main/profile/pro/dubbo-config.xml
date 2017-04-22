@@ -16,4 +16,5 @@
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" id="stockWarningApiImpl"></dubbo:reference>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 </beans>

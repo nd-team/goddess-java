@@ -100,14 +100,4 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         super.update(model);
     }
 
-    /**
-     * 文件上传
-     *
-     * @param maps  文件名，byte 文件字节
-     * @param path 上传路径
-     */
-    @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-
-    }
 }
