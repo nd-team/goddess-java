@@ -160,6 +160,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         permission.setName(permissionTO.getName());
         permission.setResource(permissionTO.getResource());
         permission.setParent(new_parent);
+        permission.setModifyTime(LocalDateTime.now());
         super.update(permission);
 
 

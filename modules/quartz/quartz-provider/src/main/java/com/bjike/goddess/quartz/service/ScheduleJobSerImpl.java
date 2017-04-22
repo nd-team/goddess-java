@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         BeanTransform.copyProperties(scheduleJobTO, scheduleJob);
         this.verifySchedule(scheduleJob);
         scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        scheduleJob.setModifyTime(LocalDateTime.now());
         super.update(scheduleJob);
         if (scheduleJob.getEnable()) {
             scheduleSer.restart(scheduleJob);
