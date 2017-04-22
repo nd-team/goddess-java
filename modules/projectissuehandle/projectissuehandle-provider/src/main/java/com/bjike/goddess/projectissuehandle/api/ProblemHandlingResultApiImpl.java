@@ -59,8 +59,8 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     }
 
     @Override
-    public ProblemHandlingResultBO searchProblemHandlingResult(String internalProjectName, String projectType, String problemObject) throws SerException {
-        return problemHandlingResultSer.searchProblemHandlingResult(internalProjectName, projectType, problemObject);
+    public List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
+        return problemHandlingResultSer.searchProblemHandlingResult(problemHandlingResultDTO);
     }
 
     public void upload() throws SerException {

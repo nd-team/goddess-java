@@ -30,7 +30,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
@@ -60,19 +60,19 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 工程类型
      */
-    @Column(name = "projectType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
+    @Column(name = "projectType",  columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
     private String projectType;
 
     /**
      * 通知方式
      */
-    @Column(name = "noticeWay", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '通知方式'")
+    @Column(name = "noticeWay",  columnDefinition = "VARCHAR(255)   COMMENT '通知方式'")
     private String noticeWay;
 
     /**
      * 问题具体内容
      */
-    @Column(name = "problemSpecificContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题具体内容'")
+    @Column(name = "problemSpecificContent",  columnDefinition = "VARCHAR(255)   COMMENT '问题具体内容'")
     private String problemSpecificContent;
 
     /**
@@ -84,7 +84,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 解决方式
      */
-    @Column(name = "solution", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '解决方式'")
+    @Column(name = "solution",  columnDefinition = "VARCHAR(255)   COMMENT '解决方式'")
     private String solution;
 
     /**
@@ -102,7 +102,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 受影响部门
      */
-    @Column(name = "affectedDepartment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '受影响部门'")
+    @Column(name = "affectedDepartment",  columnDefinition = "VARCHAR(255)   COMMENT '受影响部门'")
     private String affectedDepartment;
     /**
      * 确认问题处理结果

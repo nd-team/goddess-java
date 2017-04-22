@@ -54,8 +54,8 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     }
 
     @Override
-    public ProblemAcceptBO searchProblemAccept(String internalProjectName, String projectType) throws SerException {
-        return problemAcceptSer.searchProblemAccept(internalProjectName, projectType);
+    public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        return problemAcceptSer.searchProblemAccept(problemAcceptDTO);
     }
 
     @Override
