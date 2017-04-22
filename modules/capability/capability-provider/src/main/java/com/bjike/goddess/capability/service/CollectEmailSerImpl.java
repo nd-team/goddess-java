@@ -61,7 +61,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
-        List<CollectEmail> list = super.findByCis(collectEmailDTO, true);
+        collectEmailDTO= new CollectEmailDTO();
+        collectEmailDTO.getSorts().add("createTime");
+        List<CollectEmail> list = super.findByPage(collectEmailDTO);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
     }
 
