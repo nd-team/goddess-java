@@ -93,7 +93,7 @@ public class BusinessTypeAct {
     @PatchMapping("v1/congeal/{id}")
     public Result congeal(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.save(to), BusinessTypeVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.congeal(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

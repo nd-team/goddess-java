@@ -47,7 +47,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
      */
     private MonthPlanBO transformBO(MonthPlan entity) {
         MonthPlanBO bo = BeanTransform.copyProperties(entity, MonthPlanBO.class);
-        bo.setYear_id(entity.getYear().getId());
+        bo.setYearId(entity.getYear().getId());
         bo.setYearNumber(entity.getYear().getYear());
         bo.setType(entity.getYear().getType());
         bo.setWorkloadWeight(entity.getYear().getWorkloadWeight());
@@ -76,7 +76,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
-        entity.setYear(yearPlanSer.findById(to.getYear_id()));
+        entity.setYear(yearPlanSer.findById(to.getYearId()));
         if (entity.getYear() == null)
             throw new SerException("年计划数据为空");
         entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted());
@@ -92,7 +92,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
             try {
                 MonthPlan entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
-                entity.setYear(yearPlanSer.findById(to.getYear_id()));
+                entity.setYear(yearPlanSer.findById(to.getYearId()));
                 entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted() / 100);
                 super.update(entity);
                 entity.setModifyTime(LocalDateTime.now());
@@ -120,9 +120,9 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     }
 
     @Override
-    public List<MonthPlanBO> findByYearID(String year_id) throws SerException {
+    public List<MonthPlanBO> findByYearID(String yearId) throws SerException {
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.eq("year.id", year_id));
+        dto.getConditions().add(Restrict.eq("year.id", yearId));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

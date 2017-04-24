@@ -132,7 +132,7 @@ public class PositionWorkDetailAct {
     /**
      * 根据ID查询岗位工作明细
      *
-     * @param id
+     * @param id 岗位工作明细数据id
      * @return class PositionWorkDetailVO
      * @version v1
      */

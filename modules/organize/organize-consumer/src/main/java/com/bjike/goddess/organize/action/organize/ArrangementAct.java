@@ -134,7 +134,7 @@ public class ArrangementAct {
     /**
      * 根据ID查询岗位层级
      *
-     * @param id
+     * @param id 岗位层级数据id
      * @return class ArrangementVO
      * @version v1
      */

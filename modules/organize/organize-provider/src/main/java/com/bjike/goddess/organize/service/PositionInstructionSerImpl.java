@@ -64,15 +64,15 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setDepartment(detailBO.getDepartmentName());
         bo.setPool(detailBO.getPool());
         bo.setStaff(detailBO.getStaff());
-        bo.setParent(positionDetailSer.findParent(detailBO.getPosition_id()).getPositionName());
+        bo.setParent(positionDetailSer.findParent(detailBO.getPositionId()).getPositionName());
         bo.setChildren("");
-        for (PositionDetailBO detail : positionDetailSer.findChild(detailBO.getPosition_id()))
+        for (PositionDetailBO detail : positionDetailSer.findChild(detailBO.getPositionId()))
             bo.setChildren(bo.getChildren() + detail.getPositionName() + ",");
-        bo.setAngle_id(entity.getAngle().getId());
+        bo.setAngleId(entity.getAngle().getId());
         bo.setAngleName(entity.getAngle().getName());
-        bo.setDimension_id(entity.getDimension().getId());
+        bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        bo.setClassify_id(entity.getClassify().getId());
+        bo.setClassifyId(entity.getClassify().getId());
         bo.setClassifyName(entity.getClassify().getName());
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
@@ -130,9 +130,9 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
      */
     private PositionInstruction setForeign(PositionInstruction instruction, PositionInstructionTO to) throws SerException {
         instruction.setPosition(positionDetailSer.findById(to.getPositionId()));
-        instruction.setAngle(angleSer.findById(to.getAngle_id()));
-        instruction.setClassify(classifySer.findById(to.getClassify_id()));
-        instruction.setDimension(dimensionSer.findById(to.getDimension_id()));
+        instruction.setAngle(angleSer.findById(to.getAngleId()));
+        instruction.setClassify(classifySer.findById(to.getClassifyId()));
+        instruction.setDimension(dimensionSer.findById(to.getDimensionId()));
         for (String id : to.getReflectIds())
             instruction.getReflects().add(reflectSer.findById(id));
         for (String id : to.getOperateIds())
@@ -169,7 +169,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
 
     @Override
     public List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
-        dto.getSorts().add("position_id=asc");
+        dto.getSorts().add("positionId=asc");
         return this.transformToBOList(super.findByPage(dto));
     }
 

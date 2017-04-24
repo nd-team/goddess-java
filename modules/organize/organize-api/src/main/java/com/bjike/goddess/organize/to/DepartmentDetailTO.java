@@ -28,7 +28,7 @@ public class DepartmentDetailTO extends BaseTO {
      * 体系ID
      */
     @NotNull(message = "体系ID不能为空", groups = {ADD.class, EDIT.class})
-    private String hierarchy_id;
+    private String hierarchyId;
 
     /**
      * 体系编号
@@ -44,7 +44,7 @@ public class DepartmentDetailTO extends BaseTO {
      * 项目组/部门id
      */
     @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
-    private String department_id;
+    private String departmentId;
 
     /**
      * 项目组/部门
@@ -87,12 +87,12 @@ public class DepartmentDetailTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchy_id() {
-        return hierarchy_id;
+    public String getHierarchyId() {
+        return hierarchyId;
     }
 
-    public void setHierarchy_id(String hierarchy_id) {
-        this.hierarchy_id = hierarchy_id;
+    public void setHierarchyId(String hierarchyId) {
+        this.hierarchyId = hierarchyId;
     }
 
     public String getHierarchyNumber() {
@@ -111,12 +111,12 @@ public class DepartmentDetailTO extends BaseTO {
         this.hierarchyName = hierarchyName;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getDepartment() {

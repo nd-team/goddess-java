@@ -147,7 +147,7 @@ public class PositionDetailUserAct {
     /**
      * 根据ID查询用户职位
      *
-     * @param id
+     * @param id 用户职位数据id
      * @return class PositionDetailUserVO
      * @version v1
      */

@@ -180,7 +180,7 @@ public class ModuleTypeAct {
     /**
      * 根据ID查询模块类型
      *
-     * @param id
+     * @param id 模块类型数据id
      * @return class ModuleTypeVO
      * @version v1
      */

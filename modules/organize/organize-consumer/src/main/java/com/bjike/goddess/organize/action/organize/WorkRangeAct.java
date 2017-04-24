@@ -233,7 +233,7 @@ public class WorkRangeAct {
     /**
      * 根据ID查询工作范围
      *
-     * @param id
+     * @param id 工作范围数据id
      * @return class WorkRangeVO
      * @version v1
      */

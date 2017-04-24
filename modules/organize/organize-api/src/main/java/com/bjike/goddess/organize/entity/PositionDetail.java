@@ -56,7 +56,7 @@ public class PositionDetail extends BaseEntity {
      * 岗位名称
      */
     @JoinColumn(nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位名称'", unique = true)
-    private String position_id;
+    private String positionId;
 
     /**
      * 人员编制数
@@ -103,12 +103,12 @@ public class PositionDetail extends BaseEntity {
         this.module = module;
     }
 
-    public String getPosition_id() {
-        return position_id;
+    public String getPositionId() {
+        return positionId;
     }
 
-    public void setPosition_id(String position_id) {
-        this.position_id = position_id;
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 
     public Integer getStaff() {

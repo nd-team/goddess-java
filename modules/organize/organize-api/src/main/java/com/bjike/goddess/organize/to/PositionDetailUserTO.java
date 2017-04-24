@@ -21,26 +21,26 @@ public class PositionDetailUserTO extends BaseTO {
      * 用户信息
      */
     @NotNull(message = "用户信息不能为空", groups = {ADD.class, EDIT.class})
-    private String user_id;
+    private String userId;
 
     /**
      * 职位详细id
      */
-    private String[] position_ids;
+    private String[] positionIds;
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String[] getPosition_ids() {
-        return position_ids;
+    public String[] getPositionIds() {
+        return positionIds;
     }
 
-    public void setPosition_ids(String[] position_ids) {
-        this.position_ids = position_ids;
+    public void setPositionIds(String[] positionIds) {
+        this.positionIds = positionIds;
     }
 }

@@ -62,7 +62,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         AnnualApplyBO bo = BeanTransform.copyProperties(entity, AnnualApplyBO.class, true);
         AnnualInfo info = entity.getInfo();
         if (null != info) {
-            bo.setInfo_id(info.getId());
+            bo.setInfoId(info.getId());
             bo.setInfoUsername(info.getUsername());
         }
         return bo;
@@ -98,7 +98,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     public AnnualApplyBO save(AnnualApplyTO to) throws SerException {
         AnnualApply entity = BeanTransform.copyProperties(to, AnnualApply.class, true);
         entity.setAudit(AuditType.NONE);
-        entity.setInfo(annualInfoSer.findById(to.getInfo_id()));
+        entity.setInfo(annualInfoSer.findById(to.getInfoId()));
         entity.setLeave(this.countLeave(entity));
         if (entity.getLeave() > entity.getInfo().getSurplus())
             throw new SerException("请不要超出剩余年假数");
@@ -159,9 +159,9 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     }
 
     @Override
-    public List<AnnualApplyBO> findByInfo(String info_id) throws SerException {
+    public List<AnnualApplyBO> findByInfo(String infoId) throws SerException {
         AnnualApplyDTO dto = new AnnualApplyDTO();
-        dto.getConditions().add(Restrict.eq("info.id", info_id));
+        dto.getConditions().add(Restrict.eq("info.id", infoId));
         List<AnnualApply> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

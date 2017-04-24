@@ -84,15 +84,15 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
      *
      * @param entity         年假信息实体数据
      * @param now            当前日期
-     * @param arrangement_id 层级ID
+     * @param arrangementId 层级ID
      * @return
      * @throws SerException
      */
-    private String countSeniority(AnnualInfo entity, LocalDate now, String arrangement_id) throws SerException {
+    private String countSeniority(AnnualInfo entity, LocalDate now, String arrangementId) throws SerException {
         Long months = entity.getEntryTime().until(now, ChronoUnit.MONTHS), year = months / 12, month = months % 12;
         AnnualStandardBO standardBO = annualStandardSer.findBySeniority(year.intValue());
         if (null != standardBO) {
-            AnnualArrangementStandardBO arrangementStandardBO = annualArrangementStandardSer.findByArrangementStandard(standardBO.getId(), arrangement_id);
+            AnnualArrangementStandardBO arrangementStandardBO = annualArrangementStandardSer.findByArrangementStandard(standardBO.getId(), arrangementId);
             //@TODO 等请假模块出来做病假判断
             entity.setSurplus(arrangementStandardBO.getDays().doubleValue());
             entity.setAnnual(arrangementStandardBO.getDays());
@@ -153,7 +153,7 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
             entity.setArrangement(detailBO.getArrangementName());
             entity.setEntryTime(LocalDate.parse("2016-01-01"));//@TODO 假数据 等员工信息入职时间
             entity.isAlready(Boolean.FALSE);
-            entity.setSeniority(this.countSeniority(entity, now, detailBO.getArrangement_id()));
+            entity.setSeniority(this.countSeniority(entity, now, detailBO.getArrangementId()));
             if (entity.getAnnual() == 0)
                 receivers.add(userBO.getId());
             else

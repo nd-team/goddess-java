@@ -44,7 +44,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         Arrangement arrangement = BeanTransform.copyProperties(to, Arrangement.class);
         arrangement.setCreateTime(LocalDateTime.now());
         arrangement.setStatus(Status.THAW);
-        if (StringUtils.isNotBlank(to.getParen_id())) arrangement.setParent(super.findById(to.getParen_id()));
+        if (StringUtils.isNotBlank(to.getParentId())) arrangement.setParent(super.findById(to.getParentId()));
         super.save(arrangement);
         return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
     }
@@ -55,7 +55,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         Arrangement arrangement = super.findById(to.getId());
         if (null == arrangement)
             throw new SerException("数据对象不存在");
-        if (StringUtils.isNotBlank(to.getParen_id())) arrangement.setParent(super.findById(to.getParen_id()));
+        if (StringUtils.isNotBlank(to.getParentId())) arrangement.setParent(super.findById(to.getParentId()));
         arrangement.setArrangement(to.getArrangement());
         arrangement.setSerialNumber(to.getSerialNumber());
         arrangement.setDescription(to.getDescription());

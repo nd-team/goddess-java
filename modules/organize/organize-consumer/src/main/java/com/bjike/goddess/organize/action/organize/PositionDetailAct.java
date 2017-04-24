@@ -245,7 +245,7 @@ public class PositionDetailAct {
     /**
      * 根据ID查询岗位详细
      *
-     * @param id
+     * @param id 岗位详细数据id
      * @return class PositionDetailVO
      * @version v1
      */

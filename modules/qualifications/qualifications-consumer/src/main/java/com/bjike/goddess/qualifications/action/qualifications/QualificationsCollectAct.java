@@ -17,7 +17,7 @@ import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 import com.bjike.goddess.qualifications.vo.QualificationsCollectVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

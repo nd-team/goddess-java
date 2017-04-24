@@ -22,7 +22,7 @@ public class ForeignStaffingTO extends BaseTO {
      * 使用类型
      */
     @NotNull(message = "使用类型不能为空", groups = {ADD.class, EDIT.class})
-    private String type_id;
+    private String typeId;
 
     /**
      * 姓名
@@ -127,12 +127,12 @@ public class ForeignStaffingTO extends BaseTO {
     private Status status;
 
 
-    public String getType_id() {
-        return type_id;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
     public String getUsername() {

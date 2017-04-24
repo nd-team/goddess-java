@@ -35,7 +35,7 @@ public class DepartmentDetail extends BaseEntity {
      * 项目组/部门
      */
     @JoinColumn(nullable = false, columnDefinition = "VARCHAR(36) COMMENT '部门'", unique = true)
-    private String department_id;
+    private String departmentId;
 
     /**
      * 所属地区
@@ -77,12 +77,12 @@ public class DepartmentDetail extends BaseEntity {
         this.hierarchy = hierarchy;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getArea() {

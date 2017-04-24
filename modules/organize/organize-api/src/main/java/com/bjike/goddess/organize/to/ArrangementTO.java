@@ -49,7 +49,7 @@ public class ArrangementTO extends BaseTO {
     /**
      * 上级层级ID
      */
-    private String paren_id;
+    private String parentId;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -91,11 +91,11 @@ public class ArrangementTO extends BaseTO {
         this.createTime = createTime;
     }
 
-    public String getParen_id() {
-        return paren_id;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParen_id(String paren_id) {
-        this.paren_id = paren_id;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

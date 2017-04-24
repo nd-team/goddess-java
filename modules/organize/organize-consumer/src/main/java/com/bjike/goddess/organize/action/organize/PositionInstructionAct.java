@@ -149,7 +149,7 @@ public class PositionInstructionAct {
     /**
      * 根据ID查询岗位说明书
      *
-     * @param id
+     * @param id 岗位说明书数据id
      * @return class PositionInstructionVO
      * @version v1
      */

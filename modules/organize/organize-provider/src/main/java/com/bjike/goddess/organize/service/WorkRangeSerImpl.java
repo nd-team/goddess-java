@@ -39,20 +39,20 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     private DepartmentDetailSer departmentDetailSer;
 
     @Override
-    public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String department_id, WorkRangeDTO dto) throws SerException {
+    public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String departmentId, WorkRangeDTO dto) throws SerException {
         String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
         StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");
         sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
-        sql.append(department_id).append("' GROUP BY range_id) AS de ");
+        sql.append(departmentId).append("' GROUP BY range_id) AS de ");
         sql.append(" ON wr.id = de.range_id ");
         sql.append(" LIMIT ").append(dto.getPage() * dto.getLimit()).append(",").append(dto.getLimit());
         List<WorkRange> list = super.findBySql(sql.toString(), WorkRange.class, fields);
         List<DepartmentWorkRangeBO> bos = new ArrayList<>(0);
-        DepartmentDetailBO department = departmentDetailSer.findBOById(department_id);
+        DepartmentDetailBO department = departmentDetailSer.findBOById(departmentId);
         for (WorkRange entity : list) {
             DepartmentWorkRangeBO bo = BeanTransform.copyProperties(entity, DepartmentWorkRangeBO.class);
-            bo.setDepartmentId(department_id);
+            bo.setDepartmentId(departmentId);
             bo.setDepartmentName(department.getDepartment());
             bo.setHierarchy(department.getHierarchyName());
             bo.setSerialNumber(department.getShowNumber());
@@ -83,10 +83,10 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void departmentAddRange(DepartmentWorkRangeTO to) throws SerException {
-        DepartmentDetail departmentDetail = departmentDetailSer.findById(to.getDepartment_id());
+        DepartmentDetail departmentDetail = departmentDetailSer.findById(to.getDepartmentId());
         List<WorkRange> updateList = new ArrayList<>(0);
-        if (null != to.getRange_ids()) ;
-        for (String id : to.getRange_ids()) {
+        if (null != to.getRangeIds()) ;
+        for (String id : to.getRangeIds()) {
             WorkRange entity = super.findById(id);
             entity.getDepartments().add(departmentDetail);
             updateList.add(entity);

@@ -38,7 +38,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     private WeekPlanBO transformBO(WeekPlan entity) {
         WeekPlanBO bo = BeanTransform.copyProperties(entity, WeekPlanBO.class);
         bo.setCourse(entity.getMonth().getYear().getCourse());
-        bo.setMonth_id(entity.getMonth().getId());
+        bo.setMonthId(entity.getMonth().getId());
         bo.setMonthTotal(entity.getMonth().getTotal());
         bo.setYear(entity.getMonth().getYear().getYear());
         bo.setType(entity.getMonth().getMonth().getValueString());
@@ -57,7 +57,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
-        entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
+        entity.setMonth(monthPlanSer.findById(to.getMonthId()));
         entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
         super.save(entity);
         return this.transformBO(entity);
@@ -91,9 +91,9 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     }
 
     @Override
-    public List<WeekPlanBO> findByMonth(String month_id) throws SerException {
+    public List<WeekPlanBO> findByMonth(String monthId) throws SerException {
         WeekPlanDTO dto = new WeekPlanDTO();
-        dto.getConditions().add(Restrict.eq("month.id", month_id));
+        dto.getConditions().add(Restrict.eq("month.id", monthId));
         List<WeekPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

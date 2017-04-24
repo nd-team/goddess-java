@@ -7,11 +7,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
-import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
@@ -52,19 +50,19 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
 
     private PositionDetailBO transformationToBO(PositionDetail entity) throws SerException {
         PositionDetailBO bo = BeanTransform.copyProperties(entity, PositionDetailBO.class);
-        PositionBO position = positionAPI.findById(entity.getPosition_id());
+        PositionBO position = positionAPI.findById(entity.getPositionId());
         DepartmentDetailBO department = departmentDetailSer.findBOById(entity.getDepartment().getId());
         Arrangement arrangement = entity.getArrangement();
         ModuleType moduleType = entity.getModule();
         bo.setArea(department.getArea());
-        bo.setDepartment_id(department.getId());
+        bo.setDepartmentId(department.getId());
         bo.setDepartmentName(department.getDepartment());
         bo.setArrangementName(arrangement.getArrangement());
         bo.setDepartmentName(department.getDepartment());
         bo.setHierarchyName(department.getHierarchyName());
         bo.setPositionName(position.getName());
-        bo.setArrangement_id(arrangement.getId());
-        bo.setModule_id(moduleType.getId());
+        bo.setArrangementId(arrangement.getId());
+        bo.setModuleId(moduleType.getId());
         bo.setModuleName(moduleType.getModule());
         bo.setShowNumber(String.format("%s-%s-%s", department.getShowNumber(), arrangement.getSerialNumber(), entity.getSerialNumber()));
         return bo;
@@ -89,14 +87,14 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Override
     public List<PositionDetailBO> findByPostIds(String[] ids) throws SerException {
         PositionDetailDTO dto = new PositionDetailDTO();
-        dto.getConditions().add(Restrict.in("position_id", ids));
+        dto.getConditions().add(Restrict.in("positionId", ids));
         return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override
     public PositionDetailBO findByPostId(String id) throws SerException {
         PositionDetailDTO dto = new PositionDetailDTO();
-        dto.getConditions().add(Restrict.eq("position_id", id));
+        dto.getConditions().add(Restrict.eq("positionId", id));
         return this.transformationToBO(super.findOne(dto));
     }
 
@@ -116,7 +114,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         List<String> arrangementIds = arrangementSer.findChild(entity.getArrangement().getId())
                 .stream().map(ArrangementBO::getId).collect(Collectors.toList());
         PositionDetailDTO dto = new PositionDetailDTO();
-        dto.getConditions().add(Restrict.in("arrangement_id", arrangementIds));
+        dto.getConditions().add(Restrict.in("arrangementId", arrangementIds));
         return this.transformationToBOList(super.findByCis(dto));
     }
 
@@ -125,7 +123,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         PositionDetail entity = super.findById(postId);
         Arrangement arrangement = arrangementSer.findById(entity.getArrangement().getId());
         PositionDetailDTO dto = new PositionDetailDTO();
-        dto.getConditions().add(Restrict.eq("arrangement_id", arrangement.getParent().getId()));
+        dto.getConditions().add(Restrict.eq("arrangementId", arrangement.getParent().getId()));
         return this.transformationToBOList(super.findByCis(dto));
     }
 
@@ -138,9 +136,9 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Override
     public PositionDetailBO save(PositionDetailTO to) throws SerException {
         PositionDetail positionDetail = BeanTransform.copyProperties(to, PositionDetail.class);
-        positionDetail.setDepartment(departmentDetailSer.findById(to.getDepartment_id()));
-        positionDetail.setArrangement(arrangementSer.findById(to.getArrangement_id()));
-        positionDetail.setModule(moduleTypeSer.findById(to.getModule_id()));
+        positionDetail.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
+        positionDetail.setArrangement(arrangementSer.findById(to.getArrangementId()));
+        positionDetail.setModule(moduleTypeSer.findById(to.getModuleId()));
         super.save(positionDetail);
         return this.transformationToBO(positionDetail);
     }
@@ -154,9 +152,9 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         if (entity == null)
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
-        entity.setDepartment(departmentDetailSer.findById(to.getDepartment_id()));
-        entity.setArrangement(arrangementSer.findById(to.getArrangement_id()));
-        entity.setModule(moduleTypeSer.findById(to.getModule_id()));
+        entity.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
+        entity.setArrangement(arrangementSer.findById(to.getArrangementId()));
+        entity.setModule(moduleTypeSer.findById(to.getModuleId()));
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformationToBO(entity);
@@ -177,7 +175,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
 
     @Override
     public List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
-        dto.getSorts().add("department_id=asc");
+        dto.getSorts().add("departmentId=asc");
         return this.transformationToBOList(super.findByPage(dto));
     }
 }

@@ -73,7 +73,7 @@ public class PositionInstructionVO {
     /**
      * 角度ID
      */
-    private String angle_id;
+    private String angleId;
 
     /**
      * 角度
@@ -83,7 +83,7 @@ public class PositionInstructionVO {
     /**
      * 维度ID
      */
-    private String dimension_id;
+    private String dimensionId;
 
     /**
      * 维度
@@ -93,7 +93,7 @@ public class PositionInstructionVO {
     /**
      * 分类ID
      */
-    private String classify_id;
+    private String classifyId;
 
     /**
      * 分类
@@ -164,28 +164,28 @@ public class PositionInstructionVO {
         this.id = id;
     }
 
-    public String getAngle_id() {
-        return angle_id;
+    public String getAngleId() {
+        return angleId;
     }
 
-    public void setAngle_id(String angle_id) {
-        this.angle_id = angle_id;
+    public void setAngleId(String angleId) {
+        this.angleId = angleId;
     }
 
-    public String getDimension_id() {
-        return dimension_id;
+    public String getDimensionId() {
+        return dimensionId;
     }
 
-    public void setDimension_id(String dimension_id) {
-        this.dimension_id = dimension_id;
+    public void setDimensionId(String dimensionId) {
+        this.dimensionId = dimensionId;
     }
 
-    public String getClassify_id() {
-        return classify_id;
+    public String getClassifyId() {
+        return classifyId;
     }
 
-    public void setClassify_id(String classify_id) {
-        this.classify_id = classify_id;
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 
     public String getSerialNumber() {

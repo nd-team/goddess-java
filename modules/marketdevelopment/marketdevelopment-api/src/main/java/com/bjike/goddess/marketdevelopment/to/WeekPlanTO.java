@@ -20,8 +20,8 @@ public class WeekPlanTO extends BaseTO {
     /**
      * 月计划 id
      */
-    @NotNull(message = "月计划 id不能为空",groups = {ADD.class, EDIT.class})
-    private String month_id;
+    @NotNull(message = "月计划id不能为空",groups = {ADD.class, EDIT.class})
+    private String monthId;
 
     /**
      * 业务方向科目
@@ -89,12 +89,12 @@ public class WeekPlanTO extends BaseTO {
     private Double total;
 
 
-    public String getMonth_id() {
-        return month_id;
+    public String getMonthId() {
+        return monthId;
     }
 
-    public void setMonth_id(String month_id) {
-        this.month_id = month_id;
+    public void setMonthId(String monthId) {
+        this.monthId = monthId;
     }
 
     public String getCourse() {

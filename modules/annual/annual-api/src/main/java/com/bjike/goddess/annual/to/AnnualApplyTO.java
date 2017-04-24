@@ -21,7 +21,7 @@ public class AnnualApplyTO extends BaseTO {
      * 年假信息
      */
     @NotNull(message = "年假信息id不能为空", groups = {EDIT.class, ADD.class})
-    private String info_id;
+    private String infoId;
 
     /**
      * 请假人
@@ -70,12 +70,12 @@ public class AnnualApplyTO extends BaseTO {
      */
     private String auditTime;
 
-    public String getInfo_id() {
-        return info_id;
+    public String getInfoId() {
+        return infoId;
     }
 
-    public void setInfo_id(String info_id) {
-        this.info_id = info_id;
+    public void setInfoId(String infoId) {
+        this.infoId = infoId;
     }
 
     public String getInfoUsername() {

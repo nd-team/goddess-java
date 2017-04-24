@@ -87,7 +87,7 @@ public class DepartmentDetailAct {
      * 删除
      *
      * @param id 部门项目组数据id
-     * @return class  DepartmentDetailVO
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
@@ -104,7 +104,7 @@ public class DepartmentDetailAct {
      * 列表
      *
      * @param dto 部门项目组数据传输
-     * @return class  DepartmentDetailVO
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/maps")
@@ -133,8 +133,8 @@ public class DepartmentDetailAct {
     /**
      * 根据ID查询部门项目组
      *
-     * @param id
-     * @return class  DepartmentDetailVO
+     * @param id 部门详细数据id
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/findById/{id}")

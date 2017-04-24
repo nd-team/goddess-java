@@ -23,7 +23,7 @@ public class PositionDetailUser extends BaseEntity {
      * 用户信息
      */
     @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户信息'", unique = true)
-    private String user_id;
+    private String userId;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organize_position_detail_user_table", joinColumns = {@JoinColumn(name = "user_id", nullable = false)},
@@ -31,12 +31,12 @@ public class PositionDetailUser extends BaseEntity {
     private Set<PositionDetail> positionSet;
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Set<PositionDetail> getPositionSet() {

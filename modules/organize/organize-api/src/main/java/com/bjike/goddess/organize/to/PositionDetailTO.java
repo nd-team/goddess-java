@@ -27,13 +27,13 @@ public class PositionDetailTO extends BaseTO {
      * 部门id
      */
     @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
-    private String department_id;
+    private String departmentId;
 
     /**
      * 层级ID
      */
     @NotNull(message = "层级ID不能为空", groups = {ADD.class, EDIT.class})
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 资源池
@@ -45,13 +45,13 @@ public class PositionDetailTO extends BaseTO {
      * 模块id
      */
     @NotNull(message = "模块id不能为空", groups = {ADD.class, EDIT.class})
-    private String module_id;
+    private String moduleId;
 
     /**
      * 岗位ID
      */
     @NotNull(message = "岗位ID不能为空", groups = {ADD.class, EDIT.class})
-    private String position_id;
+    private String positionId;
 
     /**
      * 人员编制数
@@ -82,20 +82,20 @@ public class PositionDetailTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public String getPool() {
@@ -106,20 +106,20 @@ public class PositionDetailTO extends BaseTO {
         this.pool = pool;
     }
 
-    public String getModule_id() {
-        return module_id;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setModule_id(String module_id) {
-        this.module_id = module_id;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
-    public String getPosition_id() {
-        return position_id;
+    public String getPositionId() {
+        return positionId;
     }
 
-    public void setPosition_id(String position_id) {
-        this.position_id = position_id;
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 
     public Integer getStaff() {

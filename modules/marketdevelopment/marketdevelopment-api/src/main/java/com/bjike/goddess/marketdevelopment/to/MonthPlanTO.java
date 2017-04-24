@@ -22,7 +22,7 @@ public class MonthPlanTO extends BaseTO {
      * 年计划ID
      */
     @NotNull(message = "年计划ID不能为空",groups = {ADD.class, EDIT.class})
-    private String year_id;
+    private String yearId;
 
     /**
      * 月份
@@ -59,12 +59,12 @@ public class MonthPlanTO extends BaseTO {
      */
     private Double total;
 
-    public String getYear_id() {
-        return year_id;
+    public String getYearId() {
+        return yearId;
     }
 
-    public void setYear_id(String year_id) {
-        this.year_id = year_id;
+    public void setYearId(String yearId) {
+        this.yearId = yearId;
     }
 
     public MonthType getMonth() {

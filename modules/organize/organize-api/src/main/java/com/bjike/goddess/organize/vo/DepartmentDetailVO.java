@@ -20,7 +20,7 @@ public class DepartmentDetailVO {
     /**
      * 体系ID
      */
-    private String hierarchy_id;
+    private String hierarchyId;
 
     /**
      * 体系编号
@@ -35,7 +35,7 @@ public class DepartmentDetailVO {
     /**
      * 项目组/部门id
      */
-    private String department_id;
+    private String departmentId;
 
     /**
      * 项目组/部门
@@ -88,12 +88,12 @@ public class DepartmentDetailVO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchy_id() {
-        return hierarchy_id;
+    public String getHierarchyId() {
+        return hierarchyId;
     }
 
-    public void setHierarchy_id(String hierarchy_id) {
-        this.hierarchy_id = hierarchy_id;
+    public void setHierarchyId(String hierarchyId) {
+        this.hierarchyId = hierarchyId;
     }
 
     public String getHierarchyNumber() {
@@ -112,12 +112,12 @@ public class DepartmentDetailVO {
         this.hierarchyName = hierarchyName;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getDepartment() {

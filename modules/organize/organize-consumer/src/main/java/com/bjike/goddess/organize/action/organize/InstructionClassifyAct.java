@@ -161,7 +161,7 @@ public class InstructionClassifyAct {
     /**
      * 根据ID查询岗位说明书
      *
-     * @param id
+     * @param id 岗位说明书数据id
      * @return class InstructionClassifyVO
      * @version v1
      */

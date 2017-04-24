@@ -147,7 +147,7 @@ public class ReflectAct {
     /**
      * 根据ID查询体现类型
      *
-     * @param id
+     * @param id 体现类型数据id
      * @return class ReflectVO
      * @version v1
      */

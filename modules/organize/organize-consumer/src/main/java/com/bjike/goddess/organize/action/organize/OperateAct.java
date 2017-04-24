@@ -147,7 +147,7 @@ public class OperateAct {
     /**
      * 根据ID查询操作类型
      *
-     * @param id
+     * @param id 操作类型数据id
      * @return class OperateVO
      * @version v1
      */

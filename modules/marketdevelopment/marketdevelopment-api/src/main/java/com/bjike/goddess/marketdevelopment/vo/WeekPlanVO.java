@@ -20,7 +20,7 @@ public class WeekPlanVO {
     /**
      * 月计划 id
      */
-    private String month_id;
+    private String monthId;
 
 
     /**
@@ -94,12 +94,12 @@ public class WeekPlanVO {
     private Double total;
 
 
-    public String getMonth_id() {
-        return month_id;
+    public String getMonthId() {
+        return monthId;
     }
 
-    public void setMonth_id(String month_id) {
-        this.month_id = month_id;
+    public void setMonthId(String monthId) {
+        this.monthId = monthId;
     }
 
     public String getCourse() {

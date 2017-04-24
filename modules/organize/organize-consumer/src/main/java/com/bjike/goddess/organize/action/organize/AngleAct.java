@@ -169,7 +169,7 @@ public class AngleAct {
     /**
      * 根据ID查询角度
      *
-     * @param id
+     * @param id 角度数据id
      * @return class AngleVO
      * @version v1
      */

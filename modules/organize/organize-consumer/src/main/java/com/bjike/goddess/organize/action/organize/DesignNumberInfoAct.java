@@ -119,7 +119,7 @@ public class DesignNumberInfoAct {
     /**
      * 根据ID查询编号设计信息
      *
-     * @param id
+     * @param id 编号设计信息数据id
      * @return class DesignNumberInfoVO
      * @version v1
      */

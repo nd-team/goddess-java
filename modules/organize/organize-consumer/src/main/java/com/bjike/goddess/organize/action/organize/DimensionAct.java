@@ -166,7 +166,7 @@ public class DimensionAct {
     /**
      * 根据ID查询维度
      *
-     * @param id
+     * @param id 维度数据id
      * @return class DimensionVO
      * @version v1
      */

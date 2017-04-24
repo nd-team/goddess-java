@@ -43,7 +43,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
      */
     private BusinessCourseBO transformBO(BusinessCourse entity) {
         BusinessCourseBO bo = BeanTransform.copyProperties(entity, BusinessCourseBO.class);
-        bo.setType_id(entity.getType().getId());
+        bo.setTypeId(entity.getType().getId());
         bo.setTypeName(entity.getType().getType());
         return bo;
     }
@@ -65,7 +65,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Override
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
-        entity.setType(typeSer.findById(to.getType_id()));
+        entity.setType(typeSer.findById(to.getTypeId()));
         entity.setStatus(Status.THAW);
         super.save(entity);
         return this.transformBO(entity);
@@ -75,16 +75,16 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Override
     public BusinessCourseBO update(BusinessCourseTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                BusinessCourse entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setType(typeSer.findById(to.getType_id()));
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
+            BusinessCourse entity = super.findById(to.getId());
+            if (null == entity)
                 throw new SerException("数据对象不能为空");
-            }
+            BeanTransform.copyProperties(to, entity, true);
+            entity.setType(typeSer.findById(to.getTypeId()));
+            if (entity.getType() == null)
+                throw new SerException("业务类型不存在");
+            entity.setModifyTime(LocalDateTime.now());
+            super.update(entity);
+            return this.transformBO(entity);
         } else
             throw new SerException("数据ID不能为空");
     }
@@ -126,9 +126,9 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     }
 
     @Override
-    public List<BusinessCourseBO> findByType(String type_id) throws SerException {
+    public List<BusinessCourseBO> findByType(String typeId) throws SerException {
         BusinessCourseDTO dto = new BusinessCourseDTO();
-        dto.getConditions().add(Restrict.eq("type.id", type_id));
+        dto.getConditions().add(Restrict.eq("type.id", typeId));
         List<BusinessCourse> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
@@ -152,7 +152,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
     @Override
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
-        dto.getSorts().add("type_id=desc");
+        dto.getSorts().add("typeId=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 }
