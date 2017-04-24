@@ -60,4 +60,12 @@ public class CompanyCapabilityApiImpl implements CompanyCapabilityAPI {
     public List<CompanyCapabilityBO> listCompanyCapabilityByName(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
         return companyCapabilitySer.listCompanyCapabilityByName(companyCapabilityDTO );
     }
+
+
+    @Override
+    public List<String> listAllCompanyName() throws SerException {
+        return companyCapabilitySer.listAllCompanyName();
+    }
+
+
 }

@@ -77,7 +77,7 @@ public class BaseInfoManageTO extends BaseTO {
     private String siginYear;
 
     /**
-     * 签订时间
+     * 签订时间(格式年月日)
      */
     private String siginTime;
 
@@ -87,12 +87,12 @@ public class BaseInfoManageTO extends BaseTO {
     private Double money;
 
     /**
-     * 开工时间
+     * 开工时间(格式年月日)
      */
     private String startProjectTime;
 
     /**
-     * 完工时间
+     * 完工时间(格式年月日)
      */
     private String endProjectTime;
 

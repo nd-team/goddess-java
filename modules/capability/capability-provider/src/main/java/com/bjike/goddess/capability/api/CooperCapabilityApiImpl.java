@@ -78,7 +78,7 @@ public class CooperCapabilityApiImpl implements CooperCapabilityAPI {
     }
 
     @Override
-    public List<CooperCapabilityBO> listAllCompanyName() throws SerException {
+    public List<String> listAllCompanyName() throws SerException {
         return cooperCapabilitySer.listAllCompanyName();
     }
 

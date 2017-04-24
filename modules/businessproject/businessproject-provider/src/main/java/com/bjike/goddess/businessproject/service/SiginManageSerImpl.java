@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -60,11 +61,13 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO editSiginManage(SiginManageTO siginManageTO) throws SerException {
+        SiginManage temp = super.findById( siginManageTO.getId() );
         SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
-        siginManage.setModifyTime(LocalDateTime.now());
-        super.update( siginManage );
+        BeanUtils.copyProperties( siginManage , temp ,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+        super.update( temp );
 
-        SiginManageBO siginManageBO = BeanTransform.copyProperties(siginManage , SiginManageBO.class);
+        SiginManageBO siginManageBO = BeanTransform.copyProperties(temp , SiginManageBO.class);
         return siginManageBO;
     }
 
@@ -77,11 +80,16 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
+        SiginManage temp = super.findById( siginManageTO.getId() );
+
         siginManageTO.setManager( userAPI.currentUser().getUsername());
         SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
-        super.update( siginManage );
 
-        SiginManageBO siginManageBO = BeanTransform.copyProperties(siginManage , SiginManageBO.class);
+        BeanUtils.copyProperties( siginManage , temp ,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+        super.update( temp );
+
+        SiginManageBO siginManageBO = BeanTransform.copyProperties(temp , SiginManageBO.class);
         return siginManageBO;
     }
 
