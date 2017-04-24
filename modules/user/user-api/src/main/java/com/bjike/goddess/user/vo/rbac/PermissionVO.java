@@ -12,6 +12,10 @@ package com.bjike.goddess.user.vo.rbac;
  */
 public class PermissionVO {
     /**
+     * id
+     */
+    private String id;
+    /**
      * 认证名
      */
     private String name;
@@ -34,6 +38,13 @@ public class PermissionVO {
      */
     private Boolean hasChild;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
