@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @DefaultProperties
-
+@LoginAuth
 @RestController
 @RequestMapping("department")
 public class DepartmentAct {
@@ -42,12 +44,13 @@ public class DepartmentAct {
      *
      * @param id 通id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class DepartmentVO
+     * @userToken yes
      * @version v1
      */
     @GetMapping("v1/tree")
-    public Result treeData(String id) throws ActException {
+    public Result treeData(String id, HttpServletRequest request) throws ActException {
         try {
-            List<DepartmentVO> vos = BeanTransform.copyProperties(departmentAPI.treeData(id), DepartmentVO.class);
+            List<DepartmentVO> vos = BeanTransform.copyProperties(departmentAPI.treeData(id), DepartmentVO.class, request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,6 +62,7 @@ public class DepartmentAct {
      *
      * @param departmentTO 部门信息
      * @return class DepartmentVO
+     * @userToken yes
      * @des 返回部门信息
      * @version v1
      */
@@ -76,6 +80,7 @@ public class DepartmentAct {
      * 删除部门
      *
      * @param id 部门唯一标示
+     * @userToken yes
      * @des 如该节点存在子节点, 先删除子节点
      * @version v1
      */
@@ -93,6 +98,7 @@ public class DepartmentAct {
      * 编辑部门信息
      *
      * @param departmentTO 部门信息
+     * @userToken yes
      * @version v1
      */
     @PutMapping("v1/edit")

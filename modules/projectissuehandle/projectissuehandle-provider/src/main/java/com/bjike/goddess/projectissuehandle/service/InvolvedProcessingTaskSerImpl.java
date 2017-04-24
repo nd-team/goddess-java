@@ -83,12 +83,22 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public InvolvedProcessingTaskBO searchInvolvedProcessingTask(String internalProjectName, String handler) throws SerException {
-        InvolvedProcessingTaskDTO dto = new InvolvedProcessingTaskDTO();
-        dto.getConditions().add(Restrict.eq("internalProjectName", internalProjectName));
-        dto.getConditions().add(Restrict.eq("handler", handler));
-        InvolvedProcessingTaskBO involvedProcessingTaskBO = BeanTransform.copyProperties(super.findOne(dto), InvolvedProcessingTaskBO.class);
-        return involvedProcessingTaskBO;
+    public List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
+        /**
+         * 内部项目名称
+         */
+        if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getInternalProjectName())){
+            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("internalProjectName",involvedProcessingTaskDTO.getInternalProjectName()));
+        }
+        /**
+         * 处理人员
+         */
+        if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getHandler())){
+            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("handler",involvedProcessingTaskDTO.getHandler()));
+        }
+        List<InvolvedProcessingTask> involvedProcessingTasks = super.findByCis(involvedProcessingTaskDTO,true);
+        List<InvolvedProcessingTaskBO> involvedProcessingTaskBOS = BeanTransform.copyProperties(involvedProcessingTasks,InvolvedProcessingTaskBO.class);
+        return involvedProcessingTaskBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

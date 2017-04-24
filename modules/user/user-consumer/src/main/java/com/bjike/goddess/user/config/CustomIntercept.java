@@ -55,8 +55,8 @@ public class CustomIntercept implements Interceptor {
         HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
-         * 顺序
+         * 暂时不加权限
          */
-        return Arrays.asList(smoothInfo, loginInfo, authInfo);
+        return Arrays.asList(smoothInfo, loginInfo);
     }
 }

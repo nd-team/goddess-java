@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.bo.DepartmentBO;
-import com.bjike.goddess.user.bo.DepartmentTreeBO;
 import com.bjike.goddess.user.to.DepartmentTO;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface DepartmentSer extends Ser<Department, DepartmentDTO> {
-    default List<DepartmentTreeBO> treeData(String id) throws SerException {
+    default List<DepartmentBO> treeData(String id) throws SerException {
         return null;
     }
 

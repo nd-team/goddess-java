@@ -26,7 +26,7 @@ public class ChineseConvert {
             for (int i = 0; i < length; i++) {//获取指定长度的字符穿首字母大写
                 char text = src.charAt(i);
                 String[] initial = PinyinHelper.toHanyuPinyinStringArray(text, new HanyuPinyinOutputFormat());
-                if (initial != null) {
+                if (initial != null && initial.length> 0 ) {
                     number += initial[0].charAt(0);
                 } else {
                     number += text;

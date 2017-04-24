@@ -45,7 +45,7 @@ public class SiginManageAction {
     public Result findListSiginManage(SiginManageDTO siginManageDTO) throws ActException {
         try {
             List<SiginManageVO> siginManageVOList = BeanTransform.copyProperties(
-                    siginManageAPI.listSiginManage(siginManageDTO), SiginManageVO.class, true);
+                    siginManageAPI.listSiginManage(siginManageDTO), SiginManageVO.class);
             return ActResult.initialize(siginManageVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

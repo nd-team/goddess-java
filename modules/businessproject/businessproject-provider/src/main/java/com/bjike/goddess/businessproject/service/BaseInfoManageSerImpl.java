@@ -13,8 +13,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,11 +70,14 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Override
     public BaseInfoManageBO editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
 
-        BaseInfoManage baseInfoManage =  BeanTransform.copyProperties( baseInfoManageTO, BaseInfoManage.class,true);
-        baseInfoManage.setModifyTime(LocalDateTime.now());
-        super.update( baseInfoManage );
+        BaseInfoManage temp = super.findById( baseInfoManageTO.getId());
 
-        BaseInfoManageBO bo = BeanTransform.copyProperties(baseInfoManage,BaseInfoManageBO.class);
+        BaseInfoManage baseInfoManage =  BeanTransform.copyProperties( baseInfoManageTO, BaseInfoManage.class,true);
+        BeanUtils.copyProperties( baseInfoManage , temp ,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+        super.update( temp );
+
+        BaseInfoManageBO bo = BeanTransform.copyProperties(temp,BaseInfoManageBO.class);
         return bo;
     }
 

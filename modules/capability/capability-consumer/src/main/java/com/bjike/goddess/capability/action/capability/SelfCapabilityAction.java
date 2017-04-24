@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -53,16 +54,17 @@ public class SelfCapabilityAction {
     /**
      * 一个个人能力
      *
-     * @param id
+     * @param id 列表id
+     * @param request  前端过滤参数
      * @des 获取一个个人能力
      * @return class SelfCapabilityVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id) throws ActException {
+    public Result getOne(@PathVariable String id,HttpServletRequest request) throws ActException {
         try {
             SelfCapabilityBO selfCapabilityBO = selfCapabilityAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO ,SelfCapabilityVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO ,SelfCapabilityVO.class , request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -72,15 +74,16 @@ public class SelfCapabilityAction {
      * 个人能力列表
      *
      * @param selfCapabilityDTO 个人能力信息dto
+     * @param request  前端过滤参数
      * @return class SelfCapabilityVO
      * @des 获取所有个人能力信息
      * @version v1
      */
     @GetMapping("v1/listSelf")
-    public Result findList(SelfCapabilityDTO selfCapabilityDTO) throws ActException {
+    public Result findList(SelfCapabilityDTO selfCapabilityDTO,HttpServletRequest request) throws ActException {
         try {
             List<SelfCapabilityVO> selfCapabilityVOList = BeanTransform.copyProperties(
-                    selfCapabilityAPI.listSelfCapability(selfCapabilityDTO), SelfCapabilityVO.class, true);
+                    selfCapabilityAPI.listSelfCapability(selfCapabilityDTO), SelfCapabilityVO.class, request);
             return ActResult.initialize(selfCapabilityVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -209,6 +212,23 @@ public class SelfCapabilityAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcelCCapability(String name) throws ActException {
         return null;
+    }
+
+    /**
+     * 获取所有姓名
+     *
+     * @des 获取所有姓名
+     * @version v1
+     */
+    @GetMapping("v1/listAllSelfName")
+    public Result listAllSelfName(  ) throws ActException {
+        try {
+            List<String> list = selfCapabilityAPI.listAllSelfName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
     }
 
 }

@@ -54,11 +54,14 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DispatchSheetBO editDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
-        DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
-        dispatchSheet.setModifyTime(LocalDateTime.now());
-        super.update(dispatchSheet);
+        DispatchSheet temp = super.findById( dispatchSheetTO.getId());
 
-        DispatchSheetBO dispatchSheetBO = BeanTransform.copyProperties(dispatchSheet, DispatchSheetBO.class);
+        DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
+        BeanTransform.copyProperties( dispatchSheet , temp ,"id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+        super.update(temp);
+
+        DispatchSheetBO dispatchSheetBO = BeanTransform.copyProperties(temp, DispatchSheetBO.class);
 
         return dispatchSheetBO;
     }

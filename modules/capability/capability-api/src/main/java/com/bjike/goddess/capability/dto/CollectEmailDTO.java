@@ -1,6 +1,9 @@
 package com.bjike.goddess.capability.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 邮件发送定制数据传输对象
@@ -13,5 +16,37 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class CollectEmailDTO extends BaseDTO {
 
+    public interface TestCompany {
+    }
 
+    public interface TestPerson {
+    }
+
+    /**
+     * 公司集合
+     */
+    @NotNull(groups = {CollectEmailDTO.TestCompany.class}, message = "公司集合不能为空")
+    private String[] companys;
+
+    /**
+     * 个人姓名集合
+     */
+    @NotNull(groups = {CollectEmailDTO.TestPerson.class}, message = "个人姓名集合不能为空")
+    private String[] names;
+
+    public String[] getCompanys() {
+        return companys;
+    }
+
+    public void setCompanys(String[] companys) {
+        this.companys = companys;
+    }
+
+    public String[] getNames() {
+        return names;
+    }
+
+    public void setNames(String[] names) {
+        this.names = names;
+    }
 }

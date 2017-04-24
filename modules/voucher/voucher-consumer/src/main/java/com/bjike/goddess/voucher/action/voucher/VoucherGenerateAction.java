@@ -83,7 +83,7 @@ public class VoucherGenerateAction {
     @PostMapping("v1/add")
     public Result add(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate(voucherGenerateTO);
+            List<VoucherGenerateBO> voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

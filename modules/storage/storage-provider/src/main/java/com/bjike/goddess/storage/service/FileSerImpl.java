@@ -1,5 +1,6 @@
 package com.bjike.goddess.storage.service;
 
+import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -66,6 +67,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         for (Map.Entry<String, byte[]> entry : maps.entrySet()) {
             String fileName = entry.getKey();
             byte[] bytes = entry.getValue();
+
             String filePath = realPath + PathCommon.SEPARATOR + fileName; //文件保存目录
             java.io.File file = null;
             if (!new java.io.File(filePath).exists()) {
@@ -79,7 +81,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 if (path.equals("/")) {
                     path = "";
                 }
-                myFile.setPath(module + path + PathCommon.SEPARATOR + fileName); //保存路径为模块起始
+                myFile.setPath(getDbFilePath(file)); //保存路径为模块起始
                 myFile.setModule(module);
                 myFile.setUserId(userId);
                 myFile.setFileType(FileUtils.getFileType(file));
@@ -113,14 +115,31 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void delFile(String path) throws SerException {
+        String module = storageUserAPI.getCurrentModule(); //网盘登录用户
         String savePath = getRealPath(path);
         java.io.File file = new java.io.File(savePath);
         if (file.exists()) {
             if (file.isFile()) {
-                file.delete();
+                FileDTO dto = new FileDTO();
+                path = getDbFilePath(file);
+                dto.getConditions().add(Restrict.eq("path", path));
+                dto.getConditions().add(Restrict.eq("module", module));
+                dto.getConditions().add(Restrict.eq("fileType", FileUtils.getFileType(file).getCode()));
+                File db_file = super.findOne(dto);
+                if (null != db_file) {
+                    file.delete();
+                    super.remove(db_file);
+                }
             } else {
                 try {
-                    org.apache.commons.io.FileUtils.deleteDirectory(file);
+                    FileDTO dto = new FileDTO();
+                    path = getDbFilePath(file);
+                    List<Condition> conditions = dto.getConditions();
+                    conditions.add(Restrict.eq("module", module));
+                    conditions.add(Restrict.like("path", path)); //以该路径开头的文件全部删除
+                    List<File> fileList = super.findByCis(dto);
+                    org.apache.commons.io.FileUtils.deleteDirectory(file); //删除目录及目录下的所有文件
+                    super.remove(fileList); //删除所有文件
                 } catch (IOException e) {
                     throw new SerException(e.getMessage());
                 }
@@ -134,6 +153,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
     @Override
     public void rename(String path, String newName) throws SerException {
+        String module = storageUserAPI.getCurrentModule(); //网盘登录用户
         String realPath = getRealPath(path);
         String oldName = StringUtils.substringAfterLast(realPath, "/");
         String savePath = StringUtils.substringBeforeLast(realPath, "/");
@@ -147,6 +167,13 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 throw new SerException(newName + "已经存在！");
             else {
                 oldFile.renameTo(newFile);
+                path = getDbFilePath(newFile);
+                FileDTO dto = new FileDTO();
+                dto.getConditions().add(Restrict.eq("path", path));
+                dto.getConditions().add(Restrict.eq("module", module));
+                File file = super.findOne(dto);
+                file.setPath(module + path + PathCommon.SEPARATOR + newName); //保存路径为模块起始
+                super.update(file);
             }
         } else {
             throw new SerException("新文件名和旧文件名相同...");
@@ -343,6 +370,16 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
             realPath = PathCommon.RECYCLE_PATH + path;
         }
         return realPath;
+    }
+
+    /**
+     * 通过文件获取保存数据库对应的数据
+     *
+     * @param file
+     * @return
+     */
+    private String getDbFilePath(java.io.File file) {
+        return StringUtils.substringAfterLast(file.getPath(), PathCommon.ROOT_PATH + PathCommon.SEPARATOR);
     }
 
 }

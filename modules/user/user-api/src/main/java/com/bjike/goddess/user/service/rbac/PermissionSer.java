@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.rbac.PermissionDTO;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public interface PermissionSer extends Ser<Permission, PermissionDTO> {
      * @param id 组id
      * @return
      */
-    default List<PermissionTreeBO> treeData(String id)throws SerException{
+    default List<PermissionBO> treeData(String id)throws SerException{
         return null;
     }
     /**

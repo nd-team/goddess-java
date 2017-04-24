@@ -111,7 +111,7 @@ public class ProblemAcceptAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeProblemAccept(@PathVariable String id) throws ActException {
+    public Result deleteProblemAccept(@PathVariable String id) throws ActException {
         try {
             problemAcceptAPI.removeProblemAccept(id);
             return new ActResult("delete success");
@@ -123,16 +123,17 @@ public class ProblemAcceptAction {
     /**
      * 搜索
      *
+     * @param problemAcceptDTO 项目执行中的问题受理dto
      * @return class ProblemAcceptVO
-     * @des 根据内部项目名称(internalProjectName)、工程类型(projectType) 搜索
+     * @des 搜索获取所有项目执行中的问题受理
      * @version v1
      */
-    @GetMapping("v1/search")
-    public Result searchProblemAccept(String internalProjectName, String projectType) throws ActException {
+    @GetMapping("v1/searchProblemAccept")
+    public Result searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws ActException {
         try {
-            ProblemAcceptBO problemAcceptBO = problemAcceptAPI.searchProblemAccept(internalProjectName, projectType);
-            ProblemAcceptVO problemAcceptVO = BeanTransform.copyProperties(problemAcceptBO, ProblemAcceptBO.class);
-            return ActResult.initialize(problemAcceptVO);
+            List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
+                    (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class);
+            return ActResult.initialize(problemAcceptVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -7,7 +7,6 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
-import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.to.rbac.GroupTO;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,7 +32,7 @@ import java.util.List;
 @Service
 public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupSer {
     @Override
-    public List<GroupTreeBO> treeData(String id) throws SerException {
+    public List<GroupBO> treeData(String id) throws SerException {
         GroupDTO dto = new GroupDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -44,24 +42,23 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Group> groups = super.findByCis(dto);
-        List<GroupTreeBO> groupTreeBOS = new ArrayList<>(groups.size());
-        groups.stream().forEach(group -> {
-            GroupTreeBO bo = new GroupTreeBO();
-            bo.setName(group.getName());
-            bo.setId(group.getId());
-            bo.setParent(null == group.getParent());
-            groupTreeBOS.add(bo);
-        });
-        return groupTreeBOS;
+
+        return BeanTransform.copyProperties(groups, GroupBO.class);
     }
 
     @Override
     public void remove(String id) throws SerException {
-        GroupDTO dto = new GroupDTO();
-        dto.getConditions().add(Restrict.eq("parent.id", id)); //查找根节点
-        List<Group> children = super.findByCis(dto);
+        List<Group> children = getChild(id);
         if (null != children && children.size() > 0) {
-            throw new SerException("该节点存在子节点,请先删除子节点!");
+            throw new SerException("该记录存在子节点数据,请先删除子节点!");
+        }
+
+        Group department = super.findById(id);
+        Group parent = department.getParent();
+        if (null != parent) {
+            children = getChild(parent.getId());
+            parent.setHasChild(children.size() != 0);
+            super.update(parent);
         }
         super.remove(id);
     }
@@ -70,17 +67,61 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
     @Override
     public GroupBO save(GroupTO groupTO) throws SerException {
         Group group = BeanTransform.copyProperties(groupTO, Group.class, true);
+        if (StringUtils.isNotBlank(groupTO.getParentId())) {
+            GroupDTO dto = new GroupDTO();
+            dto.getConditions().add(Restrict.eq("id", groupTO.getParentId()));
+            Group parent = findOne(dto);
+            if (null != parent) {
+                group.setParent(parent);
+                parent.setHasChild(true); //更新父类子节点字段为true
+                super.update(parent);
+            }
+        }
+        group.setHasChild(false);
         super.save(group);
-        GroupBO bo = BeanTransform.copyProperties(group, GroupBO.class);
-        bo.setId(group.getId());//复制id
-        return bo;
+        return BeanTransform.copyProperties(group, GroupBO.class);
     }
 
     @Override
     public void update(GroupTO groupTO) throws SerException {
         Group group = super.findById(groupTO.getId());
-        BeanTransform.copyProperties(groupTO, group, true);
+        Group old_parent = group.getParent();
+        String parentId = groupTO.getParentId();
+        Group new_parent = null;
+        if (StringUtils.isNotBlank(parentId)) {
+            GroupDTO dto = new GroupDTO();
+            dto.getConditions().add(Restrict.eq("id", groupTO.getParentId()));
+            new_parent = super.findOne(dto);
+        }
+
+        //更新
+        group.setModifyTime(LocalDateTime.now());
+        group.setName(groupTO.getName());
+        group.setParent(new_parent);
         group.setModifyTime(LocalDateTime.now());
         super.update(group);
+
+
+        if (null != new_parent) {
+            new_parent.setHasChild(true);
+            super.update(new_parent);
+        }
+
+        /**
+         * 维护该节点与其父类是否有子节点
+         */
+        if (null != old_parent) { //以前有父节点,删除父节点后,检查其未更改前的父节点是否还存在子节点
+            List<Group> children = getChild(old_parent.getId()); //查询以未更改前其父类的所有子节点
+            old_parent.setHasChild(children.size() != 0);
+            super.update(old_parent);
+        }
+    }
+
+
+    private List<Group> getChild(String id) throws SerException {
+        GroupDTO dto = new GroupDTO();
+        dto.getConditions().add(Restrict.eq("parent.id", id));
+        List<Group> children = findByCis(dto);
+        return children;
     }
 }

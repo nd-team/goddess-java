@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 合作对象商务展示业务实现
@@ -49,6 +50,8 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     @Override
     public List<CooperCapabilityBO> listCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+
+        cooperCapabilityDTO.getSorts().add("createTime=desc");
         List<CooperCapability> list = super.findByCis(cooperCapabilityDTO, true);
 
         return BeanTransform.copyProperties(list, CooperCapabilityBO.class );
@@ -172,11 +175,12 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     
     @Override
-    public List<CooperCapabilityBO> listAllCompanyName() throws SerException {
+    public List<String> listAllCompanyName() throws SerException {
         String[] fields = new String[]{"companyName"};
         List<CooperCapabilityBO> cooperBOS =super.findBySql("select companyName ,1 from capability_coopercapability group by companyName " , CooperCapabilityBO.class, fields);
 
-        return BeanTransform.copyProperties( cooperBOS , CooperCapabilityBO.class );
+        List<String> name = cooperBOS.stream().map(CooperCapabilityBO::getCompanyName).collect(Collectors.toList());
+        return name;
     }
 
     @Override

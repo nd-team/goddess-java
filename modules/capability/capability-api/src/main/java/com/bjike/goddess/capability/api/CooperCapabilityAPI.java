@@ -83,9 +83,8 @@ public interface CooperCapabilityAPI {
 
     /**
      * 查找所有公司名
-     * @return class CooperCapabilityBO
      */
-    default List<CooperCapabilityBO> listAllCompanyName( ) throws SerException {return null;}
+    default List<String> listAllCompanyName( ) throws SerException {return null;}
 
     /**
      * 查找公司名/联系人/联系方式(提供给商业互动洽谈详情)

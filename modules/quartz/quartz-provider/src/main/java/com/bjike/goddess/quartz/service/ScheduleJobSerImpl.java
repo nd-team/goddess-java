@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,11 +34,13 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
     private ScheduleSer scheduleSer;
     @Autowired
     private ScheduleJobGroupSer scheduleJobGroupSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     public ScheduleJobBO add(ScheduleJobTO scheduleJobTO) throws SerException {
         ScheduleJob scheduleJob = BeanTransform.copyProperties(scheduleJobTO, ScheduleJob.class);
-        scheduleJob.setUserId("111");
+        scheduleJob.setUserId(userAPI.currentUser().getId());
         scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
         this.verifySchedule(scheduleJob);
         ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
@@ -56,6 +59,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         BeanTransform.copyProperties(scheduleJobTO, scheduleJob);
         this.verifySchedule(scheduleJob);
         scheduleSer.verifyTrigger(scheduleJob);//验证执行方法是否正确
+        scheduleJob.setModifyTime(LocalDateTime.now());
         super.update(scheduleJob);
         if (scheduleJob.getEnable()) {
             scheduleSer.restart(scheduleJob);

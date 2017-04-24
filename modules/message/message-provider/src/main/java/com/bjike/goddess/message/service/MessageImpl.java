@@ -141,10 +141,13 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     }
 
     @Override
-    public List<MessageBO> unreadList(String userId) throws SerException {
+    public List<MessageBO> unreadList(String userId, MsgType type) throws SerException {
         List<String> messageIds = redisClient.getList(userId + "_message");
         MessageDTO dto = new MessageDTO();
         dto.getConditions().add(Restrict.in("id", messageIds.toArray()));
+        if (null != type) {
+            dto.getConditions().add(Restrict.eq("msgType", type.getCode()));
+        }
 
         return BeanTransform.copyProperties(super.findByCis(dto), MessageBO.class);
     }
@@ -160,6 +163,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         Message message = super.findById(messageTO.getId());
         if (null != message) {
             BeanTransform.copyProperties(messageTO, message);
+            message.setModifyTime(LocalDateTime.now());
             super.update(message);
             MessageRead messageRead = BeanTransform.copyProperties(message, MessageRead.class);
             String json_messageRead = JSON.toJSONString(messageRead);

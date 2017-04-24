@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @DefaultProperties
 @RestController
 @RequestMapping("user")
@@ -42,14 +44,15 @@ public class LoginLogAct {
      * @param id 用户id
      * @return class UserLoginLogVO
      * @throws ActException
+     * @userToken yes
      * @version v1
      */
-    @LoginAuth
+
     @GetMapping("v1/{id}/logs")
-    public Result logs(@PathVariable String id) throws ActException {
+    public Result logs(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             List<UserLoginLogBO> loginLogs = userLoginLogAPI.findByUserId(id);
-            return ActResult.initialize(BeanTransform.copyProperties(loginLogs, UserLoginLogVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(loginLogs, UserLoginLogVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

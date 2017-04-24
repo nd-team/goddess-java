@@ -20,31 +20,33 @@ public class Collect extends BaseEntity {
     /**
      * 合同外部项目名称
      */
-    private String ExternalContractProjectName;
+    @Column(name = "externalContractProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    private String externalContractProjectName;
 
     /**
      * 内部项目名称
      */
+    @Column(name = "internalProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String internalProjectName;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 描述
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '描述'")
+    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '描述'")
     private String remark;
 
     public String getExternalContractProjectName() {
-        return ExternalContractProjectName;
+        return externalContractProjectName;
     }
 
     public void setExternalContractProjectName(String externalContractProjectName) {
-        ExternalContractProjectName = externalContractProjectName;
+        this.externalContractProjectName = externalContractProjectName;
     }
 
     public String getInternalProjectName() {

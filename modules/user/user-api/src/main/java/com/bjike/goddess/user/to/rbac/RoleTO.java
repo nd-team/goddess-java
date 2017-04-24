@@ -33,7 +33,10 @@ public class RoleTO extends BaseTO {
      * 创建时间
      */
     private String createTime;
-
+    /**
+     * 父id
+     */
+    private String parentId;
 
     public String getName() {
         return name;
@@ -65,5 +68,13 @@ public class RoleTO extends BaseTO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

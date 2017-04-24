@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -89,7 +90,7 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 公司名或人名数组
      */
-    @NotBlank(message = "公司名或人名数组不能为空")
+    @NotNull(message = "公司名或人名数组不能为空")
     private String[] companyOrNames;
 
 
