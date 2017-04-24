@@ -28,6 +28,11 @@ public class GroupVO {
      * 创建时间
      */
     private String createTime;
+    /**
+     * 是否有子节点
+     */
+    private Boolean hasChild;
+
 
     public String getName() {
         return name;
@@ -59,5 +64,13 @@ public class GroupVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

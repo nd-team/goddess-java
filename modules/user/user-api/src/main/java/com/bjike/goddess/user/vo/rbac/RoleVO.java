@@ -1,14 +1,16 @@
 package com.bjike.goddess.user.vo.rbac;
 
 
-/**角色值实体
+/**
+ * 角色值实体
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-02 17:01]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class RoleVO   {
+public class RoleVO {
     /**
      * id
      */
@@ -27,6 +29,11 @@ public class RoleVO   {
      * 创建时间
      */
     private String createTime;
+    /**
+     * 是否有子节点
+     */
+    private Boolean hasChild;
+
 
     public String getName() {
         return name;
@@ -58,5 +65,13 @@ public class RoleVO   {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }
