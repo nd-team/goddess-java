@@ -1,5 +1,7 @@
 package com.bjike.goddess.materialinstock.action.materialinstock;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -48,7 +50,7 @@ public class MaterialInStockAct extends BaseFileAction {
      * 根据id查询物资入库
      *
      * @param id      物资入库唯一标识
-     * @param request
+     * @param request Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -67,9 +69,9 @@ public class MaterialInStockAct extends BaseFileAction {
     /**
      * 分页查询物资入库
      *
-     * @param dto          物资入库dto
-     * @param bindingResult
-     * @param request
+     * @param dto           物资入库dto
+     * @param bindingResult 参数绑定
+     * @param request       Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -89,14 +91,14 @@ public class MaterialInStockAct extends BaseFileAction {
      * 添加物资入库
      *
      * @param to      物资入库to
-     * @param result
-     * @param request
+     * @param result  绑定结果集
+     * @param request Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated MaterialInStockTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) MaterialInStockTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MaterialInStockBO bo = materialInStockAPI.save(to);
             MaterialInStockVO vo = BeanTransform.copyProperties(bo, MaterialInStockVO.class, request);
@@ -127,12 +129,12 @@ public class MaterialInStockAct extends BaseFileAction {
      * 编辑物资入库
      *
      * @param to     物资入库to
-     * @param result
+     * @param result 绑定结果集
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated MaterialInStockTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) MaterialInStockTO to, BindingResult result) throws ActException {
         try {
             materialInStockAPI.update(to);
             return new ActResult("edit success!");
@@ -160,14 +162,7 @@ public class MaterialInStockAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 文件上传
-     *
-     * @param request
-     * @param username
-     * @throws SerException
-     * @throws IOException
-     */
+    //上传文件
     private void uploadFiles(HttpServletRequest request, String username) throws SerException, IOException {
         String path = "/" + username;
         List<MultipartFile> multipartFiles = getMultipartFile(request);

@@ -1,8 +1,13 @@
 package com.bjike.goddess.materialinstock.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 物资入库
@@ -18,6 +23,7 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 入库类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "入库类型不能为空")
     private InstockType instockType;
 
     /**
@@ -28,11 +34,13 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 物资名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资名称呢过不能为空")
     private String materialName;
 
     /**
      * 物品类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物品类型不能为空")
     private String materialType;
 
     /**
@@ -48,31 +56,37 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 物资型号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资型号不能为空")
     private String materialModel;
 
     /**
      * 数量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "数量不能为空")
     private Integer quantity;
 
     /**
      * 单位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "单位不能为空")
     private String unit;
 
     /**
      * 单价(元)
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "单价不能为空")
     private Double unitPrice;
 
     /**
      * 总额(元)
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "总额不能为空")
     private Double totalSum;
 
     /**
      * 途径
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "途径不能为空")
     private String approach;
 
     /**

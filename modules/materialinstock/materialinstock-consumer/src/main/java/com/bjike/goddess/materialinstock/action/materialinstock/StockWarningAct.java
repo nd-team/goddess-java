@@ -1,5 +1,7 @@
 package com.bjike.goddess.materialinstock.action.materialinstock;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -86,7 +88,7 @@ public class StockWarningAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated StockWarningTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) StockWarningTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             StockWarningBO bo = stockWarningAPI.save(to);
             StockWarningVO vo = BeanTransform.copyProperties(bo, StockWarningVO.class, request);
@@ -122,7 +124,7 @@ public class StockWarningAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated StockWarningTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(EDIT.class) StockWarningTO to, BindingResult result) throws ActException {
         try {
             stockWarningAPI.update(to);
             return new ActResult("edit success!");

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 物资入库业务实现
@@ -51,6 +52,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     public MaterialInStockBO save(MaterialInStockTO to) throws SerException {
         MaterialInStock entity = BeanTransform.copyProperties(to, MaterialInStock.class, true);
+        entity.setStockEncoding(UUID.randomUUID().toString());
         entity = super.save(entity);
         MaterialInStockBO bo = BeanTransform.copyProperties(entity, MaterialInStockBO.class);
         return bo;
