@@ -16,9 +16,6 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:service interface="com.bjike.goddess.datastore.api.FileSpecificationAPI" ref="fileSpecificationApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.datastore.api.NumSpecificationAPI" ref="numSpecificationApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.datastore.api.AccountPwdSpecificationAPI" ref="accountPwdSpecificationApiImpl" />
 
 	<dubbo:reference  validation="true" id="fileSpecificationApiImpl" interface="com.bjike.goddess.datastore.api.FileSpecificationAPI" />
 	<dubbo:reference  validation="true" id="numSpecificationApiImpl" interface="com.bjike.goddess.datastore.api.NumSpecificationAPI" />
