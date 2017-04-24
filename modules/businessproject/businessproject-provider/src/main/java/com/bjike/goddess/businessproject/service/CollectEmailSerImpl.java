@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -92,19 +93,22 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
+        CollectEmail temp = super.findById( collectEmailTO.getId() );
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
-        collectEmail.setModifyTime(LocalDateTime.now());
-        collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
+
+        BeanUtils.copyProperties( collectEmail,temp ,"id","createTime","createPersion","lastSendTime","status");
+        temp.setModifyTime(LocalDateTime.now());
+        temp.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置发送间隔
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
-        collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
+        temp.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
         //设置发送对象
-        collectEmail.setSendObject(String.valueOf(emails));
+        temp.setSendObject(String.valueOf(emails));
 
-        super.update(collectEmail);
-        return BeanTransform.copyProperties(collectEmail, CollectEmailBO.class);
+        super.update(temp);
+        return BeanTransform.copyProperties(temp, CollectEmailBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 公司能力展示业务实现
@@ -50,6 +51,7 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
 
     @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        companyCapabilityDTO.getSorts().add("createTime=desc");
         List<CompanyCapability> list = super.findByPage(companyCapabilityDTO);
 
         return BeanTransform.copyProperties(list, CompanyCapabilityBO.class );
@@ -94,4 +96,15 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
         }
         return companyCapabilityBOS;
     }
+
+    @Override
+    public List<String> listAllCompanyName() throws SerException {
+        String[] fields = new String[]{"company"};
+        List<CompanyCapabilityBO> cooperBOS =super.findBySql("select company ,1 from capability_companycapability group by company " , CompanyCapabilityBO.class, fields);
+
+        List<String> name = cooperBOS.stream().map(CompanyCapabilityBO::getCompany).collect(Collectors.toList());
+        return name;
+    }
+
+
 }

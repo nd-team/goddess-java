@@ -79,4 +79,9 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     public List<CollectEmailBO> collectCooperEmail(String[] companyOrName) throws SerException {
         return collectEmailSer.collectCooperEmail(companyOrName);
     }
+
+    @Override
+    public List<String> listName(String type) throws SerException {
+        return collectEmailSer.listName( type);
+    }
 }

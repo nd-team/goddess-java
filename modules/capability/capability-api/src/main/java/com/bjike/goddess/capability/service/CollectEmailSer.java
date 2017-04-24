@@ -134,5 +134,16 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
     ;
 
+    /**
+     * 汇总获取公司名/姓名
+     *
+     * @param type 汇总类型
+     */
+    default List<String> listName(String type) throws SerException {
+        return null;
+    }
+
+    ;
+
 
 }

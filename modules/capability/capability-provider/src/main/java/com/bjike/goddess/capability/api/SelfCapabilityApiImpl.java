@@ -82,7 +82,7 @@ public class SelfCapabilityApiImpl implements SelfCapabilityAPI {
     }
 
     @Override
-    public List<SelfCapabilityBO> listAllSelfName() throws SerException {
+    public List<String> listAllSelfName() throws SerException {
         return selfCapabilitySer.listAllSelfName();
     }
 }
