@@ -195,7 +195,7 @@ public class CollectEmailAction {
      */
     @GetMapping("v1/collectCompanyCapability")
     public Result collectCompanyCapability (@Validated({CollectEmailDTO.TestCompany.class}) CollectEmailDTO collectEmailDTO  ) throws ActException {
-        String[] companys = new String[]{};
+        String[] companys = collectEmailDTO.getCompanys();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
@@ -217,7 +217,7 @@ public class CollectEmailAction {
     @GetMapping("v1/collectSelfCapability")
     public Result collectSelfCapability (@Validated({CollectEmailDTO.TestPerson.class}) CollectEmailDTO collectEmailDTO   ) throws ActException {
         try {
-            String[] names = new String[]{};
+            String[] names = collectEmailDTO.getNames();
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectSelfEmail(names), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
@@ -236,11 +236,28 @@ public class CollectEmailAction {
      */
     @GetMapping("v1/collectCooperCapability")
     public Result collectCooperCapability (@Validated(CollectEmailDTO.TestCompany.class) CollectEmailDTO collectEmailDTO  ) throws ActException {
-        String[] companys = new String[]{};
+        String[] companys = collectEmailDTO.getCompanys();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 公司名或姓名
+     *
+     * @param type  汇总类型
+     * @des 根据汇总类型获取公司名或姓名
+     * @version v1
+     */
+    @GetMapping("v1/listName")
+    public Result listName( String type) throws ActException {
+        try {
+            List<String> list = collectEmailAPI.listName( type );
+            return ActResult.initialize( list );
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

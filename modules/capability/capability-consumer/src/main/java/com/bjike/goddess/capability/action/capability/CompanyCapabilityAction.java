@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -55,15 +56,16 @@ public class CompanyCapabilityAction {
      * 一个公司能力
      *
      * @param id
+     * @param request 前端过滤参数
      * @des 获取一个公司能力
      * @return  class CompanyCapabilityVO
      * @version v1
      */
     @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id) throws ActException {
+    public Result getOne(@PathVariable String id,HttpServletRequest request) throws ActException {
         try {
             CompanyCapabilityBO companyCapabilityBO = companyCapabilityAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(companyCapabilityBO,CompanyCapabilityVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(companyCapabilityBO,CompanyCapabilityVO.class , request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,15 +75,16 @@ public class CompanyCapabilityAction {
      * 公司能力列表
      *
      * @param companyCapabilityDTO 公司能力信息dto
+     * @param request 前端过滤参数
      * @des 获取所有公司能力信息
      * @return  class CompanyCapabilityVO
      * @version v1
      */
     @GetMapping("v1/listCompanyCapability")
-    public Result findListCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws ActException {
+    public Result findListCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO,HttpServletRequest request) throws ActException {
         try {
             List<CompanyCapabilityVO> companyCapabilityVOList = BeanTransform.copyProperties(
-                    companyCapabilityAPI.listCompanyCapability(companyCapabilityDTO), CompanyCapabilityVO.class, true);
+                    companyCapabilityAPI.listCompanyCapability(companyCapabilityDTO), CompanyCapabilityVO.class, request);
             return ActResult.initialize(companyCapabilityVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -205,6 +208,24 @@ public class CompanyCapabilityAction {
     @GetMapping("v1/lookLayout")
     public Result lookLayout(CompanyCapabilityTO companyCapabilityTO ) throws ActException {
         return null;
+    }
+
+    /**
+     * 获取所有公司名
+     *
+     * @des 获取所有公司名
+     * @return  class CompanyCapabilityVO
+     * @version v1
+     */
+    @GetMapping("v1/listAllCompanyName")
+    public Result listAllCompanyName(  ) throws ActException {
+        try {
+            List<String> list = companyCapabilityAPI.listAllCompanyName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
     }
 
 }

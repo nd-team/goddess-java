@@ -88,9 +88,8 @@ public interface CooperCapabilitySer extends Ser<CooperCapability, CooperCapabil
 
     /**
      * 查找所有公司名
-     * @return class CooperCapabilityBO
      */
-    default List<CooperCapabilityBO> listAllCompanyName( ) throws SerException {return null;}
+    default List<String> listAllCompanyName( ) throws SerException {return null;}
 
     /**
      * 查找公司名/联系人/联系方式

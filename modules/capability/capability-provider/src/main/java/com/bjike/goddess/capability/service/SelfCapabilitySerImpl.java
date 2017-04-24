@@ -50,6 +50,7 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        selfCapabilityDTO.getSorts().add("createTime=desc");
         List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
 
         return BeanTransform.copyProperties(list, SelfCapabilityBO.class );
@@ -187,11 +188,12 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     
     @Override
-    public List<SelfCapabilityBO> listAllSelfName() throws SerException {
+    public List<String> listAllSelfName() throws SerException {
 
         String[] fields = new String[]{"name"};
         List<SelfCapabilityBO> selfBOS =super.findBySql("select name ,1 from capability_selfcapability group by name " , SelfCapabilityBO.class, fields);
 
-        return BeanTransform.copyProperties( selfBOS , SelfCapabilityBO.class );
+        List<String> name = selfBOS.stream().map(SelfCapabilityBO::getName).collect(Collectors.toList());
+        return name;
     }
 }
