@@ -20,7 +20,7 @@ public class GroupTO extends BaseTO {
     /**
      * 组名
      */
-    @NotBlank(message = "组名不能为空", groups ={ADD.class, EDIT.class})
+    @NotBlank(message = "组名不能为空", groups = {ADD.class, EDIT.class})
     private String name;
     /**
      * 描述
@@ -34,6 +34,10 @@ public class GroupTO extends BaseTO {
      * 创建时间
      */
     private String createTime;
+    /**
+     * 父id
+     */
+    private String parentId;
 
 
     public String getName() {
@@ -68,4 +72,11 @@ public class GroupTO extends BaseTO {
         this.createTime = createTime;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 }

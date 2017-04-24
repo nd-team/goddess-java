@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @DefaultProperties
 @RestController
 @RequestMapping("group-user")
@@ -40,6 +41,7 @@ public class GroupUserAct {
      *
      * @param groupUserTO 组用户信息
      * @return class GroupUserVO
+     * @userToken yes
      * @version v1
      */
     @PostMapping("v1/add")

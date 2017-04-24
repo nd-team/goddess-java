@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.DepartmentBO;
-import com.bjike.goddess.user.bo.DepartmentTreeBO;
 import com.bjike.goddess.user.service.DepartmentSer;
 import com.bjike.goddess.user.to.DepartmentTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class DepartmentApiImpl implements DepartmentAPI {
 
 
     @Override
-    public List<DepartmentTreeBO> treeData(String id) throws SerException {
+    public List<DepartmentBO> treeData(String id) throws SerException {
         return departmentSer.treeData(id);
     }
 

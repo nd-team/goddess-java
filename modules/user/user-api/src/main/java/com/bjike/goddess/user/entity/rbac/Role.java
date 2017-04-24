@@ -43,6 +43,12 @@ public class Role extends BaseEntity {
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '角色上级' ")
     private Role parent;
 
+    /**
+     * 是否有子节点
+     */
+    @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
+    private Boolean hasChild;
+
     public String getName() {
         return name;
     }
@@ -81,5 +87,13 @@ public class Role extends BaseEntity {
 
     public void setParent(Role parent) {
         this.parent = parent;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

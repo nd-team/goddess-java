@@ -41,6 +41,13 @@ public class Department extends BaseEntity {
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '部门状态' ", nullable = false, insertable = false)
     private Status status;
 
+
+    /**
+     * 是否有子节点
+     */
+    @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
+    private Boolean hasChild;
+
     public String getName() {
         return name;
     }
@@ -71,5 +78,13 @@ public class Department extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

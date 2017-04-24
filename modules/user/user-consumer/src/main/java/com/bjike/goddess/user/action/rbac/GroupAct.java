@@ -12,7 +12,6 @@ import com.bjike.goddess.user.api.rbac.GroupAPI;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import com.bjike.goddess.user.vo.rbac.GroupVO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -42,14 +41,15 @@ public class GroupAct {
      * 获取组树结构
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
-     * @des 逐层加载, 参考ztree
      * @return class GroupVO
+     * @userToken yes
+     * @des 逐层加载, 参考ztree
      * @version v1
      */
     @GetMapping("v1/tree")
-    public Result treeData(String id,HttpServletRequest request) throws ActException {
+    public Result treeData(String id, HttpServletRequest request) throws ActException {
         try {
-            List<GroupVO> vos =  BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class,request);
+            List<GroupVO> vos = BeanTransform.copyProperties(groupAPI.treeData(id), GroupVO.class, request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -61,6 +61,7 @@ public class GroupAct {
      *
      * @param groupTO 新的组信息
      * @return class GroupVO
+     * @userToken yes
      * @version v1
      */
     @PostMapping("v1/add")
@@ -77,6 +78,7 @@ public class GroupAct {
      * 删除组
      *
      * @param id 组唯一标示
+     * @userToken yes
      * @des 如该节点存在子节点, 先删除子节点
      * @version v1
      */
@@ -94,6 +96,7 @@ public class GroupAct {
      * 编辑组信息
      *
      * @param groupTO
+     * @userToken yes
      * @version v1
      */
     @PutMapping("v1/edit")

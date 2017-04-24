@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
-import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public interface GroupAPI {
      * @param id 组id
      * @return
      */
-    default List<GroupTreeBO> treeData(String id) throws SerException {
+    default List<GroupBO> treeData(String id) throws SerException {
         return null;
     }
 

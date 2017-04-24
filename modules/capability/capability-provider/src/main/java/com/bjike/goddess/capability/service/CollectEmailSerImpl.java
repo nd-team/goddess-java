@@ -61,8 +61,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
-        collectEmailDTO= new CollectEmailDTO();
-        collectEmailDTO.getSorts().add("createTime");
+        collectEmailDTO.getSorts().add("createTime=desc");
         List<CollectEmail> list = super.findByPage(collectEmailDTO);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
     }
@@ -81,6 +80,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectEmail.setCreateTime(LocalDateTime.now());
         collectEmail.setStatus(Status.THAW);
         collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
+//        collectEmail.setCreatePersion("汪如意");
 
         //设置汇总公司名和人名
         String companyOrName ="";
@@ -119,9 +119,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             }
         }
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
-        BeanUtils.copyProperties( collectEmail,temp ,"id","createTime");
+        BeanUtils.copyProperties( collectEmail,temp ,"id","createTime","createPersion","lastSendTime","status");
         temp.setModifyTime(LocalDateTime.now());
-//        collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
+//        collectEmail.setCreatePersion(us
+// ike
+// erAPI.currentUser().getUsername());
 
         //设置汇总公司名和人名
         String companyOrName ="";
@@ -302,7 +304,21 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         return collectEmailBOList;
     }
 
-
+    @Override
+    public List<String> listName(String type) throws SerException {
+        List<String> list = new ArrayList<>();
+        //商业能力
+        if( "0".equals(type)){
+            list = companyCapabilityAPI.listAllCompanyName();
+        }else if( "1".equals(type)){
+            //个人能力
+            list = selfCapabilityAPI.listAllSelfName();
+        }else if( "2".equals(type)){
+            //合作对象
+            list = cooperCapabilityAPI.listAllCompanyName();
+        }
+        return list;
+    }
 
     /**
      * 发送间隔单位转换

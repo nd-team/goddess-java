@@ -3,6 +3,7 @@ package com.bjike.goddess.message.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.to.MessageTO;
 
 import java.util.List;
@@ -46,11 +47,12 @@ public interface MessageAPI {
 
     /**
      * 未读消息列表
-     * @param userId
+     * @param userId 用户id
+     * @param type 消息类型
      * @return
      * @throws SerException
      */
-    default List<MessageBO> unreadList(String userId) throws SerException{
+    default List<MessageBO> unreadList(String userId, MsgType type) throws SerException{
         return null;
     }
 

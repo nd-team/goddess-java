@@ -127,9 +127,8 @@ public interface SelfCapabilityAPI {
     /**
      * 查找所有姓名
      *
-     * @return class SelfCapabilityBO
      */
-    default List<SelfCapabilityBO> listAllSelfName() throws SerException {
+    default List<String> listAllSelfName() throws SerException {
         return null;
     }
 

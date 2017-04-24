@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.entity.ContractCategory;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -51,11 +52,14 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractCategoryBO editContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
-        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
-        contractCategory.setModifyTime(LocalDateTime.now());
+        ContractCategory temp = super.findById( contractCategoryTO.getId());
 
-        super.update( contractCategory );
-        ContractCategoryBO bo = BeanTransform.copyProperties( contractCategory , ContractCategoryBO.class);
+        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
+        BeanUtils.copyProperties( contractCategory , temp, "id","createTime");
+        temp.setModifyTime(LocalDateTime.now());
+
+        super.update( temp );
+        ContractCategoryBO bo = BeanTransform.copyProperties( temp , ContractCategoryBO.class);
         return bo;
     }
 

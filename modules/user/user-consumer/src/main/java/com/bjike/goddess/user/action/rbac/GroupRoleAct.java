@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @DefaultProperties
 @RestController
 @RequestMapping("group-role")
@@ -37,8 +38,8 @@ public class GroupRoleAct {
     private GroupRoleAPI groupRoleAPI;
 
     /**
-     * 添加组
-     *
+     * 添加组角色
+     * @userToken yes
      * @param groupRoleTO 角色组信息
      * @return class GroupRoleVO
      * @version v1

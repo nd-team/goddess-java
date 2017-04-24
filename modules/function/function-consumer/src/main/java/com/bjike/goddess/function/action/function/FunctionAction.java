@@ -89,12 +89,30 @@ public class FunctionAction {
         }
     }
 
+    /**
+     * 开启关闭功能
+     *
+     * @param id     功能
+     * @param enable true:开启,false:关闭
+     * @throws ActException
+     * @version v1
+     */
+    @PatchMapping("v1/enable/{id}/{enable}")
+    public Result enable(@PathVariable String id, @PathVariable Boolean enable) throws ActException {
+        try {
+            functionAPI.enable(id, enable);
+            return new ActResult("enable function success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 功能列表
      *
-     * @throws ActException
      * @return class FunctionVO
+     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -112,8 +130,8 @@ public class FunctionAction {
     /**
      * 通过分类获取功能列表
      *
-     * @throws ActException
      * @return class FunctionVO
+     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/{type}/list")
@@ -130,8 +148,8 @@ public class FunctionAction {
     /**
      * 用户功能列表
      *
-     * @throws ActException
      * @return class FunctionVO
+     * @throws ActException
      * @version v1
      */
     @LoginAuth

@@ -3,12 +3,14 @@ package com.bjike.goddess.message.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.service.MessageSer;
 import com.bjike.goddess.message.to.MessageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -41,8 +43,8 @@ public class MessageApiImpl implements MessageAPI {
     }
 
     @Override
-    public List<MessageBO> unreadList(String userId) throws SerException {
-        return messageSer.unreadList(userId);
+    public List<MessageBO> unreadList(String userId,MsgType type) throws SerException {
+        return messageSer.unreadList(userId,type);
     }
 
     @Override

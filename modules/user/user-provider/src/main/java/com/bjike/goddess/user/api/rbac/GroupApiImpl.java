@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
-import com.bjike.goddess.user.bo.rbac.GroupTreeBO;
 import com.bjike.goddess.user.service.rbac.GroupSer;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class GroupApiImpl implements GroupAPI {
     private GroupSer groupSer;
 
     @Override
-    public List<GroupTreeBO> treeData(String id) throws SerException {
+    public List<GroupBO> treeData(String id) throws SerException {
         return groupSer.treeData(id);
     }
 

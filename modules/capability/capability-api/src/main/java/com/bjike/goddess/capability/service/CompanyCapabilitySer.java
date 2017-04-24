@@ -65,5 +65,11 @@ public interface CompanyCapabilitySer extends Ser<CompanyCapability, CompanyCapa
      */
     default List<CompanyCapabilityBO> listCompanyCapabilityByName(CompanyCapabilityDTO companyCapabilityDTO ) throws SerException {return null;}
 
+    /**
+     * 查找所有公司名
+     */
+    default List<String> listAllCompanyName( ) throws SerException {return null;}
+
+
 
 }

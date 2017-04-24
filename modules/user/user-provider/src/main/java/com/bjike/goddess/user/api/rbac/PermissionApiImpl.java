@@ -5,7 +5,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
 import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.service.rbac.PermissionSer;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
@@ -37,7 +36,7 @@ public class PermissionApiImpl implements PermissionAPI {
     }
 
     @Override
-    public List<PermissionTreeBO> treeData(String id) throws SerException {
+    public List<PermissionBO> treeData(String id) throws SerException {
         return permissionSer.treeData(id);
     }
 
