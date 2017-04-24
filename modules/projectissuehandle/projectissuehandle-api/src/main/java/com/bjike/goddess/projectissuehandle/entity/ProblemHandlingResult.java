@@ -42,7 +42,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 工程类型
      */
-    @Column(name = "projectType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
+    @Column(name = "projectType",  columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
     private String projectType;
 
     /**
@@ -54,7 +54,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题具体情况
      */
-    @Column(name = "problemSpecificSituation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题具体情况'")
+    @Column(name = "problemSpecificSituation",  columnDefinition = "VARCHAR(255)   COMMENT '问题具体情况'")
     private String problemSpecificSituation;
 
     /**
@@ -90,7 +90,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题发生地点
      */
-    @Column(name = "problemOccurrencePlace", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题发生地点'")
+    @Column(name = "problemOccurrencePlace", columnDefinition = "VARCHAR(255)   COMMENT '问题发生地点'")
     private String problemOccurrencePlace;
 
     /**
@@ -108,7 +108,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题总结
      */
-    @Column(name = "problemConclusion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题总结'")
+    @Column(name = "problemConclusion" , columnDefinition = "VARCHAR(255)   COMMENT '问题总结'")
     private String problemConclusion;
 
 

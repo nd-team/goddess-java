@@ -35,6 +35,7 @@ import java.util.List;
 public class ProblemHandlingResultAction {
     @Autowired
     private ProblemHandlingResultAPI problemHandlingResultAPI;
+
     /**
      * 确认问题处理结果列表总条数
      *
@@ -80,7 +81,7 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO,BindingResult bindingResult) throws ActException {
+    public Result addProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO, BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.insertProblemHandlingResult(problemHandlingResultTO);
             return ActResult.initialize(problemHandlingResultBO);
@@ -115,7 +116,7 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeProblemHandlingResult(@PathVariable String id) throws ActException {
+    public Result deleteProblemHandlingResult(@PathVariable String id) throws ActException {
         try {
             problemHandlingResultAPI.removeProblemHandlingResult(id);
             return new ActResult("delete success");
@@ -127,20 +128,22 @@ public class ProblemHandlingResultAction {
     /**
      * 搜索
      *
+     * @param problemHandlingResultDTO 确认问题处理结果dto
      * @return class ProblemHandlingResultVO
-     * @des 根据内部项目名称(internalProjectName)、工程类型(projectType)、问题对象(problemObject) 搜索
+     * @des 搜索获取所有确认问题处理结果
      * @version v1
      */
-    @GetMapping("v1/search")
-    public Result searchProblemHandlingResult(String internalProjectName, String projectType, String problemObject) throws ActException {
+    @GetMapping("v1/searchProblemHandlingResult")
+    public Result searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws ActException {
         try {
-            ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.searchProblemHandlingResult(internalProjectName, projectType, problemObject);
-            ProblemHandlingResultVO problemHandlingResultVO = BeanTransform.copyProperties(problemHandlingResultBO, ProblemHandlingResultBO.class);
-            return ActResult.initialize(problemHandlingResultVO);
+            List<ProblemHandlingResultVO> problemHandlingResultVOS = BeanTransform.copyProperties(
+                    problemHandlingResultAPI.searchProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class, true);
+            return ActResult.initialize(problemHandlingResultVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出确认问题处理结果
      *
@@ -150,7 +153,7 @@ public class ProblemHandlingResultAction {
     public Result exportExcel(String internalProjectName, String projectType) throws ActException {
         String excel = null;
         try {
-            excel = problemHandlingResultAPI.exportExcel(internalProjectName,projectType);
+            excel = problemHandlingResultAPI.exportExcel(internalProjectName, projectType);
             return new ActResult(excel);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

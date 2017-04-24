@@ -79,7 +79,7 @@ public interface InvolvedProcessingTaskAPI {
      *
      * @throws SerException
      */
-    default InvolvedProcessingTaskBO searchInvolvedProcessingTask(String internalProjectName, String handler) throws SerException {
+    default List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return null;
     }
 

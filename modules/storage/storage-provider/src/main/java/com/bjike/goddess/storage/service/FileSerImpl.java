@@ -138,7 +138,6 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                     conditions.add(Restrict.eq("module", module));
                     conditions.add(Restrict.like("path", path)); //以该路径开头的文件全部删除
                     List<File> fileList = super.findByCis(dto);
-
                     org.apache.commons.io.FileUtils.deleteDirectory(file); //删除目录及目录下的所有文件
                     super.remove(fileList); //删除所有文件
                 } catch (IOException e) {

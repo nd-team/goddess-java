@@ -116,7 +116,7 @@ public class InvolvedProcessingTaskAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeInvolvedProcessingTask(@PathVariable String id) throws ActException {
+    public Result deleteInvolvedProcessingTask(@PathVariable String id) throws ActException {
         try {
             involvedProcessingTaskAPI.removeInvolvedProcessingTask(id);
             return new ActResult("delete success");
@@ -128,16 +128,17 @@ public class InvolvedProcessingTaskAction {
     /**
      * 搜索
      *
+     * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
      * @return class InvolvedProcessingTaskVO
-     * @des 根据内部项目名称(internalProjectName)、处理人员(handle) 搜索
+     * @des 搜索获取所有参与处理人员的任务分配
      * @version v1
      */
-    @GetMapping("v1/search")
-    public Result searchInvolvedProcessingTask(String internalProjectName, String handler) throws ActException {
+    @GetMapping("v1/searchInvolvedProcessingTask")
+    public Result searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws ActException {
         try {
-            InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.searchInvolvedProcessingTask(internalProjectName, handler);
-            InvolvedProcessingTaskVO involvedProcessingTaskVO = BeanTransform.copyProperties(involvedProcessingTaskBO, InvolvedProcessingTaskBO.class);
-            return ActResult.initialize(involvedProcessingTaskBO);
+            List<InvolvedProcessingTaskVO> involvedProcessingTaskVOS = BeanTransform.copyProperties
+                    (involvedProcessingTaskAPI.searchInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class);
+            return ActResult.initialize(involvedProcessingTaskVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

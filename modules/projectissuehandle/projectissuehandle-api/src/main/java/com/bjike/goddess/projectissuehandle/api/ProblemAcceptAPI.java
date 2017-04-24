@@ -79,7 +79,7 @@ public interface ProblemAcceptAPI {
      *
      * @throws SerException
      */
-    default ProblemAcceptBO searchProblemAccept(String internalProjectName, String projectType) throws SerException {
+    default List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return null;
     }
 

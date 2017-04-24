@@ -12,5 +12,29 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class InvolvedProcessingTaskDTO extends BaseDTO {
+    /**
+     * 内部项目名称
+     */
+    private String internalProjectName;
 
+    /**
+     * 处理人员
+     */
+    private String handler;
+
+    public String getInternalProjectName() {
+        return internalProjectName;
+    }
+
+    public void setInternalProjectName(String internalProjectName) {
+        this.internalProjectName = internalProjectName;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
 }
