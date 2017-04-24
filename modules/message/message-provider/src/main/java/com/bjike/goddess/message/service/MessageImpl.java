@@ -160,6 +160,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         Message message = super.findById(messageTO.getId());
         if (null != message) {
             BeanTransform.copyProperties(messageTO, message);
+            message.setModifyTime(LocalDateTime.now());
             super.update(message);
             MessageRead messageRead = BeanTransform.copyProperties(message, MessageRead.class);
             String json_messageRead = JSON.toJSONString(messageRead);

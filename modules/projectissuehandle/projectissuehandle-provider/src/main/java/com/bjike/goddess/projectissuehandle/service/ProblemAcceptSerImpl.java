@@ -83,12 +83,23 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public ProblemAcceptBO searchProblemAccept(String internalProjectName, String projectType) throws SerException {
-        ProblemAcceptDTO dto = new ProblemAcceptDTO();
-        dto.getConditions().add(Restrict.eq("internalProjectName", internalProjectName));
-        dto.getConditions().add(Restrict.eq("projectType", projectType));
-        ProblemAcceptBO problemAcceptBO = BeanTransform.copyProperties(super.findOne(dto), ProblemAcceptBO.class);
-        return problemAcceptBO;
+
+    public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
+        /**
+         * 内部项目名称
+         */
+        if(StringUtils.isNotBlank(problemAcceptDTO.getInternalProjectName())){
+            problemAcceptDTO.getConditions().add(Restrict.eq("internalProjectName", problemAcceptDTO.getInternalProjectName()));
+        }
+        /**
+         * 工程类型
+         */
+        if(StringUtils.isNotBlank(problemAcceptDTO.getProjectType())){
+            problemAcceptDTO.getConditions().add(Restrict.eq("projectType", problemAcceptDTO.getProjectType()));
+        }
+        List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO,true);
+        List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts,ProblemAcceptBO.class);
+        return problemAcceptBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

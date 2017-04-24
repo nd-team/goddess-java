@@ -33,19 +33,19 @@ public class InvolvedProcessingTask extends BaseEntity {
     /**
      * 每日计划
      */
-    @Column(name = "dailyPlan", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '每日计划'")
+    @Column(name = "dailyPlan",  columnDefinition = "VARCHAR(255)   COMMENT '每日计划'")
     private String dailyPlan;
 
     /**
      * 临时任务
      */
-    @Column(name = "temporaryTask", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '临时任务'")
+    @Column(name = "temporaryTask",  columnDefinition = "VARCHAR(255)   COMMENT '临时任务'")
     private String temporaryTask;
 
     /**
      * 实际完成情况
      */
-    @Column(name = "actualCompletion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际完成情况'")
+    @Column(name = "actualCompletion",  columnDefinition = "VARCHAR(255)   COMMENT '实际完成情况'")
     private String actualCompletion;
 
 

@@ -85,7 +85,7 @@ public interface ProblemHandlingResultSer extends Ser<ProblemHandlingResult, Pro
      *
      * @throws SerException
      */
-    default ProblemHandlingResultBO searchProblemHandlingResult(String internalProjectName, String projectType, String problemObject) throws SerException {
+    default List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return null;
     }
 
