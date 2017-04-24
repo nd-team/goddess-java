@@ -31,6 +31,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupAPI" id="groupApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.UserRoleAPI" id="userRoleApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.GroupUserAPI" id="groupUserApiImpl"/>
 
 
 </beans>
