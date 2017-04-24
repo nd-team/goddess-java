@@ -66,7 +66,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
      * 初始化公钥私钥
      */
     static {
-        File file = new File("/files/key.properties");
+        File file = new File("/root/files/key.properties");
         try {
             if (file.exists()) {
                 Reader rd = new FileReader(file);
@@ -81,7 +81,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
                     }
                 }
             } else {
-                LOGGER.info("配置文件不存在,请先创建!");
+                LOGGER.info("/root/files/key.properties 配置文件不存在,请先创建!");
             }
         } catch (Exception e) {
             LOGGER.info("公钥读取异常!");
