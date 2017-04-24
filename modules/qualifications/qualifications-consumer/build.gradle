@@ -39,6 +39,7 @@ dependencies {
 
     compile project(":modules:qualifications:qualifications-api")
     compile project(":modules:storage:storage-api")
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
 
     compile("org.springframework.boot:spring-boot-starter-web")
