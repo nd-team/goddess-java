@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OperateBO;
+import com.bjike.goddess.organize.dto.OperateDTO;
 import com.bjike.goddess.organize.to.OperateTO;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public interface OperateAPI {
     /**
      * 保存操作类型
      *
-     * @param to
+     * @param to 操作类型传输对象
      * @return
      * @throws SerException
      */
@@ -41,11 +42,76 @@ public interface OperateAPI {
     /**
      * 修改操作类型
      *
-     * @param to
+     * @param to 操作类型传输对象
      * @return
      * @throws SerException
      */
     default OperateBO update(OperateTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 启动
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 操作类型数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<OperateBO> maps(OperateDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询操作类型数据
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO findById(String id) throws SerException {
         return null;
     }
 

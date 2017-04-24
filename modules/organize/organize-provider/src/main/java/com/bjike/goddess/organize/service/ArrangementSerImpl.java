@@ -53,10 +53,13 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     @Override
     public ArrangementBO update(ArrangementTO to) throws SerException {
         Arrangement arrangement = super.findById(to.getId());
+        if (null == arrangement)
+            throw new SerException("数据对象不存在");
         if (StringUtils.isNotBlank(to.getParen_id())) arrangement.setParent(super.findById(to.getParen_id()));
         arrangement.setArrangement(to.getArrangement());
         arrangement.setSerialNumber(to.getSerialNumber());
         arrangement.setDescription(to.getDescription());
+        arrangement.setModifyTime(LocalDateTime.now());
         super.update(arrangement);
         return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
     }
@@ -66,5 +69,24 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
         return BeanTransform.copyProperties(super.findByCis(dto), ArrangementBO.class);
+    }
+
+    @Override
+    public ArrangementBO delete(String id) throws SerException {
+        Arrangement arrangement = super.findById(id);
+        if (null == arrangement)
+            throw new SerException("数据对象不存在");
+        try {
+            super.remove(arrangement);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+    }
+
+    @Override
+    public List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
+        dto.getSorts().add("modifyTime=desc");
+        return BeanTransform.copyProperties(super.findByPage(dto), ArrangementBO.class);
     }
 }

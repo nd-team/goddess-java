@@ -48,7 +48,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, DayPlanBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -59,6 +59,8 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     @Override
     public DayPlanBO delete(DayPlanTO to) throws SerException {
         DayPlan entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, DayPlanBO.class);
     }

@@ -9,6 +9,7 @@ import com.bjike.goddess.organize.bo.InstructionClassifyBO;
 import com.bjike.goddess.organize.dto.InstructionClassifyDTO;
 import com.bjike.goddess.organize.entity.InstructionClassify;
 import com.bjike.goddess.organize.to.InstructionClassifyTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,10 +49,53 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InstructionClassifyBO update(InstructionClassifyTO to) throws SerException {
-        InstructionClassify classify = super.findById(to.getId());
-        classify.setName(to.getName());
-        classify.setDescription(to.getDescription());
-        super.save(classify);
-        return BeanTransform.copyProperties(classify, InstructionClassifyBO.class, true);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        InstructionClassify entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
+    }
+
+    @Override
+    public InstructionClassifyBO delete(String id) throws SerException {
+        InstructionClassify entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
+    }
+
+    @Override
+    public InstructionClassifyBO close(String id) throws SerException {
+        InstructionClassify entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        entity.setStatus(Status.CONGEAL);
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
+    }
+
+    @Override
+    public InstructionClassifyBO open(String id) throws SerException {
+        InstructionClassify entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        entity.setStatus(Status.THAW);
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
+    }
+
+    @Override
+    public List<InstructionClassifyBO> maps(InstructionClassifyDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        return BeanTransform.copyProperties(super.findByPage(dto), InstructionClassifyBO.class);
     }
 }

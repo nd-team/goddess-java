@@ -85,7 +85,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

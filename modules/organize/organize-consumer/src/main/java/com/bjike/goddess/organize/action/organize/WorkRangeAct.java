@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 工作范围信息设置操作
  *
@@ -35,7 +37,7 @@ public class WorkRangeAct {
 
 
     /**
-     * 查询部门工作范围信息详细
+     * 查询部门工作范围信息详细列表
      *
      * @param department_id 部门ID
      * @param dto           部门工作范围数据传输
@@ -59,9 +61,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @GetMapping("v1/findByDepartment")
-    public Result findByDepartment(String departmentId) throws ActException {
+    public Result findByDepartment(String departmentId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDepartment(departmentId), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDepartment(departmentId), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -75,9 +77,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @GetMapping("v1/findByRange")
-    public Result findByRange(String rangeId) throws ActException {
+    public Result findByRange(String rangeId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByRange(rangeId), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByRange(rangeId), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -91,10 +93,10 @@ public class WorkRangeAct {
      * @version v1
      */
     @PostMapping("v1/departmentAddRange")
-    public Result departmentAddRange(DepartmentWorkRangeTO to) throws ActException {
+    public Result departmentAddRange(DepartmentWorkRangeTO to, HttpServletRequest request) throws ActException {
         try {
             workRangeAPI.departmentAddRange(to);
-            return ActResult.initialize(BeanTransform.copyProperties(to, WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(to, WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -108,9 +110,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @GetMapping("v1/findByDirection")
-    public Result findByDirection(String direction) throws ActException {
+    public Result findByDirection(String direction, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDirection(direction), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDirection(direction), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -125,9 +127,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @GetMapping("v1/findByDirectionProject")
-    public Result findByDirectionProject(String direction, String project) throws ActException {
+    public Result findByDirectionProject(String direction, String project, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDirectionProject(direction, project), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByDirectionProject(direction, project), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -141,9 +143,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @GetMapping("v1/findByProject")
-    public Result findByProject(String project) throws ActException {
+    public Result findByProject(String project, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByProject(project), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByProject(project), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -157,9 +159,9 @@ public class WorkRangeAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) WorkRangeTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) WorkRangeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.save(to), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.save(to), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -173,9 +175,72 @@ public class WorkRangeAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) WorkRangeTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) WorkRangeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.update(to), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.update(to), WorkRangeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 工作范围数据id
+     * @return class WorkRangeVO
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.delete(id), WorkRangeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 工作范围数据传输
+     * @return class WorkRangeVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(WorkRangeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.maps(dto), WorkRangeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(workRangeAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID查询工作范围
+     *
+     * @param id
+     * @return class WorkRangeVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findById(id), WorkRangeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -36,7 +36,7 @@ public class ContractManage extends BaseEntity {
     /**
      * 合同编号
      */
-    @Column(name = "serialNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同编号'")
+    @Column(name = "serialNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同编号'", unique = true)
     private String serialNumber;
 
     /**
@@ -78,7 +78,7 @@ public class ContractManage extends BaseEntity {
     /**
      * 线上存储位置
      */
-    @Column(name = "lineStorage",  columnDefinition = "VARCHAR(255)   COMMENT '线上存储位置'")
+    @Column(name = "lineStorage", columnDefinition = "VARCHAR(255)   COMMENT '线上存储位置'")
     private String lineStorage;
 
     /**
@@ -120,7 +120,7 @@ public class ContractManage extends BaseEntity {
     /**
      * 联系电话
      */
-    @Column(name = "phone",  columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    @Column(name = "phone", columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
     private String phone;
 
     /**

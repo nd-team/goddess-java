@@ -105,7 +105,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -188,5 +188,10 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PositionDetailUserBO getById(String id) throws SerException {
+        return this.transformBO(super.findById(id));
     }
 }

@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.ArrangementAPI;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import com.bjike.goddess.organize.vo.ArrangementVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,10 +43,10 @@ public class ArrangementAct {
      * @version v1
      */
     @GetMapping("v1/findStatus")
-    public Result findStatus() throws ActException {
+    public Result findStatus(HttpServletRequest request) throws ActException {
         try {
             List<ArrangementBO> bos = arrangementAPI.findStatus();
-            return ActResult.initialize(BeanTransform.copyProperties(bos, ArrangementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(bos, ArrangementVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -58,9 +60,9 @@ public class ArrangementAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ArrangementTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) ArrangementTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.save(to), ArrangementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.save(to), ArrangementVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -74,9 +76,72 @@ public class ArrangementAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) ArrangementTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) ArrangementTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.update(to), ArrangementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.update(to), ArrangementVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位层级数据id
+     * @return class ArrangementVO
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.delete(id), ArrangementVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位层级数据传输
+     * @return class ArrangementVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(ArrangementDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.maps(dto), ArrangementVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(arrangementAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID查询岗位层级
+     *
+     * @param id
+     * @return class ArrangementVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findById(id), ArrangementVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

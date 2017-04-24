@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
@@ -111,7 +112,7 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     /**
      * 增加岗位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
@@ -122,7 +123,7 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     /**
      * 修改职位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
@@ -138,6 +139,28 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
      * @throws SerException
      */
     default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位详细数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
         return null;
     }
 }

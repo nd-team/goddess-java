@@ -67,7 +67,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
                 entity.setType(foreignStaffingSetSer.findById(to.getId()));
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

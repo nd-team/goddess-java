@@ -80,4 +80,58 @@ public interface AngleAPI {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 角度数据id
+     * @return
+     * @throws SerException
+     */
+    default AngleBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 角度数据id
+     * @return
+     * @throws SerException
+     */
+    default AngleBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 开启
+     *
+     * @param id 角度数据id
+     * @return
+     * @throws SerException
+     */
+    default AngleBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 角度数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<AngleBO> maps(AngleDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

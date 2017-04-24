@@ -8,12 +8,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 岗位详细操作
@@ -39,9 +42,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findStatus")
-    public Result findStatus() throws ActException {
+    public Result findStatus(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findStatus(), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -55,9 +58,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findByPostIds")
-    public Result findByPostIds(String[] ids) throws ActException {
+    public Result findByPostIds(String[] ids, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findByPostIds(ids), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findByPostIds(ids), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -71,9 +74,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findByPostId")
-    public Result findByPostId(String id) throws ActException {
+    public Result findByPostId(String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findByPostId(id), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findByPostId(id), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -87,9 +90,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findChild")
-    public Result findChild(String parentId) throws ActException {
+    public Result findChild(String parentId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findChild(parentId), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findChild(parentId), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -103,9 +106,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findParent")
-    public Result findParent(String postId) throws ActException {
+    public Result findParent(String postId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findParent(postId), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findParent(postId), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -119,9 +122,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findChildByArrangement")
-    public Result findChildByArrangement(String postId) throws ActException {
+    public Result findChildByArrangement(String postId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findChildByArrangement(postId), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findChildByArrangement(postId), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -135,9 +138,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findParentByArrangement")
-    public Result findParentByArrangement(String postId) throws ActException {
+    public Result findParentByArrangement(String postId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findParentByArrangement(postId), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findParentByArrangement(postId), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -151,9 +154,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @GetMapping("v1/findBOById")
-    public Result findBOById(String id) throws ActException {
+    public Result findBOById(String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findBOById(id), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findBOById(id), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -167,9 +170,9 @@ public class PositionDetailAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) PositionDetailTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) PositionDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.save(to), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.save(to), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -184,9 +187,72 @@ public class PositionDetailAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) PositionDetailTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) PositionDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.update(to), PositionDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.update(to), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位详细数据id
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.delete(id), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位详细数据传输
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(PositionDetailDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.maps(dto), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(positionDetailAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID查询岗位详细
+     *
+     * @param id
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findBOById(id), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

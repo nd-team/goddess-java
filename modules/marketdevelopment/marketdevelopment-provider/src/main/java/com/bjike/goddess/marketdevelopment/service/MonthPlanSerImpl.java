@@ -43,7 +43,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
      * 转换月计划传输对象
      *
      * @param entity 月计划实体
-     * @return
+     * @returnz
      */
     private MonthPlanBO transformBO(MonthPlan entity) {
         MonthPlanBO bo = BeanTransform.copyProperties(entity, MonthPlanBO.class);
@@ -109,7 +109,13 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public MonthPlanBO delete(MonthPlanTO to) throws SerException {
         MonthPlan entity = super.findById(to.getId());
-        super.remove(entity);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
         return this.transformBO(entity);
     }
 
@@ -126,8 +132,12 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         List<String> yearPlanIdList = yearPlanSer.findByYear(year).stream().map(YearPlanBO::getId).collect(Collectors.toList());
         if (yearPlanIdList.size() == 0)
             return new ArrayList<>(0);
+        StringBuilder sb = new StringBuilder("");
+        for (String id : yearPlanIdList) {
+            sb.append("'").append(id).append("',");
+        }
         MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.in("year.id", yearPlanIdList.toArray(new String[0])));
+        dto.getConditions().add(Restrict.in("year.id", StringUtils.substringBeforeLast(sb.toString(), ",")));
         List<MonthPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

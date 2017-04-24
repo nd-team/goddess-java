@@ -47,7 +47,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, MarketChannelBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -58,6 +58,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Override
     public MarketChannelBO delete(MarketChannelTO to) throws SerException {
         MarketChannel entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, MarketChannelBO.class);
     }

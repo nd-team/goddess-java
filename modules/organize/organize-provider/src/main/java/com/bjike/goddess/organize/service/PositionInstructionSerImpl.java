@@ -11,6 +11,7 @@ import com.bjike.goddess.organize.entity.Operate;
 import com.bjike.goddess.organize.entity.PositionInstruction;
 import com.bjike.goddess.organize.entity.Reflect;
 import com.bjike.goddess.organize.to.PositionInstructionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,7 +117,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class);
         instruction.setCreateTime(LocalDateTime.now());
         super.save(this.setForeign(instruction, to));
-        return BeanTransform.copyProperties(instruction, PositionInstructionBO.class);
+        return this.transformToBO(instruction);
     }
 
     /**
@@ -142,9 +143,38 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionInstructionBO update(PositionInstructionTO to) throws SerException {
-        PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class), entity = super.findById(to.getId());
-        instruction.setCreateTime(entity.getCreateTime());
-        super.update(this.setForeign(instruction, to));
-        return BeanTransform.copyProperties(instruction, PositionInstructionBO.class);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        PositionInstruction entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(this.setForeign(entity, to));
+        return this.transformToBO(entity);
+    }
+
+    @Override
+    public PositionInstructionBO delete(String id) throws SerException {
+        PositionInstruction entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return this.transformToBO(entity);
+    }
+
+    @Override
+    public List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
+        dto.getSorts().add("position_id=asc");
+        return this.transformToBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PositionInstructionBO getById(String id) throws SerException {
+        return this.transformToBO(super.findById(id));
     }
 }

@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 模块类型
  *
@@ -28,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("moduletype")
-public class ModuleTypeAction {
+public class ModuleTypeAct {
 
     @Autowired
     private ModuleTypeAPI moduleTypeAPI;
@@ -41,9 +43,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ModuleTypeTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) ModuleTypeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.save(to), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.save(to), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) ModuleTypeTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) ModuleTypeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.update(to), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.update(to), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.delete(id), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.delete(id), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @PatchMapping("v1/congeal/{id}")
-    public Result congeal(@PathVariable String id) throws ActException {
+    public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.congeal(id), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.congeal(id), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @PatchMapping("v1/thaw/{id}")
-    public Result thaw(@PathVariable String id) throws ActException {
+    public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.thaw(id), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.thaw(id), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @GetMapping("v1/findByStatus")
-    public Result findByStatus(Status status) throws ActException {
+    public Result findByStatus(Status status, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(status), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(status), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -136,9 +138,9 @@ public class ModuleTypeAction {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findByStatus(Status.THAW), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -153,9 +155,39 @@ public class ModuleTypeAction {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(ModuleTypeDTO dto) throws ActException {
+    public Result maps(ModuleTypeDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.maps(dto), ModuleTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.maps(dto), ModuleTypeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(moduleTypeAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID查询模块类型
+     *
+     * @param id
+     * @return class ModuleTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findById(id), ModuleTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

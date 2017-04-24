@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 年计划
  *
@@ -41,9 +43,9 @@ public class YearPlanAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) YearPlanTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) YearPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.save(to), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.save(to), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class YearPlanAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) YearPlanTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) YearPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.update(to), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.update(to), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class YearPlanAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(YearPlanTO to) throws ActException {
+    public Result delete(YearPlanTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.delete(to), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.delete(to), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,9 +90,9 @@ public class YearPlanAct {
      * @version v1
      */
     @GetMapping("v1/findThisYear")
-    public Result findThisYear() throws ActException {
+    public Result findThisYear(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findThisYear(), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findThisYear(), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,9 +106,9 @@ public class YearPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByYear")
-    public Result findByYear(int year) throws ActException {
+    public Result findByYear(int year, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findByYear(year), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.findByYear(year), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -120,9 +122,9 @@ public class YearPlanAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getById(id), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getById(id), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,9 +139,9 @@ public class YearPlanAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(YearPlanDTO dto) throws ActException {
+    public Result maps(YearPlanDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.maps(dto), YearPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.maps(dto), YearPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -166,9 +168,9 @@ public class YearPlanAct {
      * @version v1
      */
     @GetMapping("v1/getChoice")
-    public Result getChoice() throws ActException {
+    public Result getChoice(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getChoice(), YearPlanChoiceVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.getChoice(), YearPlanChoiceVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

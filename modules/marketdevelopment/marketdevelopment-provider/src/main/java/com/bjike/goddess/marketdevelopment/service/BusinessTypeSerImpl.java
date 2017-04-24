@@ -50,7 +50,7 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -83,7 +83,13 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Override
     public BusinessTypeBO delete(BusinessTypeTO to) throws SerException {
         BusinessType entity = super.findById(to.getId());
-        super.remove(entity);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
         return BeanTransform.copyProperties(entity, BusinessTypeBO.class);
     }
 

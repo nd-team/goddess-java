@@ -2,11 +2,14 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
+import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.service.PositionDetailSer;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,5 +76,26 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     @Override
     public PositionDetailBO update(PositionDetailTO to) throws SerException {
         return positionDetailSer.update(to);
+    }
+
+    @Override
+    public List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return positionDetailSer.transformationToBOList(list);
+    }
+
+    @Override
+    public PositionDetailBO delete(String id) throws SerException {
+        return positionDetailSer.delete(id);
+    }
+
+    @Override
+    public List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
+        return positionDetailSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        return positionDetailSer.count(dto);
     }
 }

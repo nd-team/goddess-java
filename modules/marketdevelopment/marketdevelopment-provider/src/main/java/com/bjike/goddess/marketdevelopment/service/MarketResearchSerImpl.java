@@ -59,6 +59,8 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
     @Override
     public MarketResearchBO delete(MarketResearchTO to) throws SerException {
         MarketResearch entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, MarketResearchBO.class);
     }

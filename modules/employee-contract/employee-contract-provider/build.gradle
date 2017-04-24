@@ -28,7 +28,7 @@ sourceSets {
 dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
-    compile project(":modules:employeecontract:employeecontract-api")
+    compile project(":modules:employee-contract:employee-contract-api")
     compile project(":modules:user:user-api")
     compile project(":common:common-utils")
 }

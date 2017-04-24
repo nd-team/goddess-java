@@ -2,7 +2,10 @@ package com.bjike.goddess.employeecontract.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.employeecontract.bo.*;
+import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
+import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
+import com.bjike.goddess.employeecontract.bo.ContractManageBO;
+import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
 import com.bjike.goddess.employeecontract.entity.ContractManage;
 import com.bjike.goddess.employeecontract.to.ContractChangeTO;
@@ -139,16 +142,6 @@ public interface ContractManageSer extends Ser<ContractManage, ContractManageDTO
      * @throws SerException
      */
     default Long getInfoTotal() throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取合同信息列表总条数
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<ContractManageChoiceBO> getChoice() throws SerException {
         return null;
     }
 

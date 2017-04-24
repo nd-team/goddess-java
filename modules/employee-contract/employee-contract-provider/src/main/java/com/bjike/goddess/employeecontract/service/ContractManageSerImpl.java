@@ -1,10 +1,15 @@
 package com.bjike.goddess.employeecontract.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.employeecontract.bo.*;
+import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
+import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
+import com.bjike.goddess.employeecontract.bo.ContractManageBO;
+import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
+import com.bjike.goddess.employeecontract.entity.ContractChange;
 import com.bjike.goddess.employeecontract.entity.ContractManage;
 import com.bjike.goddess.employeecontract.to.ContractChangeTO;
 import com.bjike.goddess.employeecontract.to.ContractInfoTO;
@@ -151,37 +156,48 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
 
     @Override
     public List<ContractPersonalBO> personalMaps(ContractManageDTO dto) throws SerException {
-
-        return null;
+        dto.getSorts().add("status=asc");
+        dto.getSorts().add("username=desc");
+        List<ContractManage> list = super.findByPage(dto);
+        return BeanTransform.copyProperties(list, ContractPersonalBO.class);
     }
 
     @Override
     public List<ContractInfoBO> infoMaps(ContractManageDTO dto) throws SerException {
-        return null;
+        dto.getSorts().add("status=asc");
+        dto.getSorts().add("serialNumber=desc");
+        List<ContractManageBO> list = this.transformBOList(super.findByPage(dto));
+        return BeanTransform.copyProperties(list, ContractInfoBO.class);
     }
 
     @Override
     public Long getPersonalTotal() throws SerException {
-        return null;
+        ContractManageDTO dto = new ContractManageDTO();
+        return super.count(dto);
     }
 
     @Override
     public Long getInfoTotal() throws SerException {
-        return null;
-    }
-
-    @Override
-    public List<ContractManageChoiceBO> getChoice() throws SerException {
-        return null;
+        ContractManageDTO dto = new ContractManageDTO();
+        return super.count(dto);
     }
 
     @Override
     public List<ContractManageBO> findStatus() throws SerException {
-        return null;
+        ContractManageDTO dto = new ContractManageDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Boolean.TRUE));
+        List<ContractManage> list = super.findByCis(dto);
+        return this.transformBOList(list);
     }
 
     @Override
     public ContractChangeBO saveChange(ContractChangeTO to) throws SerException {
-        return null;
+        ContractChange entity = BeanTransform.copyProperties(to, ContractChange.class, true);
+        entity.setContract(super.findById(to.getId()));
+        if (null == entity.getContract())
+            throw new SerException("合同信息数据对象不存在");
+        entity.setId(null);
+        contractChangeSer.save(entity);
+        return contractChangeSer.transformBO(entity);
     }
 }

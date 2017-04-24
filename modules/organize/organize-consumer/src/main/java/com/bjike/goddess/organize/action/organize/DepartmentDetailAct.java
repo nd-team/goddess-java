@@ -8,12 +8,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 部门详细操作
@@ -39,9 +42,9 @@ public class DepartmentDetailAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) DepartmentDetailTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) DepartmentDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.save(to), DepartmentDetailVO.class);
+            DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.save(to), DepartmentDetailVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -56,9 +59,9 @@ public class DepartmentDetailAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DepartmentDetailTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) DepartmentDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.update(to), DepartmentDetailVO.class);
+            DepartmentDetailVO vo = BeanTransform.copyProperties(departmentDetailAPI.update(to), DepartmentDetailVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -72,9 +75,72 @@ public class DepartmentDetailAct {
      * @version v1
      */
     @GetMapping("v1/findStatus")
-    public Result findStatus() throws ActException {
+    public Result findStatus(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findStatus(), DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 部门项目组数据id
+     * @return class  DepartmentDetailVO
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.delete(id), DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 部门项目组数据传输
+     * @return class  DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(DepartmentDetailDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.view(dto), DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(departmentDetailAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID查询部门项目组
+     *
+     * @param id
+     * @return class  DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.getById(id), DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

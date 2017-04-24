@@ -1,7 +1,9 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.OperateBO;
+import com.bjike.goddess.organize.dto.OperateDTO;
 import com.bjike.goddess.organize.service.OperateSer;
 import com.bjike.goddess.organize.to.OperateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +39,36 @@ public class OperateApiImpl implements OperateAPI {
     @Override
     public OperateBO update(OperateTO to) throws SerException {
         return operateSer.update(to);
+    }
+
+    @Override
+    public OperateBO delete(String id) throws SerException {
+        return operateSer.delete(id);
+    }
+
+    @Override
+    public OperateBO close(String id) throws SerException {
+        return operateSer.close(id);
+    }
+
+    @Override
+    public OperateBO open(String id) throws SerException {
+        return operateSer.open(id);
+    }
+
+    @Override
+    public List<OperateBO> maps(OperateDTO dto) throws SerException {
+        return operateSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        OperateDTO dto = new OperateDTO();
+        return operateSer.count(dto);
+    }
+
+    @Override
+    public OperateBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(operateSer.findById(id), OperateBO.class);
     }
 }

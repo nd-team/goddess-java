@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 天计划
  *
@@ -41,9 +43,9 @@ public class DayPlanAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(DayPlanDTO dto) throws ActException {
+    public Result maps(DayPlanDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.maps(dto), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.maps(dto), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class DayPlanAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) DayPlanTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) DayPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.save(to), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.save(to), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class DayPlanAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DayPlanTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) DayPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.update(to), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.update(to), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class DayPlanAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(DayPlanTO to) throws ActException {
+    public Result delete(DayPlanTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.delete(to), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.delete(to), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -106,9 +108,9 @@ public class DayPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByDateCycle")
-    public Result findByDate(String start, String end) throws ActException {
+    public Result findByDate(String start, String end, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(start, end), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(start, end), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -122,9 +124,9 @@ public class DayPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByDate")
-    public Result findByDate(String date) throws ActException {
+    public Result findByDate(String date, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(date), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.findByDate(date), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class DayPlanAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.getById(id), DayPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dayPlanAPI.getById(id), DayPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

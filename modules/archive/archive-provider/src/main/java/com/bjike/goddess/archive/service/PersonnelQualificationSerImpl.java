@@ -90,7 +90,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
                 entity.setSocial(socialSecurityTypeSer.findById(to.getSocial_id()));
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

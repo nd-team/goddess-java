@@ -93,6 +93,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Override
     public BusinessCourseBO congeal(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return this.transformBO(entity);
@@ -102,6 +104,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Override
     public BusinessCourseBO thaw(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return this.transformBO(entity);
@@ -111,7 +115,13 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Override
     public BusinessCourseBO delete(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = super.findById(to.getId());
-        super.remove(entity);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
         return this.transformBO(entity);
     }
 

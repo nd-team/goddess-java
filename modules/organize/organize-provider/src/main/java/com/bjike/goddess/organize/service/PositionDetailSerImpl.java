@@ -7,15 +7,18 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
+import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.dto.PositionDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,7 +141,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         positionDetail.setDepartment(departmentDetailSer.findById(to.getDepartment_id()));
         positionDetail.setArrangement(arrangementSer.findById(to.getArrangement_id()));
         positionDetail.setModule(moduleTypeSer.findById(to.getModule_id()));
-        positionDetail.setCreateTime(LocalDateTime.now());
         super.save(positionDetail);
         return this.transformationToBO(positionDetail);
     }
@@ -146,12 +148,36 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO update(PositionDetailTO to) throws SerException {
-        PositionDetail entity = BeanTransform.copyProperties(to, PositionDetail.class, true), positionDetail = super.findById(to.getId());
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        PositionDetail entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setDepartment(departmentDetailSer.findById(to.getDepartment_id()));
         entity.setArrangement(arrangementSer.findById(to.getArrangement_id()));
-        positionDetail.setModule(moduleTypeSer.findById(to.getModule_id()));
-        entity.setCreateTime(positionDetail.getCreateTime());
+        entity.setModule(moduleTypeSer.findById(to.getModule_id()));
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, PositionBO.class);
+        return this.transformationToBO(entity);
+    }
+
+    @Override
+    public PositionDetailBO delete(String id) throws SerException {
+        PositionDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("数据对象不能为空");
+        }
+        return this.transformationToBO(entity);
+    }
+
+    @Override
+    public List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
+        dto.getSorts().add("department_id=asc");
+        return this.transformationToBOList(super.findByPage(dto));
     }
 }

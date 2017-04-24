@@ -47,7 +47,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -58,6 +58,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
         DemandAnalysis entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
     }

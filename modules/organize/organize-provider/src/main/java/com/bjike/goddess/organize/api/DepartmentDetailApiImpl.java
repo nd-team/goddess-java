@@ -65,4 +65,20 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
         return departmentDetailSer.update(to);
     }
+
+    @Override
+    public DepartmentDetailBO delete(String id) throws SerException {
+        return departmentDetailSer.delete(id);
+    }
+
+    @Override
+    public DepartmentDetailBO getById(String id) throws SerException {
+        return departmentDetailSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        return departmentDetailSer.count(dto);
+    }
 }

@@ -46,7 +46,7 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, ModuleTypeBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -56,7 +56,13 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
     @Override
     public ModuleTypeBO delete(String id) throws SerException {
         ModuleType entity = super.findById(id);
-        super.remove(entity);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
         return BeanTransform.copyProperties(entity, ModuleTypeBO.class);
     }
 

@@ -57,4 +57,49 @@ public interface PositionInstructionAPI {
     default PositionInstructionBO update(PositionInstructionTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionInstructionBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位说明书数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询岗位说明书数据
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionInstructionBO findById(String id) throws SerException {
+        return null;
+    }
+
+
 }

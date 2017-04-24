@@ -13,6 +13,7 @@ import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import com.bjike.goddess.user.api.DepartmentAPI;
 import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     private DepartmentAPI departmentAPI;
 
     private DepartmentDetailBO transformationToBO(DepartmentDetail entity) throws SerException {
-        DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class, true);
+        DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class);
         bo.setDepartment_id(entity.getDepartment_id());
         bo.setHierarchy_id(entity.getHierarchy().getId());
 //        DepartmentBO department = departmentAPI.findById(bo.getDepartment_id());
@@ -120,9 +121,35 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
-        DepartmentDetail entity = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        DepartmentDetail entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setHierarchy(hierarchySer.findById(to.getHierarchy_id()));
+        if (entity.getHierarchy() == null)
+            throw new SerException("体系不能为空");
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformationToBO(entity);
+    }
+
+    @Override
+    public DepartmentDetailBO delete(String id) throws SerException {
+        DepartmentDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return null;
+    }
+
+    @Override
+    public DepartmentDetailBO getById(String id) throws SerException {
+        return this.transformationToBO(super.findById(id));
     }
 }
