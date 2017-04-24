@@ -1,25 +1,14 @@
-模块名:dimission
-类名:HandoverReference
-作者:dengjunren
-描述:交接信息参考
+模块名:materialinstorage
+类名:StockWarning
+作者:sunfengtao
+描述:库存预警
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String cycle 当前工作范围;
-String purpose 当前工作目的;
-String authority 当前工作范围的权限;
-String material 当前工作资料;
-String detail 文件内容明细;
-String storage 文件存储路径;
-String handoverType 任务交接类型;
-String handoverDetail 任务交接内容明细;
-String handoverModel 设备交接型号;
-String handoverContent 设备交接内容;
-String handoverStorage 设备交接存储内容;
-String stockType 股权或期权交接类型;
-String stockContent 股权或期权交接内容;
-String suppliesType 办公用品交接类型;
-String suppliesContent 办公用品交接内容;
+String area 地区;
+Double lowerValue 下限值;
+Double upperValue 上限值;
+String materialType 物资类型;
 )
