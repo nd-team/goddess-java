@@ -240,4 +240,8 @@ include ':modules:dispatchcar:dispatchcar-provider'
 include ':modules:dimission:dimission-api'
 include ':modules:dimission:dimission-consumer'
 include ':modules:dimission:dimission-provider'
+//#businsurance 商业保险tanghaixiang
+include ':modules:businsurance:businsurance-api'
+include ':modules:businsurance:businsurance-consumer'
+include ':modules:businsurance:businsurance-provider'
 
