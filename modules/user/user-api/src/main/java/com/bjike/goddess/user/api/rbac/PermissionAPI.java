@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public interface PermissionAPI {
      * @param id 组id
      * @return
      */
-    default List<PermissionTreeBO> treeData(String id) throws SerException {
+    default List<PermissionBO> treeData(String id) throws SerException {
         return null;
     }
 

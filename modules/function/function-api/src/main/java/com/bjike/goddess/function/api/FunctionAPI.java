@@ -2,7 +2,6 @@ package com.bjike.goddess.function.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.function.bo.FunctionBO;
-import com.bjike.goddess.function.entity.Function;
 import com.bjike.goddess.function.enums.FunctionType;
 import com.bjike.goddess.function.to.FunctionTO;
 
@@ -39,6 +38,16 @@ public interface FunctionAPI {
     }
 
     /**
+     * 开关功能
+     *
+     * @param id
+     * @param enable
+     */
+    default void enable(String id, Boolean enable) throws SerException {
+
+    }
+
+    /**
      * 删除功能
      *
      * @param id
@@ -52,7 +61,7 @@ public interface FunctionAPI {
      *
      * @return
      */
-    default List<FunctionBO> list(FunctionType type)throws SerException {
+    default List<FunctionBO> list(FunctionType type) throws SerException {
         return null;
     }
 
@@ -61,7 +70,7 @@ public interface FunctionAPI {
      *
      * @return
      */
-    default List<FunctionBO> userFunctions()throws SerException {
+    default List<FunctionBO> userFunctions() throws SerException {
         return null;
     }
 

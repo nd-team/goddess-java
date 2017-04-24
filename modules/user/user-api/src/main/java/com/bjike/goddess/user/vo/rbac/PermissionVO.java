@@ -12,14 +12,13 @@ package com.bjike.goddess.user.vo.rbac;
  */
 public class PermissionVO {
     /**
-     * id
-     */
-    private String id;
-
-    /**
-     * 部门名
+     * 认证名
      */
     private String name;
+    /**
+     * 认证资源
+     */
+    private String resource;
 
     /**
      * 描述
@@ -30,12 +29,26 @@ public class PermissionVO {
      */
     private String createTime;
 
+    /**
+     * 是否有子节点
+     */
+    private Boolean hasChild;
+
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
     public String getDescription() {
@@ -54,11 +67,11 @@ public class PermissionVO {
         this.createTime = createTime;
     }
 
-    public String getId() {
-        return id;
+    public Boolean getHasChild() {
+        return hasChild;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

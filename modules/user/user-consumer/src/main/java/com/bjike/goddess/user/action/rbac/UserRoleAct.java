@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.UserRoleAPI;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @DefaultProperties
 @RestController
 @RequestMapping("user-role")
@@ -40,6 +42,7 @@ public class UserRoleAct {
      *
      * @param userRoleTO 用户角色信息
      * @return class UserRoleVO
+     * @userToken yes
      * @version v1
      */
     @PostMapping("v1/add")

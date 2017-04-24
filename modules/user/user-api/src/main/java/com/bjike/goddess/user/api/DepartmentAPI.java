@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.DepartmentBO;
-import com.bjike.goddess.user.bo.DepartmentTreeBO;
 import com.bjike.goddess.user.to.DepartmentTO;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public interface DepartmentAPI {
      * @param id 组id
      * @return
      */
-    default List<DepartmentTreeBO> treeData(String id) throws SerException {
+    default List<DepartmentBO> treeData(String id) throws SerException {
         return null;
     }
 

@@ -15,21 +15,32 @@ public class DepartmentVO {
      * id
      */
     private String id;
-
-
     /**
      * 部门名
      */
     private String name;
-
     /**
      * 描述
      */
     private String description;
+
     /**
      * 创建时间
      */
     private String createTime;
+
+    /**
+     * 是否有子节点
+     */
+    private String hasChild;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -55,11 +66,11 @@ public class DepartmentVO {
         this.createTime = createTime;
     }
 
-    public String getId() {
-        return id;
+    public String getHasChild() {
+        return hasChild;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setHasChild(String hasChild) {
+        this.hasChild = hasChild;
     }
 }

@@ -36,6 +36,11 @@ public class FunctionApiImpl implements FunctionAPI {
     }
 
     @Override
+    public void enable(String id, Boolean enable) throws SerException {
+        functionSer.enable(id,enable);
+    }
+
+    @Override
     public void delete(String id) throws SerException {
         functionSer.delete(id);
     }

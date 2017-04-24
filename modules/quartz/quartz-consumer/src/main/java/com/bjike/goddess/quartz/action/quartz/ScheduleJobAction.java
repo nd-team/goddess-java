@@ -8,12 +8,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.api.ScheduleJobAPI;
+import com.bjike.goddess.quartz.dto.ScheduleJobDTO;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.quartz.vo.ScheduleJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 任务调度
@@ -30,6 +33,39 @@ public class ScheduleJobAction {
 
     @Autowired
     private ScheduleJobAPI scheduleJobAPI;
+
+    /**
+     * 任务调度列表
+     *
+     * @param dto
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(ScheduleJobDTO dto) throws ActException {
+        try {
+            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class);
+            return ActResult.initialize(scheduleJobVOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 任务调度列表
+     *
+     * @param dto
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ScheduleJobDTO dto) throws ActException {
+        try {
+            Long count = scheduleJobAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 添加任务调度
