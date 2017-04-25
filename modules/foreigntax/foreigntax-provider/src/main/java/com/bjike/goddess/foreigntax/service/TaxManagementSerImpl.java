@@ -54,7 +54,7 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         TaxManagement taxManagement = BeanTransform.copyProperties(taxManagementTO,TaxManagement.class,true);
         if(taxManagement.getPaymentStatus().equals(PaymentStatus.DIDPAY)){
             taxManagement.setCompany(taxManagementTO.getCompany());
-            taxManagement.setMonth(taxManagementTO.getMonth());
+            taxManagement.setMonth(LocalDate.parse(taxManagementTO.getMonth()));
             taxManagement.setTaxType(taxManagementTO.getTaxType());
             taxManagement.setRate(taxManagement.getRate());
             taxManagement.setTax(taxManagement.getTax());
@@ -114,7 +114,7 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
                     || taxManagement.getMonth().equals(month)){
                 company = taxManagement.getCompany();
                 taxType = taxManagement.getTaxType();
-                month  = taxManagement.getMonth();
+                month  = String.valueOf(taxManagement.getMonth());
                 TaxCollectBO taxCollectBO = BeanTransform.copyProperties(taxManagement,TaxCollectBO.class,true);
                 List<TaxManagement> taxManagements = list.stream()
                         .filter(d -> d.getCompany().equals(taxManagement.getCompany()) && d.getTaxType().equals(taxManagement.getTaxType())
