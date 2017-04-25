@@ -42,37 +42,37 @@ public class BidOpeningInfo extends BaseEntity {
     /**
      * 委托人
      */
-    @Column(name = "principal", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '委托人'")
+    @Column(name = "principal", columnDefinition = "VARCHAR(255)   COMMENT '委托人'")
     private String principal;
 
     /**
      * 记录人
      */
-    @Column(name = "recorder", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '记录人'")
+    @Column(name = "recorder", columnDefinition = "VARCHAR(255)   COMMENT '记录人'")
     private String recorder;
 
     /**
      * 竞争公司
      */
-    @Column(name = "competitive", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '竞争公司'")
+    @Column(name = "competitive", columnDefinition = "VARCHAR(255)   COMMENT '竞争公司'")
     private String competitive;
 
     /**
      * 地市
      */
-    @Column(name = "cities", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地市'")
+    @Column(name = "cities", columnDefinition = "VARCHAR(255)   COMMENT '地市'")
     private String cities;
 
     /**
      * 竞争公司报价
      */
-    @Column(name = "competitivePrice", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '竞争公司报价'")
+    @Column(name = "competitivePrice", columnDefinition = "VARCHAR(255)   COMMENT '竞争公司报价'")
     private String competitivePrice;
 
     /**
      * 比率(%)
      */
-    @Column(name = "ratio", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '比率(%)'")
+    @Column(name = "ratio", columnDefinition = "VARCHAR(255)   COMMENT '比率(%)'")
     private String ratio;
 
 

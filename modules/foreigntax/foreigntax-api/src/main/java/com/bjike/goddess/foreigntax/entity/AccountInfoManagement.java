@@ -3,6 +3,7 @@ package com.bjike.goddess.foreigntax.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -27,8 +28,8 @@ public class AccountInfoManagement extends BaseEntity {
     /**
      * 所属月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属月份'")
-    private String month;
+    @Column(name = "month", columnDefinition = "DATE   COMMENT '所属月份'")
+    private LocalDate month;
 
     /**
      * 资料名称
@@ -51,11 +52,11 @@ public class AccountInfoManagement extends BaseEntity {
         this.company = company;
     }
 
-    public String getMonth() {
+    public LocalDate getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(LocalDate month) {
         this.month = month;
     }
 
