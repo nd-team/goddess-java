@@ -29,7 +29,7 @@ public class TenderInfo extends BaseEntity {
     /**
      * 资格要求
      */
-    @Column(name = "eligibilityRequirements", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '资格要求'")
+    @Column(name = "eligibilityRequirements", columnDefinition = "VARCHAR(255)   COMMENT '资格要求'")
     private String eligibilityRequirements;
 
     /**
@@ -41,67 +41,67 @@ public class TenderInfo extends BaseEntity {
     /**
      * 同类项目经验
      */
-    @Column(name = "experienceProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '同类项目经验'")
+    @Column(name = "experienceProject", columnDefinition = "VARCHAR(255)   COMMENT '同类项目经验'")
     private String experienceProject;
 
     /**
      * 主营业务收入
      */
-    @Column(name = "mainBusinessIncome", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '主营业务收入'")
+    @Column(name = "mainBusinessIncome", columnDefinition = "VARCHAR(255)   COMMENT '主营业务收入'")
     private String mainBusinessIncome;
 
     /**
      * 专业资质认证
      */
-    @Column(name = "professionalQualificationCertification", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '专业资质认证'")
+    @Column(name = "professionalQualificationCertification", columnDefinition = "VARCHAR(255)   COMMENT '专业资质认证'")
     private String professionalQualificationCertification;
 
     /**
      * 管理体系认证
      */
-    @Column(name = "managementSystemCertification", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '管理体系认证'")
+    @Column(name = "managementSystemCertification", columnDefinition = "VARCHAR(255)   COMMENT '管理体系认证'")
     private String managementSystemCertification;
 
     /**
      * 项目经理素质
      */
-    @Column(name = "projectManagerQuality", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目经理素质'")
+    @Column(name = "projectManagerQuality", columnDefinition = "VARCHAR(255)   COMMENT '项目经理素质'")
     private String projectManagerQuality;
 
     /**
      * 团队成员素质
      */
-    @Column(name = "teamMembersQuality", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '团队成员素质'")
+    @Column(name = "teamMembersQuality", columnDefinition = "VARCHAR(255)   COMMENT '团队成员素质'")
     private String teamMembersQuality;
 
     /**
      * 资源投入
      */
-    @Column(name = "resourcesInto", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '资源投入'")
+    @Column(name = "resourcesInto", columnDefinition = "VARCHAR(255)   COMMENT '资源投入'")
     private String resourcesInto;
 
     /**
      * 技术方案
      */
-    @Column(name = "technicalSolution", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '技术方案'")
+    @Column(name = "technicalSolution", columnDefinition = "VARCHAR(255)   COMMENT '技术方案'")
     private String technicalSolution;
 
     /**
      * 额外承诺
      */
-    @Column(name = "additionalCommitments", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '额外承诺'")
+    @Column(name = "additionalCommitments", columnDefinition = "VARCHAR(255)   COMMENT '额外承诺'")
     private String additionalCommitments;
 
     /**
      * 补充资料
      */
-    @Column(name = "additionalInformation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '补充资料'")
+    @Column(name = "additionalInformation", columnDefinition = "VARCHAR(255)   COMMENT '补充资料'")
     private String additionalInformation;
 
     /**
      * 经济分册
      */
-    @Column(name = "economicVolume", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '经济分册'")
+    @Column(name = "economicVolume", columnDefinition = "VARCHAR(255)   COMMENT '经济分册'")
     private String economicVolume;
 
 

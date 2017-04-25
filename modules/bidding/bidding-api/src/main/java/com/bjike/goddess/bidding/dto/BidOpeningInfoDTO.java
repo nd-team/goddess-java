@@ -17,7 +17,7 @@ public class BidOpeningInfoDTO extends BaseDTO {
     /**
      * 竞争公司
      */
-    private String[] competitive;
+    private String competitive;
     /**
      * 开始日期
      */
@@ -43,11 +43,11 @@ public class BidOpeningInfoDTO extends BaseDTO {
         this.endDate = endDate;
     }
 
-    public String[] getCompetitive() {
+    public String getCompetitive() {
         return competitive;
     }
 
-    public void setCompetitive(String[] competitive) {
+    public void setCompetitive(String competitive) {
         this.competitive = competitive;
     }
 }

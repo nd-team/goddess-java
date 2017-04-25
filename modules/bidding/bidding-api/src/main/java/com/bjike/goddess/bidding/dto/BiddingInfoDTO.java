@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 
+
 /**
  * 招标信息数据传输对象
  *
@@ -14,14 +15,14 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class BiddingInfoDTO extends BaseDTO {
     /**
-     * 招投标类型
+     * 网站名称
      */
-    private String biddingType;
+    private String webName;
 
     /**
-     * 业务类型
+     * 网址
      */
-    private String businessType;
+    private String url;
 
     /**
      * 省份
@@ -33,20 +34,21 @@ public class BiddingInfoDTO extends BaseDTO {
      */
     private String cities;
 
-    public String getBiddingType() {
-        return biddingType;
+
+    public String getWebName() {
+        return webName;
     }
 
-    public void setBiddingType(String biddingType) {
-        this.biddingType = biddingType;
+    public void setWebName(String webName) {
+        this.webName = webName;
     }
 
-    public String getBusinessType() {
-        return businessType;
+    public String getUrl() {
+        return url;
     }
 
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getProvinces() {

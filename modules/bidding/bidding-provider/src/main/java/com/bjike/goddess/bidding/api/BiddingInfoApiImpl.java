@@ -26,6 +26,10 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     private BiddingInfoSer biddingInfoSer;
 
     @Override
+    public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        return biddingInfoSer.countBiddingInfo(biddingInfoDTO);
+    }
+    @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         return biddingInfoSer.insertBiddingInfo(biddingInfoTO);
     }
@@ -51,8 +55,8 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     }
 
     @Override
-    public BiddingInfoBO search(String webName, String url, String provinces, String cities) throws SerException {
-        return biddingInfoSer.search(webName, url, provinces, cities);
+    public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        return biddingInfoSer.searchBiddingInfo(biddingInfoDTO);
     }
 
     @Override

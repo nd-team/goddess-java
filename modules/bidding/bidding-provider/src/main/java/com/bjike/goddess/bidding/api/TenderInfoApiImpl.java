@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.entity.TenderInfo;
+import com.bjike.goddess.bidding.service.TenderInfoSer;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,41 +23,45 @@ import java.util.List;
 @Service("tenderInfoApiImpl")
 public class TenderInfoApiImpl implements TenderInfoAPI {
     @Autowired
-    private TenderInfoAPI tenderInfoAPI;
+    private TenderInfoSer tenderInfoSer;
 
+    @Override
+    public Long countTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
+        return tenderInfoSer.countTenderInfo(tenderInfoDTO);
+    }
     public TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
-        return tenderInfoAPI.insertTenderInfo(tenderInfoTO);
+        return tenderInfoSer.insertTenderInfo(tenderInfoTO);
     }
 
     @Override
     public TenderInfoBO editTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
-        return tenderInfoAPI.editTenderInfo(tenderInfoTO);
+        return tenderInfoSer.editTenderInfo(tenderInfoTO);
     }
 
     @Override
     public void removeTenderInfo(String id) throws SerException {
-        tenderInfoAPI.removeTenderInfo(id);
+        tenderInfoSer.removeTenderInfo(id);
     }
 
     @Override
     public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
-        return tenderInfoAPI.findListTenderInfo(tenderInfoDTO);
+        return tenderInfoSer.findListTenderInfo(tenderInfoDTO);
     }
 
     @Override
     public String exportExcel(String projectName) throws SerException {
-        return tenderInfoAPI.exportExcel(projectName);
+        return tenderInfoSer.exportExcel(projectName);
     }
 
     @Override
     public void upload() throws SerException {
-        tenderInfoAPI.upload();
+        tenderInfoSer.upload();
 
     }
 
     @Override
     public void uploadAttachments() throws SerException {
-        tenderInfoAPI.uploadAttachments();
+        tenderInfoSer.uploadAttachments();
     }
 
 }
