@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.storage.bo.FileBO;
@@ -276,6 +277,38 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         return getFileBo(files, module, PathCommon.RECYCLE_PATH);
     }
 
+    @Override
+    public FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException {
+
+        String module = storageUserAPI.getCurrentModule(); //网盘登录用户
+        String realPath = getRealPath(path); //真实目录
+        String userId = userAPI.currentUser().getId();
+
+        String filePath = realPath + PathCommon.SEPARATOR + fileName; //文件保存目录
+        java.io.File file = null;
+        File myFile = null ;
+        if (!new java.io.File(filePath).exists()) {
+
+            file = FileUtils.byteToFile(bytes, realPath, fileName);
+            //保存到数据库
+            myFile = new File();
+            myFile.setName(fileName);
+            myFile.setSize(FileUtils.getFileSize(file));
+            myFile.setModifyTime(DateUtil.parseTime(file.lastModified()));
+            if (path.equals("/")) {
+                path = "";
+            }
+            myFile.setPath(getDbFilePath(file)); //保存路径为模块起始
+            myFile.setModule(module);
+            myFile.setUserId(userId);
+            myFile.setFileType(FileUtils.getFileType(file));
+            super.save(myFile);
+        }else{
+            throw new SerException("该文件已经存在!");
+        }
+        return  BeanTransform.copyProperties(myFile,FileBO.class);
+    }
+
     /**
      * 通过文件信息查询数据库保存的相应数据
      *
@@ -337,7 +370,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
      * @param path 模块用户path为文件短路径不带模块名前缀，系统用户则带模块前缀
      * @return
      */
-    private String getRealPath(String path) throws SerException {
+    @Override
+    public String getRealPath(String path) throws SerException {
         String realPath = null;
         String module = storageUserAPI.getCurrentModule(); //网盘登录用户
         if (path.equals("/")) {

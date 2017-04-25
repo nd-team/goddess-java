@@ -88,4 +88,14 @@ public class FileApiImpl implements FileAPI {
     public List<FileBO> recycleList(String path) throws SerException {
         return fileSer.recycleList(path);
     }
+
+    @Override
+    public FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException {
+        return fileSer.uploadSingle(bytes, path, fileName);
+    }
+
+    @Override
+    public String getRealPath(String path) throws SerException {
+        return fileSer.getRealPath(path);
+    }
 }
