@@ -255,4 +255,10 @@ include ':modules:materialinstock:materialinstock-api'
 include ':modules:materialinstock:materialinstock-consumer'
 include ':modules:materialinstock:materialinstock-provider'
 
+//#materialreceive 物资领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
+
+
 
