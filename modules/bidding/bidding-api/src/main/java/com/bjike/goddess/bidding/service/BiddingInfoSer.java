@@ -20,10 +20,16 @@ import java.util.List;
  */
 public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     /**
-     * 获取所有招标信息
+     * 招标信息列表总条数
+     */
+    default Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 招标信息
      *
      * @param biddingInfoDTO 招标信息dto
-     * @return class biddingInfoBO
+     * @return class BiddingInfoBO
      * @throws SerException
      */
     default List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
@@ -33,7 +39,8 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     /**
      * 添加招标信息
      *
-     * @param biddingInfoTO 招标信息数据集合
+     * @param biddingInfoTO 招标信息数据to
+     * @return class BiddingInfoBO
      * @throws SerException
      */
     default BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
@@ -44,7 +51,7 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
      * 编辑招标信息
      *
      * @param biddingInfoTO 招标信息数据to
-     * @return class biddingInfoBO
+     * @return class BiddingInfoBO
      * @throws SerException
      */
     default BiddingInfoBO editBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
@@ -74,10 +81,9 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     /**
      * 搜索
      *
-     * @param
      * @throws SerException
      */
-    default BiddingInfoBO search(String webName, String url, String provinces, String cities) throws SerException {
+    default List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
     }
 

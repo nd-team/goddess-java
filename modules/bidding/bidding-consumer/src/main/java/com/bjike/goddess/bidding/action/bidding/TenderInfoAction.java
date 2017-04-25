@@ -11,9 +11,11 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,6 +34,24 @@ public class TenderInfoAction {
     private TenderInfoAPI tenderInfoAPI;
 
     /**
+     * 标书资料列表总条数
+     *
+     * @param tenderInfoDTO 标书资料dto
+     * @des 获取所有标书资料
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(TenderInfoDTO tenderInfoDTO) throws ActException {
+        try {
+            Long count = tenderInfoAPI.countTenderInfo(tenderInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 标书资料
      *
      * @param tenderInfoDTO 标书资料dto
@@ -40,7 +60,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @GetMapping("v1/listTenderInfo")
-    public Result findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws ActException {
+    public Result findListTenderInfo(TenderInfoDTO tenderInfoDTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
         try {
             List<TenderInfoVO> tenderInfoVOS = BeanTransform.copyProperties(
                     tenderInfoAPI.findListTenderInfo(tenderInfoDTO), TenderInfoVO.class);
@@ -59,7 +79,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addTenderInfo(TenderInfoTO tenderInfoTO) throws ActException {
+    public Result addTenderInfo(@Validated TenderInfoTO tenderInfoTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.insertTenderInfo(tenderInfoTO);
             return ActResult.initialize(tenderInfoBO);
@@ -77,7 +97,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editTenderInfo(@Validated TenderInfoTO tenderInfoTO) throws ActException {
+    public Result editTenderInfo(@Validated TenderInfoTO tenderInfoTO,HttpServletRequest request) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.editTenderInfo(tenderInfoTO);
             return ActResult.initialize(tenderInfoBO);

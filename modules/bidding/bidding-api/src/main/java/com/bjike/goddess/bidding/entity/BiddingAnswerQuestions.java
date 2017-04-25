@@ -30,7 +30,7 @@ public class BiddingAnswerQuestions extends BaseEntity {
     /**
      * 答疑准备人
      */
-    @Column(name = "peopleAnswerQuestions", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '答疑准备人'")
+    @Column(name = "peopleAnswerQuestions", columnDefinition = "VARCHAR(255)   COMMENT '答疑准备人'")
     private String peopleAnswerQuestions;
 
     /**
@@ -42,19 +42,19 @@ public class BiddingAnswerQuestions extends BaseEntity {
     /**
      * 解答单位
      */
-    @Column(name = "answersUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT ''")
+    @Column(name = "answersUnit", columnDefinition = "VARCHAR(255)   COMMENT ''")
     private String answersUnit;
 
     /**
      * 问题
      */
-    @Column(name = "problem", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题'")
+    @Column(name = "problem", columnDefinition = "VARCHAR(255)   COMMENT '问题'")
     private String problem;
 
     /**
      * 回复
      */
-    @Column(name = "reply", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '回复'")
+    @Column(name = "reply", columnDefinition = "VARCHAR(255)   COMMENT '回复'")
     private String reply;
 
 

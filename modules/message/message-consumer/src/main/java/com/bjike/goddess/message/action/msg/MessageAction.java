@@ -76,7 +76,7 @@ public class MessageAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/read/{id}")
+    @GetMapping("v1/{id}/read")
     public Result read(@PathVariable String id) throws ActException {
         try {
             messageAPI.read(id);

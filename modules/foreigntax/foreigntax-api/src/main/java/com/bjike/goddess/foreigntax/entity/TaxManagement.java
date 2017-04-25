@@ -29,25 +29,25 @@ public class TaxManagement extends BaseEntity {
     /**
      * 所属月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属月份'")
-    private String month;
+    @Column(name = "month", columnDefinition = "DATE   COMMENT '所属月份'")
+    private LocalDate month;
 
     /**
      * 税种
      */
-    @Column(name = "taxType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '税种'")
+    @Column(name = "taxType", columnDefinition = "VARCHAR(255)   COMMENT '税种'")
     private String taxType;
 
     /**
      * 税率(%)
      */
-    @Column(name = "rate", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '税率(%)'")
+    @Column(name = "rate", columnDefinition = "DECIMAL(10,2)   COMMENT '税率(%)'")
     private Double rate;
 
     /**
      * 税金
      */
-    @Column(name = "tax", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '税金'")
+    @Column(name = "tax", columnDefinition = "DECIMAL(10,2)   COMMENT '税金'")
     private Double tax;
 
     /**
@@ -65,7 +65,7 @@ public class TaxManagement extends BaseEntity {
     /**
      * 付款单位
      */
-    @Column(name = "paymentUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '付款单位'")
+    @Column(name = "paymentUnit", columnDefinition = "VARCHAR(255)   COMMENT '付款单位'")
     private String paymentUnit;
 
 
@@ -77,11 +77,11 @@ public class TaxManagement extends BaseEntity {
         this.company = company;
     }
 
-    public String getMonth() {
+    public LocalDate getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(LocalDate month) {
         this.month = month;
     }
 

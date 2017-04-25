@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -37,59 +38,62 @@ import java.util.Map;
 public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpeningInfoDTO> implements BidOpeningInfoSer{
     @Autowired
     private BidOpeningInfoSer bidOpeningInfoAPI;
+    @Override
+    public Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        bidOpeningInfoDTO.getSorts().add("createTime=desc");
+        Long count = super.count(bidOpeningInfoDTO);
+        return count;
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        bidOpeningInfoDTO.getSorts().add("createTime=desc");
+        List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO,true);
+        List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class);
+        return bidOpeningInfoBOS;
+    }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
-        try {
-            bidOpeningInfo.setModifyTime(LocalDateTime.now());
-            super.save(bidOpeningInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        bidOpeningInfo.setModifyTime(LocalDateTime.now());
+        super.save(bidOpeningInfo);
         return BeanTransform.copyProperties(bidOpeningInfo, BidOpeningInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO editBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
-        BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
-        try {
-            bidOpeningInfo.setModifyTime(LocalDateTime.now());
-            super.update(bidOpeningInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
-        return BeanTransform.copyProperties(bidOpeningInfo, BidOpeningInfoBO.class);
+        BidOpeningInfo bidOpeningInfo = super.findById(bidOpeningInfoTO.getId());
+        BeanTransform.copyProperties(bidOpeningInfoTO, bidOpeningInfo, true);
+        bidOpeningInfo.setModifyTime(LocalDateTime.now());
+        super.update(bidOpeningInfo);
+        return BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBidOpeningInfo(String id) throws SerException {
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(StringUtils.isNotBlank(id)){
+            throw new SerException("id不能为空");
         }
+        super.remove(id);
 
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO biddingWebInfoDTO) throws SerException {
-        List<BidOpeningInfo> bidOpeningInfos = super.findByCis(biddingWebInfoDTO,true);
-        return BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class);
+    public List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        /**
+         * 竞争公司
+         */
+        if(StringUtils.isNotBlank(bidOpeningInfoDTO.getCompetitive())){
+            bidOpeningInfoDTO.getConditions().add(Restrict.eq("competitive", bidOpeningInfoDTO.getCompetitive()));
+        }
+        List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO,true);
+        List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class,true);
+        return bidOpeningInfoBOS;
     }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public BidOpeningInfoBO search(String competitive) throws SerException {
-        BidOpeningInfoDTO dto = new BidOpeningInfoDTO();
-        dto.getConditions().add(Restrict.eq("competitive", competitive));
-        BidOpeningInfoBO bidOpeningInfoBO = BeanTransform.copyProperties(super.findOne(dto), BidOpeningInfoBO.class);
-        return bidOpeningInfoBO;
-    }
-
 
 
     @Transactional(rollbackFor = SerException.class)
