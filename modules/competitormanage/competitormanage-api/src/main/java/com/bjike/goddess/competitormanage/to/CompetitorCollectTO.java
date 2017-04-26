@@ -1,11 +1,14 @@
 package com.bjike.goddess.competitormanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.competitormanage.enums.CollectIntervalType;
 import com.bjike.goddess.competitormanage.enums.SendIntervalType;
+import org.hibernate.validator.constraints.NotBlank;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 
 /**
  * 竞争对手汇总
@@ -21,6 +24,7 @@ public class CompetitorCollectTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
@@ -36,21 +40,25 @@ public class CompetitorCollectTO extends BaseTO {
     /**
      * 汇总间隔
      */
+//    @NotNull(message = "汇总间隔不能为空", groups = {ADD.class, EDIT.class})
     private CollectIntervalType collectInterval;
 
     /**
      * 发送间隔类型
      */
+//    @NotNull(message = "发送间隔类型不能为空", groups = {ADD.class, EDIT.class})
     private SendIntervalType sendIntervalType;
 
     /**
      * 发送间隔
      */
+    @NotNull(message = "发送间隔不能为空", groups = {ADD.class, EDIT.class})
     private Integer sendInterval;
 
     /**
      * 发送对象
      */
+    @NotBlank(message = "发送对象不能为空", groups = {ADD.class, EDIT.class})
     private String sendUser;
 
     /**
