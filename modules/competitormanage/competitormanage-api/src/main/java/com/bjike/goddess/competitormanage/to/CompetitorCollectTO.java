@@ -40,13 +40,13 @@ public class CompetitorCollectTO extends BaseTO {
     /**
      * 汇总间隔
      */
-//    @NotNull(message = "汇总间隔不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "汇总间隔不能为空", groups = {ADD.class, EDIT.class})
     private CollectIntervalType collectInterval;
 
     /**
      * 发送间隔类型
      */
-//    @NotNull(message = "发送间隔类型不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "发送间隔类型不能为空", groups = {ADD.class, EDIT.class})
     private SendIntervalType sendIntervalType;
 
     /**
