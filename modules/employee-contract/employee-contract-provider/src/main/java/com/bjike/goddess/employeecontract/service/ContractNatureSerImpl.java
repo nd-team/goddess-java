@@ -25,7 +25,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "employee-contractSerCache")
+@CacheConfig(cacheNames = "employeecontractSerCache")
 @Service
 public class ContractNatureSerImpl extends ServiceImpl<ContractNature, ContractNatureDTO> implements ContractNatureSer {
 

@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "employee-contract_contractchange")
+@Table(name = "employeecontract_change")
 public class ContractChange extends BaseEntity {
 
     /**
@@ -77,7 +77,7 @@ public class ContractChange extends BaseEntity {
     /**
      * 变更时间
      */
-    @Column(name = "change", nullable = false, columnDefinition = "DATE   COMMENT '变更时间'")
+    @Column(name = "changeTime", nullable = false, columnDefinition = "DATE   COMMENT '变更时间'")
     private LocalDate change;
 
 

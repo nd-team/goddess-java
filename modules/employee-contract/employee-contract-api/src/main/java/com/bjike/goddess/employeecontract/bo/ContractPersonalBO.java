@@ -3,11 +3,11 @@ package com.bjike.goddess.employeecontract.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 合同管理业务传输对象
+ * 人员合同信息传输对象
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-21 04:04 ]
- * @Description: [ 合同管理业务传输对象 ]
+ * @Description: [ 人员合同信息传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

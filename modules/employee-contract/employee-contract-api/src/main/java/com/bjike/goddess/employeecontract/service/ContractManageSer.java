@@ -146,7 +146,7 @@ public interface ContractManageSer extends Ser<ContractManage, ContractManageDTO
     }
 
     /**
-     * 查询未接触合同信息
+     * 查询未解除合同信息
      *
      * @return
      * @throws SerException

@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "employee-contract_contractnature")
+@Table(name = "employeecontract_nature")
 public class ContractNature extends BaseEntity {
 
     /**

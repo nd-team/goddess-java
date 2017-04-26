@@ -15,6 +15,7 @@ import com.bjike.goddess.employeecontract.to.ContractChangeTO;
 import com.bjike.goddess.employeecontract.to.ContractInfoTO;
 import com.bjike.goddess.employeecontract.to.ContractManageTO;
 import com.bjike.goddess.employeecontract.to.ContractPersonalTO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -33,7 +34,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "employee-contractSerCache")
+@CacheConfig(cacheNames = "employeecontractSerCache")
 @Service
 public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractManageDTO> implements ContractManageSer {
 
@@ -43,6 +44,8 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     private ContractTypeSer contractTypeSer;
     @Autowired
     private ContractChangeSer contractChangeSer;
+    @Autowired
+    private UserAPI userAPI;
 
     private ContractManageBO transformBO(ContractManage entity) throws SerException {
         ContractManageBO bo = BeanTransform.copyProperties(entity, ContractManageBO.class);
@@ -58,6 +61,16 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         for (ContractManage entity : list)
             bos.add(this.transformBO(entity));
         return bos;
+    }
+
+    /**
+     * 查看权限检测
+     *
+     * @param dto 合同管理数据传输对象
+     * @throws SerException
+     */
+    private void checkAuthority(ContractManageDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("username", userAPI.currentUser().getUsername()));
     }
 
     @Override
@@ -156,6 +169,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
 
     @Override
     public List<ContractPersonalBO> personalMaps(ContractManageDTO dto) throws SerException {
+        this.checkAuthority(dto);
         dto.getSorts().add("status=asc");
         dto.getSorts().add("username=desc");
         List<ContractManage> list = super.findByPage(dto);
@@ -164,6 +178,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
 
     @Override
     public List<ContractInfoBO> infoMaps(ContractManageDTO dto) throws SerException {
+        this.checkAuthority(dto);
         dto.getSorts().add("status=asc");
         dto.getSorts().add("serialNumber=desc");
         List<ContractManageBO> list = this.transformBOList(super.findByPage(dto));
@@ -173,12 +188,14 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     @Override
     public Long getPersonalTotal() throws SerException {
         ContractManageDTO dto = new ContractManageDTO();
+        this.checkAuthority(dto);
         return super.count(dto);
     }
 
     @Override
     public Long getInfoTotal() throws SerException {
         ContractManageDTO dto = new ContractManageDTO();
+        this.checkAuthority(dto);
         return super.count(dto);
     }
 

@@ -3,6 +3,7 @@ package com.bjike.goddess.employeecontract.dao;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
 import com.bjike.goddess.employeecontract.entity.ContractManage;
+import org.springframework.stereotype.Repository;
 
 /**
 * 合同管理持久化接口, 继承基类可使用ｊｐａ命名查询
@@ -12,6 +13,7 @@ import com.bjike.goddess.employeecontract.entity.ContractManage;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface ContractManageRep extends JpaRep<ContractManage ,ContractManageDTO> { 
+@Repository
+public interface ContractManageRep extends JpaRep<ContractManage ,ContractManageDTO> {
 
  }

@@ -16,20 +16,20 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "employee-contract_contractmanage")
+@Table(name = "employeecontract_manage")
 public class ContractManage extends BaseEntity {
 
     /**
      * 合同类型
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '合同类型'")
     private ContractType type;
 
     /**
      * 合同性质
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "nature_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '合同性质'")
     private ContractNature nature;
 
@@ -84,7 +84,7 @@ public class ContractManage extends BaseEntity {
     /**
      * 线下存储位置
      */
-    @Column(name = "storage", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '线下存储位置'")
+    @Column(name = "localStorage", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '线下存储位置'")
     private String storage;
 
     /**
