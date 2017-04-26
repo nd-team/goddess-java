@@ -20,10 +20,16 @@ import java.util.List;
  */
 public interface BiddingAnswerQuestionsSer extends Ser<BiddingAnswerQuestions, BiddingAnswerQuestionsDTO> {
     /**
-     * 获取所有投标答疑问题记录
+     * 投标答疑问题记录列表总条数
+     */
+    default Long countBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 投标答疑问题记录
      *
      * @param biddingAnswerQuestionsDTO 投标答疑问题记录dto
-     * @return class biddingAnswerQuestionsBO
+     * @return class BiddingAnswerQuestionsBO
      * @throws SerException
      */
     default List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
@@ -33,7 +39,8 @@ public interface BiddingAnswerQuestionsSer extends Ser<BiddingAnswerQuestions, B
     /**
      * 添加投标答疑问题记录
      *
-     * @param biddingAnswerQuestionsTO 投标答疑问题记录数据集合
+     * @param biddingAnswerQuestionsTO 投标答疑问题记录数据to
+     * @return class BiddingAnswerQuestionsBO
      * @throws SerException
      */
     default BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {
@@ -44,7 +51,7 @@ public interface BiddingAnswerQuestionsSer extends Ser<BiddingAnswerQuestions, B
      * 编辑投标答疑问题记录
      *
      * @param biddingAnswerQuestionsTO 投标答疑问题记录数据to
-     * @return class biddingAnswerQuestionsBO
+     * @return class BiddingAnswerQuestionsBO
      * @throws SerException
      */
     default BiddingAnswerQuestionsBO editBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {

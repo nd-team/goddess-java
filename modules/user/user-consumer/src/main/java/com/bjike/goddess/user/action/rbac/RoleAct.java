@@ -100,7 +100,7 @@ public class RoleAct {
      * @userToken yes
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) RoleTO roleTO, BindingResult result) throws ActException {
         try {
             roleAPI.update(roleTO);

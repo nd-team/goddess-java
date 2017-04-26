@@ -19,10 +19,16 @@ import java.util.List;
  */
 public interface BidOpeningInfoAPI {
     /**
-     * 获取所有开标信息
+     * 开标信息列表总条数
+     */
+    default Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 开标信息
      *
      * @param bidOpeningInfoDTO 开标信息dto
-     * @return class bidOpeningInfoBO
+     * @return class BidOpeningInfoBO
      * @throws SerException
      */
     default List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
@@ -33,6 +39,7 @@ public interface BidOpeningInfoAPI {
      * 添加开标信息
      *
      * @param bidOpeningInfoTO 开标信息数据集合to
+     * @return class BidOpeningInfoBO
      * @throws SerException
      */
     default BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
@@ -43,7 +50,7 @@ public interface BidOpeningInfoAPI {
      * 编辑开标信息
      *
      * @param bidOpeningInfoTO 开标信息数据to
-     * @return class bidOpeningInfoBO
+     * @return class BidOpeningInfoBO
      * @throws SerException
      */
     default BidOpeningInfoBO editBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
@@ -60,15 +67,12 @@ public interface BidOpeningInfoAPI {
 
     }
 
-
-
     /**
      * 搜索
      *
-     * @param competitive
      * @throws SerException
      */
-    default BidOpeningInfoBO search(String competitive) throws SerException {
+    default List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         return null;
     }
     /**

@@ -24,6 +24,10 @@ import java.util.List;
 public class BiddingWebInfoApiImpl implements BiddingWebInfoAPI {
     @Autowired
     private BiddingWebInfoSer biddingWebInfoSer;
+    @Override
+    public Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
+        return biddingWebInfoSer.countBiddingWebInfo(biddingWebInfoDTO);
+    }
 
     @Override
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {

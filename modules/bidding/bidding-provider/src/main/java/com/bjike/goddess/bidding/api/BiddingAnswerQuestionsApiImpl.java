@@ -24,6 +24,10 @@ import java.util.List;
 public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI {
     @Autowired
     private BiddingAnswerQuestionsSer biddingAnswerQuestionsSer;
+    @Override
+    public Long countBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+        return biddingAnswerQuestionsSer.countBiddingAnswerQuestions(biddingAnswerQuestionsDTO);
+    }
 
     @Override
     public BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {

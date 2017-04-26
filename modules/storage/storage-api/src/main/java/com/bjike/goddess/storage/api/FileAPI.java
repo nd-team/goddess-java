@@ -128,8 +128,27 @@ public interface FileAPI {
      * @param path
      * @throws SerException
      */
-    default  List<FileBO> recycleList(String path) throws SerException {
+    default List<FileBO> recycleList(String path) throws SerException {
         return null;
     }
 
+    /**
+     * 单文件上传并返回文件存储信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException{
+        return null;
+    }
+
+    /**
+     * 获取真实存储路径
+     *
+     * @return
+     * @throws SerException
+     */
+    default String getRealPath(String path) throws SerException{
+        return null;
+    }
 }

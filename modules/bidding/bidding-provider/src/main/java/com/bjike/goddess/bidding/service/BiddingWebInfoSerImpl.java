@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingWebInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,48 +27,46 @@ import java.util.List;
 @CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWebInfoDTO> implements BiddingWebInfoSer {
+    @Override
+    public Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
+        biddingWebInfoDTO.getSorts().add("createTime=desc");
+        Long count = super.count(biddingWebInfoDTO);
+        return count;
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
+        biddingWebInfoDTO.getSorts().add("createTime=desc");
+        List<BiddingWebInfo> biddingWebInfos = super.findByCis(biddingWebInfoDTO,true);
+        List<BiddingWebInfoBO> biddingWebInfoBOS = BeanTransform.copyProperties(biddingWebInfos,BiddingWebInfoBO.class);
+        return biddingWebInfoBOS;
+    }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
         BiddingWebInfo biddingWebInfo = BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
-        try {
-            biddingWebInfo.setId(biddingWebInfoTO.getId());
-            super.save(biddingWebInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        biddingWebInfo.setId(biddingWebInfoTO.getId());
+        super.save(biddingWebInfo);
         return BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO editBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
-        BiddingWebInfo biddingWebInfo = BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
-        try {
-            biddingWebInfo.setModifyTime(LocalDateTime.now());
-            super.update(biddingWebInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
-        return BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
+        BiddingWebInfo biddingWebInfo = super.findById(biddingWebInfoTO.getId());
+        BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
+        biddingWebInfo.setModifyTime(LocalDateTime.now());
+        super.update(biddingWebInfo);
+        return BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingWebInfo(String id) throws SerException {
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(StringUtils.isNotBlank(id)){
+            throw new SerException("id不能为空");
         }
-
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
-        List<BiddingWebInfo> biddingWebInfos = super.findByCis(biddingWebInfoDTO,true);
-        return BeanTransform.copyProperties(biddingWebInfos,BiddingWebInfoBO.class);
+        super.remove(id);
     }
 
 }

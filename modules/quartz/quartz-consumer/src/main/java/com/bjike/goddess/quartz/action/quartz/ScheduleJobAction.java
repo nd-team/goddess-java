@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,9 +42,9 @@ public class ScheduleJobAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ScheduleJobDTO dto) throws ActException {
+    public Result list(ScheduleJobDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class);
+            List<ScheduleJobVO> scheduleJobVOs = BeanTransform.copyProperties(scheduleJobAPI.list(dto), ScheduleJobVO.class,request);
             return ActResult.initialize(scheduleJobVOs);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

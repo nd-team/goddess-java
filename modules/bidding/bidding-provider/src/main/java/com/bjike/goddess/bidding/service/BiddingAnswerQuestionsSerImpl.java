@@ -7,6 +7,7 @@ import com.bjike.goddess.bidding.to.BiddingAnswerQuestionsTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,45 +27,45 @@ import java.util.List;
 @CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQuestions, BiddingAnswerQuestionsDTO> implements BiddingAnswerQuestionsSer {
+    @Override
+    public Long countBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+        biddingAnswerQuestionsDTO.getSorts().add("createTime=desc");
+        Long count = super.count(biddingAnswerQuestionsDTO);
+        return count;
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
+        biddingAnswerQuestionsDTO.getSorts().add("createTime=desc");
+        List<BiddingAnswerQuestions> biddingAnswerQuestionss = super.findByCis(biddingAnswerQuestionsDTO,true);
+        List<BiddingAnswerQuestionsBO> biddingAnswerQuestionsBOS = BeanTransform.copyProperties(biddingAnswerQuestionss,BiddingAnswerQuestionsBO.class);
+        return biddingAnswerQuestionsBOS;
+    }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {
         BiddingAnswerQuestions biddingAnswerQuestions = BeanTransform.copyProperties(biddingAnswerQuestionsTO, BiddingAnswerQuestions.class, true);
-        try {
-            biddingAnswerQuestions.setCreateTime(LocalDateTime.now());
-            super.save(biddingAnswerQuestions);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        biddingAnswerQuestions.setCreateTime(LocalDateTime.now());
+        super.save(biddingAnswerQuestions);
         return BeanTransform.copyProperties(biddingAnswerQuestions, BiddingAnswerQuestionsBO.class);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingAnswerQuestionsBO editBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {
-        BiddingAnswerQuestions biddingAnswerQuestions = BeanTransform.copyProperties(biddingAnswerQuestionsTO, BiddingAnswerQuestions.class, true);
-        try {
-            biddingAnswerQuestions.setModifyTime(LocalDateTime.now());
-            super.update(biddingAnswerQuestions);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
-        return BeanTransform.copyProperties(biddingAnswerQuestions, BiddingAnswerQuestionsBO.class);
+        BiddingAnswerQuestions biddingAnswerQuestions = super.findById(biddingAnswerQuestionsTO.getId());
+        BeanTransform.copyProperties(biddingAnswerQuestionsTO, biddingAnswerQuestions, true);
+        biddingAnswerQuestions.setModifyTime(LocalDateTime.now());
+        super.update(biddingAnswerQuestions);
+        return BeanTransform.copyProperties(biddingAnswerQuestionsTO, BiddingAnswerQuestionsBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingAnswerQuestions(String id) throws SerException {
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(StringUtils.isNotBlank(id)){
+            throw new SerException("id不能为空");
         }
-    }
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
-        List<BiddingAnswerQuestions> biddingAnswerQuestionss = super.findByCis(biddingAnswerQuestionsDTO,true);
-        return BeanTransform.copyProperties(biddingAnswerQuestionss,BiddingAnswerQuestionsBO.class);
+        super.remove(id);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override
