@@ -42,6 +42,15 @@ public class Group extends BaseEntity {
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '上级组' ")
     private Group parent;
 
+
+    /**
+     * 是否有子节点
+     */
+    @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
+    private Boolean hasChild;
+
+
+
     public String getName() {
         return name;
     }
@@ -74,4 +83,11 @@ public class Group extends BaseEntity {
         this.parent = parent;
     }
 
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
+    }
 }

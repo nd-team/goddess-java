@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.rbac.RolePermissionAPI;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@LoginAuth
 @DefaultProperties
 @RestController
 @RequestMapping("role-permission")
@@ -36,10 +38,11 @@ public class RolePermissionAct {
     private RolePermissionAPI rolePermissionAPI;
 
     /**
-     * 添加组
+     * 添加角色权限
      *
      * @param rolePermissionTO 角色权限信息
      * @return class RolePermissionVO
+     * @userToken yes
      * @version v1
      */
     @PostMapping("v1/add")

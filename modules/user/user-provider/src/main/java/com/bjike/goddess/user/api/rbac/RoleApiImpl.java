@@ -25,7 +25,7 @@ public class RoleApiImpl implements RoleAPI {
     private RoleSer roleSer;
 
     @Override
-    public List<RoleTreeBO> treeData(String id) throws SerException {
+    public List<RoleBO> treeData(String id) throws SerException {
         return roleSer.treeData(id);
     }
 

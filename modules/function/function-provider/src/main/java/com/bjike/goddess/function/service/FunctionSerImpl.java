@@ -2,6 +2,7 @@ package com.bjike.goddess.function.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.function.bo.FunctionBO;
@@ -40,7 +41,7 @@ public class FunctionSerImpl extends ServiceImpl<Function, FunctionDTO> implemen
     @Override
     public FunctionBO add(FunctionTO functionTO) throws SerException {
         Function function = BeanTransform.copyProperties(functionTO, Function.class);
-        Integer seq = super.count(new FunctionDTO()).intValue()+1;
+        Integer seq = super.count(new FunctionDTO()).intValue() + 1;
         function.setSeq(seq);
         super.save(function);
         return BeanTransform.copyProperties(function, FunctionBO.class);
@@ -51,6 +52,13 @@ public class FunctionSerImpl extends ServiceImpl<Function, FunctionDTO> implemen
         Function function = super.findById(functionTO.getId());
         BeanTransform.copyProperties(functionTO, function, new String[]{"id"});
         function.setModifyTime(LocalDateTime.now());
+        super.update(function);
+    }
+
+    @Override
+    public void enable(String id, Boolean enable) throws SerException {
+        Function function = super.findById(id);
+        function.setEnable(enable);
         super.update(function);
     }
 
@@ -73,6 +81,7 @@ public class FunctionSerImpl extends ServiceImpl<Function, FunctionDTO> implemen
         UserFunctionDTO dto = new UserFunctionDTO();
         String userId = userAPI.currentUser().getId();
         dto.getConditions().add(Restrict.eq("userId", userId));
+        dto.getConditions().add(Restrict.eq("function.status", Status.THAW.getCode()));
         List<UserFunction> userFunctions = userFunctionSer.findByCis(dto);
         List<FunctionBO> functionBOS = new ArrayList<>();
         if (null != userFunctions) {

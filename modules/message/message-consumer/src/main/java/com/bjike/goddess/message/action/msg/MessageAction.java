@@ -2,12 +2,12 @@ package com.bjike.goddess.message.action.msg;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.message.api.EmailAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.bo.MessageBO;
@@ -15,6 +15,7 @@ import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.kafka.KafkaConsumer;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.message.vo.MessageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -74,7 +76,7 @@ public class MessageAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/read/{id}")
+    @GetMapping("v1/{id}/read")
     public Result read(@PathVariable String id) throws ActException {
         try {
             messageAPI.read(id);
@@ -87,19 +89,20 @@ public class MessageAction {
     /**
      * 读取消息
      *
-     * @param userId 用户id
+     * @param id      用户id
      * @param msgType 消息类型
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/list")
-    public Result list(@PathVariable String userId,MsgType msgType) throws ActException {
+    @GetMapping("v1/{id}/messages")
+    public Result messages(@PathVariable String id, MsgType msgType, HttpServletRequest request) throws ActException {
         try {
             MessageDTO dto = new MessageDTO();
-            dto.setUserId(userId);
+            dto.setUserId(id);
             dto.setMsgType(msgType);
             List<MessageBO> messageBOS = messageAPI.list(dto);
-            return ActResult.initialize(messageBOS);
+            List<MessageVO> messageVOS = BeanTransform.copyProperties(messageBOS, MessageVO.class, request);
+            return ActResult.initialize(messageVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -112,11 +115,12 @@ public class MessageAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/unread-list/{id}")
-    public Result list(@PathVariable String id) throws ActException {
+    @GetMapping("v1/{id}/unread-messages")
+    public Result unreadMessages(@PathVariable String id, MsgType msgType, HttpServletRequest request) throws ActException {
         try {
-            List<MessageBO> messageBOS = messageAPI.unreadList(id);
-            return ActResult.initialize(messageBOS);
+            List<MessageBO> messageBOS = messageAPI.unreadList(id, msgType);
+            List<MessageVO> messageVOS = BeanTransform.copyProperties(messageBOS, MessageVO.class, request);
+            return ActResult.initialize(messageVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

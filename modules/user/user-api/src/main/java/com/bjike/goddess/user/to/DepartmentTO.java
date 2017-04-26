@@ -36,6 +36,11 @@ public class DepartmentTO extends BaseTO {
      */
     private String createTime;
 
+    /**
+     * 父id
+     */
+    private String parentId;
+
 
     public String getName() {
         return name;
@@ -69,4 +74,11 @@ public class DepartmentTO extends BaseTO {
         this.createTime = createTime;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 }

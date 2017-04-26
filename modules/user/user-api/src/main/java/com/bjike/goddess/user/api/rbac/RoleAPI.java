@@ -24,7 +24,7 @@ public interface RoleAPI {
      * @param id
      * @return
      */
-    default List<RoleTreeBO> treeData(String id) throws SerException {
+    default List<RoleBO> treeData(String id) throws SerException {
         return null;
     }
 

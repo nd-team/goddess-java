@@ -20,10 +20,16 @@ import java.util.List;
  */
 public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO> {
     /**
-     * 获取所有招投标网站信息
+     * 招投标网站信息列表总条数
+     */
+    default Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 招投标网站信息
      *
      * @param biddingWebInfoDTO 招投标网站信息dto
-     * @return class biddingWebInfoBO
+     * @return class BiddingWebInfoBO
      * @throws SerException
      */
     default List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
@@ -33,7 +39,8 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
     /**
      * 添加招投标网站信息
      *
-     * @param biddingWebInfoTO 招投标网站信息数据集合
+     * @param biddingWebInfoTO 招投标网站信息数据to
+     * @return class BiddingWebInfoBO
      * @throws SerException
      */
     default BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
@@ -44,7 +51,7 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
      * 编辑招投标网站信息
      *
      * @param biddingWebInfoTO 招投标网站信息数据to
-     * @return class biddingWebInfoBO
+     * @return class BiddingWebInfoBO
      * @throws SerException
      */
     default BiddingWebInfoBO editBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {

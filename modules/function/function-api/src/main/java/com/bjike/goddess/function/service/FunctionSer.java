@@ -40,6 +40,17 @@ public interface FunctionSer extends Ser<Function, FunctionDTO> {
 
     }
 
+
+    /**
+     * 开关功能
+     *
+     * @param id
+     * @param enable
+     */
+    default void enable(String id, Boolean enable) throws SerException {
+
+    }
+
     /**
      * 删除功能
      *

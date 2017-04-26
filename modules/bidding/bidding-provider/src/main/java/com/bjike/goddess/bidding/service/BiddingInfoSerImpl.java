@@ -1,6 +1,5 @@
 package com.bjike.goddess.bidding.service;
 
-import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.enums.BiddingType;
 import com.bjike.goddess.bidding.enums.BusinessType;
@@ -11,6 +10,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -34,48 +34,47 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Autowired
     private BiddingInfoSer biddingInfoAPI;
+    @Override
+    public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        biddingInfoDTO.getSorts().add("createTime=desc");
+        Long count = super.count(biddingInfoDTO);
+        return count;
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        biddingInfoDTO.getSorts().add("createTime=desc");
+        List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO,true);
+        List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
+        return biddingInfoBOS;
+    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
-        try {
-            biddingInfo.setId(biddingInfoTO.getId());
-            super.save(biddingInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
+        biddingInfo.setId(biddingInfoTO.getId());
+        super.save(biddingInfo);
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO editBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
-        try {
-            biddingInfo.setModifyTime(LocalDateTime.now());
-            super.update(biddingInfo);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
-        }
-        return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
+        BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
+        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true);
+        biddingInfo.setModifyTime(LocalDateTime.now());
+        super.update(biddingInfo);
+        return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingInfo(String id) throws SerException {
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(StringUtils.isNotBlank(id)){
+            throw new SerException("id不能为空");
         }
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
-        List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO,true);
-        return BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
+        super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -87,14 +86,37 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public BiddingInfoBO search(String webName, String url, String provinces, String cities) throws SerException {
-        BiddingInfoDTO dto = new BiddingInfoDTO();
-        dto.getConditions().add(Restrict.eq("webName", webName));
-        dto.getConditions().add(Restrict.eq("url", url));
-        dto.getConditions().add(Restrict.eq("provinces", provinces));
-        dto.getConditions().add(Restrict.eq("cities", cities));
-        BiddingInfoBO biddingInfoBO = BeanTransform.copyProperties(super.findOne(dto), BiddingInfoBO.class);
-        return biddingInfoBO;
+    public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
+        /**
+         * 网站名称
+         */
+        if(StringUtils.isNotBlank(biddingInfoDTO.getWebName())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("webName",biddingInfoDTO.getWebName()));
+        }
+        /**
+         * 网址
+         */
+        if(StringUtils.isNotBlank(biddingInfoDTO.getUrl())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("url", biddingInfoDTO.getUrl()));
+        }
+        /**
+         * 省份
+         */
+
+        if(StringUtils.isNotBlank(biddingInfoDTO.getProvinces())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("provinces", biddingInfoDTO.getProvinces()));
+
+        }
+        /**
+         * 地市
+         */
+        if(StringUtils.isNotBlank(biddingInfoDTO.getCities())){
+            biddingInfoDTO.getConditions().add(Restrict.eq("cities", biddingInfoDTO.getCities()));
+
+        }
+        List<BiddingInfo> biddingInfos = super.findByCis(biddingInfoDTO,true);
+        List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfos, BiddingInfoBO.class);
+        return biddingInfoBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)

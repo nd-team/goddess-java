@@ -13,10 +13,29 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [com.bjike]
  */
 public class PermissionBO extends BaseBO {
-
+    /**
+     * 认证名
+     */
     private String name;
+    /**
+     * 认证资源
+     */
     private String resource;
+
+    /**
+     * 描述
+     */
+    private String description;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 是否有子节点
+     */
     private Boolean hasChild;
+
 
     public String getName() {
         return name;
@@ -32,6 +51,22 @@ public class PermissionBO extends BaseBO {
 
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public Boolean getHasChild() {

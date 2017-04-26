@@ -28,7 +28,10 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
     @Autowired
     private BidOpeningInfoSer bidOpeningInfoSer;
 
-
+    @Override
+    public Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        return bidOpeningInfoSer.countBidOpeningInfo(bidOpeningInfoDTO);
+    }
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         return bidOpeningInfoSer.insertBidOpeningInfo(bidOpeningInfoTO);
@@ -51,8 +54,8 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
 
 
     @Override
-    public BidOpeningInfoBO search(String competitive) throws SerException {
-        return bidOpeningInfoSer.search(competitive);
+    public List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        return bidOpeningInfoSer.searchBidOpeningInfo(bidOpeningInfoDTO);
     }
     @Override
     public BidOpeningInfoBO sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {

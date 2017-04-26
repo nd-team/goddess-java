@@ -26,6 +26,11 @@ public class DepartmentBO extends BaseBO {
      */
     private String createTime;
 
+    /**
+     * 是否有子节点
+     */
+    private String hasChild;
+
 
     public String getName() {
         return name;
@@ -49,5 +54,13 @@ public class DepartmentBO extends BaseBO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(String hasChild) {
+        this.hasChild = hasChild;
     }
 }

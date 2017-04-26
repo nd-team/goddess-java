@@ -33,7 +33,7 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 文件上传
      *
-     * @param maps  文件名，byte 文件字节
+     * @param maps 文件名，byte 文件字节
      * @param path 上传路径
      */
     default void upload(Map<String, byte[]> maps, String path) throws SerException {
@@ -92,9 +92,9 @@ public interface FileSer extends Ser<File, FileDTO> {
      * 文件是否存在
      *
      * @param fromPath 移动路径
-     * @param toPath 目标路径
+     * @param toPath   目标路径
      */
-    default Boolean move(String fromPath,String toPath) throws SerException {
+    default Boolean move(String fromPath, String toPath) throws SerException {
         return null;
     }
 
@@ -125,4 +125,24 @@ public interface FileSer extends Ser<File, FileDTO> {
         return null;
     }
 
+    /**
+     * 单文件上传
+     *
+     * @param bytes 文件字节
+     * @return 文件存储id
+     */
+    default  FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException{
+        return  null;
+    }
+
+
+    /**
+     * 获取真实存储路径
+     *
+     * @return
+     * @throws SerException
+     */
+    default String getRealPath(String path) throws SerException{
+        return null;
+    }
 }

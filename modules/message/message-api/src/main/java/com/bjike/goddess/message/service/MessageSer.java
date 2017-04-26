@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.dto.MessageDTO;
 import com.bjike.goddess.message.entity.Message;
+import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.to.MessageTO;
 
 import java.util.List;
@@ -48,10 +49,11 @@ public interface MessageSer extends Ser<Message, MessageDTO> {
     /**
      * 未读消息列表
      * @param userId
+     * @param type
      * @return
      * @throws SerException
      */
-    default List<MessageBO> unreadList(String userId) throws SerException{
+    default List<MessageBO> unreadList(String userId, MsgType type) throws SerException{
         return null;
     }
 

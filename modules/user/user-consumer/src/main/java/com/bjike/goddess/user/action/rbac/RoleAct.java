@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,13 +42,14 @@ public class RoleAct {
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class RoleVO
+     * @userToken yes
      * @des 逐层加载, 参考ztree
      * @version v1
      */
     @GetMapping("v1/tree")
-    public Result treeData(String id) throws ActException {
+    public Result treeData(String id, HttpServletRequest request) throws ActException {
         try {
-            List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id), RoleVO.class);
+            List<RoleVO> vos = BeanTransform.copyProperties(roleAPI.treeData(id), RoleVO.class, request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,6 +61,7 @@ public class RoleAct {
      *
      * @param roleTO 新的角色信息
      * @return class RoleVO
+     * @userToken yes
      * @version v1
      */
     @PostMapping("v1/add")
@@ -76,6 +79,7 @@ public class RoleAct {
      * 删除角色
      *
      * @param id 角色唯一标示
+     * @userToken yes
      * @des 如该节点存在子节点, 先删除子节点
      * @version v1
      */
@@ -93,9 +97,10 @@ public class RoleAct {
      * 编辑角色信息
      *
      * @param roleTO
+     * @userToken yes
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) RoleTO roleTO, BindingResult result) throws ActException {
         try {
             roleAPI.update(roleTO);

@@ -52,19 +52,19 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 业务方向科目
      */
-    @Column(name = "businessDirectionSubject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
+    @Column(name = "businessDirectionSubject", columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
     private String businessDirectionSubject;
 
     /**
      * 标书模块
      */
-    @Column(name = "tenderModule", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
+    @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
     private String tenderModule;
 
     /**
      * 招标编号
      */
-    @Column(name = "tenderNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    @Column(name = "tenderNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
     private String tenderNumber;
 
     /**
@@ -88,43 +88,43 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 投标资格要求
      */
-    @Column(name = "biddingQualifications", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '投标资格要求'")
+    @Column(name = "biddingQualifications", columnDefinition = "VARCHAR(255)   COMMENT '投标资格要求'")
     private String biddingQualifications;
 
     /**
      * 省份
      */
-    @Column(name = "provinces", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '省份'")
+    @Column(name = "provinces", columnDefinition = "VARCHAR(255)   COMMENT '省份'")
     private String provinces;
 
     /**
      * 地市
      */
-    @Column(name = "cities", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地市'")
+    @Column(name = "cities", columnDefinition = "VARCHAR(255)   COMMENT '地市'")
     private String cities;
 
     /**
      * 账号
      */
-    @Column(name = "account", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '账号'")
+    @Column(name = "account", columnDefinition = "VARCHAR(255)   COMMENT '账号'")
     private String account;
 
     /**
      * 密码
      */
-    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '密码'")
+    @Column(name = "password",  columnDefinition = "VARCHAR(255)   COMMENT '密码'")
     private String password;
 
     /**
      * 注册人
      */
-    @Column(name = "registrant", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册人'")
+    @Column(name = "registrant", columnDefinition = "VARCHAR(255)   COMMENT '注册人'")
     private String registrant;
 
     /**
      * 注册信息
      */
-    @Column(name = "registrationInfo", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册信息'")
+    @Column(name = "registrationInfo", columnDefinition = "VARCHAR(255)   COMMENT '注册信息'")
     private String registrationInfo;
 
     /**
@@ -136,43 +136,43 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 购买标书时间
      */
-    @Column(name = "buyTenderTime", nullable = false, columnDefinition = "DATE   COMMENT '购买标书时间'")
+    @Column(name = "buyTenderTime", columnDefinition = "DATE   COMMENT '购买标书时间'")
     private LocalDate buyTenderTime;
 
     /**
      * 价格
      */
-    @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '价格'")
+    @Column(name = "price", columnDefinition = "DECIMAL(10,2)   COMMENT '价格'")
     private Double price;
 
     /**
      * 购买标书要求
      */
-    @Column(name = "buyTenderRequirements", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '购买标书要求'")
+    @Column(name = "buyTenderRequirements", columnDefinition = "VARCHAR(255)   COMMENT '购买标书要求'")
     private String buyTenderRequirements;
 
     /**
      * 交保证金时间
      */
-    @Column(name = "marginTime", nullable = false, columnDefinition = "DATE   COMMENT '交保证金时间'")
+    @Column(name = "marginTime", columnDefinition = "DATE   COMMENT '交保证金时间'")
     private LocalDate marginTime;
 
     /**
      * 交保证金方式
      */
-    @Column(name = "marginMethod", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '交保证金方式'")
+    @Column(name = "marginMethod", columnDefinition = "VARCHAR(255)   COMMENT '交保证金方式'")
     private String marginMethod;
 
     /**
      * 保证金退回时间
      */
-    @Column(name = "backTimeDeposit", nullable = false, columnDefinition = "DATE   COMMENT '保证金退回时间'")
+    @Column(name = "backTimeDeposit", columnDefinition = "DATE   COMMENT '保证金退回时间'")
     private LocalDate backTimeDeposit;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

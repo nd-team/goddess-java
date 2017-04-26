@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,13 +42,14 @@ public class PermissionAct {
      *
      * @param id id不为空时查询下层子节点,参数为空时查询最顶层
      * @return class PermissionVO
+     * @userToken yes
      * @des 逐层加载, 参考ztree
      * @version v1
      */
     @GetMapping("v1/tree")
-    public Result treeData(String id) throws ActException {
+    public Result treeData(String id, HttpServletRequest request) throws ActException {
         try {
-            List<PermissionVO> vos = BeanTransform.copyProperties(permissionAPI.treeData(id), PermissionVO.class);
+            List<PermissionVO> vos = BeanTransform.copyProperties(permissionAPI.treeData(id), PermissionVO.class, request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,6 +61,7 @@ public class PermissionAct {
      *
      * @param permissionTO 新的资源信息
      * @return class PermissionVO
+     * @userToken yes
      * @des 返回资源信息
      * @version v1
      */
@@ -76,6 +79,7 @@ public class PermissionAct {
      * 通过id删除权限资源
      *
      * @param id 权限资源唯一标示
+     * @userToken yes
      * @des 如该节点存在子节点, 先删除子节点
      * @version v1
      */
@@ -93,6 +97,7 @@ public class PermissionAct {
      * 编辑权限资源信息
      *
      * @param permissionTO
+     * @userToken yes
      * @version v1
      */
     @PutMapping("v1/edit")

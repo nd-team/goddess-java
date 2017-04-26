@@ -45,9 +45,9 @@ public class FileAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@RequestParam String path) throws ActException {
+    public Result list(@RequestParam String path, HttpServletRequest request) throws ActException {
         try {
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(path), FileVO.class);
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(path), FileVO.class,request);
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

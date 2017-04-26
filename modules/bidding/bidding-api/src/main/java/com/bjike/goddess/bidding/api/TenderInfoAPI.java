@@ -19,10 +19,16 @@ import java.util.List;
  */
 public interface TenderInfoAPI {
     /**
-     * 获取所有标书资料
+     * 标书资料列表总条数
+     */
+    default Long countTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 标书资料
      *
      * @param tenderInfoDTO 标书资料dto
-     * @return class tenderInfoBO
+     * @return class TenderInfoBO
      * @throws SerException
      */
     default List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
@@ -33,6 +39,7 @@ public interface TenderInfoAPI {
      * 添加标书资料
      *
      * @param tenderInfoTO 标书资料数据to
+     * @return class TenderInfoBO
      * @throws SerException
      */
     default TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
@@ -43,7 +50,7 @@ public interface TenderInfoAPI {
      * 编辑标书资料
      *
      * @param tenderInfoTO 标书资料数据to
-     * @return class tenderInfoBO
+     * @return class TenderInfoBO
      * @throws SerException
      */
     default TenderInfoBO editTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {

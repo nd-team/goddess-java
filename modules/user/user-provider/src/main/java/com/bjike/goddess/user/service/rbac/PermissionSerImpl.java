@@ -7,7 +7,6 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
-import com.bjike.goddess.user.bo.rbac.PermissionTreeBO;
 import com.bjike.goddess.user.dto.rbac.PermissionDTO;
 import com.bjike.goddess.user.entity.rbac.GroupRole;
 import com.bjike.goddess.user.entity.rbac.Permission;
@@ -20,7 +19,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,7 +84,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
     }
 
     @Override
-    public List<PermissionTreeBO> treeData(String id) throws SerException {
+    public List<PermissionBO> treeData(String id) throws SerException {
         PermissionDTO dto = new PermissionDTO();
         if (StringUtils.isNotBlank(id)) {
             dto.getConditions().add(Restrict.eq("parent.id", id)); //查询该父节点下的子节点
@@ -96,16 +94,9 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
 
         List<Permission> permissions = super.findByCis(dto);
-        List<PermissionTreeBO> permissionTreeBOS = new ArrayList<>(permissions.size());
-        permissions.stream().forEach(permission -> {
-            PermissionTreeBO bo = new PermissionTreeBO();
-            bo.setName(permission.getName());
-            bo.setId(permission.getId());
-            bo.setParent(null == permission.getParent());
-            permissionTreeBOS.add(bo);
-        });
 
-        return permissionTreeBOS;
+
+        return BeanTransform.copyProperties(permissions, PermissionBO.class);
     }
 
     @Override
@@ -139,6 +130,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
                 super.update(parent);
             }
         }
+        permission.setHasChild(false);
         super.save(permission);
         return BeanTransform.copyProperties(permission, PermissionBO.class);
     }
