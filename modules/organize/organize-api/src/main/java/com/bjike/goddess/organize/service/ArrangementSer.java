@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
+import com.bjike.goddess.organize.enums.ArrangementType;
 import com.bjike.goddess.organize.to.ArrangementTO;
 
 import java.util.List;
@@ -80,6 +81,17 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
      * @throws SerException
      */
     default List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取岗位层级所在层次
+     *
+     * @param id 岗位层级数据id
+     * @return
+     * @throws SerException
+     */
+    default ArrangementType getLayer(String id) throws SerException {
         return null;
     }
 

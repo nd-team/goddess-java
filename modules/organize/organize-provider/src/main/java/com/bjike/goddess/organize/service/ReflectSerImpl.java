@@ -1,5 +1,6 @@
 package com.bjike.goddess.organize.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -30,7 +31,9 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
 
     @Override
     public List<ReflectBO> findStatus() throws SerException {
-        return null;
+        ReflectDTO dto = new ReflectDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        return BeanTransform.copyProperties(super.findByCis(dto), ReflectBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

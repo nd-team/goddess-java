@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
@@ -64,17 +65,6 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     }
 
     /**
-     * 根据部门ID查询部门详细信息
-     *
-     * @param id 部门ID
-     * @return
-     * @throws SerException
-     */
-    default DepartmentDetailBO findByDepartment(String id) throws SerException {
-        return null;
-    }
-
-    /**
      * 根据ID获取部门详细传输对象
      *
      * @param id 部门项目组传输对象
@@ -104,6 +94,29 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      * @throws SerException
      */
     default DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 冻结
+     *
+     * @param id 部门项目组数据id
+     * @return
+     * @throws SerException
+     */
+    default DepartmentDetailBO congeal(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 部门项目组数据id
+     * @return
+     * @throws SerException
+     */
+    default DepartmentDetailBO thaw(String id) throws SerException {
         return null;
     }
 

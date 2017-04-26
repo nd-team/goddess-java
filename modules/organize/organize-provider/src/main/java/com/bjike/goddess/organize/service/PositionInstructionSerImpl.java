@@ -57,17 +57,19 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         PositionInstructionBO bo = BeanTransform.copyProperties(entity, PositionInstructionBO.class);
         PositionDetailBO detailBO = positionDetailSer.findBOById(entity.getPosition().getId());
         bo.setPositionId(detailBO.getId());
-        bo.setPositionName(detailBO.getPositionName());
+        bo.setPositionName(detailBO.getPosition());
         bo.setPositionNumber(detailBO.getShowNumber());
         bo.setArrangement(detailBO.getArrangementName());
         bo.setHierarchy(detailBO.getHierarchyName());
         bo.setDepartment(detailBO.getDepartmentName());
         bo.setPool(detailBO.getPool());
         bo.setStaff(detailBO.getStaff());
-        bo.setParent(positionDetailSer.findParent(detailBO.getPositionId()).getPositionName());
+        bo.setParent("");
+        for (PositionDetailBO detail : positionDetailSer.findParentByArrangement(detailBO.getId()))
+            bo.setParent(bo.getParent() + detail.getPosition() + ",");
         bo.setChildren("");
-        for (PositionDetailBO detail : positionDetailSer.findChild(detailBO.getPositionId()))
-            bo.setChildren(bo.getChildren() + detail.getPositionName() + ",");
+        for (PositionDetailBO detail : positionDetailSer.findChildByArrangement(detailBO.getId()))
+            bo.setChildren(bo.getChildren() + detail.getPosition() + ",");
         bo.setAngleId(entity.getAngle().getId());
         bo.setAngleName(entity.getAngle().getName());
         bo.setDimensionId(entity.getDimension().getId());

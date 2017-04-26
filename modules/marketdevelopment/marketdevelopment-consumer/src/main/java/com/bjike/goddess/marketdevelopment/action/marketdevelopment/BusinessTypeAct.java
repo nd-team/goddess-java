@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
+import com.bjike.goddess.marketdevelopment.vo.BusinessTypeChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -134,13 +135,13 @@ public class BusinessTypeAct {
     /**
      * 查询正常数据的业务类型数据
      *
-     * @return class BusinessTypeVO
+     * @return class BusinessTypeChoiceVO
      * @version v1
      */
     @GetMapping("v1/findThaw")
     public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.findThaw(), BusinessTypeVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.findThaw(), BusinessTypeChoiceVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

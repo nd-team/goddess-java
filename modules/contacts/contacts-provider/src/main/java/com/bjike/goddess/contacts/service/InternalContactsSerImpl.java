@@ -15,11 +15,13 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -68,17 +74,20 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, entity.getUser_id()));
         List<UserBO> user = userAPI.findByCis(userDTO);
-        UserDetailBO userDetail = userDetailAPI.findByUserId(entity.getUser_id());
         if (user.size() != 0) {
             bo.setUsername(user.get(0).getUsername());
             bo.setNumber(user.get(0).getEmployeeNumber());
-        }
-        if (null != userDetail) {
-            bo.setPosition(userDetail.getPositionName());
-            bo.setDepartment(userDetail.getDepartmentName());
-            DepartmentDetailBO departmentDetail = departmentDetailAPI.findByDepartment(userDetail.getDepartmentId());
-            if (null != departmentDetail)
-                bo.setArea(departmentDetail.getArea());
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.get(0).getId());
+            bo.setArea("");
+            bo.setPosition("");
+            bo.setDepartment("");
+            if (null != detailBO)
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
+                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
+                    bo.setArea(bo.getArea() + "," + position.getArea());
+                }
         }
         return bo;
     }

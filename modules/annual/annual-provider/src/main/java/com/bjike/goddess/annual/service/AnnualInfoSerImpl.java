@@ -15,12 +15,14 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.ArrangementAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -50,7 +52,11 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Autowired
     private UserDetailAPI userDetailAPI;
     @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private ArrangementAPI arrangementAPI;
     @Autowired
     private AnnualStandardSer annualStandardSer;
     @Autowired
@@ -82,8 +88,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     /**
      * 计算工龄
      *
-     * @param entity         年假信息实体数据
-     * @param now            当前日期
+     * @param entity        年假信息实体数据
+     * @param now           当前日期
      * @param arrangementId 层级ID
      * @return
      * @throws SerException
@@ -142,18 +148,27 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
         List<AnnualInfo> saveList = new ArrayList<>(0), updateList = super.findByCis(annualInfoDTO);
         List<String> receivers = new ArrayList<>(0);
         for (UserBO userBO : userBOs) {
-            UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-            PositionDetailBO detailBO = positionDetailAPI.findByPostId(userDetailBO.getPositionId());
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(userBO.getId());
+            PositionDetailBO position;
+            int annual = 0;
             AnnualInfo entity = new AnnualInfo();
             entity.setYear(now.getYear());
-            entity.setArea(detailBO.getArea());
             entity.setUsername(userBO.getUsername());
-            entity.setDepartment(detailBO.getDepartmentName());
-            entity.setPosition(detailBO.getPositionName());
-            entity.setArrangement(detailBO.getArrangementName());
             entity.setEntryTime(LocalDate.parse("2016-01-01"));//@TODO 假数据 等员工信息入职时间
+
+            for (String id : detailBO.getPositionIds().split(",")) {
+                PositionDetailBO positionDetail = positionDetailAPI.findBOById(id);
+                entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
+                if (entity.getAnnual() > annual) {//计算层级年假后比当前存储年假大则使用计算年假
+                    annual = entity.getAnnual();
+                    entity.setArea(positionDetail.getArea());
+                    entity.setDepartment(positionDetail.getDepartmentName());
+                    entity.setPosition(positionDetail.getPosition());
+                    entity.setArrangement(positionDetail.getArrangementName());
+                } else
+                    entity.setAnnual(annual);
+            }
             entity.isAlready(Boolean.FALSE);
-            entity.setSeniority(this.countSeniority(entity, now, detailBO.getArrangementId()));
             if (entity.getAnnual() == 0)
                 receivers.add(userBO.getId());
             else

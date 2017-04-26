@@ -2,7 +2,6 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
@@ -40,39 +39,6 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
      * @throws SerException
      */
     default List<PositionDetailBO> findByPostIds(String[] ids) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据职位ID查询
-     *
-     * @param id 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findByPostId(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据上级职位ID查询
-     *
-     * @param parentId 上级职位ID
-     * @return
-     * @throws SerException
-     */
-    default List<PositionDetailBO> findChild(String parentId) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据职位ID查询直接上级职位详细
-     *
-     * @param postId 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findParent(String postId) throws SerException {
         return null;
     }
 
@@ -139,6 +105,28 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
      * @throws SerException
      */
     default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO congeal(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO thaw(String id) throws SerException {
         return null;
     }
 

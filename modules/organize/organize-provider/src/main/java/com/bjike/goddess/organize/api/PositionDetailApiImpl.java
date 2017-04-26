@@ -39,21 +39,6 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     }
 
     @Override
-    public PositionDetailBO findByPostId(String id) throws SerException {
-        return positionDetailSer.findByPostId(id);
-    }
-
-    @Override
-    public List<PositionDetailBO> findChild(String parentId) throws SerException {
-        return positionDetailSer.findChild(parentId);
-    }
-
-    @Override
-    public PositionDetailBO findParent(String postId) throws SerException {
-        return positionDetailSer.findParent(postId);
-    }
-
-    @Override
     public List<PositionDetailBO> findChildByArrangement(String postId) throws SerException {
         return positionDetailSer.findChildByArrangement(postId);
     }
@@ -76,6 +61,16 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     @Override
     public PositionDetailBO update(PositionDetailTO to) throws SerException {
         return positionDetailSer.update(to);
+    }
+
+    @Override
+    public PositionDetailBO congeal(String id) throws SerException {
+        return positionDetailSer.congeal(id);
+    }
+
+    @Override
+    public PositionDetailBO thaw(String id) throws SerException {
+        return positionDetailSer.thaw(id);
     }
 
     @Override

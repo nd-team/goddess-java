@@ -21,7 +21,7 @@ public class PositionInstructionVO {
     private String serialNumber;
 
     /**
-     * 岗位id
+     * 岗位详细id
      */
     private String positionId;
 
@@ -91,7 +91,7 @@ public class PositionInstructionVO {
     private String dimensionName;
 
     /**
-     * 分类ID
+     * 岗位说明书分类ID
      */
     private String classifyId;
 

@@ -12,11 +12,12 @@ import com.bjike.goddess.dimission.entity.DimissionInfo;
 import com.bjike.goddess.dimission.enums.*;
 import com.bjike.goddess.dimission.to.*;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -50,19 +51,27 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Autowired
     private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
 
     private DimissionInfoBO transformBO(DimissionInfo entity) throws SerException {
         DimissionInfoBO bo = BeanTransform.copyProperties(entity, DimissionInfoBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
-        UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());
-        if (null != userDetail) {
-            PositionDetailBO positionDetail = positionDetailAPI.findByPostId(userDetail.getPositionId());
-            if (null != positionDetail) {
-                bo.setArea(positionDetail.getArea());
-                bo.setArrangement(positionDetail.getArrangementName());
-            }
-            bo.setDepartment(userDetail.getDepartmentName());
-            bo.setPosition(userDetail.getPositionName());
+        if (user != null) {
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+            bo.setArea("");
+            bo.setPosition("");
+            bo.setArrangement("");
+            bo.setDepartment("");
+            if (null != detailBO)
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
+                    bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
+                    bo.setArea(bo.getArea() + "," + position.getArea());
+                }
         }
         bo.setEmployeeNumber(user.getEmployeeNumber());
         bo.setPhone(user.getPhone());

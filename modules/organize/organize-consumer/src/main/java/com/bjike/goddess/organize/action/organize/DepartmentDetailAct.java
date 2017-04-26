@@ -146,4 +146,36 @@ public class DepartmentDetailAct {
         }
     }
 
+    /**
+     * 冻结
+     *
+     * @param id 部门详细数据id
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @PatchMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.congeal(id), DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 部门详细数据id
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @PatchMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.thaw(id), DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

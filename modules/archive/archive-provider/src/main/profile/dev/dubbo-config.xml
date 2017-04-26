@@ -40,6 +40,8 @@
                      id="arrangementApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"
                      id="departmentDetailApiImpl"/>
-
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI"
+                     id="positionDetailApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
 </beans>

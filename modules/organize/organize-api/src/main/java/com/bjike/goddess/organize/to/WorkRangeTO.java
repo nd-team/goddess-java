@@ -3,7 +3,6 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -48,16 +47,6 @@ public class WorkRangeTO extends BaseTO {
     @NotNull(message = "工作界面不能为空", groups = {ADD.class, EDIT.class})
     private String node;
 
-    /**
-     * 使用状态
-     */
-    private Status status;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
     public String getDirection() {
         return direction;
     }
@@ -96,21 +85,5 @@ public class WorkRangeTO extends BaseTO {
 
     public void setNode(String node) {
         this.node = node;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

@@ -8,11 +8,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -42,18 +44,26 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
     private UserDetailAPI userDetailAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private ArchiveGatherBO transformBO(ArchiveGather entity) throws SerException {
         ArchiveGatherBO bo = BeanTransform.copyProperties(entity, ArchiveGatherBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
-            UserDetailBO detailBO = userDetailAPI.findByUserId(user.getId());
-            if (null != detailBO) {
-                DepartmentDetailBO departmentDetail = departmentDetailAPI.findByDepartment(detailBO.getDepartmentId());
-                if (null != departmentDetail) bo.setArea(departmentDetail.getArea());
-                bo.setPosition(detailBO.getPositionName());
-                bo.setProject(detailBO.getDepartmentName());
-            }
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+            bo.setArea("");
+            bo.setPosition("");
+            bo.setProject("");
+            if (null != detailBO)
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
+                    bo.setProject(bo.getProject() + "," + position.getDepartmentName());
+                    bo.setArea(bo.getArea() + "," + position.getArea());
+                }
             bo.setSerialNumber(user.getEmployeeNumber());
         }
         return bo;

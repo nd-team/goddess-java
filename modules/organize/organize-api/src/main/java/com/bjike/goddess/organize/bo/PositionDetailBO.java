@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 岗位详细传输对象
@@ -64,14 +65,9 @@ public class PositionDetailBO extends BaseBO {
     private String moduleName;
 
     /**
-     * 岗位ID
-     */
-    private String positionId;
-
-    /**
      * 岗位名称
      */
-    private String positionName;
+    private String position;
 
     /**
      * 人员编制数
@@ -92,6 +88,19 @@ public class PositionDetailBO extends BaseBO {
      * 显示编号
      */
     private String showNumber;
+
+    /**
+     * 职位状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getSerialNumber() {
         return serialNumber;
@@ -173,20 +182,12 @@ public class PositionDetailBO extends BaseBO {
         this.moduleName = moduleName;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getStaff() {

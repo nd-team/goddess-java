@@ -40,6 +40,8 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
 
     @Override
     public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String departmentId, WorkRangeDTO dto) throws SerException {
+        if (StringUtils.isBlank(departmentId))
+            return new ArrayList<>(0);
         String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
         StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");
@@ -64,6 +66,8 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
 
     @Override
     public List<WorkRangeBO> findByDepartment(String departmentId) throws SerException {
+        if (StringUtils.isBlank(departmentId))
+            return new ArrayList<>(0);
         String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
         StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");

@@ -8,9 +8,11 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.WorkRangeAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.WorkRangeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -39,15 +41,15 @@ public class WorkRangeAct {
     /**
      * 查询部门工作范围信息详细列表
      *
-     * @param department_id 部门ID
+     * @param departmentId 部门ID
      * @param dto           部门工作范围数据传输
      * @return class WorkRangeVO
      * @version v1
      */
     @GetMapping("v1/findDepartmentWorkRangeView")
-    public Result findDepartmentWorkRangeView(String department_id, WorkRangeDTO dto) throws ActException {
+    public Result findDepartmentWorkRangeView(String departmentId, WorkRangeDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findDepartmentWorkRangeView(department_id, dto), WorkRangeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findDepartmentWorkRangeView(departmentId, dto), WorkRangeVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,13 +75,13 @@ public class WorkRangeAct {
      * 根据工作范围ID查询部门详细信息
      *
      * @param rangeId 工作范围ID
-     * @return class WorkRangeVO
+     * @return class DepartmentDetailVO
      * @version v1
      */
     @GetMapping("v1/findByRange")
     public Result findByRange(String rangeId, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByRange(rangeId), WorkRangeVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findByRange(rangeId), DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

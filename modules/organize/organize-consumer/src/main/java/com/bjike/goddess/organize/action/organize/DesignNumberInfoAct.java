@@ -46,7 +46,7 @@ public class DesignNumberInfoAct {
     public Result save(@Validated(ADD.class) DesignNumberInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             DesignNumberInfoBO bo = designNumberInfoAPI.save(to);
-            return new ActResult(BeanTransform.copyProperties(bo, DesignNumberInfoVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(bo, DesignNumberInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -63,7 +63,7 @@ public class DesignNumberInfoAct {
     public Result update(@Validated(EDIT.class) DesignNumberInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             DesignNumberInfoBO bo = designNumberInfoAPI.update(to);
-            return new ActResult(BeanTransform.copyProperties(bo, DesignNumberInfoVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(bo, DesignNumberInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

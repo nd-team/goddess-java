@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+
 /**
  * 岗位详细展示对象
  *
@@ -64,7 +66,7 @@ public class PositionDetailVO {
     /**
      * 岗位ID
      */
-    private String positionId;
+    private String position;
 
     /**
      * 岗位名称
@@ -95,6 +97,19 @@ public class PositionDetailVO {
      * id
      */
     private String id;
+
+    /**
+     * 岗位状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;
@@ -192,12 +207,12 @@ public class PositionDetailVO {
         this.moduleName = moduleName;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getStaff() {

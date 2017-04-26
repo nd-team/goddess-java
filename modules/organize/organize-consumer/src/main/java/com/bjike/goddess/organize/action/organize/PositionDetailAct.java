@@ -67,54 +67,6 @@ public class PositionDetailAct {
     }
 
     /**
-     * 根据职位ID查询
-     *
-     * @param id 职位ID
-     * @return class PositionDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/findByPostId")
-    public Result findByPostId(String id, HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findByPostId(id), PositionDetailVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 根据上级职位ID查询
-     *
-     * @param parentId 上级职位ID
-     * @return class PositionDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/findChild")
-    public Result findChild(String parentId, HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findChild(parentId), PositionDetailVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 根据职位ID查询直接上级职位详细
-     *
-     * @param postId 职位ID
-     * @return class PositionDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/findParent")
-    public Result findParent(String postId, HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findParent(postId), PositionDetailVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 查询下级层级职位详细
      *
      * @param postId 职位ID
@@ -253,6 +205,39 @@ public class PositionDetailAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.findBOById(id), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 冻结
+     *
+     * @param id 岗位详细数据id
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @PatchMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.congeal(id), PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 岗位详细数据id
+     * @return class PositionDetailVO
+     * @version v1
+     */
+    @PatchMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.thaw(id), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -26,7 +26,7 @@ public class PositionInstructionTO extends BaseTO {
     private String serialNumber;
 
     /**
-     * 岗位id
+     * 岗位详细id
      */
     @NotNull(message = "岗位id不能为空", groups = {ADD.class, EDIT.class})
     private String positionId;
@@ -83,52 +83,26 @@ public class PositionInstructionTO extends BaseTO {
     private String angleId;
 
     /**
-     * 角度
-     */
-    private String angleName;
-
-    /**
      * 维度ID
      */
     @NotNull(message = "维度ID不能为空", groups = {ADD.class, EDIT.class})
     private String dimensionId;
 
     /**
-     * 维度
-     */
-    private String dimensionName;
-
-    /**
-     * 分类ID
+     * 岗位说明书分类ID
      */
     @NotNull(message = "分类ID不能为空", groups = {ADD.class, EDIT.class})
     private String classifyId;
-
-    /**
-     * 分类
-     */
-    private String classifyName;
 
     /**
      * 操作类型id
      */
     private String[] operateIds;
 
-
     /**
-     * 操作类型
-     */
-    private String operateNames;
-
-    /**
-     * 体现类别
+     * 体现类别id
      */
     private String[] reflectIds;
-
-    /**
-     * 体现类别
-     */
-    private String reflectNames;
 
     /**
      * 工作描述
@@ -155,11 +129,6 @@ public class PositionInstructionTO extends BaseTO {
      * 输出结果
      */
     private String outcome;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
 
     public String getAngleId() {
         return angleId;
@@ -273,30 +242,6 @@ public class PositionInstructionTO extends BaseTO {
         this.children = children;
     }
 
-    public String getAngleName() {
-        return angleName;
-    }
-
-    public void setAngleName(String angleName) {
-        this.angleName = angleName;
-    }
-
-    public String getDimensionName() {
-        return dimensionName;
-    }
-
-    public void setDimensionName(String dimensionName) {
-        this.dimensionName = dimensionName;
-    }
-
-    public String getClassifyName() {
-        return classifyName;
-    }
-
-    public void setClassifyName(String classifyName) {
-        this.classifyName = classifyName;
-    }
-
     public String[] getOperateIds() {
         return operateIds;
     }
@@ -305,28 +250,12 @@ public class PositionInstructionTO extends BaseTO {
         this.operateIds = operateIds;
     }
 
-    public String getOperateNames() {
-        return operateNames;
-    }
-
-    public void setOperateNames(String operateNames) {
-        this.operateNames = operateNames;
-    }
-
     public String[] getReflectIds() {
         return reflectIds;
     }
 
     public void setReflectIds(String[] reflectIds) {
         this.reflectIds = reflectIds;
-    }
-
-    public String getReflectNames() {
-        return reflectNames;
-    }
-
-    public void setReflectNames(String reflectNames) {
-        this.reflectNames = reflectNames;
     }
 
     public String getDescription() {
@@ -367,13 +296,5 @@ public class PositionInstructionTO extends BaseTO {
 
     public void setOutcome(String outcome) {
         this.outcome = outcome;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

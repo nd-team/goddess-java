@@ -47,11 +47,6 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     }
 
     @Override
-    public DepartmentDetailBO findByDepartment(String id) throws SerException {
-        return departmentDetailSer.findByDepartment(id);
-    }
-
-    @Override
     public DepartmentDetailBO findBOById(String id) throws SerException {
         return departmentDetailSer.findBOById(id);
     }
@@ -64,6 +59,16 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     @Override
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
         return departmentDetailSer.update(to);
+    }
+
+    @Override
+    public DepartmentDetailBO congeal(String id) throws SerException {
+        return departmentDetailSer.congeal(id);
+    }
+
+    @Override
+    public DepartmentDetailBO thaw(String id) throws SerException {
+        return departmentDetailSer.thaw(id);
     }
 
     @Override

@@ -70,6 +70,6 @@ public class InstructionClassifyApiImpl implements InstructionClassifyAPI {
 
     @Override
     public InstructionClassifyBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(instructionClassifySer.findById(id), DesignNumberInfoBO.class);
+        return BeanTransform.copyProperties(instructionClassifySer.findById(id), InstructionClassifyBO.class);
     }
 }

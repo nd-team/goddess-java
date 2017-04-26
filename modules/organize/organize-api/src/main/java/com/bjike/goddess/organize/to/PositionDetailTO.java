@@ -48,10 +48,10 @@ public class PositionDetailTO extends BaseTO {
     private String moduleId;
 
     /**
-     * 岗位ID
+     * 岗位
      */
-    @NotNull(message = "岗位ID不能为空", groups = {ADD.class, EDIT.class})
-    private String positionId;
+    @NotNull(message = "岗位不能为空", groups = {ADD.class, EDIT.class})
+    private String position;
 
     /**
      * 人员编制数
@@ -63,16 +63,6 @@ public class PositionDetailTO extends BaseTO {
      * 当前人数
      */
     private String current;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 显示编号
-     */
-    private String showNumber;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -114,14 +104,6 @@ public class PositionDetailTO extends BaseTO {
         this.moduleId = moduleId;
     }
 
-    public String getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
-    }
-
     public Integer getStaff() {
         return staff;
     }
@@ -138,19 +120,11 @@ public class PositionDetailTO extends BaseTO {
         this.current = current;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getPosition() {
+        return position;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getShowNumber() {
-        return showNumber;
-    }
-
-    public void setShowNumber(String showNumber) {
-        this.showNumber = showNumber;
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

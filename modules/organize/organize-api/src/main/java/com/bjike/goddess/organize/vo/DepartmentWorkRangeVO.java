@@ -29,11 +29,6 @@ public class DepartmentWorkRangeVO {
     private String hierarchy;
 
     /**
-     * 项目组/部门id
-     */
-    private String departmentId;
-
-    /**
      * 项目组/部门
      */
     private String departmentName;
@@ -108,14 +103,6 @@ public class DepartmentWorkRangeVO {
 
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
     }
 
     public String getDepartmentName() {

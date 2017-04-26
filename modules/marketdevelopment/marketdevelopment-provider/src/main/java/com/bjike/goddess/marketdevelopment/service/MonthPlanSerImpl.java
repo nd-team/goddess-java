@@ -6,9 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
-import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
+import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,17 +129,26 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
-        List<String> yearPlanIdList = yearPlanSer.findByYear(year).stream().map(YearPlanBO::getId).collect(Collectors.toList());
-        if (yearPlanIdList.size() == 0)
-            return new ArrayList<>(0);
-        StringBuilder sb = new StringBuilder("");
-        for (String id : yearPlanIdList) {
-            sb.append("'").append(id).append("',");
+        String[] fields = {"id", "accounted", "courseAccounted", "leastQuota", "quota", "total", "yearId"};
+        StringBuilder sql = new StringBuilder(" SELECT m.id,m.accounted,m.courseAccounted,m.leastQuota,m.quota,m.total,m.year_id FROM marketdevelopment_month_plan AS m ");
+        sql.append(" LEFT JOIN (SELECT id FROM marketdevelopment_year_plan WHERE year = ");
+        sql.append(year);
+        sql.append(") AS y ON y.id = m.year_id");
+        List<MonthPlanBO> bos = super.findBySql(sql.toString(), MonthPlanBO.class, fields);
+        for (MonthPlanBO bo : bos) {
+            YearPlan yearPlan = yearPlanSer.findById(bo.getYearId());
+            bo.setYearId(yearPlan.getId());
+            bo.setYearNumber(yearPlan.getYear());
+            bo.setType(yearPlan.getType());
+            bo.setWorkloadWeight(yearPlan.getWorkloadWeight());
+            bo.setCourse(yearPlan.getCourse());
+            bo.setDevelopment(yearPlan.getDevelopment());
+            bo.setBusinessAccounted(yearPlan.getBusinessAccounted());
+            bo.setYearCourseAccounted(yearPlan.getCourseAccounted());
+            bo.setYearQuota(yearPlan.getQuota());
+            bo.setMonth(super.findById(bo.getId()).getMonth());
         }
-        MonthPlanDTO dto = new MonthPlanDTO();
-        dto.getConditions().add(Restrict.in("year.id", StringUtils.substringBeforeLast(sb.toString(), ",")));
-        List<MonthPlan> list = super.findByCis(dto);
-        return this.transformBOList(list);
+        return bos;
     }
 
     @Override

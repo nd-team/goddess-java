@@ -57,7 +57,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
         for (PositionDetail positionDetail : entity.getPositionSet()) {
             positionId.append(positionDetail.getId()).append(",");
-            positionName.append(positionAPI.findById(positionDetail.getPositionId()).getName()).append(",");
+            positionName.append(positionAPI.findById(positionDetail.getPosition()).getName()).append(",");
         }
         bo.setPosition(positionName.toString());
         bo.setPositionIds(positionId.toString());
@@ -149,7 +149,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
                 for (String id : positionIds)
-                    if (detail.getPositionId().equals(id))
+                    if (detail.getPosition().equals(id))
                         return true;
         return false;
     }

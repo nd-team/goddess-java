@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+
 /**
  * 部门详细展示对象
  *
@@ -31,11 +33,6 @@ public class DepartmentDetailVO {
      * 体系
      */
     private String hierarchyName;
-
-    /**
-     * 项目组/部门id
-     */
-    private String departmentId;
 
     /**
      * 项目组/部门
@@ -71,6 +68,19 @@ public class DepartmentDetailVO {
      * id
      */
     private String id;
+
+    /**
+     * 部门状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;
@@ -110,14 +120,6 @@ public class DepartmentDetailVO {
 
     public void setHierarchyName(String hierarchyName) {
         this.hierarchyName = hierarchyName;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
     }
 
     public String getDepartment() {
