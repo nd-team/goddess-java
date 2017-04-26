@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -54,6 +55,26 @@ public class ProjectCarryAction {
     }
 
     /**
+     * 一个项目实施
+     *
+     * @param id 项目实施信息id
+     * @des 根据id获取项目实施信息
+     * @return  class ProjectCarryVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ProjectCarryVO projectCarryVO = BeanTransform.copyProperties(
+                    projectCarryAPI.getOneById(id), ProjectCarryVO.class, true);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 项目实施列表
      *
      * @param projectCarryDTO 项目实施信息dto
@@ -61,11 +82,11 @@ public class ProjectCarryAction {
      * @return  class ProjectCarryVO
      * @version v1
      */
-    @GetMapping("v1/listProjectCarry")
-    public Result findListProjectCarry(ProjectCarryDTO projectCarryDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListProjectCarry(ProjectCarryDTO projectCarryDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ProjectCarryVO> projectCarryVOList = BeanTransform.copyProperties(
-                    projectCarryAPI.listProjectCarry(projectCarryDTO), ProjectCarryVO.class, true);
+                    projectCarryAPI.listProjectCarry(projectCarryDTO), ProjectCarryVO.class, request);
             return ActResult.initialize(projectCarryVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +106,7 @@ public class ProjectCarryAction {
     public Result addProjectCarry(@Validated({ProjectCarryTO.TESTAddAndEdit.class}) ProjectCarryTO projectCarryTO, BindingResult bindingResult) throws ActException {
         try {
             ProjectCarryBO projectCarryBO1 = projectCarryAPI.addProjectCarry(projectCarryTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectCarryBO1,ProjectCarryVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectCarryBO1,ProjectCarryVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -129,24 +150,7 @@ public class ProjectCarryAction {
         }
     }
 
-    /**
-     * 搜索
-     *
-     * @param projectCarryDTO 项目实施信息dto
-     * @des 获取所有项目实施信息
-     * @return  class ProjectCarryVO
-     * @version v1
-     */
-    @GetMapping("v1/searchInfo")
-    public Result searchInfo(ProjectCarryDTO projectCarryDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<ProjectCarryVO> projectCarryVOList = BeanTransform.copyProperties(
-                    projectCarryAPI.searchListProjectCarry(projectCarryDTO), ProjectCarryVO.class, true);
-            return ActResult.initialize(projectCarryVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
     /**
@@ -181,6 +185,7 @@ public class ProjectCarryAction {
      */
     @PostMapping("v1/uplode")
     public Result uplodeFile( ) throws ActException {
+
         return  null;
     }
 

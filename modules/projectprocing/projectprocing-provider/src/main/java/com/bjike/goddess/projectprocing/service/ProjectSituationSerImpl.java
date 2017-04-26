@@ -37,6 +37,15 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
     }
 
     @Override
+    public ProjectSituationBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw  new SerException("id不能为空");
+        }
+        ProjectSituation projectSituation = super.findById( id );
+        return BeanTransform.copyProperties( projectSituation , ProjectSituationBO.class);
+    }
+
+    @Override
     public List<ProjectSituationBO> listProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
         List<ProjectSituation> list = super.findByCis(projectSituationDTO,true);
         return BeanTransform.copyProperties(list,ProjectSituationBO.class);

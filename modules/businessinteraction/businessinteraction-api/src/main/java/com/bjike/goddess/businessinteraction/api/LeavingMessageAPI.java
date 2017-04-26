@@ -19,6 +19,20 @@ import java.util.List;
 public interface LeavingMessageAPI {
 
     /**
+     * 留言列表总条数
+     *
+     */
+    default Long countInter(LeavingMessageDTO leavingMessageDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 留言描述列表id
+     * @return class LeavingMessageBO
+     */
+    default LeavingMessageBO getOneById (String id) throws SerException {return null;}
+
+    
+    /**
      * 留言列表
      * @return class LeavingMessageBO
      */

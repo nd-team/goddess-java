@@ -21,6 +21,20 @@ import java.util.List;
 public interface InteractionRelationSer extends Ser<InteractionRelation, InteractionRelationDTO> {
 
     /**
+     * 商业能力互动联系列表总条数
+     *
+     */
+    default Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 互动联系列表id
+     * @return class InteractionRelationBO
+     */
+    default InteractionRelationBO getOneById (String id) throws SerException {return null;}
+
+
+    /**
      * 互动联系列表
      *
      * @return class InteractionRelationBO

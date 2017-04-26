@@ -31,6 +31,11 @@ public class ProjectCarryAuditApiImpl implements ProjectCarryAuditAPI {
     }
 
     @Override
+    public ProjectCarryAuditBO getOneById(String id) throws SerException {
+        return projectCarryAuditSer.getOneById(id);
+    }
+
+    @Override
     public List<ProjectCarryAuditBO> listProjectCarryAudit(ProjectCarryAuditDTO projectCarryAuditDTO) throws SerException {
         return projectCarryAuditSer.listProjectCarryAudit(projectCarryAuditDTO);
     }

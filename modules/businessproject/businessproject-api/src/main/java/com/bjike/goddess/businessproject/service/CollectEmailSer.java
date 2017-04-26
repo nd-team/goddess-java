@@ -20,6 +20,19 @@ import java.util.List;
  */
 public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
+    /**
+     * 总条数
+     */
+    default Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 一个个邮件
+     * @return class CollectEmailBO
+     */
+    default CollectEmailBO getOne(String id) throws SerException {return null;}
 
     /**
      * 客户邮件汇总列表

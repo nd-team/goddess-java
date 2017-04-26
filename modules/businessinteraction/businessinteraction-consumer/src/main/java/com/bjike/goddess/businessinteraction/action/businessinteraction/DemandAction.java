@@ -10,6 +10,7 @@ import com.bjike.goddess.businessinteraction.vo.DemandVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,18 +39,55 @@ public class DemandAction {
     private DemandAPI demandAPI;
 
     /**
+     *  列表总条数
+     *
+     * @param demandDTO  互动平台需求信息dto
+     * @des 获取所有互动平台需求信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DemandDTO demandDTO) throws ActException {
+        try {
+            Long count = demandAPI.countInter(demandDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个互动平台需求
+     *
+     * @param id 互动平台需求信息id
+     * @des 根据id获取所有互动平台需求信息
+     * @return  class DemandVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne( @PathVariable String id ) throws ActException {
+        try {
+            DemandVO demandVOList = BeanTransform.copyProperties(
+                    demandAPI.getOneById(id), DemandVO.class);
+            return ActResult.initialize(demandVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 互动平台需求描述列表
      *
      * @param demandDTO 互动平台需求描述信息dto
+     * @param request 前端过滤参数
      * @des 获取所有互动平台需求描述信息
      * @return  class DemandVO
      * @version v1
      */
     @GetMapping("v1/listDemand")
-    public Result findListDemand( DemandDTO demandDTO, BindingResult bindingResult) throws ActException {
+    public Result findListDemand(DemandDTO demandDTO, BindingResult bindingResult , HttpServletRequest request) throws ActException {
         try {
             List<DemandVO> demandVOList = BeanTransform.copyProperties(
-                    demandAPI.listDemand(demandDTO), DemandVO.class, true);
+                    demandAPI.listDemand(demandDTO), DemandVO.class, request);
             return ActResult.initialize(demandVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -63,11 +102,12 @@ public class DemandAction {
      * @return  class DemandVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addDemand(@Validated DemandTO demandTO, BindingResult bindingResult) throws ActException {
         try {
             DemandBO demandBO1 = demandAPI.addDemand(demandTO);
-            return ActResult.initialize(BeanTransform.copyProperties(demandBO1,DemandVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(demandBO1,DemandVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -82,11 +122,12 @@ public class DemandAction {
      * @return  class DemandVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editDemand(@Validated DemandTO demandTO) throws ActException {
         try {
             DemandBO demandBO1 = demandAPI.editDemand(demandTO);
-            return ActResult.initialize(BeanTransform.copyProperties(demandBO1,DemandVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(demandBO1,DemandVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -99,6 +140,7 @@ public class DemandAction {
      * @des 根据id删除互动平台需求描述信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteDemand(@PathVariable String id) throws ActException {
         try {
@@ -121,7 +163,7 @@ public class DemandAction {
     public Result searchList(@Validated({DemandDTO.TESTDemandDto.class}) DemandDTO demandDTO, BindingResult bindingResult) throws ActException {
         try {
             List<DemandVO> demandVOList = BeanTransform.copyProperties(
-                    demandAPI.searchList(demandDTO), DemandVO.class, true);
+                    demandAPI.searchList(demandDTO), DemandVO.class);
             return ActResult.initialize(demandVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -140,7 +182,7 @@ public class DemandAction {
     public Result searchDemand(@Validated({DemandDTO.TESTDemandDTO.class}) DemandDTO demandDTO, BindingResult bindingResult) throws ActException {
         try {
             List<DemandObjectVO> demandVOList = BeanTransform.copyProperties(
-                    demandAPI.searchDemand(demandDTO), DemandObjectVO.class, true);
+                    demandAPI.searchDemand(demandDTO), DemandObjectVO.class);
             return ActResult.initialize(demandVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -18,13 +18,13 @@ public class LeavingMessageTO extends BaseTO {
     /**
      * 姓名
      */
-    @NotBlank(message = "姓名不能为空")
+    @NotBlank(groups = {LeavingMessageTO.TESTLeavingMessage.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 联系方式
      */
-    @NotBlank(message = "联系方式不能为空")
+    @NotBlank(groups = {LeavingMessageTO.TESTLeavingMessage.class}, message = "联系方式不能为空")
     private String contactWay;
 
     /**
@@ -35,7 +35,7 @@ public class LeavingMessageTO extends BaseTO {
     /**
      * 互动联系信息id
      */
-    @NotBlank(groups = LeavingMessageTO.TESTLeavingMessage.class,message = "互动联系信息id不能为空")
+    @NotBlank(groups = {LeavingMessageTO.TESTLeavingMessage.class},message = "互动联系信息id不能为空")
     private String interactionId;
 
 

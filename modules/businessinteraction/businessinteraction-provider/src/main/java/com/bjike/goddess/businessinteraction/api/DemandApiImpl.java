@@ -27,6 +27,16 @@ public class DemandApiImpl implements DemandAPI {
     private DemandSer demandSer;
 
     @Override
+    public Long countInter(DemandDTO demandDTO) throws SerException {
+        return demandSer.countInter(demandDTO);
+    }
+
+    @Override
+    public DemandBO getOneById(String id) throws SerException {
+        return demandSer.getOneById(id);
+    }
+    
+    @Override
     public List<DemandBO> listDemand(DemandDTO demandDTO) throws SerException {
         return demandSer.listDemand(demandDTO);
     }

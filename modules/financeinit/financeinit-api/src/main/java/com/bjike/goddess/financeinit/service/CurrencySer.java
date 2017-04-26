@@ -20,6 +20,20 @@ import java.util.List;
  */
 public interface CurrencySer extends Ser<Currency, CurrencyDTO> {
 
+    /**
+     * 币别列表总条数
+     *
+     */
+    default Long countCurrency(CurrencyDTO currencyDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取币别列表
+     * @return class CurrencyBO
+     */
+    default CurrencyBO getOneById(String id) throws SerException {return null;}
+
 
     /**
      *  币别列表

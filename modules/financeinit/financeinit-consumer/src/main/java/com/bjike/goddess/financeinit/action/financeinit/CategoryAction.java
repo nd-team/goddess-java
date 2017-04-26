@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +38,42 @@ public class CategoryAction {
     private CategoryAPI categoryAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param customerBaseInfoDTO 类别信息dto
+     * @des 获取所有类别信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CategoryDTO customerBaseInfoDTO) throws ActException {
+        try {
+            Long count = categoryAPI.countCategory(customerBaseInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个实施审核
+     *
+     * @param id 项目类别信息id
+     * @des 根据id获取项目类别信息
+     * @return  class CategoryVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            CategoryVO projectCarryVO = BeanTransform.copyProperties(
+                    categoryAPI.getOneById(id), CategoryVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 类别列表
      *
      * @param categoryDTO 类别信息dto
@@ -50,13 +87,14 @@ public class CategoryAction {
             List<CategoryBO> categoryBOList = categoryAPI.listCategory(categoryDTO);
             List<CategoryVO> categoryVOList = BeanTransform.copyProperties(
                     categoryBOList , CategoryVO.class);
+            List<CategoryVO> categoryVOLists = new ArrayList<>();
             categoryBOList.stream().forEach(str -> {
                 FirstSubjectVO firstSubjectVO = BeanTransform.copyProperties(str.getFirstSubjectBO(), FirstSubjectVO.class);
                 CategoryVO cv= BeanTransform.copyProperties(str, CategoryVO.class);
                 cv.setFirstSubjectVO(firstSubjectVO);
-                categoryVOList.add(cv);
+                categoryVOLists.add(cv);
             });
-            return ActResult.initialize(categoryVOList);
+            return ActResult.initialize(categoryVOLists);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -33,6 +33,23 @@ import java.util.List;
 public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements DemandSer {
 
     @Override
+    public Long countInter(DemandDTO demandDTO) throws SerException {
+        Long count =  super.count(demandDTO);
+        return count;
+    }
+
+    @Override
+    public DemandBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        Demand demand = super.findById(id);
+
+        return BeanTransform.copyProperties(demand, DemandBO.class);
+    }
+    
+    
+    @Override
     public List<DemandBO> listDemand(DemandDTO demandDTO) throws SerException {
         List<Demand> list = super.findByCis(demandDTO, true);
 

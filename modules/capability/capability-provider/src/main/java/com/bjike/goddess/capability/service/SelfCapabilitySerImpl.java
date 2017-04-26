@@ -1,6 +1,8 @@
 package com.bjike.goddess.capability.service;
 
 import com.bjike.goddess.capability.bo.SelfCapabilityBO;
+import com.bjike.goddess.capability.dto.SelfCapabilitySocialDTO;
+import com.bjike.goddess.capability.entity.SelfCapabilitySocial;
 import com.bjike.goddess.capability.to.SelfCapabilityTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,6 +12,7 @@ import com.bjike.goddess.capability.entity.SelfCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,9 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "capabilitySerCache")
 @Service
 public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapabilityDTO> implements SelfCapabilitySer {
+
+    @Autowired
+    private SelfCapabilitySocialSer selfCapabilitySocialSer;
 
     @Override
     public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
@@ -110,53 +116,16 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
-
-        SelfCapability temp = BeanTransform.copyProperties(selfCapabilityTO,SelfCapability.class,true);
-        SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
-        BeanUtils.copyProperties( temp , selfCapability,"id","createTime","name","capacity","selfJobTitle","positionTitle","workYear","selfProject");
-        selfCapability.setModifyTime(LocalDateTime.now());
-
-        super.update( selfCapability );
-        return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
     public void deleteSelfCapability(String id) throws SerException {
+        //先删社交
+        SelfCapabilitySocialDTO ssDTO = new SelfCapabilitySocialDTO();
+        ssDTO.getConditions().add(Restrict.eq("selfCapabilityId",id));
+        List<SelfCapabilitySocial> selfCapabilitySocialList = selfCapabilitySocialSer.findByCis( ssDTO );
+        selfCapabilitySocialSer.remove( selfCapabilitySocialList );
+
         super.remove(id);
     }
 
-    
-    @Override
-    public SelfCapabilityBO getSelfConnector(String id) throws SerException {
-        SelfCapability selfCapability = super.findById( id );
-        return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
-    }
-    
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public SelfCapabilityBO editSelfConnector(SelfCapabilityTO selfCapabilityTO) throws SerException {
-        SelfCapability selfCapability = super.findById( selfCapabilityTO.getId() );
-
-        selfCapability.setContactName( selfCapabilityTO.getContactName());
-        selfCapability.setSex( selfCapabilityTO.getSex());
-        selfCapability.setContactWay( selfCapabilityTO.getContactWay());
-        selfCapability.setEmailName( selfCapabilityTO.getEmailName());
-        selfCapability.setQqOrWechat( selfCapabilityTO.getQqOrWechat());
-        selfCapability.setNatives( selfCapabilityTO.getNatives());
-        selfCapability.setHobby( selfCapabilityTO.getHobby());
-        selfCapability.setCharact( selfCapabilityTO.getCharact());
-        selfCapability.setFamily( selfCapabilityTO.getFamily());
-        selfCapability.setFamilyRelation( selfCapabilityTO.getFamilyRelation());
-        selfCapability.setStudyExperience( selfCapabilityTO.getStudyExperience());
-        selfCapability.setConnectExperience( selfCapabilityTO.getConnectExperience());
-        selfCapability.setOldWorkPlace( selfCapabilityTO.getOldWorkPlace());
-        selfCapability.setLivePlace( selfCapabilityTO.getLivePlace());
-        selfCapability.setGrowthPlace( selfCapabilityTO.getGrowthPlace());
-        super.update( selfCapability );
-        return BeanTransform.copyProperties(selfCapability, SelfCapabilityBO.class);
-    }
 
     
     @Override

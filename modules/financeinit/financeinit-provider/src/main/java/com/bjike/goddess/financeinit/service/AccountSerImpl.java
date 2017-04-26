@@ -41,6 +41,21 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
     private CategorySer categorySer;
 
     @Override
+    public Long countAccount(AccountDTO accountDTO) throws SerException {
+        Long count = super.count( accountDTO );
+        return count;
+    }
+
+    @Override
+    public AccountBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        Account account = super.findById(id);
+        return BeanTransform.copyProperties(account, AccountBO.class );
+    }
+
+    @Override
     public List<AccountBO> listAccount(AccountDTO accountDTO) throws SerException {
         List<Account> list = super.findByCis(accountDTO, true);
 
@@ -67,6 +82,7 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         Account account = super.findById(accountTO.getId());
         Account temp = BeanTransform.copyProperties(accountTO, Account.class, true);
         BeanUtils.copyProperties(temp, account, "id", "createTime");
+        account.setModifyTime( LocalDateTime.now() );
         super.update(account);
         return BeanTransform.copyProperties(account, AccountBO.class);
     }
@@ -86,7 +102,7 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
             throw new SerException("一级级别名不能为空");
         }
         CategoryDTO cdto = new CategoryDTO();
-        cdto.setSecondSubject(accountDTO.getFirstSubject());
+        cdto.setFirstSubjectName(accountDTO.getFirstSubject());
         List<String> list = categorySer.getSecondSubject(cdto);
         return list;
     }
@@ -97,7 +113,7 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
             throw new SerException("一级级别名不能为空");
         }
         CategoryDTO cdto = new CategoryDTO();
-        cdto.setSecondSubject(accountDTO.getFirstSubject());
+        cdto.setFirstSubjectName(accountDTO.getFirstSubject());
         cdto.setSecondSubject(accountDTO.getSecondSubject());
         List<String> list = categorySer.getThirdSubject(cdto);
         return list;

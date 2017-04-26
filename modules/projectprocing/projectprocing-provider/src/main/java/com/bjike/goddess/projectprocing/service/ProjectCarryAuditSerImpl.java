@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -33,11 +34,30 @@ public class ProjectCarryAuditSerImpl extends ServiceImpl<ProjectCarryAudit, Pro
 
     @Override
     public Long countProjectCarryAudit(ProjectCarryAuditDTO projectCarryAuditDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectCarryAuditDTO.getSaleNum())){
+            projectCarryAuditDTO.getConditions().add(Restrict.like("saleNum",projectCarryAuditDTO.getSaleNum()));
+        }if(StringUtils.isNoneBlank(projectCarryAuditDTO.getSignProjectCondition())){
+            projectCarryAuditDTO.getConditions().add(Restrict.like("signProjectCondition",projectCarryAuditDTO.getSignProjectCondition()));
+        }
         return super.count(projectCarryAuditDTO);
     }
 
     @Override
+    public ProjectCarryAuditBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw  new SerException("id不能为空");
+        }
+        ProjectCarryAudit projectSituation = super.findById( id );
+        return BeanTransform.copyProperties( projectSituation , ProjectCarryAuditBO.class);
+    }
+
+    @Override
     public List<ProjectCarryAuditBO> listProjectCarryAudit(ProjectCarryAuditDTO projectCarryAuditDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectCarryAuditDTO.getSaleNum())){
+            projectCarryAuditDTO.getConditions().add(Restrict.like("saleNum",projectCarryAuditDTO.getSaleNum()));
+        }if(StringUtils.isNoneBlank(projectCarryAuditDTO.getSignProjectCondition())){
+            projectCarryAuditDTO.getConditions().add(Restrict.like("signProjectCondition",projectCarryAuditDTO.getSignProjectCondition()));
+        }
         List<ProjectCarryAudit> list = super.findByCis(projectCarryAuditDTO,true);
         return BeanTransform.copyProperties(list,ProjectCarryAuditBO.class);
     }

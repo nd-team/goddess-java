@@ -27,6 +27,16 @@ public class FirstSubjectApiImpl implements FirstSubjectAPI {
     private FirstSubjectSer firstSubjectSer;
 
     @Override
+    public Long countFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
+        return firstSubjectSer.countFirstSubject( firstSubjectDTO );
+    }
+
+    @Override
+    public FirstSubjectBO getOneById(String id) throws SerException {
+        return firstSubjectSer.getOneById(id);
+    }
+    
+    @Override
     public List<FirstSubjectBO> listFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
         return firstSubjectSer.listFirstSubject(firstSubjectDTO);
     }
