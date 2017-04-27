@@ -1,14 +1,23 @@
-模块名:materialinstorage
-类名:StockWarning
-作者:sunfengtao
-描述:库存预警
+模块名:secure
+类名:removeAdd
+作者:chenjunhao
+描述:增员前
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String area 地区;
-Double lowerValue 下限值;
-Double upperValue 上限值;
-String materialType 物资类型;
+String intelligence 资质名称;
+String company 公司名称;
+String arrival 社保需增地市;
+String arrivalDescrption 社保地市特殊说明;
+String addTime 需增员时间;
+Double time 需参保时长;
+String request 增员参保周期特殊要求;
+Integer companyCount 当前各公司参保总人数;
+Integer cityCount 当前各地市总参保人员;
+String name 可参保人员姓名;
+String addCity 可参保人员新增的地市;
+String description 备注;
+boolean increase 是否增员;
 )

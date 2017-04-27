@@ -256,3 +256,9 @@ include ':modules:materialinstock:materialinstock-consumer'
 include ':modules:materialinstock:materialinstock-provider'
 
 
+//#secure 社保管理
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
+
+
