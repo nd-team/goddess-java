@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -54,6 +55,25 @@ public class ProjectAcceptanceAction {
     }
 
     /**
+     * 一个验收情况
+     *
+     * @param id 项目验收情况信息id
+     * @des 根据id获取项目验收情况信息
+     * @return  class ProjectAcceptanceVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ProjectAcceptanceVO projectCarryVO = BeanTransform.copyProperties(
+                    projectAcceptanceAPI.getOneById(id), ProjectAcceptanceVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目验收情况列表
      *
      * @param projectAcceptanceDTO 项目验收情况信息dto
@@ -61,11 +81,11 @@ public class ProjectAcceptanceAction {
      * @return  class ProjectAcceptanceVO
      * @version v1
      */
-    @GetMapping("v1/listProjectAcceptance")
-    public Result findListProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ProjectAcceptanceVO> projectAcceptanceVOList = BeanTransform.copyProperties(
-                    projectAcceptanceAPI.listProjectAcceptance(projectAcceptanceDTO), ProjectAcceptanceVO.class, true);
+                    projectAcceptanceAPI.listProjectAcceptance(projectAcceptanceDTO), ProjectAcceptanceVO.class,request);
             return ActResult.initialize(projectAcceptanceVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +105,7 @@ public class ProjectAcceptanceAction {
     public Result addProjectAcceptance(@Validated({ProjectAcceptanceTO.TESTAddAndEdit.class}) ProjectAcceptanceTO projectAcceptanceTO, BindingResult bindingResult) throws ActException {
         try {
             ProjectAcceptanceBO projectAcceptanceBO1 = projectAcceptanceAPI.addProjectAcceptance(projectAcceptanceTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectAcceptanceBO1,ProjectAcceptanceVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectAcceptanceBO1,ProjectAcceptanceVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,7 +125,7 @@ public class ProjectAcceptanceAction {
     public Result editProjectAcceptance(@Validated({ProjectAcceptanceTO.TESTAddAndEdit.class}) ProjectAcceptanceTO projectAcceptanceTO) throws ActException {
         try {
             ProjectAcceptanceBO projectAcceptanceBO1 = projectAcceptanceAPI.editProjectAcceptance(projectAcceptanceTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectAcceptanceBO1,ProjectAcceptanceVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectAcceptanceBO1,ProjectAcceptanceVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -129,24 +149,6 @@ public class ProjectAcceptanceAction {
         }
     }
 
-    /**
-     * 搜索
-     *
-     * @param projectAcceptanceDTO 项目验收情况信息dto
-     * @des 获取所有项目验收情况信息
-     * @return  class ProjectAcceptanceVO
-     * @version v1
-     */
-    @GetMapping("v1/searchInfo")
-    public Result searchInfo(ProjectAcceptanceDTO projectAcceptanceDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<ProjectAcceptanceVO> projectAcceptanceVOList = BeanTransform.copyProperties(
-                    projectAcceptanceAPI.searchListProjectAcceptance(projectAcceptanceDTO), ProjectAcceptanceVO.class, true);
-            return ActResult.initialize(projectAcceptanceVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 
     /**

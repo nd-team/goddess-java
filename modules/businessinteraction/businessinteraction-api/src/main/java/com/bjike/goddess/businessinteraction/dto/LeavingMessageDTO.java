@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessinteraction.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 留言数据传输对象
@@ -13,4 +14,18 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class LeavingMessageDTO extends BaseDTO {
 
+    public interface TestList{}
+    /**
+     * 互动id
+     */
+    @NotBlank(groups = {LeavingMessageDTO.TestList.class} , message = "互动id不能为空")
+    private String interactionId;
+
+    public String getInteractionId() {
+        return interactionId;
+    }
+
+    public void setInteractionId(String interactionId) {
+        this.interactionId = interactionId;
+    }
 }

@@ -20,6 +20,19 @@ import java.util.List;
 public interface DemandAPI {
 
     /**
+     * 互动平台需求描述列表总条数
+     *
+     */
+    default Long countInter(DemandDTO demandDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 互动平台需求描述列表id
+     * @return class DemandBO
+     */
+    default DemandBO getOneById (String id) throws SerException {return null;}
+
+    /**
      * 互动平台需求描述列表
      * @return class DemandBO
      */

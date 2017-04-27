@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -54,6 +55,26 @@ public class ProjectSettlementFollowAction {
     }
 
     /**
+     * 一个实施审核
+     *
+     * @param id 项目项目结算跟进信息id
+     * @des 根据id获取项目项目结算跟进信息
+     * @return  class ProjectSettlementFollowVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ProjectSettlementFollowVO projectCarryVO = BeanTransform.copyProperties(
+                    projectSettlementFollowAPI.getOneById(id), ProjectSettlementFollowVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 项目结算跟进列表
      *
      * @param projectSettlementFollowDTO 项目结算跟进信息dto
@@ -61,11 +82,11 @@ public class ProjectSettlementFollowAction {
      * @des 获取所有项目结算跟进信息
      * @version v1
      */
-    @GetMapping("v1/listProjectSettlementFollow")
-    public Result findListProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ProjectSettlementFollowVO> projectSettlementFollowVOList = BeanTransform.copyProperties(
-                    projectSettlementFollowAPI.listProjectSettlementFollow(projectSettlementFollowDTO), ProjectSettlementFollowVO.class, true);
+                    projectSettlementFollowAPI.listProjectSettlementFollow(projectSettlementFollowDTO), ProjectSettlementFollowVO.class, request);
             return ActResult.initialize(projectSettlementFollowVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +106,7 @@ public class ProjectSettlementFollowAction {
     public Result addProjectSettlementFollow(@Validated({ProjectSettlementFollowTO.TESTAddAndEdit.class}) ProjectSettlementFollowTO projectSettlementFollowTO, BindingResult bindingResult) throws ActException {
         try {
             ProjectSettlementFollowBO projectSettlementFollowBO1 = projectSettlementFollowAPI.addProjectSettlementFollow(projectSettlementFollowTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectSettlementFollowBO1, ProjectSettlementFollowVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectSettlementFollowBO1, ProjectSettlementFollowVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,7 +126,7 @@ public class ProjectSettlementFollowAction {
     public Result editProjectSettlementFollow(@Validated({ProjectSettlementFollowTO.TESTAddAndEdit.class}) ProjectSettlementFollowTO projectSettlementFollowTO) throws ActException {
         try {
             ProjectSettlementFollowBO projectSettlementFollowBO1 = projectSettlementFollowAPI.editProjectSettlementFollow(projectSettlementFollowTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectSettlementFollowBO1, ProjectSettlementFollowVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectSettlementFollowBO1, ProjectSettlementFollowVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -129,24 +150,7 @@ public class ProjectSettlementFollowAction {
         }
     }
 
-    /**
-     * 搜索
-     *
-     * @param projectSettlementFollowDTO 项目结算跟进信息dto
-     * @return class ProjectSettlementFollowVO
-     * @des 获取所有项目结算跟进信息
-     * @version v1
-     */
-    @GetMapping("v1/searchInfo")
-    public Result searchInfo(ProjectSettlementFollowDTO projectSettlementFollowDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<ProjectSettlementFollowVO> projectSettlementFollowVOList = BeanTransform.copyProperties(
-                    projectSettlementFollowAPI.searchListProjectSettlementFollow(projectSettlementFollowDTO), ProjectSettlementFollowVO.class, true);
-            return ActResult.initialize(projectSettlementFollowVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
     /**

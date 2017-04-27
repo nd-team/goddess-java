@@ -9,6 +9,7 @@ import com.bjike.goddess.businessinteraction.vo.TalkDetailVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,18 +37,56 @@ public class TalkDetailAction {
     private TalkDetailAPI talkDetailAPI;
 
     /**
+     *  列表总条数
+     *
+     * @param talkDetailDTO  洽谈详情信息dto
+     * @des 获取所有洽谈详情信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(TalkDetailDTO talkDetailDTO) throws ActException {
+        try {
+            Long count = talkDetailAPI.countInter(talkDetailDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个洽谈详情
+     *
+     * @param id 洽谈详情信息id
+     * @des 根据id获取所有洽谈详情信息
+     * @return  class TalkDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne( @PathVariable String id ) throws ActException {
+        try {
+            TalkDetailVO talkDetailVOList = BeanTransform.copyProperties(
+                    talkDetailAPI.getOneById(id), TalkDetailVO.class);
+            return ActResult.initialize(talkDetailVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    
+    /**
      * 洽谈详情列表
      *
      * @param talkDetailDTO 洽谈详情信息dto
+     * @param request 前端过滤参数
      * @des 获取所有洽谈详情信息
      * @return  class TalkDetailVO
      * @version v1
      */
     @GetMapping("v1/listTalkDetail")
-    public Result findListTalkDetail(TalkDetailDTO talkDetailDTO, BindingResult bindingResult) throws ActException {
+    public Result findListTalkDetail(TalkDetailDTO talkDetailDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<TalkDetailVO> talkDetailVOList = BeanTransform.copyProperties(
-                    talkDetailAPI.listTalkDetail(talkDetailDTO), TalkDetailVO.class, true);
+                    talkDetailAPI.listTalkDetail(talkDetailDTO), TalkDetailVO.class, request);
             return ActResult.initialize(talkDetailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -61,11 +101,12 @@ public class TalkDetailAction {
      * @return  class TalkDetailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addTalkDetail(@Validated TalkDetailTO talkDetailTO, BindingResult bindingResult) throws ActException {
         try {
             TalkDetailBO talkDetailBO1 = talkDetailAPI.addTalkDetail(talkDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -80,11 +121,12 @@ public class TalkDetailAction {
      * @return  class TalkDetailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editTalkDetail(@Validated TalkDetailTO talkDetailTO) throws ActException {
         try {
             TalkDetailBO talkDetailBO1 = talkDetailAPI.editTalkDetail(talkDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -97,6 +139,7 @@ public class TalkDetailAction {
      * @des 根据id删除洽谈详情信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteTalkDetail(@PathVariable String id) throws ActException {
         try {
@@ -119,7 +162,7 @@ public class TalkDetailAction {
     public Result getContactWays(@Validated({TalkDetailDTO.TESTTalkDetailDTO.class}) TalkDetailDTO talkDetailDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ContactObjectVO> talkDetailVOList = BeanTransform.copyProperties(
-                    talkDetailAPI.getContactWays(talkDetailDTO), TalkDetailVO.class, true);
+                    talkDetailAPI.getContactWays(talkDetailDTO), TalkDetailVO.class);
             return ActResult.initialize(talkDetailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

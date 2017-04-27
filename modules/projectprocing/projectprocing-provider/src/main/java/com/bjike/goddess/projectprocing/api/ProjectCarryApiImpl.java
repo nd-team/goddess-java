@@ -31,6 +31,11 @@ public class ProjectCarryApiImpl implements ProjectCarryAPI {
     }
 
     @Override
+    public ProjectCarryBO getOneById(String id) throws SerException {
+        return projectCarrySer.getOneById(id);
+    }
+
+    @Override
     public List<ProjectCarryBO> listProjectCarry(ProjectCarryDTO projectCarryDTO) throws SerException {
         return projectCarrySer.listProjectCarry(projectCarryDTO);
     }

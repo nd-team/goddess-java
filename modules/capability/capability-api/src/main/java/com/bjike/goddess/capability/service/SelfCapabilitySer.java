@@ -37,6 +37,7 @@ public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO
         return null;
     }
 
+
     /**
      * 个人能力展示列表
      *
@@ -67,15 +68,6 @@ public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO
         return null;
     }
 
-    /**
-     * 编辑社交
-     *
-     * @param selfCapabilityTO 个人能力展示信息
-     * @return class SelfCapabilityBO
-     */
-    default SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
-        return null;
-    }
 
     /**
      * 删除
@@ -89,24 +81,7 @@ public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO
     ;
 
 
-    /**
-     * 查看个人社交资源
-     *
-     * @return class SelfCapabilityBO
-     */
-    default SelfCapabilityBO getSelfConnector(String id) throws SerException {
-        return null;
-    }
 
-    /**
-     * 添加或编辑个人社交资源
-     *
-     * @param selfCapabilityTO 合作对象商务展示信息
-     * @return class CooperCapabilityBO
-     */
-    default SelfCapabilityBO editSelfConnector(SelfCapabilityTO selfCapabilityTO) throws SerException {
-        return null;
-    }
 
     /**
      * 搜索
@@ -133,6 +108,7 @@ public interface SelfCapabilitySer extends Ser<SelfCapability, SelfCapabilityDTO
     default List<String> listAllSelfName() throws SerException {
         return null;
     }
+
 
 
 }

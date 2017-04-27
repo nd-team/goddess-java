@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.CollectEmailDTO;
 import com.bjike.goddess.businessproject.service.CollectEmailSer;
 import com.bjike.goddess.businessproject.to.CollectEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,18 @@ import java.util.List;
 @Service("collectEmailApiImpl")
 public class CollectEmailApiImpl implements CollectEmailAPI {
 
+    @Autowired
     private CollectEmailSer collectEmailSer;
 
+    @Override
+    public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        return collectEmailSer.counts(collectEmailDTO);
+    }
+
+    @Override
+    public CollectEmailBO getOne(String id) throws SerException {
+        return collectEmailSer.getOne(id);
+    }
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
         return collectEmailSer.listCollectEmail( collectEmailDTO );

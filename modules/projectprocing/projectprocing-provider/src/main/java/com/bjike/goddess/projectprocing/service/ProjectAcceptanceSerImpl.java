@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -31,11 +32,26 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
 
     @Override
     public Long countProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectAcceptanceDTO.getArea())){
+            projectAcceptanceDTO.getConditions().add(Restrict.like("area",projectAcceptanceDTO.getArea()));
+        }
         return super.count(projectAcceptanceDTO);
     }
 
     @Override
+    public ProjectAcceptanceBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw  new SerException("id不能为空");
+        }
+        ProjectAcceptance projectSituation = super.findById( id );
+        return BeanTransform.copyProperties( projectSituation , ProjectAcceptanceBO.class);
+    }
+
+    @Override
     public List<ProjectAcceptanceBO> listProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectAcceptanceDTO.getArea())){
+            projectAcceptanceDTO.getConditions().add(Restrict.like("area",projectAcceptanceDTO.getArea()));
+        }
         List<ProjectAcceptance> list = super.findByCis(projectAcceptanceDTO,true);
         return BeanTransform.copyProperties(list,ProjectAcceptanceBO.class);
     }

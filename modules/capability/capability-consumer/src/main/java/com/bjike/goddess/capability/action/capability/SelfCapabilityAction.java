@@ -130,24 +130,7 @@ public class SelfCapabilityAction {
         }
     }
 
-    /**
-     * 编辑个人社交能力
-     *
-     * @param selfCapabilityTO 个人能力基本信息数据bo
-     * @return class SelfCapabilityVO
-     * @des 编辑个人社交能力
-     * @version v1
-     */
-    @LoginAuth
-    @PutMapping("v1/editSocial")
-    public Result editSocial(   SelfCapabilityTO selfCapabilityTO) throws ActException {
-        try {
-            SelfCapabilityBO selfCapabilityBO1 = selfCapabilityAPI.editSocial(selfCapabilityTO);
-            return ActResult.initialize(BeanTransform.copyProperties(selfCapabilityBO1, SelfCapabilityVO.class, true));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
      * 删除

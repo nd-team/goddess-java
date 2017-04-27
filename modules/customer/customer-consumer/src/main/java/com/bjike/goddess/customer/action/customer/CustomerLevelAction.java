@@ -94,7 +94,7 @@ public class CustomerLevelAction {
      * 编辑客户等级
      *
      * @param customerLevelTO 客户等级基本信息数据bo
-     * @des 添加客户等级
+     * @des 编辑客户等级
      * @return  class CustomerLevelVO
      * @version v1
      */

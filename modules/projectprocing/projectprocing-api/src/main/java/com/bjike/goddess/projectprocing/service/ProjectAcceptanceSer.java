@@ -28,6 +28,12 @@ public interface ProjectAcceptanceSer extends Ser<ProjectAcceptance, ProjectAcce
         return null;
     }
     /**
+     * 根据id获取项目验收情况列表
+     * @return class ProjectAcceptanceBO
+     */
+    default ProjectAcceptanceBO getOneById(String id) throws SerException {return null;}
+
+    /**
      * 项目验收情况列表
      * @return class ProjectAcceptanceBO
      */
