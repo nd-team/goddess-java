@@ -22,17 +22,34 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public abstract class BaseFileAction {
+    /**
+     * 上传文件调用该方法获得文件流
+     * 需要单独处理path
+     *
+     * @param request
+     * @param path
+     * @return
+     * @throws SerException
+     */
+    public List<InputStream> getInputStreams(HttpServletRequest request, String path) throws SerException {
+        return initInputStreams(request, path);
+    }
 
     /**
      * 上传文件调用该方法获得文件流
+     *
      * @param request
      * @return
      * @throws SerException
      */
     public List<InputStream> getInputStreams(HttpServletRequest request) throws SerException {
+        String path = request.getParameter("path");
+        return initInputStreams(request, path);
+    }
+
+    private List<InputStream> initInputStreams(HttpServletRequest request, String path) throws SerException {
         List<MultipartFile> multipartFiles = getMultipartFile(request);
         List<InputStream> inputStreams = null;
-        String path = request.getParameter("path");
         String token = request.getParameter("storageToken");
         if (null != multipartFiles) {
             inputStreams = new ArrayList<>(multipartFiles.size() * 2);
