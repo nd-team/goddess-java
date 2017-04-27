@@ -1,7 +1,11 @@
 package com.bjike.goddess.storage.config;
 
+import com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet;
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.ServletConfig;
 
 /**
  * 继承扫描jpa

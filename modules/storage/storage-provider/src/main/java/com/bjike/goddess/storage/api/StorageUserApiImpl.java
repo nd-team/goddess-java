@@ -41,13 +41,13 @@ public class StorageUserApiImpl implements StorageUserAPI {
     }
 
     @Override
-    public StorageUserBO getCurrentUser() throws SerException {
-        return storageUserSer.getCurrentUser();
+    public StorageUserBO getCurrentUser(String storageToken) throws SerException {
+        return storageUserSer.getCurrentUser(storageToken);
     }
 
     @Override
-    public String getCurrentModule() throws SerException {
-          return storageUserSer.getCurrentModule();
+    public String getCurrentModule(String storageToken) throws SerException {
+          return storageUserSer.getCurrentModule(storageToken);
     }
 
 }

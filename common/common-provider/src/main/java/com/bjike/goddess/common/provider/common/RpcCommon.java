@@ -11,5 +11,4 @@ package com.bjike.goddess.common.provider.common;
  */
 public class RpcCommon {
     public static final String USER_TOKEN = "userToken";
-    public static final String STORAGE_TOKEN = "storageToken";
 }

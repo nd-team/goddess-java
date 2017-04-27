@@ -22,26 +22,13 @@ public class RpcTransmit {
     }
 
     /**
-     * 传递存储模块登录用户token
-     */
-    public static void transmitStorageToken() {
-        String token = RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN);
-        RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
-    }
-
-    /**
      * 传递用户token
      */
     public static void transmitUserToken(String userToken) {
         RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
     }
 
-    /**
-     * 传递存储模块登录用户token
-     */
-    public static void transmitStorageToken(String storageToken) {
-        RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, storageToken);
-    }
+
 
     /**
      * 获取用户token
@@ -52,14 +39,6 @@ public class RpcTransmit {
         return RpcContext.getContext().getAttachment(RpcCommon.USER_TOKEN);
     }
 
-    /**
-     * 获取存储模块登录用户token
-     *
-     * @return
-     */
-    public static String getStorageToken() {
-        return RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN);
-    }
 
 
 }
