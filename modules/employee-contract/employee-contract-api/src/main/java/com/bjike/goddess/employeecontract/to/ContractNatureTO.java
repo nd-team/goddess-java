@@ -1,6 +1,9 @@
 package com.bjike.goddess.employeecontract.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 合同性质
@@ -16,6 +19,7 @@ public class ContractNatureTO extends BaseTO {
     /**
      * 性质
      */
+    @NotBlank(message = "性质不能为空", groups = {ADD.class, EDIT.class})
     private String nature;
 
     /**

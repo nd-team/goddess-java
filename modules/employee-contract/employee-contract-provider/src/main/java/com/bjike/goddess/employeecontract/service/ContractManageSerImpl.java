@@ -76,8 +76,12 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     @Override
     public ContractManageBO save(ContractManageTO to) throws SerException {
         ContractManage entity = BeanTransform.copyProperties(to, ContractManage.class, true);
-        entity.setNature(contractNatureSer.findById(to.getNature_id()));
-        entity.setType(contractTypeSer.findById(to.getType_id()));
+        entity.setNature(contractNatureSer.findById(to.getNatureId()));
+        if (null == entity.getNature())
+            throw new SerException("合同资质不能为空");
+        entity.setType(contractTypeSer.findById(to.getTypeId()));
+        if (null == entity.getType())
+            throw new SerException("合同类型不能为空");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -91,8 +95,12 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
             if (entity == null)
                 throw new SerException();
             BeanTransform.copyProperties(to, entity, true);
-            entity.setNature(contractNatureSer.findById(to.getNature_id()));
-            entity.setType(contractTypeSer.findById(to.getType_id()));
+            entity.setNature(contractNatureSer.findById(to.getNatureId()));
+            if (null == entity.getNature())
+                throw new SerException("合同资质不能为空");
+            entity.setType(contractTypeSer.findById(to.getTypeId()));
+            if (null == entity.getType())
+                throw new SerException("合同类型不能为空");
             entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
             return this.transformBO(entity);
@@ -111,8 +119,12 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
                 throw new SerException();
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
-            entity.setNature(contractNatureSer.findById(to.getNature_id()));
-            entity.setType(contractTypeSer.findById(to.getType_id()));
+            entity.setNature(contractNatureSer.findById(to.getNatureId()));
+            if (null == entity.getNature())
+                throw new SerException("合同资质不能为空");
+            entity.setType(contractTypeSer.findById(to.getTypeId()));
+            if (null == entity.getType())
+                throw new SerException("合同类型不能为空");
             super.update(entity);
             ContractManageBO bo = this.transformBO(entity);
             return BeanTransform.copyProperties(bo, ContractInfoBO.class);

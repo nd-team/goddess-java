@@ -36,8 +36,8 @@ public class ContractChangeSerImpl extends ServiceImpl<ContractChange, ContractC
     @Override
     public ContractChangeBO transformBO(ContractChange entity) throws SerException {
         ContractChangeBO bo = BeanTransform.copyProperties(entity, ContractChangeBO.class);
-        bo.setContract_id(entity.getContract().getId());
-        ContractManageBO manageBO = contractManageSer.getById(bo.getContract_id());
+        bo.setContractId(entity.getContract().getId());
+        ContractManageBO manageBO = contractManageSer.getById(bo.getContractId());
         bo.setUsername(manageBO.getUsername());
         bo.setSerialNumber(manageBO.getSerialNumber());
         bo.setType(manageBO.getTypeName());

@@ -1,6 +1,11 @@
 package com.bjike.goddess.employeecontract.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 合同管理
@@ -16,46 +21,55 @@ public class ContractManageTO extends BaseTO {
     /**
      * 合同类型
      */
-    private String type_id;
+    @NotBlank(message = "合同类型不能为空", groups = {ADD.class, EDIT.class})
+    private String typeId;
 
     /**
      * 合同性质
      */
-    private String nature_id;
+    @NotBlank(message = "合同性质不能为空", groups = {ADD.class, EDIT.class})
+    private String natureId;
 
     /**
      * 合同编号
      */
+    @NotBlank(message = "合同编号不能为空", groups = {ADD.class, EDIT.class})
     private String serialNumber;
 
     /**
      * 用人单位(乙方)
      */
+    @NotBlank(message = "用人单位(乙方)不能为空", groups = {ADD.class, EDIT.class})
     private String employeeUnit;
 
     /**
      * 职工姓名(甲方)
      */
+    @NotBlank(message = "职工姓名(甲方)不能为空", groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
      * 合同期限
      */
+    @NotBlank(message = "合同期限不能为空", groups = {ADD.class, EDIT.class})
     private String deadline;
 
     /**
      * 合同起始日
      */
+    @NotBlank(message = "合同起始日不能为空", groups = {ADD.class, EDIT.class})
     private String startDate;
 
     /**
      * 合同约满日
      */
+    @NotBlank(message = "合同约满日不能为空", groups = {ADD.class, EDIT.class})
     private String endDate;
 
     /**
      * 试用期时长
      */
+    @NotBlank(message = "试用期时长不能为空", groups = {ADD.class, EDIT.class})
     private String probation;
 
     /**
@@ -66,6 +80,7 @@ public class ContractManageTO extends BaseTO {
     /**
      * 线下存储位置
      */
+    @NotBlank(message = "线下存储位置不能为空", groups = {ADD.class, EDIT.class})
     private String storage;
 
     /**
@@ -81,21 +96,25 @@ public class ContractManageTO extends BaseTO {
     /**
      * 出生日期
      */
+    @NotBlank(message = "出生日期不能为空", groups = {ADD.class, EDIT.class})
     private String birth;
 
     /**
      * 证件类型
      */
+    @NotBlank(message = "证件类型不能为空", groups = {ADD.class, EDIT.class})
     private String certificate;
 
     /**
      * 证件号码
      */
+    @NotBlank(message = "证件号码不能为空", groups = {ADD.class, EDIT.class})
     private String certificateNumber;
 
     /**
      * 联系电话
      */
+    @NotBlank(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
     private String phone;
 
     /**
@@ -106,16 +125,19 @@ public class ContractManageTO extends BaseTO {
     /**
      * 现住址
      */
+    @NotBlank(message = "现住址不能为空", groups = {ADD.class, EDIT.class})
     private String dwell;
 
     /**
      * 部门
      */
+    @NotBlank(message = "部门不能为空", groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
      * 岗位
      */
+    @NotBlank(message = "岗位不能为空", groups = {ADD.class, EDIT.class})
     private String position;
 
     /**
@@ -131,38 +153,42 @@ public class ContractManageTO extends BaseTO {
     /**
      * 计薪方式
      */
+    @NotBlank(message = "计薪方式不能为空", groups = {ADD.class, EDIT.class})
     private String way;
 
     /**
      * 基本薪酬
      */
+    @NotNull(message = "基本薪酬不能为空", groups = {ADD.class, EDIT.class})
     private Double pay;
 
     /**
      * 薪酬发放日
      */
+    @NotBlank(message = "薪酬发放日不能为空", groups = {ADD.class, EDIT.class})
     private String releaseDate;
 
     /**
      * 特殊情况处理
      */
+    @NotBlank(message = "特殊情况处理不能为空", groups = {ADD.class, EDIT.class})
     private String situation;
 
 
-    public String getType_id() {
-        return type_id;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
-    public String getNature_id() {
-        return nature_id;
+    public String getNatureId() {
+        return natureId;
     }
 
-    public void setNature_id(String nature_id) {
-        this.nature_id = nature_id;
+    public void setNatureId(String natureId) {
+        this.natureId = natureId;
     }
 
     public String getSerialNumber() {

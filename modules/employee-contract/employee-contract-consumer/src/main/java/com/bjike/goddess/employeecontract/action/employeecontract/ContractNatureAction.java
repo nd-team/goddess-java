@@ -1,5 +1,7 @@
 package com.bjike.goddess.employeecontract.action.employeecontract;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,6 +14,7 @@ import com.bjike.goddess.employeecontract.vo.ContractNatureChoiceVO;
 import com.bjike.goddess.employeecontract.vo.ContractNatureVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +43,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(ContractNatureTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) ContractNatureTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.save(to), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -56,7 +59,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(ContractNatureTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) ContractNatureTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.update(to), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -72,7 +75,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.delete(id), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -88,7 +91,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @PatchMapping("v1/congeal/{id}")
-    public Result congeal(String id, HttpServletRequest request) throws ActException {
+    public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.congeal(id), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -104,7 +107,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @PatchMapping("v1/thaw/{id}")
-    public Result thaw(String id, HttpServletRequest request) throws ActException {
+    public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.thaw(id), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -151,7 +154,7 @@ public class ContractNatureAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.getById(id), ContractNatureVO.class, request));
         } catch (SerException e) {
@@ -179,6 +182,7 @@ public class ContractNatureAction {
      *
      * @version v1
      */
+    @GetMapping("v1/getTotal")
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(contractNatureAPI.getTotal());

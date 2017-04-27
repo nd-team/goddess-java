@@ -1,6 +1,9 @@
 package com.bjike.goddess.employeecontract.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 合同变更详细
@@ -16,6 +19,7 @@ public class ContractChangeTO extends BaseTO {
     /**
      * 合同信息id
      */
+    @NotBlank(message = "合同信息id不能为空", groups = {EDIT.class})
     private String contractId;
 
     /**
@@ -46,11 +50,13 @@ public class ContractChangeTO extends BaseTO {
     /**
      * 变更原因
      */
+    @NotBlank(message = "变更原因不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**
      * 变更内容
      */
+    @NotBlank(message = "变更内容不能为空", groups = {ADD.class, EDIT.class})
     private String content;
 
     /**
@@ -61,6 +67,7 @@ public class ContractChangeTO extends BaseTO {
     /**
      * 变更时间
      */
+    @NotBlank(message = "不能为空", groups = {ADD.class, EDIT.class})
     private String change;
 
 

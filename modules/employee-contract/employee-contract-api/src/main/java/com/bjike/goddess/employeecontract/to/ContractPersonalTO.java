@@ -1,6 +1,11 @@
 package com.bjike.goddess.employeecontract.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 人员合同信息
@@ -16,6 +21,7 @@ public class ContractPersonalTO extends BaseTO {
     /**
      * 职工姓名(甲方)
      */
+    @NotBlank(message = "职工姓名不能为空", groups = {ADD.class, EDIT.class})
     private String username;
 
     /**
@@ -26,21 +32,25 @@ public class ContractPersonalTO extends BaseTO {
     /**
      * 出生日期
      */
+    @NotBlank(message = "出生日期不能为空", groups = {ADD.class, EDIT.class})
     private String birth;
 
     /**
      * 证件类型
      */
+    @NotBlank(message = "证件类型不能为空", groups = {ADD.class, EDIT.class})
     private String certificate;
 
     /**
      * 证件号码
      */
+    @NotBlank(message = "证件号码不能为空", groups = {ADD.class, EDIT.class})
     private String certificateNumber;
 
     /**
      * 联系电话
      */
+    @NotBlank(message = "联系电话不能为空", groups = {ADD.class, EDIT.class})
     private String phone;
 
     /**
@@ -51,16 +61,19 @@ public class ContractPersonalTO extends BaseTO {
     /**
      * 现住址
      */
+    @NotBlank(message = "现住址不能为空", groups = {ADD.class, EDIT.class})
     private String dwell;
 
     /**
      * 部门
      */
+    @NotBlank(message = "部门不能为空", groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
      * 岗位
      */
+    @NotBlank(message = "岗位不能为空", groups = {ADD.class, EDIT.class})
     private String position;
 
     /**
@@ -76,21 +89,25 @@ public class ContractPersonalTO extends BaseTO {
     /**
      * 计薪方式
      */
+    @NotBlank(message = "计薪方式不能为空", groups = {ADD.class, EDIT.class})
     private String way;
 
     /**
      * 基本薪酬
      */
+    @NotNull(message = "基本薪酬不能为空", groups = {ADD.class, EDIT.class})
     private Double pay;
 
     /**
      * 薪酬发放日
      */
+    @NotBlank(message = "薪酬发放日不能为空", groups = {ADD.class, EDIT.class})
     private String releaseDate;
 
     /**
      * 特殊情况处理
      */
+    @NotBlank(message = "特殊情况处理不能为空", groups = {ADD.class, EDIT.class})
     private String situation;
 
 

@@ -1,5 +1,8 @@
 package com.bjike.goddess.employeecontract.action.employeecontract;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -21,6 +24,7 @@ import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +60,7 @@ public class ContractManageAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(ContractManageTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) ContractManageTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.save(to), ContractManageVO.class, request));
         } catch (SerException e) {
@@ -72,7 +76,7 @@ public class ContractManageAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/updateDetail/{id}")
-    public Result updateDetail(ContractManageTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result updateDetail(@Validated(EDIT.class) ContractManageTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.updateDetail(to), ContractManageVO.class, request));
         } catch (SerException e) {
@@ -88,7 +92,7 @@ public class ContractManageAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/info/update/{id}")
-    public Result updateInfo(ContractInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result updateInfo(@Validated(EDIT.class) ContractInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.updateInfo(to), ContractInfoVO.class, request));
         } catch (SerException e) {
@@ -104,7 +108,7 @@ public class ContractManageAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/personal/update/{id}")
-    public Result updatePersonal(ContractPersonalTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result updatePersonal(@Validated(EDIT.class) ContractPersonalTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.updatePersonal(to), ContractPersonalVO.class, request));
         } catch (SerException e) {
@@ -242,8 +246,8 @@ public class ContractManageAction extends BaseFileAction {
      * @return class ContractChangeVO
      * @version v1
      */
-    @PostMapping("v1/saveChange")
-    public Result saveChange(ContractChangeTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/saveChange/{id}")
+    public Result saveChange(@Validated(ADD.class) ContractChangeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.saveChange(to), ContractChangeVO.class, request));
         } catch (SerException e) {
@@ -262,6 +266,7 @@ public class ContractManageAction extends BaseFileAction {
     @PostMapping("v1/uploadEnclosure/{id}")
     public Result uploadEnclosure(HttpServletRequest request, @PathVariable String id) throws ActException {
         try {
+            String o = request.getParameter("storageToken");
 
             ContractManageBO entity = contractManageAPI.getById(id);
             if (null == entity)
@@ -269,6 +274,9 @@ public class ContractManageAction extends BaseFileAction {
             String path = "/" + entity.getUsername() + "/" + entity.getTypeName() + "/" + entity.getNatureName();
             List<MultipartFile> multipartFiles = getMultipartFile(request);
             Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
+
+            if (o != null)
+                RpcContext.getContext().setAttachment("storageToken", o);
 
             for (MultipartFile multipartFile : multipartFiles) {
                 byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());

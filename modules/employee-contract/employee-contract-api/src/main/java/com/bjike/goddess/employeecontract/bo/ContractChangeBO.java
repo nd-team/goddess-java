@@ -16,7 +16,7 @@ public class ContractChangeBO extends BaseBO {
     /**
      * 合同信息
      */
-    private String contract_id;
+    private String contractId;
 
     /**
      * 合同编号
@@ -89,12 +89,12 @@ public class ContractChangeBO extends BaseBO {
     private String change;
 
 
-    public String getContract_id() {
-        return contract_id;
+    public String getContractId() {
+        return contractId;
     }
 
-    public void setContract_id(String contract_id) {
-        this.contract_id = contract_id;
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
     }
 
     public String getSerialNumber() {
