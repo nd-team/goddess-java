@@ -14,13 +14,15 @@ import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeSummaryVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 市场招待汇总
+ * 市场招待汇总及邮件发送
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-03-21 02:19 ]
@@ -29,25 +31,58 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketactivitymanage/marketservesummary")
+@RequestMapping("marketservesummary")
 public class MarketServeSummaryAct {
 
     @Autowired
     private MarketServeSummaryAPI marketServeSummaryAPI;
 
     /**
+     * 根据id查询市场招待汇总邮件发送
+     *
+     * @param id 市场招待汇总邮件发送唯一标识
+     * @return class MarketServeSummaryVO
+     * @version v1
+     */
+    @GetMapping("v1/marketservesummary/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            MarketServeSummaryBO bo = marketServeSummaryAPI.findById(id);
+            MarketServeSummaryVO vo = BeanTransform.copyProperties(bo, MarketServeSummaryVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 市场招待汇总邮件发送dto
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated MarketServeSummaryDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = marketServeSummaryAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询市场招待邮件
      *
      * @param dto 市场招待邮箱发送传输对象
      * @return class MarketServeSummaryVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(MarketServeSummaryDTO dto) throws ActException {
+    public Result list(@Validated MarketServeSummaryDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<MarketServeSummaryBO> boList = marketServeSummaryAPI.list(dto);
-            List<MarketServeSummaryVO> voList = BeanTransform.copyProperties(boList, MarketServeSummaryVO.class);
+            List<MarketServeSummaryVO> voList = BeanTransform.copyProperties(boList, MarketServeSummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,14 +94,13 @@ public class MarketServeSummaryAct {
      *
      * @param to 市场招待邮件发送to信息
      * @return class MarketServeSummaryVO
-     * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MarketServeSummaryTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) MarketServeSummaryTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MarketServeSummaryBO bo = marketServeSummaryAPI.save(to);
-            MarketServeSummaryVO vo = BeanTransform.copyProperties(bo, MarketServeSummaryVO.class);
+            MarketServeSummaryVO vo = BeanTransform.copyProperties(bo, MarketServeSummaryVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,7 +132,7 @@ public class MarketServeSummaryAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) MarketServeSummaryTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) MarketServeSummaryTO to, BindingResult result) throws ActException {
         try {
             marketServeSummaryAPI.update(to);
             return new ActResult("edit success!");
@@ -114,8 +148,8 @@ public class MarketServeSummaryAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/thaw")
-    public Result thaw(@Validated({EDIT.class}) MarketServeSummaryTO to) throws ActException {
+    @PatchMapping("v1/thaw")
+    public Result thaw(@Validated MarketServeSummaryTO to, BindingResult result) throws ActException {
         try {
             marketServeSummaryAPI.thaw(to);
             return new ActResult("thaw success!");
@@ -125,14 +159,14 @@ public class MarketServeSummaryAct {
     }
 
     /**
-     * 编辑市场招待邮件发送
+     * 冻结市场招待邮件发送
      *
-     * @param to 市场招待邮件发送to信息
+     * @param to 市场招待邮件发送to
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/congeal")
-    public Result congeal(@Validated({EDIT.class}) MarketServeSummaryTO to) throws ActException {
+    @PatchMapping("v1/congeal")
+    public Result congeal(@Validated MarketServeSummaryTO to, BindingResult result) throws ActException {
         try {
             marketServeSummaryAPI.congeal(to);
             return new ActResult("congeal success!");
@@ -144,16 +178,16 @@ public class MarketServeSummaryAct {
     /**
      * 市场招待汇总
      *
-     * @param to 市场招待邮件发送to信息
+     * @param to 市场招待邮件发送to
      * @return class MarketServeSummaryVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/summarize")
-    public Result summarize(MarketServeSummaryTO to) throws ActException {
+    public Result summarize(@Validated MarketServeSummaryTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(to);
-            List<MarketServeSummaryVO> voList = BeanTransform.copyProperties(boList, MarketServeSummaryVO.class);
+            List<MarketServeSummaryVO> voList = BeanTransform.copyProperties(boList, MarketServeSummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

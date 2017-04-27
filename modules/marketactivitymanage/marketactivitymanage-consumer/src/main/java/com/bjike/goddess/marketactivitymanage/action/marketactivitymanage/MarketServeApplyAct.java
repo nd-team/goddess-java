@@ -7,15 +7,21 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
+import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
+import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
+import com.bjike.goddess.marketactivitymanage.vo.CustomerInfoVO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeApplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,11 +34,50 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketactivitymanage/marketserveapply")
+@RequestMapping("marketserveapply")
 public class MarketServeApplyAct {
 
     @Autowired
     private MarketServeApplyAPI marketServeApplyAPI;
+
+    @Autowired
+    private CustomerInfoAPI customerInfoAPI;
+
+    /**
+     * 根据id查询市场招待申请
+     *
+     * @param id      市场招待申请唯一标识
+     * @return class MarketServeApplyVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/marketserveapply/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            MarketServeApplyBO bo = marketServeApplyAPI.findById(id);
+            MarketServeApplyVO vo = BeanTransform.copyProperties(bo, MarketServeApplyVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 市场招待申请dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated MarketServeApplyDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = marketServeApplyAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -43,10 +88,10 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(MarketServeApplyDTO dto) throws ActException {
+    public Result list(@Validated MarketServeApplyDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<MarketServeApplyBO> boList = marketServeApplyAPI.list(dto);
-            List<MarketServeApplyVO> voList = BeanTransform.copyProperties(boList, MarketServeApplyVO.class);
+            List<MarketServeApplyVO> voList = BeanTransform.copyProperties(boList, MarketServeApplyVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -62,10 +107,10 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MarketServeApplyTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MarketServeApplyBO bo = marketServeApplyAPI.save(to);
-            MarketServeApplyVO vo = BeanTransform.copyProperties(bo, MarketServeApplyVO.class);
+            MarketServeApplyVO vo = BeanTransform.copyProperties(bo, MarketServeApplyVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -97,7 +142,7 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(MarketServeApplyTO to) throws ActException {
+    public Result edit(@Validated(EDIT.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
             marketServeApplyAPI.update(to);
             return new ActResult("edit success!");
@@ -114,7 +159,7 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @PutMapping("v1/fundModuleOpinion")
-    public Result fundModuleOpinion(MarketServeApplyTO to) throws ActException {
+    public Result fundModuleOpinion(@Validated(MarketServeApplyTO.FUNDMODULE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
             marketServeApplyAPI.fundModuleOpinion(to);
             return new ActResult("fundModuleOpinion success!");
@@ -124,14 +169,14 @@ public class MarketServeApplyAct {
     }
 
     /**
-     * 决策层意见
+     * 决策层审核意见不能为空
      *
      * @param to 市场招待申请to信息
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/executiveOpinion")
-    public Result executiveOpinion(MarketServeApplyTO to) throws ActException {
+    public Result executiveOpinion(@Validated(MarketServeApplyTO.EXECUTIVE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
             marketServeApplyAPI.executiveOpinion(to);
             return new ActResult("executiveOpinion success!");
@@ -140,7 +185,23 @@ public class MarketServeApplyAct {
         }
     }
 
-    // TODO: 17-3-20
-    //上传,下载,导入,导出
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @return class CustomerInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/addcustomerinfo")
+    public Result add(@Validated({ADD.class}) CustomerInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            CustomerInfoBO bo = customerInfoAPI.save(to);
+            CustomerInfoVO vo = BeanTransform.copyProperties(bo, CustomerInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

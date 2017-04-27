@@ -1,9 +1,11 @@
 package com.bjike.goddess.marketactivitymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
+import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeSummarySer;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,30 @@ public class MarketServeSummaryApiImpl implements MarketServeSummaryAPI {
 
     @Autowired
     private MarketServeSummarySer marketServeSummarySer;
+
+    /**
+     * 根据id查询市场招待汇总邮件发送
+     *
+     * @param id 市场招待汇总邮件发送唯一标识
+     * @return class MarketServeSummaryBO
+     * @throws SerException
+     */
+    @Override
+    public MarketServeSummaryBO findById(String id) throws SerException {
+        MarketServeSummary model = marketServeSummarySer.findById(id);
+        return BeanTransform.copyProperties(model, MarketServeSummaryBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 市场招待汇总邮件发送dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MarketServeSummaryDTO dto) throws SerException {
+        return marketServeSummarySer.count(dto);
+    }
 
     /**
      * 分页查询市场招待汇总

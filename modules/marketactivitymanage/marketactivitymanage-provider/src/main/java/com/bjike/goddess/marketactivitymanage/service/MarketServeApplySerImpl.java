@@ -110,23 +110,23 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional
     public void addClientInfo(CustomerInfoTO to) throws SerException {
-        String marketServeId = to.getMarketServeId();
-        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
-        List<String> clientNames = to.getClientNames();//客户姓名
-        List<String> importanceLevels = to.getImportanceLevels();//重要性级别
-
-        if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
-            int clientSize = clientInfoNos.size();
-            for (int i = 0; i < clientSize; i ++) {
-                CustomerInfoTO customerInfoTO = new CustomerInfoTO();
-                customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
-                customerInfoTO.setClientName(clientNames.get(i));
-                customerInfoTO.setImportanceLevel(importanceLevels.get(i));
-                customerInfoTO.setMarketServeId(marketServeId);
-
-                customerInfoAPI.save(customerInfoTO);
-            }
-        }
+//        String marketServeId = to.getMarketServeId();
+//        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
+//        List<String> clientNames = to.getClientNames();//客户姓名
+//        List<String> importanceLevels = to.getImportanceLevels();//重要性级别
+//
+//        if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
+//            int clientSize = clientInfoNos.size();
+//            for (int i = 0; i < clientSize; i ++) {
+//                CustomerInfoTO customerInfoTO = new CustomerInfoTO();
+//                customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
+//                customerInfoTO.setClientName(clientNames.get(i));
+//                customerInfoTO.setImportanceLevel(importanceLevels.get(i));
+//                customerInfoTO.setMarketServeId(marketServeId);
+//
+//                customerInfoAPI.save(customerInfoTO);
+//            }
+//        }
     }
 
     /**
@@ -151,18 +151,6 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Transactional
     public void executiveOpinion(MarketServeApplyTO to) throws SerException {
         this.update(to);
-    }
-
-    /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void uploadAttachment(InputStream inputStream, String targetPath) throws SerException {
-        // TODO: 17-3-20
     }
 
     /**

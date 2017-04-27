@@ -1,10 +1,9 @@
 package com.bjike.goddess.marketactivitymanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 客户信息
@@ -20,37 +19,27 @@ public class CustomerInfoTO extends BaseTO {
     /**
      * 客户信息编号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "客户信息编号不能为空")
     private String clientInfoNo;
 
     /**
      * 客户姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "客户姓名不能为空")
     private String clientName;
 
     /**
      * 重要性级别
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "重要性级别不能为空")
     private String importanceLevel;
+
 
     /**
      * 市场招待唯一标识
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "市场招待唯一标识不能为空")
     private String marketServeId;
-
-    /**
-     * 客户信息编号集合
-     */
-    private List<String> clientInfoNos = new ArrayList<>(0);
-
-    /**
-     * 客户姓名集合
-     */
-    private List<String> clientNames = new ArrayList<>(0);
-
-    /**
-     * 重要性级别集合
-     */
-    private List<String> importanceLevels = new ArrayList<>(0);
 
     public String getClientInfoNo() {
         return clientInfoNo;
@@ -84,27 +73,4 @@ public class CustomerInfoTO extends BaseTO {
         this.marketServeId = marketServeId;
     }
 
-    public List<String> getClientInfoNos() {
-        return clientInfoNos;
-    }
-
-    public void setClientInfoNos(List<String> clientInfoNos) {
-        this.clientInfoNos = clientInfoNos;
-    }
-
-    public List<String> getClientNames() {
-        return clientNames;
-    }
-
-    public void setClientNames(List<String> clientNames) {
-        this.clientNames = clientNames;
-    }
-
-    public List<String> getImportanceLevels() {
-        return importanceLevels;
-    }
-
-    public void setImportanceLevels(List<String> importanceLevels) {
-        this.importanceLevels = importanceLevels;
-    }
 }

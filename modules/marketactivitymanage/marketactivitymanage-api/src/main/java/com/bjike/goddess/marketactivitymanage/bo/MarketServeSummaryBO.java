@@ -21,7 +21,7 @@ public class MarketServeSummaryBO extends BaseBO {
     private String projectGroups;
 
     /**
-     * 类型(计划:true,实际:false)
+     * 类型
      */
     private Boolean type;
 
