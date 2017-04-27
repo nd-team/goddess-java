@@ -3,7 +3,6 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,19 +36,9 @@ public class ArrangementTO extends BaseTO {
     private String description;
 
     /**
-     * 使用状态
-     */
-    private Status status;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
      * 上级层级ID
      */
-    private String paren_id;
+    private String parentId;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -75,27 +64,11 @@ public class ArrangementTO extends BaseTO {
         this.description = description;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getParen_id() {
-        return paren_id;
-    }
-
-    public void setParen_id(String paren_id) {
-        this.paren_id = paren_id;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

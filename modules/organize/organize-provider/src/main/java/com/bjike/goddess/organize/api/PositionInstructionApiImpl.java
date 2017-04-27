@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service("positionInstructionApiImpl")
 public class PositionInstructionApiImpl implements PositionInstructionAPI {
-    
+
     @Autowired
     private PositionInstructionSer positionInstructionSer;
 
@@ -43,5 +43,26 @@ public class PositionInstructionApiImpl implements PositionInstructionAPI {
     @Override
     public PositionInstructionBO update(PositionInstructionTO to) throws SerException {
         return positionInstructionSer.update(to);
+    }
+
+    @Override
+    public PositionInstructionBO delete(String id) throws SerException {
+        return positionInstructionSer.delete(id);
+    }
+
+    @Override
+    public List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
+        return positionInstructionSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        PositionInstructionDTO dto = new PositionInstructionDTO();
+        return positionInstructionSer.count(dto);
+    }
+
+    @Override
+    public PositionInstructionBO findById(String id) throws SerException {
+        return positionInstructionSer.getById(id);
     }
 }

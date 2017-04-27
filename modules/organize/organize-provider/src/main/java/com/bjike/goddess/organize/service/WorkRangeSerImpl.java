@@ -13,6 +13,7 @@ import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.WorkRange;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
 import com.bjike.goddess.organize.to.WorkRangeTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,36 +39,43 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     private DepartmentDetailSer departmentDetailSer;
 
     @Override
-    public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String department_id, WorkRangeDTO dto) throws SerException {
-        String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "status", "workRange"};
-        StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.project,wr.status,wr.workRange FROM ");
-        sql.append(" organize_work_range AS wr ");
-        sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
-        sql.append(department_id).append("' GROUP BY range_id) AS de ");
-        sql.append(" ON wr.id = de.range_id ");
-        sql.append("LIMIT ").append(dto.getPage() * dto.getLimit()).append(",").append(dto.getPage());
-        List<DepartmentWorkRangeBO> list = super.findBySql(sql.toString(), DepartmentWorkRangeBO.class, fields);
-        DepartmentDetailBO department = departmentDetailSer.findBOById(department_id);
-        for (DepartmentWorkRangeBO bo : list) {
-            bo.setDepartmentId(department_id);
-            bo.setDepartmentName(department.getDepartment());
-            bo.setHierarchy(department.getHierarchyName());
-            bo.setSerialNumber(department.getShowNumber());
-            bo.setHierarchyNumber(department.getHierarchyNumber());
-        }
-        return list;
-    }
-
-    @Override
-    public List<WorkRangeBO> findByDepartment(String departmentId) throws SerException {
-        String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "status", "workRange"};
-        StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.project,wr.status,wr.workRange FROM ");
+    public List<DepartmentWorkRangeBO> findDepartmentWorkRangeView(String departmentId, WorkRangeDTO dto) throws SerException {
+        if (StringUtils.isBlank(departmentId))
+            return new ArrayList<>(0);
+        String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
+        StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");
         sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
         sql.append(departmentId).append("' GROUP BY range_id) AS de ");
         sql.append(" ON wr.id = de.range_id ");
-        List<WorkRangeBO> list = super.findBySql(sql.toString(), WorkRangeBO.class, fields);
-        return list;
+        sql.append(" LIMIT ").append(dto.getPage() * dto.getLimit()).append(",").append(dto.getLimit());
+        List<WorkRange> list = super.findBySql(sql.toString(), WorkRange.class, fields);
+        List<DepartmentWorkRangeBO> bos = new ArrayList<>(0);
+        DepartmentDetailBO department = departmentDetailSer.findBOById(departmentId);
+        for (WorkRange entity : list) {
+            DepartmentWorkRangeBO bo = BeanTransform.copyProperties(entity, DepartmentWorkRangeBO.class);
+            bo.setDepartmentId(departmentId);
+            bo.setDepartmentName(department.getDepartment());
+            bo.setHierarchy(department.getHierarchyName());
+            bo.setSerialNumber(department.getShowNumber());
+            bo.setHierarchyNumber(department.getHierarchyNumber());
+            bos.add(bo);
+        }
+        return bos;
+    }
+
+    @Override
+    public List<WorkRangeBO> findByDepartment(String departmentId) throws SerException {
+        if (StringUtils.isBlank(departmentId))
+            return new ArrayList<>(0);
+        String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
+        StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
+        sql.append(" organize_work_range AS wr ");
+        sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
+        sql.append(departmentId).append("' GROUP BY range_id) AS de ");
+        sql.append(" ON wr.id = de.range_id ");
+        List<WorkRange> list = super.findBySql(sql.toString(), WorkRange.class, fields);
+        return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 
     @Override
@@ -79,10 +87,10 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void departmentAddRange(DepartmentWorkRangeTO to) throws SerException {
-        DepartmentDetail departmentDetail = departmentDetailSer.findById(to.getDepartment_id());
+        DepartmentDetail departmentDetail = departmentDetailSer.findById(to.getDepartmentId());
         List<WorkRange> updateList = new ArrayList<>(0);
-        if (null != to.getRange_ids()) ;
-        for (String id : to.getRange_ids()) {
+        if (null != to.getRangeIds()) ;
+        for (String id : to.getRangeIds()) {
             WorkRange entity = super.findById(id);
             entity.getDepartments().add(departmentDetail);
             updateList.add(entity);
@@ -123,16 +131,39 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         entity.setStatus(Status.THAW);
         entity.setCreateTime(LocalDateTime.now());
         super.save(entity);
-        return BeanTransform.copyProperties(entity, WorkRangeBO.class, true);
+        return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WorkRangeBO update(WorkRangeTO to) throws SerException {
-        WorkRange entity = super.findById(to.getId()), workRange = BeanTransform.copyProperties(to, WorkRange.class);
-        workRange.setCreateTime(entity.getCreateTime());
-        workRange.setStatus(Status.THAW);
-        super.update(workRange);
-        return BeanTransform.copyProperties(workRange, WorkRangeBO.class, true);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        WorkRange entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, WorkRangeBO.class);
+    }
+
+    @Override
+    public WorkRangeBO delete(String id) throws SerException {
+        WorkRange entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return BeanTransform.copyProperties(entity, WorkRangeBO.class);
+    }
+
+    @Override
+    public List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
+        dto.getSorts().add("modifyTime=desc");
+        return BeanTransform.copyProperties(super.findByPage(dto), WorkRangeBO.class);
     }
 }

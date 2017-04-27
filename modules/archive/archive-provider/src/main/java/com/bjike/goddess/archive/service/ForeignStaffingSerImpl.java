@@ -35,7 +35,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
 
     private ForeignStaffingBO transformBO(ForeignStaffing entity) throws SerException {
         ForeignStaffingBO bo = BeanTransform.copyProperties(entity, ForeignStaffingBO.class);
-        bo.setType_id(entity.getType().getId());
+        bo.setTypeId(entity.getType().getId());
         bo.setTypeName(entity.getType().getName());
         return bo;
     }
@@ -51,7 +51,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
     @Override
     public ForeignStaffingBO save(ForeignStaffingTO to) throws SerException {
         ForeignStaffing entity = BeanTransform.copyProperties(to, ForeignStaffing.class, true);
-        entity.setType(foreignStaffingSetSer.findById(to.getType_id()));
+        entity.setType(foreignStaffingSetSer.findById(to.getTypeId()));
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -67,7 +67,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
                 entity.setType(foreignStaffingSetSer.findById(to.getId()));
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

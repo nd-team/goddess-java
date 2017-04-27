@@ -10,11 +10,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.MonthPlanAPI;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
+import com.bjike.goddess.marketdevelopment.vo.MonthPlanChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.MonthPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 月计划
@@ -41,9 +44,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(MonthPlanDTO dto) throws ActException {
+    public Result maps(MonthPlanDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.maps(dto), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.maps(dto), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +60,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) MonthPlanTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) MonthPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.save(to), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.save(to), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +76,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) MonthPlanTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) MonthPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.update(to), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.update(to), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +92,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(MonthPlanTO to) throws ActException {
+    public Result delete(MonthPlanTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.delete(to), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.delete(to), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +108,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByYearId/{id}")
-    public Result findByYearID(@PathVariable String id) throws ActException {
+    public Result findByYearID(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYearID(id), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYearID(id), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +124,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByYear")
-    public Result findByYear(Integer year) throws ActException {
+    public Result findByYear(Integer year, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYear(year), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.findByYear(year), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,9 +140,9 @@ public class MonthPlanAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.getById(id), MonthPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.getById(id), MonthPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -154,6 +157,21 @@ public class MonthPlanAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(monthPlanAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取月计划选择对象
+     *
+     * @return class MonthPlanChoiceVO
+     * @version v1
+     */
+    @GetMapping("v1/getChoice")
+    public Result getChoice(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(monthPlanAPI.getChoice(), MonthPlanChoiceVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

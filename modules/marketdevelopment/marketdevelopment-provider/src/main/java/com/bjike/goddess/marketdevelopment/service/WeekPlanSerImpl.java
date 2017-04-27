@@ -8,12 +8,14 @@ import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.WeekPlan;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +38,11 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     private WeekPlanBO transformBO(WeekPlan entity) {
         WeekPlanBO bo = BeanTransform.copyProperties(entity, WeekPlanBO.class);
         bo.setCourse(entity.getMonth().getYear().getCourse());
-        bo.setMonth_id(entity.getMonth().getId());
+        bo.setMonthId(entity.getMonth().getId());
         bo.setMonthTotal(entity.getMonth().getTotal());
+        bo.setYear(entity.getMonth().getYear().getYear());
+        bo.setType(entity.getMonth().getMonth().getValueString());
+        bo.setCycle(entity.getStartCycle().toString() + "至" + entity.getEndCycle().toString());
         return bo;
     }
 
@@ -52,7 +57,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
-        entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
+        entity.setMonth(monthPlanSer.findById(to.getMonthId()));
         entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
         super.save(entity);
         return this.transformBO(entity);
@@ -61,25 +66,34 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
-        WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
-        entity.setMonth(monthPlanSer.findById(to.getMonth_id()));
-        entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
-        super.update(entity);
-        return this.transformBO(entity);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                WeekPlan entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return this.transformBO(entity);
+            } catch (Exception e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO delete(WeekPlanTO to) throws SerException {
         WeekPlan entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return this.transformBO(entity);
     }
 
     @Override
-    public List<WeekPlanBO> findByMonth(String month_id) throws SerException {
+    public List<WeekPlanBO> findByMonth(String monthId) throws SerException {
         WeekPlanDTO dto = new WeekPlanDTO();
-        dto.getConditions().add(Restrict.eq("month.id", month_id));
+        dto.getConditions().add(Restrict.eq("month.id", monthId));
         List<WeekPlan> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

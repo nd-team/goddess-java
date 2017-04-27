@@ -39,6 +39,24 @@ public class ArrangementVO {
      */
     private String createTime;
 
+    /**
+     * 上层id
+     */
+    private String parentId;
+
+    /**
+     * id
+     */
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -69,6 +87,14 @@ public class ArrangementVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getCreateTime() {

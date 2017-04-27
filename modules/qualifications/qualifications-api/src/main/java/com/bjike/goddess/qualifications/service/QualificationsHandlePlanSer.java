@@ -56,11 +56,11 @@ public interface QualificationsHandlePlanSer extends Ser<QualificationsHandlePla
     /**
      * 根据资质办理查询计划
      *
-     * @param handle_id 资质办理ID
+     * @param handleId 资质办理ID
      * @return
      * @throws SerException
      */
-    default List<QualificationsHandlePlanBO> findByHandle(String handle_id) throws SerException {
+    default List<QualificationsHandlePlanBO> findByHandle(String handleId) throws SerException {
         return null;
     }
 

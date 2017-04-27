@@ -33,7 +33,7 @@ public interface DimensionSer extends Ser<Dimension, DimensionDTO> {
     /**
      * 保存维度
      *
-     * @param to
+     * @param to 维度传输对象
      * @return
      * @throws SerException
      */
@@ -44,11 +44,55 @@ public interface DimensionSer extends Ser<Dimension, DimensionDTO> {
     /**
      * 修改维度
      *
-     * @param to
+     * @param to 维度传输对象
      * @return
      * @throws SerException
      */
     default DimensionBO update(DimensionTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 维度数据id
+     * @return
+     * @throws SerException
+     */
+    default DimensionBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 维度数据id
+     * @return
+     * @throws SerException
+     */
+    default DimensionBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 开启
+     *
+     * @param id 维度数据id
+     * @return
+     * @throws SerException
+     */
+    default DimensionBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 维度数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DimensionBO> maps(DimensionDTO dto) throws SerException {
         return null;
     }
 }

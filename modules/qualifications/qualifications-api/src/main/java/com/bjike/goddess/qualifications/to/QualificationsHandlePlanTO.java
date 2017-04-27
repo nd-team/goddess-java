@@ -22,7 +22,7 @@ public class QualificationsHandlePlanTO extends BaseTO {
      * 资质办理
      */
     @NotBlank(message = "资质办理不能为空", groups = {ADD.class, EDIT.class})
-    private String handle_id;
+    private String handleId;
 
     /**
      * 准备开始时间
@@ -43,12 +43,12 @@ public class QualificationsHandlePlanTO extends BaseTO {
     private String way;
 
 
-    public String getHandle_id() {
-        return handle_id;
+    public String getHandleId() {
+        return handleId;
     }
 
-    public void setHandle_id(String handle_id) {
-        this.handle_id = handle_id;
+    public void setHandleId(String handleId) {
+        this.handleId = handleId;
     }
 
     public String getStartTime() {

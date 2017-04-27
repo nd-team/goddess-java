@@ -33,7 +33,7 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
     /**
      * 分页数据
      *
-     * @param dto
+     * @param dto 岗位说明书数据传输
      * @return
      */
     default List<PositionInstructionBO> findPage(PositionInstructionDTO dto) throws SerException {
@@ -43,7 +43,7 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
     /**
      * 保存说明书
      *
-     * @param to
+     * @param to 岗位说明书传输对象
      * @return
      */
     default PositionInstructionBO save(PositionInstructionTO to) throws SerException {
@@ -53,10 +53,43 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
     /**
      * 修改说明书
      *
-     * @param to
+     * @param to 岗位说明书传输对象
      * @return
      */
     default PositionInstructionBO update(PositionInstructionTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionInstructionBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位说明书数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询岗位说明书数据
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionInstructionBO getById(String id) throws SerException {
         return null;
     }
 

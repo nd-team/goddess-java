@@ -33,7 +33,7 @@ public interface OperateSer extends Ser<Operate, OperateDTO> {
     /**
      * 保存操作类型
      *
-     * @param to
+     * @param to 操作类型传输对象
      * @return
      * @throws SerException
      */
@@ -44,11 +44,55 @@ public interface OperateSer extends Ser<Operate, OperateDTO> {
     /**
      * 修改操作类型
      *
-     * @param to
+     * @param to 操作类型传输对象
      * @return
      * @throws SerException
      */
     default OperateBO update(OperateTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 启动
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default OperateBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 操作类型数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<OperateBO> maps(OperateDTO dto) throws SerException {
         return null;
     }
 

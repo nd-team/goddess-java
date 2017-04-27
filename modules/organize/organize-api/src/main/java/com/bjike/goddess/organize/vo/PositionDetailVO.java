@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+
 /**
  * 岗位详细展示对象
  *
@@ -29,7 +31,7 @@ public class PositionDetailVO {
     /**
      * 部门id
      */
-    private String department_id;
+    private String departmentId;
 
     /**
      * 部门
@@ -39,7 +41,7 @@ public class PositionDetailVO {
     /**
      * 层级ID
      */
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 层级
@@ -54,7 +56,7 @@ public class PositionDetailVO {
     /**
      * 模块id
      */
-    private String module_id;
+    private String moduleId;
 
     /**
      * 模块
@@ -64,7 +66,7 @@ public class PositionDetailVO {
     /**
      * 岗位ID
      */
-    private String position_id;
+    private String position;
 
     /**
      * 岗位名称
@@ -91,6 +93,32 @@ public class PositionDetailVO {
      */
     private String showNumber;
 
+    /**
+     * id
+     */
+    private String id;
+
+    /**
+     * 岗位状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -115,12 +143,12 @@ public class PositionDetailVO {
         this.area = area;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getDepartmentName() {
@@ -131,12 +159,12 @@ public class PositionDetailVO {
         this.departmentName = departmentName;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public String getArrangementName() {
@@ -163,12 +191,12 @@ public class PositionDetailVO {
         this.pool = pool;
     }
 
-    public String getModule_id() {
-        return module_id;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setModule_id(String module_id) {
-        this.module_id = module_id;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     public String getModuleName() {
@@ -179,12 +207,12 @@ public class PositionDetailVO {
         this.moduleName = moduleName;
     }
 
-    public String getPosition_id() {
-        return position_id;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPosition_id(String position_id) {
-        this.position_id = position_id;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getStaff() {

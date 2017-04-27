@@ -40,7 +40,7 @@ public class SurveyAnalyseApiImpl implements SurveyAnalyseAPI {
     }
 
     @Override
-    public List<SurveyAnalyseBO> findByPlan(String plan_id) throws SerException {
-        return surveyAnalyseSer.findByPlan(plan_id);
+    public List<SurveyAnalyseBO> findByPlan(String planId) throws SerException {
+        return surveyAnalyseSer.findByPlan(planId);
     }
 }

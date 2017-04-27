@@ -48,19 +48,19 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     private PositionDetailUserBO transformBO(PositionDetailUser entity) throws SerException {
         PositionDetailUserBO bo = BeanTransform.copyProperties(entity, PositionDetailUserBO.class);
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID, entity.getUser_id()));
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         List<UserBO> userBOs = userAPI.findByCis(userDTO);
         if (userBOs.size() > 0) {
             bo.setUsername(userBOs.get(0).getUsername());
             bo.setEmployeesNumber(userBOs.get(0).getEmployeeNumber());
         }
-        StringBuilder position_id = new StringBuilder(0), positionName = new StringBuilder(0);
+        StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
         for (PositionDetail positionDetail : entity.getPositionSet()) {
-            position_id.append(positionDetail.getId()).append(",");
-            positionName.append(positionAPI.findById(positionDetail.getPosition_id()).getName()).append(",");
+            positionId.append(positionDetail.getId()).append(",");
+            positionName.append(positionDetail.getPosition()).append(",");
         }
         bo.setPosition(positionName.toString());
-        bo.setPosition_ids(position_id.toString());
+        bo.setPositionIds(positionId.toString());
         return bo;
     }
 
@@ -74,15 +74,15 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
         PositionDetailUser entity = new PositionDetailUser();
-        entity.setUser_id(to.getUser_id());
+        entity.setUserId(to.getUserId());
         entity.setPositionSet(new HashSet<>(0));
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID, entity.getUser_id()));
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
-        if (userAPI.findByCis(userDTO).size() <= 0)
+        if (null == userBOList || userBOList.size() <= 0)
             throw new SerException("该用户不存在");
-        if (null != to.getPosition_ids())
-            for (String id : to.getPosition_ids())
+        if (null != to.getPositionIds())
+            for (String id : to.getPositionIds())
                 entity.getPositionSet().add(positionDetailSer.findById(id));
         super.save(entity);
         return this.transformBO(entity);
@@ -92,20 +92,21 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public PositionDetailUserBO update(PositionDetailUserTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.eq(ID, to.getUser_id()));
-            if (userAPI.findByCis(userDTO).size() <= 0)
+            userDTO.getConditions().add(Restrict.eq(ID, to.getUserId()));
+            List<UserBO> userBOList = userAPI.findByCis(userDTO);
+            if (null == userBOList || userBOList.size() <= 0)
                 throw new SerException("该用户不存在");
             try {
                 PositionDetailUser entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setPositionSet(new HashSet<>(0));
-                if (null != to.getPosition_ids())
-                    for (String id : to.getPosition_ids())
+                if (null != to.getPositionIds())
+                    for (String id : to.getPositionIds())
                         entity.getPositionSet().add(positionDetailSer.findById(id));
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else
@@ -120,8 +121,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public List<PositionDetailBO> findPositionByUser(String user_id) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public List<PositionDetailBO> findPositionByUser(String userId) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             return positionDetailSer.transformationToBOList(entity.getPositionSet());
         else
@@ -129,58 +130,58 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public PositionDetailUserBO findOneByUser(String user_id) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public PositionDetailUserBO findOneByUser(String userId) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             return this.transformBO(entity);
         else
             return null;
     }
 
-    private PositionDetailUser findByUser(String user_id) throws SerException {
+    private PositionDetailUser findByUser(String userId) throws SerException {
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
-        dto.getConditions().add(Restrict.eq("user_id", user_id));
+        dto.getConditions().add(Restrict.eq("userId", userId));
         return super.findOne(dto);
     }
 
     @Override
-    public Boolean checkAsUserPosition(String user_id, String[] position_ids) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public Boolean checkAsUserPosition(String userId, String[] positionIds) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                for (String id : position_ids)
-                    if (detail.getPosition_id().equals(id))
+                for (String id : positionIds)
+                    if (detail.getPosition().equals(id))
                         return true;
         return false;
     }
 
     @Override
-    public Boolean checkAsUserPositionDetail(String user_id, String[] position_ids) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public Boolean checkAsUserPositionDetail(String userId, String[] positionIds) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                for (String id : position_ids)
+                for (String id : positionIds)
                     if (detail.getId().equals(id))
                         return true;
         return false;
     }
 
     @Override
-    public Boolean checkAsUserArrangement(String user_id, String arrangement_id) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public Boolean checkAsUserArrangement(String userId, String arrangementId) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                if (detail.getArrangement().getId().equals(arrangement_id))
+                if (detail.getArrangement().getId().equals(arrangementId))
                     return true;
         return false;
     }
 
     @Override
-    public Boolean checkAsUserModule(String user_id, String module_id) throws SerException {
-        PositionDetailUser entity = this.findByUser(user_id);
+    public Boolean checkAsUserModule(String userId, String moduleId) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                if (detail.getModule().getId().equals(module_id))
+                if (detail.getModule().getId().equals(moduleId))
                     return true;
         return false;
     }
@@ -188,5 +189,10 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PositionDetailUserBO getById(String id) throws SerException {
+        return this.transformBO(super.findById(id));
     }
 }
