@@ -34,6 +34,7 @@ public class PublicKeyAct {
      */
     @GetMapping("v1/key")
     public Result key() throws ActException {
+
         try {
             return ActResult.initialize(userAPI.publicKey());
         } catch (SerException e) {

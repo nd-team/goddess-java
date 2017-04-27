@@ -45,16 +45,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 多个拦截器组成一个拦截器链
-        registry.addInterceptor(new ErrorRequestInterceptor()).addPathPatterns("/**");
         if(null!=idempotencyFilter){
             registry.addInterceptor(idempotencyFilter).excludePathPatterns(idempotencyFilter.getExcludePathPatterns()).addPathPatterns(idempotencyFilter.getPathPatterns());//幂等请求
         }
+        registry.addInterceptor(new ErrorRequestInterceptor()).addPathPatterns("/**");
 
         if (null != interceptor && interceptor.customerInterceptors() != null) {
             for (HIInfo h : interceptor.customerInterceptors()) {
                 registry.addInterceptor(h.getHandlerInterceptor()).addPathPatterns(h.getPath());
             }
         }
+
         super.addInterceptors(registry);
     }
 
