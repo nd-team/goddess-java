@@ -48,7 +48,7 @@ public class OutEmployeeSerImpl extends ServiceImpl<OutEmployee, OutEmployeeDTO>
     @Transactional
     public OutEmployeeBO is_again(OutEmployeeTO to) throws SerException {
         OutEmployee outEmployee=super.findById(to.getId());
-        outEmployee.setIs_again(to.getIsAgain());
+        outEmployee.setIsAgain(to.getIsAgain());
         outEmployee.setAdvice(to.getAdvice());
         super.update(outEmployee);
         return BeanTransform.copyProperties(outEmployee,OutEmployeeBO.class);
