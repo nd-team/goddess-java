@@ -255,4 +255,7 @@ include ':modules:materialinstock:materialinstock-api'
 include ':modules:materialinstock:materialinstock-consumer'
 include ':modules:materialinstock:materialinstock-provider'
 
-
+//#employeecontract 员工合同管理
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
