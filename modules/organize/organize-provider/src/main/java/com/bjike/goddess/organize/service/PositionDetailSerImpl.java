@@ -135,6 +135,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Override
     public PositionDetailBO save(PositionDetailTO to) throws SerException {
         PositionDetail entity = BeanTransform.copyProperties(to, PositionDetail.class);
+        entity.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
         if (null == entity.getDepartment())
             throw new SerException("部门不存在");
         entity.setArrangement(arrangementSer.findById(to.getArrangementId()));

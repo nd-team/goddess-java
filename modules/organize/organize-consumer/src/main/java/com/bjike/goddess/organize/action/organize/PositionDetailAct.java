@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 岗位详细操作
+ * 岗位详细
  *
  * @Author: [dengjunren]
  * @Date: [17-3-8 上午10:08]
@@ -51,9 +51,9 @@ public class PositionDetailAct {
     }
 
     /**
-     * 根据职位ID集合查询
+     * 根据岗位ID集合查询
      *
-     * @param ids 职位ID集合
+     * @param ids 岗位详细数据id集合
      * @return class PositionDetailVO
      * @version v1
      */
@@ -69,7 +69,7 @@ public class PositionDetailAct {
     /**
      * 查询下级层级职位详细
      *
-     * @param postId 职位ID
+     * @param postId 岗位详细数据id
      * @return class PositionDetailVO
      * @version v1
      */
@@ -85,7 +85,7 @@ public class PositionDetailAct {
     /**
      * 查询上级层级职位详细
      *
-     * @param postId 职位ID
+     * @param postId 岗位详细数据id
      * @return class PositionDetailVO
      * @version v1
      */
@@ -101,7 +101,7 @@ public class PositionDetailAct {
     /**
      * 根据ID查询职位详细信息
      *
-     * @param id 职位详细ID
+     * @param id 岗位详细数据id
      * @return class PositionDetailVO
      * @version v1
      */

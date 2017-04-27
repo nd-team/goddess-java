@@ -37,7 +37,7 @@ public class PositionInstructionAct {
     /**
      * 根据职位查询说明书
      *
-     * @param id 职位详细ID
+     * @param id 岗位详细数据id
      * @return class PositionInstructionVO
      * @version v1
      */
@@ -51,7 +51,7 @@ public class PositionInstructionAct {
     }
 
     /**
-     * 分页数据
+     * 列表
      *
      * @param dto 岗位说明书数据传输
      * @return class PositionInstructionVO

@@ -24,7 +24,7 @@ public class PositionDetailUserTO extends BaseTO {
     private String userId;
 
     /**
-     * 职位详细id
+     * 岗位详细数据id
      */
     private String[] positionIds;
 

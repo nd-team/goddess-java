@@ -57,7 +57,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
         for (PositionDetail positionDetail : entity.getPositionSet()) {
             positionId.append(positionDetail.getId()).append(",");
-            positionName.append(positionAPI.findById(positionDetail.getPosition()).getName()).append(",");
+            positionName.append(positionDetail.getPosition()).append(",");
         }
         bo.setPosition(positionName.toString());
         bo.setPositionIds(positionId.toString());
@@ -79,7 +79,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
-        if (userAPI.findByCis(userDTO).size() <= 0)
+        if (null == userBOList || userBOList.size() <= 0)
             throw new SerException("该用户不存在");
         if (null != to.getPositionIds())
             for (String id : to.getPositionIds())
@@ -93,7 +93,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (StringUtils.isNotBlank(to.getId())) {
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.eq(ID, to.getUserId()));
-            if (userAPI.findByCis(userDTO).size() <= 0)
+            List<UserBO> userBOList = userAPI.findByCis(userDTO);
+            if (null == userBOList || userBOList.size() <= 0)
                 throw new SerException("该用户不存在");
             try {
                 PositionDetailUser entity = super.findById(to.getId());
