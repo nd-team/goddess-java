@@ -37,6 +37,42 @@ public class AccountAction {
     private AccountAPI accountAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param customerBaseInfoDTO 账户来源信息dto
+     * @des 获取所有账户来源信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AccountDTO customerBaseInfoDTO) throws ActException {
+        try {
+            Long count = accountAPI.countAccount(customerBaseInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个账户来源
+     *
+     * @param id 项目账户来源信息id
+     * @des 根据id获取项目账户来源信息
+     * @return  class AccountVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            AccountVO projectCarryVO = BeanTransform.copyProperties(
+                    accountAPI.getOneById(id), AccountVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 账户来源列表
      *
      * @param accountDTO 账户来源信息dto

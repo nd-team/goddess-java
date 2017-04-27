@@ -51,25 +51,13 @@ public class SelfCapabilityApiImpl implements SelfCapabilityAPI {
         return selfCapabilitySer.editSelfCapability(selfCapabilityTO);
     }
 
-    @Override
-    public SelfCapabilityBO editSocial(SelfCapabilityTO selfCapabilityTO) throws SerException {
-        return selfCapabilitySer.editSocial(selfCapabilityTO);
-    }
 
     @Override
     public void deleteSelfCapability(String id) throws SerException {
         selfCapabilitySer.deleteSelfCapability(id);
     }
 
-    @Override
-    public SelfCapabilityBO getSelfConnector(String id) throws SerException {
-        return selfCapabilitySer.getSelfConnector(id);
-    }
 
-    @Override
-    public SelfCapabilityBO editSelfConnector(SelfCapabilityTO selfCapabilityTO) throws SerException {
-        return selfCapabilitySer.editSelfConnector(selfCapabilityTO);
-    }
 
     @Override
     public List<SelfCapabilityBO> listSelfCapabilityByName(SelfCapabilityDTO selfCapabilityDTO) throws SerException {

@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -54,6 +55,25 @@ public class ProjectSituationAction {
     }
 
     /**
+     * 一个项目情况
+     *
+     * @param id 项目情况信息id
+     * @des 根据id获取项目情况信息
+     * @return  class ProjectSituationVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ProjectSituationVO projectSituationVOList = BeanTransform.copyProperties(
+                    projectSituationAPI.getOneById(id), ProjectSituationVO.class);
+            return ActResult.initialize(projectSituationVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目情况列表
      *
      * @param projectSituationDTO 项目情况信息dto
@@ -62,10 +82,10 @@ public class ProjectSituationAction {
      * @version v1
      */
     @GetMapping("v1/listProjectSituation")
-    public Result findListProjectSituation(ProjectSituationDTO projectSituationDTO, BindingResult bindingResult) throws ActException {
+    public Result findListProjectSituation(ProjectSituationDTO projectSituationDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ProjectSituationVO> projectSituationVOList = BeanTransform.copyProperties(
-                    projectSituationAPI.listProjectSituation(projectSituationDTO), ProjectSituationVO.class, true);
+                    projectSituationAPI.listProjectSituation(projectSituationDTO), ProjectSituationVO.class,request);
             return ActResult.initialize(projectSituationVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +105,7 @@ public class ProjectSituationAction {
     public Result addProjectSituation(@Validated({ProjectSituationTO.TESTAddAndEdit.class}) ProjectSituationTO projectSituationTO, BindingResult bindingResult) throws ActException {
         try {
             ProjectSituationBO projectSituationBO1 = projectSituationAPI.addProjectSituation(projectSituationTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectSituationBO1,ProjectSituationVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectSituationBO1,ProjectSituationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,7 +125,7 @@ public class ProjectSituationAction {
     public Result editProjectSituation(@Validated({ProjectSituationTO.TESTAddAndEdit.class}) ProjectSituationTO projectSituationTO) throws ActException {
         try {
             ProjectSituationBO projectSituationBO1 = projectSituationAPI.editProjectSituation(projectSituationTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectSituationBO1,ProjectSituationVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectSituationBO1,ProjectSituationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -141,7 +161,7 @@ public class ProjectSituationAction {
     public Result searchInfo(ProjectSituationDTO projectSituationDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ProjectSituationVO> projectSituationVOList = BeanTransform.copyProperties(
-                    projectSituationAPI.searchListProjectSituation(projectSituationDTO), ProjectSituationVO.class, true);
+                    projectSituationAPI.searchListProjectSituation(projectSituationDTO), ProjectSituationVO.class);
             return ActResult.initialize(projectSituationVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

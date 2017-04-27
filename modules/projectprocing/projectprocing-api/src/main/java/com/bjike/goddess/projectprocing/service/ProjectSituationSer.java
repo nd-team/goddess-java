@@ -28,6 +28,12 @@ public interface ProjectSituationSer extends Ser<ProjectSituation, ProjectSituat
         return null;
     }
     /**
+     * 根据id获取项目情况列表
+     * @return class ProjectSituationBO
+     */
+    default ProjectSituationBO getOneById(String id) throws SerException {return null;}
+
+    /**
      * 项目情况列表
      * @return class ProjectSituationBO
      */

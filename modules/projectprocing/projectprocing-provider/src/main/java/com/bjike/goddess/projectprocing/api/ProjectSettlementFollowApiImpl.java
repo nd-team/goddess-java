@@ -32,6 +32,11 @@ public class ProjectSettlementFollowApiImpl implements ProjectSettlementFollowAP
     }
 
     @Override
+    public ProjectSettlementFollowBO getOneById(String id) throws SerException {
+        return projectSettlementFollowSer.getOneById(id);
+    }
+
+    @Override
     public List<ProjectSettlementFollowBO> listProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
         return projectSettlementFollowSer.listProjectSettlementFollow(projectSettlementFollowDTO);
     }

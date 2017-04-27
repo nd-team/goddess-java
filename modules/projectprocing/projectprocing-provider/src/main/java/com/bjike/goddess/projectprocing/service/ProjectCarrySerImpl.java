@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -33,11 +34,41 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
 
     @Override
     public Long countProjectCarry(ProjectCarryDTO projectCarryDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectCarryDTO.getArea())){
+            projectCarryDTO.getConditions().add(Restrict.like("area",projectCarryDTO.getArea()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getBusinessSubject())){
+            projectCarryDTO.getConditions().add(Restrict.like("businessSubject",projectCarryDTO.getBusinessSubject()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getBusinessType())){
+            projectCarryDTO.getConditions().add(Restrict.like("businessType",projectCarryDTO.getBusinessType()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getSignCondition())){
+            projectCarryDTO.getConditions().add(Restrict.like("signCondition",projectCarryDTO.getSignCondition()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getSignProject())){
+            projectCarryDTO.getConditions().add(Restrict.like("signProject",projectCarryDTO.getSignProject()));
+        }
         return super.count(projectCarryDTO);
     }
 
     @Override
+    public ProjectCarryBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw  new SerException("id不能为空");
+        }
+        ProjectCarry projectSituation = super.findById( id );
+        return BeanTransform.copyProperties( projectSituation , ProjectCarryBO.class);
+    }
+    @Override
     public List<ProjectCarryBO> listProjectCarry(ProjectCarryDTO projectCarryDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectCarryDTO.getArea())){
+            projectCarryDTO.getConditions().add(Restrict.like("area",projectCarryDTO.getArea()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getBusinessSubject())){
+            projectCarryDTO.getConditions().add(Restrict.like("businessSubject",projectCarryDTO.getBusinessSubject()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getBusinessType())){
+            projectCarryDTO.getConditions().add(Restrict.like("businessType",projectCarryDTO.getBusinessType()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getSignCondition())){
+            projectCarryDTO.getConditions().add(Restrict.like("signCondition",projectCarryDTO.getSignCondition()));
+        }if(StringUtils.isNoneBlank(projectCarryDTO.getSignProject())){
+            projectCarryDTO.getConditions().add(Restrict.like("signProject",projectCarryDTO.getSignProject()));
+        }
         List<ProjectCarry> list = super.findByCis(projectCarryDTO,true);
         return BeanTransform.copyProperties(list,ProjectCarryBO.class);
     }

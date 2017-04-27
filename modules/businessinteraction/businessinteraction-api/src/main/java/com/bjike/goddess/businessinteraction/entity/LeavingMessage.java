@@ -40,7 +40,7 @@ public class LeavingMessage extends BaseEntity {
      * 互动联系信息
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "interactionRelation_id",  columnDefinition = "VARCHAR(36)   COMMENT '互动联系信息'")
+    @JoinColumn(name = "interactionRelation_id", nullable = false ,columnDefinition = "VARCHAR(36)   COMMENT '互动联系信息'")
     private InteractionRelation interactionRelation;
 
     public String getName() {

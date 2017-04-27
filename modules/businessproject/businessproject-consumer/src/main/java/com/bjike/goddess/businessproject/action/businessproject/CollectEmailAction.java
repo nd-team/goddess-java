@@ -148,13 +148,14 @@ public class CollectEmailAction {
     /**
      * 汇总签订合同与预订
      *
-     * @param areas 地区
+     * @param collectEmailDTO 地区
      * @return class CollectEmailVO
      * @des 商务邮件汇总签订合同与预订
      * @version v1
      */
     @GetMapping("v1/collectSign")
-    public Result CollectSign(String[] areas) throws ActException {
+    public Result CollectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
+        String[] areas = collectEmailDTO.getAreas();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCollectEmail(areas), CollectEmailVO.class, true);
@@ -167,13 +168,14 @@ public class CollectEmailAction {
     /**
      * 汇总合同基本信息
      *
-     * @param firstCompany 甲方
+     * @param collectEmailDTO 甲方
      * @return class CollectEmailVO
      * @des 汇总合同基本信息
      * @version v1
      */
     @GetMapping("v1/collectBaseInfo")
-    public Result CollectBaseInfo(String[] firstCompany) throws ActException {
+    public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO) throws ActException {
+        String[] firstCompany = collectEmailDTO.getFirstCompany();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectBaseInfoEmail(firstCompany), CollectEmailVO.class);
@@ -186,13 +188,14 @@ public class CollectEmailAction {
     /**
      * 汇总派工合同
      *
-     * @param areas 地区
+     * @param collectEmailDTO 地区
      * @return class CollectEmailVO
      * @des 商务邮件汇总汇总派工合同
      * @version v1
      */
     @GetMapping("v1/collectDispatch")
-    public Result CollectDispatch(String[] areas) throws ActException {
+    public Result CollectDispatch(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
+        String[] areas = collectEmailDTO.getAreas();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectDispatchEmail(areas), CollectEmailVO.class);

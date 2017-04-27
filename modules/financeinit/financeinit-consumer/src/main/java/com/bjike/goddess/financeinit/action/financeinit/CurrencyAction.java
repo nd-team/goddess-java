@@ -36,6 +36,42 @@ public class CurrencyAction {
     private CurrencyAPI currencyAPI;
 
     /**
+     * 币别列表总条数
+     *
+     * @param customerBaseInfoDTO 币别信息dto
+     * @des 获取所有币别信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CurrencyDTO customerBaseInfoDTO) throws ActException {
+        try {
+            Long count = currencyAPI.countCurrency(customerBaseInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个实施审核
+     *
+     * @param id 项目币别信息id
+     * @des 根据id获取项目币别信息
+     * @return  class CurrencyVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            CurrencyVO projectCarryVO = BeanTransform.copyProperties(
+                    currencyAPI.getOneById(id), CurrencyVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 币别列表
      *
      * @param currencyDTO 币别信息dto
