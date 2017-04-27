@@ -2,7 +2,7 @@ package com.bjike.goddess.competitormanage.vo;
 
 
 /**
- * 竞争对手汇总业务传输对象
+ * 竞争对手汇总合计业务传输对象
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-03-23 11:27 ]

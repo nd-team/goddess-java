@@ -1,5 +1,7 @@
 package com.bjike.goddess.competitormanage.action.competitormanage;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,8 +13,10 @@ import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.vo.CompetitorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -37,9 +41,9 @@ public class CompetitorAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(CompetitorTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated({ADD.class}) CompetitorTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            CompetitorVO voList = BeanTransform.copyProperties(competitorAPI.saveCompetitor(to), CompetitorVO.class);
+            CompetitorVO voList = BeanTransform.copyProperties(competitorAPI.saveCompetitor(to), CompetitorVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -52,10 +56,10 @@ public class CompetitorAct {
      * @param to 竞争对手信息
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result edit(CompetitorTO to, BindingResult bindingResult) throws ActException {
+    @PutMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) CompetitorTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.editCompetitor(to), CompetitorVO.class);
+            CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.editCompetitor(to), CompetitorVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -68,10 +72,10 @@ public class CompetitorAct {
      * @param to 竞争对手组织结构信息
      * @version v1
      */
-    @PostMapping("v1/editOrganization")
-    public Result editOrganization(CompetitorTO to, BindingResult bindingResult) throws ActException {
+    @PutMapping("v1/organization")
+    public Result editOrganization(@Validated({CompetitorTO.Organization.class}) CompetitorTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.editOrganization(to), CompetitorVO.class);
+            CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.editOrganization(to), CompetitorVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,10 +85,10 @@ public class CompetitorAct {
     /**
      * 删除竞争对手
      *
-     * @param id 竞争对手ID
+     * @param id 竞争对手Id
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             competitorAPI.delete(id);
@@ -95,15 +99,47 @@ public class CompetitorAct {
     }
 
     /**
-     * 分页查询
+     * 查询列表总条数
      *
-     * @param dto 分页条件
+     * @param dto 查询条件或分页条件
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result pageList(CompetitorDTO dto) throws ActException {
+    @GetMapping("v1/count")
+    public Result count(CompetitorDTO dto) throws ActException {
         try {
-            List<CompetitorVO> voList = BeanTransform.copyProperties(competitorAPI.pageList(dto), CompetitorVO.class);
+            Long count = competitorAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询竞争对手记录
+     *
+     * @param id 竞争对手Id
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            CompetitorVO vo = BeanTransform.copyProperties(competitorAPI.findById(id), CompetitorVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 查询条件或分页条件
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result pageList(CompetitorDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<CompetitorVO> voList = BeanTransform.copyProperties(competitorAPI.pageList(dto), CompetitorVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

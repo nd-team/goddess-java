@@ -16,7 +16,7 @@ public enum SendIntervalType {
      */
     MINUTE(0),
     /**
-     * 天
+     * 时
      */
     HOUR(1),
     /**
