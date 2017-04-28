@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("quartz/schedulejobgroup")
+@RequestMapping("schedulejob-group")
 public class ScheduleJobGroupAction {
 
     @Autowired
@@ -40,7 +40,7 @@ public class ScheduleJobGroupAction {
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ScheduleJobGroupTO jobGroupTO, BindingResult result) throws ActException {
         try {
-            ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.add(jobGroupTO), ScheduleJobGroupVO.class);
+            ScheduleJobGroupVO jobGroupVO = BeanTransform.copyProperties(scheduleJobGroupAPI.add(null,jobGroupTO), ScheduleJobGroupVO.class);
             return ActResult.initialize(jobGroupVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

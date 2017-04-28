@@ -6,6 +6,7 @@ import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
 import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
+import org.mengyun.tcctransaction.api.TransactionContext;
 
 /**
  * 任务调度组业务接口
@@ -24,7 +25,7 @@ public interface ScheduleJobGroupSer extends Ser<ScheduleJobGroup, ScheduleJobGr
      * @param jobGroupTO
      * @return
      */
-    default ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
+    default ScheduleJobGroupBO add(TransactionContext txContext, ScheduleJobGroupTO jobGroupTO) throws SerException {
         return null;
     }
 
