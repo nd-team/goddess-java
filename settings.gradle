@@ -262,5 +262,9 @@ include ':modules:foreigntax:foreigntax-provider'
 include ':modules:materialinstock:materialinstock-api'
 include ':modules:materialinstock:materialinstock-consumer'
 include ':modules:materialinstock:materialinstock-provider'
+//#managefee 管理费tanghaixiang
+include ':modules:managefee:managefee-api'
+include ':modules:managefee:managefee-consumer'
+include ':modules:managefee:managefee-provider'
 
 
