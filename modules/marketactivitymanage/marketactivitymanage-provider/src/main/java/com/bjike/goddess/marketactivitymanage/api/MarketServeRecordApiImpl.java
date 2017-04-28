@@ -1,8 +1,10 @@
 package com.bjike.goddess.marketactivitymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
+import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeRecordSer;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
@@ -27,6 +29,30 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
 
     @Autowired
     private MarketServeRecordSer marketServeRecordSer;
+
+    /**
+     * 根据id查询市场招待记录
+     *
+     * @param id 市场招待记录唯一标识
+     * @return class MarketServeRecordBO
+     * @throws SerException
+     */
+    @Override
+    public MarketServeRecordBO findById(String id) throws SerException {
+        MarketServeRecord model = marketServeRecordSer.findById(id);
+        return BeanTransform.copyProperties(model, MarketServeRecordBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 市场招待记录dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MarketServeRecordDTO dto) throws SerException {
+        return marketServeRecordSer.count(dto);
+    }
 
     /**
      * 分页查询市场招待记录
@@ -105,18 +131,6 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
     @Override
     public void executiveOpinion(MarketServeRecordTO to) throws SerException {
         marketServeRecordSer.executiveOpinion(to);
-    }
-
-    /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void uploadAttachment(InputStream inputStream, String targetPath) throws SerException {
-        marketServeRecordSer.uploadAttachment(inputStream, targetPath);
     }
 
     /**

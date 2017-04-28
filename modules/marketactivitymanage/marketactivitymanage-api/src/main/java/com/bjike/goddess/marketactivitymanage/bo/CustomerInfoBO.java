@@ -2,8 +2,6 @@ package com.bjike.goddess.marketactivitymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 客户信息业务传输对象
  *

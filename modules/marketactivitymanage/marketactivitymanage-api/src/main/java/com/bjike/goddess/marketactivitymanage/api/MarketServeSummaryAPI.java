@@ -20,6 +20,23 @@ import java.util.List;
 public interface MarketServeSummaryAPI {
 
     /**
+     * 根据id查询市场招待汇总邮件发送
+     *
+     * @param id 市场招待汇总邮件发送唯一标识
+     * @return class MarketServeSummaryBO
+     * @throws SerException
+     */
+    MarketServeSummaryBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 市场招待汇总邮件发送dto
+     * @throws SerException
+     */
+    Long count(MarketServeSummaryDTO dto) throws SerException;
+
+    /**
      * 分页查询市场招待汇总邮件发送
      *
      * @param dto 市场招待汇总dto

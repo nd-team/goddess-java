@@ -3,8 +3,8 @@ package com.bjike.goddess.marketactivitymanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
-import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
+import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
 
@@ -82,19 +82,10 @@ public interface MarketServeApplySer extends Ser<MarketServeApply, MarketServeAp
     void executiveOpinion(MarketServeApplyTO to) throws SerException;
 
     /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    void uploadAttachment(InputStream inputStream, String targetPath) throws SerException;
-
-    /**
      * 导入
      *
      * @param inputStream 目标路径
-     * @param targetPath 文件输入流
+     * @param targetPath  文件输入流
      * @throws SerException
      */
     void importFile(InputStream inputStream, String targetPath) throws SerException;

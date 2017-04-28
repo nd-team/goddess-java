@@ -137,7 +137,7 @@ public class MaterialBuyAct {
      * @throws SerException
      * @version v1
      */
-    @GetMapping("v1/checkDetail/{id}")
+    @GetMapping("v1/checkdetail/{id}")
     public Result checkDetail(@PathVariable String id) throws ActException {
         try {
             MaterialBuyBO bo = materialBuyAPI.checkDetail(id);
@@ -167,7 +167,7 @@ public class MaterialBuyAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/areaPrincipalAudit")
+    @PutMapping("v1/areaprincipalaudit")
     public Result areaPrincipalAudit(@Validated(MaterialBuyTO.PrincipalAudit.class) MaterialBuyTO to, BindingResult result) throws ActException {
         try {
             materialBuyAPI.areaPrincipalAudit(to);

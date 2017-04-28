@@ -121,7 +121,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional
     public void addClientInfo(CustomerInfoTO to) throws SerException {
-        String marketServeId = to.getMarketServeId();
+       /* String marketServeId = to.getMarketServeId();
         List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
         List<String> clientNames = to.getClientNames();//客户姓名
         List<String> importanceLevels = to.getImportanceLevels();//重要性级别
@@ -137,7 +137,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
 
                 customerInfoAPI.save(customerInfoTO);
             }
-        }
+        }*/
     }
 
     /**
@@ -174,19 +174,6 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         entity.setDecisionLevel(decisionLevel);
         entity.setExecutiveAuditOpinion(executiveAuditOpinion);
         update(entity);
-    }
-
-    /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    @Transactional
-    public void uploadAttachment(InputStream inputStream, String targetPath) throws SerException {
-        // TODO: 17-3-20
     }
 
     /**

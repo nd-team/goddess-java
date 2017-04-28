@@ -42,7 +42,7 @@ public class TempMatterDemandAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findbyid/{id}")
+    @GetMapping("v1/tempmatterdemand/{id}")
     public Result findById(@PathVariable String id) throws ActException {
         try {
             TempMatterDemandBO bo = tempMatterDemandAPI.findById(id);
@@ -153,7 +153,7 @@ public class TempMatterDemandAct {
      * @return class TempMatterDemandVO
      * @throws ActException
      */
-    @GetMapping("v1/checkDetail/{id}")
+    @GetMapping("v1/checkdetail/{id}")
     public Result checkDetail(@PathVariable String id) throws ActException {
         try {
             TempMatterDemandBO bo = tempMatterDemandAPI.checkDetail(id);

@@ -55,7 +55,7 @@ public class MaterialInStockAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findbyid/{id}")
+    @GetMapping("v1/materialinstock/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialInStockBO bo = materialInStockAPI.findById(id);
