@@ -8,12 +8,14 @@ import com.bjike.goddess.businessproject.vo.SiginManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -42,10 +44,10 @@ public class SiginManageAction {
      * @version v1
      */
     @GetMapping("v1/listSiginManage")
-    public Result findListSiginManage(SiginManageDTO siginManageDTO) throws ActException {
+    public Result findListSiginManage(SiginManageDTO siginManageDTO, HttpServletRequest request) throws ActException {
         try {
             List<SiginManageVO> siginManageVOList = BeanTransform.copyProperties(
-                    siginManageAPI.listSiginManage(siginManageDTO), SiginManageVO.class);
+                    siginManageAPI.listSiginManage(siginManageDTO), SiginManageVO.class , request);
             return ActResult.initialize(siginManageVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -60,30 +62,12 @@ public class SiginManageAction {
      * @des 添加项目签订与立项
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.addSiginManage(siginManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 搜索
-     *
-     * @param siginManageDTO 项目签订与立项信息dto
-     * @return class SiginManageVO
-     * @des 分页搜索获取所有项目签订与立项
-     * @version v1
-     */
-    @GetMapping("v1/searchSiginManage")
-    public Result searchListSiginManage(SiginManageDTO siginManageDTO) throws ActException {
-        try {
-            List<SiginManageVO> baseInfoManageVOList = BeanTransform.copyProperties(
-                    siginManageAPI.searchSiginManage(siginManageDTO), SiginManageVO.class, true);
-            return ActResult.initialize(baseInfoManageVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -97,6 +81,7 @@ public class SiginManageAction {
      * @des 添加项目签订与立项
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result editSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {
@@ -114,6 +99,7 @@ public class SiginManageAction {
      * @des 根据id删除项目签订与立项信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteSiginManage(@PathVariable String id) throws ActException {
         try {
@@ -133,6 +119,7 @@ public class SiginManageAction {
      * @des 审核项目签订与立项
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/audit")
     public Result auditSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {

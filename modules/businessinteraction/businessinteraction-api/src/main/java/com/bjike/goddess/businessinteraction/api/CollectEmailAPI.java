@@ -107,6 +107,16 @@ public interface CollectEmailAPI {
 
     ;
 
+    /**
+     * 地区数组
+     *
+     */
+    default List<String> areaList( ) throws SerException {
+        return null;
+    }
+
+    ;
+
 
 
 }

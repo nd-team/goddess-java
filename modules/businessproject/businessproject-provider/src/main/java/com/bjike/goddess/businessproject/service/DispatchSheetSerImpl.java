@@ -34,6 +34,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     
     @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
+        searchCondition( dispatchSheetDTO);
         List<DispatchSheet> list = super.findByPage(dispatchSheetDTO);
         List<DispatchSheetBO> dispatchSheetBOList = BeanTransform.copyProperties(list, DispatchSheetBO.class);
         return dispatchSheetBOList;
@@ -73,64 +74,57 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         super.remove(id);
     }
 
-    
-    @Override
-    public List<DispatchSheetBO> searchDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
-        DispatchSheetDTO dto = dispatchSheetDTO;
+
+    public void searchCondition(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         /**
          * 业务类型
          */
         if (dispatchSheetDTO.getBusinessType() != null) {
-            dto.getConditions().add(Restrict.eq("businessType", dispatchSheetDTO.getBusinessType()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("businessType", dispatchSheetDTO.getBusinessType()));
         }
         /**
          * 业务方向科目
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getBusinessSubject())) {
-            dto.getConditions().add(Restrict.like("businessSubject", dispatchSheetDTO.getBusinessSubject()));
+            dispatchSheetDTO.getConditions().add(Restrict.like("businessSubject", dispatchSheetDTO.getBusinessSubject()));
         }
         /**
          * 合作方式
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getBusinessCooperate())) {
-            dto.getConditions().add(Restrict.eq("businessCooperate", dispatchSheetDTO.getBusinessCooperate()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("businessCooperate", dispatchSheetDTO.getBusinessCooperate()));
         }
         /**
          * 总包单位名称
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getMajorCompany())) {
-            dto.getConditions().add(Restrict.eq("majorCompany", dispatchSheetDTO.getMajorCompany()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("majorCompany", dispatchSheetDTO.getMajorCompany()));
         }
         /**
          * 分包单位名称
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getSubCompany())) {
-            dto.getConditions().add(Restrict.eq("subCompany", dispatchSheetDTO.getSubCompany()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("subCompany", dispatchSheetDTO.getSubCompany()));
         }
         /**
          * 地区
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getArea())) {
-            dto.getConditions().add(Restrict.eq("area", dispatchSheetDTO.getArea()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("area", dispatchSheetDTO.getArea()));
         }
         /**
          * 派工单名称
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getDispatchProject())) {
-            dto.getConditions().add(Restrict.eq("dispatchProject", dispatchSheetDTO.getDispatchProject()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("dispatchProject", dispatchSheetDTO.getDispatchProject()));
         }
         /**
          * 派工单编号
          */
         if (StringUtils.isNotBlank(dispatchSheetDTO.getDispatchNum())) {
-            dto.getConditions().add(Restrict.eq("dispatchNum", dispatchSheetDTO.getDispatchNum()));
+            dispatchSheetDTO.getConditions().add(Restrict.eq("dispatchNum", dispatchSheetDTO.getDispatchNum()));
         }
 
-        List<DispatchSheet> dispatchSheetList = super.findByCis(dto);
-
-        List<DispatchSheetBO> dispatchSheetBOList = BeanTransform.copyProperties(dispatchSheetList, DispatchSheetBO.class);
-
-        return dispatchSheetBOList;
     }
 
     @Override

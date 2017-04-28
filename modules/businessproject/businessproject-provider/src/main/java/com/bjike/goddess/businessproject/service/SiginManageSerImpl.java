@@ -42,6 +42,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
+        searchCondition( siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);
         List<SiginManageBO> siginManageBOS = BeanTransform.copyProperties(list, SiginManageBO.class);
         return siginManageBOS;
@@ -93,63 +94,58 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         return siginManageBO;
     }
 
-    
-    @Override
-    public List<SiginManageBO> searchSiginManage(SiginManageDTO siginManageDTO) throws SerException {
-        SiginManageDTO dto = siginManageDTO;
+
+    public void searchCondition(SiginManageDTO siginManageDTO) throws SerException {
         /**
          * 业务类型
          */
         if(siginManageDTO.getBusinessType() != null ){
-            dto.getConditions().add(Restrict.eq("businessType",siginManageDTO.getBusinessType()));
+            siginManageDTO.getConditions().add(Restrict.eq("businessType",siginManageDTO.getBusinessType()));
         }
         /**
          * 业务方向科目
          */
         if(StringUtils.isNotBlank(siginManageDTO.getBusinessSubject())){
-            dto.getConditions().add(Restrict.like("businessSubject",siginManageDTO.getBusinessSubject()));
+            siginManageDTO.getConditions().add(Restrict.like("businessSubject",siginManageDTO.getBusinessSubject()));
         }
         /**
          * 合作方式
          */
         if(siginManageDTO.getBusinessCooperate() != null ){
-            dto.getConditions().add(Restrict.eq("businessCooperate",siginManageDTO.getBusinessCooperate()));
+            siginManageDTO.getConditions().add(Restrict.eq("businessCooperate",siginManageDTO.getBusinessCooperate()));
         }
         /**
          * 甲方公司
          */
         if(StringUtils.isNotBlank(siginManageDTO.getFirstCompany())){
-            dto.getConditions().add(Restrict.like("firstCompany",siginManageDTO.getFirstCompany()));
+            siginManageDTO.getConditions().add(Restrict.like("firstCompany",siginManageDTO.getFirstCompany()));
         }
         /**
          * 乙方公司
          */
         if(StringUtils.isNotBlank(siginManageDTO.getSecondCompany())){
-            dto.getConditions().add(Restrict.like("secondCompany",siginManageDTO.getSecondCompany()));
+            siginManageDTO.getConditions().add(Restrict.like("secondCompany",siginManageDTO.getSecondCompany()));
         }
         /**
          * 地区
          */
         if(StringUtils.isNotBlank(siginManageDTO.getArea())){
-            dto.getConditions().add(Restrict.like("area",siginManageDTO.getArea()));
+            siginManageDTO.getConditions().add(Restrict.like("area",siginManageDTO.getArea()));
         }
         /**
          * 合同属性
          */
         if(siginManageDTO.getContractProperty() != null ){
-            dto.getConditions().add(Restrict.eq("contractProperty",siginManageDTO.getContractProperty()));
+            siginManageDTO.getConditions().add(Restrict.eq("contractProperty",siginManageDTO.getContractProperty()));
         }
         /**
          * 立项情况
          */
         if(StringUtils.isNotBlank(siginManageDTO.getMakeProject() ) ){
-            dto.getConditions().add(Restrict.eq("makeProject",siginManageDTO.getMakeProject()));
+            siginManageDTO.getConditions().add(Restrict.eq("makeProject",siginManageDTO.getMakeProject()));
         }
 
-        List<SiginManage> siginManageList = super.findByCis( dto );
 
-        List<SiginManageBO> siginManageBOList = BeanTransform.copyProperties(siginManageList ,SiginManageBO.class);
-        return siginManageBOList;
     }
 
     @Override
