@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.organize.bo.DesignNumberInfoBO;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
@@ -95,5 +96,27 @@ public interface ModuleTypeAPI {
     default List<ModuleTypeBO> maps(ModuleTypeDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询模块类型数据
+     *
+     * @param id 模块类型数据id
+     * @return
+     * @throws SerException
+     */
+    default ModuleTypeBO findById(String id) throws SerException {
+        return null;
+    }
+
 
 }

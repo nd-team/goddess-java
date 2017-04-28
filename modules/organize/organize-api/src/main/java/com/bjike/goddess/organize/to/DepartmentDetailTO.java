@@ -28,27 +28,12 @@ public class DepartmentDetailTO extends BaseTO {
      * 体系ID
      */
     @NotNull(message = "体系ID不能为空", groups = {ADD.class, EDIT.class})
-    private String hierarchy_id;
-
-    /**
-     * 体系编号
-     */
-    private String hierarchyNumber;
-
-    /**
-     * 体系
-     */
-    private String hierarchyName;
-
-    /**
-     * 项目组/部门id
-     */
-    @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
-    private String department_id;
+    private String hierarchyId;
 
     /**
      * 项目组/部门
      */
+    @NotNull(message = "部门不能为空", groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
@@ -68,16 +53,6 @@ public class DepartmentDetailTO extends BaseTO {
      */
     private String description;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 显示编号
-     */
-    private String showNumber;
-
 
     public String getSerialNumber() {
         return serialNumber;
@@ -87,36 +62,12 @@ public class DepartmentDetailTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchy_id() {
-        return hierarchy_id;
+    public String getHierarchyId() {
+        return hierarchyId;
     }
 
-    public void setHierarchy_id(String hierarchy_id) {
-        this.hierarchy_id = hierarchy_id;
-    }
-
-    public String getHierarchyNumber() {
-        return hierarchyNumber;
-    }
-
-    public void setHierarchyNumber(String hierarchyNumber) {
-        this.hierarchyNumber = hierarchyNumber;
-    }
-
-    public String getHierarchyName() {
-        return hierarchyName;
-    }
-
-    public void setHierarchyName(String hierarchyName) {
-        this.hierarchyName = hierarchyName;
-    }
-
-    public String getDepartment_id() {
-        return department_id;
-    }
-
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setHierarchyId(String hierarchyId) {
+        this.hierarchyId = hierarchyId;
     }
 
     public String getDepartment() {
@@ -151,19 +102,4 @@ public class DepartmentDetailTO extends BaseTO {
         this.description = description;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getShowNumber() {
-        return showNumber;
-    }
-
-    public void setShowNumber(String showNumber) {
-        this.showNumber = showNumber;
-    }
 }

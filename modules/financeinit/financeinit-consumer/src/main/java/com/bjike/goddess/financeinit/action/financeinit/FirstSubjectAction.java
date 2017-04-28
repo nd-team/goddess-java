@@ -36,6 +36,42 @@ public class FirstSubjectAction {
     private FirstSubjectAPI firstSubjectAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param customerBaseInfoDTO 一级科目信息dto
+     * @des 获取所有一级科目信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(FirstSubjectDTO customerBaseInfoDTO) throws ActException {
+        try {
+            Long count = firstSubjectAPI.countFirstSubject(customerBaseInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个一级科目
+     *
+     * @param id 项目一级科目信息id
+     * @des 根据id获取项目一级科目信息
+     * @return  class FirstSubjectVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            FirstSubjectVO projectCarryVO = BeanTransform.copyProperties(
+                    firstSubjectAPI.getOneById(id), FirstSubjectVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 一级科目列表
      *
      * @param firstSubjectDTO 一级科目信息dto

@@ -38,7 +38,7 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
     @Override
     public HandlePlanStageBO save(HandlePlanStageTO to) throws SerException {
         HandlePlanStage entity = BeanTransform.copyProperties(to, HandlePlanStage.class, true);
-        entity.setPlan(handlePlanSer.findById(to.getPlan_id()));
+        entity.setPlan(handlePlanSer.findById(to.getPlanId()));
         super.save(entity);
         return BeanTransform.copyProperties(entity, HandlePlanStageBO.class);
     }
@@ -49,7 +49,7 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
         HandlePlanStage entity = BeanTransform.copyProperties(to, HandlePlanStage.class, true), stage = super.findById(to.getId());
         entity.setCreateTime(stage.getCreateTime());
         entity.setModifyTime(LocalDateTime.now());
-        entity.setPlan(handlePlanSer.findById(to.getPlan_id()));
+        entity.setPlan(handlePlanSer.findById(to.getPlanId()));
         super.update(entity);
         return BeanTransform.copyProperties(entity, HandlePlanStageBO.class);
     }
@@ -63,29 +63,29 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
     }
 
     @Override
-    public List<HandlePlanStageBO> findByPlanIds(String[] plan_ids) throws SerException {
-        if (plan_ids.length == 0)
+    public List<HandlePlanStageBO> findByPlanIds(String[] planIds) throws SerException {
+        if (planIds.length == 0)
             return null;
         HandlePlanStageDTO dto = new HandlePlanStageDTO();
-        dto.getConditions().add(Restrict.in("plan.id", plan_ids));
+        dto.getConditions().add(Restrict.in("plan.id", planIds));
         dto.getSorts().add("plan.id");
         List<HandlePlanStage> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, HandlePlanStageBO.class);
     }
 
     @Override
-    public List<HandlePlanStageBO> findByPlan(String plan_id) throws SerException {
+    public List<HandlePlanStageBO> findByPlan(String planId) throws SerException {
         HandlePlanStageDTO dto = new HandlePlanStageDTO();
-        dto.getConditions().add(Restrict.eq("plan.id", plan_id));
+        dto.getConditions().add(Restrict.eq("plan.id", planId));
         List<HandlePlanStage> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, HandlePlanStageBO.class);
     }
 
     @Override
-    public List<HandlePlanStageBO> findByHandle(String handle_id) throws SerException {
-        List<String> plan_ids = handlePlanSer.findByHandle(handle_id).stream().map(QualificationsHandlePlanBO::getId).collect(Collectors.toList());
-        if (plan_ids.size() != 0)
-            return this.findByPlanIds(plan_ids.toArray(new String[0]));
+    public List<HandlePlanStageBO> findByHandle(String handleId) throws SerException {
+        List<String> planIds = handlePlanSer.findByHandle(handleId).stream().map(QualificationsHandlePlanBO::getId).collect(Collectors.toList());
+        if (planIds.size() != 0)
+            return this.findByPlanIds(planIds.toArray(new String[0]));
         else
             return null;
     }

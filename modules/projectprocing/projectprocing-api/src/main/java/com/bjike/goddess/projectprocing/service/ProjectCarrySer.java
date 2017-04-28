@@ -28,6 +28,12 @@ public interface ProjectCarrySer extends Ser<ProjectCarry, ProjectCarryDTO> {
         return null;
     }
     /**
+     * 根据id获取项目实施列表
+     * @return class ProjectCarryBO
+     */
+    default ProjectCarryBO getOneById(String id) throws SerException {return null;}
+
+    /**
      * 项目实施列表
      * @return class ProjectCarryBO
      */

@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessinteraction.bo;
 
+import java.io.Serializable;
+
 /**
  * @Author: [tanghaixiang]
  * @Date: [2017-03-27 15:09]
@@ -7,7 +9,7 @@ package com.bjike.goddess.businessinteraction.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CollectData {
+public class CollectData implements Serializable{
 
     /**
      * 汇总字段名

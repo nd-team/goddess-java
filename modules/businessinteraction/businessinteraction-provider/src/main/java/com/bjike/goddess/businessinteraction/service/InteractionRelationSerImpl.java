@@ -1,6 +1,8 @@
 package com.bjike.goddess.businessinteraction.service;
 
 import com.bjike.goddess.businessinteraction.bo.InteractionRelationBO;
+import com.bjike.goddess.businessinteraction.dto.LeavingMessageDTO;
+import com.bjike.goddess.businessinteraction.entity.LeavingMessage;
 import com.bjike.goddess.businessinteraction.to.InteractionRelationTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -11,6 +13,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +34,33 @@ import java.util.List;
 @Service
 public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation, InteractionRelationDTO> implements InteractionRelationSer {
 
+    @Autowired
+    private LeavingMessageSer leavingMessageSer;
+
+    @Override
+    public Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        if(StringUtils.isNoneBlank(interactionRelationDTO.getCompanyName())){
+            interactionRelationDTO.getConditions().add(Restrict.like("companyName",interactionRelationDTO.getCompanyName()));
+        }
+        Long count = super.count( interactionRelationDTO );
+        return count;
+    }
+
+    @Override
+    public InteractionRelationBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id部嫩嗯为空");
+        }
+
+        InteractionRelation interactionRelation = super.findById( id );
+        return BeanTransform.copyProperties(interactionRelation, InteractionRelationBO.class );
+    }
 
     @Override
     public List<InteractionRelationBO> listInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        if(StringUtils.isNoneBlank(interactionRelationDTO.getCompanyName())){
+            interactionRelationDTO.getConditions().add(Restrict.like("companyName",interactionRelationDTO.getCompanyName()));
+        }
         List<InteractionRelation> list = super.findByCis(interactionRelationDTO, true);
 
         return BeanTransform.copyProperties(list, InteractionRelationBO.class );
@@ -74,6 +101,12 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
     @Override
     public void deleteInteractionRelation(String id) throws SerException {
         if (StringUtils.isNotBlank(id)){
+            LeavingMessageDTO leavingMessageDTO = new LeavingMessageDTO();
+            leavingMessageDTO.getConditions().add(Restrict.eq("interactionRelation.id",id));
+            List<LeavingMessage> list = leavingMessageSer.findByCis( leavingMessageDTO);
+            if( list!= null && list.size()>0){
+                leavingMessageSer.remove( list );
+            }
             super.remove(id);
         }else{
             throw new SerException("互动联系id不能为空");

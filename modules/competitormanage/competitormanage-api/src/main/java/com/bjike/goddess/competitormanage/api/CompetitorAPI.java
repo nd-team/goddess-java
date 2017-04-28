@@ -52,4 +52,20 @@ public interface CompetitorAPI {
      * @param dto 分页条件
      */
     List<CompetitorBO> pageList(CompetitorDTO dto) throws SerException;
+
+    /**
+     * 查询列表总条数
+     *
+     * @param dto 查询条件或分页条件
+     * @return 列表总条数
+     */
+    Long count(CompetitorDTO dto) throws SerException;
+
+    /**
+     * 根据id查询竞争对手记录
+     *
+     * @param id 竞争对手记录id
+     * @return 竞争对手记录
+     */
+    CompetitorBO findById(String id) throws SerException;
 }

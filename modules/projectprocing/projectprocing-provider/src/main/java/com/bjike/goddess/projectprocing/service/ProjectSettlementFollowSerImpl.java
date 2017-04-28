@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -37,11 +38,46 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
 
     @Override
     public Long countProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area",projectSettlementFollowDTO.getArea()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType",projectSettlementFollowDTO.getBusinessType()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject",projectSettlementFollowDTO.getBusinessSubject()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName",projectSettlementFollowDTO.getOperatorName()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit",projectSettlementFollowDTO.getOutsourcingUnit()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName",projectSettlementFollowDTO.getInnerName()));
+        }
         return super.count(projectSettlementFollowDTO);
     }
 
     @Override
+    public ProjectSettlementFollowBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw  new SerException("id不能为空");
+        }
+        ProjectSettlementFollow projectSituation = super.findById( id );
+        return BeanTransform.copyProperties( projectSituation , ProjectSettlementFollowBO.class);
+    }
+
+    @Override
     public List<ProjectSettlementFollowBO> listProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
+        if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area",projectSettlementFollowDTO.getArea()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType",projectSettlementFollowDTO.getBusinessType()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject",projectSettlementFollowDTO.getBusinessSubject()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName",projectSettlementFollowDTO.getOperatorName()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit",projectSettlementFollowDTO.getOutsourcingUnit()));
+        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())){
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName",projectSettlementFollowDTO.getInnerName()));
+        }
         List<ProjectSettlementFollow> list = super.findByCis(projectSettlementFollowDTO, true);
         List<ProjectSettlementFollowBO> projectSettlementFollowBOS =  BeanTransform.copyProperties(list, ProjectSettlementFollowBO.class);
         return projectSettlementFollowBOS;

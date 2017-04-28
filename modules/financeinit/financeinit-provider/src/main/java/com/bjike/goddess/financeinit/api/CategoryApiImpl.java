@@ -27,6 +27,16 @@ public class CategoryApiImpl implements CategoryAPI {
 
 
     @Override
+    public Long countCategory(CategoryDTO categoryDTO) throws SerException {
+        return categorySer.countCategory( categoryDTO );
+    }
+
+    @Override
+    public CategoryBO getOneById(String id) throws SerException {
+        return categorySer.getOneById(id);
+    }
+    
+    @Override
     public List<CategoryBO> listCategory(CategoryDTO categoryDTO) throws SerException {
         return categorySer.listCategory(categoryDTO);
     }

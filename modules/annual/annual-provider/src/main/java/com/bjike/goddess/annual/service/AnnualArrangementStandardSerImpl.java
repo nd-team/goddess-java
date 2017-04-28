@@ -46,12 +46,12 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
      */
     private AnnualArrangementStandardBO transformBO(AnnualArrangementStandard entity) throws SerException {
         AnnualArrangementStandardBO bo = BeanTransform.copyProperties(entity, AnnualArrangementStandardBO.class);
-        ArrangementBO arrangementBO = arrangementAPI.findById(entity.getArrangement_id());
+        ArrangementBO arrangementBO = arrangementAPI.findById(entity.getArrangementId());
         AnnualStandard annualStandard = entity.getStandard();
         bo.setArrangement(arrangementBO.getArrangement());
         bo.setStartCycle(annualStandard.getStartCycle());
         bo.setEndCycle(annualStandard.getEndCycle());
-        bo.setStandard_id(annualStandard.getId());
+        bo.setStandardId(annualStandard.getId());
         bo.setAstrict(annualStandard.getAstrict());
         bo.setRemark(annualStandard.getRemark());
         return bo;
@@ -74,15 +74,15 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualArrangementStandardBO update(AnnualArrangementStandardTO to) throws SerException {
-        AnnualArrangementStandardBO bo = this.findByArrangementStandard(to.getStandard_id(), to.getArrangement_id());
+        AnnualArrangementStandardBO bo = this.findByArrangementStandard(to.getStandardId(), to.getArrangementId());
         AnnualArrangementStandard entity;
         if (bo == null) {
             entity = BeanTransform.copyProperties(to, AnnualArrangementStandard.class);
-            entity.setStandard(annualStandardSer.findById(to.getStandard_id()));
+            entity.setStandard(annualStandardSer.findById(to.getStandardId()));
             super.save(entity);
         } else {
             entity = BeanTransform.copyProperties(to, AnnualArrangementStandard.class);
-            entity.setStandard(annualStandardSer.findById(to.getArrangement_id()));
+            entity.setStandard(annualStandardSer.findById(to.getArrangementId()));
             entity.setId(bo.getId());
             super.update(entity);
         }
@@ -90,10 +90,10 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
     }
 
     @Override
-    public AnnualArrangementStandardBO findByArrangementStandard(String standard_id, String arrangement_id) throws SerException {
+    public AnnualArrangementStandardBO findByArrangementStandard(String standardId, String arrangementId) throws SerException {
         AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
-        dto.getConditions().add(Restrict.eq("standard.id", standard_id));
-        dto.getConditions().add(Restrict.eq("arrangement_id", arrangement_id));
+        dto.getConditions().add(Restrict.eq("standard.id", standardId));
+        dto.getConditions().add(Restrict.eq("arrangementId", arrangementId));
         AnnualArrangementStandard entity = super.findOne(dto);
         if (null == entity)
             return null;
@@ -101,9 +101,9 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
     }
 
     @Override
-    public List<AnnualArrangementStandardBO> findByStandard(String standard_id) throws SerException {
+    public List<AnnualArrangementStandardBO> findByStandard(String standardId) throws SerException {
         AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
-        dto.getConditions().add(Restrict.eq("standard.id", standard_id));
+        dto.getConditions().add(Restrict.eq("standard.id", standardId));
         List<AnnualArrangementStandard> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
@@ -111,7 +111,7 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
     @Override
     public List<AnnualArrangementStandardBO> maps(AnnualArrangementStandardDTO dto) throws SerException {
         dto.getSorts().add("standard.id");
-        dto.getSorts().add("arrangement_id");
+        dto.getSorts().add("arrangementId");
         List<AnnualArrangementStandard> list = super.findByPage(dto);
         return this.transformBOList(list);
     }

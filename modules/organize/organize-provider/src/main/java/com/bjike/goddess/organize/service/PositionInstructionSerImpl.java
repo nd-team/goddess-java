@@ -11,6 +11,7 @@ import com.bjike.goddess.organize.entity.Operate;
 import com.bjike.goddess.organize.entity.PositionInstruction;
 import com.bjike.goddess.organize.entity.Reflect;
 import com.bjike.goddess.organize.to.PositionInstructionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,22 +57,24 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         PositionInstructionBO bo = BeanTransform.copyProperties(entity, PositionInstructionBO.class);
         PositionDetailBO detailBO = positionDetailSer.findBOById(entity.getPosition().getId());
         bo.setPositionId(detailBO.getId());
-        bo.setPositionName(detailBO.getPositionName());
+        bo.setPositionName(detailBO.getPosition());
         bo.setPositionNumber(detailBO.getShowNumber());
         bo.setArrangement(detailBO.getArrangementName());
         bo.setHierarchy(detailBO.getHierarchyName());
         bo.setDepartment(detailBO.getDepartmentName());
         bo.setPool(detailBO.getPool());
         bo.setStaff(detailBO.getStaff());
-        bo.setParent(positionDetailSer.findParent(detailBO.getPosition_id()).getPositionName());
+        bo.setParent("");
+        for (PositionDetailBO detail : positionDetailSer.findParentByArrangement(detailBO.getId()))
+            bo.setParent(bo.getParent() + detail.getPosition() + ",");
         bo.setChildren("");
-        for (PositionDetailBO detail : positionDetailSer.findChild(detailBO.getPosition_id()))
-            bo.setChildren(bo.getChildren() + detail.getPositionName() + ",");
-        bo.setAngle_id(entity.getAngle().getId());
+        for (PositionDetailBO detail : positionDetailSer.findChildByArrangement(detailBO.getId()))
+            bo.setChildren(bo.getChildren() + detail.getPosition() + ",");
+        bo.setAngleId(entity.getAngle().getId());
         bo.setAngleName(entity.getAngle().getName());
-        bo.setDimension_id(entity.getDimension().getId());
+        bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        bo.setClassify_id(entity.getClassify().getId());
+        bo.setClassifyId(entity.getClassify().getId());
         bo.setClassifyName(entity.getClassify().getName());
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
@@ -116,7 +119,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class);
         instruction.setCreateTime(LocalDateTime.now());
         super.save(this.setForeign(instruction, to));
-        return BeanTransform.copyProperties(instruction, PositionInstructionBO.class);
+        return this.transformToBO(instruction);
     }
 
     /**
@@ -129,9 +132,9 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
      */
     private PositionInstruction setForeign(PositionInstruction instruction, PositionInstructionTO to) throws SerException {
         instruction.setPosition(positionDetailSer.findById(to.getPositionId()));
-        instruction.setAngle(angleSer.findById(to.getAngle_id()));
-        instruction.setClassify(classifySer.findById(to.getClassify_id()));
-        instruction.setDimension(dimensionSer.findById(to.getDimension_id()));
+        instruction.setAngle(angleSer.findById(to.getAngleId()));
+        instruction.setClassify(classifySer.findById(to.getClassifyId()));
+        instruction.setDimension(dimensionSer.findById(to.getDimensionId()));
         for (String id : to.getReflectIds())
             instruction.getReflects().add(reflectSer.findById(id));
         for (String id : to.getOperateIds())
@@ -142,9 +145,38 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionInstructionBO update(PositionInstructionTO to) throws SerException {
-        PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class), entity = super.findById(to.getId());
-        instruction.setCreateTime(entity.getCreateTime());
-        super.update(this.setForeign(instruction, to));
-        return BeanTransform.copyProperties(instruction, PositionInstructionBO.class);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        PositionInstruction entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(this.setForeign(entity, to));
+        return this.transformToBO(entity);
+    }
+
+    @Override
+    public PositionInstructionBO delete(String id) throws SerException {
+        PositionInstruction entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return this.transformToBO(entity);
+    }
+
+    @Override
+    public List<PositionInstructionBO> maps(PositionInstructionDTO dto) throws SerException {
+        dto.getSorts().add("positionId=asc");
+        return this.transformToBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PositionInstructionBO getById(String id) throws SerException {
+        return this.transformToBO(super.findById(id));
     }
 }

@@ -55,4 +55,30 @@ public class AngleApiImpl implements AngleAPI {
     public List<AngleBO> findByCis(AngleDTO dto) throws SerException {
         return BeanTransform.copyProperties(angleSer.findByCis(dto, false), AngleBO.class);
     }
+
+    @Override
+    public AngleBO delete(String id) throws SerException {
+        return angleSer.delete(id);
+    }
+
+    @Override
+    public AngleBO close(String id) throws SerException {
+        return angleSer.close(id);
+    }
+
+    @Override
+    public AngleBO open(String id) throws SerException {
+        return angleSer.delete(id);
+    }
+
+    @Override
+    public List<AngleBO> maps(AngleDTO dto) throws SerException {
+        return angleSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AngleDTO dto = new AngleDTO();
+        return angleSer.count(dto);
+    }
 }

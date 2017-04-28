@@ -57,33 +57,33 @@ public interface HandlePlanImplementSer extends Ser<HandlePlanImplement, HandleP
     /**
      * 根据计划阶段ID集合查询实施工作记录
      *
-     * @param stage_ids 计划阶段ID
+     * @param stageIds 计划阶段ID
      * @return
      * @throws SerException
      */
-    default List<HandlePlanImplementBO> findByStageIds(String[] stage_ids) throws SerException {
+    default List<HandlePlanImplementBO> findByStageIds(String[] stageIds) throws SerException {
         return null;
     }
 
     /**
      * 根据计划阶段ID查询实施工作记录
      *
-     * @param stage_id 计划阶段ID
+     * @param stageId 计划阶段ID
      * @return
      * @throws SerException
      */
-    default List<HandlePlanImplementBO> findByStage(String stage_id) throws SerException {
+    default List<HandlePlanImplementBO> findByStage(String stageId) throws SerException {
         return null;
     }
 
     /**
      * 根据资质办理查询实施工作记录
      *
-     * @param handle_id 资质办理ID
+     * @param handleId 资质办理ID
      * @return
      * @throws SerException
      */
-    default List<HandlePlanImplementBO> findByHandle(String handle_id) throws SerException {
+    default List<HandlePlanImplementBO> findByHandle(String handleId) throws SerException {
         return null;
     }
 

@@ -2,7 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.PositionWorkDetailBO;
-import com.bjike.goddess.organize.entity.PositionWorkDetail;
+import com.bjike.goddess.organize.dto.PositionWorkDetailDTO;
 import com.bjike.goddess.organize.service.PositionWorkDetailSer;
 import com.bjike.goddess.organize.to.PositionWorkDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +38,26 @@ public class PositionWorkDetailApiImpl implements PositionWorkDetailAPI {
     @Override
     public PositionWorkDetailBO update(PositionWorkDetailTO to) throws SerException {
         return positionWorkDetailSer.update(to);
+    }
+
+    @Override
+    public PositionWorkDetailBO delete(String id) throws SerException {
+        return positionWorkDetailSer.delete(id);
+    }
+
+    @Override
+    public List<PositionWorkDetailBO> maps(PositionWorkDetailDTO dto) throws SerException {
+        return positionWorkDetailSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        PositionWorkDetailDTO dto = new PositionWorkDetailDTO();
+        return positionWorkDetailSer.count(dto);
+    }
+
+    @Override
+    public PositionWorkDetailBO findById(String id) throws SerException {
+        return positionWorkDetailSer.getById(id);
     }
 }

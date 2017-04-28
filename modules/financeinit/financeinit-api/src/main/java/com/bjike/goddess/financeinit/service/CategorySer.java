@@ -21,6 +21,22 @@ import java.util.List;
 public interface CategorySer extends Ser<Category, CategoryDTO> {
 
     /**
+     * 类别列表总条数
+     *
+     */
+    default Long countCategory(CategoryDTO categoryDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取类别列表
+     * @return class CategoryBO
+     */
+    default CategoryBO getOneById(String id) throws SerException {return null;}
+
+
+
+    /**
      * 类别列表
      * @return class CategoryBO
      */

@@ -38,6 +38,19 @@ public class HierarchyVO {
      */
     private String createTime;
 
+    /**
+     * id
+     */
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }

@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 业务方向科目
  *
@@ -41,9 +43,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(BusinessCourseDTO dto) throws ActException {
+    public Result maps(BusinessCourseDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.maps(dto), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.maps(dto), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) BusinessCourseTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) BusinessCourseTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.save(to), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.save(to), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) BusinessCourseTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) BusinessCourseTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.update(to), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.update(to), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @PatchMapping("v1/congeal/{id}")
-    public Result congeal(BusinessCourseTO to) throws ActException {
+    public Result congeal(BusinessCourseTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.congeal(to), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.congeal(to), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @PatchMapping("v1/thaw/{id}")
-    public Result thaw(BusinessCourseTO to) throws ActException {
+    public Result thaw(BusinessCourseTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.thaw(to), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.thaw(to), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(BusinessCourseTO to) throws ActException {
+    public Result delete(BusinessCourseTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.delete(to), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.delete(to), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,9 +139,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @GetMapping("v1/findByType/{id}")
-    public Result findByType(@PathVariable String id) throws ActException {
+    public Result findByType(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findByType(id), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findByType(id), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -152,9 +154,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findThaw(), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.findThaw(), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -168,9 +170,9 @@ public class BusinessCourseAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.getById(id), BusinessCourseVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.getById(id), BusinessCourseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

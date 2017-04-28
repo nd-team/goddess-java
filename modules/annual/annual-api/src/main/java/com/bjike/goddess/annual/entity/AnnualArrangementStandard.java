@@ -29,7 +29,7 @@ public class AnnualArrangementStandard extends BaseEntity {
      * 岗位层级id
      */
     @Column(name = "arrangement_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '岗位层级id'")
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 年假天数
@@ -46,12 +46,12 @@ public class AnnualArrangementStandard extends BaseEntity {
         this.standard = standard;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public Integer getDays() {

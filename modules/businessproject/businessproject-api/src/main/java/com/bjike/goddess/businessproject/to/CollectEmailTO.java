@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotBlank
+    @NotNull(message = "发送间隔不能为空，且是数字")
     private Double sendNum;
 
     /**

@@ -53,4 +53,37 @@ public interface PositionWorkDetailSer extends Ser<PositionWorkDetail, PositionW
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 岗位工作明细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionWorkDetailBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位工作详细数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionWorkDetailBO> maps(PositionWorkDetailDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询岗位工作详细数据
+     *
+     * @param id 岗位工作详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionWorkDetailBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

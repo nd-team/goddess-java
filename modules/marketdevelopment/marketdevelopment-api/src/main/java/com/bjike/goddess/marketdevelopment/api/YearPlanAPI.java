@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 
@@ -101,6 +102,16 @@ public interface YearPlanAPI {
      * @throws SerException
      */
     default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取年计划选择对象
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<YearPlanChoiceBO> getChoice() throws SerException {
         return null;
     }
 

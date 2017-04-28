@@ -118,4 +118,26 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default WorkRangeBO update(WorkRangeTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 删除
+     *
+     * @param id 工作范围数据id
+     * @return
+     * @throws SerException
+     */
+    default WorkRangeBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 工作范围设置数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
+        return null;
+    }
 }

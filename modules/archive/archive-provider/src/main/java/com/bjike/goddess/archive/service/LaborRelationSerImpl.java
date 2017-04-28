@@ -49,7 +49,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, LaborRelationBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

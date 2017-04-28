@@ -1,12 +1,12 @@
 package com.bjike.goddess.competitormanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
 import com.bjike.goddess.competitormanage.service.CompetitorCollectSer;
 import com.bjike.goddess.competitormanage.to.CompetitorCollectTO;
-import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +60,15 @@ public class CompetitorCollectApiImpl implements CompetitorCollectAPI {
     @Override
     public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
         return competitorCollectSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(CompetitorCollectDTO dto) throws SerException {
+        return competitorCollectSer.count(dto);
+    }
+
+    @Override
+    public CompetitorCollectBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(competitorCollectSer.findById(id), CompetitorCollectBO.class);
     }
 }

@@ -1,9 +1,9 @@
 package com.bjike.goddess.organize.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 部门详细
@@ -34,8 +34,14 @@ public class DepartmentDetail extends BaseEntity {
     /**
      * 项目组/部门
      */
-    @JoinColumn(nullable = false, columnDefinition = "VARCHAR(36) COMMENT '部门'", unique = true)
-    private String department_id;
+    @Column(nullable = false, columnDefinition = "VARCHAR(36) COMMENT '部门'", unique = true)
+    private String department;
+
+    /**
+     * 状态
+     */
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '部门状态' ", nullable = false, insertable = false)
+    private Status status;
 
     /**
      * 所属地区
@@ -55,12 +61,6 @@ public class DepartmentDetail extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) COMMENT '描述'")
     private String description;
 
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "DATETIME COMMENT '创建时间", nullable = false)
-    private LocalDateTime createTime;
-
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -77,12 +77,12 @@ public class DepartmentDetail extends BaseEntity {
         this.hierarchy = hierarchy;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getArea() {
@@ -109,11 +109,11 @@ public class DepartmentDetail extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

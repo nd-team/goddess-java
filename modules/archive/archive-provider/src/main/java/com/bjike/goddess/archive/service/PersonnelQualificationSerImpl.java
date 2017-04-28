@@ -54,9 +54,9 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
                 bo.setIdentityCard(detailBO.getIdCard());
             }
         }
-        bo.setSocial_id(entity.getSocial().getId());
+        bo.setSocialId(entity.getSocial().getId());
         bo.setSocialName(entity.getSocial().getName());
-        bo.setLobor_id(entity.getLabor().getId());
+        bo.setLoborId(entity.getLabor().getId());
         bo.setLaborName(entity.getLabor().getName());
         return bo;
     }
@@ -72,8 +72,8 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
     @Override
     public PersonnelQualificationBO save(PersonnelQualificationTO to) throws SerException {
         PersonnelQualification entity = BeanTransform.copyProperties(to, PersonnelQualification.class);
-        entity.setLabor(laborRelationSer.findById(to.getLabor_id()));
-        entity.setSocial(socialSecurityTypeSer.findById(to.getSocial_id()));
+        entity.setLabor(laborRelationSer.findById(to.getLaborId()));
+        entity.setSocial(socialSecurityTypeSer.findById(to.getSocialId()));
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -86,11 +86,11 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
                 PersonnelQualification entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
-                entity.setLabor(laborRelationSer.findById(to.getLabor_id()));
-                entity.setSocial(socialSecurityTypeSer.findById(to.getSocial_id()));
+                entity.setLabor(laborRelationSer.findById(to.getLaborId()));
+                entity.setSocial(socialSecurityTypeSer.findById(to.getSocialId()));
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

@@ -21,7 +21,7 @@ public class PositionInstructionsLogVO {
     private String serialNumber;
 
     /**
-     * 岗位id
+     * 岗位详细id
      */
     private String positionId;
 
@@ -135,6 +135,19 @@ public class PositionInstructionsLogVO {
      * 记录时间
      */
     private String logTime;
+
+    /**
+     * id
+     */
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getSerialNumber() {
         return serialNumber;

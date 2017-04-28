@@ -26,6 +26,14 @@ public interface ProjectSettlementFollowAPI {
     default Long countProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取结算跟进列表
+     * @return class ProjectSettlementFollowBO
+     */
+    default ProjectSettlementFollowBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 项目结算跟进列表
      * @return class ProjectSettlementFollowBO

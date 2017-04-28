@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.PositionWorkDetailBO;
+import com.bjike.goddess.organize.dto.PositionWorkDetailDTO;
 import com.bjike.goddess.organize.to.PositionWorkDetailTO;
 
 import java.util.List;
@@ -46,6 +47,49 @@ public interface PositionWorkDetailAPI {
      * @throws SerException
      */
     default PositionWorkDetailBO update(PositionWorkDetailTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位工作明细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionWorkDetailBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位工作详细数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionWorkDetailBO> maps(PositionWorkDetailDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询岗位工作详细数据
+     *
+     * @param id 岗位工作详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionWorkDetailBO findById(String id) throws SerException {
         return null;
     }
 

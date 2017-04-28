@@ -16,6 +16,8 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<!--<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+
 	<dubbo:reference  validation="true" id="projectAcceptanceApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectAcceptanceAPI" />
 	<dubbo:reference  validation="true" id="projectCarryApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAPI" />
 	<dubbo:reference  validation="true" id="projectCarryAuditAuditApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAuditAPI" />

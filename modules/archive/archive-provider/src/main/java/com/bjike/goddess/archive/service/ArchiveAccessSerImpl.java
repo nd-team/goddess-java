@@ -68,7 +68,7 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
                 entity.setAccess(sb.toString());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, ArchiveAccessBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

@@ -2,7 +2,6 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.service.BusinessTypeSer;
@@ -58,7 +57,7 @@ public class BusinessTypeApiImpl implements BusinessTypeAPI {
     }
 
     @Override
-    public BusinessCourseBO getById(String id) throws SerException {
+    public BusinessTypeBO getById(String id) throws SerException {
         return BeanTransform.copyProperties(businessTypeSer.findById(id), BusinessTypeBO.class);
     }
 

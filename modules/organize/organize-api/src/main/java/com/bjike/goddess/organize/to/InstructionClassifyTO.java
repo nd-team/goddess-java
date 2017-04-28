@@ -3,12 +3,11 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * 岗位说明书 - 分类展示对象
+ * 岗位说明书分类展示对象
  *
  * @Author: [dengjunren]
  * @Date: [17-3-8 上午11:25]
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class InstructionClassifyTO  extends BaseTO {
+public class InstructionClassifyTO extends BaseTO {
 
     /**
      * 名称
@@ -29,16 +28,6 @@ public class InstructionClassifyTO  extends BaseTO {
      */
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 使用状态
-     */
-    private Status status;
 
     public String getName() {
         return name;
@@ -56,19 +45,4 @@ public class InstructionClassifyTO  extends BaseTO {
         this.description = description;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

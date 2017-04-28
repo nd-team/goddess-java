@@ -260,5 +260,8 @@ include ':modules:materialreceive:materialreceive-api'
 include ':modules:materialreceive:materialreceive-consumer'
 include ':modules:materialreceive:materialreceive-provider'
 
-
+//#employeecontract 员工合同管理
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
 

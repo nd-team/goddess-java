@@ -3,7 +3,6 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,17 +28,6 @@ public class DimensionTO extends BaseTO {
      */
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 使用状态
-     */
-    private Status status;
-
     public String getName() {
         return name;
     }
@@ -56,19 +44,4 @@ public class DimensionTO extends BaseTO {
         this.description = description;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

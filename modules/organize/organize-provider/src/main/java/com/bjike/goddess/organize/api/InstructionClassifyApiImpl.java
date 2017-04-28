@@ -2,7 +2,9 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.DesignNumberInfoBO;
 import com.bjike.goddess.organize.bo.InstructionClassifyBO;
+import com.bjike.goddess.organize.dto.InstructionClassifyDTO;
 import com.bjike.goddess.organize.service.InstructionClassifySer;
 import com.bjike.goddess.organize.to.InstructionClassifyTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,6 @@ public class InstructionClassifyApiImpl implements InstructionClassifyAPI {
     }
 
     @Override
-    public InstructionClassifyBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(instructionClassifySer.findById(id), InstructionClassifyBO.class, true);
-    }
-
-    @Override
     public InstructionClassifyBO save(InstructionClassifyTO to) throws SerException {
         return instructionClassifySer.save(to);
     }
@@ -43,5 +40,36 @@ public class InstructionClassifyApiImpl implements InstructionClassifyAPI {
     @Override
     public InstructionClassifyBO update(InstructionClassifyTO to) throws SerException {
         return instructionClassifySer.update(to);
+    }
+
+    @Override
+    public InstructionClassifyBO delete(String id) throws SerException {
+        return instructionClassifySer.delete(id);
+    }
+
+    @Override
+    public InstructionClassifyBO close(String id) throws SerException {
+        return instructionClassifySer.close(id);
+    }
+
+    @Override
+    public InstructionClassifyBO open(String id) throws SerException {
+        return instructionClassifySer.open(id);
+    }
+
+    @Override
+    public List<InstructionClassifyBO> maps(InstructionClassifyDTO dto) throws SerException {
+        return instructionClassifySer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        InstructionClassifyDTO dto = new InstructionClassifyDTO();
+        return instructionClassifySer.count(dto);
+    }
+
+    @Override
+    public InstructionClassifyBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(instructionClassifySer.findById(id), InstructionClassifyBO.class);
     }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 岗位详细传输对象
@@ -31,7 +32,7 @@ public class PositionDetailBO extends BaseBO {
     /**
      * 部门id
      */
-    private String department_id;
+    private String departmentId;
 
     /**
      * 部门
@@ -41,7 +42,7 @@ public class PositionDetailBO extends BaseBO {
     /**
      * 层级ID
      */
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 层级
@@ -56,7 +57,7 @@ public class PositionDetailBO extends BaseBO {
     /**
      * 模块id
      */
-    private String module_id;
+    private String moduleId;
 
     /**
      * 模块
@@ -64,14 +65,9 @@ public class PositionDetailBO extends BaseBO {
     private String moduleName;
 
     /**
-     * 岗位ID
-     */
-    private String position_id;
-
-    /**
      * 岗位名称
      */
-    private String positionName;
+    private String position;
 
     /**
      * 人员编制数
@@ -92,6 +88,19 @@ public class PositionDetailBO extends BaseBO {
      * 显示编号
      */
     private String showNumber;
+
+    /**
+     * 职位状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getSerialNumber() {
         return serialNumber;
@@ -117,12 +126,12 @@ public class PositionDetailBO extends BaseBO {
         this.area = area;
     }
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getDepartmentName() {
@@ -133,12 +142,12 @@ public class PositionDetailBO extends BaseBO {
         this.departmentName = departmentName;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public String getArrangementName() {
@@ -157,12 +166,12 @@ public class PositionDetailBO extends BaseBO {
         this.pool = pool;
     }
 
-    public String getModule_id() {
-        return module_id;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setModule_id(String module_id) {
-        this.module_id = module_id;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     public String getModuleName() {
@@ -173,20 +182,12 @@ public class PositionDetailBO extends BaseBO {
         this.moduleName = moduleName;
     }
 
-    public String getPosition_id() {
-        return position_id;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPosition_id(String position_id) {
-        this.position_id = position_id;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getStaff() {
