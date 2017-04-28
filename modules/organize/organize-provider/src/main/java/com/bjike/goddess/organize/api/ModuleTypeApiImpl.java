@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.service.ModuleTypeSer;
@@ -59,5 +60,16 @@ public class ModuleTypeApiImpl implements ModuleTypeAPI {
     @Override
     public List<ModuleTypeBO> maps(ModuleTypeDTO dto) throws SerException {
         return moduleTypeSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ModuleTypeDTO dto = new ModuleTypeDTO();
+        return moduleTypeSer.count(dto);
+    }
+
+    @Override
+    public ModuleTypeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(moduleTypeSer.findById(id), ModuleTypeBO.class);
     }
 }

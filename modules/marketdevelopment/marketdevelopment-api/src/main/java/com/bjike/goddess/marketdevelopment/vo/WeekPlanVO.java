@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.vo;
 
+import com.bjike.goddess.marketdevelopment.enums.MonthType;
+
 /**
  * 周计划表现层对象
  *
@@ -18,7 +20,18 @@ public class WeekPlanVO {
     /**
      * 月计划 id
      */
-    private String month_id;
+    private String monthId;
+
+
+    /**
+     * 年份
+     */
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    private String type;
 
     /**
      * 业务方向科目
@@ -29,6 +42,11 @@ public class WeekPlanVO {
      * 总任务量
      */
     private Double monthTotal;
+
+    /**
+     * 周期
+     */
+    private String cycle;
 
     /**
      * 周期(开始日期)
@@ -76,20 +94,12 @@ public class WeekPlanVO {
     private Double total;
 
 
-    public String getId() {
-        return id;
+    public String getMonthId() {
+        return monthId;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMonth_id() {
-        return month_id;
-    }
-
-    public void setMonth_id(String month_id) {
-        this.month_id = month_id;
+    public void setMonthId(String monthId) {
+        this.monthId = monthId;
     }
 
     public String getCourse() {
@@ -178,5 +188,37 @@ public class WeekPlanVO {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(String cycle) {
+        this.cycle = cycle;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

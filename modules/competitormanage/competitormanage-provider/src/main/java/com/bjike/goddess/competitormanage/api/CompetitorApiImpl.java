@@ -1,6 +1,7 @@
 package com.bjike.goddess.competitormanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.service.CompetitorSer;
@@ -48,5 +49,15 @@ public class CompetitorApiImpl implements CompetitorAPI {
     @Override
     public List<CompetitorBO> pageList(CompetitorDTO dto) throws SerException {
         return competitorSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(CompetitorDTO dto) throws SerException {
+        return competitorSer.count(dto);
+    }
+
+    @Override
+    public CompetitorBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(competitorSer.findById(id),CompetitorBO.class);
     }
 }

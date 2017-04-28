@@ -10,11 +10,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
+import com.bjike.goddess.marketdevelopment.vo.BusinessTypeChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 业务类型
@@ -41,9 +44,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(BusinessTypeDTO dto) throws ActException {
+    public Result maps(BusinessTypeDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.maps(dto), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.maps(dto), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +60,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) BusinessTypeTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) BusinessTypeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.save(to), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.save(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +76,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) BusinessTypeTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) BusinessTypeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.save(to), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.update(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +92,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @PatchMapping("v1/congeal/{id}")
-    public Result congeal(BusinessTypeTO to) throws ActException {
+    public Result congeal(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.save(to), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.congeal(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +108,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @PatchMapping("v1/thaw/{id}")
-    public Result thaw(BusinessTypeTO to) throws ActException {
+    public Result thaw(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.thaw(to), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.thaw(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +124,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(BusinessTypeTO to) throws ActException {
+    public Result delete(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.delete(to), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.delete(to), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -132,13 +135,13 @@ public class BusinessTypeAct {
     /**
      * 查询正常数据的业务类型数据
      *
-     * @return class BusinessTypeVO
+     * @return class BusinessTypeChoiceVO
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.findThaw(), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.findThaw(), BusinessTypeChoiceVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -152,9 +155,9 @@ public class BusinessTypeAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.getById(id), BusinessTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.getById(id), BusinessTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

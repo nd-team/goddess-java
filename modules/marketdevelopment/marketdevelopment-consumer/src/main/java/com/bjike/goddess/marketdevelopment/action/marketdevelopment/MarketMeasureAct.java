@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 市场测算
  *
@@ -41,9 +43,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(MarketMeasureDTO dto) throws ActException {
+    public Result maps(MarketMeasureDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.maps(dto), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.maps(dto), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -56,10 +58,10 @@ public class MarketMeasureAct {
      * @return class MarketMeasureVO
      * @version v1
      */
-    @PostMapping("v1/save/{id}")
-    public Result save(@Validated(ADD.class) MarketMeasureTO to, BindingResult result) throws ActException {
+    @PostMapping("v1/save")
+    public Result save(@Validated(ADD.class) MarketMeasureTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.save(to), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.save(to), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) MarketMeasureTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) MarketMeasureTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.update(to), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.update(to), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(MarketMeasureTO to) throws ActException {
+    public Result delete(MarketMeasureTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.delete(to), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.delete(to), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(String type) throws ActException {
+    public Result findByType(String type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByType(type), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByType(type), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @GetMapping("v1/findByCourse")
-    public Result findByCourse(String course) throws ActException {
+    public Result findByCourse(String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByCourse(course), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByCourse(course), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @GetMapping("v1/findByCourseType")
-    public Result findByCourseType(String type, String course) throws ActException {
+    public Result findByCourseType(String type, String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByCourseType(type, course), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.findByCourseType(type, course), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -154,9 +156,9 @@ public class MarketMeasureAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.getById(id), MarketMeasureVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.getById(id), MarketMeasureVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

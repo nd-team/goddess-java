@@ -2,8 +2,11 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
+import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,40 +42,7 @@ public interface PositionDetailAPI {
     }
 
     /**
-     * 根据职位ID查询
-     *
-     * @param id 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findByPostId(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据上级职位ID查询
-     *
-     * @param parentId 上级职位ID
-     * @return
-     * @throws SerException
-     */
-    default List<PositionDetailBO> findChild(String parentId) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据职位ID查询直接上级职位详细
-     *
-     * @param postId 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findParent(String postId) throws SerException {
-        return null;
-    }
-
-    /**
-     * 查询下级层级职位详细
+     * 根据职位ID查询该职位下级层级职位详细
      *
      * @param postId 职位ID
      * @return
@@ -83,7 +53,7 @@ public interface PositionDetailAPI {
     }
 
     /**
-     * 查询上级层级职位详细
+     * 根据职位ID查询该职位上级层级职位详细
      *
      * @param postId 职位ID
      * @return
@@ -107,7 +77,7 @@ public interface PositionDetailAPI {
     /**
      * 增加岗位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
@@ -118,11 +88,77 @@ public interface PositionDetailAPI {
     /**
      * 修改职位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
     default PositionDetailBO update(PositionDetailTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 冻结
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO congeal(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO thaw(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 转换岗位详细传输对象
+     *
+     * @param list 岗位详细数据对象集合
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位详细数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

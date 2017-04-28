@@ -17,7 +17,7 @@ public class ForeignStaffingBO extends BaseBO {
     /**
      * 使用类型id
      */
-    private String type_id;
+    private String typeId;
 
     /**
      * 使用类型
@@ -115,12 +115,12 @@ public class ForeignStaffingBO extends BaseBO {
     private Status status;
 
 
-    public String getType_id() {
-        return type_id;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
     public String getTypeName() {

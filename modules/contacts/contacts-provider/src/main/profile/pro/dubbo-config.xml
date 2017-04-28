@@ -37,6 +37,8 @@
     <dubbo:reference validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI"/>
     <dubbo:reference validation="true" id="customerBaseInfoApiImpl"
                      interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI"/>
-
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI"
+                     id="positionDetailApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
 </beans>

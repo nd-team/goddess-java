@@ -8,10 +8,12 @@ import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
 import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.entity.DemandAnalysis;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,15 +40,26 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO update(DemandAnalysisTO to) throws SerException {
-        DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                DemandAnalysis entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
+            } catch (Exception e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
         DemandAnalysis entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
     }

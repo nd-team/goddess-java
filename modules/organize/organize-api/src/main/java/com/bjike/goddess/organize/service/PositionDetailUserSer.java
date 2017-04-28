@@ -135,4 +135,15 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
         return null;
     }
 
+    /**
+     * 根据id查询用户职位数据
+     *
+     * @param id 用户职位数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailUserBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

@@ -29,17 +29,6 @@ public class ReflectTO  extends BaseTO {
      */
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 使用状态
-     */
-    private Status status;
-
     public String getName() {
         return name;
     }
@@ -54,21 +43,5 @@ public class ReflectTO  extends BaseTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

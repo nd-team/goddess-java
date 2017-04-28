@@ -40,14 +40,14 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
      */
     private CooperationSituationBO transformBO(CooperationSituation entity) {
         CooperationSituationBO bo = BeanTransform.copyProperties(entity, CooperationSituationBO.class);
-        bo.setInformation_id(entity.getInformation().getId());
+        bo.setInformationId(entity.getInformation().getId());
         return bo;
     }
 
     @Override
-    public List<CooperationSituationBO> findByInformation(String info_id) throws SerException {
+    public List<CooperationSituationBO> findByInformation(String infoId) throws SerException {
         CooperationSituationDTO dto = new CooperationSituationDTO();
-        dto.getConditions().add(Restrict.eq("information.id", info_id));
+        dto.getConditions().add(Restrict.eq("information.id", infoId));
         List<CooperationSituation> list = super.findByCis(dto);
         List<CooperationSituationBO> bos = new ArrayList<>(0);
         for (CooperationSituation entity : list)
@@ -59,7 +59,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Override
     public CooperationSituationBO save(CooperationSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -68,7 +68,7 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Override
     public CooperationSituationBO update(CooperationSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         super.update(entity);
         return this.transformBO(entity);
     }

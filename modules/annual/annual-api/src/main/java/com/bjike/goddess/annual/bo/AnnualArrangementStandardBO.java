@@ -16,7 +16,7 @@ public class AnnualArrangementStandardBO extends BaseBO {
     /**
      * 标准ID
      */
-    private String standard_id;
+    private String standardId;
 
     /**
      * 开始工龄范围(年)
@@ -41,7 +41,7 @@ public class AnnualArrangementStandardBO extends BaseBO {
     /**
      * 岗位层级id
      */
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 岗位层级
@@ -61,12 +61,12 @@ public class AnnualArrangementStandardBO extends BaseBO {
         this.arrangement = arrangement;
     }
 
-    public String getStandard_id() {
-        return standard_id;
+    public String getStandardId() {
+        return standardId;
     }
 
-    public void setStandard_id(String standard_id) {
-        this.standard_id = standard_id;
+    public void setStandardId(String standardId) {
+        this.standardId = standardId;
     }
 
     public Integer getStartCycle() {
@@ -101,12 +101,12 @@ public class AnnualArrangementStandardBO extends BaseBO {
         this.remark = remark;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public Integer getDays() {

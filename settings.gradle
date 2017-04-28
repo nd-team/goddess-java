@@ -267,4 +267,13 @@ include ':modules:managefee:managefee-api'
 include ':modules:managefee:managefee-consumer'
 include ':modules:managefee:managefee-provider'
 
+//#materialreceive 物资领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
+
+//#employeecontract 员工合同管理
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
 

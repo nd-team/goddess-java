@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
+import com.bjike.goddess.organize.enums.ArrangementType;
 import com.bjike.goddess.organize.to.ArrangementTO;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
     /**
      * 保存岗位层级
      *
-     * @param to
+     * @param to 岗位层级传输对象
      * @return
      */
     default ArrangementBO save(ArrangementTO to) throws SerException {
@@ -43,7 +44,7 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
     /**
      * 修改岗位层级
      *
-     * @param to
+     * @param to 岗位层级传输对象
      * @return
      */
     default ArrangementBO update(ArrangementTO to) throws SerException {
@@ -53,7 +54,7 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
     /**
      * 查询下级岗位层次
      *
-     * @param id
+     * @param id 岗位层级数据id
      * @return
      * @throws SerException
      */
@@ -61,5 +62,37 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 岗位层级下级id
+     * @return
+     * @throws SerException
+     */
+    default ArrangementBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位层级数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取岗位层级所在层次
+     *
+     * @param id 岗位层级数据id
+     * @return
+     * @throws SerException
+     */
+    default ArrangementType getLayer(String id) throws SerException {
+        return null;
+    }
 
 }

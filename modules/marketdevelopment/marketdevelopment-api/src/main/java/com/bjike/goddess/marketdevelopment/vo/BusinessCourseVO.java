@@ -20,7 +20,7 @@ public class BusinessCourseVO {
     /**
      * 业务类型id
      */
-    private String type_id;
+    private String typeId;
 
     /**
      * 业务类型
@@ -51,12 +51,12 @@ public class BusinessCourseVO {
         this.id = id;
     }
 
-    public String getType_id() {
-        return type_id;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
     public String getTypeName() {

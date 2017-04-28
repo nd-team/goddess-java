@@ -21,13 +21,13 @@ public class AnnualArrangementStandardTO extends BaseTO {
      * 标准ID
      */
     @NotNull(message = "标准ID不能为空", groups = {EDIT.class, ADD.class})
-    private String standard_id;
+    private String standardId;
 
     /**
      * 岗位层级id
      */
     @NotNull(message = "岗位层级id不能为空", groups = {EDIT.class, ADD.class})
-    private String arrangement_id;
+    private String arrangementId;
 
     /**
      * 年假天数
@@ -36,20 +36,20 @@ public class AnnualArrangementStandardTO extends BaseTO {
     private Integer days;
 
 
-    public String getStandard_id() {
-        return standard_id;
+    public String getStandardId() {
+        return standardId;
     }
 
-    public void setStandard_id(String standard_id) {
-        this.standard_id = standard_id;
+    public void setStandardId(String standardId) {
+        this.standardId = standardId;
     }
 
-    public String getArrangement_id() {
-        return arrangement_id;
+    public String getArrangementId() {
+        return arrangementId;
     }
 
-    public void setArrangement_id(String arrangement_id) {
-        this.arrangement_id = arrangement_id;
+    public void setArrangementId(String arrangementId) {
+        this.arrangementId = arrangementId;
     }
 
     public Integer getDays() {

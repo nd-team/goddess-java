@@ -19,7 +19,7 @@ public class PositionInstructionsLogTO extends BaseBO {
     private String serialNumber;
 
     /**
-     * 岗位id
+     * 岗位详细id
      */
     private String positionId;
 

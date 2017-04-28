@@ -21,27 +21,27 @@ public class DepartmentWorkRangeTO extends BaseTO {
      * 项目组/部门id
      */
     @NotNull(message = "部门id不能为空", groups = {ADD.class, EDIT.class})
-    private String department_id;
+    private String departmentId;
 
     /**
      * 工作范围ID数组
      */
     @NotNull(message = "工作范围ID数组不能为空", groups = {ADD.class, EDIT.class})
-    private String[] range_ids;
+    private String[] rangeIds;
 
-    public String getDepartment_id() {
-        return department_id;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
-    public String[] getRange_ids() {
-        return range_ids;
+    public String[] getRangeIds() {
+        return rangeIds;
     }
 
-    public void setRange_ids(String[] range_ids) {
-        this.range_ids = range_ids;
+    public void setRangeIds(String[] rangeIds) {
+        this.rangeIds = rangeIds;
     }
 }

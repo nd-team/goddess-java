@@ -9,11 +9,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -43,18 +45,24 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     private UserDetailAPI userDetailAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private ArchiveDetailBO transformBO(ArchiveDetail entity) throws SerException {
         ArchiveDetailBO bo = BeanTransform.copyProperties(entity, ArchiveDetailBO.class);
+        bo.setPosition("");
+        bo.setProject("");
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
-            UserDetailBO detailBO = userDetailAPI.findByUserId(user.getId());
-            if (null != detailBO) {
-                DepartmentDetailBO departmentDetail = departmentDetailAPI.findByDepartment(detailBO.getDepartmentId());
-                if (null != departmentDetail) bo.setArea(departmentDetail.getArea());
-                bo.setPosition(detailBO.getPositionName());
-                bo.setProject(detailBO.getDepartmentName());
-            }
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+            if (null != detailBO)
+                for (String id : detailBO.getPositionIds().split(",")) {
+                    PositionDetailBO position = positionDetailAPI.findBOById(id);
+                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
+                    bo.setProject(bo.getProject() + "," + position.getDepartmentName());
+                }
             bo.setSerialNumber(user.getEmployeeNumber());
         }
         return bo;
@@ -85,7 +93,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return this.transformBO(entity);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

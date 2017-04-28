@@ -49,7 +49,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
-            } catch (SerException e) {
+            } catch (Exception e) {
                 throw new SerException("数据对象不能为空");
             }
         } else

@@ -45,15 +45,9 @@ public class File extends BaseEntity {
 
 
     /**
-     * 上传用户
+     * 所属模块用户
      */
-    @Column(name = "user_id", columnDefinition = "VARCHAR(36)   COMMENT '上传用户'")
-    private String userId;
-
-    /**
-     * 所属模块
-     */
-    @Column(name = "module", columnDefinition = "VARCHAR(100)   COMMENT '所属模块'")
+    @Column(name = "module", columnDefinition = "VARCHAR(100)   COMMENT '所属模块,用户'")
     private String module;
 
     public String getName() {
@@ -86,14 +80,6 @@ public class File extends BaseEntity {
 
     public void setSize(String size) {
         this.size = size;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getModule() {

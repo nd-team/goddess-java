@@ -17,6 +17,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -48,6 +49,9 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Autowired
     private CustomerInfoSer customerInfoSer;
 
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 分页查询市场招待汇总
      *
@@ -71,10 +75,33 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     @Override
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
+
+        String sb = getProjectGroup(to);
+        String curUsername = userAPI.currentUser().getUsername();
         MarketServeSummary marketServeSummary = BeanTransform.copyProperties(to, MarketServeSummary.class, true);
+        marketServeSummary.setStatus(Status.THAW);
+        marketServeSummary.setCreateUser(curUsername);
+        marketServeSummary.setProjectGroups(sb);
+        marketServeSummary.setUpdateTime(LocalDateTime.now());
         marketServeSummary = super.save(marketServeSummary);
         MarketServeSummaryBO bo = BeanTransform.copyProperties(marketServeSummary, MarketServeSummaryBO.class);
         return bo;
+    }
+
+    private String getProjectGroup(MarketServeSummaryTO to) {
+        String[] projectGroups = to.getProjectGroups();
+        boolean projectGroupNotEmpty = (projectGroups != null) && (projectGroups.length > 0);
+        StringBuilder sb = new StringBuilder();
+        if (projectGroupNotEmpty) {
+            for (int i = 0; i < projectGroups.length; i ++) {
+                if (i < projectGroups.length -1){
+                    sb.append(projectGroups[i]).append(",");
+                } else {
+                    sb.append(projectGroups[i]);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -107,8 +134,11 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     private void updateMarketServeSummary(MarketServeSummaryTO to, MarketServeSummary model) throws SerException {
+        String sb = getProjectGroup(to);
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
+        model.setProjectGroups(sb);
+        model.setUpdateTime(LocalDateTime.now());
         super.update(model);
     }
 

@@ -19,6 +19,23 @@ import java.util.List;
 public interface CustomerInfoAPI {
 
     /**
+     * 根据id查询客户信息
+     *
+     * @param id 客户信息唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    CustomerInfoBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 客户信息dto
+     * @throws SerException
+     */
+    Long count(CustomerInfoDTO dto) throws SerException;
+
+    /**
      * 分页查询客户信息
      *
      * @param dto 客户信息dto

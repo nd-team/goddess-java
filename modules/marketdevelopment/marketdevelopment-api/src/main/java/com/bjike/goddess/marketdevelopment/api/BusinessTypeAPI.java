@@ -92,7 +92,7 @@ public interface BusinessTypeAPI {
      * @return
      * @throws SerException
      */
-    default BusinessCourseBO getById(String id) throws SerException {
+    default BusinessTypeBO getById(String id) throws SerException {
         return null;
     }
 

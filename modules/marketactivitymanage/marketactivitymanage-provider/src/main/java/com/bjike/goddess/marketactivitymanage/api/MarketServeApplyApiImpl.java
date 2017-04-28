@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketactivitymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
@@ -28,6 +29,30 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
 
     @Autowired
     private MarketServeApplySer marketServeApplySer;
+
+    /**
+     * 根据id查询市场招待申请
+     *
+     * @param id 市场招待申请唯一标识
+     * @return class MarketServeApplyBO
+     * @throws SerException
+     */
+    @Override
+    public MarketServeApplyBO findById(String id) throws SerException {
+        MarketServeApply model = marketServeApplySer.findById(id);
+        return BeanTransform.copyProperties(model, MarketServeApplyBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 市场招待申请dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MarketServeApplyDTO dto) throws SerException {
+        return marketServeApplySer.count(dto);
+    }
 
     /**
      * 分页查询市场招待申请
@@ -106,18 +131,6 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Override
     public void executiveOpinion(MarketServeApplyTO to) throws SerException {
         marketServeApplySer.executiveOpinion(to);
-    }
-
-    /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void uploadAttachment(InputStream inputStream, String targetPath) throws SerException {
-        marketServeApplySer.uploadAttachment(inputStream, targetPath);
     }
 
     /**

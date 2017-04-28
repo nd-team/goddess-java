@@ -21,4 +21,6 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeSummaryAPI" ref="marketServeSummaryApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI" ref="customerInfoApiImpl"></dubbo:service>
 
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

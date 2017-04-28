@@ -3,7 +3,6 @@ package com.bjike.goddess.organize.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class HierarchyTO  extends BaseTO {
+public class HierarchyTO extends BaseTO {
 
     /**
      * 编号
@@ -34,16 +33,6 @@ public class HierarchyTO  extends BaseTO {
      * 描述
      */
     private String description;
-
-    /**
-     * 使用状态
-     */
-    private Status status;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -67,21 +56,5 @@ public class HierarchyTO  extends BaseTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

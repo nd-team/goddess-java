@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -23,20 +24,20 @@ public class PositionDetailUser extends BaseEntity {
      * 用户信息
      */
     @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户信息'", unique = true)
-    private String user_id;
+    private String userId;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "organize_position_detail_user_table", joinColumns = {@JoinColumn(name = "user_id", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "position_id", nullable = false)})
-    private Set<PositionDetail> positionSet;
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "organize_position_detail_user_table", joinColumns = {@JoinColumn(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '用户id'")},
+            inverseJoinColumns = {@JoinColumn(name = "position_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位详细id'")})
+    private Set<PositionDetail> positionSet = new HashSet<>(0);
 
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Set<PositionDetail> getPositionSet() {

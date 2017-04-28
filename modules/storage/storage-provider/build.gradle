@@ -30,9 +30,11 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:storage:storage-api")
     compile project(":common:common-utils")
-    compile project(":modules:user:user-api")
     compile(project(":common:common-redis")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile group: 'org.mortbay.jetty', name: 'jetty', version: "$jetty_version"
+
 }
 
