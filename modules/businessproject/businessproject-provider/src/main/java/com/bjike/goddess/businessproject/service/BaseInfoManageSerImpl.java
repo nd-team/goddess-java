@@ -41,6 +41,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        searchCondition( baseInfoManageDTO);
         List<BaseInfoManage> list = super.findByPage(baseInfoManageDTO);
         List<BaseInfoManageBO> baseInfoManageBOList = BeanTransform.copyProperties(list, BaseInfoManageBO.class);
         return baseInfoManageBOList;
@@ -102,9 +103,8 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         return bo;
     }
 
-    
-    @Override
-    public List<BaseInfoManageBO> searchSiginManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+
+    public void searchCondition(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         /**
          * 业务类型
          */
@@ -172,10 +172,6 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             baseInfoManageDTO.getConditions().add(Restrict.eq("fileCondition",baseInfoManageDTO.getFileCondition()));
         }
 
-        List<BaseInfoManage> baseInfoManageList = super.findByCis( baseInfoManageDTO );
-
-        List<BaseInfoManageBO> baseInfoManageBOList = BeanTransform.copyProperties(baseInfoManageList ,BaseInfoManageBO.class);
-        return baseInfoManageBOList;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.bjike.goddess.quartz.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
@@ -8,9 +10,14 @@ import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.entity.ScheduleJobGroup;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.to.UserTO;
+import org.mengyun.tcctransaction.Compensable;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,12 +38,35 @@ public class ScheduleJobGroupSerImpl extends ServiceImpl<ScheduleJobGroup, Sched
     @Autowired
     private ScheduleSer scheduleSer;
 
+    @Autowired
+    private UserAPI userAPI;
+
+    @Transactional(rollbackFor = SerException.class)
+    @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
     @Override
-    public ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
+    public ScheduleJobGroupBO add(TransactionContext txContext, ScheduleJobGroupTO jobGroupTO) throws SerException {
         ScheduleJobGroup jobGroup = BeanTransform.copyProperties(jobGroupTO, ScheduleJobGroup.class);
         super.save(jobGroup);
         return BeanTransform.copyProperties(jobGroup, ScheduleJobGroupBO.class);
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String addConfirm(TransactionContext txContext, ScheduleJobGroupTO jobGroupTO) throws SerException {
+        System.out.println("定时任务组添加");
+        return null;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String addCancel(TransactionContext txContext, ScheduleJobGroupTO jobGroupTO) throws SerException {
+        ScheduleJobGroupDTO dto = new ScheduleJobGroupDTO();
+        dto.getConditions().add(Restrict.eq("name", jobGroupTO.getName()));
+        ScheduleJobGroup group = super.findOne(dto);
+        if(null!=group){
+            super.remove(group);
+        }
+        return null;
+    }
+
 
     @Override
     public void edit(ScheduleJobGroupTO jobGroupTO) throws SerException {

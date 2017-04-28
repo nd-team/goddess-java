@@ -31,7 +31,11 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        String contentType = request.getContentType();  //获取Content-Type
+        if (StringUtils.isBlank(contentType) || //不是文件上传
+                (contentType != null) && !(contentType.toLowerCase().startsWith("multipart/"))) {
+            return true;
+        }
         if (StringUtils.isBlank(request.getParameter("path"))) {
             throw new SerException("path 不能为空!");
         }

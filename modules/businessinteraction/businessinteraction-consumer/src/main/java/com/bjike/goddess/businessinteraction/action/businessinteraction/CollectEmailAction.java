@@ -206,5 +206,20 @@ public class CollectEmailAction {
         }
     }
 
+    /**
+     * 所有地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea (  ) throws ActException {
+        try {
+            List<String> areas = collectEmailAPI.areaList( );
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

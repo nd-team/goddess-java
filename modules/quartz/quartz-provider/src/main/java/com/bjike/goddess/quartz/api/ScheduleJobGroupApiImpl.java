@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
 import com.bjike.goddess.quartz.service.ScheduleJobGroupSer;
 import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,8 @@ public class ScheduleJobGroupApiImpl implements ScheduleJobGroupAPI {
     private ScheduleJobGroupSer scheduleJobGroupSer;
 
     @Override
-    public ScheduleJobGroupBO add(ScheduleJobGroupTO jobGroupTO) throws SerException {
-        return scheduleJobGroupSer.add(jobGroupTO);
+    public ScheduleJobGroupBO add(TransactionContext context,ScheduleJobGroupTO jobGroupTO) throws SerException {
+        return scheduleJobGroupSer.add(context  , jobGroupTO);
     }
 
     @Override
