@@ -33,7 +33,7 @@ public interface InstructionClassifySer extends Ser<InstructionClassify, Instruc
     /**
      * 添加岗位说明书分类
      *
-     * @param to
+     * @param to 岗位说明书分类传输对象
      * @return
      * @throws SerException
      */
@@ -44,11 +44,55 @@ public interface InstructionClassifySer extends Ser<InstructionClassify, Instruc
     /**
      * 修改岗位说明书分类
      *
-     * @param to
+     * @param to 岗位说明书分类传输对象
      * @return
      * @throws SerException
      */
     default InstructionClassifyBO update(InstructionClassifyTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default InstructionClassifyBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default InstructionClassifyBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 启动
+     *
+     * @param id 岗位说明书数据id
+     * @return
+     * @throws SerException
+     */
+    default InstructionClassifyBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位说明书分类数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<InstructionClassifyBO> maps(InstructionClassifyDTO dto) throws SerException {
         return null;
     }
 }

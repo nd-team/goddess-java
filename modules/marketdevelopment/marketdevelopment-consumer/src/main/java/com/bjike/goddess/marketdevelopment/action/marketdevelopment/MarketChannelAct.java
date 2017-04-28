@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 市场挖掘
  *
@@ -41,9 +43,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(MarketChannelDTO dto) throws ActException {
+    public Result maps(MarketChannelDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.maps(dto), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.maps(dto), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) MarketChannelTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) MarketChannelTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.save(to), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.save(to), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) MarketChannelTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) MarketChannelTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.update(to), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.update(to), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(MarketChannelTO to) throws ActException {
+    public Result delete(MarketChannelTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.delete(to), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.delete(to), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(String type) throws ActException {
+    public Result findByType(String type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByType(type), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByType(type), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @GetMapping("v1/findByCourse")
-    public Result findByCourse(String course) throws ActException {
+    public Result findByCourse(String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourse(course), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourse(course), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @GetMapping("v1/findByCourseType")
-    public Result findByCourseType(String type, String course) throws ActException {
+    public Result findByCourseType(String type, String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourseType(type, course), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.findByCourseType(type, course), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -154,9 +156,9 @@ public class MarketChannelAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.getById(id), MarketChannelVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(marketChannelAPI.getById(id), MarketChannelVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

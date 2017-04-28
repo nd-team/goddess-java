@@ -7,6 +7,7 @@ import com.bjike.goddess.financeinit.bo.CurrencyBO;
 import com.bjike.goddess.financeinit.dto.CurrencyDTO;
 import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.to.CurrencyTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,21 @@ import java.util.List;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implements CurrencySer {
+
+    @Override
+    public Long countCurrency(CurrencyDTO currencyDTO) throws SerException {
+        Long count = super.count( currencyDTO );
+        return count;
+    }
+
+    @Override
+    public CurrencyBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        Currency currency = super.findById(id);
+        return BeanTransform.copyProperties(currency, CurrencyBO.class );
+    }
 
     @Override
     public List<CurrencyBO> listCurrency(CurrencyDTO currencyDTO) throws SerException {

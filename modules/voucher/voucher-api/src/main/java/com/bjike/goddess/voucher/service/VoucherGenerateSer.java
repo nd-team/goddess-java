@@ -52,7 +52,9 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
+    default List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -392,10 +394,19 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+
+    /**
+     * 根据日期、项目组、地区、项目统计记账凭证
+     */
+    default List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO, String condition) throws SerException {
+        return null;
+    }
+
+
     /**
      * 查询资金流水记录即一级科目为银行存款或库存现金
      *
-     * @param dto  查询条件
+     * @param dto 查询条件
      * @return 资金流水记录
      */
     List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;

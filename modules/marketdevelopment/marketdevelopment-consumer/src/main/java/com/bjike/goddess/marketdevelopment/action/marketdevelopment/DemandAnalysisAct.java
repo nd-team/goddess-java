@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 市场需求分析
  *
@@ -41,9 +43,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(DemandAnalysisDTO dto) throws ActException {
+    public Result maps(DemandAnalysisDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.maps(dto), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.maps(dto), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) DemandAnalysisTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) DemandAnalysisTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.save(to), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.save(to), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @PutMapping("v1/udpate/{id}")
-    public Result update(@Validated(EDIT.class) DemandAnalysisTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) DemandAnalysisTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.update(to), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.update(to), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(DemandAnalysisTO to) throws ActException {
+    public Result delete(DemandAnalysisTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.delete(to), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.delete(to), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(String type) throws ActException {
+    public Result findByType(String type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByType(type), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByType(type), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @GetMapping("v1/findByCourse")
-    public Result findByCourse(String course) throws ActException {
+    public Result findByCourse(String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByCourse(course), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByCourse(course), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @GetMapping("v1/findByCourseType")
-    public Result findByCourseType(String type, String course) throws ActException {
+    public Result findByCourseType(String type, String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByCourseType(type, course), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.findByCourseType(type, course), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -155,9 +157,9 @@ public class DemandAnalysisAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.getById(id), DemandAnalysisVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandAnalysisAPI.getById(id), DemandAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

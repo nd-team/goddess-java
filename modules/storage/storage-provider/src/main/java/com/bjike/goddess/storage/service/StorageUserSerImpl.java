@@ -91,7 +91,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
 
     @Override
     public Boolean signOut(String storageToken) throws SerException {
-        StorageUserBO userBO = getCurrentUser();
+        StorageUserBO userBO = getCurrentUser(storageToken);
         StorageSession.remove(storageToken);
         redis.removeMap(StorageCommon.LOGIN_USER, userBO.getId());
         return true;
@@ -99,14 +99,13 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
 
 
     @Override
-    public StorageUserBO getCurrentUser() throws SerException {
-        String token = RpcTransmit.getStorageToken();
-        if (StringUtils.isNotBlank(token)) {
-            LoginUser loginUser = StorageSession.get(token);
+    public StorageUserBO getCurrentUser(String storageToken) throws SerException {
+        if (StringUtils.isNotBlank(storageToken)) {
+            LoginUser loginUser = StorageSession.get(storageToken);
             if (null != loginUser) {
                 return BeanTransform.copyProperties(loginUser, StorageUserBO.class);
             } else {
-                String login_user = redis.getMap(StorageCommon.LOGIN_USER, token);
+                String login_user = redis.getMap(StorageCommon.LOGIN_USER, storageToken);
                 if (StringUtils.isNotBlank(login_user)) {
                     loginUser = JSON.parseObject(login_user, LoginUser.class);
                     return BeanTransform.copyProperties(loginUser, StorageUserBO.class);
@@ -119,7 +118,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     @Override
-    public String getCurrentModule() throws SerException {
-        return this.getCurrentUser().getModuleName();
+    public String getCurrentModule(String storageToken) throws SerException {
+        return this.getCurrentUser(storageToken).getModuleName();
     }
 }

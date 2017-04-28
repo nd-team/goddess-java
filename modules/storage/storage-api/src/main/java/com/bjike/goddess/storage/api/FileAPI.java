@@ -2,9 +2,10 @@ package com.bjike.goddess.storage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.storage.bo.FileBO;
+import com.bjike.goddess.storage.to.FileInfo;
 
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文件存储业务接口
@@ -16,53 +17,39 @@ import java.util.Map;
  * @Copy: [ com.bjike ]
  */
 public interface FileAPI {
-
     /**
      * 文件列表
      *
-     * @param path
+     * @param fileInfo 文件信息
      */
-    default List<FileBO> list(String path) throws SerException {
+    default List<FileBO> list(FileInfo fileInfo) throws SerException {
         return null;
     }
 
     /**
-     * 多文件上传
+     * 文件上传
      *
-     * @param maps 文件名，byte 文件字节
-     * @param path 上传路径
-     * @return 文件路径
+     * @param inputStreams 上传文件及信息
      */
-    default void upload(Map<String, byte[]> maps, String path) throws SerException {
+    default void upload(List<InputStream> inputStreams) throws SerException {
     }
 
-    /**
-     * 单文件上传
-     *
-     * @param bytes    文件字节
-     * @param fileName 文件名
-     * @param path     上传路径
-     * @return 文件路径
-     */
-    default void upload(byte[] bytes, String fileName, String path) throws SerException {
-    }
 
     /**
      * 文件夹创建
      *
-     * @param path 文件路径
-     * @param dir  新的目录
+     * @param fileInfo 文件信息
      */
-    default void mkDir(String path, String dir) throws SerException {
+    default void mkDir(FileInfo fileInfo) throws SerException {
 
     }
 
     /**
      * 删除文件
      *
-     * @param path 文件或者文件夹路径
+     * @param fileInfo 文件信息
      */
-    default void delFile(String path) throws SerException {
+    default void delFile(FileInfo fileInfo) throws SerException {
 
     }
 
@@ -70,85 +57,77 @@ public interface FileAPI {
     /**
      * 重命名
      *
-     * @param path    文件或者文件夹路径
-     * @param newName 新文件名
+     * @param fileInfo 文件信息
      */
-    default void rename(String path, String newName) throws SerException {
+    default void rename(FileInfo fileInfo) throws SerException {
 
     }
 
     /**
      * 下载
      *
-     * @param path 文件路径
+     * @param fileInfo 文件信息
      */
-    default byte[] download(String path) throws SerException {
+    default byte[] download(FileInfo fileInfo) throws SerException {
         return null;
     }
 
     /**
      * 文件是否存在
      *
-     * @param path 文件路径
+     * @param fileInfo 文件信息
      */
-    default Boolean existsFile(String path) throws SerException {
+    default Boolean existsFile(FileInfo fileInfo) throws SerException {
         return null;
     }
 
     /**
      * 文件是否存在
      *
-     * @param fromPath 移动路径
-     * @param toPath   目标路径
+     * @param fileInfo 文件信息
      */
-    default Boolean move(String fromPath, String toPath) throws SerException {
+    default Boolean move(FileInfo fileInfo) throws SerException {
         return null;
     }
 
     /**
      * 删除到回收站
      *
-     * @param path
+     * @param fileInfo 文件信息
      * @throws SerException
      */
-    default void recycle(String path) throws SerException {
+    default void recycle(FileInfo fileInfo) throws SerException {
 
     }
 
     /**
      * 恢复目录
+     *
+     * @param fileInfo 文件信息
      */
-    default void restore(String path) throws SerException {
+    default void restore(FileInfo fileInfo) throws SerException {
 
     }
 
     /**
      * 回收站目录
      *
-     * @param path
+     * @param fileInfo 文件信息
      * @throws SerException
      */
-    default List<FileBO> recycleList(String path) throws SerException {
+    default List<FileBO> recycleList(FileInfo fileInfo) throws SerException {
         return null;
     }
 
-    /**
-     * 单文件上传并返回文件存储信息
-     *
-     * @return
-     * @throws SerException
-     */
-    default FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException{
-        return null;
-    }
 
     /**
      * 获取真实存储路径
      *
+     * @param fileInfo 文件信息
      * @return
      * @throws SerException
      */
-    default String getRealPath(String path) throws SerException{
+    default String getRealPath(FileInfo fileInfo) throws SerException {
         return null;
     }
 }

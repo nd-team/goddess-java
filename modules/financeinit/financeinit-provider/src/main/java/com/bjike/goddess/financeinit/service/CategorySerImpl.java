@@ -42,6 +42,21 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     private FirstSubjectSer firstSubjectSer;
 
     @Override
+    public Long countCategory(CategoryDTO categoryDTO) throws SerException {
+        Long count = super.count( categoryDTO );
+        return count;
+    }
+
+    @Override
+    public CategoryBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        Category category = super.findById(id);
+        return BeanTransform.copyProperties(category, CategoryBO.class );
+    }
+    
+    @Override
     public List<CategoryBO> listCategory(CategoryDTO categoryDTO) throws SerException {
         List<Category> list = super.findByCis(categoryDTO, true);
         List<CategoryBO> categoryBOList = new ArrayList<>();
@@ -65,7 +80,8 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         CategoryDTO dto = new CategoryDTO();
         dto.getConditions().add(Restrict.eq("secondSubject", categoryTO.getSecondSubject()));
         dto.getConditions().add(Restrict.eq("thirdSubject", categoryTO.getThirdSubject()));
-        dto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+        FirstSubject firstSubjectTemp = BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true);
+        dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectTemp.getId()));
         Long count = super.count(dto);
         if (count > 0) {
             throw new SerException("已存在相同数据");
@@ -123,9 +139,10 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
         Category tranCategory = BeanTransform.copyProperties(categoryTO, Category.class, true);
         Category category = super.findById(categoryTO.getId());
-        BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime");
+        BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime","firstCode","secondCode");
         category.setFirstSubject(BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true));
 
+        category.setModifyTime(LocalDateTime.now());
         super.update(category);
         return BeanTransform.copyProperties(category, CategoryBO.class);
     }
@@ -194,7 +211,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
 
         if (StringUtils.isNotBlank(categoryTO.getFirstSubjectName())) {
-            dto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+            dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
         }
         //有一二级情况下
         if (StringUtils.isNotBlank(categoryTO.getSecondSubject())
@@ -207,12 +224,12 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
             } else {
                 //不存在就要取最大加一
                 CategoryDTO temp_cdto = new CategoryDTO();
-                temp_cdto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+                temp_cdto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
                 temp_cdto.getSorts().add("secondCode=desc");
                 List<Category> tempCategory = super.findByCis(temp_cdto);
                 if (tempCategory != null && tempCategory.size() > 0) {
                     Category maxCodeCategory = tempCategory.get(0);
-                    int secondCode = Integer.parseInt(maxCodeCategory.getSecondSubject()) + 1;
+                    int secondCode = Integer.parseInt(maxCodeCategory.getSecondCode()) + 1;
                     if (secondCode < 99) {
                         code = firstSubjectCode + String.valueOf(secondCode < 10 ? "0" + secondCode : secondCode);
                         categoryTO.setSecondCode(String.valueOf(secondCode));
@@ -230,7 +247,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                 && StringUtils.isNotBlank(categoryTO.getThirdSubject())) {
             //先查三级是否有（有：抛异常 无：根据一二级查最大三级加一）
             dto = new CategoryDTO();
-            dto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+            dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
             dto.getConditions().add(Restrict.eq("secondSubject", categoryTO.getSecondSubject()));
             dto.getConditions().add(Restrict.eq("thirdSubject", categoryTO.getThirdSubject()));
             List<Category> categories = super.findByCis(dto);
@@ -240,7 +257,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
             } else {
                 //不存在就要取最大加一
                 dto = new CategoryDTO();
-                dto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+                dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
                 dto.getConditions().add(Restrict.eq("secondSubject", categoryTO.getSecondSubject()));
                 dto.getSorts().add("thirdCode=desc");
                 List<Category> tempCategory = super.findByCis(dto);
@@ -257,11 +274,11 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
                     //如果二级也不存在
                     //查询二级最大加一
                     dto = new CategoryDTO();
-                    dto.getConditions().add(Restrict.eq("firstSubject_id", BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true)));
+                    dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
                     dto.getSorts().add("secondCode=desc");
                     categories = super.findByCis(cdto);
                     if (categories != null && categories.size() > 0) {
-                        int secondCode = Integer.parseInt(categories.get(0).getSecondSubject() == null ? "00" : categories.get(0).getSecondSubject()) + 1;
+                        int secondCode = Integer.parseInt(categories.get(0).getSecondCode() == null ? "00" : categories.get(0).getSecondCode()) + 1;
                         categoryTO.setSecondCode(firstSubjectCode + (secondCode < 10 ? "0" + secondCode : secondCode));
                         categoryTO.setThirdCode("01");
                         code = firstSubjectCode + categoryTO.getSecondCode() + "01";

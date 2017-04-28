@@ -21,6 +21,21 @@ import java.util.List;
 public interface AccountSer extends Ser<Account, AccountDTO> {
 
     /**
+     * 账户来源列表总条数
+     *
+     */
+    default Long countAccount(AccountDTO accountDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取账户来源列表
+     * @return class AccountBO
+     */
+    default AccountBO getOneById(String id) throws SerException {return null;}
+
+
+    /**
      * 账户来源列表
      * @return class AccountBO
      */

@@ -31,6 +31,20 @@ import java.util.stream.Collectors;
 public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectDTO> implements FirstSubjectSer {
 
     @Override
+    public Long countFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
+        Long count = super.count( firstSubjectDTO );
+        return count;
+    }
+
+    @Override
+    public FirstSubjectBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        FirstSubject firstSubject = super.findById(id);
+        return BeanTransform.copyProperties(firstSubject, FirstSubjectBO.class );
+    }
+    @Override
     public List<FirstSubjectBO> listFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
         List<FirstSubject> list = super.findByCis(firstSubjectDTO, true);
 
@@ -117,7 +131,7 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         String code = "";
         FirstSubjectDTO dto = new FirstSubjectDTO();
         dto.getConditions().add(Restrict.eq("category", categoryName));
-        dto.getSorts().add(" code=desc");
+        dto.getSorts().add("code=desc");
         List<FirstSubject> firstSubjectList = super.findByCis( dto );
         if( firstSubjectList != null && firstSubjectList.size()>0 ){
             code = firstSubjectList.get(0).getCode();

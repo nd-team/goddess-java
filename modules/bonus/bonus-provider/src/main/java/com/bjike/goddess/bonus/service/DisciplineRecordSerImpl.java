@@ -10,11 +10,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -46,6 +48,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     private UserDetailAPI userDetailAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
@@ -68,14 +74,16 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null == user)
             throw new SerException("该用户不存在");
-        UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());//获取用户详细信息
         entity.setSerialNumber(user.getEmployeeNumber());
-        if (null != userDetail) {
-            entity.setProject(userDetail.getDepartmentName());
-            DepartmentDetailBO departmentDetail = departmentDetailAPI.findByDepartment(userDetail.getDepartmentId());
-            if (departmentDetail != null)
-                entity.setArea(departmentDetail.getArea());
-        }
+        PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+        entity.setArea("");
+        entity.setProject("");
+        if (null != detailBO)
+            for (String id : detailBO.getPositionIds().split(",")) {
+                PositionDetailBO position = positionDetailAPI.findBOById(id);
+                entity.setProject(entity.getProject() + "," + position.getDepartmentName());
+                entity.setArea(entity.getArea() + "," + position.getArea());
+            }
         if (entity.getStatus()) {//检测奖罚分数填写是否符合规范 true 为奖励 false 为处罚
             if (entity.getBallot() < 0)
                 entity.setBallot(-entity.getBallot());

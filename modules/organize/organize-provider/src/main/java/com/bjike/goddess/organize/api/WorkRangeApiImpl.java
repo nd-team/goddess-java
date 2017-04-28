@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.DepartmentWorkRangeBO;
 import com.bjike.goddess.organize.bo.WorkRangeBO;
@@ -71,5 +72,26 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     @Override
     public WorkRangeBO update(WorkRangeTO to) throws SerException {
         return workRangeSer.update(to);
+    }
+
+    @Override
+    public WorkRangeBO delete(String id) throws SerException {
+        return workRangeSer.delete(id);
+    }
+
+    @Override
+    public List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
+        return workRangeSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        return workRangeSer.count(dto);
+    }
+
+    @Override
+    public WorkRangeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(workRangeSer.findById(id), WorkRangeBO.class);
     }
 }

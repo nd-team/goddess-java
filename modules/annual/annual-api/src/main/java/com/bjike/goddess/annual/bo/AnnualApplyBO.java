@@ -17,7 +17,7 @@ public class AnnualApplyBO extends BaseBO {
     /**
      * 年假信息
      */
-    private String info_id;
+    private String infoId;
 
     /**
      * 请假人
@@ -65,12 +65,12 @@ public class AnnualApplyBO extends BaseBO {
     private String auditTime;
 
 
-    public String getInfo_id() {
-        return info_id;
+    public String getInfoId() {
+        return infoId;
     }
 
-    public void setInfo_id(String info_id) {
-        this.info_id = info_id;
+    public void setInfoId(String infoId) {
+        this.infoId = infoId;
     }
 
     public String getInfoUsername() {

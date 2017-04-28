@@ -75,4 +75,15 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
         return positionDetailUserSer.maps(dto);
     }
+
+    @Override
+    public Long getTotal() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        return positionDetailUserSer.count(dto);
+    }
+
+    @Override
+    public PositionDetailUserBO findById(String id) throws SerException {
+        return positionDetailUserSer.getById(id);
+    }
 }

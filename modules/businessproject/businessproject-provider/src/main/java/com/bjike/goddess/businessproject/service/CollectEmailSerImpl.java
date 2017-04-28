@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -47,12 +48,30 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private DispatchSheetSer dispatchSheetAPI;
 
 
-    
+    @Override
+    public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        Long count = super.count(collectEmailDTO);
+        return count;
+    }
+
+    @Override
+    public CollectEmailBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空哦");
+        }
+        CollectEmail selfCapability = super.findById(id);
+        return BeanTransform.copyProperties(selfCapability,CollectEmailBO.class);
+
+    }
+
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
-        List<CollectEmail> list = super.findByCis(collectEmailDTO, true);
+        collectEmailDTO.getSorts().add("createTime=desc");
+        List<CollectEmail> list = super.findByPage(collectEmailDTO);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
     }
+
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -140,6 +159,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     public List<CollectEmailBO> collectCollectEmail(String[] area) throws SerException {
         List<CollectEmailBO> collectEmailBOList = new ArrayList<>();
         List<String> areas = Arrays.asList(area);
+
 //        if (areas == null || areas.size() == 0) {
 //            areas = siginManageAPI.listArea();
 //        }
@@ -149,28 +169,45 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         //再获取业务类型
         List<Integer> busType = Arrays.asList(BusinessType.MOBILECOMMUNICATION.getCode(), BusinessType.SOFTDEVELOP.getCode()
                 , BusinessType.INTELLIGENCESYSTEM.getCode(), BusinessType.ADVERT.getCode());
+        StringBuffer busTypeStr = new StringBuffer("");
+        for(Integer type : busType){
+            busTypeStr.append( type+",");
+        }
         //再获取合作方式
         List<Integer> cooperStatus = Arrays.asList(BusinessCooperate.RENTCONTRACT.getCode(),
                 BusinessCooperate.CHARCONTRACT.getCode(), BusinessCooperate.DISTRIBUTECONTRACT.getCode(), BusinessCooperate.SALECONTRACT.getCode());
+        StringBuffer cooperStr = new StringBuffer("");
+        for(Integer type : cooperStatus){
+            cooperStr.append( type+",");
+        }
         //再获合同属性
         List<Integer> distribute = Arrays.asList(ContractProperty.FRAMECONTRACT.getCode(), ContractProperty.SINGLECONTRACT.getCode());
-
+        StringBuffer distributeStr = new StringBuffer("");
+        for(Integer type : distribute){
+            distributeStr.append( type+",");
+        }
         //立项情况
         List<String> makeProjects = Arrays.asList("已立项", "未立项");
-
+        StringBuffer makeProjectsStr = new StringBuffer("");
+        for(String type : makeProjects){
+            makeProjectsStr.append( "'"+type+"'"+",");
+        }
         //签订合同情况
         List<String> signConditions = Arrays.asList("已签订", "未签订");
-
+        StringBuffer signStr = new StringBuffer("");
+        for(String type : signConditions){
+            signStr.append( "'"+type+"'"+",");
+        }
 
         for (String areaStr : areas) {
 
-            String[] fields = new String[]{"count", "type", "remark"};
+            String[] fields = new String[]{"count", "type", "enumConvert"};
 
             /**
              * 再获取业务类型
              */
             String sql = "select count(*) as counts , area as type ,businessType as enumConvert  from  businessproject_siginmanage " +
-                    "where businessType in (" + busType + ") and area = " + areaStr + " group by area , businessType order by businessType asc  ";
+                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ") and area = '" + areaStr + "' group by area , businessType order by businessType asc  ";
             List<Map<String, String>> busTypeMapList = new ArrayList<>();
             List<CollectEmailBO> collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -179,7 +216,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取合作方式
              */
             sql = "select count(*) as counts , area as type ,businessCooperate as enumConvert  from  businessproject_siginmanage " +
-                    "where businessCooperate in (" + cooperStatus + ") and area = " + areaStr + " group by area , businessCooperate order by businessCooperate asc  ";
+                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ") and area = '" + areaStr + "' group by area , businessCooperate order by businessCooperate asc  ";
             List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -188,16 +225,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获合同属性
              */
             sql = "select count(*) as counts , area as type ,contractProperty as enumConvert  from  businessproject_siginmanage " +
-                    "where contractProperty in (" + distribute + ") and area = " + areaStr + " group by area , contractProperty order by contractProperty asc  ";
+                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"",",") + ") and area = '" + areaStr + "' group by area , contractProperty order by contractProperty asc  ";
             List<Map<String, String>> propertyMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
 
+            fields = new String[]{"count", "type", "remark"};
             /**
              * 立项情况
              */
             sql = "select count(*) as counts , area as type ,makeProject as remark  from  businessproject_siginmanage " +
-                    "where makeProject in (" + makeProjects + ") and area = " + areaStr + " group by makeProject , area order by makeProject asc  ";
+                    "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr+"",",") + ") and area = '" + areaStr + "' group by makeProject , area order by makeProject asc  ";
             List<Map<String, String>> makeProjectMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             makeProjectMapList = sqlQueryString(makeProjects, collectEmailBOS, makeProjectMapList);
@@ -205,7 +243,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 签订合同情况
              */
             sql = "select count(*) as counts , area as type ,siginStatus as remark  from  businessproject_siginmanage " +
-                    "where siginStatus in (" + signConditions + ") and area = " + areaStr + " group by siginStatus , area order by siginStatus asc  ";
+                    "where siginStatus in (" + StringUtils.substringBeforeLast(signStr+"",",") + ") and area = '" + areaStr + "' group by siginStatus , area order by siginStatus asc  ";
             List<Map<String, String>> signMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -235,25 +273,40 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         //再获取业务类型
         List<Integer> busType = Arrays.asList(BusinessType.MOBILECOMMUNICATION.getCode(), BusinessType.SOFTDEVELOP.getCode()
                 , BusinessType.INTELLIGENCESYSTEM.getCode(), BusinessType.ADVERT.getCode());
+        StringBuffer busTypeStr = new StringBuffer("");
+        for(Integer type : busType){
+            busTypeStr.append( type+",");
+        }
         //再获取合作方式
         List<Integer> cooperStatus = Arrays.asList(BusinessCooperate.RENTCONTRACT.getCode(),
                 BusinessCooperate.CHARCONTRACT.getCode(), BusinessCooperate.DISTRIBUTECONTRACT.getCode(), BusinessCooperate.SALECONTRACT.getCode());
+        StringBuffer cooperStr = new StringBuffer("");
+        for(Integer type : cooperStatus){
+            cooperStr.append( type+",");
+        }
         //再获合同属性
         List<Integer> distribute = Arrays.asList(ContractProperty.FRAMECONTRACT.getCode(), ContractProperty.SINGLECONTRACT.getCode());
+        StringBuffer distributeStr = new StringBuffer("");
+        for(Integer type : distribute){
+            distributeStr.append( type+",");
+        }
 
         //合同归档情况
         List<String> signConditions = Arrays.asList("已归档", "未归档");
-
+        StringBuffer signStr = new StringBuffer("");
+        for(String type : signConditions){
+            signStr.append( "'"+type+"',");
+        }
 
         for (String firstCompanyStr : firstCompanys) {
 
-            String[] fields = new String[]{"counts", "type", "remark"};
+            String[] fields = new String[]{"counts", "type", "enumConvert"};
 
             /**
              * 再获取业务类型
              */
             String sql = "select count(*) as counts , firstCompany as type ,businessType as enumConvert  from  businessproject_baseinfomanage " +
-                    "where businessType in (" + busType + ") and firstCompany = " + firstCompanyStr + " group by firstCompany , businessType order by businessType asc  ";
+                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"" ,",")+ ") and firstCompany = " + firstCompanyStr + " group by firstCompany , businessType order by businessType asc  ";
             List<Map<String, String>> busTypeMapList = new ArrayList<>();
             List<CollectEmailBO> collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -262,7 +315,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取合作方式
              */
             sql = "select count(*) as counts , firstCompany as type ,businessCooperate as enumConvert  from  businessproject_baseinfomanage " +
-                    "where businessCooperate in (" + cooperStatus + ") and firstCompany = " + firstCompanyStr + " group by firstCompany , businessCooperate order by businessCooperate asc  ";
+                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"" ,",") + ") and firstCompany = " + firstCompanyStr + " group by firstCompany , businessCooperate order by businessCooperate asc  ";
             List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -271,16 +324,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获合同属性
              */
             sql = "select count(*) as counts , firstCompany as type ,contractProperty as enumConvert  from  businessproject_baseinfomanage " +
-                    "where contractProperty in (" + distribute + ") and firstCompany = " + firstCompanyStr + " group by firstCompany , contractProperty order by contractProperty asc  ";
+                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"" ,",") + ") and firstCompany = " + firstCompanyStr + " group by firstCompany , contractProperty order by contractProperty asc  ";
             List<Map<String, String>> propertyMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
 
+            fields = new String[]{"counts", "type", "remark"};
             /**
              * 合同归档情况
              */
             sql = "select count(*) as counts , firstCompany as type ,fileCondition as remark  from  businessproject_baseinfomanage " +
-                    "where fileCondition in (" + signConditions + ") and firstCompany = " + firstCompanyStr + " group by fileCondition , firstCompany order by siginStatus asc  ";
+                    "where fileCondition in (" + StringUtils.substringBeforeLast(signStr+"" ,",") + ") and firstCompany = " + firstCompanyStr + " group by fileCondition , firstCompany order by fileCondition asc  ";
             List<Map<String, String>> signMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -308,7 +362,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         String[] fields = new String[]{"counts", "type", "remark"};
         for(String areaStr :area ){
             String sql = "select count(*) as counts  , area as type , dispatchProject as remark from  businessproject_dispatchsheet " +
-                    "where  area = " + areaStr + " group by dispatchProject   ";
+                    "where  area = '" + areaStr + "' group by dispatchProject   ";
 
             List<CollectEmailBO> collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countDispatchName = 0;
@@ -318,7 +372,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
             //已完工
             sql = "select count(*) as counts , area as type , completeProject as remark from  businessproject_dispatchsheet " +
-                    "where  area = " + areaStr + " and completeProject ='已完工'   ";
+                    "where  area = '" + areaStr + "' and completeProject ='已完工'   ";
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countComplete = 0;
             if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
@@ -327,7 +381,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
             //未完工
             sql = "select count(*) as counts , area as type , completeProject as remark from  businessproject_dispatchsheet " +
-                    "where  area = " + areaStr + " and completeProject ='未完工'   ";
+                    "where  area = '" + areaStr + "' and completeProject ='未完工'   ";
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countNotComplete = 0;
             if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
@@ -337,7 +391,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             String[] fieldMoney = new String[]{"money", "type"};
             //金额
             sql = "select sum(money) as money , area as type  from  businessproject_dispatchsheet " +
-                    "where  area = " + areaStr ;
+                    " where  area = '" + areaStr+"'" ;
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fieldMoney);
             Double money = 0d;
             if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
@@ -349,7 +403,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             cbo.setDispatchProjectCount( countDispatchName );
             cbo.setComplete(  countComplete );
             cbo.setNotComplete( countNotComplete );
-            cbo.setMoney( money );
+            cbo.setMoney( null == money ? 0d:money);
 
             collectEmailBOList.add( cbo );
         }
@@ -385,13 +439,30 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     public List<CollectEmailBO> calcuteBaseInfoCount(List<Integer> busType, List<Integer> cooperStatus,
                                                   List<Integer> distribute, List<String> signConditions,
                                                   List<CollectEmailBO> collectEmailBOList) throws SerException {
-        String[] fields = new String[]{"counts", "remark"};
+        StringBuffer busTypeStr = new StringBuffer("");
+        for(Integer type : busType){
+            busTypeStr.append( type+",");
+        }
+        StringBuffer cooperStr = new StringBuffer("");
+        for(Integer type : cooperStatus){
+            cooperStr.append( type+",");
+        }
+        StringBuffer distributeStr = new StringBuffer("");
+        for(Integer type : distribute){
+            distributeStr.append( type+",");
+        }
+        StringBuffer signStr = new StringBuffer("");
+        for(String type : signConditions){
+            signStr.append( "'"+type+"',");
+        }
+
+        String[] fields = new String[]{"counts", "enumConvert"};
 
         /**
          * 再获取业务类型
          */
         String sql = "select count(*) as counts , businessType as enumConvert  from  businessproject_baseinfomanage " +
-                "where businessType in (" + busType + ")  group by businessType order by businessType asc  ";
+                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ")  group by businessType order by businessType asc  ";
         List<Map<String, String>> busTypeMapList = new ArrayList<>();
         List<CollectEmailBO> collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -400,7 +471,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取合作方式
          */
         sql = "select count(*) as counts , businessCooperate as enumConvert  from  businessproject_baseinfomanage " +
-                "where businessCooperate in (" + cooperStatus + ")  group by  businessCooperate order by businessCooperate asc  ";
+                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ")  group by  businessCooperate order by businessCooperate asc  ";
         List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -410,16 +481,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获合同属性
          */
         sql = "select count(*) as counts  ,contractProperty as enumConvert  from  businessproject_baseinfomanage " +
-                "where contractProperty in (" + distribute + ")  group by  contractProperty order by contractProperty asc  ";
+                "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"",",") + ")  group by  contractProperty order by contractProperty asc  ";
         List<Map<String, String>> propertyMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
 
+        fields = new String[]{"counts", "remark"};
         /**
          * 合同归档情况
          */
         sql = "select count(*) as counts , fileCondition as remark  from  businessproject_baseinfomanage " +
-                "where fileCondition in (" + signConditions + ")  group by fileCondition  order by fileCondition asc  ";
+                "where fileCondition in (" + StringUtils.substringBeforeLast(signStr+"",",") + ")  group by fileCondition  order by fileCondition asc  ";
         List<Map<String, String>> signMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -452,13 +524,32 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                                              List<Integer> distribute, List<String> makeProjects,
                                              List<String> signConditions,
                                              List<CollectEmailBO> collectEmailBOList) throws SerException {
-        String[] fields = new String[]{"counts", "remark"};
+        StringBuffer busTypeStr = new StringBuffer("");
+        for(Integer type : busType){
+            busTypeStr.append( type+",");
+        }
+        StringBuffer cooperStr = new StringBuffer("");
+        for(Integer type : cooperStatus){
+            cooperStr.append( type+",");
+        }
+        StringBuffer distributeStr = new StringBuffer("");
+        for(Integer type : distribute){
+            distributeStr.append( type+",");
+        }
+        StringBuffer makeProjectsStr = new StringBuffer("");
+        for(String type : makeProjects){
+            makeProjectsStr.append( "'"+type+"',");
+        }StringBuffer signStr = new StringBuffer("");
+        for(String type : signConditions){
+            signStr.append( "'"+type+"',");
+        }
+        String[] fields = new String[]{"counts", "enumConvert"};
 
         /**
          * 再获取业务类型
          */
         String sql = "select count(*) as counts , businessType as enumConvert  from  businessproject_siginmanage " +
-                "where businessType in (" + busType + ")  group by  businessType order by businessType asc  ";
+                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ")  group by  businessType order by businessType asc  ";
         List<Map<String, String>> busTypeMapList = new ArrayList<>();
         List<CollectEmailBO> collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -467,7 +558,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取合作方式
          */
         sql = "select count(*) as counts , businessCooperate as enumConvert  from  businessproject_siginmanage " +
-                "where businessCooperate in (" + cooperStatus + ")  group by  businessCooperate order by businessCooperate asc  ";
+                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ")  group by  businessCooperate order by businessCooperate asc  ";
         List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -477,16 +568,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获合同属性
          */
         sql = "select count(*) as counts  ,contractProperty as enumConvert  from  businessproject_siginmanage " +
-                "where contractProperty in (" + distribute + ")  group by  contractProperty order by contractProperty asc  ";
+                "where contractProperty in (" +  StringUtils.substringBeforeLast(distributeStr+"",",")  + ")  group by  contractProperty order by contractProperty asc  ";
         List<Map<String, String>> propertyMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
 
+        fields = new String[]{"counts", "remark"};
         /**
          * 立项情况
          */
         sql = "select count(*) as counts , makeProject as remark  from  businessproject_siginmanage " +
-                "where makeProject in (" + makeProjects + ")  group by makeProject  order by makeProject asc  ";
+                "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr+"",",") + ")  group by makeProject  order by makeProject asc  ";
         List<Map<String, String>> makeProjectMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         makeProjectMapList = sqlQueryString(makeProjects, collectEmailBOS, makeProjectMapList);
@@ -494,7 +586,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 签订合同情况
          */
         sql = "select count(*) as counts , siginStatus as remark  from  businessproject_siginmanage " +
-                "where siginStatus in (" + signConditions + ")  group by siginStatus  order by siginStatus asc  ";
+                "where siginStatus in (" + StringUtils.substringBeforeLast(signStr+"",",")  + ")  group by siginStatus  order by siginStatus asc  ";
         List<Map<String, String>> signMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -573,19 +665,19 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 }
 
                 //存map
-                for (String o : obj) {
-                    for (CollectEmailBO cbo : collectEmailBOS) {
-                        Map<String, String> areaMap = new HashMap<>();
-                        if (!diffrent.contains(o) && cbo.getRemark().equals(o)) {
-                            areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
-                        } else {
-                            areaMap.put("remark", o);
-                            areaMap.put("count", 0 + "");
-                        }
-                        mapList.add(areaMap);
-                    }
+                for (CollectEmailBO cbo : collectEmailBOS) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    areaMap.put("remark", cbo.getRemark());
+                    areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
+                    mapList.add(areaMap);
                 }
+                for(String dif: diffrent){
+                    Map<String, String> areaMap = new HashMap<>();
+                    areaMap.put("remark", dif);
+                    areaMap.put("count", String.valueOf(0));
+                    mapList.add(areaMap);
+                }
+
 
             }
         }
@@ -627,30 +719,29 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 }
 
                 //存map
-                for (Integer o : obj) {
-                    for (CollectEmailBO cbo : collectEmailBOS) {
-                        Map<String, String> areaMap = new HashMap<>();
-                        if (!diffrent.contains(o) && cbo.getEnumConvert()==o ) {
-                            if (enumStr.equals("BusinessType")) {
-                                areaMap.put("remark", BusinessType.getStrConvert(cbo.getEnumConvert()));
-                            } else if (enumStr.equals("BusinessCooperate")) {
-                                areaMap.put("remark", BusinessCooperate.getStrConvert(cbo.getEnumConvert()));
-                            } else if (enumStr.equals("ContractProperty")) {
-                                areaMap.put("remark", ContractProperty.getStrConvert(cbo.getEnumConvert()));
-                            }
-                            areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
-                        } else {
-                            if (enumStr.equals("BusinessType")) {
-                                areaMap.put("remark", BusinessType.getStrConvert(cbo.getEnumConvert()));
-                            } else if (enumStr.equals("BusinessCooperate")) {
-                                areaMap.put("remark", BusinessCooperate.getStrConvert(cbo.getEnumConvert()));
-                            } else if (enumStr.equals("ContractProperty")) {
-                                areaMap.put("remark", ContractProperty.getStrConvert(cbo.getEnumConvert()));
-                            }
-                            areaMap.put("count", 0 + "");
-                        }
-                        mapList.add(areaMap);
+                for (CollectEmailBO cbo : collectEmailBOS) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    if (enumStr.equals("BusinessType")) {
+                        areaMap.put("remark", BusinessType.getStrConvert(cbo.getEnumConvert()));
+                    } else if (enumStr.equals("BusinessCooperate")) {
+                        areaMap.put("remark", BusinessCooperate.getStrConvert(cbo.getEnumConvert()));
+                    } else if (enumStr.equals("ContractProperty")) {
+                        areaMap.put("remark", ContractProperty.getStrConvert(cbo.getEnumConvert()));
                     }
+                    areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
+                    mapList.add(areaMap);
+                }
+                for(Integer dif: diffrent){
+                    Map<String, String> areaMap = new HashMap<>();
+                    if (enumStr.equals("BusinessType")) {
+                        areaMap.put("remark", BusinessType.getStrConvert(dif ));
+                    } else if (enumStr.equals("BusinessCooperate")) {
+                        areaMap.put("remark", BusinessCooperate.getStrConvert(dif));
+                    } else if (enumStr.equals("ContractProperty")) {
+                        areaMap.put("remark", ContractProperty.getStrConvert(dif));
+                    }
+                    areaMap.put("count", 0 + "");
+                    mapList.add(areaMap);
                 }
 
             }

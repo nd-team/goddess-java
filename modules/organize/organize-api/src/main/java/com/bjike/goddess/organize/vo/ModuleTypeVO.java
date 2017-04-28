@@ -32,7 +32,6 @@ public class ModuleTypeVO {
      */
     private Status status;
 
-
     public String getId() {
         return id;
     }

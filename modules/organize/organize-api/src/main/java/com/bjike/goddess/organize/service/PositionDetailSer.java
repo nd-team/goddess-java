@@ -43,39 +43,6 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     }
 
     /**
-     * 根据职位ID查询
-     *
-     * @param id 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findByPostId(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据上级职位ID查询
-     *
-     * @param parentId 上级职位ID
-     * @return
-     * @throws SerException
-     */
-    default List<PositionDetailBO> findChild(String parentId) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据职位ID查询直接上级职位详细
-     *
-     * @param postId 职位ID
-     * @return
-     * @throws SerException
-     */
-    default PositionDetailBO findParent(String postId) throws SerException {
-        return null;
-    }
-
-    /**
      * 根据职位ID查询该职位下级层级职位详细
      *
      * @param postId 职位ID
@@ -111,7 +78,7 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     /**
      * 增加岗位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
@@ -122,7 +89,7 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     /**
      * 修改职位详细
      *
-     * @param to
+     * @param to 岗位详细传输对象
      * @return
      * @throws SerException
      */
@@ -138,6 +105,50 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
      * @throws SerException
      */
     default List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
+        return null;
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO congeal(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO thaw(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 岗位详细数据id
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 岗位详细数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
         return null;
     }
 }

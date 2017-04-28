@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.apache.commons.io.IOUtils;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("staffrecords")
-public class StaffRecordsAct {
+public class StaffRecordsAct extends BaseFileAction {
 
     @Autowired
     private StaffRecordsAPI staffRecordsAPI;
@@ -72,8 +72,7 @@ public class StaffRecordsAct {
             Object o = RpcContext.getContext().getAttachment("storageToken");
 
             String path = "/" + to.getUsername() + "/" + to.getEnclosure();
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            List<MultipartFile> multipartFiles = multiRequest.getFiles("file");
+            List<MultipartFile> multipartFiles = getMultipartFile(request);
             Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
 
             for (MultipartFile multipartFile : multipartFiles) {

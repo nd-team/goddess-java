@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -1123,5 +1124,34 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, field);
         return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO, String condition) throws SerException {
+        if (StringUtils.isNotBlank(voucherGenerateDTO.getArea())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("area", voucherGenerateDTO.getArea()));
+        }
+        if (StringUtils.isNotBlank(voucherGenerateDTO.getProjectName())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("projectName", voucherGenerateDTO.getProjectName()));
+        }
+        if (StringUtils.isNotBlank(voucherGenerateDTO.getProjectGroup())) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("projectGroup", voucherGenerateDTO.getProjectGroup()));
+        }
+        if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime()) && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
+            voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", Arrays.asList(voucherGenerateDTO.getStartTime(), voucherGenerateDTO.getEndTime())));
+        }
+        if ("manageFee".equals(condition)) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", "管理费"));
+            voucherGenerateDTO.getConditions().add(Restrict.or("firstSubject", "管理费用"));
+        } else if ("outFee".equals(condition)) {
+            voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", "管理费"));
+            voucherGenerateDTO.getConditions().add(Restrict.or("firstSubject", "管理费用"));
+            voucherGenerateDTO.getConditions().add(Restrict.eq("secondSubject", "外包管理费"));
+            voucherGenerateDTO.getConditions().add(Restrict.or("secondSubject", "管理费"));
+        }
+
+        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        return listBO;
     }
 }

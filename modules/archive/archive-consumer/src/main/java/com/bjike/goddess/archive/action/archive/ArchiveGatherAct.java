@@ -1,6 +1,5 @@
 package com.bjike.goddess.archive.action.archive;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.archive.api.ArchiveGatherAPI;
 import com.bjike.goddess.archive.dto.ArchiveGatherDTO;
 import com.bjike.goddess.archive.to.ArchiveGatherTO;
@@ -10,6 +9,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -19,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("archivegather")
-public class ArchiveGatherAct {
+public class ArchiveGatherAct extends BaseFileAction {
 
     @Autowired
     private ArchiveGatherAPI archiveGatherAPI;
@@ -120,11 +119,9 @@ public class ArchiveGatherAct {
     @PostMapping("v1/uploadEnclosure")
     public Result uploadEnclosure(HttpServletRequest request, String username) throws ActException {
         try {
-            Object o = RpcContext.getContext().getAttachment("storageToken");
 
             String path = "/" + username;
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            List<MultipartFile> multipartFiles = multiRequest.getFiles("file");
+            List<MultipartFile> multipartFiles = getMultipartFile(request);
             Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
 
             for (MultipartFile multipartFile : multipartFiles) {

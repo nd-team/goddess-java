@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import com.bjike.goddess.common.api.type.Status;
+
 /**
  * 部门详细展示对象
  *
@@ -20,7 +22,7 @@ public class DepartmentDetailVO {
     /**
      * 体系ID
      */
-    private String hierarchy_id;
+    private String hierarchyId;
 
     /**
      * 体系编号
@@ -31,11 +33,6 @@ public class DepartmentDetailVO {
      * 体系
      */
     private String hierarchyName;
-
-    /**
-     * 项目组/部门id
-     */
-    private String department_id;
 
     /**
      * 项目组/部门
@@ -67,6 +64,32 @@ public class DepartmentDetailVO {
      */
     private String showNumber;
 
+    /**
+     * id
+     */
+    private String id;
+
+    /**
+     * 部门状态
+     */
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -75,12 +98,12 @@ public class DepartmentDetailVO {
         this.serialNumber = serialNumber;
     }
 
-    public String getHierarchy_id() {
-        return hierarchy_id;
+    public String getHierarchyId() {
+        return hierarchyId;
     }
 
-    public void setHierarchy_id(String hierarchy_id) {
-        this.hierarchy_id = hierarchy_id;
+    public void setHierarchyId(String hierarchyId) {
+        this.hierarchyId = hierarchyId;
     }
 
     public String getHierarchyNumber() {
@@ -97,14 +120,6 @@ public class DepartmentDetailVO {
 
     public void setHierarchyName(String hierarchyName) {
         this.hierarchyName = hierarchyName;
-    }
-
-    public String getDepartment_id() {
-        return department_id;
-    }
-
-    public void setDepartment_id(String department_id) {
-        this.department_id = department_id;
     }
 
     public String getDepartment() {

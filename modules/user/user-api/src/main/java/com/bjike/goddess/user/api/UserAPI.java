@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.to.UserTO;
+import org.mengyun.tcctransaction.api.TransactionContext;
 
 import java.util.List;
 
@@ -98,7 +99,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default UserBO add(UserTO userTO) throws SerException {
+    default UserBO add(TransactionContext context,UserTO userTO) throws SerException {
         return null;
     }
 

@@ -18,6 +18,20 @@ import java.util.List;
  */
 public interface CollectEmailAPI {
 
+    /**
+     * 总条数
+     */
+    default Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 一个个邮件
+     * @return class CollectEmailBO
+     */
+    default CollectEmailBO getOne(String id) throws SerException {return null;}
+
 
     /**
      * 商务项目合同邮件汇总列表

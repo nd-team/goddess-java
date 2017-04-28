@@ -42,7 +42,7 @@ public class TargetInformation extends BaseEntity {
      * 客户基本信息
      */
     @Column(name = "customer_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户基本信息'")
-    private String customer_id;
+    private String customerId;
 
     /**
      * 备注
@@ -75,12 +75,12 @@ public class TargetInformation extends BaseEntity {
         this.course = course;
     }
 
-    public String getCustomer_id() {
-        return customer_id;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(String customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getRemark() {

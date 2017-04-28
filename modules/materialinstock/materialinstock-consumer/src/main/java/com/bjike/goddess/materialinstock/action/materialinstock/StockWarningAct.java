@@ -45,7 +45,7 @@ public class StockWarningAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findbyid/{id}")
+    @GetMapping("v1/stockwarning/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             StockWarningBO bo = stockWarningAPI.findById(id);

@@ -26,6 +26,16 @@ public class CurrencyApiImpl implements CurrencyAPI {
     private CurrencySer currencySer;
 
     @Override
+    public Long countCurrency(CurrencyDTO currencyDTO) throws SerException {
+        return currencySer.countCurrency( currencyDTO );
+    }
+
+    @Override
+    public CurrencyBO getOneById(String id) throws SerException {
+        return currencySer.getOneById(id);
+    }
+
+    @Override
     public List<CurrencyBO> listCurrency(CurrencyDTO currencyDTO) throws SerException {
         return currencySer.listCurrency(currencyDTO);
     }

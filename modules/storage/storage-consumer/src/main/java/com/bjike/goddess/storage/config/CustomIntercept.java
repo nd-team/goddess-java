@@ -3,8 +3,7 @@ package com.bjike.goddess.storage.config;
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
 import com.bjike.goddess.common.consumer.interceptor.login.StorageIntercept;
-import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.rbac.PermissionAPI;
+import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,18 +21,18 @@ import java.util.List;
  */
 @Component
 public class CustomIntercept implements Interceptor {
+    @Autowired
+    private StorageUserAPI storageUserAPI;
 
 
     @Override
     public List<HIInfo> customerInterceptors() {
 
-
-
-        HIInfo stoarge = new HIInfo(new StorageIntercept(), "/**");
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
 
         /**
-         * 顺序
+         * 暂时不加权限
          */
-        return Arrays.asList(stoarge);
+        return Arrays.asList(storageInfo);
     }
 }

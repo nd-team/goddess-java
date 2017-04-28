@@ -8,6 +8,7 @@ import com.bjike.goddess.organize.bo.PositionWorkDetailBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailDTO;
 import com.bjike.goddess.organize.entity.PositionWorkDetail;
 import com.bjike.goddess.organize.to.PositionWorkDetailTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,9 +84,39 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionWorkDetailBO update(PositionWorkDetailTO to) throws SerException {
-        PositionWorkDetail entity = BeanTransform.copyProperties(to, PositionWorkDetail.class);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        PositionWorkDetail entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
         entity.setInstructions(positionInstructionSer.findById(to.getInstructionId()));
         super.update(entity);
         return transformBO(entity);
+    }
+
+    @Override
+    public PositionWorkDetailBO delete(String id) throws SerException {
+        PositionWorkDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (Exception e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return transformBO(entity);
+    }
+
+    @Override
+    public List<PositionWorkDetailBO> maps(PositionWorkDetailDTO dto) throws SerException {
+        dto.getSorts().add("instruction_id=asc");
+        return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PositionWorkDetailBO getById(String id) throws SerException {
+        return this.transformBO(super.findById(id));
     }
 }

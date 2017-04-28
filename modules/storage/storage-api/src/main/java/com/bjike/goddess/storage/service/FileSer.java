@@ -6,8 +6,8 @@ import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.dto.FileDTO;
 import com.bjike.goddess.storage.entity.File;
 
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文件存储业务接口
@@ -24,38 +24,40 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 文件列表
      *
-     * @param path
+     * @param path         路径
+     * @param storageToken 登录令牌
      */
-    default List<FileBO> list(String path) throws SerException {
+    default List<FileBO> list(String path, String storageToken) throws SerException {
         return null;
     }
 
     /**
      * 文件上传
      *
-     * @param maps 文件名，byte 文件字节
-     * @param path 上传路径
+     * @param inputStreams 上传文件，文件信息流
      */
-    default void upload(Map<String, byte[]> maps, String path) throws SerException {
+    default void upload(List<InputStream> inputStreams) throws SerException {
     }
 
 
     /**
      * 文件夹创建
      *
-     * @param path 文件路径
-     * @param dir  新的目录
+     * @param path         文件路径
+     * @param dir          新的目录
+     * @param storageToken 登录令牌
      */
-    default void mkDir(String path, String dir) throws SerException {
+    default void mkDir(String path, String dir, String storageToken) throws SerException {
 
     }
 
     /**
      * 删除文件
      *
-     * @param path 文件或者文件夹路径
+     * @param path         文件或者文件夹路径
+     * @param storageToken 登录令牌
      */
-    default void delFile(String path) throws SerException {
+    default void delFile(String path, String storageToken) throws SerException {
 
     }
 
@@ -63,86 +65,87 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 重命名
      *
-     * @param path    文件或者文件夹路径
-     * @param newName 新文件名
+     * @param path         文件或者文件夹路径
+     * @param newName      新文件名
+     * @param storageToken 登录令牌
      */
-    default void rename(String path, String newName) throws SerException {
+    default void rename(String path, String newName, String storageToken) throws SerException {
 
     }
 
     /**
      * 下载
      *
-     * @param path 文件路径
+     * @param storageToken 登录令牌
+     * @param path         文件路径
      */
-    default byte[] download(String path) throws SerException {
+    default byte[] download(String path, String storageToken) throws SerException {
         return null;
     }
 
     /**
      * 文件是否存在
      *
-     * @param path 文件路径
+     * @param path         文件路径
+     * @param storageToken 登录令牌
      */
-    default Boolean existsFile(String path) throws SerException {
+    default Boolean existsFile(String path, String storageToken) throws SerException {
         return null;
     }
 
     /**
      * 文件是否存在
      *
-     * @param fromPath 移动路径
-     * @param toPath   目标路径
+     * @param fromPath     移动路径
+     * @param toPath       目标路径
+     * @param storageToken 登录令牌
      */
-    default Boolean move(String fromPath, String toPath) throws SerException {
+    default Boolean move(String fromPath, String toPath, String storageToken) throws SerException {
         return null;
     }
 
     /**
      * 删除到回收站
      *
-     * @param path
+     * @param path         文件路径
+     * @param storageToken 登录令牌
      * @throws SerException
      */
-    default void recycle(String path) throws SerException {
+    default void recycle(String path, String storageToken) throws SerException {
 
     }
 
     /**
      * 恢复目录
+     *
+     * @param path         文件路径
+     * @param storageToken 登录令牌
      */
-    default void restore(String path) throws SerException {
+    default void restore(String path, String storageToken) throws SerException {
 
     }
 
     /**
      * 回收站目录
      *
-     * @param path
+     * @param path         文件路径
+     * @param storageToken 登录令牌
      * @throws SerException
      */
-    default List<FileBO> recycleList(String path) throws SerException {
+    default List<FileBO> recycleList(String path, String storageToken) throws SerException {
         return null;
-    }
-
-    /**
-     * 单文件上传
-     *
-     * @param bytes 文件字节
-     * @return 文件存储id
-     */
-    default  FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException{
-        return  null;
     }
 
 
     /**
      * 获取真实存储路径
      *
+     * @param path         文件路径
+     * @param storageToken 登录令牌
      * @return
      * @throws SerException
      */
-    default String getRealPath(String path) throws SerException{
+    default String getRealPath(String path, String storageToken) throws SerException {
         return null;
     }
 }

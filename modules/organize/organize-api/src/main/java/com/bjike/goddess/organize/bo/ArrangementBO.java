@@ -3,8 +3,6 @@ package com.bjike.goddess.organize.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
-import java.time.LocalDateTime;
-
 /**
  * 岗位层级
  *
@@ -45,10 +43,11 @@ public class ArrangementBO extends BaseBO {
     /**
      * 上级层级
      */
-    private String parent_id;
+    private String parentId;
 
     /**
      * 上级层级
+     *
      * @return
      */
     private String parent;
@@ -61,12 +60,12 @@ public class ArrangementBO extends BaseBO {
         this.parent = parent;
     }
 
-    public String getParent_id() {
-        return parent_id;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParent_id(String parent_id) {
-        this.parent_id = parent_id;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getSerialNumber() {

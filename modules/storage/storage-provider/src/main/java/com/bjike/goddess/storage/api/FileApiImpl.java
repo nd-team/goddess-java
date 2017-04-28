@@ -3,12 +3,13 @@ package com.bjike.goddess.storage.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.service.FileSer;
+import com.bjike.goddess.storage.to.FileInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文件存储业务接口实现
@@ -26,76 +27,104 @@ public class FileApiImpl implements FileAPI {
     private FileSer fileSer;
 
     @Override
-    public List<FileBO> list(String path) throws SerException {
-        return fileSer.list(path);
+    public List<FileBO> list(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.list(path, token);
     }
 
     @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-        fileSer.upload(maps, path);
+    public void upload(List<InputStream> inputStreams) throws SerException {
+        fileSer.upload(inputStreams);
     }
 
     @Override
-    public void upload(byte[] bytes, String fileName, String path) throws SerException {
-        Map<String, byte[]> map = new HashMap<>(1);
-        map.put(fileName, bytes);
-        fileSer.upload(map, path);
+    public void mkDir(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        String dir = fileInfo.getDir();
+        if (StringUtils.isNotBlank(dir)) {
+            fileSer.mkDir(path, dir, token);
+        } else {
+            throw new SerException("dir 不能为空！");
+        }
+    }
+
+    @Override
+    public void delFile(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        fileSer.delFile(path, token);
     }
 
 
     @Override
-    public void mkDir(String path, String dir) throws SerException {
-        fileSer.mkDir(path, dir);
+    public void rename(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String newName = fileInfo.getNewName();
+        String token = fileInfo.getStorageToken();
+        if (StringUtils.isNotBlank(newName)) {
+            fileSer.rename(path, newName, token);
+        } else {
+            throw new SerException("newName 不能为空！");
+        }
     }
 
     @Override
-    public void delFile(String path) throws SerException {
-        fileSer.delFile(path);
+    public byte[] download(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.download(path, token);
+    }
+
+    @Override
+    public Boolean existsFile(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.existsFile(path, token);
+    }
+
+    @Override
+    public Boolean move(FileInfo fileInfo) throws SerException {
+        String from = fileInfo.getPath();
+        String to = fileInfo.getToPath();
+        if (StringUtils.isNotBlank(to)) {
+            String token = fileInfo.getStorageToken();
+            return fileSer.move(from, to, token);
+        } else {
+            throw new SerException("toPath 不能为空！");
+        }
+
+    }
+
+    @Override
+    public void recycle(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        fileSer.recycle(path, token);
+    }
+
+    @Override
+    public void restore(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        fileSer.restore(path, token);
+    }
+
+    @Override
+    public List<FileBO> recycleList(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.recycleList(path, token);
     }
 
 
     @Override
-    public void rename(String path, String newName) throws SerException {
-        fileSer.rename(path, newName);
+    public String getRealPath(FileInfo fileInfo) throws SerException {
+        String path = fileInfo.getPath();
+        String token = fileInfo.getStorageToken();
+        return fileSer.getRealPath(path, token);
     }
 
-    @Override
-    public byte[] download(String path) throws SerException {
-        return fileSer.download(path);
-    }
 
-    @Override
-    public Boolean existsFile(String path) throws SerException {
-        return fileSer.existsFile(path);
-    }
-
-    @Override
-    public Boolean move(String fromPath, String toPath) throws SerException {
-        return fileSer.move(fromPath, toPath);
-    }
-
-    @Override
-    public void recycle(String path) throws SerException {
-        fileSer.recycle(path);
-    }
-
-    @Override
-    public void restore(String path) throws SerException {
-        fileSer.restore(path);
-    }
-
-    @Override
-    public List<FileBO> recycleList(String path) throws SerException {
-        return fileSer.recycleList(path);
-    }
-
-    @Override
-    public FileBO uploadSingle(byte[] bytes, String path, String fileName) throws SerException {
-        return fileSer.uploadSingle(bytes, path, fileName);
-    }
-
-    @Override
-    public String getRealPath(String path) throws SerException {
-        return fileSer.getRealPath(path);
-    }
 }

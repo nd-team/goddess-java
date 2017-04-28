@@ -22,6 +22,8 @@ import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
+import org.mengyun.tcctransaction.Compensable;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -153,10 +155,27 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
-    @Transactional
-    public UserBO add(UserTO userTO) throws SerException {
+    @Transactional(rollbackFor = SerException.class)
+    @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
+    public UserBO add(TransactionContext txContext, UserTO userTO) throws SerException {
         User user = BeanTransform.copyProperties(userTO, User.class);
         return BeanTransform.copyProperties(super.save(user), UserBO.class);
+    }
+    @Transactional(rollbackFor = SerException.class)
+    public String addConfirm(TransactionContext txContext, UserTO userTO) throws SerException {
+        System.out.println("用户添加确认");
+        return null;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String addCancel(TransactionContext txContext, UserTO userTO) throws SerException {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("username", userTO.getUsername()));
+        User user = super.findOne(dto);
+        if(null!=user){
+            super.remove(user);
+        }
+        return null;
     }
 
     @Override

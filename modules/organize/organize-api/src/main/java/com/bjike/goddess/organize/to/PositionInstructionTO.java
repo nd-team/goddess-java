@@ -26,7 +26,7 @@ public class PositionInstructionTO extends BaseTO {
     private String serialNumber;
 
     /**
-     * 岗位id
+     * 岗位详细id
      */
     @NotNull(message = "岗位id不能为空", groups = {ADD.class, EDIT.class})
     private String positionId;
@@ -80,55 +80,29 @@ public class PositionInstructionTO extends BaseTO {
      * 角度ID
      */
     @NotNull(message = "角度ID不能为空", groups = {ADD.class, EDIT.class})
-    private String angle_id;
-
-    /**
-     * 角度
-     */
-    private String angleName;
+    private String angleId;
 
     /**
      * 维度ID
      */
     @NotNull(message = "维度ID不能为空", groups = {ADD.class, EDIT.class})
-    private String dimension_id;
+    private String dimensionId;
 
     /**
-     * 维度
-     */
-    private String dimensionName;
-
-    /**
-     * 分类ID
+     * 岗位说明书分类ID
      */
     @NotNull(message = "分类ID不能为空", groups = {ADD.class, EDIT.class})
-    private String classify_id;
-
-    /**
-     * 分类
-     */
-    private String classifyName;
+    private String classifyId;
 
     /**
      * 操作类型id
      */
     private String[] operateIds;
 
-
     /**
-     * 操作类型
-     */
-    private String operateNames;
-
-    /**
-     * 体现类别
+     * 体现类别id
      */
     private String[] reflectIds;
-
-    /**
-     * 体现类别
-     */
-    private String reflectNames;
 
     /**
      * 工作描述
@@ -156,33 +130,28 @@ public class PositionInstructionTO extends BaseTO {
      */
     private String outcome;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    public String getAngle_id() {
-        return angle_id;
+    public String getAngleId() {
+        return angleId;
     }
 
-    public void setAngle_id(String angle_id) {
-        this.angle_id = angle_id;
+    public void setAngleId(String angleId) {
+        this.angleId = angleId;
     }
 
-    public String getDimension_id() {
-        return dimension_id;
+    public String getDimensionId() {
+        return dimensionId;
     }
 
-    public void setDimension_id(String dimension_id) {
-        this.dimension_id = dimension_id;
+    public void setDimensionId(String dimensionId) {
+        this.dimensionId = dimensionId;
     }
 
-    public String getClassify_id() {
-        return classify_id;
+    public String getClassifyId() {
+        return classifyId;
     }
 
-    public void setClassify_id(String classify_id) {
-        this.classify_id = classify_id;
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 
     public String getSerialNumber() {
@@ -273,30 +242,6 @@ public class PositionInstructionTO extends BaseTO {
         this.children = children;
     }
 
-    public String getAngleName() {
-        return angleName;
-    }
-
-    public void setAngleName(String angleName) {
-        this.angleName = angleName;
-    }
-
-    public String getDimensionName() {
-        return dimensionName;
-    }
-
-    public void setDimensionName(String dimensionName) {
-        this.dimensionName = dimensionName;
-    }
-
-    public String getClassifyName() {
-        return classifyName;
-    }
-
-    public void setClassifyName(String classifyName) {
-        this.classifyName = classifyName;
-    }
-
     public String[] getOperateIds() {
         return operateIds;
     }
@@ -305,28 +250,12 @@ public class PositionInstructionTO extends BaseTO {
         this.operateIds = operateIds;
     }
 
-    public String getOperateNames() {
-        return operateNames;
-    }
-
-    public void setOperateNames(String operateNames) {
-        this.operateNames = operateNames;
-    }
-
     public String[] getReflectIds() {
         return reflectIds;
     }
 
     public void setReflectIds(String[] reflectIds) {
         this.reflectIds = reflectIds;
-    }
-
-    public String getReflectNames() {
-        return reflectNames;
-    }
-
-    public void setReflectNames(String reflectNames) {
-        this.reflectNames = reflectNames;
     }
 
     public String getDescription() {
@@ -367,13 +296,5 @@ public class PositionInstructionTO extends BaseTO {
 
     public void setOutcome(String outcome) {
         this.outcome = outcome;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

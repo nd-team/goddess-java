@@ -38,7 +38,7 @@ public interface AnnualArrangementStandardSer extends Ser<AnnualArrangementStand
      * @return
      * @throws SerException
      */
-    default List<AnnualArrangementStandardBO> findByStandard(String standard_id) throws SerException {
+    default List<AnnualArrangementStandardBO> findByStandard(String standardId) throws SerException {
         return null;
     }
 
@@ -56,12 +56,12 @@ public interface AnnualArrangementStandardSer extends Ser<AnnualArrangementStand
     /**
      * 根据标准和岗位层级查询年假层级标准
      *
-     * @param standard_id    年假标准ID
-     * @param arrangement_id 岗位层级ID
+     * @param standardId    年假标准ID
+     * @param arrangementId 岗位层级ID
      * @return
      * @throws SerException
      */
-    default AnnualArrangementStandardBO findByArrangementStandard(String standard_id, String arrangement_id) throws SerException {
+    default AnnualArrangementStandardBO findByArrangementStandard(String standardId, String arrangementId) throws SerException {
         return null;
     }
 }

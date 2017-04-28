@@ -19,48 +19,49 @@ public class ProjectCarryTO extends BaseTO {
     /**
      * 合同外部项目名称
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "合同外部项目名称不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "合同外部项目名称不能为空")
     private String outerName;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "内部项目名称不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "内部项目名称不能为空")
     private String innerName;
 
     /**
      * 合同签订情况
      */
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "合同签订情况不能为空")
     private String signCondition;
 
     /**
      * 立项情况
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "立项情况不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "立项情况不能为空")
     private String signProject;
 
     /**
      * 派工单编号
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "派工单编号不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "派工单编号不能为空")
     private String depatchNum;
 
     /**
      * 地区
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "地区不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "地区不能为空")
     private String area;
 
     /**
      * 业务类型
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "业务类型不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "业务类型不能为空")
     private String businessType;
 
     /**
      * 业务方向科目
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "业务方向科目不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "业务方向科目不能为空")
     private String businessSubject;
 
     /**
@@ -126,13 +127,13 @@ public class ProjectCarryTO extends BaseTO {
     /**
      * 是否初验
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "是否初验不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "是否初验不能为空")
     private String startTestCondition;
 
     /**
      * 是否终验
      */
-    @NotBlank(groups = ProjectCarryTO.TESTAddAndEdit.class,message = "是否终验不能为空")
+    @NotBlank(groups = {ProjectCarryTO.TESTAddAndEdit.class},message = "是否终验不能为空")
     private String finalTestCondition;
 
     /**

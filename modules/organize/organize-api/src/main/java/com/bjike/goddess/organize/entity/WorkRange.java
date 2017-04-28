@@ -66,7 +66,7 @@ public class WorkRange extends BaseEntity {
     /**
      * 对应部门
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organize_work_range_department",
             joinColumns = {@JoinColumn(name = "range_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '工作范围'")},
             inverseJoinColumns = {@JoinColumn(nullable = false, name = "department_id", columnDefinition = "VARCHAR(36) COMMENT '部门详细'")})
@@ -135,4 +135,5 @@ public class WorkRange extends BaseEntity {
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
+
 }

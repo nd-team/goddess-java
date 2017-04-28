@@ -1,5 +1,6 @@
 package com.bjike.goddess.storage.config;
 
+import com.alibaba.dubbo.remoting.http.servlet.DispatcherServlet;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
+
 public class AppRoot {
 
 }

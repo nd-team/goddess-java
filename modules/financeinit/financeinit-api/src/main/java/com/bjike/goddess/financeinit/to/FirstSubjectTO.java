@@ -26,7 +26,7 @@ public class FirstSubjectTO extends BaseTO {
     private String name;
 
     /**
-     * 级别所属类别
+     * 级别所属类别,有如下类别(资产类/负债类/共同类/权益类/成本类/损益类)可选
      */
     @NotBlank(message = "级别所属类别不能为空，有如下类别(资产类/负债类/共同类/权益类/成本类/损益类)可选")
     private String category;

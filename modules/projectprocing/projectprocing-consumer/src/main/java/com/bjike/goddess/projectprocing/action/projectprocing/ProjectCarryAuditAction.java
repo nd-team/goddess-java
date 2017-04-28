@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -54,6 +55,25 @@ public class ProjectCarryAuditAction {
     }
 
     /**
+     * 一个实施审核
+     *
+     * @param id 项目实施审核信息id
+     * @des 根据id获取项目实施审核信息
+     * @return  class ProjectCarryAuditVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ProjectCarryAuditVO projectCarryVO = BeanTransform.copyProperties(
+                    projectCarryAuditAPI.getOneById(id), ProjectCarryAuditVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目实施审核列表
      *
      * @param projectCarryAuditDTO 项目实施审核信息dto
@@ -62,10 +82,10 @@ public class ProjectCarryAuditAction {
      * @version v1
      */
     @GetMapping("v1/listProjectCarryAudit")
-    public Result findListProjectCarryAudit(ProjectCarryAuditDTO projectCarryAuditDTO, BindingResult bindingResult) throws ActException {
+    public Result findListProjectCarryAudit(ProjectCarryAuditDTO projectCarryAuditDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ProjectCarryAuditVO> projectCarryAuditVOList = BeanTransform.copyProperties(
-                    projectCarryAuditAPI.listProjectCarryAudit(projectCarryAuditDTO), ProjectCarryAuditVO.class, true);
+                    projectCarryAuditAPI.listProjectCarryAudit(projectCarryAuditDTO), ProjectCarryAuditVO.class, request);
             return ActResult.initialize(projectCarryAuditVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +105,7 @@ public class ProjectCarryAuditAction {
     public Result addProjectCarryAudit(@Validated({ProjectCarryAuditTO.TESTAddAndEdit.class}) ProjectCarryAuditTO projectCarryAuditTO, BindingResult bindingResult) throws ActException {
         try {
             ProjectCarryAuditBO projectCarryAuditBO1 = projectCarryAuditAPI.addProjectCarryAudit(projectCarryAuditTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectCarryAuditBO1,ProjectCarryAuditVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectCarryAuditBO1,ProjectCarryAuditVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,7 +125,7 @@ public class ProjectCarryAuditAction {
     public Result editProjectCarryAudit(@Validated({ProjectCarryAuditTO.TESTAddAndEdit.class}) ProjectCarryAuditTO projectCarryAuditTO) throws ActException {
         try {
             ProjectCarryAuditBO projectCarryAuditBO1 = projectCarryAuditAPI.editProjectCarryAudit(projectCarryAuditTO);
-            return ActResult.initialize(BeanTransform.copyProperties(projectCarryAuditBO1,ProjectCarryAuditVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(projectCarryAuditBO1,ProjectCarryAuditVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -141,7 +161,7 @@ public class ProjectCarryAuditAction {
     public Result searchInfo(ProjectCarryAuditDTO projectCarryAuditDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ProjectCarryAuditVO> projectCarryAuditVOList = BeanTransform.copyProperties(
-                    projectCarryAuditAPI.searchListProjectCarryAudit(projectCarryAuditDTO), ProjectCarryAuditVO.class, true);
+                    projectCarryAuditAPI.searchListProjectCarryAudit(projectCarryAuditDTO), ProjectCarryAuditVO.class);
             return ActResult.initialize(projectCarryAuditVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

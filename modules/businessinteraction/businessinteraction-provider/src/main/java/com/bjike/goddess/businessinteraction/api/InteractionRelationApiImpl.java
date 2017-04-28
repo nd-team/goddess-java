@@ -26,6 +26,16 @@ public class InteractionRelationApiImpl implements InteractionRelationAPI {
     private InteractionRelationSer interactionRelationSer;
 
     @Override
+    public Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        return interactionRelationSer.countInter( interactionRelationDTO);
+    }
+
+    @Override
+    public InteractionRelationBO getOneById(String id) throws SerException {
+        return interactionRelationSer.getOneById(id);
+    }
+
+    @Override
     public List<InteractionRelationBO> listInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {
         return interactionRelationSer.listInteractionRelation(interactionRelationDTO);
     }

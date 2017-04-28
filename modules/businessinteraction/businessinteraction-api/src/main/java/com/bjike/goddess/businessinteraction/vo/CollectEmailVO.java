@@ -23,7 +23,7 @@ public class CollectEmailVO {
      */
     private String id;
     /**
-     * 行业
+     * 地区
      */
     private String work;
 

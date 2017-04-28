@@ -1,11 +1,14 @@
 package com.bjike.goddess.storage;
 
+import com.caucho.hessian.client.HessianProxyFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 
 import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
@@ -21,13 +24,15 @@ public class Application {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize("50MB");
-        factory.setMaxRequestSize("50MB");
+        factory.setMaxFileSize("800MB");
+        factory.setMaxRequestSize("800MB");
         return factory.createMultipartConfig();
     }
 
 
     public static void main(String[] args) throws IOException {
+        HessianProxyFactory factory = new HessianProxyFactory();
+        factory.setOverloadEnabled(true);
         SpringApplication.run(Application.class, args);
         System.in.read();
     }

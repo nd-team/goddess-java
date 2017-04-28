@@ -26,6 +26,16 @@ public class AccountApiImpl implements AccountAPI {
     private AccountSer accountSer;
 
     @Override
+    public Long countAccount(AccountDTO accountDTO) throws SerException {
+        return accountSer.countAccount( accountDTO );
+    }
+
+    @Override
+    public AccountBO getOneById(String id) throws SerException {
+        return accountSer.getOneById(id);
+    }
+    
+    @Override
     public List<AccountBO> listAccount(AccountDTO accountDTO) throws SerException {
         return accountSer.listAccount(accountDTO);
     }

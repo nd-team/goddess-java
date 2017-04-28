@@ -381,7 +381,9 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default List<String> listGroup () throws  SerException {return null;}
+    default List<String> listGroup() throws SerException {
+        return null;
+    }
 
     /**
      * 根据id查找记账凭证
@@ -392,6 +394,13 @@ public interface VoucherGenerateAPI {
         return null;
     }
 
+    /**
+     * 根据日期、项目组、地区、项目统计记账凭证
+     *
+     */
+    default List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO,String condition) throws SerException {
+        return null;
+    }
 
     /**
      * 查询资金流水记录即一级科目为银行存款或库存现金

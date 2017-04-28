@@ -1,14 +1,17 @@
-模块名:materialinstorage
-类名:StockWarning
+模块名:materialreceive
+类名:ProjectGroupReceive
 作者:sunfengtao
-描述:库存预警
+描述:项目组领用归还
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String area 地区;
-Double lowerValue 下限值;
-Double upperValue 上限值;
-String materialType 物资类型;
+LocalDateTime receiveTime 领用时间;
+String materialName 物品名称;
+Integer quantity 数量;
+String recipient 领用人;
+String issuer 发放人;
+LocalDateTime returnTime 归还时间;
+String returnPerson 归还人;
 )

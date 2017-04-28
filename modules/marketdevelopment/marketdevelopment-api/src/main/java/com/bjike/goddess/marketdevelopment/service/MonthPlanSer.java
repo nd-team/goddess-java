@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
@@ -77,6 +78,7 @@ public interface MonthPlanSer extends Ser<MonthPlan, MonthPlanDTO> {
 
     /**
      * 根据id获取月计划数据
+     *
      * @param id 月计划数据id
      * @return
      * @throws SerException
@@ -96,4 +98,13 @@ public interface MonthPlanSer extends Ser<MonthPlan, MonthPlanDTO> {
         return null;
     }
 
+    /**
+     * 获取月计划选择对象
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MonthPlanChoiceBO> getChoice() throws SerException {
+        return null;
+    }
 }

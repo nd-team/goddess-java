@@ -1,10 +1,10 @@
 package com.bjike.goddess.organize.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 岗位详细
@@ -56,7 +56,7 @@ public class PositionDetail extends BaseEntity {
      * 岗位名称
      */
     @JoinColumn(nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位名称'", unique = true)
-    private String position_id;
+    private String position;
 
     /**
      * 人员编制数
@@ -66,10 +66,16 @@ public class PositionDetail extends BaseEntity {
     private Integer staff;
 
     /**
-     * 创建时间
+     * 描述
      */
-    @Column(columnDefinition = "datetime", nullable = false)
-    private LocalDateTime createTime;
+    @Column(columnDefinition = "VARCHAR(255) comment '描述' ")
+    private String description;
+
+    /**
+     * 状态
+     */
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '岗位状态' ", nullable = false, insertable = false)
+    private Status status;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -103,12 +109,12 @@ public class PositionDetail extends BaseEntity {
         this.module = module;
     }
 
-    public String getPosition_id() {
-        return position_id;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPosition_id(String position_id) {
-        this.position_id = position_id;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Integer getStaff() {
@@ -119,19 +125,27 @@ public class PositionDetail extends BaseEntity {
         this.staff = staff;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
     public Arrangement getArrangement() {
         return arrangement;
     }
 
     public void setArrangement(Arrangement arrangement) {
         this.arrangement = arrangement;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

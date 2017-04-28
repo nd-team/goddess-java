@@ -21,8 +21,7 @@ public enum AuditType {
     /**
      * 拒绝
      */
-    DENIED(2)
-    ;
+    DENIED(2);
 
     private int value;
 

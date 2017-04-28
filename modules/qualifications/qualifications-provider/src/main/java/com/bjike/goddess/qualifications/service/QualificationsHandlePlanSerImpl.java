@@ -36,7 +36,7 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
     @Override
     public QualificationsHandlePlanBO save(QualificationsHandlePlanTO to) throws SerException {
         QualificationsHandlePlan entity = BeanTransform.copyProperties(to, QualificationsHandlePlan.class, true);
-        entity.setHandle(handleSer.findById(to.getHandle_id()));
+        entity.setHandle(handleSer.findById(to.getHandleId()));
         super.save(entity);
         return BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
     }
@@ -47,7 +47,7 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
         QualificationsHandlePlan entity = BeanTransform.copyProperties(to, QualificationsHandlePlan.class, true), plan = super.findById(to.getId());
         entity.setModifyTime(LocalDateTime.now());
         entity.setCreateTime(plan.getCreateTime());
-        entity.setHandle(handleSer.findById(to.getHandle_id()));
+        entity.setHandle(handleSer.findById(to.getHandleId()));
         super.save(entity);
         return BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
     }
@@ -61,9 +61,9 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
     }
 
     @Override
-    public List<QualificationsHandlePlanBO> findByHandle(String handle_id) throws SerException {
+    public List<QualificationsHandlePlanBO> findByHandle(String handleId) throws SerException {
         QualificationsHandlePlanDTO dto = new QualificationsHandlePlanDTO();
-        dto.getConditions().add(Restrict.eq("handle.id", handle_id));
+        dto.getConditions().add(Restrict.eq("handle.id", handleId));
         List<QualificationsHandlePlan> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, QualificationsHandlePlanBO.class);
     }

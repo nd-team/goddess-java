@@ -26,6 +26,16 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     private CollectEmailSer collectEmailSer;
 
     @Override
+    public Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
+        return collectEmailSer.countInter(collectEmailDTO);
+    }
+
+    @Override
+    public CollectEmailBO getOneById(String id) throws SerException {
+        return collectEmailSer.getOneById(id);
+    }
+
+    @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
         return collectEmailSer.listCollectEmail( collectEmailDTO );
     }
@@ -58,5 +68,10 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     @Override
     public List<CollectEmailBO> collectCollectEmail(String[] works) throws SerException {
         return collectEmailSer.collectCollectEmail(works);
+    }
+
+    @Override
+    public List<String> areaList() throws SerException {
+        return collectEmailSer.areaList();
     }
 }

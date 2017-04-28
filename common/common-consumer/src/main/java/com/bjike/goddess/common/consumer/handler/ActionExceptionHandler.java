@@ -3,6 +3,7 @@ package com.bjike.goddess.common.consumer.handler;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,6 @@ import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by huanghuanlai on 2017/1/14.
@@ -39,9 +39,9 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             }
             LOGGER.error(e.getMessage());
         }
-        if(e.getMessage().startsWith("Forbid consumer")){
+        if (StringUtils.isNotBlank(e.getMessage()) && e.getMessage().startsWith("Forbid consumer")) {
             actResult.setMsg("服务调用失败");
-        }else{
+        } else {
             actResult.setMsg(e.getMessage());
         }
         ResponseContext.writeData(actResult);

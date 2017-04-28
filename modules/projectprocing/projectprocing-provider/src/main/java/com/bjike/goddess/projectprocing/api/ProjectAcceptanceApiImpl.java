@@ -32,6 +32,11 @@ public class ProjectAcceptanceApiImpl implements ProjectAcceptanceAPI {
     }
 
     @Override
+    public ProjectAcceptanceBO getOneById(String id) throws SerException {
+        return projectAcceptanceSer.getOneById(id);
+    }
+
+    @Override
     public List<ProjectAcceptanceBO> listProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
         return projectAcceptanceSer.listProjectAcceptance(projectAcceptanceDTO);
     }

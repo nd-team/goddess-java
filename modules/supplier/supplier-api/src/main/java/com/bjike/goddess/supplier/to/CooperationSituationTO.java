@@ -20,7 +20,7 @@ public class CooperationSituationTO extends BaseTO {
      * 供应商基本信息
      */
     @NotNull(message = "供应商信息传输错误", groups = {ADD.class, EDIT.class})
-    private String information_id;
+    private String informationId;
 
     /**
      * 公司名称
@@ -44,12 +44,12 @@ public class CooperationSituationTO extends BaseTO {
      */
     private String cooperationTerm;
 
-    public String getInformation_id() {
-        return information_id;
+    public String getInformationId() {
+        return informationId;
     }
 
-    public void setInformation_id(String information_id) {
-        this.information_id = information_id;
+    public void setInformationId(String informationId) {
+        this.informationId = informationId;
     }
 
     public String getName() {
