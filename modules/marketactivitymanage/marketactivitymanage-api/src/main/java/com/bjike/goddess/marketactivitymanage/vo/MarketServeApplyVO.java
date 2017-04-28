@@ -14,6 +14,11 @@ import com.bjike.goddess.marketactivitymanage.type.AuditType;
 public class MarketServeApplyVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 计划活动时间点
      */
     private String planActivityTiming;
@@ -98,6 +103,13 @@ public class MarketServeApplyVO {
      */
     private AuditType executiveAuditOpinion;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getPlanActivityTiming() {
         return planActivityTiming;

@@ -22,6 +22,23 @@ import java.util.List;
 public interface MarketServeApplyAPI {
 
     /**
+     * 根据id查询市场招待申请
+     *
+     * @param id 市场招待申请唯一标识
+     * @return class MarketServeApplyBO
+     * @throws SerException
+     */
+    MarketServeApplyBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 市场招待申请dto
+     * @throws SerException
+     */
+    Long count(MarketServeApplyDTO dto) throws SerException;
+
+    /**
      * 查询市场招待申请
      *
      * @param dto 市场招待申请dto
@@ -80,19 +97,10 @@ public interface MarketServeApplyAPI {
     void executiveOpinion(MarketServeApplyTO to) throws SerException;
 
     /**
-     * 上传附件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    void uploadAttachment(InputStream inputStream, String targetPath) throws SerException;
-
-    /**
      * 导入
      *
      * @param inputStream 目标路径
-     * @param targetPath 文件输入流
+     * @param targetPath  文件输入流
      * @throws SerException
      */
     void importFile(InputStream inputStream, String targetPath) throws SerException;

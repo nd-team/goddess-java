@@ -3,8 +3,8 @@ package com.bjike.goddess.marketactivitymanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
-import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
+import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 
 import java.util.List;

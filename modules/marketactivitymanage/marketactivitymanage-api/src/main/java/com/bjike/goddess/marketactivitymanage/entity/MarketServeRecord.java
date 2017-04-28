@@ -3,7 +3,9 @@ package com.bjike.goddess.marketactivitymanage.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -99,7 +101,7 @@ public class MarketServeRecord extends BaseEntity {
     private String classify;
 
     /**
-     * 实际费用
+     * 预计费用
      */
     @Column(name = "predictCharge", nullable = false, columnDefinition = "DECIMAL(7,2) COMMENT '预计费用'")
     private Double predictCharge;

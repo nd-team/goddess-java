@@ -13,9 +13,11 @@ import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,11 +30,47 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("marketactivitymanage/marketserverecord")
+@RequestMapping("marketserverecord")
 public class MarketServeRecordAct {
 
     @Autowired
     private MarketServeRecordAPI marketServeRecordAPI;
+
+    /**
+     * 根据id查询市场招待记录
+     *
+     * @param id      市场招待记录唯一标识
+     * @return class MarketServeRecordVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/marketserverecord/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            MarketServeRecordBO bo = marketServeRecordAPI.findById(id);
+            MarketServeRecordVO vo = BeanTransform.copyProperties(bo, MarketServeRecordVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 市场招待记录dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated MarketServeRecordDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = marketServeRecordAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -43,10 +81,10 @@ public class MarketServeRecordAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(MarketServeRecordDTO dto) throws ActException {
+    public Result list(@Validated MarketServeRecordDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<MarketServeRecordBO> boList = marketServeRecordAPI.list(dto);
-            List<MarketServeRecordVO> voList = BeanTransform.copyProperties(boList, MarketServeRecordVO.class);
+            List<MarketServeRecordVO> voList = BeanTransform.copyProperties(boList, MarketServeRecordVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -62,10 +100,10 @@ public class MarketServeRecordAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MarketServeRecordTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) MarketServeRecordTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MarketServeRecordBO bo = marketServeRecordAPI.save(to);
-            MarketServeRecordVO vo = BeanTransform.copyProperties(bo, MarketServeRecordVO.class);
+            MarketServeRecordVO vo = BeanTransform.copyProperties(bo, MarketServeRecordVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -97,7 +135,7 @@ public class MarketServeRecordAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) MarketServeRecordTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) MarketServeRecordTO to, BindingResult result) throws ActException {
         try {
             marketServeRecordAPI.update(to);
             return new ActResult("edit success!");
@@ -113,8 +151,8 @@ public class MarketServeRecordAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/fundModuleOpinion")
-    public Result fundModuleOpinion(MarketServeRecordTO to) throws ActException {
+    @PutMapping("v1/fundmodule")
+    public Result fundModuleOpinion(@Validated(MarketServeRecordTO.FUNDMODULE.class) MarketServeRecordTO to, BindingResult result) throws ActException {
         try {
             marketServeRecordAPI.fundModuleOpinion(to);
             return new ActResult("fundModuleOpinion success!");
@@ -130,8 +168,8 @@ public class MarketServeRecordAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/executiveOpinion")
-    public Result executiveOpinion(MarketServeRecordTO to) throws ActException {
+    @PutMapping("v1/executive")
+    public Result executiveOpinion(@Validated(MarketServeRecordTO.EXECUTIVE.class) MarketServeRecordTO to, BindingResult result) throws ActException {
         try {
             marketServeRecordAPI.executiveOpinion(to);
             return new ActResult("executiveOpinion success!");
@@ -148,7 +186,7 @@ public class MarketServeRecordAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/checkDetails/{id}")
+    @GetMapping("v1/checkdetail/{id}")
     public Result checkDetails(@PathVariable String id) throws ActException {
         try {
             MarketServeRecordBO bo =  marketServeRecordAPI.checkDetails(id);

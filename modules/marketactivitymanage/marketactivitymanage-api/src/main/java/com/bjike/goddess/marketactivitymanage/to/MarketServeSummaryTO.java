@@ -1,8 +1,15 @@
 package com.bjike.goddess.marketactivitymanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.marketactivitymanage.type.CycleType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 市场招待汇总
@@ -18,11 +25,13 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 项目组
      */
+    @Size(groups = {ADD.class, EDIT.class}, min = 1, message = "项目组数量必须大于0")
     private String[] projectGroups;
 
     /**
-     * 类型(计划:true,实际:false)
+     * 类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "类型不能为空")
     private Boolean type;
 
     /**
@@ -58,26 +67,31 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 发送间隔
      */
+    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "发送间隔最小为1")
     private Integer sendInterval;
 
     /**
      * 发送时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送时间格式不能为空")
     private CycleType cycle;
 
     /**
      * 汇总间隔
      */
+    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "汇总间隔最小为1")
     private Integer detailInterval;
 
     /**
      * 汇总时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总时间格式不能为空")
     private CycleType detailCycle;
 
     /**
      * 发送对象
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
     private String emails;
 
     /**
