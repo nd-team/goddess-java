@@ -225,4 +225,9 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<String> listGroup() throws SerException {
         return voucherGenerateSer.listGroup();
     }
+
+    @Override
+    public List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.findFundRecord(dto);
+    }
 }

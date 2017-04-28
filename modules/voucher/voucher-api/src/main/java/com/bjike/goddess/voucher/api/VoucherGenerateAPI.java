@@ -163,7 +163,7 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> collectGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> collectGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -172,7 +172,7 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> collectPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> collectPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -238,7 +238,7 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctTransGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctTransGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -247,7 +247,7 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctTransPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctTransPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -292,7 +292,7 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctCkGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctCkGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -301,10 +301,9 @@ public interface VoucherGenerateAPI {
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctCkPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctCkPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
-
 
 
     /**
@@ -325,44 +324,60 @@ public interface VoucherGenerateAPI {
 
     /**
      * 查询所有汇总一级科目
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listFirstSubject () throws  SerException {return null;}
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
 
     /**
      * 根据一级科目查询二级科目
+     *
      * @param firstSub 一级科目
      * @return
      * @throws SerException
      */
-    default List<String> listSubByFirst (String firstSub) throws  SerException {return null;}
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
 
     /**
      * 根据一级二级查询三级科目
-     * @param firstSub 一级科目
+     *
+     * @param firstSub  一级科目
      * @param secondSub 二级科目
      * @return
      * @throws SerException
      */
-    default List<String> listTubByFirst ( String firstSub ,  String secondSub) throws  SerException {return null;}
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总地区
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listArea () throws  SerException {return null;}
+    default List<String> listArea() throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总项目
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listProject () throws  SerException {return null;}
+    default List<String> listProject() throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总项目组
+     *
      * @return
      * @throws SerException
      */
@@ -378,5 +393,10 @@ public interface VoucherGenerateAPI {
     }
 
 
-
+    /**
+     * 查询资金流水记录即一级科目为银行存款或库存现金
+     *
+     * @return 资金流水记录
+     */
+    List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
 }

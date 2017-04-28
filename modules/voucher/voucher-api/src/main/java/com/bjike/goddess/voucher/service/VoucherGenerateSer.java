@@ -3,8 +3,8 @@ package com.bjike.goddess.voucher.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
-import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
 import java.util.List;
@@ -32,56 +32,77 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 记账凭证列表总条数
-     *
      */
     default Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
+
     /**
      * 记账凭证列表
+     *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {return null;}
+    default List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
+
     /**
-     *  添加
+     * 添加
+     *
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
     default List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
 
+
     /**
-     *  编辑
+     * 编辑
+     *
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO editVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
+    default VoucherGenerateBO editVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除
+     *
      * @param id id
      */
-    default void deleteVoucherGenerate(String id ) throws SerException {return;};
+    default void deleteVoucherGenerate(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
      * 审核列表总条数
-     *
      */
     default Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
+
     /**
      * 审核列表
+     *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> listAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {return null;}
+    default List<VoucherGenerateBO> listAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
 
 
     /**
-     *  拆分
+     * 拆分
+     *
      * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO split(VoucherGenerateTO voucherGenerateTO) throws SerException { return null;}
+    default VoucherGenerateBO split(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return null;
+    }
+
     /**
      * 审核
      *
@@ -153,7 +174,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> collectGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> collectGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -162,7 +183,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> collectPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> collectPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -227,7 +248,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctTransGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctTransGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -236,7 +257,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctTransPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctTransPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -279,7 +300,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctCkGroup (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctCkGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -288,7 +309,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      *
      * @return class VoucherGenerateBO
      */
-    default List<VoucherGenerateBO> ctCkPname (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+    default List<VoucherGenerateBO> ctCkPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
 
@@ -310,51 +331,72 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 查询所有汇总一级科目
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listFirstSubject () throws  SerException {return null;}
+    default List<String> listFirstSubject() throws SerException {
+        return null;
+    }
 
     /**
      * 根据一级科目查询二级科目
+     *
      * @param firstSub 一级科目
      * @return
      * @throws SerException
      */
-    default List<String> listSubByFirst (String firstSub) throws  SerException {return null;}
+    default List<String> listSubByFirst(String firstSub) throws SerException {
+        return null;
+    }
 
     /**
      * 根据一级二级查询三级科目
-     * @param firstSub 一级科目
+     *
+     * @param firstSub  一级科目
      * @param secondSub 二级科目
      * @return
      * @throws SerException
      */
-    default List<String> listTubByFirst ( String firstSub ,  String secondSub) throws  SerException {return null;}
+    default List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总地区
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listArea () throws  SerException {return null;}
+    default List<String> listArea() throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总项目
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listProject () throws  SerException {return null;}
+    default List<String> listProject() throws SerException {
+        return null;
+    }
 
     /**
      * 查询所有汇总项目组
+     *
      * @return
      * @throws SerException
      */
-    default List<String> listGroup () throws  SerException {return null;}
+    default List<String> listGroup() throws SerException {
+        return null;
+    }
 
-
-
-
-
+    /**
+     * 查询资金流水记录即一级科目为银行存款或库存现金
+     *
+     * @param dto  查询条件
+     * @return 资金流水记录
+     */
+    List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
 }
