@@ -22,6 +22,21 @@ import java.util.List;
 public interface TalkDetailSer extends Ser<TalkDetail, TalkDetailDTO> {
 
     /**
+     * 洽谈详情列表总条数
+     *
+     */
+    default Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 洽谈详情列表id
+     * @return class TalkDetailBO
+     */
+    default TalkDetailBO getOneById (String id) throws SerException {return null;}
+
+
+    
+    /**
      * 洽谈详情列表
      * @return class TalkDetailBO
      */

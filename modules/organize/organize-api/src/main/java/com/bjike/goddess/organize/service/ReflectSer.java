@@ -51,4 +51,48 @@ public interface ReflectSer extends Ser<Reflect, ReflectDTO> {
     default ReflectBO update(ReflectTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 删除
+     *
+     * @param id 体现类型数据id
+     * @return
+     * @throws SerException
+     */
+    default ReflectBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 关闭
+     *
+     * @param id 体现类型数据id
+     * @return
+     * @throws SerException
+     */
+    default ReflectBO close(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 开启
+     *
+     * @param id 体现类型数据id
+     * @return
+     * @throws SerException
+     */
+    default ReflectBO open(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 体现类型数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<ReflectBO> maps(ReflectDTO dto) throws SerException {
+        return null;
+    }
 }

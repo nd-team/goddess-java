@@ -27,7 +27,15 @@ public class TalkDetailApiImpl implements TalkDetailAPI {
     @Autowired
     private TalkDetailSer talkDetailSer;
 
+    @Override
+    public Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
+        return talkDetailSer.countInter(talkDetailDTO);
+    }
 
+    @Override
+    public TalkDetailBO getOneById(String id) throws SerException {
+        return talkDetailSer.getOneById(id);
+    }
     @Override
     public List<TalkDetailBO> listTalkDetail(TalkDetailDTO talkDetailDTO) throws SerException {
         return talkDetailSer.listTalkDetail(talkDetailDTO);

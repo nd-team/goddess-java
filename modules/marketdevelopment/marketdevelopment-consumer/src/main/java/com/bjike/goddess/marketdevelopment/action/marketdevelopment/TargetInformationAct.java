@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 确定目标信息
  *
@@ -41,9 +43,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(TargetInformationDTO dto) throws ActException {
+    public Result maps(TargetInformationDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.maps(dto), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.maps(dto), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +59,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) TargetInformationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) TargetInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.save(to), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.save(to), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +75,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) TargetInformationTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) TargetInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.update(to), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.update(to), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +91,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(TargetInformationTO to) throws ActException {
+    public Result delete(TargetInformationTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.delete(to), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.delete(to), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(String type) throws ActException {
+    public Result findByType(String type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByType(type), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByType(type), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/findByCourse")
-    public Result findByCourse(String course) throws ActException {
+    public Result findByCourse(String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByCourse(course), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByCourse(course), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/findByCourseType")
-    public Result findByCourseType(String type, String course) throws ActException {
+    public Result findByCourseType(String type, String course, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByCourseType(type, course), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByCourseType(type, course), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -154,9 +156,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/findByArea")
-    public Result findByArea(String area) throws ActException {
+    public Result findByArea(String area, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByArea(area), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.findByArea(area), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -170,9 +172,9 @@ public class TargetInformationAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.getById(id), TargetInformationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(targetInformationAPI.getById(id), TargetInformationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -8,10 +8,12 @@ import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -39,15 +41,26 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketResearchBO update(MarketResearchTO to) throws SerException {
-        MarketResearch entity = BeanTransform.copyProperties(to, MarketResearch.class);
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, MarketResearchBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                MarketResearch entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, MarketResearchBO.class);
+            } catch (SerException e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketResearchBO delete(MarketResearchTO to) throws SerException {
         MarketResearch entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, MarketResearchBO.class);
     }

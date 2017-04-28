@@ -57,7 +57,7 @@ public class PositionInstruction extends BaseEntity {
     /**
      * 操作类型
      */
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organize_position_instruction_operate",
             joinColumns = {@JoinColumn(name = "instruction_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位说明书'")},
             inverseJoinColumns = {@JoinColumn(nullable = false, name = "operate_id", columnDefinition = "VARCHAR(36) COMMENT '操作类型'")})
@@ -66,7 +66,7 @@ public class PositionInstruction extends BaseEntity {
     /**
      * 体现类别
      */
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organize_position_instruction_reflect",
             joinColumns = {@JoinColumn(name = "instruction_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位说明书'")},
             inverseJoinColumns = {@JoinColumn(nullable = false, name = "reflect_id", columnDefinition = "VARCHAR(36) COMMENT '体现类别'")})

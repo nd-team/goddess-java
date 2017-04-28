@@ -27,13 +27,13 @@ public class PersonnelQualificationTO extends BaseTO {
      * 劳动关系类型
      */
     @NotNull(message = "劳动关系类型不能为空", groups = {ADD.class, EDIT.class})
-    private String labor_id;
+    private String laborId;
 
     /**
      * 社保购买类型
      */
     @NotNull(message = "社保购买类型不能为空", groups = {ADD.class, EDIT.class})
-    private String social_id;
+    private String socialId;
 
     /**
      * 资质证书1
@@ -82,20 +82,20 @@ public class PersonnelQualificationTO extends BaseTO {
         this.username = username;
     }
 
-    public String getLabor_id() {
-        return labor_id;
+    public String getLaborId() {
+        return laborId;
     }
 
-    public void setLabor_id(String labor_id) {
-        this.labor_id = labor_id;
+    public void setLaborId(String laborId) {
+        this.laborId = laborId;
     }
 
-    public String getSocial_id() {
-        return social_id;
+    public String getSocialId() {
+        return socialId;
     }
 
-    public void setSocial_id(String social_id) {
-        this.social_id = social_id;
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
     }
 
     public String getCertificateOne() {

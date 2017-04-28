@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.service.ArrangementSer;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,21 @@ public class ArrangementApiImpl implements ArrangementAPI {
     @Override
     public List<ArrangementBO> findChild(String id) throws SerException {
         return arrangementSer.findChild(id);
+    }
+
+    @Override
+    public ArrangementBO delete(String id) throws SerException {
+        return arrangementSer.delete(id);
+    }
+
+    @Override
+    public List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
+        return arrangementSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ArrangementDTO dto = new ArrangementDTO();
+        return arrangementSer.count(dto);
     }
 }

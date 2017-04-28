@@ -66,11 +66,11 @@ public interface AnnualApplyAPI {
     /**
      * 根据年假信息查询年假申请记录
      *
-     * @param info_id 年假信息ID
+     * @param infoId 年假信息ID
      * @return
      * @throws SerException
      */
-    default List<AnnualApplyBO> findByInfo(String info_id) throws SerException {
+    default List<AnnualApplyBO> findByInfo(String infoId) throws SerException {
         return null;
     }
 

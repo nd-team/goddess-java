@@ -40,12 +40,6 @@ public class DesignNumberInfoTO  extends BaseTO {
      */
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -76,13 +70,5 @@ public class DesignNumberInfoTO  extends BaseTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

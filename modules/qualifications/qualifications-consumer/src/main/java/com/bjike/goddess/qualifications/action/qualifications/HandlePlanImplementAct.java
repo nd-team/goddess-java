@@ -82,14 +82,14 @@ public class HandlePlanImplementAct {
     /**
      * 根据计划阶段ID集合查询实施工作记录
      *
-     * @param stage_ids 计划阶段ID
+     * @param stageIds 计划阶段ID
      * @return class HandlePlanImplementVO
      * @version v1
      */
     @GetMapping("v1/findByStage")
-    public Result findByStageIds(String[] stage_ids) throws ActException {
+    public Result findByStageIds(String[] stageIds) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStageIds(stage_ids), HandlePlanImplementVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStageIds(stageIds), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

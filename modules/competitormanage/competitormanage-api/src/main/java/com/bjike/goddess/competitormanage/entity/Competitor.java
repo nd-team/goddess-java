@@ -92,7 +92,7 @@ public class Competitor extends BaseEntity {
     /**
      * 其他备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '其他备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '其他备注'")
     private String remark;
 
     /**

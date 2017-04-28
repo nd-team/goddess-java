@@ -38,6 +38,22 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     private CooperCapabilityAPI cooperCapabilityAPI;
 
     @Override
+    public Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
+        Long count =  super.count(talkDetailDTO);
+        return count;
+    }
+
+    @Override
+    public TalkDetailBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        TalkDetail talkDetail = super.findById(id);
+
+        return BeanTransform.copyProperties(talkDetail, TalkDetailBO.class);
+    }
+    
+    @Override
     public List<TalkDetailBO> listTalkDetail(TalkDetailDTO talkDetailDTO) throws SerException {
         List<TalkDetail> list = super.findByCis(talkDetailDTO, true);
 

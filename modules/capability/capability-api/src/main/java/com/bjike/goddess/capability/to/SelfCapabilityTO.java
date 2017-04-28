@@ -14,11 +14,13 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class SelfCapabilityTO extends BaseTO {
 
-    public interface TestAdd{}
+    public interface TestAdd {
+    }
+
     /**
      * 姓名
      */
-    @NotBlank(groups = SelfCapabilityTO.TestAdd.class ,message = "姓名不能为空")
+    @NotBlank(groups = SelfCapabilityTO.TestAdd.class, message = "姓名不能为空")
     private String name;
 
     /**
@@ -71,9 +73,9 @@ public class SelfCapabilityTO extends BaseTO {
      */
     private String qqOrWechat;
 
-/**
- * 籍贯
- */
+    /**
+     * 籍贯
+     */
     private String natives;
 
     /**

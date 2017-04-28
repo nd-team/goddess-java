@@ -20,6 +20,20 @@ import java.util.List;
  */
 public interface FirstSubjectSer extends Ser<FirstSubject, FirstSubjectDTO> {
 
+    /**
+     * 一级科目列表总条数
+     *
+     */
+    default Long countFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取一级科目列表
+     * @return class FirstSubjectBO
+     */
+    default FirstSubjectBO getOneById(String id) throws SerException {return null;}
+
 
     /**
      * 一级科目列表

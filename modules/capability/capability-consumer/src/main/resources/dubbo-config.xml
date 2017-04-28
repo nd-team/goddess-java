@@ -22,5 +22,6 @@
 	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.capability.api.CollectEmailAPI" />
 	<dubbo:reference  validation="true" id="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
 	<dubbo:reference  validation="true" id="selfCapabilityApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilityAPI" />
+	<dubbo:reference  validation="true" id="selfCapabilitySocialApiImpl" interface="com.bjike.goddess.capability.api.SelfCapabilitySocialAPI" />
 
 </beans>

@@ -44,15 +44,9 @@ public class Arrangement extends BaseEntity {
     private Status status;
 
     /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "DATETIME COMMENT '创建时间'", nullable = false)
-    private LocalDateTime createTime;
-
-    /**
      * 上级层级
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(columnDefinition = "VARCHAR(36) COMMENT '上级层级'", name = "parent_id")
     private Arrangement parent;
 
@@ -96,11 +90,4 @@ public class Arrangement extends BaseEntity {
         this.status = status;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

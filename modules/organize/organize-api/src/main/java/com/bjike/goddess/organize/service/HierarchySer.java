@@ -33,7 +33,7 @@ public interface HierarchySer extends Ser<Hierarchy, HierarchyDTO> {
     /**
      * 保存体系
      *
-     * @param to
+     * @param to 体系传输对象
      * @return
      * @throws SerException
      */
@@ -44,11 +44,55 @@ public interface HierarchySer extends Ser<Hierarchy, HierarchyDTO> {
     /**
      * 修改体系
      *
-     * @param to
+     * @param to 体系传输对象
      * @return
      * @throws SerException
      */
     default HierarchyBO update(HierarchyTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 体系数据id
+     * @return
+     * @throws SerException
+     */
+    default HierarchyBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id 体系数据id
+     * @return
+     * @throws SerException
+     */
+    default HierarchyBO congeal(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id 体系数据id
+     * @return
+     * @throws SerException
+     */
+    default HierarchyBO thaw(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 体系数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<HierarchyBO> maps(HierarchyDTO dto) throws SerException {
         return null;
     }
 

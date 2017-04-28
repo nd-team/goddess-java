@@ -18,7 +18,7 @@ public class HandlePlanImplementVO {
     /**
      * 办理计划阶段
      */
-    private String stage_id;
+    private String stageId;
 
     /**
      * 实施内容
@@ -54,12 +54,12 @@ public class HandlePlanImplementVO {
         this.id = id;
     }
 
-    public String getStage_id() {
-        return stage_id;
+    public String getStageId() {
+        return stageId;
     }
 
-    public void setStage_id(String stage_id) {
-        this.stage_id = stage_id;
+    public void setStageId(String stageId) {
+        this.stageId = stageId;
     }
 
     public String getContent() {

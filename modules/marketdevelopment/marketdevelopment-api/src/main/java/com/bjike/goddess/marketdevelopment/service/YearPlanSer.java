@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
@@ -74,5 +75,14 @@ public interface YearPlanSer extends Ser<YearPlan, YearPlanDTO> {
         return null;
     }
 
+    /**
+     * 获取年计划选择对象
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<YearPlanChoiceBO> getChoice() throws SerException {
+        return null;
+    }
 
 }

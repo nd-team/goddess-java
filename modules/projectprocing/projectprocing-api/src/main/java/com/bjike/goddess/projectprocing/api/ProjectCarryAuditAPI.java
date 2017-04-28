@@ -26,6 +26,14 @@ public interface ProjectCarryAuditAPI {
         return null;
     }
     /**
+     * 根据id获取项目实施审核列表
+     * @return class ProjectCarryAuditBO
+     */
+    default ProjectCarryAuditBO getOneById(String id) throws SerException {return null;}
+
+
+
+    /**
      * 项目实施审核列表
      * @return class ProjectCarryAuditBO
      */

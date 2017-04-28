@@ -64,14 +64,14 @@ public class SurveyQuestionnaireOptionUserAct {
     /**
      * 根据选项查询问卷填写记录
      *
-     * @param option_id 调研问卷选项数据id
+     * @param optionId 调研问卷选项数据id
      * @return class SurveyQuestionnaireOptionUserVO
      * @version v1
      */
-    @GetMapping("v1/findByOption/{option_id}")
-    public Result findByOption(@PathVariable String option_id) throws ActException {
+    @GetMapping("v1/findByOption")
+    public Result findByOption(String optionId) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionUserAPI.findByOption(option_id), SurveyQuestionnaireOptionUserVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionUserAPI.findByOption(optionId), SurveyQuestionnaireOptionUserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -37,7 +37,7 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
 
     private SurveyQuestionnaireUserBO transformBO(SurveyQuestionnaireUser entity) {
         SurveyQuestionnaireUserBO bo = BeanTransform.copyProperties(entity, SurveyQuestionnaireUserBO.class);
-        bo.setActualize_id(entity.getActualize().getId());
+        bo.setActualizeId(entity.getActualize().getId());
         bo.setQuestionnaireName(entity.getActualize().getQuestionnaire());
         return bo;
     }
@@ -54,7 +54,7 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
     public SurveyQuestionnaireUserBO save(SurveyQuestionnaireUserTO to) throws SerException {
         SurveyQuestionnaireUser entity = new SurveyQuestionnaireUser();
         entity.setUser(userAPI.currentUser().getUsername());
-        entity.setActualize(surveyActualizeSer.findById(to.getActualize_id()));
+        entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -68,9 +68,9 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
     }
 
     @Override
-    public List<SurveyQuestionnaireUserBO> findByActualize(String actualize_id) throws SerException {
+    public List<SurveyQuestionnaireUserBO> findByActualize(String actualizeId) throws SerException {
         SurveyQuestionnaireUserDTO dto = new SurveyQuestionnaireUserDTO();
-        dto.getConditions().add(Restrict.eq("actualize.id", actualize_id));
+        dto.getConditions().add(Restrict.eq("actualize.id", actualizeId));
         List<SurveyQuestionnaireUser> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

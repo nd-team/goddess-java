@@ -14,6 +14,7 @@ import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
 import com.bjike.goddess.businessinteraction.entity.CollectEmail;
 import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -48,6 +49,21 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Autowired
     private TalkDetailSer talkDetailSer;
 
+    @Override
+    public Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
+        Long count =  super.count(collectEmailDTO);
+        return count;
+    }
+
+    @Override
+    public CollectEmailBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        CollectEmail collectEmail = super.findById(id);
+
+        return BeanTransform.copyProperties(collectEmail, CollectEmailBO.class);
+    }
 
     @Cacheable
     @Override
@@ -173,6 +189,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<String> areas = Arrays.asList(works);
         StringBuffer sb = new StringBuffer("");
         for(String str : areas ) {
+            collectDataList = new ArrayList<>();
             sb.append( str.replaceAll(str,"'"+str+"'") ).append(",");
 
             String[] fields = new String[]{"counts","remark"};
@@ -251,6 +268,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         }
 
         //合计
+        collectDataList = new ArrayList<>();
         calculateTotal(sb.substring(0,sb.lastIndexOf(",")) , collectDataList , collectEmailBOList );
         return collectEmailBOList;
     }
@@ -267,8 +285,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectDataList.add( collectData );
 
         //留言数量
-        String sql = "select count(*) as counts , '留言数量' as remark from businessinteraction_leavingmessage  bl " +
-                "  INNER JOIN  businessinteraction_interactionrelation bi  on bl.interactionRelation_id = bi.id where bi.area in ("+area+")  ";
+        String sql = " select count(*) as counts , '留言数量' as remark  " +
+                " from businessinteraction_leavingmessage  bl " +
+                " INNER JOIN  businessinteraction_interactionrelation bi  on bl.interactionRelation_id = bi.id where bi.area in ( "+area+")";
         List<CollectEmailBO> collectEmailBOS = leavingMessageSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("留言数量");
@@ -326,7 +345,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectDataList.add( collectData );
 
         CollectEmailBO cbo = new CollectEmailBO();
-        cbo.setRemark( "合作" );
+        cbo.setRemark( "合计" );
         cbo.setCollectDataList( collectDataList );
         collectEmailBOList.add( cbo );
     }

@@ -51,13 +51,13 @@ public class CompetitorCollect extends BaseEntity {
     /**
      * 发送间隔类型
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔类型'")
+    @Column(name = "sendIntervalType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔类型'")
     private SendIntervalType sendIntervalType;
 
     /**
      * 发送间隔
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔'")
+    @Column(name = "sendInterval", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔'")
     private Integer sendInterval;
 
     /**

@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 周计划
  *
@@ -40,9 +42,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) WeekPlanTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) WeekPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.save(to), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.save(to), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -56,9 +58,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) WeekPlanTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) WeekPlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.update(to), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.update(to), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -72,9 +74,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(WeekPlanTO to) throws ActException {
+    public Result delete(WeekPlanTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.delete(to), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.delete(to), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,9 +90,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByMonth/{id}")
-    public Result findByMonth(@PathVariable String id) throws ActException {
+    public Result findByMonth(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByMonth(id), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByMonth(id), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +107,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @GetMapping("v1/findByDate")
-    public Result findByDate(String startDate, String endDate) throws ActException {
+    public Result findByDate(String startDate, String endDate, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByDate(startDate, endDate), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.findByDate(startDate, endDate), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -122,9 +124,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.getById(id), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.getById(id), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,9 +140,9 @@ public class WeekPlanAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(WeekPlanDTO dto) throws ActException {
+    public Result maps(WeekPlanDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.maps(dto), WeekPlanVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(weekPlanAPI.maps(dto), WeekPlanVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -29,7 +29,7 @@ public class AccountDTO extends BaseDTO {
     /**
      * 二级科目名
      */
-    @NotBlank(groups = AccountDTO.TESTSearchSecond.class, message = "二级科目不能为空")
+    @NotBlank(groups = {AccountDTO.TESTSearchSecond.class}, message = "二级科目不能为空")
     private String secondSubject;
 
     public String getFirstSubject() {

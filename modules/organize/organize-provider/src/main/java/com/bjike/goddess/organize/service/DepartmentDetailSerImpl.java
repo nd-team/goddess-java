@@ -11,8 +11,7 @@ import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import com.bjike.goddess.user.api.DepartmentAPI;
-import com.bjike.goddess.user.dto.DepartmentDTO;
-import com.bjike.goddess.user.entity.Department;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 部门详细业务实现
@@ -44,13 +42,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     private DepartmentAPI departmentAPI;
 
     private DepartmentDetailBO transformationToBO(DepartmentDetail entity) throws SerException {
-        DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class, true);
-        bo.setDepartment_id(entity.getDepartment_id());
-        bo.setHierarchy_id(entity.getHierarchy().getId());
-//        DepartmentBO department = departmentAPI.findById(bo.getDepartment_id());
+        DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class);
+        bo.setHierarchyId(entity.getHierarchy().getId());
         bo.setHierarchyName(entity.getHierarchy().getHierarchy());
         bo.setHierarchyNumber(entity.getHierarchy().getSerialNumber());
-//        bo.setDepartment(department.getName());
         bo.setShowNumber(String.format("%s-%s", entity.getHierarchy().getSerialNumber(), entity.getSerialNumber()));
         return bo;
     }
@@ -69,35 +64,25 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
 
 
     @Override
-    public List<DepartmentDetailBO> findByHierarchy(String hierarchy_id) throws SerException {
+    public List<DepartmentDetailBO> findByHierarchy(String hierarchyId) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
-        dto.getConditions().add(Restrict.eq("hierarchy_id", hierarchy_id));
+        dto.getConditions().add(Restrict.eq("hierarchy.id", hierarchyId));
         return this.transformationToBOList(super.findByCis(dto));
     }
 
     @Override
     public List<DepartmentDetailBO> findStatus() throws SerException {
-        DepartmentDTO departmentDTO = new DepartmentDTO();
+        DepartmentDetailDTO departmentDTO = new DepartmentDetailDTO();
         departmentDTO.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        List<Department> list = new ArrayList<>(0);//@TODO 等待部门接口修改
-        if (list.size() > 0)
-            return this.findByDepartmentIds(list.stream().map(Department::getId).collect(Collectors.toList()));
-        else
-            return null;
+        List<DepartmentDetail> list = super.findByCis(departmentDTO);
+        return this.transformationToBOList(list);
     }
 
     @Override
     public List<DepartmentDetailBO> findByDepartmentIds(List<String> ids) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
-        dto.getConditions().add(Restrict.in("department_id", ids));
+        dto.getConditions().add(Restrict.in("id", ids));
         return this.transformationToBOList(super.findByCis(dto));
-    }
-
-    @Override
-    public DepartmentDetailBO findByDepartment(String id) throws SerException {
-        DepartmentDetailDTO dto = new DepartmentDetailDTO();
-        dto.getConditions().add(Restrict.eq("department_id", id));
-        return this.transformationToBO(super.findOne(dto));
     }
 
     @Override
@@ -109,8 +94,11 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
-        department.setHierarchy(hierarchySer.findById(to.getHierarchy_id()));
+        department.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
+        if (department.getHierarchy() == null)
+            throw new SerException("体系不能为空");
         department.setCreateTime(LocalDateTime.now());
+        department.setStatus(Status.THAW);
         super.save(department);
         return this.transformationToBO(department);
     }
@@ -118,9 +106,55 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
-        DepartmentDetail entity = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
-        entity.setHierarchy(hierarchySer.findById(to.getHierarchy_id()));
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        DepartmentDetail entity = super.findById(to.getId());
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
+        if (entity.getHierarchy() == null)
+            throw new SerException("体系不能为空");
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformationToBO(entity);
+    }
+
+    @Override
+    public DepartmentDetailBO congeal(String id) throws SerException {
+        DepartmentDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        entity.setStatus(Status.CONGEAL);
+        super.update(entity);
+        return this.transformationToBO(entity);
+    }
+
+    @Override
+    public DepartmentDetailBO thaw(String id) throws SerException {
+        DepartmentDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        entity.setStatus(Status.THAW);
+        super.update(entity);
+        return this.transformationToBO(entity);
+    }
+
+    @Override
+    public DepartmentDetailBO delete(String id) throws SerException {
+        DepartmentDetail entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        try {
+            super.remove(entity);
+        } catch (SerException e) {
+            throw new SerException("存在依赖关系无法删除");
+        }
+        return null;
+    }
+
+    @Override
+    public DepartmentDetailBO getById(String id) throws SerException {
+        return this.transformationToBO(super.findById(id));
     }
 }

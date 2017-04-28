@@ -17,7 +17,7 @@ public class MonthPlanBO extends BaseBO {
     /**
      * 年计划ID
      */
-    private String year_id;
+    private String yearId;
 
     /**
      * 年
@@ -89,12 +89,12 @@ public class MonthPlanBO extends BaseBO {
      */
     private Double total;
 
-    public String getYear_id() {
-        return year_id;
+    public String getYearId() {
+        return yearId;
     }
 
-    public void setYear_id(String year_id) {
-        this.year_id = year_id;
+    public void setYearId(String yearId) {
+        this.yearId = yearId;
     }
 
     public Integer getYearNumber() {

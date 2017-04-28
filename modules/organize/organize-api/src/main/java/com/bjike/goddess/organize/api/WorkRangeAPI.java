@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.DepartmentWorkRangeBO;
+import com.bjike.goddess.organize.bo.DesignNumberInfoBO;
 import com.bjike.goddess.organize.bo.WorkRangeBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
@@ -116,5 +117,49 @@ public interface WorkRangeAPI {
     default WorkRangeBO update(WorkRangeTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 删除
+     *
+     * @param id 工作范围数据id
+     * @return
+     * @throws SerException
+     */
+    default WorkRangeBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 工作范围设置数据传输
+     * @return
+     * @throws SerException
+     */
+    default List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询工作范围数据
+     *
+     * @param id 工作范围数据id
+     * @return
+     * @throws SerException
+     */
+    default WorkRangeBO findById(String id) throws SerException {
+        return null;
+    }
+
 
 }

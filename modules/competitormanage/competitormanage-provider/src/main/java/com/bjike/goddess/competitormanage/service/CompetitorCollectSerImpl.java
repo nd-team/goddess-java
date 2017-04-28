@@ -47,6 +47,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         CompetitorCollect model = BeanTransform.copyProperties(to, CompetitorCollect.class, true);
         model.setOperateUser(userAPI.currentUser().getUsername());
         super.save(model);
+        to.setId(model.getId());
         return BeanTransform.copyProperties(to, CompetitorCollectBO.class);
     }
 
@@ -61,7 +62,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
             } else {
-                throw new SerException("更新对象不能为空");
+                throw new SerException("更新对象不能为空!");
             }
         } else {
             throw new SerException("更新ID不能为空!");
@@ -190,6 +191,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         List<CompetitorCollect> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, CompetitorCollectBO.class);
     }

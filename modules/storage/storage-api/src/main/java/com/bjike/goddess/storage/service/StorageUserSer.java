@@ -51,7 +51,7 @@ public interface StorageUserSer extends Ser<StorageUser, StorageUserDTO> {
      * @return
      * @throws SerException
      */
-    default StorageUserBO getCurrentUser() throws SerException{
+    default StorageUserBO getCurrentUser(String storageToken) throws SerException{
         return null;
     }
 
@@ -60,7 +60,7 @@ public interface StorageUserSer extends Ser<StorageUser, StorageUserDTO> {
      * @return
      * @throws SerException
      */
-    default String getCurrentModule() throws SerException{
+    default String getCurrentModule(String storageToken) throws SerException{
         return null;
     }
 

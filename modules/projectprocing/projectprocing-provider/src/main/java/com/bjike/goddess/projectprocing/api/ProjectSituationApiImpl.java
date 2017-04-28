@@ -32,6 +32,11 @@ public class ProjectSituationApiImpl implements ProjectSituationAPI {
     }
 
     @Override
+    public ProjectSituationBO getOneById(String id) throws SerException {
+        return projectSituationSer.getOneById(id);
+    }
+
+    @Override
     public List<ProjectSituationBO> listProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
         return projectSituationSer.listProjectSituation(projectSituationDTO);
     }
