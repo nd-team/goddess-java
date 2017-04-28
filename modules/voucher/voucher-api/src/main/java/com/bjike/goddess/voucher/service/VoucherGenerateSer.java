@@ -354,6 +354,13 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> listGroup () throws  SerException {return null;}
 
 
+    /**
+     * 根据日期、项目组、地区、项目统计记账凭证
+     *
+     */
+    default List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO,String condition) throws SerException {
+        return null;
+    }
 
 
 
