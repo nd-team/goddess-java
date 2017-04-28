@@ -37,9 +37,23 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return bos;
     }
 
+    /**
+     * 检测体系编号是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(HierarchyTO to) throws SerException {
+        HierarchyDTO dto = new HierarchyDTO();
+        dto.getConditions().add(Restrict.eq("serialNumber", to.getSerialNumber()));
+        if (super.findByCis(dto).size() > 0)
+            throw new SerException("该编号已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HierarchyBO save(HierarchyTO to) throws SerException {
+        this.checkUnique(to);
         Hierarchy hierarchy = BeanTransform.copyProperties(to, Hierarchy.class);
         hierarchy.setCreateTime(LocalDateTime.now());
         hierarchy.setStatus(Status.THAW);
@@ -55,6 +69,8 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         Hierarchy entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getSerialNumber().equals(to.getSerialNumber()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

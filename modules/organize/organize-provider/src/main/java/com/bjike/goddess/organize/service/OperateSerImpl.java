@@ -37,9 +37,23 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         return bos;
     }
 
+    /**
+     * 检查操作类型是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(OperateTO to) throws SerException {
+        OperateDTO dto = new OperateDTO();
+        dto.getConditions().add(Restrict.eq("name", to.getName()));
+        if (super.findOne(dto) != null)
+            throw new SerException(to.getName() + ":该操作类型已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OperateBO save(OperateTO to) throws SerException {
+        this.checkUnique(to);
         Operate operate = BeanTransform.copyProperties(to, Operate.class);
         operate.setStatus(Status.THAW);
         super.save(operate);
@@ -54,6 +68,8 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         Operate entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getName().equals(to.getName()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

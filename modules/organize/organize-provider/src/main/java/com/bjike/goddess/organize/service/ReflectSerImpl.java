@@ -36,9 +36,23 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         return BeanTransform.copyProperties(super.findByCis(dto), ReflectBO.class);
     }
 
+    /**
+     * 检测是否有重复体现类型
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(ReflectTO to) throws SerException {
+        ReflectDTO dto = new ReflectDTO();
+        dto.getConditions().add(Restrict.eq("name", to.getName()));
+        if (super.findOne(dto) != null)
+            throw new SerException(to.getName() + ":该体现类型已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ReflectBO save(ReflectTO to) throws SerException {
+        this.checkUnique(to);
         Reflect reflect = BeanTransform.copyProperties(to, Reflect.class);
         reflect.setCreateTime(LocalDateTime.now());
         reflect.setStatus(Status.THAW);
@@ -54,6 +68,8 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         Reflect entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getName().equals(to.getName()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

@@ -9,6 +9,7 @@ import com.bjike.goddess.organize.bo.AngleBO;
 import com.bjike.goddess.organize.dto.AngleDTO;
 import com.bjike.goddess.organize.entity.Angle;
 import com.bjike.goddess.organize.to.AngleTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,17 +40,35 @@ public class AngleSerImpl extends ServiceImpl<Angle, AngleDTO> implements AngleS
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AngleBO saveAsTo(AngleTO to) throws SerException {
+        this.checkUnique(to);
         Angle angle = BeanTransform.copyProperties(to, Angle.class, true);
         super.save(angle);
         return BeanTransform.copyProperties(angle, AngleBO.class);
     }
 
+    /**
+     * 检测角度是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(AngleTO to) throws SerException {
+        AngleDTO dto = new AngleDTO();
+        dto.getConditions().add(Restrict.eq("name", to.getName()));
+        if (super.findOne(dto) != null)
+            throw new SerException(to.getName() + ":该角度已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void updateAsTo(AngleTO to) throws SerException {
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException();
         Angle angle = super.findById(to.getId());
         if (null == angle)
             throw new SerException("数据对象不存在");
+        if (!angle.getName().equals(to.getName()))
+            this.checkUnique(to);
         angle.setName(to.getName());
         angle.setDescription(to.getDescription());
         angle.setModifyTime(LocalDateTime.now());

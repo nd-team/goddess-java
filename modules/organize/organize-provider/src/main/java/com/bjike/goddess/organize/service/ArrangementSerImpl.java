@@ -42,6 +42,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO save(ArrangementTO to) throws SerException {
+        this.checkUnique(to);
         Arrangement arrangement = BeanTransform.copyProperties(to, Arrangement.class);
         arrangement.setCreateTime(LocalDateTime.now());
         arrangement.setStatus(Status.THAW);
@@ -68,12 +69,27 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         return layer;
     }
 
+    /**
+     * 检测岗位层级编号是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(ArrangementTO to) throws SerException {
+        ArrangementDTO dto = new ArrangementDTO();
+        dto.getConditions().add(Restrict.eq("serialNumber", to.getSerialNumber()));
+        if (null != super.findByCis(dto))
+            throw new SerException(to.getSerialNumber() + ":该编号已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO update(ArrangementTO to) throws SerException {
         Arrangement arrangement = super.findById(to.getId());
         if (null == arrangement)
             throw new SerException("数据对象不存在");
+        if (!arrangement.getSerialNumber().equals(to.getSerialNumber()))
+            this.checkUnique(to);
         if (StringUtils.isNotBlank(to.getParentId())) arrangement.setParent(super.findById(to.getParentId()));
         arrangement.setArrangement(to.getArrangement());
         arrangement.setSerialNumber(to.getSerialNumber());

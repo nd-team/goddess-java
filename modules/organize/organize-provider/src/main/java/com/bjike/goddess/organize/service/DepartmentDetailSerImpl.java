@@ -5,12 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.HierarchyAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
-import com.bjike.goddess.user.api.DepartmentAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,13 +31,7 @@ import java.util.List;
 public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, DepartmentDetailDTO> implements DepartmentDetailSer {
 
     @Autowired
-    private HierarchyAPI hierarchyAPI;
-
-    @Autowired
     private HierarchySer hierarchySer;
-
-    @Autowired
-    private DepartmentAPI departmentAPI;
 
     private DepartmentDetailBO transformationToBO(DepartmentDetail entity) throws SerException {
         DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class);
@@ -90,9 +82,26 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return this.transformationToBO(super.findById(id));
     }
 
+    /**
+     * 检测部门或部门编号是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(DepartmentDetailTO to) throws SerException {
+        String[] fields = {"id", "department"};
+        StringBuilder sql = new StringBuilder(" SELECT ");
+        sql.append(" id,department ").append(" FROM organize_department_detail ");
+        sql.append(" WHERE serialNumber='").append(to.getSerialNumber()).append("' OR department='").append(to.getDepartment()).append("'");
+        List<DepartmentDetailBO> list = super.findBySql(sql.toString(), DepartmentDetailBO.class, fields);
+        if (list.size() > 0)
+            throw new SerException("部门或编号已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
+        this.checkUnique(to);
         DepartmentDetail department = BeanTransform.copyProperties(to, DepartmentDetail.class, true);
         department.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (department.getHierarchy() == null)
@@ -111,6 +120,8 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getSerialNumber().equals(to.getSerialNumber()) || !entity.getDepartment().equals(to.getDepartment()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (entity.getHierarchy() == null)
