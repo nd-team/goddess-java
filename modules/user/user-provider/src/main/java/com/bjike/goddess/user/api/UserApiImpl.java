@@ -6,6 +6,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.UserTO;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +51,8 @@ public class UserApiImpl implements UserAPI {
 
 
     @Override
-    public UserBO add(UserTO userTO) throws SerException {
-        return userSer.add(userTO);
+    public UserBO add(TransactionContext context,UserTO userTO) throws SerException {
+        return userSer.add(context,userTO);
     }
 
     @Override
