@@ -1,6 +1,5 @@
 package com.bjike.goddess.qualifications.action.qualifications;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -16,18 +15,13 @@ import com.bjike.goddess.qualifications.to.QualificationsCollectFilterTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 import com.bjike.goddess.qualifications.vo.QualificationsCollectVO;
 import com.bjike.goddess.storage.api.FileAPI;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 资质办理进度汇总
@@ -168,8 +162,6 @@ public class QualificationsCollectAct extends BaseFileAction {
     @PostMapping("v1/uploadEnclosure/{id}")
     public Result uploadEnclosure(HttpServletRequest request, @PathVariable String id) throws ActException {
         try {
-            Object o = RpcContext.getContext().getAttachment("storageToken");
-
             QualificationsCollectBO collectBO = qualificationsCollectAPI.getById(id);
             if (null == collectBO)
                 throw new SerException("数据id错误");
@@ -179,17 +171,7 @@ public class QualificationsCollectAct extends BaseFileAction {
             if (StringUtils.isNotBlank(collectBO.getCertificate()))
                 path.append("/").append(collectBO.getCompany());
 
-            if (o != null)
-                RpcContext.getContext().setAttachment("storageToken", o.toString());
-
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-
-            for (MultipartFile multipartFile : multipartFiles) {
-                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                map.put(multipartFile.getOriginalFilename(), bytes);
-            }
-            fileAPI.upload(map, path.toString());
+            fileAPI.upload(this.getInputStreams(request, path.toString()));
             return new ActResult("上传成功");
         } catch (Exception e) {
             throw new ActException(e.getMessage());
