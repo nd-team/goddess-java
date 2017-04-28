@@ -8,12 +8,14 @@ import com.bjike.goddess.businessproject.vo.DispatchSheetVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -41,34 +43,17 @@ public class DispatchSheetAction {
      * @version v1
      */
     @GetMapping("v1/listDispatchSheet")
-    public Result findListDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws ActException {
+    public Result findListDispatchSheet(DispatchSheetDTO dispatchSheetDTO, HttpServletRequest request) throws ActException {
         try {
             List<DispatchSheetVO> dispatchSheetVOList = BeanTransform.copyProperties(
-                    dispatchSheetAPI.listDispatchSheet(dispatchSheetDTO), DispatchSheetVO.class, true);
+                    dispatchSheetAPI.listDispatchSheet(dispatchSheetDTO), DispatchSheetVO.class, request);
             return ActResult.initialize(dispatchSheetVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 搜索
-     *
-     * @param dispatchSheetDTO 项目签订与立项信息dto
-     * @return class DispatchSheetVO
-     * @des 分页搜索获取所有项目签订与立项
-     * @version v1
-     */
-    @GetMapping("v1/searchDispatchSheet")
-    public Result searchListDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws ActException {
-        try {
-            List<DispatchSheetVO> baseInfoManageVOList = BeanTransform.copyProperties(
-                    dispatchSheetAPI.searchDispatchSheet(dispatchSheetDTO), DispatchSheetVO.class, true);
-            return ActResult.initialize(baseInfoManageVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
      * 添加项目派工单
@@ -78,6 +63,7 @@ public class DispatchSheetAction {
      * @des 添加项目派工单
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addDispatchSheet(@Validated DispatchSheetTO dispatchSheetTO) throws ActException {
         try {
@@ -97,6 +83,7 @@ public class DispatchSheetAction {
      * @des 添加项目派工单
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result editDispatchSheet(@Validated DispatchSheetTO dispatchSheetTO) throws ActException {
         try {
@@ -114,6 +101,7 @@ public class DispatchSheetAction {
      * @des 根据id删除项目派工单信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteDispatchSheet(@PathVariable String id) throws ActException {
         try {

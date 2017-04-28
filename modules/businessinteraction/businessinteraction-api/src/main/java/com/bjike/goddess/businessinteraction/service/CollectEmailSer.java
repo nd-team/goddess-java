@@ -109,4 +109,16 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
     ;
 
+
+    /**
+     * 地区数组
+     *
+     */
+    default List<String> areaList( ) throws SerException {
+        return null;
+    }
+
+    ;
+
+
 }

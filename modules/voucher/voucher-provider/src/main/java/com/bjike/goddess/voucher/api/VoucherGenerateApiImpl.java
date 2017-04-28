@@ -225,4 +225,9 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<String> listGroup() throws SerException {
         return voucherGenerateSer.listGroup();
     }
+
+    @Override
+    public List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO,String condition) throws SerException {
+        return voucherGenerateSer.listStatistic(voucherGenerateDTO,condition);
+    }
 }

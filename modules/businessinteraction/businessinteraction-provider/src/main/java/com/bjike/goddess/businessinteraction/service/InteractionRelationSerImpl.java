@@ -72,6 +72,7 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
         InteractionRelation interactionRelation = null;
         try {
             interactionRelation = BeanTransform.copyProperties(interactionRelationTO,InteractionRelation.class,true);
+            interactionRelation.setArea( interactionRelation.getArea().trim());
             interactionRelation.setCreateTime(LocalDateTime.now());
             super.save( interactionRelation );
         } catch (SerException e) {
@@ -89,6 +90,8 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
             interact = super.findById( interactionRelationTO.getId() );
             BeanUtils.copyProperties(interactionRelation,interact,"id","createTime");
+            interact.setArea( interact.getArea().trim());
+
             interact.setModifyTime(LocalDateTime.now());
             super.save(interact );
         } catch (SerException e) {
