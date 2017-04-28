@@ -1,7 +1,6 @@
 package com.bjike.goddess.marketactivitymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
 /**
  * 市场招待记录申请汇总或者市场招待记录汇总

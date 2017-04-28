@@ -4,8 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
 import com.bjike.goddess.marketactivitymanage.bo.ServeSummaryBO;
-import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeSummaryDTO;
+import com.bjike.goddess.marketactivitymanage.entity.MarketServeSummary;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeSummaryTO;
 
 import java.util.List;

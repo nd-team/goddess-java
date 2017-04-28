@@ -3,7 +3,9 @@ package com.bjike.goddess.marketactivitymanage.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 

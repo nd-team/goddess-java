@@ -255,10 +255,16 @@ include ':modules:materialinstock:materialinstock-api'
 include ':modules:materialinstock:materialinstock-consumer'
 include ':modules:materialinstock:materialinstock-provider'
 
+
 //#secure 社保管理
 include ':modules:secure:secure-api'
 include ':modules:secure:secure-consumer'
 include ':modules:secure:secure-provider'
+
+//#materialreceive 物资领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
 
 //#employeecontract 员工合同管理
 include ':modules:employee-contract:employee-contract-api'

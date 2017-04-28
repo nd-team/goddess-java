@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.marketactivitymanage.type.CycleType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -28,7 +30,7 @@ public class MarketServeSummary extends BaseEntity {
     private String projectGroups;
 
     /**
-     * 类型(计划:true,实际:false)
+     * 类型
      */
     @Column(name = "type", nullable = false, columnDefinition = "TINYINT(1) COMMENT '类型(计划:true,实际:false)'")
     private Boolean type;
@@ -48,7 +50,7 @@ public class MarketServeSummary extends BaseEntity {
     /**
      * 上次发送时间
      */
-    @Column(name = "lastTime", nullable = false, columnDefinition = "DATETIME COMMENT '上次发送时间'")
+    @Column(name = "lastTime", columnDefinition = "DATETIME COMMENT '上次发送时间'")
     private LocalDateTime lastTime;
 
     /**

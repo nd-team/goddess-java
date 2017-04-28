@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -37,15 +38,16 @@ public class DeviceTypeAct {
      * 根据id查询设备类型
      *
      * @param id 设备类型唯一标识
+     * @param request 请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findbyid/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    @GetMapping("v1/devicetype/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             DeviceTypeBO bo = deviceTypeAPI.findById(id);
-            DeviceTypeVO vo = BeanTransform.copyProperties(bo, DeviceTypeVO.class);
+            DeviceTypeVO vo = BeanTransform.copyProperties(bo, DeviceTypeVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -56,16 +58,17 @@ public class DeviceTypeAct {
      * 分页查询设备类型
      *
      * @param dto           设备类型dto
-     * @param bindingResult
+     * @param bindingResult 参数绑定
+     * @param request 请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated DeviceTypeDTO dto, BindingResult bindingResult) throws ActException {
+    public Result list(@Validated DeviceTypeDTO dto, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<DeviceTypeBO> boList = deviceTypeAPI.list(dto);
-            List<DeviceTypeVO> voList = BeanTransform.copyProperties(boList, DeviceTypeVO.class);
+            List<DeviceTypeVO> voList = BeanTransform.copyProperties(boList, DeviceTypeVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -76,16 +79,17 @@ public class DeviceTypeAct {
      * 添加设备类型
      *
      * @param to     设备类型to
-     * @param result
+     * @param result 数据绑定
+     * @param request Http请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({DeviceTypeTO.DeviceTypeAdd.class}) DeviceTypeTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({DeviceTypeTO.DeviceTypeAdd.class}) DeviceTypeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             DeviceTypeBO bo = deviceTypeAPI.save(to);
-            DeviceTypeVO vo = BeanTransform.copyProperties(bo, DeviceTypeVO.class);
+            DeviceTypeVO vo = BeanTransform.copyProperties(bo, DeviceTypeVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -113,7 +117,7 @@ public class DeviceTypeAct {
      * 编辑设备类型
      *
      * @param to     设备类型to
-     * @param result
+     * @param result 参数绑定
      * @throws ActException
      * @version v1
      */

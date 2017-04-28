@@ -6,12 +6,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.dimission.bo.DimissionInfoBO;
-import com.bjike.goddess.dimission.vo.DimissionInfoVO;
-import com.bjike.goddess.dimission.vo.DimissionReasonVO;
 import com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI;
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
-import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
 import com.bjike.goddess.secure.vo.BeforeRemoveEmployeeVO;
@@ -19,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
