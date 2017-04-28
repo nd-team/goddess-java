@@ -31,9 +31,8 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String contentType = request.getContentType();  //获取Content-Type
-        if (StringUtils.isBlank(contentType) || //不是文件上传
-                (contentType != null) && !(contentType.toLowerCase().startsWith("multipart/"))) {
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
+        if (multiRequest.getFiles("file").size() == 0) {
             return true;
         }
         if (StringUtils.isBlank(request.getParameter("path"))) {
