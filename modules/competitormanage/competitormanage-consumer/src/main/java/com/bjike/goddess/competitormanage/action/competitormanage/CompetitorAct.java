@@ -38,6 +38,7 @@ public class CompetitorAct {
      * 新增竞争对手
      *
      * @param to 竞争对手信息
+     * @return class CompetitorVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -54,6 +55,7 @@ public class CompetitorAct {
      * 编辑竞争对手
      *
      * @param to 竞争对手信息
+     * @return class CompetitorVO
      * @version v1
      */
     @PutMapping("v1/edit")
@@ -70,6 +72,7 @@ public class CompetitorAct {
      * 竞争对手组织结构信息
      *
      * @param to 竞争对手组织结构信息
+     * @return class CompetitorVO
      * @version v1
      */
     @PutMapping("v1/organization")
@@ -118,6 +121,7 @@ public class CompetitorAct {
      * 根据id查询竞争对手记录
      *
      * @param id 竞争对手Id
+     * @return class CompetitorVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
@@ -134,6 +138,7 @@ public class CompetitorAct {
      * 列表
      *
      * @param dto 查询条件或分页条件
+     * @return class CompetitorVO
      * @version v1
      */
     @GetMapping("v1/list")

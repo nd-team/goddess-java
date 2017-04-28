@@ -14,15 +14,15 @@ public enum CollectIntervalType {
     /**
      * 天
      */
-    DAY(0),
+    ONEDAY(0),
     /**
      * 周
      */
-    WEEK(1),
+    ONEWEEK(1),
     /**
      * 月
      */
-    MONTH(2);
+    ONEMONTH(2);
 
     private int code;
 
