@@ -32,6 +32,10 @@ public class AccountPwdSpecificationApiImpl implements AccountPwdSpecificationAP
     public Long countAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws SerException {
         return accountPwdSpecificationSer.countAccountPwdSpecification(accountPwdSpecificationDTO);
     }
+    @Override
+    public AccountPwdSpecificationBO getOne(String id) throws SerException {
+        return accountPwdSpecificationSer.getOne(id);
+    }
 
     @Override
     public List<AccountPwdSpecificationBO> findListAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws SerException {

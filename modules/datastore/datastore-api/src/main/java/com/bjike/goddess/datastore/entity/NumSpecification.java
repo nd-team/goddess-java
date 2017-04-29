@@ -2,7 +2,9 @@ package com.bjike.goddess.datastore.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -21,73 +23,73 @@ public class NumSpecification extends BaseEntity {
     /**
      * 地区英文代号
      */
-    @Column(name = "areaEnglishCode",  columnDefinition = "VARCHAR(255)   COMMENT '地区英文代号'")
+    @Column(name = "areaEnglishCode", columnDefinition = "VARCHAR(255)   COMMENT '地区英文代号'")
     private String areaEnglishCode;
 
     /**
      * 项目组英文代号
      */
-    @Column(name = "projectTeamEnglishCode",  columnDefinition = "VARCHAR(255)   COMMENT '项目组英文代号'")
+    @Column(name = "projectTeamEnglishCode", columnDefinition = "VARCHAR(255)   COMMENT '项目组英文代号'")
     private String projectTeamEnglishCode;
 
     /**
      * 大模块英文字符
      */
-    @Column(name = "largeModuleEnglishCharacter",  columnDefinition = "VARCHAR(255)   COMMENT '大模块英文字符'")
+    @Column(name = "largeModuleEnglishCharacter", columnDefinition = "VARCHAR(255)   COMMENT '大模块英文字符'")
     private String largeModuleEnglishCharacter;
 
     /**
      * 小模块英文字符
      */
-    @Column(name = "smallModuleEnglishCharacter",  columnDefinition = "VARCHAR(255)   COMMENT '小模块英文字符'")
+    @Column(name = "smallModuleEnglishCharacter", columnDefinition = "VARCHAR(255)   COMMENT '小模块英文字符'")
     private String smallModuleEnglishCharacter;
 
     /**
      * 小项目数字字段
      */
-    @Column(name = "smallProjectNumField",  columnDefinition = "VARCHAR(255)   COMMENT '小项目数字字段'")
+    @Column(name = "smallProjectNumField", columnDefinition = "VARCHAR(255)   COMMENT '小项目数字字段'")
     private String smallProjectNumField;
 
     /**
      * 属性数字字段
      */
-    @Column(name = "attributeNumField",  columnDefinition = "VARCHAR(255)   COMMENT '属性数字字段'")
+    @Column(name = "attributeNumField", columnDefinition = "VARCHAR(255)   COMMENT '属性数字字段'")
     private String attributeNumField;
 
     /**
      * 类型英文代号
      */
-    @Column(name = "typeEnglishCode",  columnDefinition = "VARCHAR(255)   COMMENT '类型英文代号'")
+    @Column(name = "typeEnglishCode", columnDefinition = "VARCHAR(255)   COMMENT '类型英文代号'")
     private String typeEnglishCode;
 
     /**
      * 目录数字字段
      */
-    @Column(name = "directoryNumField",  columnDefinition = "VARCHAR(255)   COMMENT '目录数字字段'")
+    @Column(name = "directoryNumField", columnDefinition = "VARCHAR(255)   COMMENT '目录数字字段'")
     private String directoryNumField;
 
     /**
      * 事件内容
      */
-    @Column(name = "eventContent",  columnDefinition = "VARCHAR(255)   COMMENT '事件内容'")
+    @Column(name = "eventContent", columnDefinition = "VARCHAR(255)   COMMENT '事件内容'")
     private String eventContent;
 
     /**
      * 物品内容
      */
-    @Column(name = "articleContent",  columnDefinition = "VARCHAR(255)   COMMENT '物品内容'")
+    @Column(name = "articleContent", columnDefinition = "VARCHAR(255)   COMMENT '物品内容'")
     private String articleContent;
 
     /**
      * 文献主题
      */
-    @Column(name = "theme",  columnDefinition = "VARCHAR(255)   COMMENT '文献主题'")
+    @Column(name = "theme", columnDefinition = "VARCHAR(255)   COMMENT '文献主题'")
     private String theme;
 
     /**
      * 内容概况数字字段
      */
-    @Column(name = "contentSummaryNumField",  columnDefinition = "VARCHAR(255)   COMMENT '内容概况数字字段'")
+    @Column(name = "contentSummaryNumField", columnDefinition = "VARCHAR(255)   COMMENT '内容概况数字字段'")
     private String contentSummaryNumField;
 
     /**
@@ -99,13 +101,13 @@ public class NumSpecification extends BaseEntity {
     /**
      * 地区数字字段
      */
-    @Column(name = "areaNumField",  columnDefinition = "VARCHAR(255)   COMMENT '地区数字字段'")
+    @Column(name = "areaNumField", columnDefinition = "VARCHAR(255)   COMMENT '地区数字字段'")
     private String areaNumField;
 
     /**
      * 部门数字字段
      */
-    @Column(name = "departmentNumField",  columnDefinition = "VARCHAR(255)   COMMENT '部门数字字段'")
+    @Column(name = "departmentNumField", columnDefinition = "VARCHAR(255)   COMMENT '部门数字字段'")
     private String departmentNumField;
 
     /**
@@ -117,19 +119,19 @@ public class NumSpecification extends BaseEntity {
     /**
      * 岗位数字字段
      */
-    @Column(name = "postNumField",  columnDefinition = "VARCHAR(255)   COMMENT '岗位数字字段'")
+    @Column(name = "postNumField", columnDefinition = "VARCHAR(255)   COMMENT '岗位数字字段'")
     private String postNumField;
 
     /**
      * 时间年月日字段
      */
-    @Column(name = "timeField",  columnDefinition = "VARCHAR(255)   COMMENT '时间年月日字段'")
+    @Column(name = "timeField", columnDefinition = "VARCHAR(255)   COMMENT '时间年月日字段'")
     private String timeField;
 
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

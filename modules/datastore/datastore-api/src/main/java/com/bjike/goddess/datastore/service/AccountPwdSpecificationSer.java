@@ -3,12 +3,9 @@ package com.bjike.goddess.datastore.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.datastore.bo.AccountPwdSpecificationBO;
-import com.bjike.goddess.datastore.bo.FileSpecificationBO;
-import com.bjike.goddess.datastore.dto.FileSpecificationDTO;
-import com.bjike.goddess.datastore.entity.AccountPwdSpecification;
 import com.bjike.goddess.datastore.dto.AccountPwdSpecificationDTO;
+import com.bjike.goddess.datastore.entity.AccountPwdSpecification;
 import com.bjike.goddess.datastore.to.AccountPwdSpecificationTO;
-import com.bjike.goddess.datastore.to.FileSpecificationTO;
 
 import java.util.List;
 
@@ -31,6 +28,16 @@ public interface AccountPwdSpecificationSer extends Ser<AccountPwdSpecification,
     }
 
     /**
+     * 一个数据存储账号密码规范
+     *
+     * @return class AccountPwdSpecificationBO
+     */
+    default AccountPwdSpecificationBO getOne(String id) throws SerException {
+        return null;
+    }
+
+
+    /**
      * 数据存储账号密码规范
      *
      * @param accountPwdSpecificationDTO 数据存储账号密码规范dto
@@ -40,6 +47,7 @@ public interface AccountPwdSpecificationSer extends Ser<AccountPwdSpecification,
     default List<AccountPwdSpecificationBO> findListAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws SerException {
         return null;
     }
+
 
     /**
      * 添加数据存储账号密码规范
