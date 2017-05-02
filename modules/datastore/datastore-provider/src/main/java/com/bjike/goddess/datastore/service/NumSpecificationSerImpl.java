@@ -34,6 +34,12 @@ public class NumSpecificationSerImpl extends ServiceImpl<NumSpecification, NumSp
         Long counts = super.count(numSpecificationDTO);
         return counts;
     }
+    @Override
+    public NumSpecificationBO getOne(String id) throws SerException {
+        NumSpecification numSpecification = super.findById(id);
+        return BeanTransform.copyProperties(numSpecification, NumSpecificationBO.class);
+    }
+
 
     @Override
     public List<NumSpecificationBO> findListNumSpecification(NumSpecificationDTO numSpecificationDTO) throws SerException {
@@ -62,9 +68,6 @@ public class NumSpecificationSerImpl extends ServiceImpl<NumSpecification, NumSp
 
     @Override
     public void removeNumSpecification(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 }

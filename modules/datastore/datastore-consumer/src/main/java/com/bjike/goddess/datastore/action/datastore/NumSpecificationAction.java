@@ -5,20 +5,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.datastore.api.AccountPwdSpecificationAPI;
 import com.bjike.goddess.datastore.api.NumSpecificationAPI;
-import com.bjike.goddess.datastore.bo.AccountPwdSpecificationBO;
 import com.bjike.goddess.datastore.bo.NumSpecificationBO;
-import com.bjike.goddess.datastore.dto.AccountPwdSpecificationDTO;
 import com.bjike.goddess.datastore.dto.NumSpecificationDTO;
-import com.bjike.goddess.datastore.to.AccountPwdSpecificationTO;
 import com.bjike.goddess.datastore.to.NumSpecificationTO;
-import com.bjike.goddess.datastore.vo.AccountPwdSpecificationVO;
 import com.bjike.goddess.datastore.vo.NumSpecificationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,7 +27,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("accountpwdspecification")
+@RequestMapping("numspecification")
 public class NumSpecificationAction {
     @Autowired
     private NumSpecificationAPI numSpecificationAPI;
@@ -44,10 +40,28 @@ public class NumSpecificationAction {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(NumSpecificationDTO numSpecificationDTO, BindingResult bindingResult) throws ActException {
+    public Result count(NumSpecificationDTO numSpecificationDTO) throws ActException {
         try {
             Long count = numSpecificationAPI.countNumSpecification(numSpecificationDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个数据存储编号规范
+     *
+     * @param id
+     * @return class NumSpecificationVO
+     * @des 获取一个数据存储编号规范
+     * @version v1
+     */
+    @GetMapping("v1/num/{id}")
+    public Result num(@PathVariable String id) throws ActException {
+        try {
+            NumSpecificationBO numSpecificationBO = numSpecificationAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(numSpecificationBO, NumSpecificationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -61,11 +75,11 @@ public class NumSpecificationAction {
      * @des 获取所有数据存储编号规范
      * @version v1
      */
-    @GetMapping("v1/listNumSpecification")
-    public Result findListNumSpecification(NumSpecificationDTO numSpecificationDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(NumSpecificationDTO numSpecificationDTO, HttpServletRequest request) throws ActException {
         try {
             List<NumSpecificationVO> numSpecificationVOS = BeanTransform.copyProperties
-                    (numSpecificationAPI.findListNumSpecification(numSpecificationDTO),NumSpecificationVO.class);
+                    (numSpecificationAPI.findListNumSpecification(numSpecificationDTO), NumSpecificationVO.class, request);
             return ActResult.initialize(numSpecificationVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,7 +95,7 @@ public class NumSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addNumSpecification(NumSpecificationTO numSpecificationTO, BindingResult bindingResult) throws ActException {
+    public Result add(NumSpecificationTO numSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             NumSpecificationBO numSpecificationBO = numSpecificationAPI.insertNumSpecification(numSpecificationTO);
             return ActResult.initialize(numSpecificationBO);
@@ -99,7 +113,7 @@ public class NumSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editNumSpecification(NumSpecificationTO numSpecificationTO) throws ActException {
+    public Result edit(NumSpecificationTO numSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             NumSpecificationBO numSpecificationBO = numSpecificationAPI.editNumSpecification(numSpecificationTO);
             return ActResult.initialize(numSpecificationBO);
@@ -116,7 +130,7 @@ public class NumSpecificationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteNumSpecification(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             numSpecificationAPI.removeNumSpecification(id);
             return new ActResult("delete success");
