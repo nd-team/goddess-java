@@ -1,6 +1,9 @@
 package com.bjike.goddess.business.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 工商注册
@@ -16,11 +19,13 @@ public class BusinessRegisterTO extends BaseTO {
     /**
      * 注册公司名称
      */
+    @NotBlank(message = "注册公司名称不能为空",groups = {ADD.class, EDIT.class})
     private String registerCompanyName;
 
     /**
      * 注册号/统一社会信用代码
      */
+    @NotBlank(message = "注册号/统一社会信用代码不能为空",groups = {ADD.class, EDIT.class})
     private String registerNum;
 
     /**
