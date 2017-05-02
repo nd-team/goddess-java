@@ -3,7 +3,9 @@ package com.bjike.goddess.projectmeasure.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 

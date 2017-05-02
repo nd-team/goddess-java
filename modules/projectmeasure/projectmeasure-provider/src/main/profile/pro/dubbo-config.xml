@@ -26,4 +26,6 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectMultipleUIAPI" ref="singleProjectMultipleUIApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectSingleUIAPI" ref="singleProjectSingleUIApiImpl"></dubbo:service>
 
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
 </beans>

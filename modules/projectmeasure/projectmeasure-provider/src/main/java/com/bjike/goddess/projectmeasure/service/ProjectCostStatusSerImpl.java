@@ -6,11 +6,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
 import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
-import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -48,8 +50,10 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public ProjectCostStatusBO save(ProjectCostStatusTO to) throws SerException {
         ProjectCostStatus entity = BeanTransform.copyProperties(to, ProjectCostStatus.class, true);
+        verify(entity);
         entity = super.save(entity);
         ProjectCostStatusBO bo = BeanTransform.copyProperties(entity, ProjectCostStatusBO.class);
         return bo;
@@ -62,9 +66,57 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void update(ProjectCostStatusTO to) throws SerException {
-        ProjectCostStatus entity = BeanTransform.copyProperties(to, ProjectCostStatus.class, true);
-        super.update(entity);
+        if (StringUtils.isNotEmpty(to.getId())){
+            ProjectCostStatus model = super.findById(to.getId());
+            if (model != null) {
+                updateProjectCostStatus(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新项目费用情况
+     *
+     * @param to
+     * @param model
+     */
+    private void updateProjectCostStatus(ProjectCostStatusTO to, ProjectCostStatus model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        verify(model);//参数校验
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     *
+     * @param model
+     */
+    private void verify(ProjectCostStatus model) throws SerException {
+        if ((model.getTaxes() != null) && (model.getTaxes() < 0)) {
+            throw new SerException("参数税金taxes必须是大于等于0的小数");
+        }
+
+        if ((model.getServiceCharge() != null) && (model.getServiceCharge() < 0)) {
+            throw new SerException("参数服务费serviceCharge必须是大于等于0的小数");
+        }
+
+        if ((model.getServeCharge() != null) && (model.getServeCharge() < 0)) {
+            throw new SerException("参数招待费serveCharge必须是大于等于0的小数");
+        }
+
+        if ((model.getRoyalties() != null) && (model.getRoyalties() < 0)) {
+            throw new SerException("参数提成royalties必须是大于等于0的小数");
+        }
+
+        if ((model.getDemandCharge() != null) && (model.getDemandCharge() < 0)) {
+            throw new SerException("参数需求费用demandCharge必须是大于等于0的小数");
+        }
     }
 
     /**
@@ -74,6 +126,7 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }

@@ -5,8 +5,6 @@ import com.bjike.goddess.projectmeasure.type.InvoiceForm;
 import com.bjike.goddess.projectmeasure.type.PaymentForm;
 import com.bjike.goddess.projectmeasure.type.RemitContent;
 
-import javax.persistence.Column;
-
 /**
  * 项目费用情况业务传输对象
  *
