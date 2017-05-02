@@ -166,7 +166,7 @@ public class ProjectMeasureSummaryAct {
     }
 
     /**
-     * 编辑项目测算邮件发送
+     * 冻结项目测算邮件发送
      *
      * @param id 项目测算邮件发送唯一标识
      * @throws ActException
