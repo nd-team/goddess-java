@@ -36,6 +36,11 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         Long count = super.count(staffMovementApplyDTO);
         return count;
     }
+    @Override
+    public StaffMovementApplyBO getOne(String id) throws SerException {
+        StaffMovementApply staffMovementApply = super.findById(id);
+        return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class,true);
+    }
 
     @Override
     public List<StaffMovementApplyBO> findListStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {
