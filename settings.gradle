@@ -277,3 +277,7 @@ include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
+//#materialtransfer 物资调用
+include ':modules:materialtransfer:materialtransfer-api'
+include ':modules:materialtransfer:materialtransfer-consumer'
+include ':modules:materialtransfer:materialtransfer-provider'
