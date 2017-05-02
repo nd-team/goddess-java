@@ -2,13 +2,9 @@ package com.bjike.goddess.projectissuehandle.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
-import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
-import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
-import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
+import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 
 import java.util.List;
@@ -29,11 +25,21 @@ public interface ProblemHandlingResultSer extends Ser<ProblemHandlingResult, Pro
     default Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个确认问题处理结果
+     *
+     * @return class ProblemHandlingResultBO
+     */
+    default ProblemHandlingResultBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 确认问题处理结果
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
-     * @return class problemHandlingResultBO
+     * @return class ProblemHandlingResultBO
      * @throws SerException
      */
     default List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
@@ -54,7 +60,7 @@ public interface ProblemHandlingResultSer extends Ser<ProblemHandlingResult, Pro
      * 编辑确认问题处理结果
      *
      * @param problemHandlingResultTO 确认问题处理结果数据to
-     * @return class problemHandlingResultBO
+     * @return class ProblemHandlingResultBO
      * @throws SerException
      */
     default ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {

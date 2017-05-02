@@ -4,14 +4,12 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +33,12 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         problemHandlingResultDTO.getSorts().add("createTime=desc");
         Long counts = super.count(problemHandlingResultDTO);
         return counts;
+    }
+
+    @Override
+    public ProblemHandlingResultBO getOne(String id) throws SerException {
+        ProblemHandlingResult problemHandlingResult = super.findById(id);
+        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class, true);
     }
 
     @Override
@@ -88,23 +92,28 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         /**
          * 内部项目名称
          */
-        if(StringUtils.isNotBlank(problemHandlingResultDTO.getInternalProjectName())){
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getInternalProjectName())) {
             problemHandlingResultDTO.getConditions().add(Restrict.eq("internalProjectName", problemHandlingResultDTO.getInternalProjectName()));
         }
         /**
          * 工程类型
          */
-        if(StringUtils.isNotBlank(problemHandlingResultDTO.getProjectType())){
-            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectType",problemHandlingResultDTO.getProjectType()));
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProjectType())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectType", problemHandlingResultDTO.getProjectType()));
         }
         /**
          * 问题对象
          */
-        if(problemHandlingResultDTO.getProblemObject()!=null){
+        /*if(problemHandlingResultDTO.getProblemObject()!=null){
             problemHandlingResultDTO.getConditions().add(Restrict.eq("problemObject", problemHandlingResultDTO.getProblemObject()));
+        }*/
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProblemObject())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectObject", problemHandlingResultDTO.getProblemObject()));
         }
-        List<ProblemHandlingResult> problemHandlingResultList = super.findByCis(problemHandlingResultDTO,true);
-        List<ProblemHandlingResultBO> problemHandlingResultBOList = BeanTransform.copyProperties(problemHandlingResultList,ProblemHandlingResultBO.class);
+
+        List<ProblemHandlingResult> problemHandlingResultList = super.findByCis(problemHandlingResultDTO);
+
+        List<ProblemHandlingResultBO> problemHandlingResultBOList = BeanTransform.copyProperties(problemHandlingResultList, ProblemHandlingResultBO.class);
         return problemHandlingResultBOList;
     }
 

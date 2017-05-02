@@ -3,13 +3,9 @@ package com.bjike.goddess.projectissuehandle.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
-import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
-import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
+import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
-import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 
 import java.util.List;
 
@@ -29,11 +25,22 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
     default Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个参与处理人员的任务分配
+     *
+     * @return class InvolvedProcessingTaskBO
+     */
+    default InvolvedProcessingTaskBO getOne(String id) throws SerException {
+        return null;
+    }
+
+
     /**
      * 参与处理人员的任务分配
      *
      * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
-     * @return class involvedProcessingTaskBO
+     * @return class InvolvedProcessingTaskBO
      * @throws SerException
      */
     default List<InvolvedProcessingTaskBO> findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
@@ -54,7 +61,7 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
      * 编辑参与处理人员的任务分配
      *
      * @param involvedProcessingTaskTO 参与处理人员的任务分配数据to
-     * @return class involvedProcessingTaskBO
+     * @return class InvolvedProcessingTaskBO
      * @throws SerException
      */
     default InvolvedProcessingTaskBO editInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {

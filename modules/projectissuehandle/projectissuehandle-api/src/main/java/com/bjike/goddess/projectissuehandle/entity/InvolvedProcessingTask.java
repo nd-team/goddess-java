@@ -21,13 +21,13 @@ public class InvolvedProcessingTask extends BaseEntity {
     /**
      * 内部项目名称
      */
-    @Column(name = "internalProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "internalProjectName", columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String internalProjectName;
 
     /**
      * 处理人员
      */
-    @Column(name = "handler", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '处理人员'")
+    @Column(name = "handler", columnDefinition = "VARCHAR(255)   COMMENT '处理人员'")
     private String handler;
 
     /**
