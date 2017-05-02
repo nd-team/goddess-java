@@ -5,22 +5,22 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
-import com.bjike.goddess.user.dto.DepartmentDTO;
-import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserDetailDTO;
-import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.entity.Position;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.user.service.rbac.GroupSer;
+import com.bjike.goddess.user.to.UserDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -44,26 +44,35 @@ public class UserDetailSerImpl extends ServiceImpl<UserDetail, UserDetailDTO> im
     private GroupSer groupSer;
     @Autowired
     private UserSer userSer;
+    @Autowired
+    private PositionSer positionSer;
 
     @Transactional
     @Override
-    public UserDetailBO add() throws SerException {
-        UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("phone", "13457910241"));
-        User user = userSer.findOne(dto);
-        UserDetail userDetail = new UserDetail();
-        userDetail.setUser(user);
-        DepartmentDTO departmentDTO = new DepartmentDTO();
-        departmentDTO.getConditions().add(Restrict.eq("name", "a研发部"));
-        Department department = departmentSer.findOne(departmentDTO);
-        userDetail.setDepartment(department);
+    public void update(UserDetailTO detailTO) throws SerException {
+        UserDetailDTO dto = new UserDetailDTO();
+        UserBO userBO = userSer.currentUser();
+        User user = userSer.findById(userBO.getId());
+        dto.getConditions().add(Restrict.eq("user.id", user.getId()));
+        UserDetail userDetail = super.findOne(dto);
+        if (null != userDetail) {
+            BeanTransform.copyProperties(userDetail, detailTO, true);
+            userDetail.setGroup(groupSer.findById(detailTO.getGroupId()));
+            userDetail.setDepartment(departmentSer.findById(detailTO.getDepartmentId()));
+            userDetail.setPosition(positionSer.findById(detailTO.getPositionId()));
+            super.update(userDetail);
+        } else {
+            userDetail = new UserDetail();
+            BeanTransform.copyProperties(userDetail, detailTO);
+            userDetail.setUser(user);
+            userDetail.setGroup(groupSer.findById(detailTO.getGroupId()));
+            userDetail.setDepartment(departmentSer.findById(detailTO.getDepartmentId()));
+            userDetail.setPosition(positionSer.findById(detailTO.getPositionId()));
+            userDetail.setModifyTime(LocalDateTime.now());
+            super.save(userDetail);
+        }
 
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.getConditions().add(Restrict.eq("name", "项目组"));
-        Group group = groupSer.findOne(groupDTO);
-        userDetail.setGroup(group);
-        super.save(userDetail);
-        return BeanTransform.copyProperties(userDetail, UserDetailBO.class);
+
     }
 
     @Override

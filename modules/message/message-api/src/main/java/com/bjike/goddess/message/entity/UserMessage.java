@@ -15,7 +15,7 @@ import javax.persistence.*;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "message_user_message")
+@Table(name = "user_message")
 public class UserMessage extends BaseEntity {
     /**
      * 用户
