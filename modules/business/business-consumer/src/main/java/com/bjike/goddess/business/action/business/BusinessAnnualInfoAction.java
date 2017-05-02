@@ -9,6 +9,8 @@ import com.bjike.goddess.business.to.BusinessAnnualInfoTO;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
 import com.bjike.goddess.business.vo.BusinessAnnualInfoVO;
 import com.bjike.goddess.business.vo.BusinessRegisterVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -16,8 +18,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -50,6 +54,23 @@ public class BusinessAnnualInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个工商年检信息
+     *
+     * @param id
+     * @return class BusinessAnnualInfoVO
+     * @des 获取一个工商年检信息
+     * @version v1
+     */
+    @GetMapping("v1/info/{id}")
+    public Result info(@PathVariable String id) throws ActException {
+        try {
+            BusinessAnnualInfoBO businessAnnualInfoBO = businessAnnualInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(businessAnnualInfoBO, BusinessAnnualInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 工商年检信息列表
@@ -59,11 +80,11 @@ public class BusinessAnnualInfoAction {
      * @des 获取所有工商年检信息
      * @version v1
      */
-    @GetMapping("v1/listBusinessAnnualInfo")
-    public Result findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BusinessAnnualInfoDTO businessAnnualInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<BusinessAnnualInfoVO> businessAnnualInfoVOS = BeanTransform.copyProperties
-                    (businessAnnualInfoAPI.findListBusinessAnnualInfo(businessAnnualInfoDTO),BusinessAnnualInfoVO.class);
+                    (businessAnnualInfoAPI.findListBusinessAnnualInfo(businessAnnualInfoDTO),BusinessAnnualInfoVO.class,request);
             return ActResult.initialize(businessAnnualInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -79,7 +100,7 @@ public class BusinessAnnualInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) BusinessAnnualInfoTO businessAnnualInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessAnnualInfoBO businessAnnualInfoBO = businessAnnualInfoAPI.insertBusinessAnnualInfo(businessAnnualInfoTO);
             return ActResult.initialize(businessAnnualInfoBO);
@@ -97,7 +118,7 @@ public class BusinessAnnualInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) BusinessAnnualInfoTO businessAnnualInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessAnnualInfoBO businessAnnualInfoBO = businessAnnualInfoAPI.editBusinessAnnualInfo(businessAnnualInfoTO);
             return ActResult.initialize(businessAnnualInfoBO);
@@ -114,7 +135,7 @@ public class BusinessAnnualInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeBusinessAnnualInfo(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             businessAnnualInfoAPI.removeBusinessAnnualInfo(id);
             return new ActResult("delete success");

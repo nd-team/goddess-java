@@ -27,6 +27,10 @@ public class BusinessAnnualInfoApiImpl implements BusinessAnnualInfoAPI {
     public Long countBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         return businessAnnualInfoSer.countBusinessAnnualInfo(businessAnnualInfoDTO);
     }
+    @Override
+    public BusinessAnnualInfoBO getOne(String id) throws SerException {
+        return businessAnnualInfoSer.getOne(id);
+    }
 
     @Override
     public List<BusinessAnnualInfoBO> findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {

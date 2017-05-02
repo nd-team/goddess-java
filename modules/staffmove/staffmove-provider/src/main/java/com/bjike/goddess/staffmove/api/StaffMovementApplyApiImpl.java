@@ -32,6 +32,10 @@ public class StaffMovementApplyApiImpl implements StaffMovementApplyAPI {
     public Long countStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {
         return staffMovementApplySer.countStaffMovementApply(staffMovementApplyDTO);
     }
+    @Override
+    public StaffMovementApplyBO getOne(String id) throws SerException {
+        return staffMovementApplySer.getOne(id);
+    }
 
     @Override
     public List<StaffMovementApplyBO> findListStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {

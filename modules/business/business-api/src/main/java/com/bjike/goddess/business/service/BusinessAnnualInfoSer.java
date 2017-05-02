@@ -25,6 +25,14 @@ public interface BusinessAnnualInfoSer extends Ser<BusinessAnnualInfo, BusinessA
     default Long countBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个工商年检信息
+     *
+     * @return class BusinessAnnualInfoBO
+     */
+    default BusinessAnnualInfoBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 工商年检信息
