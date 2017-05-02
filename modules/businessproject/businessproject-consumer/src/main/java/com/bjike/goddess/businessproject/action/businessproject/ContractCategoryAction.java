@@ -8,12 +8,14 @@ import com.bjike.goddess.businessproject.vo.ContractCategoryVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -41,8 +43,8 @@ public class ContractCategoryAction {
      * @des 获取所有项目合同类型信息
      * @version v1
      */
-    @GetMapping("v1/listContractCategory")
-    public Result findListContractCategory(ContractCategoryDTO contractCategoryDTO) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListContractCategory(ContractCategoryDTO contractCategoryDTO, HttpServletRequest request) throws ActException {
         try {
             List<ContractCategoryVO> contractCategoryVOList = BeanTransform.copyProperties(
                     contractCategoryAPI.listContractCategory(contractCategoryDTO), ContractCategoryVO.class, true);
@@ -60,6 +62,7 @@ public class ContractCategoryAction {
      * @des 添加项目合同类型
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addContractCategory(@Validated ContractCategoryTO contractCategoryTO) throws ActException {
         try {
@@ -79,6 +82,7 @@ public class ContractCategoryAction {
      * @des 添加项目合同类型
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result editContractCategory(@Validated ContractCategoryTO contractCategoryTO) throws ActException {
         try {
@@ -96,6 +100,7 @@ public class ContractCategoryAction {
      * @des 根据id删除项目合同类型信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteContractCategory(@PathVariable String id) throws ActException {
         try {

@@ -4,6 +4,7 @@ import com.bjike.goddess.businessinteraction.bo.CollectData;
 import com.bjike.goddess.businessinteraction.dto.DemandDTO;
 import com.bjike.goddess.businessinteraction.dto.InteractionRelationDTO;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
+import com.bjike.goddess.businessinteraction.entity.InteractionRelation;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 邮件发送定制业务实现
@@ -276,19 +278,20 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     public void calculateTotal(String area ,List<CollectData> collectDataList, List<CollectEmailBO> collectEmailBOList ) throws SerException {
         String[] fields = new String[]{"counts","remark"};
         //互动联系信息数量
-        InteractionRelationDTO interDTO = new InteractionRelationDTO();
-        interDTO.getConditions().add(Restrict.in("area",area));
-        Long interCount = interactionRelationSer.count( interDTO );
+        String sql = " select count(*) as counts , '互动联系信息数量' as remark from businessinteraction_interactionrelation where area in("+area+")";
+        List<CollectEmailBO> collectEmailBOS = interactionRelationSer.findBySql(sql, CollectEmailBO.class, fields);
         CollectData collectData = new CollectData();
         collectData.setName("互动联系信息数量");
-        collectData.setCounts( interCount!=null  ? interCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
+
         //留言数量
-        String sql = " select count(*) as counts , '留言数量' as remark  " +
+        sql = " select count(*) as counts , '留言数量' as remark  " +
                 " from businessinteraction_leavingmessage  bl " +
                 " INNER JOIN  businessinteraction_interactionrelation bi  on bl.interactionRelation_id = bi.id where bi.area in ( "+area+")";
-        List<CollectEmailBO> collectEmailBOS = leavingMessageSer.findBySql(sql, CollectEmailBO.class, fields);
+        collectEmailBOS = leavingMessageSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("留言数量");
         collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
@@ -296,52 +299,48 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectDataList.add( collectData );
 
         //需求记录数量
-        DemandDTO demandDTO = new DemandDTO();
-        demandDTO.getConditions().add(Restrict.in("area",area ) );
-        Long demandCount = demandSer.count(demandDTO );
+        sql = " select count(*) as counts , '需求记录数量' as remark from businessinteraction_demand where area in("+area+")";
+        collectEmailBOS = demandSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("需求记录数量");
-        collectData.setCounts( demandCount !=null  ? demandCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
         //直接合作方数量
-        TalkDetailDTO talkDetailDTO = new TalkDetailDTO();
-        talkDetailDTO.getConditions().add(Restrict.in("area",area ) );
-        talkDetailDTO.getConditions().add(Restrict.eq("cooperWay","直接合作"));
-        Long talkCount = talkDetailSer.count( talkDetailDTO );
+        sql = " select count(*) as counts , '直接合作方数量' as remark from businessinteraction_talkdetail where cooperWay ='直接合作' and area in("+area+")";
+        collectEmailBOS = talkDetailSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("直接合作方数量");
-        collectData.setCounts( talkCount!=null ? talkCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
         //中介合作方数量
-        talkDetailDTO = new TalkDetailDTO();
-        talkDetailDTO.getConditions().add(Restrict.in("area",area ) );
-        talkDetailDTO.getConditions().add(Restrict.eq("cooperWay","中介"));
-        talkCount = talkDetailSer.count( talkDetailDTO );
+        sql = " select count(*) as counts , '中介合作方数量' as remark from businessinteraction_talkdetail where cooperWay = '中介' and  area in("+area+")";
+        collectEmailBOS = talkDetailSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("中介合作方数量");
-        collectData.setCounts( talkCount!=null ? talkCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
         //达成合作数量
-        talkDetailDTO = new TalkDetailDTO();
-        talkDetailDTO.getConditions().add(Restrict.in("area",area ) );
-        talkDetailDTO.getConditions().add(Restrict.eq("cooperCondition","已达成"));
-        talkCount = talkDetailSer.count( talkDetailDTO );
+        sql = " select count(*) as counts , '达成合作数量' as remark from businessinteraction_talkdetail where cooperCondition = '已达成' and  area in("+area+")";
+        collectEmailBOS = talkDetailSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("达成合作数量");
-        collectData.setCounts( talkCount!=null ? talkCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
         //未达成合作数量
-        talkDetailDTO = new TalkDetailDTO();
-        talkDetailDTO.getConditions().add(Restrict.in("area",area ) );
-        talkDetailDTO.getConditions().add(Restrict.eq("cooperCondition","未达成"));
-        talkCount = talkDetailSer.count( talkDetailDTO );
+        sql = " select count(*) as counts , '未达成合作数量' as remark from businessinteraction_talkdetail where cooperCondition = '未达成' and  area in("+area+")";
+        collectEmailBOS = talkDetailSer.findBySql(sql, CollectEmailBO.class, fields);
         collectData = new CollectData();
         collectData.setName("未达成合作数量");
-        collectData.setCounts( talkCount!=null ? talkCount:0 );
+        collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0
+                ? Long.parseLong(String.valueOf(collectEmailBOS.get(0).getCounts())):0 );
         collectDataList.add( collectData );
 
         CollectEmailBO cbo = new CollectEmailBO();
@@ -384,5 +383,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         return unit;
     }
 
+    @Override
+    public List<String> areaList() throws SerException {
+        String [] field = new String[]{"area"};
+        String sql = "select area, 1 from businessinteraction_interactionrelation group by area";
 
+        List<InteractionRelation> list = interactionRelationSer.findBySql(sql , InteractionRelation.class , field );
+        List<String> areaList = list.stream().map(InteractionRelation::getArea).collect(Collectors.toList());
+        return areaList;
+    }
 }
