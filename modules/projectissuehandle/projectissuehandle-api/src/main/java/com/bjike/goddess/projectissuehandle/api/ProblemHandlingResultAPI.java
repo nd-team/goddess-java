@@ -24,6 +24,12 @@ public interface ProblemHandlingResultAPI {
         return null;
     }
     /**
+     * 一个确认问题处理结果
+     * @return class ProblemHandlingResultBO
+     */
+    default ProblemHandlingResultBO getOne(String id) throws SerException {return null;}
+
+    /**
      * 确认问题处理结果
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto

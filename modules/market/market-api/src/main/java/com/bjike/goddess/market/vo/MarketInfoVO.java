@@ -1,6 +1,8 @@
 package com.bjike.goddess.market.vo;
 
 
+import com.bjike.goddess.market.enums.Scale;
+
 /**
  * 市场信息管理表现层对象
  *
@@ -59,7 +61,7 @@ public class MarketInfoVO {
     /**
      * 规模
      */
-    private String scale;
+    private Scale scale;
 
     /**
      * 发起时间
@@ -219,11 +221,11 @@ public class MarketInfoVO {
         this.projectName = projectName;
     }
 
-    public String getScale() {
+    public Scale getScale() {
         return scale;
     }
 
-    public void setScale(String scale) {
+    public void setScale(Scale scale) {
         this.scale = scale;
     }
 
