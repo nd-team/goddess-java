@@ -109,7 +109,7 @@ public class MarketServeRecordTO extends BaseTO {
     /**
      * 预计费用
      */
-    @DecimalMin(groups = {ADD.class, EDIT.class}, value = "0.0", inclusive = false, message = "预计费用必须大于0.0")
+    @NotNull(groups = {ADD.class, EDIT.class},message = "预计费用必须大于0.0")
     private Double predictCharge;
 
     /**
