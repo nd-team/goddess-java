@@ -1,11 +1,13 @@
 package com.bjike.goddess.projectissuehandle.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
+import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 
 /**
@@ -14,7 +16,7 @@ import java.time.LocalDate;
  * @Author: [ xiazhili ]
  * @Date: [ 2017-03-23 04:30 ]
  * @Description: [ 确认问题处理结果 ]
- * @Version: [ v1.0.0 ]
+ * @Version: [ v1.0.0 ]ike
  * @Copy: [ com.bjike ]
  */
 @Entity
@@ -24,68 +26,68 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
+    @Column(name = "year", columnDefinition = "VARCHAR(255)   COMMENT '年份'")
     private String year;
 
     /**
      * 合同外部项目名称
      */
-    @Column(name = "externalContractProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    @Column(name = "externalContractProjectName", columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
     private String externalContractProjectName;
 
     /**
      * 内部项目名称
      */
-    @Column(name = "internalProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "internalProjectName", columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String internalProjectName;
 
     /**
      * 工程类型
      */
-    @Column(name = "projectType",  columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
+    @Column(name = "projectType", columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
     private String projectType;
 
     /**
      * 问题受理时间
      */
-    @Column(name = "problemAcceptTime", nullable = false, columnDefinition = "DATE   COMMENT '问题受理时间'")
-    private LocalDate problemAcceptTime;
+    @Column(name = "problemAcceptTime", columnDefinition = "DATETIME   COMMENT '问题受理时间'")
+    private LocalDateTime problemAcceptTime;
 
     /**
      * 问题具体情况
      */
-    @Column(name = "problemSpecificSituation",  columnDefinition = "VARCHAR(255)   COMMENT '问题具体情况'")
+    @Column(name = "problemSpecificSituation", columnDefinition = "VARCHAR(255)   COMMENT '问题具体情况'")
     private String problemSpecificSituation;
 
     /**
      * 问题对象
      */
-    @Column(name = "problemObject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题对象'")
-    private ProblemObject problemObject;
+    @Column(name = "problemObject", columnDefinition = "VARCHAR(255)   COMMENT '问题对象'")
+    private String problemObject;
 
     /**
      * 问题责任人员
      */
-    @Column(name = "problemResponsible", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题责任人员'")
+    @Column(name = "problemResponsible", columnDefinition = "VARCHAR(255)   COMMENT '问题责任人员'")
     private String problemResponsible;
 
     /**
      * 问题处理人员
      */
-    @Column(name = "problemHandler", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题处理人员'")
+    @Column(name = "problemHandler", columnDefinition = "VARCHAR(255)   COMMENT '问题处理人员'")
     private String problemHandler;
 
     /**
      * 问题相关部门
      */
-    @Column(name = "problemRelevantDepartment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题相关部门'")
-    private String problemRelevantDepartment;
+    @Column(name = "problemRelevantDepartment", columnDefinition = "INT(2)   COMMENT '问题相关部门'")
+    private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
      * 问题发生时间
      */
-    @Column(name = "problemOccurrenceTime", nullable = false, columnDefinition = "DATE   COMMENT '问题发生时间'")
-    private LocalDate problemOccurrenceTime;
+    @Column(name = "problemOccurrenceTime", columnDefinition = "DATETIME   COMMENT '问题发生时间'")
+    private LocalDateTime problemOccurrenceTime;
 
     /**
      * 问题发生地点
@@ -96,19 +98,19 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题解决时间
      */
-    @Column(name = "problemSolveTime", nullable = false, columnDefinition = "DATE   COMMENT '问题解决时间'")
-    private LocalDate problemSolveTime;
+    @Column(name = "problemSolveTime", columnDefinition = "DATETIME   COMMENT '问题解决时间'")
+    private LocalDateTime problemSolveTime;
 
     /**
      * 问题处理结果
      */
-    @Column(name = "problemProcessingResult", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题处理结果'")
+    @Column(name = "problemProcessingResult", columnDefinition = "INT(2)   COMMENT '问题处理结果'")
     private ProblemProcessingResult problemProcessingResult;
 
     /**
      * 问题总结
      */
-    @Column(name = "problemConclusion" , columnDefinition = "VARCHAR(255)   COMMENT '问题总结'")
+    @Column(name = "problemConclusion", columnDefinition = "VARCHAR(255)   COMMENT '问题总结'")
     private String problemConclusion;
 
 
@@ -159,11 +161,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.projectType = projectType;
     }
 
-    public LocalDate getProblemAcceptTime() {
+    public LocalDateTime getProblemAcceptTime() {
         return problemAcceptTime;
     }
 
-    public void setProblemAcceptTime(LocalDate problemAcceptTime) {
+    public void setProblemAcceptTime(LocalDateTime problemAcceptTime) {
         this.problemAcceptTime = problemAcceptTime;
     }
 
@@ -175,11 +177,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemSpecificSituation = problemSpecificSituation;
     }
 
-    public ProblemObject getProblemObject() {
+    public String getProblemObject() {
         return problemObject;
     }
 
-    public void setProblemObject(ProblemObject problemObject) {
+    public void setProblemObject(String problemObject) {
         this.problemObject = problemObject;
     }
 
@@ -199,19 +201,19 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemHandler = problemHandler;
     }
 
-    public String getProblemRelevantDepartment() {
+    public ProblemRelevantDepartment getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(String problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 
-    public LocalDate getProblemOccurrenceTime() {
+    public LocalDateTime getProblemOccurrenceTime() {
         return problemOccurrenceTime;
     }
 
-    public void setProblemOccurrenceTime(LocalDate problemOccurrenceTime) {
+    public void setProblemOccurrenceTime(LocalDateTime problemOccurrenceTime) {
         this.problemOccurrenceTime = problemOccurrenceTime;
     }
 
@@ -223,11 +225,11 @@ public class ProblemHandlingResult extends BaseEntity {
         this.problemOccurrencePlace = problemOccurrencePlace;
     }
 
-    public LocalDate getProblemSolveTime() {
+    public LocalDateTime getProblemSolveTime() {
         return problemSolveTime;
     }
 
-    public void setProblemSolveTime(LocalDate problemSolveTime) {
+    public void setProblemSolveTime(LocalDateTime problemSolveTime) {
         this.problemSolveTime = problemSolveTime;
     }
 

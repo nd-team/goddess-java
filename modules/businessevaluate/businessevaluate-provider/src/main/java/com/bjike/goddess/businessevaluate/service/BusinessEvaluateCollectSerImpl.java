@@ -56,6 +56,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         BusinessEvaluateCollect model = BeanTransform.copyProperties(to, BusinessEvaluateCollect.class, true);
         model.setOperateUser(userAPI.currentUser().getUsername());
         super.save(model);
+        to.setId(model.getId());
         return BeanTransform.copyProperties(to, BusinessEvaluateCollectBO.class);
     }
 

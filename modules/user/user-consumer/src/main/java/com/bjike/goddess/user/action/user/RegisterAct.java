@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @DefaultProperties
 @RestController
-@RequestMapping("user")
 public class RegisterAct {
     @Autowired
     private UserRegisterAPI userRegisterAPI;

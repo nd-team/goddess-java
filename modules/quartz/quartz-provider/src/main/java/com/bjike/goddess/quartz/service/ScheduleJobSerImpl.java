@@ -10,9 +10,12 @@ import com.bjike.goddess.quartz.dto.ScheduleJobGroupDTO;
 import com.bjike.goddess.quartz.entity.ScheduleJob;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.user.api.UserAPI;
+import org.mengyun.tcctransaction.Compensable;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -52,6 +55,7 @@ public class ScheduleJobSerImpl extends ServiceImpl<ScheduleJob, ScheduleJobDTO>
         }
         return BeanTransform.copyProperties(scheduleJob, ScheduleJobBO.class);
     }
+
 
     @Override
     public void edit(ScheduleJobTO scheduleJobTO) throws SerException {

@@ -23,9 +23,15 @@ import java.util.List;
 public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI {
     @Autowired
     private InvolvedProcessingTaskSer involvedProcessingTaskSer;
+
     @Override
     public Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return involvedProcessingTaskSer.countInvolvedProcessingTask(involvedProcessingTaskDTO);
+    }
+
+    @Override
+    public InvolvedProcessingTaskBO getOne(String id) throws SerException {
+        return involvedProcessingTaskSer.getOne(id);
     }
 
     @Override

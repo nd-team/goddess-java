@@ -5,6 +5,8 @@ import com.bjike.goddess.business.bo.BusinessRegisterBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
 import com.bjike.goddess.business.vo.BusinessRegisterVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,8 +14,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,6 +50,23 @@ public class BusinessRegisterAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个工商注册
+     *
+     * @param id
+     * @return class BusinessRegisterVO
+     * @des 获取一个工商注册
+     * @version v1
+     */
+    @GetMapping("v1/register/{id}")
+    public Result register(@PathVariable String id) throws ActException {
+        try {
+            BusinessRegisterBO businessRegisterBO = businessRegisterAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(businessRegisterBO, BusinessRegisterVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 工商注册列表
@@ -55,11 +76,11 @@ public class BusinessRegisterAction {
      * @des 获取所有工商注册
      * @version v1
      */
-    @GetMapping("v1/listBusinessRegister")
-    public Result findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BusinessRegisterDTO businessRegisterDTO, HttpServletRequest request) throws ActException {
         try {
             List<BusinessRegisterVO> businessRegisterVOS = BeanTransform.copyProperties
-                    (businessRegisterAPI.findListBusinessRegister(businessRegisterDTO),BusinessRegisterVO.class);
+                    (businessRegisterAPI.findListBusinessRegister(businessRegisterDTO),BusinessRegisterVO.class,request);
             return ActResult.initialize(businessRegisterVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -75,7 +96,7 @@ public class BusinessRegisterAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBusinessRegister(BusinessRegisterTO businessRegisterTO,BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) BusinessRegisterTO businessRegisterTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessRegisterBO businessRegisterBO = businessRegisterAPI.insertBusinessRegister(businessRegisterTO);
             return ActResult.initialize(businessRegisterBO);
@@ -93,7 +114,7 @@ public class BusinessRegisterAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBusinessRegister(BusinessRegisterTO businessRegisterTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) BusinessRegisterTO businessRegisterTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessRegisterBO businessRegisterBO = businessRegisterAPI.editBusinessRegister(businessRegisterTO);
             return ActResult.initialize(businessRegisterBO);
@@ -110,7 +131,7 @@ public class BusinessRegisterAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeBusinessRegister(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             businessRegisterAPI.removeBusinessRegister(id);
             return new ActResult("delete success");

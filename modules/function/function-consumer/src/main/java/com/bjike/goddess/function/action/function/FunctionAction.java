@@ -30,7 +30,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("function")
 public class FunctionAction {
 
     @Autowired

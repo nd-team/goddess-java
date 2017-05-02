@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("accountpwdspecification")
+@RequestMapping("filespecification")
 public class FileSpecificationAction {
     @Autowired
     private FileSpecificationAPI fileSpecificationAPI;
@@ -39,15 +40,33 @@ public class FileSpecificationAction {
     /**
      * 数据存储文件规范列表总条数
      *
-     * @param accountPwdSpecificationDTO 数据存储文件规范dto
+     * @param fileSpecificationDTO 数据存储文件规范dto
      * @des 获取所有数据存储文件规范总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(FileSpecificationDTO fileSpecificationDTO, BindingResult bindingResult) throws ActException {
+    public Result count(FileSpecificationDTO fileSpecificationDTO) throws ActException {
         try {
             Long count = fileSpecificationAPI.countFileSpecification(fileSpecificationDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个数据存储文件规范
+     *
+     * @param id
+     * @return class FileSpecificationVO
+     * @des 获取一个数据存储文件规范
+     * @version v1
+     */
+    @GetMapping("v1/file/{id}")
+    public Result file(@PathVariable String id) throws ActException {
+        try {
+            FileSpecificationBO fileSpecificationBO = fileSpecificationAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(fileSpecificationBO, FileSpecificationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -61,11 +80,11 @@ public class FileSpecificationAction {
      * @des 获取所有数据存储文件规范
      * @version v1
      */
-    @GetMapping("v1/listFileSpecification")
-    public Result findListFileSpecification(FileSpecificationDTO fileSpecificationDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(FileSpecificationDTO fileSpecificationDTO, HttpServletRequest request) throws ActException {
         try {
             List<FileSpecificationVO> fileSpecificationVOS = BeanTransform.copyProperties
-                    (fileSpecificationAPI.findListFileSpecification(fileSpecificationDTO),FileSpecificationVO.class);
+                    (fileSpecificationAPI.findListFileSpecification(fileSpecificationDTO),FileSpecificationVO.class,request);
             return ActResult.initialize(fileSpecificationVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,7 +100,7 @@ public class FileSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addFileSpecification(FileSpecificationTO fileSpecificationTO, BindingResult bindingResult) throws ActException {
+    public Result add(FileSpecificationTO fileSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             FileSpecificationBO fileSpecificationBO = fileSpecificationAPI.insertFileSpecification(fileSpecificationTO);
             return ActResult.initialize(fileSpecificationBO);
@@ -99,7 +118,7 @@ public class FileSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editFileSpecification(FileSpecificationTO fileSpecificationTO) throws ActException {
+    public Result edit(FileSpecificationTO fileSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             FileSpecificationBO fileSpecificationBO = fileSpecificationAPI.editFileSpecification(fileSpecificationTO);
             return ActResult.initialize(fileSpecificationBO);
@@ -116,7 +135,7 @@ public class FileSpecificationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteFileSpecification(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             fileSpecificationAPI.removeFileSpecification(id);
             return new ActResult("delete success");

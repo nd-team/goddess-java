@@ -1,8 +1,15 @@
 package com.bjike.goddess.projectissuehandle.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
+import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
+import com.bjike.goddess.projectissuehandle.enums.ProjectType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -29,11 +36,13 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 内部项目名称
      */
+    @NotBlank(message = "内部项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String internalProjectName;
 
     /**
      * 工程类型
      */
+    @NotBlank(message = "工程类型不能为空", groups = {ADD.class, EDIT.class})
     private String projectType;
 
     /**
@@ -49,7 +58,8 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题对象
      */
-    private ProblemObject problemObject;
+    @NotBlank(message = "问题对象不能为空", groups = {ADD.class, EDIT.class})
+    private String problemObject;
 
     /**
      * 问题责任人员
@@ -64,7 +74,7 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题相关部门
      */
-    private String problemRelevantDepartment;
+    private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
      * 问题发生时间
@@ -140,11 +150,11 @@ public class ProblemHandlingResultTO extends BaseTO {
         this.problemSpecificSituation = problemSpecificSituation;
     }
 
-    public ProblemObject getProblemObject() {
+    public String getProblemObject() {
         return problemObject;
     }
 
-    public void setProblemObject(ProblemObject problemObject) {
+    public void setProblemObject(String problemObject) {
         this.problemObject = problemObject;
     }
 
@@ -164,11 +174,11 @@ public class ProblemHandlingResultTO extends BaseTO {
         this.problemHandler = problemHandler;
     }
 
-    public String getProblemRelevantDepartment() {
+    public ProblemRelevantDepartment getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(String problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 

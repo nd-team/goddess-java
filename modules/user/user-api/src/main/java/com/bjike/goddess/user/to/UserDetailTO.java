@@ -24,7 +24,7 @@ public class UserDetailTO extends BaseTO {
     /**
      * 用户类型
      */
-    private UserType userType ;
+    private UserType userType;
     /**
      * 所在地址
      */
@@ -41,6 +41,18 @@ public class UserDetailTO extends BaseTO {
      * 身份证
      */
     private String idCard;
+    /**
+     * 部门id
+     */
+    private String departmentId;
+    /**
+     * 组id
+     */
+    private String groupId;
+    /**
+     * 职位id
+     */
+    private String positionId;
 
     public SexType getSex() {
         return sex;
@@ -96,5 +108,29 @@ public class UserDetailTO extends BaseTO {
 
     public void setIdCard(String idCard) {
         this.idCard = idCard;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 }

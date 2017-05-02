@@ -27,6 +27,10 @@ public class BusinessTaxChangeApiImpl implements BusinessTaxChangeAPI {
     public Long countBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         return businessTaxChangeSer.countBusinessTaxChange(businessTaxChangeDTO);
     }
+    @Override
+    public BusinessTaxChangeBO getOne(String id) throws SerException {
+        return businessTaxChangeSer.getOne(id);
+    }
 
     @Override
     public List<BusinessTaxChangeBO> findListBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {

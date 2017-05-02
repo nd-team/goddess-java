@@ -31,6 +31,10 @@ public class NumSpecificationApiImpl implements NumSpecificationAPI {
     public Long countNumSpecification(NumSpecificationDTO numSpecificationDTO) throws SerException {
         return numSpecificationSer.countNumSpecification(numSpecificationDTO);
     }
+    @Override
+    public NumSpecificationBO getOne(String id) throws SerException {
+        return numSpecificationSer.getOne(id);
+    }
 
     @Override
     public List<NumSpecificationBO> findListNumSpecification(NumSpecificationDTO numSpecificationDTO) throws SerException {

@@ -63,6 +63,10 @@ public class CompetitorCollectBO extends BaseBO {
      */
     private String remark;
 
+    /**
+     * 更新时间
+     */
+    private String modifyTime;
 
     public String getArea() {
         return area;
@@ -135,5 +139,13 @@ public class CompetitorCollectBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -1,8 +1,7 @@
 package com.bjike.goddess.projectissuehandle.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.projectissuehandle.enums.ProblemEmergencyDegree;
-import com.bjike.goddess.projectissuehandle.enums.ProblemTypes;
+import com.bjike.goddess.projectissuehandle.enums.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,37 +23,37 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
+    @Column(name = "year", columnDefinition = "VARCHAR(255)   COMMENT '年份'")
     private String year;
 
     /**
      * 地区
      */
-    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 合同外部编号
      */
-    @Column(name = "externalContractNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部编号'")
+    @Column(name = "externalContractNum", columnDefinition = "VARCHAR(255)   COMMENT '合同外部编号'")
     private String externalContractNum;
 
     /**
      * 合同外部项目名称
      */
-    @Column(name = "externalContractProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    @Column(name = "externalContractProjectName", columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
     private String externalContractProjectName;
 
     /**
      * 内部项目名称
      */
-    @Column(name = "internalProjectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "internalProjectName", columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String internalProjectName;
 
     /**
      * 内部项目编号
      */
-    @Column(name = "internalNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
+    @Column(name = "internalNum", columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
     private String internalNum;
 
     /**
@@ -66,8 +65,8 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 通知方式
      */
-    @Column(name = "noticeWay",  columnDefinition = "VARCHAR(255)   COMMENT '通知方式'")
-    private String noticeWay;
+    @Column(name = "noticeWay",  columnDefinition = "INT(2)   COMMENT '通知方式'")
+    private NoticeWay noticeWay;
 
     /**
      * 问题具体内容
@@ -78,7 +77,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 问题类型
      */
-    @Column(name = "problemTypes", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题类型'")
+    @Column(name = "problemTypes", columnDefinition = "INT(2)   COMMENT '问题类型'")
     private ProblemTypes problemTypes;
 
     /**
@@ -90,20 +89,20 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 问题紧急程度
      */
-    @Column(name = "problemEmergencyDegree", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题紧急程度'")
+    @Column(name = "problemEmergencyDegree", columnDefinition = "INT(2)   COMMENT '问题紧急程度'")
     private ProblemEmergencyDegree problemEmergencyDegree;
 
     /**
      * 问题处理时间
      */
-    @Column(name = "problemProcessingTime", nullable = false, columnDefinition = "DATE   COMMENT '问题处理时间'")
-    private LocalDate problemProcessingTime;
+    @Column(name = "problemProcessingTime", columnDefinition = "INT(2)   COMMENT '问题处理时间'")
+    private ProblemProcessingTime problemProcessingTime;
 
     /**
      * 受影响部门
      */
-    @Column(name = "affectedDepartment",  columnDefinition = "VARCHAR(255)   COMMENT '受影响部门'")
-    private String affectedDepartment;
+    @Column(name = "affectedDepartment",  columnDefinition = "INT(2)   COMMENT '受影响部门'")
+    private AffectedDepartment affectedDepartment;
     /**
      * 确认问题处理结果
      *//*
@@ -167,11 +166,11 @@ public class ProblemAccept extends BaseEntity {
         this.projectType = projectType;
     }
 
-    public String getNoticeWay() {
+    public NoticeWay getNoticeWay() {
         return noticeWay;
     }
 
-    public void setNoticeWay(String noticeWay) {
+    public void setNoticeWay(NoticeWay noticeWay) {
         this.noticeWay = noticeWay;
     }
 
@@ -207,23 +206,23 @@ public class ProblemAccept extends BaseEntity {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
-    public LocalDate getProblemProcessingTime() {
+    public ProblemProcessingTime getProblemProcessingTime() {
         return problemProcessingTime;
     }
 
-    public void setProblemProcessingTime(LocalDate problemProcessingTime) {
+    public void setProblemProcessingTime(ProblemProcessingTime problemProcessingTime) {
         this.problemProcessingTime = problemProcessingTime;
     }
 
-    public String getAffectedDepartment() {
+    public AffectedDepartment getAffectedDepartment() {
         return affectedDepartment;
     }
 
-    public void setAffectedDepartment(String affectedDepartment) {
+    public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
     }
 
-   /* public ProblemHandlingResult getProblemHandlingResult() {
+/* public ProblemHandlingResult getProblemHandlingResult() {
         return problemHandlingResult;
     }
 

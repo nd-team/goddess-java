@@ -1,7 +1,6 @@
 package com.bjike.goddess.projectissuehandle.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 
 /**
  * 确认问题处理结果数据传输对象
@@ -25,7 +24,7 @@ public class ProblemHandlingResultDTO extends BaseDTO {
     /**
      * 问题对象
      */
-    private ProblemObject problemObject;
+    private String problemObject;
 
     public String getInternalProjectName() {
         return internalProjectName;
@@ -39,15 +38,16 @@ public class ProblemHandlingResultDTO extends BaseDTO {
         return projectType;
     }
 
-    public ProblemObject getProblemObject() {
-        return problemObject;
-    }
-
-    public void setProblemObject(ProblemObject problemObject) {
-        this.problemObject = problemObject;
-    }
 
     public void setProjectType(String projectType) {
         this.projectType = projectType;
+    }
+
+    public String getProblemObject() {
+        return problemObject;
+    }
+
+    public void setProblemObject(String problemObject) {
+        this.problemObject = problemObject;
     }
 }

@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -22,6 +21,8 @@ import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
+import org.mengyun.tcctransaction.Compensable;
+import org.mengyun.tcctransaction.api.TransactionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -109,7 +110,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             return BeanTransform.copyProperties(this.findOne(dto), UserBO.class);
 
         } //获取当前用户直接给无需登录
-        String token =  RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         LoginUser loginUser = currentLoginUser(token);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
 
@@ -124,24 +125,23 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             return BeanTransform.copyProperties(this.findOne(dto), UserBO.class);
 
         } //获取当前用户直接给无需登录
-        LoginUser loginUser  = currentLoginUser(userToken);
+        LoginUser loginUser = currentLoginUser(userToken);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
     }
 
     @Override
     public List<PermissionBO> currentPermissions() throws SerException {
-        String token =  RpcTransmit.getUserToken();
-        if(null != token){
+        String token = RpcTransmit.getUserToken();
+        if (null != token) {
             try {
                 LoginUser loginUser = currentLoginUser(token);
                 return loginUser.getPermissions();
-            }catch (SerException e){
+            } catch (SerException e) {
                 return new ArrayList<>(0);
             }
         }
         return new ArrayList<>(0);
     }
-
 
 
     @Cacheable
@@ -153,10 +153,28 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
-    @Transactional
-    public UserBO add(UserTO userTO) throws SerException {
+    @Transactional(rollbackFor = SerException.class)
+    @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
+    public UserBO add(TransactionContext txContext, UserTO userTO) throws SerException {
         User user = BeanTransform.copyProperties(userTO, User.class);
         return BeanTransform.copyProperties(super.save(user), UserBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String addConfirm(TransactionContext txContext, UserTO userTO) throws SerException {
+        System.out.println("用户添加确认");
+        return null;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    public String addCancel(TransactionContext txContext, UserTO userTO) throws SerException {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq("username", userTO.getUsername()));
+        User user = super.findOne(dto);
+        if (null != user) {
+            super.remove(user);
+        }
+        return null;
     }
 
     @Override
@@ -206,7 +224,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void update(UserTO userTO) throws SerException {
-          String token =  RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (StringUtils.isNotBlank(token)) {
             User user = super.findById(userTO.getId());
             BeanTransform.copyProperties(userTO, user, true);
@@ -235,7 +253,6 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         });
         return userBOS;
     }
-
 
 
     private LoginUser currentLoginUser(Object token) throws SerException {

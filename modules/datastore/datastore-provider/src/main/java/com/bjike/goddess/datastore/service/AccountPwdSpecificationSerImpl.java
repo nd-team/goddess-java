@@ -33,6 +33,11 @@ public class AccountPwdSpecificationSerImpl extends ServiceImpl<AccountPwdSpecif
         Long count = super.count(accountPwdSpecificationDTO);
         return count;
     }
+    @Override
+    public AccountPwdSpecificationBO getOne(String id) throws SerException {
+        AccountPwdSpecification accountPwdSpecification = super.findById(id);
+        return BeanTransform.copyProperties(accountPwdSpecification, AccountPwdSpecificationBO.class);
+    }
 
     @Override
     public List<AccountPwdSpecificationBO> findListAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws SerException {
@@ -61,9 +66,6 @@ public class AccountPwdSpecificationSerImpl extends ServiceImpl<AccountPwdSpecif
 
     @Override
     public void removeAccountPwdSpecification(String id) throws SerException {
-        if (StringUtils.isNotBlank(id)) {
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 }

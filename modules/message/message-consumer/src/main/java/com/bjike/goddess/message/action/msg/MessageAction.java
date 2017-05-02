@@ -37,7 +37,6 @@ import java.util.List;
  */
 @RestController
 @LoginAuth
-@RequestMapping("message")
 public class MessageAction {
     @Autowired
     private MessageAPI messageAPI;

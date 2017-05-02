@@ -5,6 +5,8 @@ import com.bjike.goddess.business.bo.BusinessTaxChangeBO;
 import com.bjike.goddess.business.dto.BusinessTaxChangeDTO;
 import com.bjike.goddess.business.to.BusinessTaxChangeTO;
 import com.bjike.goddess.business.vo.BusinessTaxChangeVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,8 +14,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -30,6 +34,7 @@ import java.util.List;
 public class BusinessTaxChangeAction {
     @Autowired
     private BusinessTaxChangeAPI businessTaxChangeAPI;
+
     /**
      * 工商税务变更列表总条数
      *
@@ -48,6 +53,24 @@ public class BusinessTaxChangeAction {
     }
 
     /**
+     * 一个工商税务变更
+     *
+     * @param id
+     * @return class BusinessTaxChangeVO
+     * @des 获取一个工商税务变更
+     * @version v1
+     */
+    @GetMapping("v1/change/{id}")
+    public Result change(@PathVariable String id) throws ActException {
+        try {
+            BusinessTaxChangeBO businessTaxChangeBO = businessTaxChangeAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(businessTaxChangeBO, BusinessTaxChangeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 工商税务变更列表
      *
      * @param businessTaxChangeDTO 工商税务变更dto
@@ -55,11 +78,11 @@ public class BusinessTaxChangeAction {
      * @des 获取所有工商税务变更
      * @version v1
      */
-    @GetMapping("v1/listBusinessTaxChange")
-    public Result findListBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BusinessTaxChangeDTO businessTaxChangeDTO, HttpServletRequest request) throws ActException {
         try {
             List<BusinessTaxChangeVO> businessTaxChangeVOS = BeanTransform.copyProperties
-                    (businessTaxChangeAPI.findListBusinessTaxChange(businessTaxChangeDTO),BusinessTaxChangeVO.class);
+                    (businessTaxChangeAPI.findListBusinessTaxChange(businessTaxChangeDTO), BusinessTaxChangeVO.class, request);
             return ActResult.initialize(businessTaxChangeVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -75,7 +98,7 @@ public class BusinessTaxChangeAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBusinessTaxChange(BusinessTaxChangeTO businessTaxChangeTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) BusinessTaxChangeTO businessTaxChangeTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessTaxChangeBO businessTaxChangeBO = businessTaxChangeAPI.insertBusinessTaxChange(businessTaxChangeTO);
             return ActResult.initialize(businessTaxChangeBO);
@@ -93,7 +116,7 @@ public class BusinessTaxChangeAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBusinessTaxChange(BusinessTaxChangeTO businessTaxChangeTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) BusinessTaxChangeTO businessTaxChangeTO, BindingResult bindingResult) throws ActException {
         try {
             BusinessTaxChangeBO businessTaxChangeBO = businessTaxChangeAPI.editBusinessTaxChange(businessTaxChangeTO);
             return ActResult.initialize(businessTaxChangeBO);
@@ -110,7 +133,7 @@ public class BusinessTaxChangeAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeBusinessTaxChange(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             businessTaxChangeAPI.removeBusinessTaxChange(id);
             return new ActResult("delete success");
@@ -118,6 +141,7 @@ public class BusinessTaxChangeAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 上传
      *
@@ -133,6 +157,7 @@ public class BusinessTaxChangeAction {
         }
 
     }
+
     /**
      * 下载
      *

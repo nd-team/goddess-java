@@ -29,7 +29,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("quartz/schedulejob")
+@RequestMapping("schedulejob")
 public class ScheduleJobAction {
 
     @Autowired

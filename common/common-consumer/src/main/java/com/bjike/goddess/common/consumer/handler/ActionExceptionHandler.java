@@ -44,7 +44,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         } else {
             actResult.setMsg(e.getMessage());
         }
-        ResponseContext.writeData(actResult.toString());
+        ResponseContext.writeData(actResult);
 
         return new ModelAndView();
     }

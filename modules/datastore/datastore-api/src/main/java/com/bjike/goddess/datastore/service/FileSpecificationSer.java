@@ -3,8 +3,8 @@ package com.bjike.goddess.datastore.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.datastore.bo.FileSpecificationBO;
-import com.bjike.goddess.datastore.entity.FileSpecification;
 import com.bjike.goddess.datastore.dto.FileSpecificationDTO;
+import com.bjike.goddess.datastore.entity.FileSpecification;
 import com.bjike.goddess.datastore.to.FileSpecificationTO;
 
 import java.util.List;
@@ -23,6 +23,15 @@ public interface FileSpecificationSer extends Ser<FileSpecification, FileSpecifi
      * 数据存储文件规范列表总条数
      */
     default Long countFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个数据存储文件规范
+     *
+     * @return class FileSpecificationBO
+     */
+    default FileSpecificationBO getOne(String id) throws SerException {
         return null;
     }
 

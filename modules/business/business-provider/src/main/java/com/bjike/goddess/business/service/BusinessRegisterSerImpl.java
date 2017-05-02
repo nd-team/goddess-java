@@ -34,6 +34,11 @@ public class BusinessRegisterSerImpl extends ServiceImpl<BusinessRegister, Busin
         return counts;
     }
     @Override
+    public BusinessRegisterBO getOne(String id) throws SerException {
+        BusinessRegister businessRegister = super.findById(id);
+        return BeanTransform.copyProperties(businessRegister,BusinessRegisterBO.class,true);
+    }
+    @Override
     public List<BusinessRegisterBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         businessRegisterDTO.getSorts().add("createTime=desc");
         List<BusinessRegister> businessRegisters = super.findByCis(businessRegisterDTO,true);
