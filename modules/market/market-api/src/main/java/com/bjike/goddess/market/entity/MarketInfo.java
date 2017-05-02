@@ -1,6 +1,7 @@
 package com.bjike.goddess.market.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.market.enums.Scale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,13 +26,13 @@ public class MarketInfo extends BaseEntity {
     /**
      * 审核人
      */
-    @Column(name = "auditor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核人'")
+    @Column(name = "auditor", columnDefinition = "VARCHAR(255)   COMMENT '审核人'")
     private String auditor;
 
     /**
      * 审核意见
      */
-    @Column(name = "auditOpinion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
+    @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditOpinion;
 
     /**
@@ -43,44 +44,44 @@ public class MarketInfo extends BaseEntity {
     /**
      * 市场收集日期
      */
-    @Column(name = "infoCollectionDate", nullable = false, columnDefinition = "DATE   COMMENT '市场收集日期'")
+    @Column(name = "infoCollectionDate", columnDefinition = "DATE   COMMENT '市场收集日期'")
     private LocalDate infoCollectionDate;
 
     /**
      * 行业
      */
-    @Column(name = "workProfession", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '行业'")
+    @Column(name = "workProfession", columnDefinition = "VARCHAR(255)   COMMENT '行业'")
     private String workProfession;
 
     /**
      * 技术类别
      */
-    @Column(name = "technologyCategory", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '技术类别'")
+    @Column(name = "technologyCategory", columnDefinition = "VARCHAR(255)   COMMENT '技术类别'")
     private String technologyCategory;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
      * 规模
      */
-    @Column(name = "scale", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '规模'")
-    private String scale;
+    @Column(name = "scale", columnDefinition = "INT(2)   COMMENT '规模'")
+    private Scale scale;
 
     /**
      * 发起时间
      */
-    @Column(name = "startTime", nullable = false, columnDefinition = "DATE   COMMENT '发起时间'")
-    private LocalDate startTime;
+    @Column(name = "startTime", columnDefinition = "DATETIME   COMMENT '发起时间'")
+    private LocalDateTime startTime;
 
     /**
      * 重要时间点
@@ -91,68 +92,91 @@ public class MarketInfo extends BaseEntity {
     /**
      * 结束时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "DATE   COMMENT '结束时间'")
-    private LocalDate endTime;
+    @Column(name = "endTime", columnDefinition = "DATETIME   COMMENT '结束时间'")
+    private LocalDateTime endTime;
 
     /**
      * 信息来源
      */
-    @Column(name = "infoSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '信息来源'")
+    @Column(name = "infoSource", columnDefinition = "VARCHAR(255)   COMMENT '信息来源'")
     private String infoSource;
 
     /**
      * 市场信息收集人
      */
-    @Column(name = "marketInfoCollecting", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '市场信息收集人'")
+    @Column(name = "marketInfoCollecting", columnDefinition = "VARCHAR(255)   COMMENT '市场信息收集人'")
     private String marketInfoCollecting;
 
     /**
      * 是否为有效信息(0是，1否)
      */
-    @Column(name = "is_effective", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否为有效信息(0是，1否)'", insertable = false)
+    @Column(name = "is_effective", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否为有效信息(0是，1否)'")
     private Boolean effective;
 
     /**
      * 项目性质
      */
-    @Column(name = "projectNature", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目性质'")
+    @Column(name = "projectNature", columnDefinition = "VARCHAR(255)   COMMENT '项目性质'")
     private String projectNature;
 
     /**
      * 市场分析人员
      */
-    @Column(name = "marketAnalysts", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '市场分析人员'")
+    @Column(name = "marketAnalysts", columnDefinition = "VARCHAR(255)   COMMENT '市场分析人员'")
     private String marketAnalysts;
 
     /**
      * 配置要求
      */
-    @Column(name = "configurationRequirement", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '配置要求'")
+    @Column(name = "configurationRequirement", columnDefinition = "VARCHAR(255)   COMMENT '配置要求'")
     private String configurationRequirement;
 
     /**
      * 技术要求
      */
-    @Column(name = "technicalRequirement", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '技术要求'")
+    @Column(name = "technicalRequirement", columnDefinition = "VARCHAR(255)   COMMENT '技术要求'")
     private String technicalRequirement;
 
     /**
      * 资质要求
      */
-    @Column(name = "qualificationRequirement", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '资质要求'")
+    @Column(name = "qualificationRequirement", columnDefinition = "VARCHAR(255)   COMMENT '资质要求'")
     private String qualificationRequirement;
 
+    /**
+     * 客户信息编号
+     */
+    @Column(name = "customerNum", columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+    private String customerNum;
+
+    /**
+     * 客户名称
+     */
+    @Column(name = "customerName", columnDefinition = "VARCHAR(255)   COMMENT '客户名称'")
+    private String customerName;
+
+    /**
+     * 组织机构名称
+     */
+    @Column(name = "origanizion", columnDefinition = "VARCHAR(255)   COMMENT '组织机构名称'")
+    private String origanizion;
+
+    /**
+     * 竞争对手名称
+     */
+    @Column(name = "competitorsName", columnDefinition = "VARCHAR(255)   COMMENT '竞争对手名称'")
+    private String competitorsName;
 
     /**
      * 客户/竞争对手信息填写人
      */
-    @Column(name = "fillPerson", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户/竞争对手信息填写人'")
+    @Column(name = "fillPerson", columnDefinition = "VARCHAR(255)   COMMENT '客户/竞争对手信息填写人'")
     private String fillPerson;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 
@@ -220,19 +244,19 @@ public class MarketInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public String getScale() {
+    public Scale getScale() {
         return scale;
     }
 
-    public void setScale(String scale) {
+    public void setScale(Scale scale) {
         this.scale = scale;
     }
 
-    public LocalDate getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDate startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -244,11 +268,11 @@ public class MarketInfo extends BaseEntity {
         this.importantPoint = importantPoint;
     }
 
-    public LocalDate getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDate endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -314,6 +338,38 @@ public class MarketInfo extends BaseEntity {
 
     public void setQualificationRequirement(String qualificationRequirement) {
         this.qualificationRequirement = qualificationRequirement;
+    }
+
+    public String getCustomerNum() {
+        return customerNum;
+    }
+
+    public void setCustomerNum(String customerNum) {
+        this.customerNum = customerNum;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getOriganizion() {
+        return origanizion;
+    }
+
+    public void setOriganizion(String origanizion) {
+        this.origanizion = origanizion;
+    }
+
+    public String getCompetitorsName() {
+        return competitorsName;
+    }
+
+    public void setCompetitorsName(String competitorsName) {
+        this.competitorsName = competitorsName;
     }
 
     public String getFillPerson() {

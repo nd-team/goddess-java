@@ -29,11 +29,23 @@ import java.util.List;
 @Service
 public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> implements MarketInfoSer {
 
+    @Override
+    public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
+        marketInfoDTO.getSorts().add("createTime=desc");
+        Long count = super.count(marketInfoDTO);
+        return count;
+    }
+    @Override
+    public MarketInfoBO getOne(String id) throws SerException {
+        MarketInfo marketInfo = super.findById(id);
+        return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
+    }
     @Cacheable
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         List<MarketInfo> marketInfos = super.findByCis(marketInfoDTO, true);
-        return BeanTransform.copyProperties(marketInfos, MarketInfoBO.class);
+        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos,MarketInfoBO.class,true);
+        return marketInfoBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -44,14 +56,13 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
                 //判断是否为新项目
-                if (!StringUtils.isNotEmpty(marketInfo.getProjectNature())) {
+                if (StringUtils.isNotEmpty(marketInfo.getProjectNature())) {
                     marketInfo.setProjectNature("新项目");
                 }
                 marketInfo.setEffective(true);
-            } else {
-                marketInfo.setCreateTime(LocalDateTime.now());
-                super.save(marketInfo);
             }
+            marketInfo.setCreateTime(LocalDateTime.now());
+            super.save(marketInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }

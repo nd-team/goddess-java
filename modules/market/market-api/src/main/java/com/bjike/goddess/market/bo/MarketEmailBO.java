@@ -21,10 +21,9 @@ import java.util.Map;
 public class MarketEmailBO extends BaseBO {
 
     /**
-     * 行业
+     * 地区
      */
-    @NotBlank
-    private String work;
+    private String area;
 
     /**
      * 备注
@@ -34,7 +33,6 @@ public class MarketEmailBO extends BaseBO {
     /**
      * 发送间隔
      */
-    @NotBlank
     private Double sendNum;
 
     /**
@@ -130,12 +128,12 @@ public class MarketEmailBO extends BaseBO {
     private List<Map<String, String>> scaleMap;
 
 
-    public String getWork() {
-        return work;
+    public String getArea() {
+        return area;
     }
 
-    public void setWork(String work) {
-        this.work = work;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getRemark() {

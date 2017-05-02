@@ -1,6 +1,7 @@
 package com.bjike.goddess.market.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.market.enums.Scale;
 
 
 /**
@@ -57,7 +58,7 @@ public class MarketInfoBO extends BaseBO {
     /**
      * 规模
      */
-    private String scale;
+    private Scale scale;
 
     /**
      * 发起时间
@@ -209,11 +210,11 @@ public class MarketInfoBO extends BaseBO {
         this.projectName = projectName;
     }
 
-    public String getScale() {
+    public Scale getScale() {
         return scale;
     }
 
-    public void setScale(String scale) {
+    public void setScale(Scale scale) {
         this.scale = scale;
     }
 

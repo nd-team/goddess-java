@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -25,10 +26,10 @@ import java.time.LocalDateTime;
 public class MarketEmail extends BaseEntity {
 
     /**
-     * 行业
+     * 地区
      */
-    @Column(name = "work", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '行业'")
-    private String work;
+    @Column(name = "area",nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
 
     /**
      * 备注
@@ -52,14 +53,14 @@ public class MarketEmail extends BaseEntity {
      * 发送单位
      */
 
-    @Column(columnDefinition = "TINYINT(2)  COMMENT '发送单位'", nullable = false)
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '发送单位'")
     private MarketSendUnit marketSendUnit;
 
     /**
      * 汇总间隔
      */
 
-    @Column(columnDefinition = "TINYINT(2)  COMMENT '汇总间隔'", nullable = false)
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '汇总间隔'")
     private MarketCollectUnit marketCollectUnit;
 
     /**
@@ -73,11 +74,10 @@ public class MarketEmail extends BaseEntity {
      */
     @Column(name = "lastSendTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '上次发送时间'")
     private LocalDateTime lastSendTime;
-
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
@@ -87,12 +87,12 @@ public class MarketEmail extends BaseEntity {
     private String createPersion;
 
 
-    public String getWork() {
-        return work;
+    public String getArea() {
+        return area;
     }
 
-    public void setWork(String work) {
-        this.work = work;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getRemark() {

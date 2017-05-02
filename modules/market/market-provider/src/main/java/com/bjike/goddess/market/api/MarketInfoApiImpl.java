@@ -1,9 +1,11 @@
 package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
+import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.service.MarketInfoSer;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,14 @@ import java.util.List;
 public class MarketInfoApiImpl implements MarketInfoAPI {
     @Autowired
     private MarketInfoSer marketInfoSer;
-
+    @Override
+    public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
+        return marketInfoSer.countMarketInfo(marketInfoDTO);
+    }
+    @Override
+    public MarketInfoBO getOne(String id) throws SerException {
+        return marketInfoSer.getOne(id);
+    }
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         return marketInfoSer.findListMarketInfo(marketInfoDTO);
@@ -35,7 +44,10 @@ public class MarketInfoApiImpl implements MarketInfoAPI {
 
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-        marketInfoTO.setEndTime(DateUtil.dateToString(LocalDate.now()));
+        marketInfoTO.setInfoCollectionDate(DateUtil.dateToString(LocalDate.now()));
+        marketInfoTO.setStartTime(DateUtil.dateToString(LocalDateTime.now()));
+        marketInfoTO.setImportantPoint(DateUtil.dateToString(LocalDateTime.now()));
+        marketInfoTO.setEndTime(DateUtil.dateToString(LocalDateTime.now()));
         return marketInfoSer.insertMarketInfo(marketInfoTO);
     }
 
