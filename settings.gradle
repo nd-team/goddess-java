@@ -283,3 +283,8 @@ include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
+
+//#courier 快递收发管理
+include ':modules:courier:courier-api'
+include ':modules:courier:courier-consumer'
+include ':modules:courier:courier-provider'
