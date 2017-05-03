@@ -7,10 +7,12 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
 import com.bjike.goddess.organize.enums.ArrangementType;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,9 @@ import java.util.List;
  */
 @Service
 public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO> implements ArrangementSer {
+
+    @Autowired
+    private PositionDetailSer positionDetailSer;
 
 
     @Override
@@ -112,11 +117,11 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         Arrangement arrangement = super.findById(id);
         if (null == arrangement)
             throw new SerException("数据对象不存在");
-        try {
-            super.remove(arrangement);
-        } catch (SerException e) {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("arrangement.id", id));
+        if (this.findChild(id).size() > 0 || positionDetailSer.findByCis(dto).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(arrangement);
         return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
     }
 

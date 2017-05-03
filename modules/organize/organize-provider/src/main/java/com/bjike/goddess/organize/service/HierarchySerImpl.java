@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.HierarchyDTO;
 import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.HierarchyTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,9 @@ import java.util.List;
  */
 @Service
 public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> implements HierarchySer {
+
+    @Autowired
+    private DepartmentDetailSer departmentDetailSer;
 
     @Override
     public List<HierarchyBO> findStatus() throws SerException {
@@ -82,11 +86,9 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         Hierarchy entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (departmentDetailSer.findByHierarchy(id).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }
 

@@ -31,6 +31,9 @@ import java.util.List;
 public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, DepartmentDetailDTO> implements DepartmentDetailSer {
 
     @Autowired
+    private WorkRangeSer workRangeSer;
+
+    @Autowired
     private HierarchySer hierarchySer;
 
     private DepartmentDetailBO transformationToBO(DepartmentDetail entity) throws SerException {
@@ -156,11 +159,9 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetail entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (workRangeSer.findByDepartment(id).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return null;
     }
 

@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.DimensionDTO;
 import com.bjike.goddess.organize.entity.Dimension;
 import com.bjike.goddess.organize.to.DimensionTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,8 @@ import java.util.List;
 
 public class DimensionSerImpl extends ServiceImpl<Dimension, DimensionDTO> implements DimensionSer {
 
+    @Autowired
+    private PositionInstructionSer positionInstructionSer;
 
     @Override
     public List<DimensionBO> findStatus() throws SerException {
@@ -83,11 +86,9 @@ public class DimensionSerImpl extends ServiceImpl<Dimension, DimensionDTO> imple
         Dimension entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (positionInstructionSer.findByDimension(id).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, DimensionBO.class);
     }
 
