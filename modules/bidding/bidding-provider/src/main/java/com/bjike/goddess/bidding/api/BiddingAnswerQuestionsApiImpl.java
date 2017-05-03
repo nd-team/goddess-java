@@ -28,6 +28,10 @@ public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI 
     public Long countBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         return biddingAnswerQuestionsSer.countBiddingAnswerQuestions(biddingAnswerQuestionsDTO);
     }
+    @Override
+    public BiddingAnswerQuestionsBO getOne(String id) throws SerException {
+        return biddingAnswerQuestionsSer.getOne(id);
+    }
 
     @Override
     public BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {

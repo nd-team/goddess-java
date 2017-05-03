@@ -25,6 +25,15 @@ public interface BiddingWebInfoAPI {
         return null;
     }
     /**
+     * 一个招投标网站信息
+     *
+     * @return class BiddingWebInfoBO
+     */
+    default BiddingWebInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 招投标网站信息
      *
      * @param biddingWebInfoDTO 招投标网站信息dto

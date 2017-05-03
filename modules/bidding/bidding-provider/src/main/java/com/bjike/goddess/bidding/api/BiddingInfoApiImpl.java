@@ -2,13 +2,14 @@ package com.bjike.goddess.bidding.api;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
-import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,8 +30,19 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.countBiddingInfo(biddingInfoDTO);
     }
+
+    @Override
+    public BiddingInfoBO getOne(String id) throws SerException {
+        return biddingInfoSer.getOne(id);
+    }
+
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
+        biddingInfoTO.setRegistrationTime(DateUtil.dateToString(LocalDateTime.now()));
+        biddingInfoTO.setBiddingTime(DateUtil.dateToString(LocalDateTime.now()));
+        biddingInfoTO.setBuyTenderTime(DateUtil.dateToString(LocalDateTime.now()));
+        biddingInfoTO.setMarginTime(DateUtil.dateToString(LocalDateTime.now()));
+        biddingInfoTO.setBackTimeDeposit(DateUtil.dateToString(LocalDateTime.now()));
         return biddingInfoSer.insertBiddingInfo(biddingInfoTO);
     }
 
@@ -64,6 +76,7 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
         biddingInfoSer.upload();
 
     }
+
     @Override
     public BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         return biddingInfoSer.sendBiddingInfo(biddingInfoTO);
@@ -71,7 +84,7 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     }
 
     @Override
-    public BiddingInfoBO collectBiddingInfo(String[] cities) throws SerException {
+    public List<BiddingInfoBO> collectBiddingInfo(String[] cities) throws SerException {
         return biddingInfoSer.collectBiddingInfo(cities);
     }
 

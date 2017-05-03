@@ -33,6 +33,10 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
         return bidOpeningInfoSer.countBidOpeningInfo(bidOpeningInfoDTO);
     }
     @Override
+    public BidOpeningInfoBO getOne(String id) throws SerException {
+        return bidOpeningInfoSer.getOne(id);
+    }
+    @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         return bidOpeningInfoSer.insertBidOpeningInfo(bidOpeningInfoTO);
     }

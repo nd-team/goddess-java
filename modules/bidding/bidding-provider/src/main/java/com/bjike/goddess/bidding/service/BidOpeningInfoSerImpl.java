@@ -44,7 +44,11 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         Long count = super.count(bidOpeningInfoDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public BidOpeningInfoBO getOne(String id) throws SerException {
+        BidOpeningInfo bidOpeningInfo = super.findById(id);
+        return BeanTransform.copyProperties(bidOpeningInfo,BidOpeningInfoBO.class);
+    }
     @Override
     public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         bidOpeningInfoDTO.getSorts().add("createTime=desc");
@@ -52,7 +56,6 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class);
         return bidOpeningInfoBOS;
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
@@ -61,7 +64,6 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         return BeanTransform.copyProperties(bidOpeningInfo, BidOpeningInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO editBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         BidOpeningInfo bidOpeningInfo = super.findById(bidOpeningInfoTO.getId());
@@ -71,17 +73,12 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         return BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBidOpeningInfo(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
 
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<BidOpeningInfoBO> searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         /**
@@ -96,26 +93,17 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     }
 
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String projectName) throws SerException {
         //TODO: xiazhili 2017-03-10 未做导出
         return null;
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
         //TODO: xiazhili 2017-03-10 未做发送邮件
         return null;
     }
-    /**
-     /**
-     * 汇总
-     *
-     * @param cities cities
-     * @return class bidOpeningInfoBO
-     * @throws SerException
-     */
+    @Override
     public BidOpeningInfoBO collectBidOpeningInfo(String cities) throws SerException {
         List<BidOpeningInfoBO> bidOpeningInfoBOList = new ArrayList<>();
         //先查询地市
@@ -124,11 +112,11 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         String [] fields = new String[]{"count","competitive"};
         String sql = "select count(*) as count ,competitive from bidding_bidopeninginfo where cities=''";
         List<Map<String,String>> citiesMapList = new ArrayList<Map<String,String>>();
-        citiesMapList = sqlQueryString(citie, fields, sql, citiesMapList);
+     //   citiesMapList = sqlQueryString(citie, fields, sql, citiesMapList);
 
 
         BidOpeningInfoBO bidOpeningInfoBO = new BidOpeningInfoBO();
-        bidOpeningInfoBO.setAreaMap(citiesMapList);
+      //  bidOpeningInfoBO.setAreaMap(citiesMapList);
         bidOpeningInfoBOList.add(bidOpeningInfoBO);
 
         return null;
@@ -137,20 +125,20 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
      *
      * 数据库查询返回，然后添加map数组
      */
-    public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
+    /*public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
         List<BidOpeningInfoBO> bidOpeningInfoBOS = bidOpeningInfoAPI.findBySql(sql, BidOpeningInfoBO.class, fields);
         if (bidOpeningInfoBOS != null && bidOpeningInfoBOS.size() > 0) {
             if (obj.size() == bidOpeningInfoBOS.size()) {
                 for (BidOpeningInfoBO cbo : bidOpeningInfoBOS) {
                     Map<String, String> areaMap = new HashMap<>();
-                    areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+            //        areaMap.put("remark", cbo.getRemark());
+             //       areaMap.put("count", String.valueOf(cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (bidOpeningInfoBOS.size() < obj.size()) {
                 List<String> cbStr = new ArrayList<>();
                 for (BidOpeningInfoBO cb : bidOpeningInfoBOS) {
-                    cbStr.add(cb.getRemark());
+              //      cbStr.add(cb.getRemark());
                 }
 
                 //获取到所有不同的  如：地区
@@ -165,12 +153,12 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
                 for (String o : obj) {
                     for (BidOpeningInfoBO cbo : bidOpeningInfoBOS) {
                         Map<String, String> areaMap = new HashMap<>();
-                        if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
-                            areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+              //          if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
+             //               areaMap.put("remark", cbo.getRemark());
+               //             areaMap.put("count", String.valueOf(cbo.getCounts()));
                         }else {
-                            areaMap.put("remark", o);
-                            areaMap.put("count", 0+"");
+                  //          areaMap.put("remark", o);
+                  //          areaMap.put("count", 0+"");
                         }
                         mapList.add(areaMap);
                     }
@@ -178,7 +166,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
 
             }
         }
-        return mapList;
-    }
+     //   return mapList;
+    }*/
 
 }

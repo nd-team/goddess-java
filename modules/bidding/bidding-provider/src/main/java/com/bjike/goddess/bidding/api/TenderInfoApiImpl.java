@@ -29,6 +29,11 @@ public class TenderInfoApiImpl implements TenderInfoAPI {
     public Long countTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         return tenderInfoSer.countTenderInfo(tenderInfoDTO);
     }
+    @Override
+    public TenderInfoBO getOne(String id) throws SerException {
+        return tenderInfoSer.getOne(id);
+    }
+
     public TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
         return tenderInfoSer.insertTenderInfo(tenderInfoTO);
     }
