@@ -2,6 +2,7 @@ package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketEmailBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.service.MarketEmailSer;
@@ -62,7 +63,7 @@ public class MarketEmailApiImpl implements MarketEmailAPI {
     }
 
     @Override
-    public List<MarketEmailBO> collectMarketEmail(String[] area) throws SerException {
-        return marketEmailSer.collectMarketEmail(area);
+    public List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
+        return marketEmailSer.marketCollect(areas);
     }
 }

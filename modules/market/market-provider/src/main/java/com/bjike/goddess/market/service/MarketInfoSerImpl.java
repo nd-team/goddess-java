@@ -6,6 +6,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
+import com.bjike.goddess.market.enums.MarketProjectNature;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -56,10 +57,11 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
                 //判断是否为新项目
-                if (StringUtils.isNotEmpty(marketInfo.getProjectNature())) {
-                    marketInfo.setProjectNature("新项目");
+                if (marketInfo.getProjectNature().equals(MarketProjectNature.NEWPROJECT)) {
+                    marketInfo.setEffective(true);
+                } else if (marketInfo.getProjectNature().equals(MarketProjectNature.OLDPROJECT)) {
+                    marketInfo.setEffective(false);
                 }
-                marketInfo.setEffective(true);
             }
             marketInfo.setCreateTime(LocalDateTime.now());
             super.save(marketInfo);
@@ -69,7 +71,6 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
       /*  try {
