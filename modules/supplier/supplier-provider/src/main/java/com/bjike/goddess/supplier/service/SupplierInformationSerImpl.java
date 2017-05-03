@@ -104,7 +104,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
             try {
                 SupplierInformation entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
-                this.countExecution(entity);
+                entity.setExecution(this.countExecution(entity));
+                entity.setId(to.getId());
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, SupplierInformationBO.class);

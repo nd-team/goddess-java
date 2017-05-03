@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,13 +35,27 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     @Autowired
     private PositionDetailSer positionDetailSer;
 
+    private ArrangementBO transformBO(Arrangement entity) throws SerException {
+        ArrangementBO bo = BeanTransform.copyProperties(entity, ArrangementBO.class);
+        if (null != entity.getParent())
+            bo.setParentId(entity.getParent().getId());
+        return bo;
+    }
+
+    private List<ArrangementBO> transformBOList(List<Arrangement> list) throws SerException {
+        List<ArrangementBO> bos = new ArrayList<>(list.size());
+        for (Arrangement entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
 
     @Override
     public List<ArrangementBO> findStatus() throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<Arrangement> list = super.findByCis(dto);
-        List<ArrangementBO> bos = BeanTransform.copyProperties(list, ArrangementBO.class);
+        List<ArrangementBO> bos = this.transformBOList(list);
         return bos;
     }
 
@@ -55,7 +70,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
             arrangement.setParent(super.findById(to.getParentId()));
         this.checkLayer(arrangement, 1);
         super.save(arrangement);
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        return this.transformBO(arrangement);
     }
 
     /**
@@ -83,7 +98,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     private void checkUnique(ArrangementTO to) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("serialNumber", to.getSerialNumber()));
-        if (null != super.findByCis(dto))
+        if (super.findByCis(dto).size() > 0)
             throw new SerException(to.getSerialNumber() + ":该编号已存在,无法保存");
     }
 
@@ -102,14 +117,14 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         arrangement.setModifyTime(LocalDateTime.now());
         this.checkLayer(arrangement, 1);
         super.update(arrangement);
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        return this.transformBO(arrangement);
     }
 
     @Override
     public List<ArrangementBO> findChild(String id) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
-        return BeanTransform.copyProperties(super.findByCis(dto), ArrangementBO.class);
+        return this.transformBOList(super.findByCis(dto));
     }
 
     @Override
@@ -122,13 +137,13 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         if (this.findChild(id).size() > 0 || positionDetailSer.findByCis(dto).size() > 0)
             throw new SerException("存在依赖关系无法删除");
         super.remove(arrangement);
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        return this.transformBO(arrangement);
     }
 
     @Override
     public List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
         dto.getSorts().add("modifyTime=desc");
-        return BeanTransform.copyProperties(super.findByPage(dto), ArrangementBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override
