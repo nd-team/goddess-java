@@ -8,6 +8,7 @@ import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
 import com.bjike.goddess.supplier.dto.EnterpriseQualificationDTO;
 import com.bjike.goddess.supplier.entity.EnterpriseQualification;
 import com.bjike.goddess.supplier.to.EnterpriseQualificationTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
      */
     private EnterpriseQualificationBO transformBO(EnterpriseQualification entity) {
         EnterpriseQualificationBO bo = BeanTransform.copyProperties(entity, EnterpriseQualificationBO.class);
-        bo.setInformation_id(entity.getInformation().getId());
+        bo.setInformationId(entity.getInformation().getId());
         return bo;
     }
 
@@ -60,7 +61,9 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Override
     public EnterpriseQualificationBO save(EnterpriseQualificationTO to) throws SerException {
         EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class);
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -68,11 +71,15 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EnterpriseQualificationBO update(EnterpriseQualificationTO to) throws SerException {
-        EnterpriseQualification entity = BeanTransform.copyProperties(to, EnterpriseQualification.class), qualification = super.findById(to.getId());
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
-        entity.setCreateTime(LocalDateTime.now());
-        if (null != qualification)
-            entity.setCreateTime(qualification.getCreateTime());
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        EnterpriseQualification entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
@@ -82,6 +89,8 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
     @Override
     public EnterpriseQualificationBO delete(String id) throws SerException {
         EnterpriseQualification entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return this.transformBO(entity);
     }

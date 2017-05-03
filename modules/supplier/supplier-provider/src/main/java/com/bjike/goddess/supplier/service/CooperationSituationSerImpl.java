@@ -8,11 +8,13 @@ import com.bjike.goddess.supplier.bo.CooperationSituationBO;
 import com.bjike.goddess.supplier.dto.CooperationSituationDTO;
 import com.bjike.goddess.supplier.entity.CooperationSituation;
 import com.bjike.goddess.supplier.to.CooperationSituationTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +62,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     public CooperationSituationBO save(CooperationSituationTO to) throws SerException {
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -67,8 +71,16 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO update(CooperationSituationTO to) throws SerException {
-        CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        CooperationSituation entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
     }
@@ -77,6 +89,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Override
     public CooperationSituationBO delete(String id) throws SerException {
         CooperationSituation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return this.transformBO(entity);
     }

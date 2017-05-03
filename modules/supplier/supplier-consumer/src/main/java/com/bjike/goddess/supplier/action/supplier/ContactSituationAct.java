@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 联系情况
  *
@@ -39,12 +41,12 @@ public class ContactSituationAct {
      * @version v1
      */
     @GetMapping("v1/findByInformation/{id}")
-    public Result findByInformation(@PathVariable String id) throws ActException {
+    public Result findByInformation(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
                             contactSituationAPI.findByInformation(id)
-                            , ContactSituationVO.class));
+                            , ContactSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -58,9 +60,9 @@ public class ContactSituationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) ContactSituationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) ContactSituationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.save(to), ContactSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.save(to), ContactSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -74,9 +76,9 @@ public class ContactSituationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) ContactSituationTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) ContactSituationTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.update(to), ContactSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.update(to), ContactSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -90,9 +92,9 @@ public class ContactSituationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.delete(id), ContactSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(contactSituationAPI.delete(id), ContactSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
