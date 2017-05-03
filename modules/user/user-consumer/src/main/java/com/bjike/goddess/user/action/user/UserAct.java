@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @DefaultProperties
 @RestController
-@RequestMapping("user")
 public class UserAct {
 
     @Autowired

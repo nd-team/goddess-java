@@ -3,7 +3,6 @@ package com.bjike.goddess.voucher.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +112,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public List<VoucherGenerateBO> collectPname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        return voucherGenerateSer.collectPname( voucherGenerateDTO );
+        return voucherGenerateSer.collectPname(voucherGenerateDTO);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public VoucherGenerateBO antiPosting(String id) throws SerException {
-        return voucherGenerateSer.antiPosting( id );
+        return voucherGenerateSer.antiPosting(id);
     }
 
     @Override
@@ -203,12 +202,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public List<String> listSubByFirst(String firstSub) throws SerException {
-        return voucherGenerateSer.listSubByFirst( firstSub);
+        return voucherGenerateSer.listSubByFirst(firstSub);
     }
 
     @Override
     public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
-        return voucherGenerateSer.listTubByFirst(firstSub,secondSub);
+        return voucherGenerateSer.listTubByFirst(firstSub, secondSub);
     }
 
     @Override
@@ -227,7 +226,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO,String condition) throws SerException {
-        return voucherGenerateSer.listStatistic(voucherGenerateDTO,condition);
+    public List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.findFundRecord(dto);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO, String condition) throws SerException {
+        return voucherGenerateSer.listStatistic(voucherGenerateDTO, condition);
     }
 }

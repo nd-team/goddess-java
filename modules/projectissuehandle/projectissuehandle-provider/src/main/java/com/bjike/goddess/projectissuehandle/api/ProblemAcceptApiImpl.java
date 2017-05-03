@@ -1,8 +1,10 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
+import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.service.ProblemAcceptSer;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,10 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return problemAcceptSer.countProblemAccept(problemAcceptDTO);
+    }
+    @Override
+    public ProblemAcceptBO getOne(String id) throws SerException {
+        return problemAcceptSer.getOne(id);
     }
 
     @Override

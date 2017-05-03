@@ -26,6 +26,15 @@ public interface BusinessRegisterSer extends Ser<BusinessRegister, BusinessRegis
         return null;
     }
     /**
+     * 一个工商注册
+     *
+     * @return class BusinessRegisterBO
+     */
+    default BusinessRegisterBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 工商注册
      *
      * @param businessRegisterDTO 工商注册dto

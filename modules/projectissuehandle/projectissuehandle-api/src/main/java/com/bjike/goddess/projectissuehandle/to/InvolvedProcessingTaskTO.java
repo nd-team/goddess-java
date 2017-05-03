@@ -1,6 +1,9 @@
 package com.bjike.goddess.projectissuehandle.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 参与处理人员的任务分配
@@ -16,11 +19,13 @@ public class InvolvedProcessingTaskTO extends BaseTO {
     /**
      * 内部项目名称
      */
+    @NotBlank(message = "内部项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String internalProjectName;
 
     /**
      * 处理人员
      */
+    @NotBlank(message = "处理人员不能为空",groups = {ADD.class, EDIT.class})
     private String handler;
 
     /**

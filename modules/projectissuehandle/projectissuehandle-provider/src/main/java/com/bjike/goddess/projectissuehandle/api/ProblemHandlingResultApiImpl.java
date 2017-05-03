@@ -9,7 +9,7 @@ import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,6 +30,12 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return problemHandlingResultSer.countProblemHandlingResult(problemHandlingResultDTO);
     }
+
+    @Override
+    public ProblemHandlingResultBO getOne(String id) throws SerException {
+        return problemHandlingResultSer.getOne(id);
+    }
+
     @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return problemHandlingResultSer.findListProblemHandlingResult(problemHandlingResultDTO);
@@ -37,9 +43,9 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
 
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        problemHandlingResultTO.setProblemAcceptTime(DateUtil.dateToString(LocalDate.now()));
-        problemHandlingResultTO.setProblemOccurrenceTime(DateUtil.dateToString(LocalDate.now()));
-        problemHandlingResultTO.setProblemSolveTime(DateUtil.dateToString(LocalDate.now()));
+        problemHandlingResultTO.setProblemAcceptTime(DateUtil.dateToString(LocalDateTime.now()));
+        problemHandlingResultTO.setProblemOccurrenceTime(DateUtil.dateToString(LocalDateTime.now()));
+        problemHandlingResultTO.setProblemSolveTime(DateUtil.dateToString(LocalDateTime.now()));
         return problemHandlingResultSer.insertProblemHandlingResult(problemHandlingResultTO);
     }
 

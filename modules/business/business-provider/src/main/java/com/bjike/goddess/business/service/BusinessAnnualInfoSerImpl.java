@@ -35,6 +35,11 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
         Long counts = super.count(businessAnnualInfoDTO);
         return counts;
     }
+    @Override
+    public BusinessAnnualInfoBO getOne(String id) throws SerException {
+        BusinessAnnualInfo businessAnnualInfo = super.findById(id);
+        return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class,true);
+    }
 
     @Override
     public List<BusinessAnnualInfoBO> findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {

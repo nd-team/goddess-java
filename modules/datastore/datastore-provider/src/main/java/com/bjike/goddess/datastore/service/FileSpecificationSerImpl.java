@@ -35,6 +35,11 @@ public class FileSpecificationSerImpl extends ServiceImpl<FileSpecification, Fil
         Long counts = super.count(fileSpecificationDTO);
         return counts;
     }
+    @Override
+    public FileSpecificationBO getOne(String id) throws SerException {
+        FileSpecification fileSpecification = super.findById(id);
+        return BeanTransform.copyProperties(fileSpecification, FileSpecificationBO.class);
+    }
 
     @Override
     public List<FileSpecificationBO> findListFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
@@ -64,9 +69,6 @@ public class FileSpecificationSerImpl extends ServiceImpl<FileSpecification, Fil
 
     @Override
      public void removeFileSpecification(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 }

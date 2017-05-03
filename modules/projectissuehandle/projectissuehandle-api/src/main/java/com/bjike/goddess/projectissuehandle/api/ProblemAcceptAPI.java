@@ -24,6 +24,12 @@ public interface ProblemAcceptAPI {
         return null;
     }
     /**
+     * 一个项目执行中的问题受理
+     * @return class ProblemAcceptBO
+     */
+    default ProblemAcceptBO getOne(String id) throws SerException {return null;}
+
+    /**
      * 项目执行中的问题受理
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto

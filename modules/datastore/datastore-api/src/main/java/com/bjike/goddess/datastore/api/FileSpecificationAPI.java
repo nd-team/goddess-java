@@ -18,16 +18,25 @@ import java.util.List;
  */
 public interface FileSpecificationAPI {
     /**
-     * 数据存储-文件规范列表总条数
+     * 数据存储文件规范列表总条数
      */
     default Long countFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
         return null;
     }
 
     /**
+     * 一个数据存储文件规范
+     *
+     * @return class FileSpecificationBO
+     */
+    default FileSpecificationBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 数据存储-文件规范
      *
-     * @param fileSpecificationDTO 数据存储-文件规范dto
+     * @param fileSpecificationDTO 数据存储文件规范dto
      * @return class FileSpecificationBO
      * @throws SerException
      */
@@ -36,7 +45,7 @@ public interface FileSpecificationAPI {
     }
 
     /**
-     * 添加数据存储-文件规范
+     * 添加数据存储文件规范
      *
      * @param fileSpecificationTO 数据存储-文件规范信息数据to
      * @return class FileSpecificationBO
@@ -47,9 +56,9 @@ public interface FileSpecificationAPI {
     }
 
     /**
-     * 编辑数据存储-文件规范
+     * 编辑数据存储文件规范
      *
-     * @param fileSpecificationTO 数据存储-文件规范数据to
+     * @param fileSpecificationTO 数据存储文件规范数据to
      * @return class FileSpecificationBO
      * @throws SerException
      */
@@ -58,7 +67,7 @@ public interface FileSpecificationAPI {
     }
 
     /**
-     * 根据id删除数据存储-文件规范
+     * 根据id删除数据存储文件规范
      *
      * @param id
      * @throws SerException

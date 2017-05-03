@@ -22,31 +22,31 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 公司名称
      */
-    @Column(name = "companyName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
+    @Column(name = "companyName", columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
     private String companyName;
 
     /**
      * 报告年份
      */
-    @Column(name = "reportYear", nullable = false, columnDefinition = "DATE   COMMENT '报告年份'")
+    @Column(name = "reportYear", columnDefinition = "DATE   COMMENT '报告年份'")
     private LocalDate reportYear;
 
     /**
      * 提交日期
      */
-    @Column(name = "submitDate", nullable = false, columnDefinition = "DATE   COMMENT '提交日期'")
+    @Column(name = "submitDate", columnDefinition = "DATE   COMMENT '提交日期'")
     private LocalDate submitDate;
 
     /**
      * 状态(是否公示)
      */
-    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
+    @Column(name = "is_status",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
     private Boolean status;
 
     /**
      * 年报
      */
-    @Column(name = "annualReport", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年报'")
+    @Column(name = "annualReport", columnDefinition = "VARCHAR(255)   COMMENT '年报'")
     private String annualReport;
 
 

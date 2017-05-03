@@ -26,6 +26,14 @@ public interface StaffMovementApplySer extends Ser<StaffMovementApply, StaffMove
     default Long countStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个人员调动申请
+     *
+     * @return class StaffMovementApplyBO
+     */
+    default StaffMovementApplyBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 人员调动申请

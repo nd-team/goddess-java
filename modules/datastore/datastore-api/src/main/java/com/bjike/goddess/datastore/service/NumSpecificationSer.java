@@ -2,12 +2,9 @@ package com.bjike.goddess.datastore.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.datastore.bo.FileSpecificationBO;
 import com.bjike.goddess.datastore.bo.NumSpecificationBO;
-import com.bjike.goddess.datastore.dto.FileSpecificationDTO;
-import com.bjike.goddess.datastore.entity.NumSpecification;
 import com.bjike.goddess.datastore.dto.NumSpecificationDTO;
-import com.bjike.goddess.datastore.to.FileSpecificationTO;
+import com.bjike.goddess.datastore.entity.NumSpecification;
 import com.bjike.goddess.datastore.to.NumSpecificationTO;
 
 import java.util.List;
@@ -27,6 +24,15 @@ public interface NumSpecificationSer extends Ser<NumSpecification, NumSpecificat
      * 数据存储编号规范列表总条数
      */
     default Long countNumSpecification(NumSpecificationDTO numSpecificationDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个数据存储编号规范
+     *
+     * @return class NumSpecificationBO
+     */
+    default NumSpecificationBO getOne(String id) throws SerException {
         return null;
     }
 

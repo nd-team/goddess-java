@@ -40,7 +40,7 @@ public final class ResponseContext {
 
     public static void writeData(Object data){
         try {
-            init().getWriter().print(JSON.toJSONString(data));
+            init().getWriter().print(JSON.toJSON(data));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
@@ -48,7 +48,7 @@ public final class ResponseContext {
 
     public static void writeData(HttpServletResponse response,Object data){
         try {
-            init().getWriter().print(JSON.toJSONString(data));
+            init().getWriter().print(JSON.toJSON(data));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

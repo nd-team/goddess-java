@@ -1,10 +1,12 @@
 package com.bjike.goddess.projectissuehandle.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.projectissuehandle.enums.ProblemEmergencyDegree;
-import com.bjike.goddess.projectissuehandle.enums.ProblemTypes;
+import com.bjike.goddess.projectissuehandle.enums.*;
+import org.hibernate.validator.constraints.NotBlank;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目执行中的问题受理
@@ -40,6 +42,7 @@ public class ProblemAcceptTO extends BaseTO {
     /**
      * 内部项目名称
      */
+    @NotBlank(message = "内部项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String internalProjectName;
 
     /**
@@ -50,12 +53,13 @@ public class ProblemAcceptTO extends BaseTO {
     /**
      * 工程类型
      */
+    @NotBlank(message = "工程类型不能为空",groups = {ADD.class, EDIT.class})
     private String projectType;
 
     /**
      * 通知方式
      */
-    private String noticeWay;
+    private NoticeWay noticeWay;
 
     /**
      * 问题具体内容
@@ -80,12 +84,12 @@ public class ProblemAcceptTO extends BaseTO {
     /**
      * 问题处理时间
      */
-    private String problemProcessingTime;
+    private ProblemProcessingTime problemProcessingTime;
 
     /**
      * 受影响部门
      */
-    private String affectedDepartment;
+    private AffectedDepartment affectedDepartment;
 
 
     public String getYear() {
@@ -144,11 +148,11 @@ public class ProblemAcceptTO extends BaseTO {
         this.projectType = projectType;
     }
 
-    public String getNoticeWay() {
+    public NoticeWay getNoticeWay() {
         return noticeWay;
     }
 
-    public void setNoticeWay(String noticeWay) {
+    public void setNoticeWay(NoticeWay noticeWay) {
         this.noticeWay = noticeWay;
     }
 
@@ -184,19 +188,19 @@ public class ProblemAcceptTO extends BaseTO {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
-    public String getProblemProcessingTime() {
+    public ProblemProcessingTime getProblemProcessingTime() {
         return problemProcessingTime;
     }
 
-    public void setProblemProcessingTime(String problemProcessingTime) {
+    public void setProblemProcessingTime(ProblemProcessingTime problemProcessingTime) {
         this.problemProcessingTime = problemProcessingTime;
     }
 
-    public String getAffectedDepartment() {
+    public AffectedDepartment getAffectedDepartment() {
         return affectedDepartment;
     }
 
-    public void setAffectedDepartment(String affectedDepartment) {
+    public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
     }
 }

@@ -22,43 +22,43 @@ public class BusinessTaxChange extends BaseEntity {
     /**
      * 变更日期
      */
-    @Column(name = "changeDate", nullable = false, columnDefinition = "DATE   COMMENT '变更日期'")
+    @Column(name = "changeDate", columnDefinition = "DATE   COMMENT '变更日期'")
     private LocalDate changeDate;
 
     /**
      * 变更原因
      */
-    @Column(name = "changeCause", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '变更原因'")
+    @Column(name = "changeCause", columnDefinition = "VARCHAR(255)   COMMENT '变更原因'")
     private String changeCause;
 
     /**
      * 变更前内容
      */
-    @Column(name = "changeBeforeContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '变更前内容'")
+    @Column(name = "changeBeforeContent", columnDefinition = "VARCHAR(255)   COMMENT '变更前内容'")
     private String changeBeforeContent;
 
     /**
      * 变更后内容
      */
-    @Column(name = "changeAfterContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT ''")
+    @Column(name = "changeAfterContent", columnDefinition = "VARCHAR(255)   COMMENT ''")
     private String changeAfterContent;
 
     /**
      * 负责经办人
      */
-    @Column(name = "responsibleAgent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责经办人'")
+    @Column(name = "responsibleAgent", columnDefinition = "VARCHAR(255)   COMMENT '负责经办人'")
     private String responsibleAgent;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
      * 变更资料名称
      */
-    @Column(name = "changeDataName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '变更资料名称'")
+    @Column(name = "changeDataName",  columnDefinition = "VARCHAR(255)   COMMENT '变更资料名称'")
     private String changeDataName;
 
 

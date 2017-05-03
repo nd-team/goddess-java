@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -39,10 +40,28 @@ public class AccountPwdSpecificationAction {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(AccountPwdSpecificationDTO accountPwdSpecificationDTO, BindingResult bindingResult) throws ActException {
+    public Result count(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws ActException {
         try {
             Long count = accountPwdSpecificationAPI.countAccountPwdSpecification(accountPwdSpecificationDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个数据存储账号密码规范
+     *
+     * @param id
+     * @return class AccountPwdSpecificationVO
+     * @des 获取一个数据存储账号密码规范
+     * @version v1
+     */
+    @GetMapping("v1/account/{id}")
+    public Result account(@PathVariable String id) throws ActException {
+        try {
+            AccountPwdSpecificationBO accountPwdSpecificationBO = accountPwdSpecificationAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(accountPwdSpecificationBO, AccountPwdSpecificationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -56,11 +75,11 @@ public class AccountPwdSpecificationAction {
      * @des 获取所有数据存储账号密码规范
      * @version v1
      */
-    @GetMapping("v1/listAccountPwdSpecification")
-    public Result findListAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(AccountPwdSpecificationDTO accountPwdSpecificationDTO, HttpServletRequest request) throws ActException {
         try {
             List<AccountPwdSpecificationVO> accountPwdSpecificationVOS = BeanTransform.copyProperties
-                    (accountPwdSpecificationAPI.findListAccountPwdSpecification(accountPwdSpecificationDTO), AccountPwdSpecificationVO.class);
+                    (accountPwdSpecificationAPI.findListAccountPwdSpecification(accountPwdSpecificationDTO), AccountPwdSpecificationVO.class, request);
             return ActResult.initialize(accountPwdSpecificationVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -76,7 +95,7 @@ public class AccountPwdSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addAccountPwdSpecification(AccountPwdSpecificationTO accountPwdSpecificationTO, BindingResult bindingResult) throws ActException {
+    public Result add(AccountPwdSpecificationTO accountPwdSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             AccountPwdSpecificationBO accountPwdSpecificationBO = accountPwdSpecificationAPI.insertAccountPwdSpecification(accountPwdSpecificationTO);
             return ActResult.initialize(accountPwdSpecificationBO);
@@ -94,7 +113,7 @@ public class AccountPwdSpecificationAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editAccountPwdSpecification(AccountPwdSpecificationTO accountPwdSpecificationTO) throws ActException {
+    public Result edit(AccountPwdSpecificationTO accountPwdSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
             AccountPwdSpecificationBO accountPwdSpecificationBO = accountPwdSpecificationAPI.editAccountPwdSpecification(accountPwdSpecificationTO);
             return ActResult.initialize(accountPwdSpecificationBO);
@@ -111,7 +130,7 @@ public class AccountPwdSpecificationAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteAccountPwdSpecification(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             accountPwdSpecificationAPI.removeAccountPwdSpecification(id);
             return new ActResult("delete success");

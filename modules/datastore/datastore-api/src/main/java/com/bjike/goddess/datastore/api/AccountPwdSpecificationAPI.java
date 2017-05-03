@@ -18,14 +18,20 @@ import java.util.List;
  */
 public interface AccountPwdSpecificationAPI {
     /**
-     * 数据存储-账号密码规范列表总条数
+     * 数据存储账号密码规范列表总条数
      */
     default Long countAccountPwdSpecification(AccountPwdSpecificationDTO accountPwdSpecificationDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个数据存储账号密码规范
+     * @return class AccountPwdSpecificationBO
+     */
+    default AccountPwdSpecificationBO getOne(String id) throws SerException {return null;}
+
 
     /**
-     * 数据存储-账号密码规范
+     * 数据存储账号密码规范
      *
      * @param accountPwdSpecificationDTO 数据存储-账号密码规范dto
      * @return class AccountPwdSpecificationBO
@@ -36,7 +42,7 @@ public interface AccountPwdSpecificationAPI {
     }
 
     /**
-     * 添加数据存储-账号密码规范
+     * 添加数据存储账号密码规范
      *
      * @param accountPwdSpecificationTO 数据存储-账号密码规范数据to
      * @return class AccountPwdSpecificationBO
@@ -47,7 +53,7 @@ public interface AccountPwdSpecificationAPI {
     }
 
     /**
-     * 编辑数据存储-账号密码规范
+     * 编辑数据存储账号密码规范
      *
      * @param accountPwdSpecificationTO 数据存储-账号密码规范数据to
      * @return class AccountPwdSpecificationBO
@@ -58,7 +64,7 @@ public interface AccountPwdSpecificationAPI {
     }
 
     /**
-     * 根据id删除数据存储-账号密码规范
+     * 根据id删除数据存储账号密码规范
      *
      * @param id
      * @throws SerException

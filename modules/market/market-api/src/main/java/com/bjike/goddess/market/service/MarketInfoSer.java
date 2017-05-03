@@ -20,10 +20,22 @@ import java.util.List;
  */
 public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
     /**
-     * 获取市场信息
+     *市场信息管理列表总条数
+     */
+    default Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个市场信息管理
+     * @return class MarketInfoBO
+     */
+    default MarketInfoBO getOne(String id) throws SerException {return null;}
+
+    /**
+     * 市场信息
      *
      * @param marketInfoDTO 市场信息dto
-     * @return class marketInfoBO
+     * @return class MarketInfoBO
      * @throws SerException
      */
     default List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
@@ -34,6 +46,7 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
      * 添加市场信息
      *
      * @param marketInfoTO 市场信息数据to
+     * @return class MarketInfoBO
      * @throws SerException
      */
     default MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
@@ -44,7 +57,7 @@ public interface MarketInfoSer extends Ser<MarketInfo, MarketInfoDTO> {
      * 编辑市场信息
      *
      * @param marketInfoTO 市场信息数据to
-     * @return class marketInfoBO
+     * @return class MarketInfoBO
      * @throws SerException
      */
     default MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {

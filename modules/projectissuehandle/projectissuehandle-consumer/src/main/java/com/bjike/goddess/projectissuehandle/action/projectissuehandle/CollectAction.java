@@ -24,7 +24,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectissuehandle/collect")
+@RequestMapping("collect")
 public class CollectAction {
     @Autowired
     private CollectAPI collectAPI;
@@ -37,8 +37,8 @@ public class CollectAction {
      * @des 项目执行中的问题受理及处理结果
      * @version v1
      */
-    @GetMapping("v1/Collect")
-    public Result Collect(@NotBlank String[] areas) throws ActException {
+    @GetMapping("v1/collect")
+    public Result collect(@NotBlank String[] areas) throws ActException {
         try {
             List<CollectVO> collectVOS = BeanTransform.copyProperties(
                     collectAPI.collect(areas), CollectVO.class, true);

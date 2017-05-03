@@ -16,11 +16,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "rbac_role_permission")
 public class RolePermission extends BaseEntity {
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "permission_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '资源id' ")
     private Permission permission;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '角色id' ")
     private Role role;
 
