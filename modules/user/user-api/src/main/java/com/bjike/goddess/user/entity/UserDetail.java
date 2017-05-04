@@ -34,11 +34,7 @@ public class UserDetail extends BaseEntity {
     @Range(min = 0, max = 120)
     @Column(columnDefinition = "TINYINT COMMENT '年龄' ")
     private Integer age;
-    /**
-     * 用户类型
-     */
-    @Column(columnDefinition = "TINYINT(2)  COMMENT '用户类型' ", nullable = false)
-    private UserType userType;
+
     /**
      * 地址
      */
@@ -100,14 +96,6 @@ public class UserDetail extends BaseEntity {
 
     public void setAge(Integer age) {
         this.age = age;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public String getAddress() {
