@@ -15,7 +15,7 @@ import javax.persistence.*;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "message_group_message")
+@Table(name = "group_message")
 public class GroupMessage extends BaseEntity {
     /**
      * 组

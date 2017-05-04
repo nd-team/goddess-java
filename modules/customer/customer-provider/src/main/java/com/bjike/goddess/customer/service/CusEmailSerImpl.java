@@ -1,5 +1,6 @@
 package com.bjike.goddess.customer.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -211,7 +212,9 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
         String cusStatus = String.valueOf(tempCusStatus).substring(0, String.valueOf(tempCusStatus).lastIndexOf(","));
 
+        StringBuffer worksBuffer = new StringBuffer("");
         for (String work : works) {
+            worksBuffer.append("'"+work+"',");
             //处理地区汇总
             String[] fields = new String[]{"counts", "work", "remark"};
             String sql = "select count(*) as counts , workprofession as work ,area as remark  from  customer_customerbaseinfo " +
@@ -255,10 +258,11 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
 
         //合计计算总数
-        cusEmailBOList = calcuteCount(areaList, levelList, cusTypeList, cusStatusList, cusEmailBOList);
+        cusEmailBOList = calcuteCount(areaList, levelList, cusTypeList, cusStatusList, cusEmailBOList, worksBuffer);
 
         return cusEmailBOList;
     }
+
 
     /**
      * 合计计算总数
@@ -273,7 +277,8 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
      */
     public List<CusEmailBO> calcuteCount(List<String> areaList, List<String> levelList,
                                          List<Integer> cusTypeList, List<Integer> cusStatusList,
-                                         List<CusEmailBO> cusEmailBOList) throws SerException {
+                                         List<CusEmailBO> cusEmailBOList , StringBuffer worksBuffer) throws SerException {
+        String works = StringUtils.substringBeforeLast(worksBuffer.toString(),",");
         String[] fields = new String[]{"counts", "remark"};
 
         /**
@@ -285,7 +290,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
         String areas = String.valueOf(tempAreas).substring(0, String.valueOf(tempAreas).lastIndexOf(","));
         String sql = "select count(*) as counts , area as remark  from  customer_customerbaseinfo " +
-                "where area in (" + areas + ")  group by area  order by area asc  ";
+                "where area in (" + areas + ") and workprofession in("+works+") group by area  order by area asc  ";
         List<Map<String, String>> areaMapList = new ArrayList<>();
         List<CusEmailBO> cusEmailBOS = customerBaseInfoAPI.findBySql(sql, CusEmailBO.class, fields);
         areaMapList = sqlQueryString(areaList, cusEmailBOS, areaMapList);
@@ -298,7 +303,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         String levels = String.valueOf(tempLevels).substring(0, String.valueOf(tempLevels).lastIndexOf(","));
         sql = " select count(*) AS counts,  csLevel.name AS remark FROM customer_customerbaseinfo AS base" +
                 " INNER JOIN customer_customerlevel AS csLevel ON base.customerLevel_id = csLevel.id " +
-                " WHERE csLevel.name IN (" + levels + ") GROUP BY  csLevel.name" +
+                " WHERE csLevel.name IN (" + levels + ") and workprofession in("+works+") GROUP BY  csLevel.name" +
                 " ORDER BY csLevel.name ASC";
         List<Map<String, String>> levelMapList = new ArrayList<>();
         cusEmailBOS = customerBaseInfoAPI.findBySql(sql, CusEmailBO.class, fields);
@@ -315,7 +320,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
         String cusType = String.valueOf(tempCusTypes).substring(0, String.valueOf(tempCusTypes).lastIndexOf(","));
         sql = "select count(*) as counts , customertype as enumConvert  from  customer_customerbaseinfo " +
-                "where customertype in (" + cusType + ")  group by customertype  order by customertype asc  ";
+                "where customertype in (" + cusType + ")  and workprofession in("+works+") group by customertype  order by customertype asc  ";
         List<Map<String, String>> cusTypeMapList = new ArrayList<>();
         cusEmailBOS = customerBaseInfoAPI.findBySql(sql, CusEmailBO.class, fields);
         cusTypeMapList = sqlQueryInt("CustomerType", cusTypeList, cusEmailBOS, cusTypeMapList);
@@ -327,7 +332,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
         }
         String cusStatus = String.valueOf(tempCusStatus).substring(0, String.valueOf(tempCusStatus).lastIndexOf(","));
         sql = "select count(*) as counts , customerstatus as enumConvert  from  customer_customerbaseinfo " +
-                "where customerstatus in (" + cusStatus + ")  group by  customerstatus order by customerstatus asc  ";
+                "where customerstatus in (" + cusStatus + ") and workprofession in("+works+") group by  customerstatus order by customerstatus asc  ";
         List<Map<String, String>> cusStatusMapList = new ArrayList<>();
         cusEmailBOS = customerBaseInfoAPI.findBySql(sql, CusEmailBO.class, fields);
         cusStatusMapList = sqlQueryInt("CustomerStatus", cusStatusList, cusEmailBOS, cusStatusMapList);
@@ -379,7 +384,6 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     }
 
 
-
     /**
      * 数据库查询返回，然后添加map数组
      */
@@ -415,7 +419,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
                     areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
-                for(String dif: diffrent){
+                for (String dif : diffrent) {
                     Map<String, String> areaMap = new HashMap<>();
                     areaMap.put("remark", dif);
                     areaMap.put("count", String.valueOf(0));
@@ -424,14 +428,22 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
 
 
             }
-        }else{
-            for(String dif: obj){
+        } else {
+            for (String dif : obj) {
                 Map<String, String> areaMap = new HashMap<>();
                 areaMap.put("remark", dif);
                 areaMap.put("count", String.valueOf(0));
                 mapList.add(areaMap);
             }
         }
+
+        Collections.sort(mapList, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2) {
+                //进行判断
+                return ((String) o1.get("remark")).compareTo((String) o2.get("remark"));
+            }
+        });
         return mapList;
     }
 
@@ -477,7 +489,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
                     areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
-                for(Integer dif: diffrent){
+                for (Integer dif : diffrent) {
                     Map<String, String> areaMap = new HashMap<>();
                     if (enumStr.equals("CustomerStatus")) {
                         areaMap.put("remark", CustomerStatus.getStrConvert(dif));
@@ -490,8 +502,8 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
 
 
             }
-        }else{
-            for(Integer dif: obj){
+        } else {
+            for (Integer dif : obj) {
                 Map<String, String> areaMap = new HashMap<>();
                 if (enumStr.equals("CustomerStatus")) {
                     areaMap.put("remark", CustomerStatus.getStrConvert(dif));
@@ -502,6 +514,14 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
                 mapList.add(areaMap);
             }
         }
+
+        Collections.sort(mapList, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2) {
+                //进行判断
+                return ((String) o1.get("remark")).compareTo((String) o2.get("remark"));
+            }
+        });
         return mapList;
     }
 

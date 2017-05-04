@@ -402,5 +402,10 @@ public interface VoucherGenerateAPI {
         return null;
     }
 
-
+    /**
+     * 查询资金流水记录即一级科目为银行存款或库存现金
+     *
+     * @return 资金流水记录
+     */
+    List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
 }

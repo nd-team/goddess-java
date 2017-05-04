@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [com.bjike]
  */
 @Entity
-@Table(name = "message_user_subscribe")
+@Table(name = " user_message_subscribe")
 public class UserSubscribe extends BaseEntity {
     /**
      * 消息类型

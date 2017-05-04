@@ -14,6 +14,11 @@ import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 public class ProjectOutsourcingVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 合同外部项目名称
      */
     private String contractExtProject;
@@ -97,6 +102,14 @@ public class ProjectOutsourcingVO {
      * 记录人
      */
     private String recordUser;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getContractExtProject() {
         return contractExtProject;
