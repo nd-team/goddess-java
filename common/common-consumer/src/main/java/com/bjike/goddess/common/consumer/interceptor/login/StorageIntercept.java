@@ -32,14 +32,19 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
-        if (multiRequest.getFiles("file").size() == 0) {
+        try {
+            String contentType = request.getContentType();  //获取Content-Type
+            if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
+                if (StringUtils.isBlank(request.getParameter("path"))) {
+                    throw new SerException("path 不能为空!");
+                }
+            }
+
+            return validateLogin(request, response);
+        }catch (Exception e){
             return true;
         }
-        if (StringUtils.isBlank(request.getParameter("path"))) {
-            throw new SerException("path 不能为空!");
-        }
-        return validateLogin(request, response);
+
 
     }
 
