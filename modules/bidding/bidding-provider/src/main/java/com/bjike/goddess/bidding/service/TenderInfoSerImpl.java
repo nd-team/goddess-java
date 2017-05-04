@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
@@ -35,7 +36,11 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         Long count = super.count(tenderInfoDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public TenderInfoBO getOne(String id) throws SerException {
+        TenderInfo tenderInfo = super.findById(id);
+        return BeanTransform.copyProperties(tenderInfo,TenderInfoBO.class);
+    }
     @Override
     public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         tenderInfoDTO.getSorts().add("createTime=desc");
@@ -44,7 +49,6 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         return tenderInfoBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
         TenderInfo tenderInfo = BeanTransform.copyProperties(tenderInfoTO, TenderInfo.class, true);
@@ -53,7 +57,6 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         return BeanTransform.copyProperties(tenderInfo, TenderInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public TenderInfoBO editTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
         TenderInfo tenderInfo = super.findById(tenderInfoTO.getId());
@@ -63,22 +66,16 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         return BeanTransform.copyProperties(tenderInfoTO, TenderInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeTenderInfo(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String projectName) throws SerException {
         //TODO: xiazhili 2017-03-17 未做导出
         return null;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void upload() throws SerException {
         //TODO: xiazhili 2017-03-17 未做上传
@@ -86,7 +83,6 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
 
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void uploadAttachments() throws SerException {
         //TODO: xiazhili 2017-03-17 未做上传附件

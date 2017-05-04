@@ -26,6 +26,14 @@ public interface BiddingAnswerQuestionsSer extends Ser<BiddingAnswerQuestions, B
         return null;
     }
     /**
+     * 一个投标答疑问题记录
+     *
+     * @return class BiddingAnswerQuestionsBO
+     */
+    default BiddingAnswerQuestionsBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 投标答疑问题记录
      *
      * @param biddingAnswerQuestionsDTO 投标答疑问题记录dto

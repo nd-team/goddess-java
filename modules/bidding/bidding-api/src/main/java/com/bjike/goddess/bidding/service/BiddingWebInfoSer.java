@@ -1,11 +1,11 @@
 package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
+import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
+import com.bjike.goddess.bidding.entity.BiddingWebInfo;
 import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.bidding.entity.BiddingWebInfo;
-import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 
 import java.util.List;
 
@@ -25,6 +25,16 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
     default Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个招投标网站信息
+     *
+     * @return class BiddingWebInfoBO
+     */
+    default BiddingWebInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 招投标网站信息
      *

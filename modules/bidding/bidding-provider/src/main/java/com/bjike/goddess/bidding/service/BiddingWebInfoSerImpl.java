@@ -33,7 +33,11 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         Long count = super.count(biddingWebInfoDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public BiddingWebInfoBO getOne(String id) throws SerException {
+        BiddingWebInfo biddingWebInfo = super.findById(id);
+        return BeanTransform.copyProperties(biddingWebInfo,BiddingWebInfoBO.class);
+    }
     @Override
     public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         biddingWebInfoDTO.getSorts().add("createTime=desc");
@@ -41,7 +45,6 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         List<BiddingWebInfoBO> biddingWebInfoBOS = BeanTransform.copyProperties(biddingWebInfos,BiddingWebInfoBO.class);
         return biddingWebInfoBOS;
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
         BiddingWebInfo biddingWebInfo = BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
@@ -50,7 +53,6 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         return BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO editBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
         BiddingWebInfo biddingWebInfo = super.findById(biddingWebInfoTO.getId());
@@ -60,12 +62,8 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         return BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingWebInfo(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 

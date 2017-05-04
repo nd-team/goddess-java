@@ -1,6 +1,8 @@
 package com.bjike.goddess.market.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.market.enums.MarketProjectNature;
+import com.bjike.goddess.market.enums.MarketWorkType;
 import com.bjike.goddess.market.enums.Scale;
 
 import javax.persistence.Column;
@@ -50,8 +52,8 @@ public class MarketInfo extends BaseEntity {
     /**
      * 行业
      */
-    @Column(name = "workProfession", columnDefinition = "VARCHAR(255)   COMMENT '行业'")
-    private String workProfession;
+    @Column(name = "workType", columnDefinition = "TINYINT(2)   COMMENT '行业'")
+    private MarketWorkType workType;
 
     /**
      * 技术类别
@@ -74,7 +76,7 @@ public class MarketInfo extends BaseEntity {
     /**
      * 规模
      */
-    @Column(name = "scale", columnDefinition = "INT(2)   COMMENT '规模'")
+    @Column(name = "scale", columnDefinition = "TINYINT(2)   COMMENT '规模'")
     private Scale scale;
 
     /**
@@ -116,8 +118,8 @@ public class MarketInfo extends BaseEntity {
     /**
      * 项目性质
      */
-    @Column(name = "projectNature", columnDefinition = "VARCHAR(255)   COMMENT '项目性质'")
-    private String projectNature;
+    @Column(name = "projectNature", columnDefinition = "TINYINT(2)   COMMENT '项目性质'")
+    private MarketProjectNature projectNature;
 
     /**
      * 市场分析人员
@@ -212,12 +214,12 @@ public class MarketInfo extends BaseEntity {
         this.infoCollectionDate = infoCollectionDate;
     }
 
-    public String getWorkProfession() {
-        return workProfession;
+    public MarketWorkType getWorkType() {
+        return workType;
     }
 
-    public void setWorkProfession(String workProfession) {
-        this.workProfession = workProfession;
+    public void setWorkType(MarketWorkType workType) {
+        this.workType = workType;
     }
 
     public String getTechnologyCategory() {
@@ -300,11 +302,11 @@ public class MarketInfo extends BaseEntity {
         this.effective = effective;
     }
 
-    public String getProjectNature() {
+    public MarketProjectNature getProjectNature() {
         return projectNature;
     }
 
-    public void setProjectNature(String projectNature) {
+    public void setProjectNature(MarketProjectNature projectNature) {
         this.projectNature = projectNature;
     }
 

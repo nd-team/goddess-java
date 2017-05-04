@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -24,20 +24,25 @@ public class BidOpeningInfo extends BaseEntity {
     /**
      * 招标编号
      */
-    @Column(name = "tenderNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
+    @Column(name = "tenderNumber", columnDefinition = "VARCHAR(255)   COMMENT '招标编号'")
     private String tenderNumber;
 
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
      * 开标时间
      */
-    @Column(name = "bidOpeningTime", nullable = false, columnDefinition = "DATE   COMMENT '开标时间String'")
-    private LocalDate bidOpeningTime;
+    @Column(name = "bidOpeningTime", columnDefinition = "DATETIME   COMMENT '开标时间String'")
+    private LocalDateTime bidOpeningTime;
+    /**
+     * 开标地点
+     */
+    @Column(name = "bidOpeningPlace", columnDefinition = "VARCHAR(255)   COMMENT '开标地点'")
+    private String bidOpeningPlace;
 
     /**
      * 委托人
@@ -66,14 +71,14 @@ public class BidOpeningInfo extends BaseEntity {
     /**
      * 竞争公司报价
      */
-    @Column(name = "competitivePrice", columnDefinition = "VARCHAR(255)   COMMENT '竞争公司报价'")
-    private String competitivePrice;
+    @Column(name = "competitivePrice", columnDefinition = "DECIMAL(10,2)   COMMENT '竞争公司报价'")
+    private Double competitivePrice;
 
     /**
      * 比率(%)
      */
-    @Column(name = "ratio", columnDefinition = "VARCHAR(255)   COMMENT '比率(%)'")
-    private String ratio;
+    @Column(name = "ratio", columnDefinition = "DECIMAL(10,2)   COMMENT '比率(%)'")
+    private Double ratio;
 
 
     public String getTenderNumber() {
@@ -92,12 +97,20 @@ public class BidOpeningInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDate getBidOpeningTime() {
+    public LocalDateTime getBidOpeningTime() {
         return bidOpeningTime;
     }
 
-    public void setBidOpeningTime(LocalDate bidOpeningTime) {
+    public void setBidOpeningTime(LocalDateTime bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
+    }
+
+    public String getBidOpeningPlace() {
+        return bidOpeningPlace;
+    }
+
+    public void setBidOpeningPlace(String bidOpeningPlace) {
+        this.bidOpeningPlace = bidOpeningPlace;
     }
 
     public String getPrincipal() {
@@ -132,19 +145,19 @@ public class BidOpeningInfo extends BaseEntity {
         this.cities = cities;
     }
 
-    public String getCompetitivePrice() {
+    public Double getCompetitivePrice() {
         return competitivePrice;
     }
 
-    public void setCompetitivePrice(String competitivePrice) {
+    public void setCompetitivePrice(Double competitivePrice) {
         this.competitivePrice = competitivePrice;
     }
 
-    public String getRatio() {
+    public Double getRatio() {
         return ratio;
     }
 
-    public void setRatio(String ratio) {
+    public void setRatio(Double ratio) {
         this.ratio = ratio;
     }
 }

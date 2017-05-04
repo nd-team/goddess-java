@@ -26,6 +26,14 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
         return null;
     }
     /**
+     * 一个开标信息
+     *
+     * @return class BidOpeningInfoBO
+     */
+    default BidOpeningInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 开标信息
      *
      * @param bidOpeningInfoDTO 开标信息dto

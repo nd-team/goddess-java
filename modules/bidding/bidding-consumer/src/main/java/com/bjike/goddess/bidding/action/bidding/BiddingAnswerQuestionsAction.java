@@ -5,6 +5,8 @@ import com.bjike.goddess.bidding.bo.BiddingAnswerQuestionsBO;
 import com.bjike.goddess.bidding.dto.BiddingAnswerQuestionsDTO;
 import com.bjike.goddess.bidding.to.BiddingAnswerQuestionsTO;
 import com.bjike.goddess.bidding.vo.BiddingAnswerQuestionsVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -28,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("bidding/biddinganswerquestions")
+@RequestMapping("biddinganswerquestions")
 public class BiddingAnswerQuestionsAction {
     @Autowired
     private BiddingAnswerQuestionsAPI biddingAnswerQuestionsAPI;
@@ -48,20 +50,38 @@ public class BiddingAnswerQuestionsAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个投标答疑问题记录
+     *
+     * @param id
+     * @return class BiddingAnswerQuestionsVO
+     * @des 获取一个投标答疑问题记录
+     * @version v1
+     */
+    @GetMapping("v1/answer/{id}")
+    public Result answer(@PathVariable String id) throws ActException {
+        try {
+            BiddingAnswerQuestionsBO biddingAnswerQuestionsBO = biddingAnswerQuestionsAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingAnswerQuestionsBO, BiddingAnswerQuestionsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
-     * 投标答疑问题
+     * 投标答疑问题列表
      *
      * @param biddingAnswerQuestionsDTO 投标答疑问题记录dto
      * @return class BiddingAnswerQuestionsVO
      * @des 获取所有投标答疑问题记录
      * @version v1
      */
-    @GetMapping("v1/listBiddingAnswerQuestions")
-    public Result findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO, HttpServletRequest request) throws ActException {
         try {
             List<BiddingAnswerQuestionsVO> biddingAnswerQuestionsVOS = BeanTransform.copyProperties(
-                    biddingAnswerQuestionsAPI.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO), BiddingAnswerQuestionsVO.class);
+                    biddingAnswerQuestionsAPI.findListBiddingAnswerQuestions(biddingAnswerQuestionsDTO), BiddingAnswerQuestionsVO.class,request);
             return ActResult.initialize(biddingAnswerQuestionsVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -77,7 +97,7 @@ public class BiddingAnswerQuestionsAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBiddingAnswerQuestions(@Validated BiddingAnswerQuestionsTO biddingAnswerQuestionsTO,BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) BiddingAnswerQuestionsTO biddingAnswerQuestionsTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingAnswerQuestionsBO biddingAnswerQuestionsBO = biddingAnswerQuestionsAPI.insertBiddingAnswerQuestions(biddingAnswerQuestionsTO);
             return ActResult.initialize(biddingAnswerQuestionsBO);
@@ -95,7 +115,7 @@ public class BiddingAnswerQuestionsAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated(EDIT.class) BiddingAnswerQuestionsTO biddingAnswerQuestionsTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingAnswerQuestionsBO biddingAnswerQuestionsBO = biddingAnswerQuestionsAPI.editBiddingAnswerQuestions(biddingAnswerQuestionsTO);
             return ActResult.initialize(biddingAnswerQuestionsBO);
@@ -112,7 +132,7 @@ public class BiddingAnswerQuestionsAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteBiddingAnswerQuestions(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             biddingAnswerQuestionsAPI.removeBiddingAnswerQuestions(id);
             return new ActResult("delete success!");

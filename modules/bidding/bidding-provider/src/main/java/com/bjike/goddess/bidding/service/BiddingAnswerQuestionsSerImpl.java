@@ -33,7 +33,11 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         Long count = super.count(biddingAnswerQuestionsDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+   @Override
+    public BiddingAnswerQuestionsBO getOne(String id) throws SerException {
+        BiddingAnswerQuestions biddingAnswerQuestions = super.findById(id);
+        return BeanTransform.copyProperties(biddingAnswerQuestions,BiddingAnswerQuestionsBO.class);
+    }
     @Override
     public List<BiddingAnswerQuestionsBO> findListBiddingAnswerQuestions(BiddingAnswerQuestionsDTO biddingAnswerQuestionsDTO) throws SerException {
         biddingAnswerQuestionsDTO.getSorts().add("createTime=desc");
@@ -41,7 +45,6 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         List<BiddingAnswerQuestionsBO> biddingAnswerQuestionsBOS = BeanTransform.copyProperties(biddingAnswerQuestionss,BiddingAnswerQuestionsBO.class);
         return biddingAnswerQuestionsBOS;
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingAnswerQuestionsBO insertBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {
         BiddingAnswerQuestions biddingAnswerQuestions = BeanTransform.copyProperties(biddingAnswerQuestionsTO, BiddingAnswerQuestions.class, true);
@@ -49,7 +52,6 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         super.save(biddingAnswerQuestions);
         return BeanTransform.copyProperties(biddingAnswerQuestions, BiddingAnswerQuestionsBO.class);
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingAnswerQuestionsBO editBiddingAnswerQuestions(BiddingAnswerQuestionsTO biddingAnswerQuestionsTO) throws SerException {
         BiddingAnswerQuestions biddingAnswerQuestions = super.findById(biddingAnswerQuestionsTO.getId());
@@ -59,12 +61,8 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         return BeanTransform.copyProperties(biddingAnswerQuestionsTO, BiddingAnswerQuestionsBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingAnswerQuestions(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
     @Transactional(rollbackFor = SerException.class)

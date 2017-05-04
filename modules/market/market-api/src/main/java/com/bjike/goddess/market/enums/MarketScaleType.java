@@ -1,9 +1,11 @@
 package com.bjike.goddess.market.enums;
 
 /**
+ * 项目级别
+ *
  * @Author: [xiazhili]
  * @Date: [17-3-22]
- * @Description: []
+ * @Description: [项目级别]
  * @Version: [1.0.0]
  * @Copy: [com.bjike.goddess]
  */

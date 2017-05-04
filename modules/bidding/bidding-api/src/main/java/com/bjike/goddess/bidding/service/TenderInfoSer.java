@@ -26,6 +26,15 @@ public interface TenderInfoSer extends Ser<TenderInfo, TenderInfoDTO> {
         return null;
     }
     /**
+     * 一个标书资料
+     *
+     * @return class TenderInfoBO
+     */
+    default TenderInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 标书资料
      *
      * @param tenderInfoDTO 标书资料dto
