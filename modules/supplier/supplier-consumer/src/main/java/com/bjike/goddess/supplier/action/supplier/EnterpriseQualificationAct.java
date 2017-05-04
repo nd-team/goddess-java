@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 企业资质
  *
@@ -39,12 +41,12 @@ public class EnterpriseQualificationAct {
      * @version v1
      */
     @GetMapping("v1/findByInformation/{id}")
-    public Result findByInformation(@PathVariable String id) throws ActException {
+    public Result findByInformation(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
                             enterpriseQualificationAPI.findByInformation(id)
-                            , EnterpriseQualificationVO.class));
+                            , EnterpriseQualificationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -58,9 +60,9 @@ public class EnterpriseQualificationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) EnterpriseQualificationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) EnterpriseQualificationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.save(to), EnterpriseQualificationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.save(to), EnterpriseQualificationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -74,9 +76,9 @@ public class EnterpriseQualificationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) EnterpriseQualificationTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) EnterpriseQualificationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.update(to), EnterpriseQualificationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.update(to), EnterpriseQualificationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -90,12 +92,27 @@ public class EnterpriseQualificationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.delete(id), EnterpriseQualificationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.delete(id), EnterpriseQualificationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 根据id获取供应商企业资质数据
+     *
+     * @param id 供应商企业资质数据id
+     * @return class EnterpriseQualificationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.getById(id), EnterpriseQualificationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

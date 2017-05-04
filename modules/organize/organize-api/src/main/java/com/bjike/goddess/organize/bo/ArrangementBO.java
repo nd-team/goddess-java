@@ -50,14 +50,14 @@ public class ArrangementBO extends BaseBO {
      *
      * @return
      */
-    private String parent;
+    private String parentName;
 
-    public String getParent() {
-        return parent;
+    public String getParentName() {
+        return parentName;
     }
 
-    public void setParent(String parent) {
-        this.parent = parent;
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public String getParentId() {

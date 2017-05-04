@@ -43,4 +43,9 @@ public class EnterpriseQualificationApiImpl implements EnterpriseQualificationAP
     public EnterpriseQualificationBO delete(String id) throws SerException {
         return enterpriseQualificationSer.delete(id);
     }
+
+    @Override
+    public EnterpriseQualificationBO getById(String id) throws SerException {
+        return enterpriseQualificationSer.getById(id);
+    }
 }

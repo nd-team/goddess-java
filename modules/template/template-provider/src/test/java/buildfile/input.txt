@@ -1,17 +1,20 @@
-模块名:materialreceive
-类名:ProjectGroupReceive
-作者:sunfengtao
-描述:项目组领用归还
+模块名:otherexpenses
+类名:OtherExpenses
+作者:邓钧仁
+描述:其他费用
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-LocalDateTime receiveTime 领用时间;
-String materialName 物品名称;
-Integer quantity 数量;
-String recipient 领用人;
-String issuer 发放人;
-LocalDateTime returnTime 归还时间;
-String returnPerson 归还人;
+String area 地区;
+String project 项目组;
+String type 类别;
+String name 项目名称;
+Integer year 年份;
+Integer month 月份;
+Double target 目标其他费用;
+Double actual 实际其他费用;
+Double ratio 比例;
+Double balance 差额;
 )

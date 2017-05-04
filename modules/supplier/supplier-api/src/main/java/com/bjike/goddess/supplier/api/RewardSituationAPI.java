@@ -61,4 +61,14 @@ public interface RewardSituationAPI {
         return null;
     }
 
+    /**
+     * 根据id获取供应商获奖情况数据
+     *
+     * @param id 供应商获奖情况数据id
+     * @return
+     * @throws SerException
+     */
+    default RewardSituationBO getById(String id) throws SerException {
+        return null;
+    }
 }

@@ -82,6 +82,22 @@ public class OperateAct {
     }
 
     /**
+     * 关闭
+     *
+     * @param id 操作类型数据id
+     * @return class OperateVO
+     * @version v1
+     */
+    @PatchMapping("v1/close/{id}")
+    public Result close(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(operateAPI.close(id), OperateVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 开启
      *
      * @param id 操作类型数据id

@@ -277,3 +277,9 @@ include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
+//#otherexpenses 其他费用
+include ':modules:otherexpenses:otherexpenses-api'
+include ':modules:otherexpenses:otherexpenses-consumer'
+include ':modules:otherexpenses:otherexpenses-provider'
+
+

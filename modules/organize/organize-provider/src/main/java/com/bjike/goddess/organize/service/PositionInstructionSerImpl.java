@@ -179,4 +179,50 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     public PositionInstructionBO getById(String id) throws SerException {
         return this.transformToBO(super.findById(id));
     }
+
+    @Override
+    public List<PositionInstructionBO> findByAngle(String angleId) throws SerException {
+        PositionInstructionDTO dto = new PositionInstructionDTO();
+        dto.getConditions().add(Restrict.eq("angle.id", angleId));
+        List<PositionInstruction> list = super.findByCis(dto);
+        return this.transformToBOList(list);
+    }
+
+    @Override
+    public List<PositionInstructionBO> findByDimension(String dimensionId) throws SerException {
+        PositionInstructionDTO dto = new PositionInstructionDTO();
+        dto.getConditions().add(Restrict.eq("dimension.id", dimensionId));
+        List<PositionInstruction> list = super.findByCis(dto);
+        return this.transformToBOList(list);
+    }
+
+    @Override
+    public List<PositionInstructionBO> findByClassify(String classifyId) throws SerException {
+        PositionInstructionDTO dto = new PositionInstructionDTO();
+        dto.getConditions().add(Restrict.eq("classify.id", classifyId));
+        List<PositionInstruction> list = super.findByCis(dto);
+        return this.transformToBOList(list);
+    }
+
+    @Override
+    public List<PositionInstructionBO> findByOperate(String operateId) throws SerException {
+        String[] fields = {"id"};
+        String sql = String.format("SELECT  instruction_id  FROM organize_position_instruction_operate  WHERE operate_id = '%s'", operateId);
+        List<PositionInstructionBO> bos = super.findBySql(sql, PositionDetailBO.class, fields);
+        List<PositionInstruction> list = new ArrayList<>(0);
+        for (PositionInstructionBO bo : bos)
+            list.add(super.findById(bo.getId()));
+        return this.transformToBOList(list);
+    }
+
+    @Override
+    public List<PositionInstructionBO> findByReflect(String reflectId) throws SerException {
+        String[] fields = {"id"};
+        String sql = String.format("SELECT  instruction_id  FROM organize_position_instruction_reflect  WHERE reflect_id = '%s'", reflectId);
+        List<PositionInstructionBO> bos = super.findBySql(sql, PositionDetailBO.class, fields);
+        List<PositionInstruction> list = new ArrayList<>(0);
+        for (PositionInstructionBO bo : bos)
+            list.add(super.findById(bo.getId()));
+        return this.transformToBOList(list);
+    }
 }

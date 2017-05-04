@@ -2,6 +2,7 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
+import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.service.SupplierInformationSer;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,26 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     @Override
     public List<SupplierInformationBO> findOrderName() throws SerException {
         return supplierInformationSer.findOrderName();
+    }
+
+    @Override
+    public SupplierInformationBO delete(String id) throws SerException {
+        return supplierInformationSer.delete(id);
+    }
+
+    @Override
+    public List<SupplierInformationBO> maps(SupplierInformationDTO dto) throws SerException {
+        return supplierInformationSer.maps(dto);
+    }
+
+    @Override
+    public SupplierInformationBO getById(String id) throws SerException {
+        return supplierInformationSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SupplierInformationDTO dto = new SupplierInformationDTO();
+        return supplierInformationSer.count(dto);
     }
 }
