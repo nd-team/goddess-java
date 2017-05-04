@@ -43,11 +43,11 @@ public interface OtherExpensesSer extends Ser<OtherExpenses, OtherExpensesDTO> {
 
     /**
      * 删除
-     * @param to 其他费用数据id
+     * @param id 其他费用数据id
      * @return
      * @throws SerException
      */
-    default OtherExpensesBO delete(OtherExpensesTO to) throws SerException {
+    default OtherExpensesBO delete(String id) throws SerException {
         return null;
     }
 

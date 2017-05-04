@@ -1,5 +1,7 @@
 package com.bjike.goddess.otherexpenses.bo;
 
+import java.io.Serializable;
+
 /**
  * @Author: [dengjunren]
  * @Date: [2017-05-03 15:43]
@@ -7,7 +9,7 @@ package com.bjike.goddess.otherexpenses.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class TypeCollectBO {
+public class TypeCollectBO implements Serializable {
 
     /**
      * 类别
