@@ -40,7 +40,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         Long count = super.count(biddingInfoDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public BiddingInfoBO getOne(String id) throws SerException {
+        BiddingInfo biddingInfo = super.findById(id);
+        return BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
+    }
     @Override
     public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
@@ -49,7 +53,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return biddingInfoBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
@@ -58,7 +61,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO editBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
@@ -68,12 +70,8 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingInfo(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 
@@ -84,7 +82,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return null;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         /**
@@ -140,7 +137,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
      * @return class biddingInfoBO
      * @throws SerException
      */
-    public BiddingInfoBO collectBiddingInfo(String[] cities) throws SerException {
+    public List<BiddingInfoBO> collectBiddingInfo(String[] cities) throws SerException {
         List<BiddingInfoBO> biddingInfoList = new ArrayList<>();
         //先查询地市
         List<String> citie = biddingInfoAPI.getBiddingInfoCities();
@@ -167,12 +164,12 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             busTypeMapList = sqlQueryInt("BusinessType" ,busType,fields,sql,busTypeMapList);
 
             BiddingInfoBO biddingInfoBO = new BiddingInfoBO();
-            biddingInfoBO.setAreaMap(citieMapList);
+            /*biddingInfoBO.setAreaMap(citieMapList);
             biddingInfoBO.setBiddingType(bidTypeMapList);
-            biddingInfoBO.setBusinessType(busTypeMapList);
+            biddingInfoBO.setBusinessType(busTypeMapList);*/
             biddingInfoList.add(biddingInfoBO);
         }
-        return null;
+        return biddingInfoList;
     }
     /**
      *
@@ -185,7 +182,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                 for (BiddingInfoBO cbo : biddingInfoBOS) {
                     Map<String, String> areaMap = new HashMap<>();
                     areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+                    //areaMap.put("count", String.valueOf(cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (biddingInfoBOS.size() < obj.size()) {
@@ -208,7 +205,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                         Map<String, String> areaMap = new HashMap<>();
                         if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
                             areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+                      //      areaMap.put("count", String.valueOf(cbo.getCounts()));
                         }else {
                             areaMap.put("remark", o);
                             areaMap.put("count", 0+"");
@@ -234,11 +231,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                 for (BiddingInfoBO cbo : biddingInfoBOS) {
                     Map<String, String> areaMap = new HashMap<>();
                     if( enumStr.equals("BiddingType")){
-                        areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
+                   //     areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
                     }else if(enumStr.equals("BusinessType")){
-                        areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
+                   //     areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
                     }
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+                   // areaMap.put("count", String.valueOf(cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (biddingInfoBOS.size() < obj.size()) {
@@ -261,11 +258,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                         Map<String, String> areaMap = new HashMap<>();
                         if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
                             if( enumStr.equals("BiddingType")){
-                                areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
+                          //      areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
                             }else if(enumStr.equals("BusinessType")){
-                                areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
+                          //      areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
                             }
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+                            //areaMap.put("count", String.valueOf(cbo.getCounts()));
                         }else {
                             if( enumStr.equals("BiddingType")){
                                 areaMap.put("remark", BiddingType.getStrConvert( o ));

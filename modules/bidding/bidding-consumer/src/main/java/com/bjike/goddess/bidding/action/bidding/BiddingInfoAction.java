@@ -5,6 +5,8 @@ import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -28,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("bidding/biddinginfo")
+@RequestMapping("biddinginfo")
 public class BiddingInfoAction {
     @Autowired
     private BiddingInfoAPI biddingInfoAPI;
@@ -48,20 +50,37 @@ public class BiddingInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个招标信息
+     *
+     * @param id
+     * @return class BiddingInfoVO
+     * @des 获取一个招标信息
+     * @version v1
+     */
+    @GetMapping("v1/info/{id}")
+    public Result info(@PathVariable String id) throws ActException {
+        try {
+            BiddingInfoBO biddingInfoBO = biddingInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 招标信息
+     * 招标信息列表
      *
      * @param biddingInfoDTO 招标信息dto
      * @return class BiddingInfoVO
      * @des 获取所有招标信息
      * @version v1
      */
-    @GetMapping("v1/listBiddingInfo")
-    public Result findListBiddingInfo(BiddingInfoDTO biddingInfoDTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BiddingInfoDTO biddingInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.findListBiddingInfo(biddingInfoDTO), BiddingInfoVO.class);
+                    biddingInfoAPI.findListBiddingInfo(biddingInfoDTO), BiddingInfoVO.class,request);
             return ActResult.initialize(biddingInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -77,7 +96,7 @@ public class BiddingInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBiddingInfo(@Validated BiddingInfoTO biddingInfoTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.insertBiddingInfo(biddingInfoTO);
             return ActResult.initialize(biddingInfoBO);
@@ -95,7 +114,7 @@ public class BiddingInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBiddingInfo(@Validated BiddingInfoTO biddingInfoTO,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated(EDIT.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.editBiddingInfo(biddingInfoTO);
             return ActResult.initialize(biddingInfoBO);
@@ -112,7 +131,7 @@ public class BiddingInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteBiddingInfo(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             biddingInfoAPI.removeBiddingInfo(id);
             return new ActResult("delete success!");
@@ -129,7 +148,7 @@ public class BiddingInfoAction {
      * @version v1
      */
     @GetMapping("v1/search")
-    public Result searchBiddingInfo(BiddingInfoDTO biddingInfoDTO,HttpServletRequest request) throws ActException {
+    public Result search(BiddingInfoDTO biddingInfoDTO,HttpServletRequest request) throws ActException {
         try {
             List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
                     biddingInfoAPI.searchBiddingInfo(biddingInfoDTO),BiddingInfoVO.class);

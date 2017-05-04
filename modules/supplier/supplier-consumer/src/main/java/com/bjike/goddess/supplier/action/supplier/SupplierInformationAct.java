@@ -8,12 +8,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.supplier.api.SupplierInformationAPI;
+import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
 import com.bjike.goddess.supplier.vo.SupplierInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 供应商基本信息
@@ -89,6 +92,69 @@ public class SupplierInformationAct {
     public Result findOrderName() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.findOrderName(), SupplierInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 删除
+     *
+     * @param id 供应商基本信息数据id
+     * @return class SupplierInformationVO
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.delete(id), SupplierInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 供应商基本信息数据传输对象
+     * @return class SupplierInformationVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(SupplierInformationDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.maps(dto), SupplierInformationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取供应商基本信息数据
+     *
+     * @param id 供应商基本信息数据id
+     * @return class SupplierInformationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(supplierInformationAPI.getById(id), SupplierInformationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(supplierInformationAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

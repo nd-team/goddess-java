@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 岗位层级
@@ -46,7 +45,7 @@ public class Arrangement extends BaseEntity {
     /**
      * 上级层级
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(columnDefinition = "VARCHAR(36) COMMENT '上级层级'", name = "parent_id")
     private Arrangement parent;
 

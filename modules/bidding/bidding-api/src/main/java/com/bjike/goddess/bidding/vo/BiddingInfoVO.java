@@ -16,6 +16,10 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 public class BiddingInfoVO {
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 网站名称
@@ -142,6 +146,13 @@ public class BiddingInfoVO {
      */
     private String remark;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getWebName() {
         return webName;

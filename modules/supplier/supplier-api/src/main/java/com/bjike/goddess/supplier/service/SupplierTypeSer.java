@@ -85,4 +85,26 @@ public interface SupplierTypeSer extends Ser<SupplierType, SupplierTypeDTO> {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 供应商类型管理数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取供应商类型数据
+     *
+     * @param id 供应商类型数据id
+     * @return
+     * @throws SerException
+     */
+    default SupplierTypeBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

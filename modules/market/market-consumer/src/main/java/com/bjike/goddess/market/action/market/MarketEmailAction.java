@@ -10,6 +10,7 @@ import com.bjike.goddess.market.api.MarketEmailAPI;
 import com.bjike.goddess.market.bo.MarketEmailBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.to.MarketEmailTO;
+import com.bjike.goddess.market.vo.MarketCollectVO;
 import com.bjike.goddess.market.vo.MarketEmailVO;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,16 +148,16 @@ public class MarketEmailAction {
     /**
      * 汇总市场信息管理
      *
-     * @param area 地区
+     * @param areas 地区
      * @des 项目市场信息管理
      * @return  class MarketEmailVO
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect ( String[] area ) throws ActException {
+    public Result collect ( @RequestParam String[] areas ) throws ActException {
         try {
-            List<MarketEmailVO> marketEmailVOS = BeanTransform.copyProperties(
-                    marketEmailAPI.collectMarketEmail(area),MarketEmailVO.class,true);
+            List<MarketCollectVO> marketEmailVOS = BeanTransform.copyProperties(
+                    marketEmailAPI.marketCollect(areas),MarketCollectVO.class);
             return ActResult.initialize(marketEmailVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

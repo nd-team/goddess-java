@@ -23,7 +23,7 @@ public class TenderInfo extends BaseEntity {
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
@@ -35,7 +35,7 @@ public class TenderInfo extends BaseEntity {
     /**
      * 标书编号
      */
-    @Column(name = "tenderNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标书编号'")
+    @Column(name = "tenderNumber", columnDefinition = "VARCHAR(255)   COMMENT '标书编号'")
     private String tenderNumber;
 
     /**

@@ -2,11 +2,6 @@ package com.bjike.goddess.bidding.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 开标信息业务传输对象
  *
@@ -32,6 +27,10 @@ public class BidOpeningInfoBO extends BaseBO {
      * 开标时间
      */
     private String bidOpeningTime;
+    /**
+     * 开标地点
+     */
+    private String bidOpeningPlace;
 
     /**
      * 委托人
@@ -56,61 +55,14 @@ public class BidOpeningInfoBO extends BaseBO {
     /**
      * 竞争公司报价
      */
-    private String competitivePrice;
+    private Double competitivePrice;
 
     /**
      * 比率(%)
      */
-    private String ratio;
-    /**
-     * 个数
-     */
-    private int counts;
-    /**
-     * 备注
-     */
-    private String remark;
+    private Double ratio;
 
-    public String getRemark() {
-        return remark;
-    }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    /**
-     * 数据库枚举转换
-     */
-    private int enumConvert;
-    /**
-     * 地区汇总集合
-     */
-    private List<Map<String, String>> areaMap;
-
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
-    public int getEnumConvert() {
-        return enumConvert;
-    }
-
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
-    }
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
 
     public String getTenderNumber() {
         return tenderNumber;
@@ -134,6 +86,14 @@ public class BidOpeningInfoBO extends BaseBO {
 
     public void setBidOpeningTime(String bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
+    }
+
+    public String getBidOpeningPlace() {
+        return bidOpeningPlace;
+    }
+
+    public void setBidOpeningPlace(String bidOpeningPlace) {
+        this.bidOpeningPlace = bidOpeningPlace;
     }
 
     public String getPrincipal() {
@@ -168,19 +128,19 @@ public class BidOpeningInfoBO extends BaseBO {
         this.cities = cities;
     }
 
-    public String getCompetitivePrice() {
+    public Double getCompetitivePrice() {
         return competitivePrice;
     }
 
-    public void setCompetitivePrice(String competitivePrice) {
+    public void setCompetitivePrice(Double competitivePrice) {
         this.competitivePrice = competitivePrice;
     }
 
-    public String getRatio() {
+    public Double getRatio() {
         return ratio;
     }
 
-    public void setRatio(String ratio) {
+    public void setRatio(Double ratio) {
         this.ratio = ratio;
     }
 }

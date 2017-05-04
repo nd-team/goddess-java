@@ -1,7 +1,12 @@
 package com.bjike.goddess.bidding.to;
 
+import com.bjike.goddess.bidding.enums.BiddingType;
+import com.bjike.goddess.bidding.enums.BusinessType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
@@ -18,22 +23,24 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 网站名称
      */
+    @NotBlank(message = "网站名称不能为空",groups = {ADD.class, EDIT.class})
     private String webName;
 
     /**
      * 网址
      */
+    @NotBlank(message = "网址不能为空",groups = {ADD.class, EDIT.class})
     private String url;
 
     /**
      * 招投标类型
      */
-    private String biddingType;
+    private BiddingType biddingType;
 
     /**
      * 业务类型
      */
-    private String businessType;
+    private BusinessType businessType;
 
     /**
      * 业务方向科目
@@ -48,11 +55,13 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 招标编号
      */
+    @NotBlank(message = "招标编号不能为空",groups = {ADD.class, EDIT.class})
     private String tenderNumber;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
@@ -73,11 +82,13 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 省份
      */
+    @NotBlank(message = "省份不能为空",groups = {ADD.class, EDIT.class})
     private String provinces;
 
     /**
      * 地市
      */
+    @NotBlank(message = "地市不能为空",groups = {ADD.class, EDIT.class})
     private String cities;
 
     /**
@@ -157,19 +168,19 @@ public class BiddingInfoTO extends BaseTO {
         this.url = url;
     }
 
-    public String getBiddingType() {
+    public BiddingType getBiddingType() {
         return biddingType;
     }
 
-    public void setBiddingType(String biddingType) {
+    public void setBiddingType(BiddingType biddingType) {
         this.biddingType = biddingType;
     }
 
-    public String getBusinessType() {
+    public BusinessType getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(String businessType) {
+    public void setBusinessType(BusinessType businessType) {
         this.businessType = businessType;
     }
 

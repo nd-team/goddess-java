@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 获奖情况
  *
@@ -40,12 +42,12 @@ public class RewardSituationAct {
      * @version v1
      */
     @GetMapping("v1/findByInformation/{id}")
-    public Result findByInformation(@PathVariable String id) throws ActException {
+    public Result findByInformation(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
                             rewardSituationAPI.findByInformation(id)
-                            , RewardSituationVO.class));
+                            , RewardSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -59,9 +61,9 @@ public class RewardSituationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) RewardSituationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) RewardSituationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.save(to), RewardSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.save(to), RewardSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -75,9 +77,9 @@ public class RewardSituationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) RewardSituationTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) RewardSituationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.update(to), RewardSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.update(to), RewardSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -91,9 +93,25 @@ public class RewardSituationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.delete(id), RewardSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.delete(id), RewardSituationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取供应商获奖情况数据
+     *
+     * @param id 供应商获奖情况数据id
+     * @return class RewardSituationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.getById(id), RewardSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

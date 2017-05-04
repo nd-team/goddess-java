@@ -281,3 +281,10 @@ include ':modules:employee-contract:employee-contract-provider'
 include ':modules:materialtransfer:materialtransfer-api'
 include ':modules:materialtransfer:materialtransfer-consumer'
 include ':modules:materialtransfer:materialtransfer-provider'
+
+//#otherexpenses 其他费用
+include ':modules:otherexpenses:otherexpenses-api'
+include ':modules:otherexpenses:otherexpenses-consumer'
+include ':modules:otherexpenses:otherexpenses-provider'
+
+

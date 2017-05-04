@@ -2,6 +2,7 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
+import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 
 import java.util.List;
@@ -79,6 +80,38 @@ public interface SupplierTypeAPI {
      * @throws SerException
      */
     default SupplierTypeBO thaw(SupplierTypeTO to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 列表
+     *
+     * @param dto 供应商类型管理数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取供应商类型数据
+     *
+     * @param id 供应商类型数据id
+     * @return
+     * @throws SerException
+     */
+    default SupplierTypeBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException{
         return null;
     }
 

@@ -8,6 +8,7 @@ import com.bjike.goddess.supplier.bo.RewardSituationBO;
 import com.bjike.goddess.supplier.dto.RewardSituationDTO;
 import com.bjike.goddess.supplier.entity.RewardSituation;
 import com.bjike.goddess.supplier.to.RewardSituationTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
      */
     private RewardSituationBO transformBO(RewardSituation entity) {
         RewardSituationBO bo = BeanTransform.copyProperties(entity, RewardSituationBO.class);
-        bo.setInformation_id(entity.getInformation().getId());
+        bo.setInformationId(entity.getInformation().getId());
         return bo;
     }
 
@@ -60,7 +61,9 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Override
     public RewardSituationBO save(RewardSituationTO to) throws SerException {
         RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class, true);
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -68,11 +71,15 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RewardSituationBO update(RewardSituationTO to) throws SerException {
-        RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class, true), situation = super.findById(to.getId());
-        entity.setInformation(supplierInformationSer.findById(to.getInformation_id()));
-        entity.setCreateTime(LocalDateTime.now());
-        if (null != situation)
-            entity.setCreateTime(situation.getCreateTime());
+        if (StringUtils.isBlank(to.getId()))
+            throw new SerException("数据ID不能为空");
+        RewardSituation entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
+        if (null == entity.getInformation())
+            throw new SerException("供应商基本信息id错误,无法查询对应数据");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
@@ -82,7 +89,18 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Override
     public RewardSituationBO delete(String id) throws SerException {
         RewardSituation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return this.transformBO(entity);
+    }
+
+    @Override
+    public RewardSituationBO getById(String id) throws SerException {
+        RewardSituation entity = super.findById(id);
+        if (null == entity)
+            return null;
+        else
+            return this.transformBO(entity);
     }
 }

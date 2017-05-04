@@ -23,13 +23,13 @@ public class BiddingWebInfo extends BaseEntity {
     /**
      * 网站名称
      */
-    @Column(name = "webName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '网站名称'")
+    @Column(name = "webName", columnDefinition = "VARCHAR(255)   COMMENT '网站名称'")
     private String webName;
 
     /**
      * 网址
      */
-    @Column(name = "url", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '网址'")
+    @Column(name = "url", columnDefinition = "VARCHAR(255)   COMMENT '网址'")
     private String url;
 
 

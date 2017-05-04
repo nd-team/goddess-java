@@ -1,6 +1,9 @@
 package com.bjike.goddess.bidding.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 标书资料
@@ -16,6 +19,7 @@ public class TenderInfoTO extends BaseTO {
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
@@ -26,6 +30,7 @@ public class TenderInfoTO extends BaseTO {
     /**
      * 标书编号
      */
+    @NotBlank(message = "标书编号不能为空",groups = {ADD.class, EDIT.class})
     private String tenderNumber;
 
     /**

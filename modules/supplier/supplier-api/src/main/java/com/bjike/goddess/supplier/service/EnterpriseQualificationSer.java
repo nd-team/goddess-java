@@ -64,4 +64,15 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
         return null;
     }
 
+    /**
+     * 根据id获取供应商企业资质数据
+     *
+     * @param id 供应商企业资质数据id
+     * @return
+     * @throws SerException
+     */
+    default EnterpriseQualificationBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

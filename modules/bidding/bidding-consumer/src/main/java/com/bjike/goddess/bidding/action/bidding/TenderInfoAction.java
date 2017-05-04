@@ -5,6 +5,8 @@ import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.bidding.vo.TenderInfoVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -28,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("bidding/tenderinfo")
+@RequestMapping("tenderinfo")
 public class TenderInfoAction {
     @Autowired
     private TenderInfoAPI tenderInfoAPI;
@@ -50,20 +52,38 @@ public class TenderInfoAction {
         }
     }
 
+    /**
+     * 一个标书资料
+     *
+     * @param id
+     * @return class TenderInfoVO
+     * @des 获取一个标书资料
+     * @version v1
+     */
+    @GetMapping("v1/info/{id}")
+    public Result info(@PathVariable String id) throws ActException {
+        try {
+            TenderInfoBO tenderInfoBO = tenderInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(tenderInfoBO, TenderInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
-     * 标书资料
+     * 标书资料列表
      *
      * @param tenderInfoDTO 标书资料dto
      * @return class TenderInfoVO
      * @des 获取所有标书资料
      * @version v1
      */
-    @GetMapping("v1/listTenderInfo")
-    public Result findListTenderInfo(TenderInfoDTO tenderInfoDTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(TenderInfoDTO tenderInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<TenderInfoVO> tenderInfoVOS = BeanTransform.copyProperties(
-                    tenderInfoAPI.findListTenderInfo(tenderInfoDTO), TenderInfoVO.class);
+                    tenderInfoAPI.findListTenderInfo(tenderInfoDTO), TenderInfoVO.class, request);
             return ActResult.initialize(tenderInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -79,7 +99,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addTenderInfo(@Validated TenderInfoTO tenderInfoTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.insertTenderInfo(tenderInfoTO);
             return ActResult.initialize(tenderInfoBO);
@@ -97,7 +117,7 @@ public class TenderInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editTenderInfo(@Validated TenderInfoTO tenderInfoTO,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated(EDIT.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
             TenderInfoBO tenderInfoBO = tenderInfoAPI.editTenderInfo(tenderInfoTO);
             return ActResult.initialize(tenderInfoBO);

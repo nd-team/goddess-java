@@ -11,6 +11,10 @@ package com.bjike.goddess.bidding.vo;
  * @Copy: [ com.bjike ]
  */
 public class BiddingAnswerQuestionsVO {
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 项目名称
@@ -42,6 +46,13 @@ public class BiddingAnswerQuestionsVO {
      */
     private String reply;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getProjectName() {
         return projectName;
