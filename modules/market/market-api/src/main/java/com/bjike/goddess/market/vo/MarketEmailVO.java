@@ -22,9 +22,9 @@ public class MarketEmailVO {
      */
     private String id;
     /**
-     * 行业
+     * 地区
      */
-    private String work;
+    private String area;
 
     /**
      * 备注
@@ -95,12 +95,12 @@ public class MarketEmailVO {
         this.id = id;
     }
 
-    public String getWork() {
-        return work;
+    public String getArea() {
+        return area;
     }
 
-    public void setWork(String work) {
-        this.work = work;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getRemark() {

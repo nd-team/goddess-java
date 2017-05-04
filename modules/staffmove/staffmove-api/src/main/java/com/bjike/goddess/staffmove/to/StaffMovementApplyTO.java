@@ -1,7 +1,10 @@
 package com.bjike.goddess.staffmove.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.staffmove.enums.AuditorType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 人员调动申请
@@ -37,16 +40,19 @@ public class StaffMovementApplyTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 部门
      */
+    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
@@ -62,11 +68,13 @@ public class StaffMovementApplyTO extends BaseTO {
     /**
      * 调往地区
      */
+    @NotBlank(message = "调往地区不能为空",groups = {ADD.class, EDIT.class})
     private String moveArea;
 
     /**
      * 调往项目
      */
+    @NotBlank(message = "调往项目不能为空",groups = {ADD.class, EDIT.class})
     private String moveProject;
 
     /**

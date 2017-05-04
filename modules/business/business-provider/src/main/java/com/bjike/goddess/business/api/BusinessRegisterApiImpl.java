@@ -28,6 +28,10 @@ public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
         return businessRegisterSer.countBusinessRegister(businessRegisterDTO);
     }
     @Override
+    public BusinessRegisterBO getOne(String id) throws SerException {
+        return businessRegisterSer.getOne(id);
+    }
+    @Override
     public List<BusinessRegisterBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         return businessRegisterSer.findListBusinessRegister(businessRegisterDTO);
     }

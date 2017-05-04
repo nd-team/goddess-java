@@ -1,6 +1,8 @@
 package com.bjike.goddess.market.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.market.enums.Scale;
+import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
@@ -27,6 +29,7 @@ public class MarketInfoTO extends BaseTO {
     /**
      * 市场信息编号
      */
+    @NotBlank(message = "市场信息编号不能为空")
     private String marketInfoId;
 
     /**
@@ -57,7 +60,7 @@ public class MarketInfoTO extends BaseTO {
     /**
      * 规模
      */
-    private String scale;
+    private Scale scale;
 
     /**
      * 发起时间
@@ -210,11 +213,11 @@ public class MarketInfoTO extends BaseTO {
         this.projectName = projectName;
     }
 
-    public String getScale() {
+    public Scale getScale() {
         return scale;
     }
 
-    public void setScale(String scale) {
+    public void setScale(Scale scale) {
         this.scale = scale;
     }
 

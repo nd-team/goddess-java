@@ -2,7 +2,9 @@ package com.bjike.goddess.datastore.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -21,97 +23,97 @@ public class AccountPwdSpecification extends BaseEntity {
     /**
      * 地区简称
      */
-    @Column(name = "areaAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '地区简称'")
+    @Column(name = "areaAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '地区简称'")
     private String areaAbbreviation;
 
     /**
      * 代表性简称
      */
-    @Column(name = "representativeAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '代表性简称'")
+    @Column(name = "representativeAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '代表性简称'")
     private String representativeAbbreviation;
 
     /**
      * 员工姓名
      */
-    @Column(name = "employeeName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
+    @Column(name = "employeeName", columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
     private String employeeName;
 
     /**
      * 运营商简称
      */
-    @Column(name = "operatorAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '运营商简称'")
+    @Column(name = "operatorAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '运营商简称'")
     private String operatorAbbreviation;
 
     /**
      * 厂家简称
      */
-    @Column(name = "factoryAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '厂家简称'")
+    @Column(name = "factoryAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '厂家简称'")
     private String factoryAbbreviation;
 
     /**
      * 总包商简称
      */
-    @Column(name = "contractorAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '总包商简称'")
+    @Column(name = "contractorAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '总包商简称'")
     private String contractorAbbreviation;
 
     /**
      * 符号
      */
-    @Column(name = "symbol",  columnDefinition = "VARCHAR(255)   COMMENT '符号'")
+    @Column(name = "symbol", columnDefinition = "VARCHAR(255)   COMMENT '符号'")
     private String symbol;
 
     /**
      * 所属公司简称
      */
-    @Column(name = "accountSubordinateCompanyAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '所属公司简称'")
+    @Column(name = "accountSubordinateCompanyAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '所属公司简称'")
     private String accountSubordinateCompanyAbbreviation;
 
     /**
      * 所属部门简称
      */
-    @Column(name = "subordinateDepartmentAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '所属部门简称'")
+    @Column(name = "subordinateDepartmentAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '所属部门简称'")
     private String subordinateDepartmentAbbreviation;
 
     /**
      * 所属模块简称
      */
-    @Column(name = "subordinateModuleAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '所属模块简称'")
+    @Column(name = "subordinateModuleAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '所属模块简称'")
     private String subordinateModuleAbbreviation;
 
     /**
      * 简称后缀
      */
-    @Column(name = "abbreviationSuffix",  columnDefinition = "VARCHAR(255)   COMMENT '简称后缀'")
+    @Column(name = "abbreviationSuffix", columnDefinition = "VARCHAR(255)   COMMENT '简称后缀'")
     private String abbreviationSuffix;
 
     /**
      * 邮箱号
      */
-    @Column(name = "email",  columnDefinition = "VARCHAR(255)   COMMENT '邮箱号'")
+    @Column(name = "email", columnDefinition = "VARCHAR(255)   COMMENT '邮箱号'")
     private String email;
 
     /**
      * 公司正式员工简称
      */
-    @Column(name = "companyStaffAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '公司正式员工简称'")
+    @Column(name = "companyStaffAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '公司正式员工简称'")
     private String companyStaffAbbreviation;
 
     /**
      * 社保人员简称
      */
-    @Column(name = "socialSecurityStaffAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '社保人员简称'")
+    @Column(name = "socialSecurityStaffAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '社保人员简称'")
     private String socialSecurityStaffAbbreviation;
 
     /**
      * 外账人员简称
      */
-    @Column(name = "accountStaffAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '外账人员简称'")
+    @Column(name = "accountStaffAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '外账人员简称'")
     private String accountStaffAbbreviation;
 
     /**
      * 游客简称
      */
-    @Column(name = "touristAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '游客简称'")
+    @Column(name = "touristAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '游客简称'")
     private String touristAbbreviation;
 
     /**
@@ -129,19 +131,19 @@ public class AccountPwdSpecification extends BaseEntity {
     /**
      * 所属公司简称
      */
-    @Column(name = "pwdSubordinateCompanyAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '所属公司简称'")
+    @Column(name = "pwdSubordinateCompanyAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '所属公司简称'")
     private String pwdSubordinateCompanyAbbreviation;
 
     /**
      * 所属项目组简称
      */
-    @Column(name = "subordinateProjectTeamAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '所属项目组简称'")
+    @Column(name = "subordinateProjectTeamAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '所属项目组简称'")
     private String subordinateProjectTeamAbbreviation;
 
     /**
      * 初始英文简称
      */
-    @Column(name = "initialEnglishAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '初始英文简称'")
+    @Column(name = "initialEnglishAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '初始英文简称'")
     private String initialEnglishAbbreviation;
 
     /**
@@ -153,7 +155,7 @@ public class AccountPwdSpecification extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "pwdRemark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "pwdRemark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String pwdRemark;
 
 

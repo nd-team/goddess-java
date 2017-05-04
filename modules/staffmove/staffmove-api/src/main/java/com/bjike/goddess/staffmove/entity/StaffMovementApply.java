@@ -47,19 +47,19 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
+    @Column(name = "project", columnDefinition = "VARCHAR(255)   COMMENT '项目'")
     private String project;
 
     /**
      * 部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String department;
 
     /**
@@ -77,13 +77,13 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 调往地区
      */
-    @Column(name = "moveArea", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '调往地区'")
+    @Column(name = "moveArea", columnDefinition = "VARCHAR(255)   COMMENT '调往地区'")
     private String moveArea;
 
     /**
      * 调往项目
      */
-    @Column(name = "moveProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '调往项目'")
+    @Column(name = "moveProject", columnDefinition = "VARCHAR(255)   COMMENT '调往项目'")
     private String moveProject;
 
     /**
@@ -95,13 +95,13 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 计划到岗时间
      */
-    @Column(name = "planArriveTime", nullable = false, columnDefinition = "DATETIME   COMMENT '计划到岗时间'")
+    @Column(name = "planArriveTime",  columnDefinition = "DATETIME   COMMENT '计划到岗时间'")
     private LocalDateTime planArriveTime;
 
     /**
      * 实际到岗时间
      */
-    @Column(name = "actualArriveTime", nullable = false, columnDefinition = "DATETIME   COMMENT '实际到岗时间'")
+    @Column(name = "actualArriveTime",columnDefinition = "DATETIME   COMMENT '实际到岗时间'")
     private LocalDateTime actualArriveTime;
 
     /**
@@ -113,13 +113,13 @@ public class StaffMovementApply extends BaseEntity {
     /**
      * 审核人
      */
-    @Column(name = "auditor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核人'")
+    @Column(name = "auditor", columnDefinition = "INT(2)   COMMENT '审核人'")
     private AuditorType auditor;
 
     /**
      * 审核意见
      */
-    @Column(name = "auditOpinion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
+    @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditOpinion;
 
 

@@ -269,7 +269,7 @@ public class BeanTransform {
                 }
             }
             if (null != includes) {
-                boolean is_in = includeField(excludes, t_field);
+                boolean is_in = includeField(includes, t_field);
                 if (!is_in) {
                     continue;
                 }
@@ -344,8 +344,8 @@ public class BeanTransform {
     }
 
     private static boolean includeField(String[] includes, Field field) {
-        for (String exclude : includes) {
-            if (exclude.equals(field.getName())) { //过滤除id外的所有属性
+        for (String include : includes) {
+            if (include.equals(field.getName())) { //过滤除id外的所有属性
                 return true;
             }
 

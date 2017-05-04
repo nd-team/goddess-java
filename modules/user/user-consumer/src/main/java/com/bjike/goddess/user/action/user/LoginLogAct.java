@@ -31,7 +31,6 @@ import java.util.List;
 @LoginAuth
 @DefaultProperties
 @RestController
-@RequestMapping("user")
 public class LoginLogAct {
 
     @Autowired

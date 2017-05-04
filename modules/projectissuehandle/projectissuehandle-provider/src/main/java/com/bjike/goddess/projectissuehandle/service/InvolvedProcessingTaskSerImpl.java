@@ -35,6 +35,11 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         Long counts = super.count(involvedProcessingTaskDTO);
         return counts;
     }
+    @Override
+    public InvolvedProcessingTaskBO getOne(String id) throws SerException {
+        InvolvedProcessingTask involvedProcessingTask = super.findById(id);
+        return BeanTransform.copyProperties(involvedProcessingTask,InvolvedProcessingTaskBO.class,true);
+    }
 
     @Override
     public List<InvolvedProcessingTaskBO> findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {

@@ -2,7 +2,9 @@ package com.bjike.goddess.datastore.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -22,73 +24,73 @@ public class FileSpecification extends BaseEntity {
     /**
      * 属性简称
      */
-    @Column(name = "attributeAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '属性简称'")
+    @Column(name = "attributeAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '属性简称'")
     private String attributeAbbreviation;
 
     /**
      * 类别简称
      */
-    @Column(name = "categoryAbbreviation",  columnDefinition = "VARCHAR(255)   COMMENT '类别简称'")
+    @Column(name = "categoryAbbreviation", columnDefinition = "VARCHAR(255)   COMMENT '类别简称'")
     private String categoryAbbreviation;
 
     /**
      * 发布时间
      */
-    @Column(name = "releaseTime", nullable = false, columnDefinition = "DATETIME   COMMENT '发布时间'")
+    @Column(name = "releaseTime", columnDefinition = "DATETIME   COMMENT '发布时间'")
     private LocalDateTime releaseTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "updateTime", nullable = false, columnDefinition = "DATETIME   COMMENT '更新时间'")
+    @Column(name = "updateTime", columnDefinition = "DATETIME   COMMENT '更新时间'")
     private LocalDateTime updateTime;
 
     /**
      * 所属项目组
      */
-    @Column(name = "belongProjectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '所属项目组'")
+    @Column(name = "belongProjectGroup", columnDefinition = "VARCHAR(255)   COMMENT '所属项目组'")
     private String belongProjectGroup;
 
     /**
      * 内容所属小模块
      */
-    @Column(name = "smallModuleContent",  columnDefinition = "VARCHAR(255)   COMMENT '内容所属小模块'")
+    @Column(name = "smallModuleContent", columnDefinition = "VARCHAR(255)   COMMENT '内容所属小模块'")
     private String smallModuleContent;
 
     /**
      * 内容概述
      */
-    @Column(name = "contentSummary",  columnDefinition = "VARCHAR(255)   COMMENT '内容概述'")
+    @Column(name = "contentSummary", columnDefinition = "VARCHAR(255)   COMMENT '内容概述'")
     private String contentSummary;
 
     /**
      * 产品名概述
      */
-    @Column(name = "productNameSummary",  columnDefinition = "VARCHAR(255)   COMMENT '产品名概述'")
+    @Column(name = "productNameSummary", columnDefinition = "VARCHAR(255)   COMMENT '产品名概述'")
     private String productNameSummary;
 
     /**
      * 文件名概述
      */
-    @Column(name = "fileNameSummary",  columnDefinition = "VARCHAR(255)   COMMENT '文件名概述'")
+    @Column(name = "fileNameSummary", columnDefinition = "VARCHAR(255)   COMMENT '文件名概述'")
     private String fileNameSummary;
 
     /**
      * 版本数字
      */
-    @Column(name = "versionNum",  columnDefinition = "VARCHAR(255)   COMMENT '版本数字'")
+    @Column(name = "versionNum", columnDefinition = "VARCHAR(255)   COMMENT '版本数字'")
     private String versionNum;
 
     /**
      * 序号
      */
-    @Column(name = "no", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '序号'")
+    @Column(name = "no", columnDefinition = "VARCHAR(255)   COMMENT '序号'")
     private String no;
 
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

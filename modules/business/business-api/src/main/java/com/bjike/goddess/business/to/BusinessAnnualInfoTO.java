@@ -1,6 +1,9 @@
 package com.bjike.goddess.business.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 工商年检信息
@@ -16,26 +19,31 @@ public class BusinessAnnualInfoTO extends BaseTO {
     /**
      * 公司名称
      */
+    @NotBlank(message = "公司名称不能为空",groups = {ADD.class, EDIT.class})
     private String companyName;
 
     /**
      * 报告年份
      */
+    @NotBlank(message = "报告年份不能为空",groups = {ADD.class, EDIT.class})
     private String reportYear;
 
     /**
      * 提交日期
      */
+    @NotBlank(message = "提交日期不能为空",groups = {ADD.class, EDIT.class})
     private String submitDate;
 
     /**
      * 状态(是否公示)
      */
+    @NotBlank(message = "状态(是否公示)不能为空",groups = {ADD.class, EDIT.class})
     private Boolean status;
 
     /**
      * 年报
      */
+    @NotBlank(message = "年报不能为空",groups = {ADD.class, EDIT.class})
     private String annualReport;
 
 

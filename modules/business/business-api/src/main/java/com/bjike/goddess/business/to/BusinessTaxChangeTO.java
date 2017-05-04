@@ -1,6 +1,9 @@
 package com.bjike.goddess.business.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 工商税务变更
@@ -16,6 +19,7 @@ public class BusinessTaxChangeTO extends BaseTO {
     /**
      * 变更日期
      */
+    @NotBlank(message = "变更日期不能为空",groups = {ADD.class, EDIT.class})
     private String changeDate;
 
     /**

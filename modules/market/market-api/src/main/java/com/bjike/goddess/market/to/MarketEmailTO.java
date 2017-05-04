@@ -6,6 +6,7 @@ import com.bjike.goddess.market.enums.MarketCollectUnit;
 import com.bjike.goddess.market.enums.MarketSendUnit;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -20,10 +21,9 @@ import java.util.List;
 public class MarketEmailTO extends BaseTO {
 
     /**
-     * 行业
+     * 地区
      */
-    @NotBlank
-    private String work;
+    private String area;
 
     /**
      * 备注
@@ -33,7 +33,7 @@ public class MarketEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotBlank
+    @NotNull(message = "发送间隔不能为空且是double型数字")
     private Double sendNum;
 
     /**
@@ -44,11 +44,13 @@ public class MarketEmailTO extends BaseTO {
     /**
      * 发送单位
      */
+    @NotNull(message = "发送单位不能为空")
     private MarketSendUnit marketSendUnit;
 
     /**
      * 汇总间隔
      */
+    @NotNull(message = "汇总间隔不能为空")
     private MarketCollectUnit marketCollectUnit;
 
     /**
@@ -86,18 +88,14 @@ public class MarketEmailTO extends BaseTO {
      */
     private String modifyTime;
 
-    /**
-     * 行业字符串数组
-     */
-    private String[] works;
 
 
-    public String getWork() {
-        return work;
+    public String getArea() {
+        return area;
     }
 
-    public void setWork(String work) {
-        this.work = work;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getRemark() {
@@ -196,11 +194,4 @@ public class MarketEmailTO extends BaseTO {
         this.modifyTime = modifyTime;
     }
 
-    public String[] getWorks() {
-        return works;
-    }
-
-    public void setWorks(String[] works) {
-        this.works = works;
-    }
 }
