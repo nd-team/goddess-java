@@ -7,7 +7,6 @@ import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,20 +31,14 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try {
-            String contentType = request.getContentType();  //获取Content-Type
-            if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
-                if (StringUtils.isBlank(request.getParameter("path"))) {
-                    throw new SerException("path 不能为空!");
-                }
+        String contentType = request.getContentType();  //获取Content-Type
+        if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
+            if (StringUtils.isBlank(request.getParameter("path"))) {
+                throw new SerException("path 不能为空!");
             }
-
             return validateLogin(request, response);
-        }catch (Exception e){
-            return true;
         }
-
-
+        return  true;
     }
 
 
