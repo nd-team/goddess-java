@@ -100,4 +100,21 @@ public class CooperationSituationAct {
         }
     }
 
+    /**
+     * 根据id获取供应商合作情况数据
+     *
+     * @param id 供应商合作情况数据id
+     * @return class CooperationSituationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.getById(id), CooperationSituationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

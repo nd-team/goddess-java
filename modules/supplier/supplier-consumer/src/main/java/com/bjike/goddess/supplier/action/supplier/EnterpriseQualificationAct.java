@@ -100,4 +100,19 @@ public class EnterpriseQualificationAct {
         }
     }
 
+    /**
+     * 根据id获取供应商企业资质数据
+     *
+     * @param id 供应商企业资质数据id
+     * @return class EnterpriseQualificationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(enterpriseQualificationAPI.getById(id), EnterpriseQualificationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

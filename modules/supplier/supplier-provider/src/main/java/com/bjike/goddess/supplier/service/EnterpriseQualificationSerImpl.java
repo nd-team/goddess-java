@@ -94,4 +94,13 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         super.remove(entity);
         return this.transformBO(entity);
     }
+
+    @Override
+    public EnterpriseQualificationBO getById(String id) throws SerException {
+        EnterpriseQualification entity = super.findById(id);
+        if (null == entity)
+            return null;
+        else
+            return this.transformBO(entity);
+    }
 }

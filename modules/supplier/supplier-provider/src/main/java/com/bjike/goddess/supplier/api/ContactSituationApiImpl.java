@@ -43,4 +43,9 @@ public class ContactSituationApiImpl implements ContactSituationAPI {
     public ContactSituationBO delete(String id) throws SerException {
         return contactSituationSer.delete(id);
     }
+
+    @Override
+    public ContactSituationBO getById(String id) throws SerException {
+        return contactSituationSer.getById(id);
+    }
 }

@@ -101,4 +101,20 @@ public class RewardSituationAct {
         }
     }
 
+    /**
+     * 根据id获取供应商获奖情况数据
+     *
+     * @param id 供应商获奖情况数据id
+     * @return class RewardSituationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(rewardSituationAPI.getById(id), RewardSituationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

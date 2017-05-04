@@ -94,4 +94,13 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
         super.remove(entity);
         return this.transformBO(entity);
     }
+
+    @Override
+    public RewardSituationBO getById(String id) throws SerException {
+        RewardSituation entity = super.findById(id);
+        if (null == entity)
+            return null;
+        else
+            return this.transformBO(entity);
+    }
 }

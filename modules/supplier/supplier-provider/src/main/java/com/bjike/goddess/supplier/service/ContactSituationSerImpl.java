@@ -95,4 +95,13 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
         super.remove(entity);
         return this.transformBO(entity);
     }
+
+    @Override
+    public ContactSituationBO getById(String id) throws SerException {
+        ContactSituation entity = super.findById(id);
+        if (null == entity)
+            return null;
+        else
+            return this.transformBO(entity);
+    }
 }

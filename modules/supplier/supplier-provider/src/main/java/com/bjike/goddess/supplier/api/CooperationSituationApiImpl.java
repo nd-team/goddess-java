@@ -43,4 +43,9 @@ public class CooperationSituationApiImpl implements CooperationSituationAPI {
     public CooperationSituationBO delete(String id) throws SerException {
         return cooperationSituationSer.delete(id);
     }
+
+    @Override
+    public CooperationSituationBO getById(String id) throws SerException {
+        return cooperationSituationSer.getById(id);
+    }
 }

@@ -94,4 +94,13 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
         super.remove(entity);
         return this.transformBO(entity);
     }
+
+    @Override
+    public CooperationSituationBO getById(String id) throws SerException {
+        CooperationSituation entity = super.findById(id);
+        if (null == entity)
+            return null;
+        else
+            return this.transformBO(entity);
+    }
 }
