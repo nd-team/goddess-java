@@ -7,14 +7,17 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
 import com.bjike.goddess.organize.enums.ArrangementType;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,19 +32,37 @@ import java.util.List;
 @Service
 public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO> implements ArrangementSer {
 
+    @Autowired
+    private PositionDetailSer positionDetailSer;
+
+    private ArrangementBO transformBO(Arrangement entity) throws SerException {
+        ArrangementBO bo = BeanTransform.copyProperties(entity, ArrangementBO.class);
+        if (null != entity.getParent())
+            bo.setParentId(entity.getParent().getId());
+        return bo;
+    }
+
+    private List<ArrangementBO> transformBOList(List<Arrangement> list) throws SerException {
+        List<ArrangementBO> bos = new ArrayList<>(list.size());
+        for (Arrangement entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
 
     @Override
     public List<ArrangementBO> findStatus() throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<Arrangement> list = super.findByCis(dto);
-        List<ArrangementBO> bos = BeanTransform.copyProperties(list, ArrangementBO.class);
+        List<ArrangementBO> bos = this.transformBOList(list);
         return bos;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO save(ArrangementTO to) throws SerException {
+        this.checkUnique(to);
         Arrangement arrangement = BeanTransform.copyProperties(to, Arrangement.class);
         arrangement.setCreateTime(LocalDateTime.now());
         arrangement.setStatus(Status.THAW);
@@ -49,7 +70,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
             arrangement.setParent(super.findById(to.getParentId()));
         this.checkLayer(arrangement, 1);
         super.save(arrangement);
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        return this.transformBO(arrangement);
     }
 
     /**
@@ -68,12 +89,27 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         return layer;
     }
 
+    /**
+     * 检测岗位层级编号是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(ArrangementTO to) throws SerException {
+        ArrangementDTO dto = new ArrangementDTO();
+        dto.getConditions().add(Restrict.eq("serialNumber", to.getSerialNumber()));
+        if (super.findByCis(dto).size() > 0)
+            throw new SerException(to.getSerialNumber() + ":该编号已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArrangementBO update(ArrangementTO to) throws SerException {
         Arrangement arrangement = super.findById(to.getId());
         if (null == arrangement)
             throw new SerException("数据对象不存在");
+        if (!arrangement.getSerialNumber().equals(to.getSerialNumber()))
+            this.checkUnique(to);
         if (StringUtils.isNotBlank(to.getParentId())) arrangement.setParent(super.findById(to.getParentId()));
         arrangement.setArrangement(to.getArrangement());
         arrangement.setSerialNumber(to.getSerialNumber());
@@ -81,14 +117,14 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         arrangement.setModifyTime(LocalDateTime.now());
         this.checkLayer(arrangement, 1);
         super.update(arrangement);
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        return this.transformBO(arrangement);
     }
 
     @Override
     public List<ArrangementBO> findChild(String id) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         dto.getConditions().add(Restrict.eq("parent.id", id));
-        return BeanTransform.copyProperties(super.findByCis(dto), ArrangementBO.class);
+        return this.transformBOList(super.findByCis(dto));
     }
 
     @Override
@@ -96,18 +132,18 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         Arrangement arrangement = super.findById(id);
         if (null == arrangement)
             throw new SerException("数据对象不存在");
-        try {
-            super.remove(arrangement);
-        } catch (SerException e) {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("arrangement.id", id));
+        if (this.findChild(id).size() > 0 || positionDetailSer.findByCis(dto).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
-        return BeanTransform.copyProperties(arrangement, ArrangementBO.class);
+        super.remove(arrangement);
+        return this.transformBO(arrangement);
     }
 
     @Override
     public List<ArrangementBO> maps(ArrangementDTO dto) throws SerException {
         dto.getSorts().add("modifyTime=desc");
-        return BeanTransform.copyProperties(super.findByPage(dto), ArrangementBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override

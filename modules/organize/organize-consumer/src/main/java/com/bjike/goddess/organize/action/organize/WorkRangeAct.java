@@ -98,7 +98,7 @@ public class WorkRangeAct {
     public Result departmentAddRange(DepartmentWorkRangeTO to, HttpServletRequest request) throws ActException {
         try {
             workRangeAPI.departmentAddRange(to);
-            return ActResult.initialize(BeanTransform.copyProperties(to, WorkRangeVO.class, request));
+            return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

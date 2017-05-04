@@ -43,7 +43,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         bo.setInstructionId(entity.getInstruction().getId());
         bo.setSerialNumber(entity.getInstruction().getSerialNumber());
         bo.setAngle(entity.getInstruction().getAngle().getName());
-        bo.setClassify(entity.getInstruction().getClassify().getId());
+        bo.setClassify(entity.getInstruction().getClassify().getName());
         bo.setDimension(entity.getInstruction().getDimension().getName());
         bo.setFunction(entity.getInstruction().getFunction());
         bo.setFrequency(entity.getInstruction().getFrequency());
@@ -75,8 +75,9 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
     @Override
     public PositionWorkDetailBO save(PositionWorkDetailTO to) throws SerException {
         PositionWorkDetail entity = BeanTransform.copyProperties(to, PositionWorkDetail.class);
-        entity.setCreateTime(LocalDateTime.now());
         entity.setInstructions(positionInstructionSer.findById(to.getInstructionId()));
+        if (entity.getInstruction() == null)
+            throw new SerException("岗位说明书为空,无法保存");
         super.save(entity);
         return transformBO(entity);
     }
@@ -92,6 +93,8 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setInstructions(positionInstructionSer.findById(to.getInstructionId()));
+        if (entity.getInstruction() == null)
+            throw new SerException("岗位说明书为空,无法保存");
         super.update(entity);
         return transformBO(entity);
     }

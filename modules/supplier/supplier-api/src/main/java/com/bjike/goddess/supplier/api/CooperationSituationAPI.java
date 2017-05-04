@@ -61,4 +61,15 @@ public interface CooperationSituationAPI {
         return null;
     }
 
+    /**
+     * 根据id获取供应商合作情况数据
+     *
+     * @param id 供应商合作情况数据id
+     * @return
+     * @throws SerException
+     */
+    default CooperationSituationBO getById(String id) throws SerException {
+        return null;
+    }
+
 }

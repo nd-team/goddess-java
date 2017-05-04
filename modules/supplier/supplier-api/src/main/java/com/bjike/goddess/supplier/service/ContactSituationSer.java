@@ -63,4 +63,15 @@ public interface ContactSituationSer extends Ser<ContactSituation, ContactSituat
     default ContactSituationBO delete(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取供应商联系情况数据
+     *
+     * @param id 供应商联系情况数据id
+     * @return
+     * @throws SerException
+     */
+    default ContactSituationBO getById(String id) throws SerException {
+        return null;
+    }
 }

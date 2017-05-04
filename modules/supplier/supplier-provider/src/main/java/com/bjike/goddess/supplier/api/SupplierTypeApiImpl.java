@@ -2,6 +2,7 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierTypeBO;
+import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.service.SupplierTypeSer;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,21 @@ public class SupplierTypeApiImpl implements SupplierTypeAPI {
     @Override
     public SupplierTypeBO thaw(SupplierTypeTO to) throws SerException {
         return supplierTypeSer.thaw(to);
+    }
+
+    @Override
+    public List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
+        return supplierTypeSer.maps(dto);
+    }
+
+    @Override
+    public SupplierTypeBO getById(String id) throws SerException {
+        return supplierTypeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SupplierTypeDTO dto = new SupplierTypeDTO();
+        return supplierTypeSer.count(dto);
     }
 }

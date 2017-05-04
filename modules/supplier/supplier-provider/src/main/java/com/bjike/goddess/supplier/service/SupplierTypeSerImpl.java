@@ -9,11 +9,13 @@ import com.bjike.goddess.supplier.bo.SupplierTypeBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.entity.SupplierType;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,21 +51,26 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO update(SupplierTypeTO to) throws SerException {
-        SupplierType entity = super.findById(to.getId()),type = super.findById(to.getId());
-        entity.setName(to.getName());
-        entity.setDescription(to.getDescription());
-        entity.setCreateTime(LocalDateTime.now());
-        if (null != type)
-            entity.setCreateTime(type.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
+        if (StringUtils.isNotBlank(to.getId())) {
+            try {
+                SupplierType entity = super.findById(to.getId());
+                BeanTransform.copyProperties(to, entity, true);
+                entity.setModifyTime(LocalDateTime.now());
+                super.update(entity);
+                return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
+            } catch (Exception e) {
+                throw new SerException("数据对象不能为空");
+            }
+        } else
+            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO delete(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
@@ -72,6 +79,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Override
     public SupplierTypeBO congeal(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
@@ -81,8 +90,28 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Override
     public SupplierTypeBO thaw(SupplierTypeTO to) throws SerException {
         SupplierType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.THAW);
         super.update(entity);
+        return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
+    }
+
+    @Override
+    public List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        List<SupplierType> list = super.findByPage(dto);
+        if (null == list)
+            return BeanTransform.copyProperties(list, SupplierTypeBO.class);
+        else
+            return new ArrayList<SupplierTypeBO>(0);
+    }
+
+    @Override
+    public SupplierTypeBO getById(String id) throws SerException {
+        SupplierType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
 }

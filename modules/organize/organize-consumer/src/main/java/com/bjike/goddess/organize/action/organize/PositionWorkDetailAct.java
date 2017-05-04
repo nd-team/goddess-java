@@ -58,7 +58,7 @@ public class PositionWorkDetailAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(BindingResult result, @Validated(ADD.class) PositionWorkDetailTO to, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) PositionWorkDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionWorkDetailAPI.save(to), PositionWorkDetailVO.class, request));
         } catch (SerException e) {
@@ -74,7 +74,7 @@ public class PositionWorkDetailAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(BindingResult result, @Validated(EDIT.class) PositionWorkDetailTO to, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) PositionWorkDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionWorkDetailAPI.update(to), PositionWorkDetailVO.class, request));
         } catch (SerException e) {
