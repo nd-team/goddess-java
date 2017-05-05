@@ -22,7 +22,13 @@ allprojects {
         testCompile 'junit:junit:4.12'
         testCompile('com.dounine.japi:client:1.0') {
             exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-        }
+            exclude group: 'org.springframework', module: 'spring-beans'
+            exclude group: 'org.springframework', module: 'spring-core'
+            exclude group: 'org.springframework', module: 'spring-context'
+            exclude group: 'org.springframework', module: 'spring-aop'
+            exclude group: 'org.springframework', module: 'spring-expression'
+            exclude group: 'org.springframework', module: 'spring-web'
+            exclude group: 'org.springframework', module: 'spring-webmvc'        }
     }
 
     configure(install.repositories.mavenInstaller) {
