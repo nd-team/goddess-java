@@ -11,6 +11,7 @@ import com.bjike.goddess.market.bo.MarketEmailBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.entity.MarketEmail;
 import com.bjike.goddess.market.to.MarketEmailTO;
+import com.sun.org.apache.xerces.internal.dom.PSVIAttrNSImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,11 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         if (areas == null || areas.length <= 0) {
             throw new SerException("汇总失败，请选择地区");
         }
-        String areaStr  = StringUtils.join(areas, ",");
+        String[] areasTemp = new String[areas.length];
+        for(int i = 0;i<areas.length;i++){
+            areasTemp[i] = "'"+areas[i]+"'";
+        }
+        String areaStr  = StringUtils.join(areasTemp, ",");
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT *  FROM (SELECT area,MAX(CASE WHEN  workType='1' THEN workTypeCounts ");
         sb.append(" END ) AS mobile, MAX( CASE WHEN workType='2' THEN ");
@@ -100,7 +105,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS plan FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as workTypeCounts , workType as workType ,area as area ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY workType,area ORDER BY area ");
         sb.append(" )a ");
         sb.append(" GROUP BY area)A, ");
@@ -113,7 +118,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS fourth FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as scaleCounts , scale as scale ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY scale,area ORDER BY area ");
         sb.append(" )a)B, ");
         sb.append(" ( ");
@@ -123,7 +128,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as effectiveCounts , is_effective as is_effective ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY is_effective,area ORDER BY area ");
         sb.append(" )a)C, ");
         sb.append(" ( ");
@@ -133,7 +138,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append("  select count(*) as projectNatureCounts , projectNature as projectNature ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY projectNature,area ORDER BY area ");
         sb.append(" )a)D ");
         sb.append(" UNION ");
@@ -149,7 +154,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS plan FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as workTypeCounts , workType as workType ,area as area ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY workType,area ORDER BY area ");
         sb.append(" )a ");
         sb.append(" GROUP BY area)A, ");
@@ -162,7 +167,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS fourth FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as scaleCounts , scale as scale ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY scale,area ORDER BY area ");
         sb.append(" )a)B, ");
         sb.append(" ( ");
@@ -172,7 +177,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as effectiveCounts , is_effective as is_effective ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY is_effective,area ORDER BY area ");
         sb.append(" )a)C, ");
         sb.append(" ( ");
@@ -182,7 +187,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append("  select count(*) as projectNatureCounts , projectNature as projectNature ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY projectNature,area ORDER BY area ");
         sb.append(" )a)D ");
 
@@ -194,7 +199,9 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         List<MarketCollectBO> collects  = super.findBySql(sql, MarketCollectBO.class,fields);
 
         return collects;
+
     }
+
 
 
     /**
@@ -229,7 +236,10 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
                 break;
         }
         return unit;
+
     }
+
+
 
 //    /**
 //     * 数据库查询返回，然后添加map数组
@@ -282,7 +292,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
     /**
      * 将数据库返回的枚举int值转换，然后添加map数组
      */
-    public List<Map<String, String>> sqlQueryInt(String enumStr, List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
+   /* public List<Map<String, String>> sqlQueryInt(String enumStr, List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
         List<MarketEmailBO> marketEmailBOS = marketInfoSer.findBySql(sql, CusEmailBO.class, fields);
         if (marketEmailBOS != null && marketEmailBOS.size() > 0) {
             if (obj.size() == marketEmailBOS.size()) {
@@ -340,5 +350,5 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
             }
         }
         return mapList;
-    }
+    }*/
 }
