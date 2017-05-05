@@ -11,7 +11,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -29,22 +32,36 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     @Override
     @Transactional
     public AttachedBO save(AttachedTO to) throws SerException {
+<<<<<<< HEAD
         Attached attached = BeanTransform.copyProperties(to, Attached.class, true);
         attached = super.save(attached);
         return BeanTransform.copyProperties(attached, AttachedBO.class);
+=======
+        Attached attached= BeanTransform.copyProperties(to,Attached.class,true);
+        attached=super.save(attached);
+        return BeanTransform.copyProperties(attached,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public AttachedBO exameAndComplete(AttachedTO to) throws SerException {
+<<<<<<< HEAD
         Attached attached = super.findById(to.getId());
+=======
+        Attached attached=super.findById(to.getId());
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
         attached.setMoney(to.getMoney());
         attached.setPaid(to.getPaid());
         attached.setRecord(to.getRecord());
         attached.setDecription(to.getDecription());
         attached.setAdvice(to.getAdvice());
         super.update(attached);
+<<<<<<< HEAD
         return BeanTransform.copyProperties(attached, AttachedBO.class);
+=======
+        return BeanTransform.copyProperties(attached,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -56,25 +73,41 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     @Override
     public List<AttachedBO> find(AttachedDTO dto) throws SerException {
+<<<<<<< HEAD
         List<Attached> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AttachedBO.class);
+=======
+        List<Attached> list=super.findByCis(dto,true);
+        return BeanTransform.copyProperties(list,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public AttachedBO findByID(String id) throws SerException {
+<<<<<<< HEAD
         Attached attached = super.findById(id);
         return BeanTransform.copyProperties(attached, AttachedBO.class);
+=======
+        Attached attached=super.findById(id);
+        return BeanTransform.copyProperties(attached,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public List<AttachedBO> findALL() throws SerException {
+<<<<<<< HEAD
         List<Attached> list = super.findAll();
         return BeanTransform.copyProperties(list, AttachedBO.class);
+=======
+        List<Attached> list=super.findAll();
+        return BeanTransform.copyProperties(list,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public AttachedBO update(AttachedTO to) throws SerException {
+<<<<<<< HEAD
         Attached attached = super.findById(to.getId());
         LocalDateTime a = attached.getCreateTime();
         LocalDateTime b = attached.getModifyTime();
@@ -83,5 +116,11 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         attached.setModifyTime(b);
         super.update(attached);
         return BeanTransform.copyProperties(attached, AttachedBO.class);
+=======
+        Attached attached=super.findById(to.getId());
+        attached=BeanTransform.copyProperties(to,Attached.class,true);
+        super.update(attached);
+        return BeanTransform.copyProperties(attached,AttachedBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 }

@@ -9,20 +9,30 @@ import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
+<<<<<<< HEAD
 import com.bjike.goddess.secure.bo.DismissionEmployeeBO;
+=======
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.BeforeRemoveEmployee;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
+<<<<<<< HEAD
+=======
+import com.bjike.goddess.user.entity.UserDetail;
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -46,11 +56,16 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     @Autowired
     private UserAPI userAPI;
     @Autowired
+<<<<<<< HEAD
     private UserDetailAPI userDetailAPI;
+=======
+    private UserDetailAPI  userDetailAPI;
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 
     @Override
     @Transactional
     public BeforeRemoveEmployeeBO save(BeforeRemoveEmployeeTO to) throws SerException {
+<<<<<<< HEAD
         BeforeRemoveEmployee beforeRemoveEmployee = BeanTransform.copyProperties(to, BeforeRemoveEmployee.class, true);
         super.save(beforeRemoveEmployee);
         //TODO:发邮件
@@ -59,12 +74,26 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         messageTO.setRangeType(RangeType.SPECIFIED);
         messageAPI.send(messageTO);
         return BeanTransform.copyProperties(beforeRemoveEmployee, BeforeRemoveEmployeeBO.class);
+=======
+        BeforeRemoveEmployee beforeRemoveEmployee= BeanTransform.copyProperties(to,BeforeRemoveEmployee.class,true);
+        super.save(beforeRemoveEmployee);
+        //TODO:发邮件
+        MessageTO messageTO=new MessageTO("减员审核","有减员名单需您审核");
+        messageTO.setReceivers(new String[]{"XXX"});
+        messageTO.setRangeType(RangeType.SPECIFIED);
+        messageAPI.send(messageTO);
+        return BeanTransform.copyProperties(beforeRemoveEmployee,BeforeRemoveEmployeeBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public BeforeRemoveEmployeeBO exam(BeforeRemoveEmployeeTO to) throws SerException {
+<<<<<<< HEAD
         if (userDetailAPI.findByUserId(userAPI.currentUser().getId()).getDepartmentName().equals("总经办")) {
+=======
+        if(userDetailAPI.findByUserId(userAPI.currentUser().getId()).getDepartmentName().equals("总经办")){
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
             BeforeRemoveEmployee beforeRemoveEmployee = super.findById(to.getId());
             beforeRemoveEmployee.setIs_remove(to.getIs_remove());
             super.update(beforeRemoveEmployee);
@@ -80,14 +109,24 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 
     @Override
     public List<BeforeRemoveEmployeeBO> find(BeforeRemoveEmployeeDTO dto) throws SerException {
+<<<<<<< HEAD
         List<BeforeRemoveEmployee> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, BeforeRemoveEmployeeBO.class);
+=======
+        List<BeforeRemoveEmployee> list=super.findByCis(dto,true);
+        return BeanTransform.copyProperties(list,BeforeRemoveEmployeeBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public BeforeRemoveEmployeeBO findByID(String id) throws SerException {
+<<<<<<< HEAD
         BeforeRemoveEmployee beforeRemoveEmployee = super.findById(id);
         return BeanTransform.copyProperties(beforeRemoveEmployee, BeforeRemoveEmployeeBO.class);
+=======
+        BeforeRemoveEmployee beforeRemoveEmployee=super.findById(id);
+        return BeanTransform.copyProperties(beforeRemoveEmployee,BeforeRemoveEmployeeBO.class);
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -98,6 +137,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     }
 
     @Override
+<<<<<<< HEAD
     public List<DismissionEmployeeBO> all() throws SerException {
         List<DimissionInfoBO> list = dimissionInfoAPI.all();
         List<DismissionEmployeeBO> boList = new ArrayList<DismissionEmployeeBO>();
@@ -108,5 +148,9 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
             boList.add(bo);
         }
         return boList;
+=======
+    public List<DimissionInfoBO> all() throws SerException {
+        return dimissionInfoAPI.all();
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 }

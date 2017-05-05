@@ -2,10 +2,17 @@ package com.bjike.goddess.secure.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+<<<<<<< HEAD
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
 import com.bjike.goddess.secure.bo.DismissionEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.BeforeRemoveEmployee;
+=======
+import com.bjike.goddess.dimission.bo.DimissionInfoBO;
+import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
+import com.bjike.goddess.secure.entity.BeforeRemoveEmployee;
+import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
 
 import java.util.List;
@@ -78,10 +85,17 @@ public interface BeforeRemoveEmployeeSer extends Ser<BeforeRemoveEmployee, Befor
     /**
      * 获取所有离职员工
      *
+<<<<<<< HEAD
      * @return class DismissionEmployeeBO
      * @throws SerException
      */
     default List<DismissionEmployeeBO> all() throws SerException {
+=======
+     * @return class DimissionInfoBO
+     * @throws SerException
+     */
+    default List<DimissionInfoBO> all() throws SerException {
+>>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
         return null;
     }
 }
