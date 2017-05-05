@@ -12,6 +12,11 @@ package com.bjike.goddess.contractquotemanager.vo;
 public class ContractNodeStandardVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 日期
      */
     private String date;
@@ -61,6 +66,13 @@ public class ContractNodeStandardVO {
      */
     private Integer nodeStandard;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDate() {
         return date;
@@ -141,4 +153,5 @@ public class ContractNodeStandardVO {
     public void setNodeStandard(Integer nodeStandard) {
         this.nodeStandard = nodeStandard;
     }
+
 }

@@ -3,8 +3,6 @@ package com.bjike.goddess.projectmeasure.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.projectmeasure.type.PeopleProperty;
 
-import javax.persistence.Column;
-
 /**
  * 项目人员需求业务传输对象
  *

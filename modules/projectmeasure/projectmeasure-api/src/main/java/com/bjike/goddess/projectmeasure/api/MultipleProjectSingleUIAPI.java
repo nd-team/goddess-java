@@ -5,7 +5,6 @@ import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 
-
 import java.util.List;
 
 /**
@@ -18,6 +17,24 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MultipleProjectSingleUIAPI {
+
+    /**
+     * 根据id查询多项目单个界面
+     *
+     * @param id 多项目单个界面唯一标识
+     * @return class MultipleProjectSingleUIBO
+     * @throws SerException
+     */
+    MultipleProjectSingleUIBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 多项目当个界面dto
+     * @throws SerException
+     */
+    Long count(MultipleProjectSingleUIDTO dto) throws SerException;
+
 
     /**
      * 分页查询多项目单个界面

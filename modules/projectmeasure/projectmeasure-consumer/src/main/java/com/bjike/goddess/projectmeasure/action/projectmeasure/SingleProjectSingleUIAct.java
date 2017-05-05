@@ -13,10 +13,11 @@ import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.vo.SingleProjectSingleUIVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,11 +30,47 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/singleprojectsingleui")
+@RequestMapping("ssui")
 public class SingleProjectSingleUIAct {
 
     @Autowired
     private SingleProjectSingleUIAPI singleProjectSingleUIAPI;
+
+    /**
+     * 根据id查询单个项目单个界面
+     *
+     * @param id 单个项目单个界面唯一标识
+     * @return class SingleProjectSingleUIVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/ssui/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            SingleProjectSingleUIBO bo = singleProjectSingleUIAPI.findById(id);
+            SingleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectSingleUIVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 单个项目单个界面dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated SingleProjectSingleUIDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = singleProjectSingleUIAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分页查询单个项目单个界面
@@ -44,10 +81,10 @@ public class SingleProjectSingleUIAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(SingleProjectSingleUIDTO dto) throws ActException {
+    public Result list(@Validated SingleProjectSingleUIDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<SingleProjectSingleUIBO> boList = singleProjectSingleUIAPI.list(dto);
-            List<SingleProjectSingleUIVO> voList = BeanTransform.copyProperties(boList, SingleProjectSingleUIVO.class);
+            List<SingleProjectSingleUIVO> voList = BeanTransform.copyProperties(boList, SingleProjectSingleUIVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -63,10 +100,10 @@ public class SingleProjectSingleUIAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) SingleProjectSingleUITO to) throws ActException {
+    public Result add(@Validated({ADD.class}) SingleProjectSingleUITO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             SingleProjectSingleUIBO bo = singleProjectSingleUIAPI.save(to);
-            SingleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectSingleUIVO.class);
+            SingleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectSingleUIVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,7 +135,7 @@ public class SingleProjectSingleUIAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) SingleProjectSingleUITO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) SingleProjectSingleUITO to, BindingResult result) throws ActException {
         try {
             singleProjectSingleUIAPI.update(to);
             return new ActResult("edit success!");
