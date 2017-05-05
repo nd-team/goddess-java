@@ -1,6 +1,7 @@
 package com.bjike.goddess.bidding.api;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
@@ -82,10 +83,13 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
         return biddingInfoSer.sendBiddingInfo(biddingInfoTO);
 
     }
-
     @Override
-    public List<BiddingInfoBO> collectBiddingInfo(String[] cities) throws SerException {
+    public List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {
         return biddingInfoSer.collectBiddingInfo(cities);
+    }
+    @Override
+    public List<String> getBiddingInfoCities() throws SerException {
+        return biddingInfoSer.getBiddingInfoCities();
     }
 
 }

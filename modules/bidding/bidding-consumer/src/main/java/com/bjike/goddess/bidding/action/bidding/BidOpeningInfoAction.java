@@ -7,7 +7,9 @@ import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.vo.BidOpeningCollectVO;
 import com.bjike.goddess.bidding.vo.BidOpeningInfoVO;
+import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -146,24 +148,6 @@ public class BidOpeningInfoAction {
     }
 
     /**
-     * 汇总开标信息统计
-     *
-     * @param bidOpeningInfoDTO 开标信息bo
-     * @return class BidOpeningInfoVO
-     * @des 根据竞争公司(competitive) 汇总开标信息统计
-     * @version v1
-     */
-    @GetMapping("v1/collect")
-    public Result collectBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws ActException {
-        try {
-            List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.collectBidOpeningInfo(String.valueOf(bidOpeningInfoDTO)), BidOpeningInfoVO.class, true);
-            return ActResult.initialize(bidOpeningInfoVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
      * 搜索
      *
      * @param bidOpeningInfoDTO 开标信息dto
@@ -199,6 +183,41 @@ public class BidOpeningInfoAction {
         }
 
     }
+    /**
+     * 汇总招标信息
+     *
+     * @param cities 地市
+     * @return class BiddingInfoCollectVO
+     * @des 汇总招标信息
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(@RequestParam String[] cities) throws ActException {
+        try {
+            List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
+                    bidOpeningInfoAPI.collectBidOpening(cities), BidOpeningCollectVO.class);
+            return ActResult.initialize(bidOpeningInfoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取地市
+     *
+     * @des 获取地市集合
+     * @version v1
+     */
+    @GetMapping("v1/cities")
+    public Result cities() throws ActException {
+        try {
+            List<String> citiesList = bidOpeningInfoAPI.getBidOpeningInfoCities();
+            return ActResult.initialize(citiesList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 发送邮件
