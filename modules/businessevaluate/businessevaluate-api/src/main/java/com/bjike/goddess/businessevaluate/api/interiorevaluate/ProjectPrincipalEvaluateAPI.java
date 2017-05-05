@@ -48,4 +48,20 @@ public interface ProjectPrincipalEvaluateAPI {
      * @return 项目负责人评价结果集
      */
     List<ProjectPrincipalEvaluateBO> pageList(ProjectPrincipalEvaluateDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(ProjectPrincipalEvaluateDTO dto) throws SerException;
+
+    /**
+     * 根据id查询项目负责人评价
+     *
+     * @param id 项目负责人评价id
+     * @return 项目负责人评价
+     */
+    ProjectPrincipalEvaluateBO findById(String id) throws SerException;
 }

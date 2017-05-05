@@ -22,19 +22,19 @@ public class EvaluateCollectTotalVO {
     /**
      * 项目问题数量
      */
-    private Double problemCount;
+    private Integer problemCount;
     /**
      * 长期合作项目数量
      */
-    private Double longtermCount;
+    private Integer longtermCount;
     /**
      * 事项合作项目数量
      */
-    private Double itemCount;
+    private Integer itemCount;
     /**
      * 中介合作项目数量
      */
-    private Double agencyCount;
+    private Integer agencyCount;
     /**
      * 项目成本
      */
@@ -76,35 +76,35 @@ public class EvaluateCollectTotalVO {
         this.project = project;
     }
 
-    public Double getProblemCount() {
+    public Integer getProblemCount() {
         return problemCount;
     }
 
-    public void setProblemCount(Double problemCount) {
+    public void setProblemCount(Integer problemCount) {
         this.problemCount = problemCount;
     }
 
-    public Double getLongtermCount() {
+    public Integer getLongtermCount() {
         return longtermCount;
     }
 
-    public void setLongtermCount(Double longtermCount) {
+    public void setLongtermCount(Integer longtermCount) {
         this.longtermCount = longtermCount;
     }
 
-    public Double getItemCount() {
+    public Integer getItemCount() {
         return itemCount;
     }
 
-    public void setItemCount(Double itemCount) {
+    public void setItemCount(Integer itemCount) {
         this.itemCount = itemCount;
     }
 
-    public Double getAgencyCount() {
+    public Integer getAgencyCount() {
         return agencyCount;
     }
 
-    public void setAgencyCount(Double agencyCount) {
+    public void setAgencyCount(Integer agencyCount) {
         this.agencyCount = agencyCount;
     }
 
@@ -148,11 +148,11 @@ public class EvaluateCollectTotalVO {
         this.projectProfit = projectProfit;
     }
 
-    public Double getProjectTotalAmountt() {
+    public Double getProjectTotalAmount() {
         return projectTotalAmount;
     }
 
-    public void setProjectTotalAmountt(Double projectTotalAmountt) {
-        this.projectTotalAmount = projectTotalAmountt;
+    public void setProjectTotalAmount(Double projectTotalAmount) {
+        this.projectTotalAmount = projectTotalAmount;
     }
 }

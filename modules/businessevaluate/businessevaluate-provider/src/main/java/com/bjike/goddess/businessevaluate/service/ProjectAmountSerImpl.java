@@ -94,7 +94,13 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
         List<ProjectAmountBO> boList = BeanTransform.copyProperties(list, ProjectAmountBO.class);
         //设置项目信息
         if (boList != null && !boList.isEmpty()) {
+            //设置差额
             for (ProjectAmountBO bo : boList) {
+                bo.setCostSubtract(bo.getCost() - bo.getBudgetCost());
+                bo.setFeeSubtract(bo.getFee() - bo.getFeeSubtract());
+                bo.setManageFeeSubtract(bo.getManageFee() - bo.getBudgetManageFee());
+                bo.setTaxesSubtract(bo.getTaxes() - bo.getBudgetTaxes());
+                bo.setProfitSubtract(bo.getProfit() - bo.getBudgetProfit());
                 EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
                 if (info != null) {
                     bo.setArea(info.getArea());

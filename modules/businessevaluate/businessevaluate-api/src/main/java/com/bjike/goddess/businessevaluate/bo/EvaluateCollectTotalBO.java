@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessevaluate.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 /**
  * 汇总合计
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.businessevaluate.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class EvaluateCollectTotalBO {
+public class EvaluateCollectTotalBO extends BaseBO {
 
     /**
      * 地区
