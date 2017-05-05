@@ -95,7 +95,6 @@ public class ProjectContractBO extends BaseBO {
     private CommunicateResult trail;
     private CommunicateResult abandon;
 
-
     public String getContractExtProject() {
         return contractExtProject;
     }
