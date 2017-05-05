@@ -1,6 +1,9 @@
 package com.bjike.goddess.bidding.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.time.LocalDate;
 
@@ -18,6 +21,7 @@ public class BiddingAnswerQuestionsTO extends BaseTO {
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**

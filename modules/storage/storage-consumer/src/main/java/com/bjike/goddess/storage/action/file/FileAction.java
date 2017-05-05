@@ -45,9 +45,9 @@ public class FileAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, HttpServletRequest request, BindingResult result) throws ActException {
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo,  BindingResult result,HttpServletRequest request) throws ActException {
         try {
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class, request);
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class );
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

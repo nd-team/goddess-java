@@ -82,6 +82,22 @@ public class ReflectAct {
     }
 
     /**
+     * 关闭
+     *
+     * @param id 体现类型数据id
+     * @return class ReflectVO
+     * @version v1
+     */
+    @PatchMapping("v1/close/{id}")
+    public Result close(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(reflectAPI.close(id), ReflectVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 开启
      *
      * @param id 体现类型数据id

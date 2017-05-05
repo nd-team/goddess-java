@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.OperateDTO;
 import com.bjike.goddess.organize.entity.Operate;
 import com.bjike.goddess.organize.to.OperateTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ import java.util.List;
 @Service
 public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements OperateSer {
 
+    @Autowired
+    private PositionInstructionSer positionInstructionSer;
+
     @Override
     public List<OperateBO> findStatus() throws SerException {
         OperateDTO dto = new OperateDTO();
@@ -37,9 +41,23 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         return bos;
     }
 
+    /**
+     * 检查操作类型是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(OperateTO to) throws SerException {
+        OperateDTO dto = new OperateDTO();
+        dto.getConditions().add(Restrict.eq("name", to.getName()));
+        if (super.findOne(dto) != null)
+            throw new SerException(to.getName() + ":该操作类型已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OperateBO save(OperateTO to) throws SerException {
+        this.checkUnique(to);
         Operate operate = BeanTransform.copyProperties(to, Operate.class);
         operate.setStatus(Status.THAW);
         super.save(operate);
@@ -54,6 +72,8 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         Operate entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getName().equals(to.getName()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -65,11 +85,9 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
         Operate entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (positionInstructionSer.findByOperate(id).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, OperateBO.class);
     }
 

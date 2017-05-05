@@ -7,9 +7,11 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
+import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "organizeSerCache")
 @Service
 public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> implements ModuleTypeSer {
+
+    @Autowired
+    private PositionDetailSer positionDetailSer;
 
     @Override
     public ModuleTypeBO save(ModuleTypeTO to) throws SerException {
@@ -58,11 +63,11 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
         ModuleType entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("module.id", id));
+        if (positionDetailSer.findByCis(dto).size() > 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, ModuleTypeBO.class);
     }
 

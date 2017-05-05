@@ -1,6 +1,8 @@
 package com.bjike.goddess.market.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.market.enums.MarketProjectNature;
+import com.bjike.goddess.market.enums.MarketWorkType;
 import com.bjike.goddess.market.enums.Scale;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -40,7 +42,7 @@ public class MarketInfoTO extends BaseTO {
     /**
      * 行业
      */
-    private String workProfession;
+    private MarketWorkType workType;
 
     /**
      * 技术类别
@@ -95,7 +97,7 @@ public class MarketInfoTO extends BaseTO {
     /**
      * 项目性质
      */
-    private String projectNature;
+    private MarketProjectNature projectNature;
 
     /**
      * 市场分析人员
@@ -181,12 +183,12 @@ public class MarketInfoTO extends BaseTO {
         this.infoCollectionDate = infoCollectionDate;
     }
 
-    public String getWorkProfession() {
-        return workProfession;
+    public MarketWorkType getWorkType() {
+        return workType;
     }
 
-    public void setWorkProfession(String workProfession) {
-        this.workProfession = workProfession;
+    public void setWorkType(MarketWorkType workType) {
+        this.workType = workType;
     }
 
     public String getTechnologyCategory() {
@@ -269,11 +271,11 @@ public class MarketInfoTO extends BaseTO {
         this.effective = effective;
     }
 
-    public String getProjectNature() {
+    public MarketProjectNature getProjectNature() {
         return projectNature;
     }
 
-    public void setProjectNature(String projectNature) {
+    public void setProjectNature(MarketProjectNature projectNature) {
         this.projectNature = projectNature;
     }
 

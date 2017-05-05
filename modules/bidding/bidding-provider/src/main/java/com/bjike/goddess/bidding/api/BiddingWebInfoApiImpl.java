@@ -28,6 +28,10 @@ public class BiddingWebInfoApiImpl implements BiddingWebInfoAPI {
     public Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         return biddingWebInfoSer.countBiddingWebInfo(biddingWebInfoDTO);
     }
+    @Override
+    public BiddingWebInfoBO getOne(String id) throws SerException {
+        return biddingWebInfoSer.getOne(id);
+    }
 
     @Override
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {

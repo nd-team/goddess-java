@@ -1,8 +1,9 @@
 package com.bjike.goddess.bidding.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-
-import java.time.LocalDate;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 开标信息
@@ -18,18 +19,23 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 招标编号
      */
+    @NotBlank(message = "招标编号不能为空", groups = {ADD.class, EDIT.class})
     private String tenderNumber;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
-     * 开标时间String
+     * 开标时间
      */
     private String bidOpeningTime;
-
+    /**
+     * 开标地点
+     */
+    private String bidOpeningPlace;
     /**
      * 委托人
      */
@@ -43,6 +49,7 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 竞争公司
      */
+    @NotBlank(message = "竞争公司不能为空", groups = {ADD.class, EDIT.class})
     private String competitive;
 
     /**
@@ -53,12 +60,12 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 竞争公司报价
      */
-    private String competitivePrice;
+    private Double competitivePrice;
 
     /**
      * 比率(%)
      */
-    private String ratio;
+    private Double ratio;
 
 
     public String getTenderNumber() {
@@ -83,6 +90,14 @@ public class BidOpeningInfoTO extends BaseTO {
 
     public void setBidOpeningTime(String bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
+    }
+
+    public String getBidOpeningPlace() {
+        return bidOpeningPlace;
+    }
+
+    public void setBidOpeningPlace(String bidOpeningPlace) {
+        this.bidOpeningPlace = bidOpeningPlace;
     }
 
     public String getPrincipal() {
@@ -117,19 +132,19 @@ public class BidOpeningInfoTO extends BaseTO {
         this.cities = cities;
     }
 
-    public String getCompetitivePrice() {
+    public Double getCompetitivePrice() {
         return competitivePrice;
     }
 
-    public void setCompetitivePrice(String competitivePrice) {
+    public void setCompetitivePrice(Double competitivePrice) {
         this.competitivePrice = competitivePrice;
     }
 
-    public String getRatio() {
+    public Double getRatio() {
         return ratio;
     }
 
-    public void setRatio(String ratio) {
+    public void setRatio(Double ratio) {
         this.ratio = ratio;
     }
 }

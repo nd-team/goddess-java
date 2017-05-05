@@ -24,6 +24,14 @@ public interface BiddingInfoAPI {
     default Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个招标信息
+     *
+     * @return class BiddingInfoBO
+     */
+    default BiddingInfoBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 招标信息
@@ -101,7 +109,7 @@ public interface BiddingInfoAPI {
      * @return class biddingInfoBO
      * @throws SerException
      */
-    default BiddingInfoBO collectBiddingInfo(String[] cities) throws SerException {
+    default List<BiddingInfoBO> collectBiddingInfo(String[] cities) throws SerException {
         return null;
     }
 
