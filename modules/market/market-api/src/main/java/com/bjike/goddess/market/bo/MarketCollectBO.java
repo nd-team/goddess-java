@@ -14,7 +14,6 @@ public class MarketCollectBO implements Serializable {
     private Object first;
     private Object second;
     private Object third;
-    private Object fourth;
     private Object has;
     private Object notHas;
     private Object social;
@@ -75,14 +74,6 @@ public class MarketCollectBO implements Serializable {
 
     public void setThird(Object third) {
         this.third = third;
-    }
-
-    public Object getFourth() {
-        return fourth;
-    }
-
-    public void setFourth(Object fourth) {
-        this.fourth = fourth;
     }
 
     public Object getHas() {
