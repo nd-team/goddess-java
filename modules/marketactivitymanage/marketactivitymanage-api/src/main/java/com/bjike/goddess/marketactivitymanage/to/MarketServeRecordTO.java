@@ -31,13 +31,13 @@ public class MarketServeRecordTO extends BaseTO {
     /**
      * 计划活动时间点
      */
-    @Pattern(groups = {ADD.class, EDIT.class}, regexp = "^[1-9]\\d{3}\\-(0?[1-9]|1[0-2])\\-(0?[1-9]|[12]\\d|3[01])\\s*(0?[1-9]|1\\d|2[0-3])(\\:(0?[1-9]|[1-5]\\d)){2}$", message = "日期格式必须符合yy-MM-dd HH:mm:ss 如2015-01-27 10:11:12")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划活动时间点不能为空")
     private String planActivityTiming;
 
     /**
      * 实际活动时间点
      */
-    @Pattern(groups = {ADD.class, EDIT.class}, regexp = "^[1-9]\\d{3}\\-(0?[1-9]|1[0-2])\\-(0?[1-9]|[12]\\d|3[01])\\s*(0?[1-9]|1\\d|2[0-3])(\\:(0?[1-9]|[1-5]\\d)){2}$", message = "日期格式必须符合yy-MM-dd HH:mm:ss 如2015-01-27 10:11:12")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "实际活动时间点不能为空")
     private String actualActivityTiming;
 
     /**
