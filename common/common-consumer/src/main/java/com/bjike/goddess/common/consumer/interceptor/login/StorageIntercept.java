@@ -34,7 +34,15 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
         String contentType = request.getContentType();  //获取Content-Type
         if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
             if (StringUtils.isBlank(request.getParameter("path"))) {
-                throw new SerException("path 不能为空!");
+                PrintWriter out = response.getWriter();
+                out.flush();
+                response.setContentType("text/html; charset=UTF-8"); //转码
+                response.setStatus(200);
+                ActResult result = new ActResult();
+                result.setMsg("path 不能为空!");
+                result.setCode(1);
+                out.println(JSON.toJSONString(result));
+                return false;
             }
             return validateLogin(request, response);
         }
