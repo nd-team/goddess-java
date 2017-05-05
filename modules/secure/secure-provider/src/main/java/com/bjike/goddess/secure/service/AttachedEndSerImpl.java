@@ -7,10 +7,6 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.secure.bo.AttachedEndBO;
 import com.bjike.goddess.secure.dto.AttachedEndDTO;
-<<<<<<< HEAD
-=======
-import com.bjike.goddess.secure.entity.Attached;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import com.bjike.goddess.secure.entity.AttachedEnd;
 import com.bjike.goddess.secure.to.AttachedEndTO;
 import com.bjike.goddess.secure.to.AttachedTO;
@@ -20,19 +16,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -49,25 +33,16 @@ import java.util.List;
 public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO> implements AttachedEndSer {
     @Autowired
     private AttachedSer attachedSer;
-<<<<<<< HEAD
     private boolean b = true;
     private int year1;
     private int month1;
     private int day1;
-=======
-    private boolean b=true;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 
     @Override
     @Transactional
     public void save() throws SerException {
-<<<<<<< HEAD
         List<AttachedBO> list = attachedSer.findALL();
         if (list.size() > 0) {
-=======
-        List<AttachedBO> list=attachedSer.findALL();
-        if(list.size()>0) {
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
             for (AttachedBO bo : list) {
                 if (bo.getAdvice()) {
                     String endTime = bo.getEndTime();
@@ -93,7 +68,6 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     @Override
     @Transactional
     public AttachedEndBO is_Again(AttachedEndTO to) throws SerException {
-<<<<<<< HEAD
         AttachedEnd attachedEnd = super.findById(to.getId());
         LocalDateTime a = attachedEnd.getCreateTime();
         LocalDateTime b = attachedEnd.getModifyTime();
@@ -107,22 +81,10 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
             attachedSer.update(attachedTO);
         }
         return BeanTransform.copyProperties(attachedEnd, AttachedEndBO.class);
-=======
-        AttachedEnd attachedEnd= super.findById(to.getId());
-        attachedEnd=BeanTransform.copyProperties(to,AttachedEnd.class,true);
-        super.update(attachedEnd);
-        if(to.getIsAttachedAgin()){
-            AttachedTO attachedTO= new AttachedTO();
-            BeanUtils.copyProperties(to,attachedTO);
-            attachedSer.update(attachedTO);
-        }
-        return BeanTransform.copyProperties(attachedEnd,AttachedEndBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public List<AttachedEndBO> find(AttachedEndDTO dto) throws SerException {
-<<<<<<< HEAD
         LocalDateTime localDateTime = LocalDateTime.now();
         int year=localDateTime.getYear();
         int month=localDateTime.getMonthValue();
@@ -139,29 +101,12 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
         }
         List<AttachedEnd> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AttachedEndBO.class);
-=======
-        LocalDateTime localDateTime=LocalDateTime.now();
-        if(localDateTime.getHour()==0){
-            b=true;
-        }
-        if(b){
-            this.save();
-            b=false;
-        }
-        List<AttachedEnd> list=super.findByCis(dto,true);
-        return BeanTransform.copyProperties(list,AttachedEndBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public AttachedEndBO findByID(String id) throws SerException {
-<<<<<<< HEAD
         AttachedEnd attachedEnd = super.findById(id);
         return BeanTransform.copyProperties(attachedEnd, AttachedEndBO.class);
-=======
-        AttachedEnd attachedEnd=super.findById(id);
-        return BeanTransform.copyProperties(attachedEnd,AttachedEndBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override

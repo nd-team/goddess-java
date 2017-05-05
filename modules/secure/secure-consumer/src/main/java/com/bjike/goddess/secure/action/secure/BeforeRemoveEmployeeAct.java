@@ -8,25 +8,16 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI;
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
-<<<<<<< HEAD
 import com.bjike.goddess.secure.bo.DismissionEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
 import com.bjike.goddess.secure.vo.BeforeRemoveEmployeeVO;
 import com.bjike.goddess.secure.vo.DismissionEmployeeVO;
-=======
-import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
-import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
-import com.bjike.goddess.secure.vo.BeforeRemoveEmployeeVO;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-<<<<<<< HEAD
 
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -112,11 +103,7 @@ public class BeforeRemoveEmployeeAct {
      * @version v1
      */
     @PutMapping("v1/exam")
-<<<<<<< HEAD
     public Result exam(BeforeRemoveEmployeeTO to, HttpServletRequest request) throws ActException {
-=======
-    public Result exam(BeforeRemoveEmployeeTO to,HttpServletRequest request) throws ActException {
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
         try {
             BeforeRemoveEmployeeBO beforeRemoveEmployeeBO = beforeRemoveEmployeeAPI.exam(to);
             return ActResult.initialize(BeanTransform.copyProperties(beforeRemoveEmployeeBO, BeforeRemoveEmployeeVO.class, request));
@@ -142,7 +129,6 @@ public class BeforeRemoveEmployeeAct {
         }
     }
 
-<<<<<<< HEAD
     /**
      * 获取所有离职名单
      *
@@ -160,23 +146,4 @@ public class BeforeRemoveEmployeeAct {
             throw new ActException(e.getMessage());
         }
     }
-=======
-//    /**
-//     * 获取所有离职名单
-//     *
-//     * @param request 请求对象
-//     * @return class DimissionReasonVO
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @GetMapping("v1/dimissonInfoList")
-//    public Result dimissonInfoList(HttpServletRequest request) throws ActException {
-//        try {
-//            List<DimissionInfoBO> list = beforeRemoveEmployeeAPI.all();
-//            return ActResult.initialize(BeanTransform.copyProperties(list, DimissionReasonVO.class, request));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 }

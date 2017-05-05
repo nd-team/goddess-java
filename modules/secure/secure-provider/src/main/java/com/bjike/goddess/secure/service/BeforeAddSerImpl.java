@@ -17,10 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -58,15 +55,11 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Transactional
     public BeforeAddBO completeAndConfirm(BeforeAddTO to) throws SerException {
         BeforeAdd canAdd = super.findById(to.getId());
-<<<<<<< HEAD
         LocalDateTime a = canAdd.getCreateTime();
         LocalDateTime b = canAdd.getModifyTime();
         canAdd = BeanTransform.copyProperties(to, BeforeAdd.class, true);
         canAdd.setCreateTime(a);
         canAdd.setModifyTime(b);
-=======
-        canAdd = BeanTransform.copyProperties(to, BeforeAdd.class, true);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
         super.update(canAdd);
         if (canAdd.getIncrease()) {    //确认购买，添加到购买社保人员中
             BuyTO buyTO = new BuyTO();

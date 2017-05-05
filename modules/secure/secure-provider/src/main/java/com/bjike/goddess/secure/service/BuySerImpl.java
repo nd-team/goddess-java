@@ -15,10 +15,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -34,29 +31,19 @@ import java.util.List;
 @Service
 public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
     @Autowired
-<<<<<<< HEAD
     private AddEmployeeSer addEmployeeSer;
-=======
-    private  AddEmployeeSer addEmployeeSer;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     @Autowired
     private EmployeeSecureSer employeeSecureSer;
 
     @Override
     public List<BuyBO> find(BuyDTO dto) throws SerException {
-<<<<<<< HEAD
         List<Buy> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, BuyBO.class);
-=======
-        List<Buy> list=super.findByCis(dto,true);
-        return BeanTransform.copyProperties(list,BuyBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public BuyBO edit(BuyTO to) throws SerException {
-<<<<<<< HEAD
         Buy buy = super.findById(to.getId());
         LocalDateTime a = buy.getCreateTime();
         LocalDateTime b = buy.getModifyTime();
@@ -67,33 +54,16 @@ public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
         if (buy.getExamine()) {   //审批通过，添加到社保增员中
             AddEmployeeTO addEmployeeTO = new AddEmployeeTO();
             BeanUtils.copyProperties(buy, addEmployeeTO);
-=======
-        Buy buy= super.findById(to.getId());
-        buy=BeanTransform.copyProperties(to,Buy.class,true);
-        super.update(buy);
-        if(buy.getExamine()){   //审批通过，添加到社保增员中
-            AddEmployeeTO addEmployeeTO=new AddEmployeeTO();
-            BeanUtils.copyProperties(buy,addEmployeeTO);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
             addEmployeeTO.setBornLocal(buy.getBorn());
             addEmployeeTO.setSecureCity(buy.getCity());
             addEmployeeTO.setType(buy.getSecureType());
             addEmployeeSer.save(addEmployeeTO);
-<<<<<<< HEAD
             EmployeeSecure employeeSecure = new EmployeeSecure();
             BeanUtils.copyProperties(buy, employeeSecure);
             employeeSecure.setStatus("购买中");
             employeeSecureSer.save(employeeSecure);
         }
         return BeanTransform.copyProperties(buy, BuyBO.class);
-=======
-            EmployeeSecure employeeSecure=new EmployeeSecure();
-            BeanUtils.copyProperties(buy,employeeSecure);
-            employeeSecure.setStatus("购买中");
-            employeeSecureSer.save(employeeSecure);
-        }
-        return BeanTransform.copyProperties(buy,BuyBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -105,26 +75,15 @@ public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
 
     @Override
     public BuyBO findByID(String id) throws SerException {
-<<<<<<< HEAD
         Buy buy = super.findById(id);
         return BeanTransform.copyProperties(buy, BuyBO.class);
-=======
-        Buy buy=super.findById(id);
-        return BeanTransform.copyProperties(buy,BuyBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public BuyBO save(BuyTO to) throws SerException {
-<<<<<<< HEAD
         Buy buy = BeanTransform.copyProperties(to, Buy.class, true);
         buy = super.save(buy);
         return BeanTransform.copyProperties(buy, BuyBO.class);
-=======
-        Buy buy=BeanTransform.copyProperties(to,Buy.class,true);
-        buy=super.save(buy);
-        return BeanTransform.copyProperties(buy,BuyBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 }

@@ -27,9 +27,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.PayDetailAPI" id="payDetailApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.RemoveEmployeeAPI" id="removeEmployeeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
-<<<<<<< HEAD
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" id="dimissionInfoApiImpl"/>
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 </beans>

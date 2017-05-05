@@ -3,33 +3,16 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-<<<<<<< HEAD
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
-=======
-import com.bjike.goddess.secure.bo.AbandonBO;
-import com.bjike.goddess.secure.bo.AddEmployeeBO;
-import com.bjike.goddess.secure.bo.EmployeeSecureBO;
-import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
-import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
-import com.bjike.goddess.secure.entity.Abandon;
-import com.bjike.goddess.secure.entity.AddEmployee;
-import com.bjike.goddess.secure.entity.EmployeeSecure;
-import com.bjike.goddess.secure.entity.RemoveEmployee;
-import com.bjike.goddess.secure.to.EmployeeSecureTO;
-import org.springframework.beans.BeanUtils;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,15 +38,9 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     @Override
     @Transactional
     public EmployeeSecureBO save(EmployeeSecureTO to) throws SerException {
-<<<<<<< HEAD
         EmployeeSecure employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class, true);
         super.save(employeeSecure);
         return BeanTransform.copyProperties(employeeSecure, EmployeeSecureBO.class);
-=======
-        EmployeeSecure employeeSecure=BeanTransform.copyProperties(to,EmployeeSecure.class,true);
-        super.save(employeeSecure);
-        return BeanTransform.copyProperties(employeeSecure,EmployeeSecureBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 //        List<AddEmployeeBO> list=addEmployeeSer.findALL();
 //        for(AddEmployeeBO bo:list){
 //            EmployeeSecure employeeSecure=new EmployeeSecure();
@@ -106,7 +83,6 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     @Override
     @Transactional
     public EmployeeSecureBO edit(EmployeeSecureTO to) throws SerException {
-<<<<<<< HEAD
         EmployeeSecure employeeSecure = super.findById(to.getId());
         LocalDateTime a = employeeSecure.getCreateTime();
         LocalDateTime b = employeeSecure.getModifyTime();
@@ -115,12 +91,6 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
         employeeSecure.setModifyTime(b);
         super.update(employeeSecure);
         return BeanTransform.copyProperties(employeeSecure, EmployeeSecureBO.class);
-=======
-        EmployeeSecure employeeSecure= super.findById(to.getId());
-        employeeSecure=BeanTransform.copyProperties(to,EmployeeSecure.class);
-        super.update(employeeSecure);
-        return BeanTransform.copyProperties(employeeSecure,EmployeeSecureBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -133,24 +103,14 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
 
     @Override
     public List<EmployeeSecureBO> find(EmployeeSecureDTO dto) throws SerException {
-<<<<<<< HEAD
         List<EmployeeSecure> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, EmployeeSecureBO.class);
-=======
-        List<EmployeeSecure> list=super.findByCis(dto,true);
-        return BeanTransform.copyProperties(list,EmployeeSecureBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public EmployeeSecureBO findByID(String id) throws SerException {
-<<<<<<< HEAD
         EmployeeSecure employeeSecure = super.findById(id);
         return BeanTransform.copyProperties(employeeSecure, EmployeeSecureBO.class);
-=======
-        EmployeeSecure employeeSecure=super.findById(id);
-        return BeanTransform.copyProperties(employeeSecure,EmployeeSecureBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -162,21 +122,12 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
 
     @Override
     public List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
-<<<<<<< HEAD
         List<String> emploeeIds = Arrays.asList(employeeId);
         List<EmployeeSecureBO> list = null;
         for (int i = 0; i < emploeeIds.size(); i++) {
             String[] fields = new String[]{"id", "status"};
             String sql = "select id,status from secure_employee_secure where employeeNum='" + emploeeIds.get(i) + "'";
             list = this.findBySql(sql, EmployeeSecureBO.class, fields);
-=======
-        List<String> emploeeIds=Arrays.asList(employeeId);
-        List<EmployeeSecureBO> list=null;
-        for(int i=0;i<emploeeIds.size();i++) {
-            String[] fields=new String[]{"id","status"};
-            String sql="select id,status from secure_employee_secure where employeeNum='"+emploeeIds.get(i)+"'";
-            list=this.findBySql(sql,EmployeeSecureBO.class,fields);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
         }
         return list;
     }

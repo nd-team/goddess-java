@@ -7,20 +7,11 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
-<<<<<<< HEAD
-=======
-import com.bjike.goddess.secure.to.EmployeeSecureTO;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
-=======
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 import java.util.List;
 
 /**
@@ -37,30 +28,19 @@ import java.util.List;
 public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO> implements AddEmployeeSer {
     @Override
     public List<AddEmployeeBO> find(AddEmployeeDTO dto) throws SerException {
-<<<<<<< HEAD
         List<AddEmployee> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AddEmployeeBO.class);
-=======
-        List<AddEmployee> list=super.findByCis(dto,true);
-        return BeanTransform.copyProperties(list,AddEmployeeBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public AddEmployeeBO findByID(String id) throws SerException {
-<<<<<<< HEAD
         AddEmployee addEmployee = super.findById(id);
         return BeanTransform.copyProperties(addEmployee, AddEmployeeBO.class);
-=======
-        AddEmployee addEmployee=super.findById(id);
-        return BeanTransform.copyProperties(addEmployee,AddEmployeeBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     @Transactional
     public AddEmployeeBO edit(AddEmployeeTO to) throws SerException {
-<<<<<<< HEAD
         AddEmployee addEmployee = super.findById(to.getId());
         LocalDateTime a = addEmployee.getCreateTime();
         LocalDateTime b = addEmployee.getModifyTime();
@@ -69,12 +49,6 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         addEmployee.setModifyTime(b);
         super.update(addEmployee);
         return BeanTransform.copyProperties(addEmployee, AddEmployeeBO.class);
-=======
-        AddEmployee addEmployee= super.findById(to.getId());
-        addEmployee=BeanTransform.copyProperties(to,AddEmployee.class);
-        super.update(addEmployee);
-        return BeanTransform.copyProperties(addEmployee,AddEmployeeBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
@@ -87,25 +61,14 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
     @Override
     @Transactional
     public AddEmployeeBO save(AddEmployeeTO to) throws SerException {
-<<<<<<< HEAD
         AddEmployee addEmployee = BeanTransform.copyProperties(to, AddEmployee.class, true);
         super.save(addEmployee);
         return BeanTransform.copyProperties(addEmployee, AddEmployeeBO.class);
-=======
-        AddEmployee addEmployee=BeanTransform.copyProperties(to,AddEmployee.class,true);
-        super.save(addEmployee);
-        return BeanTransform.copyProperties(addEmployee,AddEmployeeBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 
     @Override
     public List<AddEmployeeBO> findALL() throws SerException {
-<<<<<<< HEAD
         List<AddEmployee> list = super.findAll();
         return BeanTransform.copyProperties(list, AddEmployeeBO.class);
-=======
-        List<AddEmployee> list=super.findAll();
-        return BeanTransform.copyProperties(list,AddEmployeeBO.class);
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
     }
 }
