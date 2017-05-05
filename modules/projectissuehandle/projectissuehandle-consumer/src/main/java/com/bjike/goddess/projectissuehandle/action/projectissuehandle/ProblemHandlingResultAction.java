@@ -222,6 +222,21 @@ public class ProblemHandlingResultAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取地区
+     *
+     * @des 获取地区集合
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result area() throws ActException {
+        try {
+            List<String> areaList = problemHandlingResultAPI.getArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

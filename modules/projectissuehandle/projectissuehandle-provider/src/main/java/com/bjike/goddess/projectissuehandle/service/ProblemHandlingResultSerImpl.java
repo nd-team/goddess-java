@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 确认问题处理结果业务实现
@@ -252,6 +253,17 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
        "operator","vender","intergrator","goverment","innerstaff" ,"complete","uncomplete"};
         List<CollectBO> collectBOS = super.findBySql(sql, CollectBO.class, fields);
         return collectBOS;
+    }
+    @Override
+    public List<String> getArea() throws SerException {
+        String [] fields = new String[]{"area"};
+        List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct area,1 from projectissuehandle_problemhandlingresult group by area order by area asc ",ProblemHandlingResultBO.class,fields);
+
+        List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
     }
 
 }

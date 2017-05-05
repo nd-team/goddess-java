@@ -73,5 +73,9 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     public List<CollectBO> collect(String [] areas)throws SerException{
         return problemHandlingResultSer.collect(areas);
     }
+    @Override
+    public List<String> getArea() throws SerException {
+        return problemHandlingResultSer.getArea();
+    }
 
 }
