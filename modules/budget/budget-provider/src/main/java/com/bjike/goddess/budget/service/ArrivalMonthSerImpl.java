@@ -5,7 +5,6 @@ import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.entity.ArrivalMonth;
-import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -121,7 +120,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         for (String arrival : arrivals) {
             for (Integer year : years) {
                 for (ArrivalMonth arrivalMonth : list) {
-                    if (arrivalMonth.getArrival().equals(arrival) && arrivalMonth.getYear() == year) {
+                    if (arrivalMonth.getArrival().equals(arrival) && arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
                         incomeDifferencesSum += arrivalMonth.getIncomeDifferences();
@@ -130,22 +129,26 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         workDifferencesSum += arrivalMonth.getWorkDifferences();
                     }
                 }
-                ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
-                bo.setArrival(arrival);
-                bo.setYear(year);
-                bo.setTargetIncomeSum(targetIncomeSum);
-                bo.setPlanIncomeSum(planIncomeSum);
-                bo.setIncomeDifferencesSum(incomeDifferencesSum);
-                bo.setTargetWorkSum(targetWorkSum);
-                bo.setActualWorkSum(actualWorkSum);
-                bo.setWorkDifferencesSum(workDifferencesSum);
-                boList.add(bo);
-                targetIncomeSum = 0.00;
-                planIncomeSum = 0.00;
-                incomeDifferencesSum = 0.00;
-                targetWorkSum = 0;
-                actualWorkSum = 0;
-                workDifferencesSum = 0;
+                if (targetWorkSum != 0) {
+                    ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                    bo.setArrival(arrival);
+                    bo.setYear(year);
+                    bo.setTargetIncomeSum(targetIncomeSum);
+                    bo.setPlanIncomeSum(planIncomeSum);
+                    bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                    bo.setTargetWorkSum(targetWorkSum);
+                    bo.setActualWorkSum(actualWorkSum);
+                    bo.setWorkDifferencesSum(workDifferencesSum);
+                    Double scale = planIncomeSum / targetIncomeSum;
+                    bo.setScale(scale);
+                    boList.add(bo);
+                    targetIncomeSum = 0.00;
+                    planIncomeSum = 0.00;
+                    incomeDifferencesSum = 0.00;
+                    targetWorkSum = 0;
+                    actualWorkSum = 0;
+                    workDifferencesSum = 0;
+                }
             }
         }
         return boList;
@@ -167,7 +170,7 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
             List<ArrivalMonth> list = super.findByCis(dto);
             for (Integer year : years) {
                 for (ArrivalMonth arrivalMonth : list) {
-                    if (arrivalMonth.getYear() == year) {
+                    if (arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
                         incomeDifferencesSum += arrivalMonth.getIncomeDifferences();
@@ -176,22 +179,26 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         workDifferencesSum += arrivalMonth.getWorkDifferences();
                     }
                 }
-                ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
-                bo.setArrival(arrival);
-                bo.setYear(year);
-                bo.setTargetIncomeSum(targetIncomeSum);
-                bo.setPlanIncomeSum(planIncomeSum);
-                bo.setIncomeDifferencesSum(incomeDifferencesSum);
-                bo.setTargetWorkSum(targetWorkSum);
-                bo.setActualWorkSum(actualWorkSum);
-                bo.setWorkDifferencesSum(workDifferencesSum);
-                boList.add(bo);
-                targetIncomeSum = 0.00;
-                planIncomeSum = 0.00;
-                incomeDifferencesSum = 0.00;
-                targetWorkSum = 0;
-                actualWorkSum = 0;
-                workDifferencesSum = 0;
+                if (targetWorkSum != 0) {
+                    ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                    bo.setArrival(arrival);
+                    bo.setYear(year);
+                    bo.setTargetIncomeSum(targetIncomeSum);
+                    bo.setPlanIncomeSum(planIncomeSum);
+                    bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                    bo.setTargetWorkSum(targetWorkSum);
+                    bo.setActualWorkSum(actualWorkSum);
+                    bo.setWorkDifferencesSum(workDifferencesSum);
+                    Double scale = planIncomeSum / targetIncomeSum;
+                    bo.setScale(scale);
+                    boList.add(bo);
+                    targetIncomeSum = 0.00;
+                    planIncomeSum = 0.00;
+                    incomeDifferencesSum = 0.00;
+                    targetWorkSum = 0;
+                    actualWorkSum = 0;
+                    workDifferencesSum = 0;
+                }
             }
         }
         return boList;
@@ -203,12 +210,17 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         String[] arrivals = new String[]{arrivalMonth.getArrival()};
         Integer[] years = new Integer[]{arrivalMonth.getYear()};
         Integer[] months = new Integer[]{arrivalMonth.getMonth()};
-        List<ArrivalWeekBO> list=null;
+        List<ArrivalWeekBO> list = null;
         for (int i = 0; i < arrivals.length && i < years.length && i < months.length; i++) {
             String sql = "SELECT week,targetWork,actualWork,workDifferences,price,targetIncome,planIncome,incomeDifferences\n" +
-                    "from budget_arrivalweek where arrival='"+arrivals[i]+"' AND year='"+years[i]+"' AND month='"+months[i]+"'";
-            String[] fields=new String[]{"week","targetWork","actualWork","workDifferences","price","targetIncome","planIncome","incomeDifferences"};
-            list=super.findBySql(sql,ArrivalWeekBO.class,fields);
+                    "from budget_arrivalweek where arrival='" + arrivals[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
+            String[] fields = new String[]{"week", "targetWork", "actualWork", "workDifferences", "price", "targetIncome", "planIncome", "incomeDifferences"};
+            list = super.findBySql(sql, ArrivalWeekBO.class, fields);
+        }
+        for (ArrivalWeekBO bo : list) {
+            bo.setArrival(arrivalMonth.getArrival());
+            bo.setYear(arrivalMonth.getYear());
+            bo.setMonth(arrivalMonth.getMonth());
         }
         return list;
     }

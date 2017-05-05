@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.service.ProjectMonthSer;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
@@ -58,5 +59,10 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     @Override
     public List<ProjectMonthCountBO> conditionsCount(String[] projects) throws SerException {
         return projectMonthSer.conditionsCount(projects);
+    }
+
+    @Override
+    public List<ProjectWeekBO> findDetail(String id) throws SerException {
+        return projectMonthSer.findDetail(id);
     }
 }

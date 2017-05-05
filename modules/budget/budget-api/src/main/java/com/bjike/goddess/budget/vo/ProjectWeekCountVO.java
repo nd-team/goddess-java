@@ -48,6 +48,18 @@ public class ProjectWeekCountVO {
      * 收入差异总量
      */
     private Double incomeDifferencesSum;
+    /**
+     * 单价
+     */
+    private Double price;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public Integer getYear() {
         return year;

@@ -2,8 +2,10 @@ package com.bjike.goddess.budget.action.budget;
 
 import com.bjike.goddess.budget.api.ArrivalMonthAPI;
 import com.bjike.goddess.budget.bo.ArrivalMonthBO;
+import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
+import com.bjike.goddess.budget.vo.ArrivalMonthCountVO;
 import com.bjike.goddess.budget.vo.ArrivalMonthVO;
 import com.bjike.goddess.budget.vo.ArrivalWeekVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -68,6 +70,43 @@ public class ArrivalMonthAct {
         try {
             List<ArrivalWeekBO> list = arrivalMonthAPI.findDetail(id);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalWeekVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 汇总
+     *
+     * @param request 请求对象
+     * @return class ArrivalMonthCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(HttpServletRequest request) throws ActException {
+        try {
+            List<ArrivalMonthCountBO> list = arrivalMonthAPI.count();
+            return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalMonthCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 按地区汇总
+     *
+     * @param arrivals 地区数组
+     * @param request  请求对象
+     * @return class ArrivalMonthCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/conditionsCount/{arrivals}")
+    public Result conditionsCount(@PathVariable String[] arrivals, HttpServletRequest request) throws ActException {
+        try {
+            List<ArrivalMonthCountBO> list = arrivalMonthAPI.conditionsCount(arrivals);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalMonthCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

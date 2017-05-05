@@ -1,6 +1,14 @@
 package com.bjike.goddess.budget.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目收入周
@@ -16,59 +24,81 @@ public class ProjectWeekTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String arrival;
 
     /**
      * 项目
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目不能为空")
     private String project;
     /**
      * 年份
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "年份不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "年份必须大于0")
     private Integer year;
     /**
      * 月份
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "月份不能为空")
+    @Min(value = 1, groups = {ADD.class, EDIT.class}, message = "月份必须大于等于1")
+    @Max(value = 12, groups = {ADD.class, EDIT.class}, message = "月份必须小于等于12")
     private Integer month;
 
     /**
      * 周数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "周数不能为空")
+    @Min(value = 1, groups = {ADD.class, EDIT.class}, message = "周数必须大于等于1")
+    @Max(value = 5, groups = {ADD.class, EDIT.class}, message = "周数必须小于等于5")
     private Integer week;
 
     /**
      * 目标任务量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "目标任务量不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "目标任务量必须大于0")
     private Integer targetWork;
 
     /**
      * 实际完工量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "实际完工量不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "实际完工量必须大于0")
     private Integer actualWork;
 
     /**
      * 工作量差异
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "工作量差异不能为空")
     private Integer workDifferences;
 
     /**
      * 参考单价
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "单价不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "单价必须大于0")
     private Double price;
 
     /**
      * 目标收入
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "目标收入不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "目标收入必须大于0")
     private Double targetIncome;
 
     /**
      * 计划收入
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划收入不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "计划收入必须大于0")
     private Double planIncome;
 
     /**
      * 收入差异
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "收入差异不能为空")
     private Double incomeDifferences;
 
 

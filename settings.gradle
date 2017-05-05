@@ -287,4 +287,14 @@ include ':modules:secure:secure-api'
 include ':modules:secure:secure-consumer'
 include ':modules:secure:secure-provider'
 
+//#courier 快递管理
+include ':modules:courier:courier-api'
+include ':modules:courier:courier-consumer'
+include ':modules:courier:courier-provider'
+
+//#budget 收入预算-往来账务情况
+include ':modules:budget:budget-api'
+include ':modules:budget:budget-consumer'
+include ':modules:budget:budget-provider'
+
 

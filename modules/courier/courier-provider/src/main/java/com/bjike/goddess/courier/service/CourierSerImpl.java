@@ -6,24 +6,23 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.courier.bo.CourierBO;
-import com.bjike.goddess.courier.bo.CourierCompanyBO;
 import com.bjike.goddess.courier.bo.CourierCountBO;
 import com.bjike.goddess.courier.dto.CourierDTO;
 import com.bjike.goddess.courier.entity.Courier;
 import com.bjike.goddess.courier.entity.CourierCompany;
 import com.bjike.goddess.courier.to.CourierTO;
-import com.bjike.goddess.storage.api.FileAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 快递收发业务实现
@@ -61,7 +60,11 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
     @Transactional(rollbackFor = {SerException.class})
     public CourierBO edit(CourierTO to) throws SerException {
         Courier courier = super.findById(to.getId());
+        LocalDateTime a=courier.getCreateTime();
+        LocalDateTime b=courier.getModifyTime();
         courier = BeanTransform.copyProperties(to, Courier.class, true);
+        courier.setCreateTime(a);
+        courier.setModifyTime(b);
         super.update(courier);
         if (!courier.getIsConfirm()) {
             //TODO:发邮件给寄件人
@@ -172,15 +175,17 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                                 sum += courier.getFeeSum();
                             }
                         }
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
+                        if (count != 0) {
+                            CourierCountBO courierCountBO = new CourierCountBO();
+                            courierCountBO.setArrival(a);
+                            courierCountBO.setDepartment(d);
+                            courierCountBO.setCourierCompany(c);
+                            courierCountBO.setCountNum(count);
+                            courierCountBO.setTotal(sum);
+                            boList.add(courierCountBO);
+                            count = 0;
+                            sum = 0;     //置为0
+                        }
                     }
                 }
             }
@@ -202,14 +207,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -230,14 +237,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -258,14 +267,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -285,13 +296,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setArrival(a);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -310,13 +323,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setDepartment(d);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setDepartment(d);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -335,13 +350,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCourierCompany(c);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setCourierCompany(c);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -428,15 +445,17 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                                 sum += courier.getFeeSum();
                             }
                         }
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
+                        if (count != 0) {
+                            CourierCountBO courierCountBO = new CourierCountBO();
+                            courierCountBO.setArrival(a);
+                            courierCountBO.setDepartment(d);
+                            courierCountBO.setCourierCompany(c);
+                            courierCountBO.setCountNum(count);
+                            courierCountBO.setTotal(sum);
+                            boList.add(courierCountBO);
+                            count = 0;
+                            sum = 0;     //置为0
+                        }
                     }
                 }
             }
@@ -461,14 +480,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -492,14 +513,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -523,14 +546,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -553,13 +578,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setArrival(a);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -581,13 +608,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setDepartment(d);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setDepartment(d);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -609,13 +638,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCourierCompany(c);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setCourierCompany(c);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -634,11 +665,13 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                 count++;
                 sum += courier.getFeeSum();
             }
-            CourierCountBO courierCountBO = new CourierCountBO();
-            courierCountBO.setCountNum(count);
-            courierCountBO.setTotal(sum);
-            boList.add(courierCountBO);
-            return boList;
+            if (count != 0) {
+                CourierCountBO courierCountBO = new CourierCountBO();
+                courierCountBO.setCountNum(count);
+                courierCountBO.setTotal(sum);
+                boList.add(courierCountBO);
+                return boList;
+            }
         }
 
         /**
@@ -657,15 +690,17 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                                 sum += courier.getFeeSum();
                             }
                         }
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
+                        if (count != 0) {
+                            CourierCountBO courierCountBO = new CourierCountBO();
+                            courierCountBO.setArrival(a);
+                            courierCountBO.setDepartment(d);
+                            courierCountBO.setCourierCompany(c);
+                            courierCountBO.setCountNum(count);
+                            courierCountBO.setTotal(sum);
+                            boList.add(courierCountBO);
+                            count = 0;
+                            sum = 0;     //置为0
+                        }
                     }
                 }
             }
@@ -687,14 +722,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -715,14 +752,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -743,14 +782,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -770,13 +811,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setArrival(a);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -795,13 +838,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setDepartment(d);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setDepartment(d);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -820,13 +865,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCourierCompany(c);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setCourierCompany(c);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -887,15 +934,17 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                                 sum += courier.getFeeSum();
                             }
                         }
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
+                        if (count != 0) {
+                            CourierCountBO courierCountBO = new CourierCountBO();
+                            courierCountBO.setArrival(a);
+                            courierCountBO.setDepartment(d);
+                            courierCountBO.setCourierCompany(c);
+                            courierCountBO.setCountNum(count);
+                            courierCountBO.setTotal(sum);
+                            boList.add(courierCountBO);
+                            count = 0;
+                            sum = 0;     //置为0
+                        }
                     }
                 }
             }
@@ -918,14 +967,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -947,14 +998,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -976,14 +1029,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -1004,13 +1059,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setArrival(a);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -1030,13 +1087,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setDepartment(d);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setDepartment(d);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -1056,13 +1115,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCourierCompany(c);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setCourierCompany(c);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -1121,15 +1182,17 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                                 sum += courier.getFeeSum();
                             }
                         }
-                        CourierCountBO courierCountBO = new CourierCountBO();
-                        courierCountBO.setArrival(a);
-                        courierCountBO.setDepartment(d);
-                        courierCountBO.setCourierCompany(c);
-                        courierCountBO.setCountNum(count);
-                        courierCountBO.setTotal(sum);
-                        boList.add(courierCountBO);
-                        count = 0;
-                        sum = 0;     //置为0
+                        if (count != 0) {
+                            CourierCountBO courierCountBO = new CourierCountBO();
+                            courierCountBO.setArrival(a);
+                            courierCountBO.setDepartment(d);
+                            courierCountBO.setCourierCompany(c);
+                            courierCountBO.setCountNum(count);
+                            courierCountBO.setTotal(sum);
+                            boList.add(courierCountBO);
+                            count = 0;
+                            sum = 0;     //置为0
+                        }
                     }
                 }
             }
@@ -1151,14 +1214,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -1179,14 +1244,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setArrival(a);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setArrival(a);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -1207,14 +1274,16 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                             sum += courier.getFeeSum();
                         }
                     }
-                    CourierCountBO courierCountBO = new CourierCountBO();
-                    courierCountBO.setCourierCompany(c);
-                    courierCountBO.setDepartment(d);
-                    courierCountBO.setCountNum(count);
-                    courierCountBO.setTotal(sum);
-                    boList.add(courierCountBO);
-                    count = 0;
-                    sum = 0;     //置为0
+                    if (count != 0) {
+                        CourierCountBO courierCountBO = new CourierCountBO();
+                        courierCountBO.setCourierCompany(c);
+                        courierCountBO.setDepartment(d);
+                        courierCountBO.setCountNum(count);
+                        courierCountBO.setTotal(sum);
+                        boList.add(courierCountBO);
+                        count = 0;
+                        sum = 0;     //置为0
+                    }
                 }
             }
             return boList;
@@ -1234,13 +1303,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setArrival(a);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setArrival(a);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -1259,13 +1330,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setDepartment(d);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setDepartment(d);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }
@@ -1284,13 +1357,15 @@ public class CourierSerImpl extends ServiceImpl<Courier, CourierDTO> implements 
                         sum += courier.getFeeSum();
                     }
                 }
-                CourierCountBO courierCountBO = new CourierCountBO();
-                courierCountBO.setCourierCompany(c);
-                courierCountBO.setCountNum(count);
-                courierCountBO.setTotal(sum);
-                boList.add(courierCountBO);
-                count = 0;
-                sum = 0;     //置为0
+                if (count != 0) {
+                    CourierCountBO courierCountBO = new CourierCountBO();
+                    courierCountBO.setCourierCompany(c);
+                    courierCountBO.setCountNum(count);
+                    courierCountBO.setTotal(sum);
+                    boList.add(courierCountBO);
+                    count = 0;
+                    sum = 0;     //置为0
+                }
             }
             return boList;
         }

@@ -7,12 +7,15 @@ import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.vo.ArrivalWeekCountVO;
 import com.bjike.goddess.budget.vo.ArrivalWeekVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +46,7 @@ public class ArrivalWeekAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(ArrivalWeekTO to, HttpServletRequest request) throws ActException {
+    public Result save(@Validated({ADD.class}) ArrivalWeekTO to, HttpServletRequest request) throws ActException {
         try {
             ArrivalWeekBO bo = arrivalWeekAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, ArrivalWeekVO.class, request));
@@ -60,7 +63,7 @@ public class ArrivalWeekAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(ArrivalWeekTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) ArrivalWeekTO to) throws ActException {
         try {
             arrivalWeekAPI.edit(to);
             return new ActResult("编辑成功!");
@@ -152,7 +155,7 @@ public class ArrivalWeekAct {
      * @version v1
      */
     @GetMapping("v1/conditionsCount/{arrivals}")
-    public Result conditionsCount(String[] arrivals, HttpServletRequest request) throws ActException {
+    public Result conditionsCount(@PathVariable String[] arrivals, HttpServletRequest request) throws ActException {
         try {
             List<ArrivalWeekCountBO> list = arrivalWeekAPI.conditionsCount(arrivals);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalWeekCountVO.class, request));

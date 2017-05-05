@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,7 +38,11 @@ public class CourierCompanySerImpl extends ServiceImpl<CourierCompany, CourierCo
     @Transactional(rollbackFor = {SerException.class})
     public CourierCompanyBO edit(CourierCompanyTO to) throws SerException {
         CourierCompany courierCompany = super.findById(to.getId());
+        LocalDateTime a = courierCompany.getCreateTime();
+        LocalDateTime b = courierCompany.getModifyTime();
         courierCompany = BeanTransform.copyProperties(to, CourierCompany.class, true);
+        courierCompany.setCreateTime(a);
+        courierCompany.setModifyTime(b);
         super.update(courierCompany);
         return BeanTransform.copyProperties(courierCompany, CourierCompanyBO.class);
     }

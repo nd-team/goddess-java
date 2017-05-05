@@ -42,6 +42,18 @@ public class ArrivalMonthCountBO extends BaseBO {
      * 工作量差额总量
      */
     private Integer workDifferencesSum;
+    /**
+     * 比例
+     */
+    private Double scale;
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
 
     public String getArrival() {
         return arrival;
