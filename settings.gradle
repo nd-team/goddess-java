@@ -105,6 +105,7 @@ include ':modules:capability:capability-provider'
 //include ':modules:contractquotemanager:contractquotemanager-consumer'
 //include ':modules:contractquotemanager:contractquotemanager-provider'
 
+//#proearlymarketcost 项目前期的市场费用管理
 //include ':modules:proearlymarketcost:proearlymarketcost-api'
 //include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 //include ':modules:proearlymarketcost:proearlymarketcost-provider'
@@ -274,13 +275,16 @@ include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
+//dispatchcar 出车管理
 include ':modules:dispatchcar:dispatchcar-api'
 include ':modules:dispatchcar:dispatchcar-consumer'
 include ':modules:dispatchcar:dispatchcar-provider'
+
 //#fundrecords 资金流水
 include ':modules:fundrecords:fundrecords-api'
 include ':modules:fundrecords:fundrecords-consumer'
 include ':modules:fundrecords:fundrecords-provider'
+
 //#fundrecords 银行流水
 include ':modules:bankrecords:bankrecords-api'
 include ':modules:bankrecords:bankrecords-consumer'
