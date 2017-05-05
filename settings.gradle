@@ -242,9 +242,9 @@ include ':modules:materialbuy:materialbuy-consumer'
 include ':modules:materialbuy:materialbuy-provider'
 
 //#dimission 离职模块
-//include ':modules:dimission:dimission-api'
-//include ':modules:dimission:dimission-consumer'
-//include ':modules:dimission:dimission-provider'
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
 //#businsurance 商业保险tanghaixiang
 include ':modules:businsurance:businsurance-api'
 include ':modules:businsurance:businsurance-consumer'
@@ -281,5 +281,10 @@ include ':modules:employee-contract:employee-contract-provider'
 include ':modules:otherexpenses:otherexpenses-api'
 include ':modules:otherexpenses:otherexpenses-consumer'
 include ':modules:otherexpenses:otherexpenses-provider'
+
+//#secure 社保模块
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
 
 
