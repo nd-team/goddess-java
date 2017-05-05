@@ -16,17 +16,7 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.employeecontract.api.ContractChangeAPI"
-                     id="contractChangeApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.employeecontract.api.ContractManageAPI"
-                     id="contractManageApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.employeecontract.api.ContractNatureAPI"
-                     id="contractNatureApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.employeecontract.api.ContractTypeAPI"
-                     id="contractTypeApiImpl"/>
-
-    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.otherexpenses.api.OtherExpensesAPI" id="otherExpensesApiImpl"/>
 
 
 </beans>

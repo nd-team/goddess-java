@@ -9,6 +9,7 @@ import com.bjike.goddess.devicerepair.service.DeviceRepairSer;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
+import com.bjike.goddess.devicerepair.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +110,18 @@ public class DeviceRepairApiImpl implements DeviceRepairAPI {
     @Override
     public void welfareAudit(WelfareAuditTO to) throws SerException {
         deviceRepairSer.welfareAudit(to);
+    }
+
+    /**
+     * 项目经理审核状态
+     *
+     * @param id           设备维修唯一标识
+     * @param pmAuditState 项目经理审核状态
+     * @throws SerException
+     */
+    @Override
+    public void pmAudit(String id, AuditState pmAuditState) throws SerException {
+        deviceRepairSer.pmAudit(id, pmAuditState);
     }
 
     /**

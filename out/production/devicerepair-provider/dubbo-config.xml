@@ -18,4 +18,6 @@
 
 	<dubbo:service validation="true" interface="com.bjike.goddess.devicerepair.api.DeviceRepairAPI" ref="deviceRepairApiImpl"></dubbo:service>
 
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>
