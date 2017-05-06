@@ -232,9 +232,9 @@ include ':modules:interiorrecommend:interiorrecommend-provider'
 //include ':modules:staffwelfare:staffwelfaremanage-consumer'
 //include ':modules:staffwelfare:staffwelfaremanage-provider'
 //#dispatchcar 出车管理
-//include ':modules:dispatchcar:dispatchcar-api'
-//include ':modules:dispatchcar:dispatchcar-consumer'
-//include ':modules:dispatchcar:dispatchcar-provider'
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
 
 //#materialbuy 物资购买
 include ':modules:materialbuy:materialbuy-api'
@@ -312,6 +312,11 @@ include ':modules:devicerepair:devicerepair-provider'
 include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
 include ':modules:contractquotemanager:contractquotemanager-provider'
+
+//#outcarfare 出车费资金准备与支付业务流程
+include ':modules:outcarfare:outcarfare-api'
+include ':modules:outcarfare:outcarfare-consumer'
+include ':modules:outcarfare:outcarfare-provider'
 
 
 //#outcarfare 出车费资金准备与支付业务流程

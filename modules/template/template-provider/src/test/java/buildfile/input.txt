@@ -1,23 +1,25 @@
-模块名:secure
-类名:removeAdd
+模块名:outcarfare
+类名:WaitPay
 作者:chenjunhao
-描述:增员前
+描述:等待付款
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String intelligence 资质名称;
-String company 公司名称;
-String arrival 社保需增地市;
-String arrivalDescrption 社保地市特殊说明;
-String addTime 需增员时间;
-Double time 需参保时长;
-String request 增员参保周期特殊要求;
-Integer companyCount 当前各公司参保总人数;
-Integer cityCount 当前各地市总参保人员;
-String name 可参保人员姓名;
-String addCity 可参保人员新增的地市;
-String description 备注;
-boolean increase 是否增员;
+String driverName 司机名称;
+LocalDate carDate 出车日期;
+String number 单号;
+String arrival 地区;
+String carUser 用车人;
+String project 科目;
+Double carPrice 租车单价;
+Double overtimeHour 加班时长;
+Double overtimePrice 加班单价;
+Double overtimeFee 加班费;
+Double allowance 餐费补贴;
+Double parkFee 停车/过路费;
+Double amount 金额;
+String single 填单人;
+boolean isPay 是否付款;
 )
