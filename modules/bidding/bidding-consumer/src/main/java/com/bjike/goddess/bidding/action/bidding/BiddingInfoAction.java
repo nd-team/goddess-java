@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -34,6 +35,7 @@ import java.util.List;
 public class BiddingInfoAction {
     @Autowired
     private BiddingInfoAPI biddingInfoAPI;
+
     /**
      * 招标信息列表总条数
      *
@@ -50,6 +52,7 @@ public class BiddingInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个招标信息
      *
@@ -80,7 +83,7 @@ public class BiddingInfoAction {
     public Result list(BiddingInfoDTO biddingInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.findListBiddingInfo(biddingInfoDTO), BiddingInfoVO.class,request);
+                    biddingInfoAPI.findListBiddingInfo(biddingInfoDTO), BiddingInfoVO.class, request);
             return ActResult.initialize(biddingInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -139,6 +142,7 @@ public class BiddingInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 搜索
      *
@@ -148,10 +152,10 @@ public class BiddingInfoAction {
      * @version v1
      */
     @GetMapping("v1/search")
-    public Result search(BiddingInfoDTO biddingInfoDTO,HttpServletRequest request) throws ActException {
+    public Result search(BiddingInfoDTO biddingInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.searchBiddingInfo(biddingInfoDTO),BiddingInfoVO.class);
+                    biddingInfoAPI.searchBiddingInfo(biddingInfoDTO), BiddingInfoVO.class);
             return ActResult.initialize(biddingInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -159,17 +163,35 @@ public class BiddingInfoAction {
     }
 
     /**
-     * 汇总
+     * 汇总招标信息
      *
-     * @return class BiddingInfoVO
+     * @param cities 地市
+     * @return class BiddingInfoCollectVO
+     * @des 汇总招标信息
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collectBiddingInfo(String[] cities) throws ActException {
+    public Result collect(@RequestParam String[] cities) throws ActException {
         try {
-            List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.collectBiddingInfo(cities), BiddingInfoVO.class, true);
-            return ActResult.initialize(biddingInfoVOS);
+            List<BiddingInfoCollectVO> biddingInfoCollectVOS = BeanTransform.copyProperties(
+                    biddingInfoAPI.collectBiddingInfo(cities), BiddingInfoCollectVO.class);
+            return ActResult.initialize(biddingInfoCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取地市
+     *
+     * @des 获取地市集合
+     * @version v1
+     */
+    @GetMapping("v1/cities")
+    public Result cities() throws ActException {
+        try {
+            List<String> citiesList = biddingInfoAPI.getBiddingInfoCities();
+            return ActResult.initialize(citiesList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
