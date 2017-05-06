@@ -15,6 +15,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class ArrivalWeekAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated({ADD.class}) ArrivalWeekTO to, HttpServletRequest request) throws ActException {
+    public Result save(@Validated({ADD.class}) ArrivalWeekTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ArrivalWeekBO bo = arrivalWeekAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, ArrivalWeekVO.class, request));
@@ -63,7 +64,7 @@ public class ArrivalWeekAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) ArrivalWeekTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) ArrivalWeekTO to, BindingResult result) throws ActException {
         try {
             arrivalWeekAPI.edit(to);
             return new ActResult("编辑成功!");
