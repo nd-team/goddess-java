@@ -21,7 +21,7 @@ public class MoneyReadyCountVO {
     /**
      * 上月准备金
      */
-    private Double LastMonthReserveSum;
+    private Double lastMonthReserveSum;
     /**
      * 本月准备金
      */
@@ -52,11 +52,11 @@ public class MoneyReadyCountVO {
     }
 
     public Double getLastMonthReserveSum() {
-        return LastMonthReserveSum;
+        return lastMonthReserveSum;
     }
 
     public void setLastMonthReserveSum(Double lastMonthReserveSum) {
-        LastMonthReserveSum = lastMonthReserveSum;
+        this.lastMonthReserveSum = lastMonthReserveSum;
     }
 
     public Double getCurrentMonthReserveSum() {
