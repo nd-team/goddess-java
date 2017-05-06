@@ -184,11 +184,11 @@ public class BidOpeningInfoAction {
 
     }
     /**
-     * 汇总招标信息
+     * 汇总开标信息
      *
      * @param cities 地市
-     * @return class BiddingInfoCollectVO
-     * @des 汇总招标信息
+     * @return class BidOpeningInfoVO
+     * @des 汇总开标信息
      * @version v1
      */
     @GetMapping("v1/collect")
