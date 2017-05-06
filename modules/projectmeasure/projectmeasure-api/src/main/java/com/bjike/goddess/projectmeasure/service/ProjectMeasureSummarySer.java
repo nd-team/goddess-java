@@ -4,8 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
-import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
+import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 
 import java.util.List;
@@ -58,18 +58,18 @@ public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, Pro
     /**
      * 解冻项目测算汇总
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
-    void thaw(ProjectMeasureSummaryTO to) throws SerException;
+    void thaw(String id) throws SerException;
 
     /**
      * 冻结项目测算汇总
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
-    void congeal(ProjectMeasureSummaryTO to) throws SerException;
+    void congeal(String id) throws SerException;
 
     /**
      * 项目测算汇总

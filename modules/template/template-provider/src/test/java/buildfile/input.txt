@@ -1,31 +1,12 @@
-<<<<<<< HEAD
-模块名:otherexpenses
-类名:OtherExpenses
-作者:邓钧仁
-描述:其他费用
-=======
 模块名:secure
 类名:removeAdd
 作者:chenjunhao
 描述:增员前
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-<<<<<<< HEAD
-String area 地区;
-String project 项目组;
-String type 类别;
-String name 项目名称;
-Integer year 年份;
-Integer month 月份;
-Double target 目标其他费用;
-Double actual 实际其他费用;
-Double ratio 比例;
-Double balance 差额;
-=======
 String intelligence 资质名称;
 String company 公司名称;
 String arrival 社保需增地市;
@@ -39,5 +20,4 @@ String name 可参保人员姓名;
 String addCity 可参保人员新增的地市;
 String description 备注;
 boolean increase 是否增员;
->>>>>>> 3ed38c3bf2ddd8e993ac3765a483612fd6e8516e
 )

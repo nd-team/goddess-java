@@ -4,8 +4,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.projectmeasure.type.InterfaceSelect;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 
-import javax.persistence.Column;
-
 /**
  * 单个项目单个界面业务传输对象
  *

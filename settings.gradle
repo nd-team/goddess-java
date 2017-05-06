@@ -277,10 +277,16 @@ include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
+//#materialtransfer 物资调用
+include ':modules:materialtransfer:materialtransfer-api'
+include ':modules:materialtransfer:materialtransfer-consumer'
+include ':modules:materialtransfer:materialtransfer-provider'
+
 //#otherexpenses 其他费用
 include ':modules:otherexpenses:otherexpenses-api'
 include ':modules:otherexpenses:otherexpenses-consumer'
 include ':modules:otherexpenses:otherexpenses-provider'
+
 
 //#secure 社保模块
 include ':modules:secure:secure-api'
@@ -297,4 +303,18 @@ include ':modules:budget:budget-api'
 include ':modules:budget:budget-consumer'
 include ':modules:budget:budget-provider'
 
+//#devicerepair 设备维修
+include ':modules:devicerepair:devicerepair-api'
+include ':modules:devicerepair:devicerepair-consumer'
+include ':modules:devicerepair:devicerepair-provider'
 
+//#contractquotemanager 合同单价
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
+
+
+//#outcarfare 出车费资金准备与支付业务流程
+include ':modules:outcarfare:outcarfare-api'
+include ':modules:outcarfare:outcarfare-consumer'
+include ':modules:outcarfare:outcarfare-provider'

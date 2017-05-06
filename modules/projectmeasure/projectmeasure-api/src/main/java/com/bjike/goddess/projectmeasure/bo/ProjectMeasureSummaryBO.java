@@ -31,7 +31,7 @@ public class ProjectMeasureSummaryBO extends BaseBO {
     private String updateTime;
 
     /**
-     * 上次发送时间String
+     * 上次发送时间
      */
     private String lastTime;
 

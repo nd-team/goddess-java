@@ -8,19 +8,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.api.MultipleProjectSingleUIAPI;
-import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
-import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
-import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUITO;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
-import com.bjike.goddess.projectmeasure.vo.MultipleProjectMultipleUIVO;
 import com.bjike.goddess.projectmeasure.vo.MultipleProjectSingleUIVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,11 +30,47 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/multipleprojectsingleui")
+@RequestMapping("msui")
 public class MultipleProjectSingleUIAct {
 
     @Autowired
     private MultipleProjectSingleUIAPI multipleProjectSingleUIAPI;
+
+    /**
+     * 根据id查询多项目单个界面
+     *
+     * @param id　多项目单个界面唯一标识
+     * @return class MultipleProjectSingleUIVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/msui/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            MultipleProjectSingleUIBO bo = multipleProjectSingleUIAPI.findById(id);
+            MultipleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, MultipleProjectSingleUIVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 多项目单个界面dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated MultipleProjectSingleUIDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = multipleProjectSingleUIAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分页查询多项目单个界面
@@ -48,10 +81,10 @@ public class MultipleProjectSingleUIAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(MultipleProjectSingleUIDTO dto) throws ActException {
+    public Result list(@Validated MultipleProjectSingleUIDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<MultipleProjectSingleUIBO> boList = multipleProjectSingleUIAPI.list(dto);
-            List<MultipleProjectSingleUIVO> voList = BeanTransform.copyProperties(boList, MultipleProjectSingleUIVO.class);
+            List<MultipleProjectSingleUIVO> voList = BeanTransform.copyProperties(boList, MultipleProjectSingleUIVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -67,10 +100,10 @@ public class MultipleProjectSingleUIAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MultipleProjectSingleUITO to) throws ActException {
+    public Result add(@Validated({ADD.class}) MultipleProjectSingleUITO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MultipleProjectSingleUIBO bo = multipleProjectSingleUIAPI.save(to);
-            MultipleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, MultipleProjectSingleUIVO.class);
+            MultipleProjectSingleUIVO vo = BeanTransform.copyProperties(bo, MultipleProjectSingleUIVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -102,7 +135,7 @@ public class MultipleProjectSingleUIAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) MultipleProjectSingleUITO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) MultipleProjectSingleUITO to, BindingResult result) throws ActException {
         try {
             multipleProjectSingleUIAPI.update(to);
             return new ActResult("edit success!");

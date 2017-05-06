@@ -3,16 +3,16 @@ package com.bjike.goddess.projectmeasure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
-import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,9 +49,10 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public MultipleProjectSingleUIBO save(MultipleProjectSingleUITO to) throws SerException {
         MultipleProjectSingleUI entity = BeanTransform.copyProperties(to, MultipleProjectSingleUI.class, true);
+        verify(entity);//参数校验
         entity = super.save(entity);
         MultipleProjectSingleUIBO bo = BeanTransform.copyProperties(entity, MultipleProjectSingleUIBO.class);
         return bo;
@@ -64,10 +65,35 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void update(MultipleProjectSingleUITO to) throws SerException {
-        MultipleProjectSingleUI entity = BeanTransform.copyProperties(to, MultipleProjectSingleUI.class, true);
-        super.update(entity);
+        if (StringUtils.isNotEmpty(to.getId())){
+            MultipleProjectSingleUI model = super.findById(to.getId());
+            if (model != null) {
+                updateMSUI(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    private void updateMSUI(MultipleProjectSingleUITO to, MultipleProjectSingleUI model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        verify(model);//参数校验
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 参数校验
+     * @param model
+     */
+    private void verify(MultipleProjectSingleUI model) throws SerException {
+        if (model.getWorkload() < 1) {
+            throw new SerException("参数工作量workload必须是大于0的整数");
+        }
     }
 
     /**
@@ -77,7 +103,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }
