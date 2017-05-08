@@ -43,9 +43,9 @@ include ':modules:customer:customer-provider'
 //include ':modules:recruit:recruit-consumer'
 //include ':modules:recruit:recruit-provider'
 //#市场活动管理
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//include ':modules:marketactivitymanage:marketactivitymanage-api'
+//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+//include ':modules:marketactivitymanage:marketactivitymanage-provider'
 //#司机信息
 include ':modules:driverinfo:driverinfo-api'
 include ':modules:driverinfo:driverinfo-consumer'
@@ -75,11 +75,6 @@ include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
 
-//#市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
-
 //#竞争对手管理
 //include ':modules:competitormanage:competitormanage-api'
 //include ':modules:competitormanage:competitormanage-consumer'
@@ -107,17 +102,17 @@ include ':modules:intromanage:intromanage-consumer'
 include ':modules:intromanage:intromanage-provider'
 
 //#marketdevelopment 市场计划进度管理
-include ':modules:marketdevelopment:marketdevelopment-api'
-include ':modules:marketdevelopment:marketdevelopment-consumer'
-include ':modules:marketdevelopment:marketdevelopment-provider'
+//include ':modules:marketdevelopment:marketdevelopment-api'
+//include ':modules:marketdevelopment:marketdevelopment-consumer'
+//include ':modules:marketdevelopment:marketdevelopment-provider'
 //#projectissuehandle 项目问题受理
-include ':modules:projectissuehandle:projectissuehandle-api'
-include ':modules:projectissuehandle:projectissuehandle-consumer'
-include ':modules:projectissuehandle:projectissuehandle-provider'
+//include ':modules:projectissuehandle:projectissuehandle-api'
+//include ':modules:projectissuehandle:projectissuehandle-consumer'
+//include ':modules:projectissuehandle:projectissuehandle-provider'
 //#market 市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
+//include ':modules:market:market-api'
+//include ':modules:market:market-consumer'
+//include ':modules:market:market-provider'
 //#商业能力互动tanghaixiang
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
