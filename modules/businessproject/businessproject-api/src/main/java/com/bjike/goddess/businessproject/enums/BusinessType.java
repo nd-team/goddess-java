@@ -10,6 +10,7 @@ package com.bjike.goddess.businessproject.enums;
  * @Copy: [com.bjike]
  */
 public enum BusinessType {
+
     /**
      * 移动通信类
      */

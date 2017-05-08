@@ -12,6 +12,7 @@ import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,42 @@ public class DispatchSheetAction {
     private DispatchSheetAPI dispatchSheetAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param dispatchSheetDTO 派工单信息信息dto
+     * @des 获取所有派工单信息信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DispatchSheetDTO dispatchSheetDTO) throws ActException {
+        try {
+            Long count = dispatchSheetAPI.countDispatchSheet(dispatchSheetDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个派工单信息
+     *
+     * @param id 项目派工单信息信息id
+     * @des 根据id获取项目派工单信息信息
+     * @return  class DispatchSheetVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            DispatchSheetVO projectCarryVO = BeanTransform.copyProperties(
+                    dispatchSheetAPI.getOneById(id), DispatchSheetVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目派工单列表
      *
      * @param dispatchSheetDTO 项目派工单信息dto
@@ -42,8 +79,8 @@ public class DispatchSheetAction {
      * @des 获取所有项目派工单信息
      * @version v1
      */
-    @GetMapping("v1/listDispatchSheet")
-    public Result findListDispatchSheet(DispatchSheetDTO dispatchSheetDTO, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListDispatchSheet(DispatchSheetDTO dispatchSheetDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<DispatchSheetVO> dispatchSheetVOList = BeanTransform.copyProperties(
                     dispatchSheetAPI.listDispatchSheet(dispatchSheetDTO), DispatchSheetVO.class, request);
@@ -65,7 +102,7 @@ public class DispatchSheetAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addDispatchSheet(@Validated DispatchSheetTO dispatchSheetTO) throws ActException {
+    public Result addDispatchSheet(@Validated(DispatchSheetTO.TestAdd.class) DispatchSheetTO dispatchSheetTO) throws ActException {
         try {
             DispatchSheetBO dispatchSheetBO1 = dispatchSheetAPI.addDispatchSheet(dispatchSheetTO);
             return ActResult.initialize(BeanTransform.copyProperties(dispatchSheetBO1, DispatchSheetVO.class, true));
@@ -85,7 +122,7 @@ public class DispatchSheetAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editDispatchSheet(@Validated DispatchSheetTO dispatchSheetTO) throws ActException {
+    public Result editDispatchSheet(@Validated(DispatchSheetTO.TestAdd.class) DispatchSheetTO dispatchSheetTO) throws ActException {
         try {
             DispatchSheetBO dispatchSheetBO1 = dispatchSheetAPI.editDispatchSheet(dispatchSheetTO);
             return ActResult.initialize(BeanTransform.copyProperties(dispatchSheetBO1, DispatchSheetVO.class, true));

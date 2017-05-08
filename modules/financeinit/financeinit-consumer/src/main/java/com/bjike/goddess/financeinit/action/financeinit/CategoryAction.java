@@ -3,6 +3,7 @@ package com.bjike.goddess.financeinit.action.financeinit;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +42,14 @@ public class CategoryAction {
     /**
      * 列表总条数
      *
-     * @param customerBaseInfoDTO 类别信息dto
+     * @param categoryDTO 类别信息dto
      * @des 获取所有类别信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(CategoryDTO customerBaseInfoDTO) throws ActException {
+    public Result count(@Validated(CategoryDTO.TestList.class) CategoryDTO categoryDTO) throws ActException {
         try {
-            Long count = categoryAPI.countCategory(customerBaseInfoDTO);
+            Long count = categoryAPI.countCategory(categoryDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -55,7 +57,7 @@ public class CategoryAction {
     }
 
     /**
-     * 一个实施审核
+     * 一个类别
      *
      * @param id 项目类别信息id
      * @des 根据id获取项目类别信息
@@ -82,15 +84,15 @@ public class CategoryAction {
      * @version v1
      */
     @GetMapping("v1/listCategory")
-    public Result findListCategory(CategoryDTO categoryDTO, BindingResult bindingResult) throws ActException {
+    public Result findListCategory(@Validated(CategoryDTO.TestList.class) CategoryDTO categoryDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<CategoryBO> categoryBOList = categoryAPI.listCategory(categoryDTO);
             List<CategoryVO> categoryVOList = BeanTransform.copyProperties(
-                    categoryBOList , CategoryVO.class);
+                    categoryBOList , CategoryVO.class , request);
             List<CategoryVO> categoryVOLists = new ArrayList<>();
             categoryBOList.stream().forEach(str -> {
                 FirstSubjectVO firstSubjectVO = BeanTransform.copyProperties(str.getFirstSubjectBO(), FirstSubjectVO.class);
-                CategoryVO cv= BeanTransform.copyProperties(str, CategoryVO.class);
+                CategoryVO cv= BeanTransform.copyProperties(str, CategoryVO.class , request);
                 cv.setFirstSubjectVO(firstSubjectVO);
                 categoryVOLists.add(cv);
             });
@@ -108,8 +110,9 @@ public class CategoryAction {
      * @des 添加类别
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result addCategory(@Validated CategoryTO categoryTO, BindingResult bindingResult) throws ActException {
+    public Result addCategory(@Validated(CategoryTO.TestAdd.class) CategoryTO categoryTO, BindingResult bindingResult) throws ActException {
         try {
             CategoryBO categoryBO1 = categoryAPI.addCategory(categoryTO);
             return ActResult.initialize(BeanTransform.copyProperties(categoryBO1, CategoryVO.class));
@@ -127,8 +130,9 @@ public class CategoryAction {
      * @des 添加类别
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCategory(@Validated CategoryTO categoryTO) throws ActException {
+    public Result editCategory(@Validated(CategoryTO.TestAdd.class) CategoryTO categoryTO) throws ActException {
         try {
             CategoryBO categoryBO1 = categoryAPI.editCategory(categoryTO);
             return ActResult.initialize(BeanTransform.copyProperties(categoryBO1, CategoryVO.class));
@@ -144,6 +148,7 @@ public class CategoryAction {
      * @des 根据id删除类别信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCategory(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +156,24 @@ public class CategoryAction {
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取对应类的一级名
+     *
+     * @param categoryTO 类别基本信息数据bo
+     * @des 获取对应类的一级名
+     * @version v1
+     */
+    @GetMapping("v1/listFirstName")
+    public Result listFirstName(@Validated(CategoryTO.TestGetFirst.class) CategoryTO categoryTO) throws ActException {
+        try {
+            List<String> projectCarryVO =categoryAPI.listFirstName(categoryTO);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

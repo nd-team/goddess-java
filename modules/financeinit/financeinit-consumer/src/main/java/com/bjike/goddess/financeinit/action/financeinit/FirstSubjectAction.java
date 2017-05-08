@@ -3,6 +3,7 @@ package com.bjike.goddess.financeinit.action.financeinit;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -80,10 +82,10 @@ public class FirstSubjectAction {
      * @version v1
      */
     @GetMapping("v1/listFirstSubject")
-    public Result findListFirstSubject(FirstSubjectDTO firstSubjectDTO, BindingResult bindingResult) throws ActException {
+    public Result findListFirstSubject(FirstSubjectDTO firstSubjectDTO, BindingResult bindingResult , HttpServletRequest request) throws ActException {
         try {
             List<FirstSubjectVO> firstSubjectVOList = BeanTransform.copyProperties(
-                    firstSubjectAPI.listFirstSubject(firstSubjectDTO), FirstSubjectVO.class);
+                    firstSubjectAPI.listFirstSubject(firstSubjectDTO), FirstSubjectVO.class , request);
             return ActResult.initialize(firstSubjectVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,6 +100,7 @@ public class FirstSubjectAction {
      * @des 添加一级科目
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addFirstSubject(@Validated FirstSubjectTO firstSubjectTO, BindingResult bindingResult) throws ActException {
         try {
@@ -117,6 +120,7 @@ public class FirstSubjectAction {
      * @des 添加一级科目
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editFirstSubject(@Validated FirstSubjectTO firstSubjectTO) throws ActException {
         try {
@@ -134,6 +138,7 @@ public class FirstSubjectAction {
      * @des 根据id删除一级科目信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteFirstSubject(@PathVariable String id) throws ActException {
         try {
@@ -151,6 +156,7 @@ public class FirstSubjectAction {
      * @des 批量导入添加一级科目
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel() throws ActException {
         return null;

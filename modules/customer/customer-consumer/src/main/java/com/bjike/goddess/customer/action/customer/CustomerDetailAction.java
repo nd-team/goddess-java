@@ -10,6 +10,7 @@ import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
+import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
@@ -71,15 +72,20 @@ public class CustomerDetailAction {
         try {
             List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
             List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
-            customerDetailBOList.stream().forEach(str->{
-                CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
-                CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
-                customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
-                customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
-                customerDetailVOList.add( customerDetailVO );
-            });
-            return ActResult.initialize(customerDetailVOList);
+
+            if( customerDetailBOList == null ){
+                return ActResult.initialize(BeanTransform.copyProperties(customerDetailBOList, CustomerDetailVO.class));
+            }else {
+                customerDetailBOList.stream().forEach(str->{
+                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
+                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
+                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                    CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
+                    customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+                    customerDetailVOList.add( customerDetailVO );
+                });
+                return ActResult.initialize(customerDetailVOList);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

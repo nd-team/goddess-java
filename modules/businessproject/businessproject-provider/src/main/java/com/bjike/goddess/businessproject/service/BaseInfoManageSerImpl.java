@@ -37,8 +37,22 @@ import java.util.stream.Collectors;
 @Service
 public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoManageDTO> implements BaseInfoManageSer {
 
+    @Override
+    public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        searchCondition( baseInfoManageDTO);
+        Long count = super.count( baseInfoManageDTO );
+        return count;
+    }
 
-    
+    @Override
+    public BaseInfoManageBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        BaseInfoManage baseInfoManage = super.findById(id);
+        return BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class );
+    }
+
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         searchCondition( baseInfoManageDTO);

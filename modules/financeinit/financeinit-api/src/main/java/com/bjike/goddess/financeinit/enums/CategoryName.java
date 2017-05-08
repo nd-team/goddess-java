@@ -1,6 +1,7 @@
 package com.bjike.goddess.financeinit.enums;
 
 /**
+ * 类别名
  * @Author: [tanghaixiang]
  * @Date: [2017-03-29 16:50]
  * @Description: []

@@ -15,6 +15,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,42 @@ public class CollectEmailAction {
     private CollectEmailAPI collectEmailAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param collectEmailDTO 项目合同邮件信息dto
+     * @des 获取所有项目合同邮件信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CollectEmailDTO collectEmailDTO) throws ActException {
+        try {
+            Long count = collectEmailAPI.counts(collectEmailDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个项目合同邮件
+     *
+     * @param id 项目项目合同邮件信息id
+     * @des 根据id获取项目项目合同邮件信息
+     * @return  class CollectEmailVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            CollectEmailVO projectCarryVO = BeanTransform.copyProperties(
+                    collectEmailAPI.getOne(id), CollectEmailVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 商务邮件汇总列表
      *
      * @param collectEmailDTO 商务邮件汇总信息dto
@@ -46,7 +83,7 @@ public class CollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findListCollectEmail(CollectEmailDTO collectEmailDTO, HttpServletRequest request) throws ActException {
+    public Result findListCollectEmail(CollectEmailDTO collectEmailDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.listCollectEmail(collectEmailDTO), CollectEmailVO.class, request);

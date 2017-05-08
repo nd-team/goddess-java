@@ -4,6 +4,9 @@ import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 商务项目合同签订与立项管理
@@ -16,84 +19,102 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class SiginManageTO extends BaseTO {
 
+    public interface TestAdd{}
+
     /**
      * 业务类型
      */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "业务类型不能为空")
     private BusinessType businessType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "业务方向科目不能为空")
     private String businessSubject;
 
     /**
      * 合作方式
      */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合作方式不能为空")
     private BusinessCooperate businessCooperate;
 
     /**
      * 外部项目名称
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "外部项目名称不能为空")
     private String outerProject;
 
     /**
      * 甲方公司名称
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "甲方公司名称不能为空")
     private String firstCompany;
 
     /**
      * 乙方公司名称
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "乙方公司名称不能为空")
     private String secondCompany;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "地区不能为空")
     private String area;
 
     /**
      * 合同金额
      */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同金额不能为空,且为数字")
     private Double money;
 
     /**
      * 开工时间
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "开工时间不能为空,格式为年月日")
     private String startProjectTime;
 
     /**
      * 完工时间
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "完工时间不能为空,格式为年月日")
     private String endProjectTime;
 
     /**
-     * 签订状态
+     * 签订状态(是否已签订)
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空")
     private String siginStatus;
 
     /**
      * 合同属性
      */
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同属性不能为空")
     private ContractProperty contractProperty;
 
     /**
      * 立项情况
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
     private String makeProject;
 
     /**
      * 内部项目名称
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "内部项目名称不能为空")
     private String innerProject;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 项目负责人
      */
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目负责人不能为空")
     private String projectCharge;
 
     /**
