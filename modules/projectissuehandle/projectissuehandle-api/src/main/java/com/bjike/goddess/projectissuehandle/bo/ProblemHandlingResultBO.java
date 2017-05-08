@@ -3,6 +3,8 @@ package com.bjike.goddess.projectissuehandle.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
+import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
+import com.bjike.goddess.projectissuehandle.enums.ProjectType;
 
 
 /**
@@ -20,7 +22,10 @@ public class ProblemHandlingResultBO extends BaseBO {
      * 年份
      */
     private String year;
-
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 合同外部项目名称
      */
@@ -49,7 +54,7 @@ public class ProblemHandlingResultBO extends BaseBO {
     /**
      * 问题对象
      */
-    private ProblemObject problemObject;
+    private String problemObject;
 
     /**
      * 问题责任人员
@@ -64,7 +69,7 @@ public class ProblemHandlingResultBO extends BaseBO {
     /**
      * 问题相关部门
      */
-    private String problemRelevantDepartment;
+    private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
      * 问题发生时间
@@ -98,6 +103,14 @@ public class ProblemHandlingResultBO extends BaseBO {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getExternalContractProjectName() {
@@ -140,11 +153,11 @@ public class ProblemHandlingResultBO extends BaseBO {
         this.problemSpecificSituation = problemSpecificSituation;
     }
 
-    public ProblemObject getProblemObject() {
+    public String getProblemObject() {
         return problemObject;
     }
 
-    public void setProblemObject(ProblemObject problemObject) {
+    public void setProblemObject(String problemObject) {
         this.problemObject = problemObject;
     }
 
@@ -164,11 +177,11 @@ public class ProblemHandlingResultBO extends BaseBO {
         this.problemHandler = problemHandler;
     }
 
-    public String getProblemRelevantDepartment() {
+    public ProblemRelevantDepartment getProblemRelevantDepartment() {
         return problemRelevantDepartment;
     }
 
-    public void setProblemRelevantDepartment(String problemRelevantDepartment) {
+    public void setProblemRelevantDepartment(ProblemRelevantDepartment problemRelevantDepartment) {
         this.problemRelevantDepartment = problemRelevantDepartment;
     }
 

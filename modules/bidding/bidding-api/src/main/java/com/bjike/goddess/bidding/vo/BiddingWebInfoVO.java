@@ -10,6 +10,10 @@ package com.bjike.goddess.bidding.vo;
  * @Copy: [ com.bjike ]
  */
 public class BiddingWebInfoVO {
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 网站名称
@@ -21,6 +25,13 @@ public class BiddingWebInfoVO {
      */
     private String url;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getWebName() {
         return webName;

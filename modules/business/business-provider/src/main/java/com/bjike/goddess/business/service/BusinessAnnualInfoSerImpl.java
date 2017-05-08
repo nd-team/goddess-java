@@ -35,21 +35,26 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
         Long counts = super.count(businessAnnualInfoDTO);
         return counts;
     }
+    @Override
+    public BusinessAnnualInfoBO getOne(String id) throws SerException {
+        BusinessAnnualInfo businessAnnualInfo = super.findById(id);
+        return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class,true);
+    }
 
     @Override
     public List<BusinessAnnualInfoBO> findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         businessAnnualInfoDTO.getSorts().add("createTime=desc");
         List<BusinessAnnualInfo> businessAnnualInfos = super.findByCis(businessAnnualInfoDTO,true);
-        List<BusinessAnnualInfoBO> businessAnnualInfoBOS = BeanTransform.copyProperties(businessAnnualInfos, BusinessRegisterBO.class,true);
+        List<BusinessAnnualInfoBO> businessAnnualInfoBOS = BeanTransform.copyProperties(businessAnnualInfos, BusinessAnnualInfoBO.class);
         return businessAnnualInfoBOS;
     }
 
     @Override
     public BusinessAnnualInfoBO insertBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws SerException {
-        BusinessAnnualInfo businessAnnualInfo = BeanTransform.copyProperties(businessAnnualInfoTO,BusinessRegister.class,true);
+        BusinessAnnualInfo businessAnnualInfo = BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfo.class,true);
         businessAnnualInfo.setCreateTime(LocalDateTime.now());
         super.save(businessAnnualInfo);
-        return BeanTransform.copyProperties(businessAnnualInfo,BusinessRegisterBO.class);
+        return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
         BeanTransform.copyProperties(businessAnnualInfoTO,businessAnnualInfo,true);
         businessAnnualInfo.setModifyTime(LocalDateTime.now());
         super.update(businessAnnualInfo);
-        return BeanTransform.copyProperties(businessAnnualInfoTO,BusinessRegisterBO.class);
+        return BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfoBO.class);
     }
 
     @Override

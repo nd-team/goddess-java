@@ -18,7 +18,7 @@ public class CooperationSituationVO {
     /**
      * 供应商基本信息
      */
-    private String information_id;
+    private String informationId;
 
     /**
      * 公司名称
@@ -49,12 +49,12 @@ public class CooperationSituationVO {
         this.id = id;
     }
 
-    public String getInformation_id() {
-        return information_id;
+    public String getInformationId() {
+        return informationId;
     }
 
-    public void setInformation_id(String information_id) {
-        this.information_id = information_id;
+    public void setInformationId(String informationId) {
+        this.informationId = informationId;
     }
 
     public String getName() {

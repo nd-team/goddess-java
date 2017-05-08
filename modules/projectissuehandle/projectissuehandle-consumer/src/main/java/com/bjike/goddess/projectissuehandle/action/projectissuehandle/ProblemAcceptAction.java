@@ -1,8 +1,12 @@
 package com.bjike.goddess.projectissuehandle.action.projectissuehandle;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI;
@@ -10,10 +14,14 @@ import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -27,10 +35,12 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectissuehandle/problemaccept")
-public class ProblemAcceptAction {
+@RequestMapping("problemaccept")
+public class ProblemAcceptAction extends BaseFileAction {
     @Autowired
     private ProblemAcceptAPI problemAcceptAPI;
+    @Autowired
+    private FileAPI fileAPI;
     /**
      * 项目执行中的问题受理列表总条数
      *
@@ -49,6 +59,24 @@ public class ProblemAcceptAction {
     }
 
     /**
+     * 一个项目执行中的问题受理
+     *
+     * @param id
+     * @return class ProblemAcceptVO
+     * @des 获取一个项目执行中的问题受理
+     * @version v1
+     */
+    @GetMapping("v1/problem/{id}")
+    public Result problem(@PathVariable String id) throws ActException {
+        try {
+            ProblemAcceptBO problemAcceptBO = problemAcceptAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(problemAcceptBO, ProblemAcceptVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目执行中的问题受理列表
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto
@@ -56,11 +84,11 @@ public class ProblemAcceptAction {
      * @des 获取所有项目执行中的问题受理
      * @version v1
      */
-    @GetMapping("v1/listProblemAccept")
-    public Result findListProblemAccept(ProblemAcceptDTO problemAcceptDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
-                    (problemAcceptAPI.findListProblemAccept(problemAcceptDTO), ProblemAcceptVO.class);
+                    (problemAcceptAPI.findListProblemAccept(problemAcceptDTO), ProblemAcceptVO.class,request);
             return ActResult.initialize(problemAcceptVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -75,28 +103,11 @@ public class ProblemAcceptAction {
      * @des 添加项目执行中的问题受理
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result addProblemAccept(ProblemAcceptTO problemAcceptTO,BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) ProblemAcceptTO problemAcceptTO, BindingResult result) throws ActException {
         try {
             ProblemAcceptBO problemAcceptBO = problemAcceptAPI.insertProblemAccept(problemAcceptTO);
-            return ActResult.initialize(problemAcceptBO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 编辑项目执行中的问题受理
-     *
-     * @param problemAcceptTO 项目执行中的问题受理数据to
-     * @return class ProblemAcceptVO
-     * @des 编辑项目执行中的问题受理
-     * @version v1
-     */
-    @PostMapping("v1/edit")
-    public Result editProblemAccept(ProblemAcceptTO problemAcceptTO) throws ActException {
-        try {
-            ProblemAcceptBO problemAcceptBO = problemAcceptAPI.editProblemAccept(problemAcceptTO);
             return ActResult.initialize(problemAcceptBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -121,6 +132,25 @@ public class ProblemAcceptAction {
     }
 
     /**
+     * 编辑项目执行中的问题受理
+     *
+     * @param problemAcceptTO 项目执行中的问题受理数据to
+     * @return class ProblemAcceptVO
+     * @des 编辑项目执行中的问题受理
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result editProblemAccept(@Validated(EDIT.class) ProblemAcceptTO problemAcceptTO, BindingResult result) throws ActException {
+        try {
+            ProblemAcceptBO problemAcceptBO = problemAcceptAPI.editProblemAccept(problemAcceptTO);
+            return ActResult.initialize(problemAcceptBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 搜索
      *
      * @param problemAcceptDTO 项目执行中的问题受理dto
@@ -128,8 +158,8 @@ public class ProblemAcceptAction {
      * @des 搜索获取所有项目执行中的问题受理
      * @version v1
      */
-    @GetMapping("v1/searchProblemAccept")
-    public Result searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws ActException {
+    @GetMapping("v1/search")
+    public Result search(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest httpServletRequest) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
                     (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class);
@@ -138,6 +168,7 @@ public class ProblemAcceptAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出项目执行中的问题受理
      *
@@ -147,7 +178,7 @@ public class ProblemAcceptAction {
     public Result exportExcel(String internalProjectName, String projectType) throws ActException {
         String excel = null;
         try {
-            excel = problemAcceptAPI.exportExcel(internalProjectName,projectType);
+            excel = problemAcceptAPI.exportExcel(internalProjectName, projectType);
             return new ActResult(excel);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -161,9 +192,10 @@ public class ProblemAcceptAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload() throws ActException {
+    public Result upload(HttpServletRequest request) throws ActException {
         try {
-            problemAcceptAPI.upload();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

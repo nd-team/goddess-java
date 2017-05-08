@@ -1,23 +1,28 @@
 package com.bjike.goddess.projectissuehandle.action.projectissuehandle;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
-import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
-import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
+import com.bjike.goddess.projectissuehandle.vo.CollectVO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemHandlingResultVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -31,11 +36,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectissuehandle/problemhandlingresult")
-public class ProblemHandlingResultAction {
+@RequestMapping("problemhandlingresult")
+public class ProblemHandlingResultAction extends BaseFileAction{
     @Autowired
     private ProblemHandlingResultAPI problemHandlingResultAPI;
 
+    @Autowired
+    private FileAPI fileAPI;
     /**
      * 确认问题处理结果列表总条数
      *
@@ -54,6 +61,24 @@ public class ProblemHandlingResultAction {
     }
 
     /**
+     * 一个确认问题处理结果
+     *
+     * @param id
+     * @return class ProblemHandlingResultVO
+     * @des 获取一个确认问题处理结果
+     * @version v1
+     */
+    @GetMapping("v1/result/{id}")
+    public Result result(@PathVariable String id) throws ActException {
+        try {
+            ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(problemHandlingResultBO, ProblemHandlingResultVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 确认问题处理结果列表
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
@@ -61,11 +86,11 @@ public class ProblemHandlingResultAction {
      * @des 获取所有确认问题处理结果
      * @version v1
      */
-    @GetMapping("v1/listProblemHandlingResult")
-    public Result findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(ProblemHandlingResultDTO problemHandlingResultDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemHandlingResultVO> problemHandlingResultVOS = BeanTransform.copyProperties
-                    (problemHandlingResultAPI.findListProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class);
+                    (problemHandlingResultAPI.findListProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class,request);
             return ActResult.initialize(problemHandlingResultVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -80,8 +105,9 @@ public class ProblemHandlingResultAction {
      * @des 添加确认问题处理结果
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result addProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) ProblemHandlingResultTO problemHandlingResultTO, BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.insertProblemHandlingResult(problemHandlingResultTO);
             return ActResult.initialize(problemHandlingResultBO);
@@ -98,8 +124,9 @@ public class ProblemHandlingResultAction {
      * @des 编辑确认问题处理结果
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
-    public Result editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) ProblemHandlingResultTO problemHandlingResultTO,BindingResult bindingResult) throws ActException {
         try {
             ProblemHandlingResultBO problemHandlingResultBO = problemHandlingResultAPI.editProblemHandlingResult(problemHandlingResultTO);
             return ActResult.initialize(problemHandlingResultBO);
@@ -116,7 +143,7 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteProblemHandlingResult(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             problemHandlingResultAPI.removeProblemHandlingResult(id);
             return new ActResult("delete success");
@@ -133,8 +160,8 @@ public class ProblemHandlingResultAction {
      * @des 搜索获取所有确认问题处理结果
      * @version v1
      */
-    @GetMapping("v1/searchProblemHandlingResult")
-    public Result searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws ActException {
+    @GetMapping("v1/search")
+    public Result search(ProblemHandlingResultDTO problemHandlingResultDTO, HttpServletRequest httpServletRequest) throws ActException {
         try {
             List<ProblemHandlingResultVO> problemHandlingResultVOS = BeanTransform.copyProperties(
                     problemHandlingResultAPI.searchProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class, true);
@@ -167,14 +194,49 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload() throws ActException {
+    public Result upload(HttpServletRequest request) throws ActException {
         try {
-            problemHandlingResultAPI.upload();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
 
     }
+    /**
+     * 汇总项目中问题受理和处理
+     *
+     * @param areas 地区
+     * @des 汇总项目中问题受理和处理管理
+     * @return  class CollectVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect ( @RequestParam String[] areas ) throws ActException {
+        try {
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(
+                    problemHandlingResultAPI.collect(areas),CollectVO.class);
+            return ActResult.initialize(collectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取地区
+     *
+     * @des 获取地区集合
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result area() throws ActException {
+        try {
+            List<String> areaList = problemHandlingResultAPI.getArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

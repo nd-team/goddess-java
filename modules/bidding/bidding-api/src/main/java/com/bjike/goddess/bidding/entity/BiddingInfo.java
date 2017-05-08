@@ -8,7 +8,7 @@ import com.bjike.goddess.common.api.type.Status;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -27,26 +27,26 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 网站名称
      */
-    @Column(name = "webName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '网站名称'")
+    @Column(name = "webName", columnDefinition = "VARCHAR(255)   COMMENT '网站名称'")
     private String webName;
 
     /**
      * 网址
      */
-    @Column(name = "url", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '网址'")
+    @Column(name = "url", columnDefinition = "VARCHAR(255)   COMMENT '网址'")
     private String url;
 
     /**
      * 招投标类型
      */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '招投标类型'")
+    @Column(name = "biddingType", columnDefinition = "TINYINT(2)   COMMENT '招投标类型'")
     private BiddingType biddingType;
 
 
     /**
      * 业务类型
      */
-    @Column(columnDefinition = "TINYINT(1)  COMMENT '业务类型'")
+    @Column(name = "businessType", columnDefinition = "TINYINT(2)   COMMENT '业务类型'")
     private BusinessType businessType;
 
     /**
@@ -70,20 +70,20 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
      * 报名时间
      */
-    @Column(name = "registrationTime", nullable = false, columnDefinition = "DATE   COMMENT '报名时间'")
-    private LocalDate registrationTime;
+    @Column(name = "registrationTime", columnDefinition = "DATETIME   COMMENT '报名时间'")
+    private LocalDateTime registrationTime;
 
     /**
      * 投标时间
      */
-    @Column(name = "biddingTime", nullable = false, columnDefinition = "DATE   COMMENT '投标时间'")
-    private LocalDate biddingTime;
+    @Column(name = "biddingTime", columnDefinition = "DATETIME   COMMENT '投标时间'")
+    private LocalDateTime biddingTime;
 
     /**
      * 投标资格要求
@@ -112,7 +112,7 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 密码
      */
-    @Column(name = "password",  columnDefinition = "VARCHAR(255)   COMMENT '密码'")
+    @Column(name = "password", columnDefinition = "VARCHAR(255)   COMMENT '密码'")
     private String password;
 
     /**
@@ -130,14 +130,14 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
     private Status status;
 
     /**
      * 购买标书时间
      */
-    @Column(name = "buyTenderTime", columnDefinition = "DATE   COMMENT '购买标书时间'")
-    private LocalDate buyTenderTime;
+    @Column(name = "buyTenderTime", columnDefinition = "DATETIME   COMMENT '购买标书时间'")
+    private LocalDateTime buyTenderTime;
 
     /**
      * 价格
@@ -154,8 +154,8 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 交保证金时间
      */
-    @Column(name = "marginTime", columnDefinition = "DATE   COMMENT '交保证金时间'")
-    private LocalDate marginTime;
+    @Column(name = "marginTime", columnDefinition = "DATETIME   COMMENT '交保证金时间'")
+    private LocalDateTime marginTime;
 
     /**
      * 交保证金方式
@@ -166,8 +166,8 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 保证金退回时间
      */
-    @Column(name = "backTimeDeposit", columnDefinition = "DATE   COMMENT '保证金退回时间'")
-    private LocalDate backTimeDeposit;
+    @Column(name = "backTimeDeposit", columnDefinition = "DATETIME   COMMENT '保证金退回时间'")
+    private LocalDateTime backTimeDeposit;
 
     /**
      * 备注
@@ -240,19 +240,19 @@ public class BiddingInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDate getRegistrationTime() {
+    public LocalDateTime getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(LocalDate registrationTime) {
+    public void setRegistrationTime(LocalDateTime registrationTime) {
         this.registrationTime = registrationTime;
     }
 
-    public LocalDate getBiddingTime() {
+    public LocalDateTime getBiddingTime() {
         return biddingTime;
     }
 
-    public void setBiddingTime(LocalDate biddingTime) {
+    public void setBiddingTime(LocalDateTime biddingTime) {
         this.biddingTime = biddingTime;
     }
 
@@ -320,11 +320,11 @@ public class BiddingInfo extends BaseEntity {
         this.status = status;
     }
 
-    public LocalDate getBuyTenderTime() {
+    public LocalDateTime getBuyTenderTime() {
         return buyTenderTime;
     }
 
-    public void setBuyTenderTime(LocalDate buyTenderTime) {
+    public void setBuyTenderTime(LocalDateTime buyTenderTime) {
         this.buyTenderTime = buyTenderTime;
     }
 
@@ -344,11 +344,11 @@ public class BiddingInfo extends BaseEntity {
         this.buyTenderRequirements = buyTenderRequirements;
     }
 
-    public LocalDate getMarginTime() {
+    public LocalDateTime getMarginTime() {
         return marginTime;
     }
 
-    public void setMarginTime(LocalDate marginTime) {
+    public void setMarginTime(LocalDateTime marginTime) {
         this.marginTime = marginTime;
     }
 
@@ -360,11 +360,11 @@ public class BiddingInfo extends BaseEntity {
         this.marginMethod = marginMethod;
     }
 
-    public LocalDate getBackTimeDeposit() {
+    public LocalDateTime getBackTimeDeposit() {
         return backTimeDeposit;
     }
 
-    public void setBackTimeDeposit(LocalDate backTimeDeposit) {
+    public void setBackTimeDeposit(LocalDateTime backTimeDeposit) {
         this.backTimeDeposit = backTimeDeposit;
     }
 

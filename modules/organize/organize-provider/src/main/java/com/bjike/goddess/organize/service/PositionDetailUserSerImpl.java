@@ -71,8 +71,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return bos;
     }
 
+    /**
+     * 检测用户职位内是否有重复用户
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(PositionDetailUserTO to) throws SerException {
+        if (this.findByUser(to.getUserId()) != null)
+            throw new SerException("该用户已存在,无法保存");
+    }
+
     @Override
     public PositionDetailUserBO save(PositionDetailUserTO to) throws SerException {
+        this.checkUnique(to);
         PositionDetailUser entity = new PositionDetailUser();
         entity.setUserId(to.getUserId());
         entity.setPositionSet(new HashSet<>(0));
@@ -96,8 +108,10 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             List<UserBO> userBOList = userAPI.findByCis(userDTO);
             if (null == userBOList || userBOList.size() <= 0)
                 throw new SerException("该用户不存在");
+            PositionDetailUser entity = super.findById(to.getId());
+            if (!entity.getUserId().equals(to.getUserId()))
+                this.checkUnique(to);
             try {
-                PositionDetailUser entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setPositionSet(new HashSet<>(0));
                 if (null != to.getPositionIds())

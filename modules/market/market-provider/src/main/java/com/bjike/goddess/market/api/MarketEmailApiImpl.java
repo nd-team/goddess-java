@@ -1,10 +1,16 @@
 package com.bjike.goddess.market.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketEmailBO;
+import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.service.MarketEmailSer;
+import com.bjike.goddess.market.to.MarketEmailTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -20,10 +26,48 @@ import java.util.List;
 @Service("marketEmailApiImpl")
 public class MarketEmailApiImpl implements MarketEmailAPI {
 
+    @Autowired
     private MarketEmailSer marketEmailSer;
 
     @Override
-    public List<MarketEmailBO> collectMarketEmail(String[] works) throws SerException {
-        return marketEmailSer.collectMarketEmail(works);
+    public Long counts(MarketEmailDTO marketEmailDTO) throws SerException {
+        return marketEmailSer.counts(marketEmailDTO);
+    }
+
+
+    @Override
+    public MarketEmailBO getOne(String id) throws SerException {
+        return marketEmailSer.getOne(id);
+    }
+
+
+    @Override
+    public List<MarketEmailBO> listMarketEmail(MarketEmailDTO marketEmailDTO) throws SerException {
+        return marketEmailSer.listMarketEmail(marketEmailDTO);
+    }
+
+    @Override
+    public MarketEmailBO addMarketEmail(MarketEmailTO marketEmailTO) throws SerException {
+        marketEmailTO.setLastSendTime(DateUtil.dateToString(LocalDateTime.now()));
+        return marketEmailSer.addMarketEmail(marketEmailTO);
+    }
+
+    @Override
+    public MarketEmailBO editMarketEmail(MarketEmailTO marketEmailTO) throws SerException {
+        return marketEmailSer.editMarketEmail(marketEmailTO);
+    }
+
+    @Override
+    public void deleteMarketEmail(String id) throws SerException {
+        marketEmailSer.deleteMarketEmail(id);
+    }
+
+    @Override
+    public List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
+        return marketEmailSer.marketCollect(areas);
+    }
+    @Override
+    public List<String> getArea() throws SerException {
+        return marketEmailSer.getArea();
     }
 }

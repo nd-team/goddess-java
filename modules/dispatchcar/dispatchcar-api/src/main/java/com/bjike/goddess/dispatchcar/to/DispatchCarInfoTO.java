@@ -22,8 +22,6 @@ import java.util.Map;
  */
 public class DispatchCarInfoTO extends BaseTO {
 
-    public interface TESTDemoList{}
-
     /**
      * 出车单号
      */

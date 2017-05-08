@@ -23,6 +23,14 @@ public interface BusinessTaxChangeAPI {
     default Long countBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个工商税务变更
+     *
+     * @return class BusinessTaxChangeBO
+     */
+    default BusinessTaxChangeBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 工商税务变更

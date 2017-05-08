@@ -16,17 +16,12 @@ import com.bjike.goddess.dimission.vo.DimissionInfoCollectVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoVO;
 import com.bjike.goddess.dimission.vo.DimissionReasonVO;
 import com.bjike.goddess.storage.api.FileAPI;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 离职信息
@@ -398,15 +393,8 @@ public class DimissionInfoAct extends BaseFileAction {
         try {
 
             String path = "/" + username;
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
 
-            for (MultipartFile multipartFile : multipartFiles) {
-                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                map.put(multipartFile.getOriginalFilename(), bytes);
-            }
-
-            fileAPI.upload(map, path);
+            fileAPI.upload(this.getInputStreams(request, path));
             return new ActResult("上传成功");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

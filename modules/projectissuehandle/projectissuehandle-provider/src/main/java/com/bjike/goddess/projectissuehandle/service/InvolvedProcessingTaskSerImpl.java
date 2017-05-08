@@ -35,6 +35,11 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         Long counts = super.count(involvedProcessingTaskDTO);
         return counts;
     }
+    @Override
+    public InvolvedProcessingTaskBO getOne(String id) throws SerException {
+        InvolvedProcessingTask involvedProcessingTask = super.findById(id);
+        return BeanTransform.copyProperties(involvedProcessingTask,InvolvedProcessingTaskBO.class,true);
+    }
 
     @Override
     public List<InvolvedProcessingTaskBO> findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
@@ -44,7 +49,6 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         return involvedProcessingTaskBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public InvolvedProcessingTaskBO insertInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {
         InvolvedProcessingTask involvedProcessingTask = BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTask.class, true);
@@ -53,7 +57,6 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         return BeanTransform.copyProperties(involvedProcessingTask, InvolvedProcessingTaskBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public InvolvedProcessingTaskBO editInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws SerException {
         InvolvedProcessingTask involvedProcessingTask = super.findById(involvedProcessingTaskTO.getId());
@@ -63,7 +66,6 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         return BeanTransform.copyProperties(involvedProcessingTaskTO, InvolvedProcessingTaskBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeInvolvedProcessingTask(String id) throws SerException {
         try {
@@ -74,7 +76,6 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
 
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String internalProjectName, String handler) throws SerException {
         //TODO: xiazhili 2017-03-25 未做导出
@@ -99,14 +100,6 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
         List<InvolvedProcessingTask> involvedProcessingTasks = super.findByCis(involvedProcessingTaskDTO,true);
         List<InvolvedProcessingTaskBO> involvedProcessingTaskBOS = BeanTransform.copyProperties(involvedProcessingTasks,InvolvedProcessingTaskBO.class);
         return involvedProcessingTaskBOS;
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public void upload() throws SerException {
-        //TODO: xiazhili 2017-03-25 未做上传
-        return;
-
     }
 
 }

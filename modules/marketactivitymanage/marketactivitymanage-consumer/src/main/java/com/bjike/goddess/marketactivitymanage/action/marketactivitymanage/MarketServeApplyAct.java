@@ -107,7 +107,7 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MarketServeApplyBO bo = marketServeApplyAPI.save(to);
             MarketServeApplyVO vo = BeanTransform.copyProperties(bo, MarketServeApplyVO.class, request);
@@ -194,7 +194,7 @@ public class MarketServeApplyAct {
      * @version v1
      */
     @PostMapping("v1/addcustomerinfo")
-    public Result add(@Validated({ADD.class}) CustomerInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) CustomerInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             CustomerInfoBO bo = customerInfoAPI.save(to);
             CustomerInfoVO vo = BeanTransform.copyProperties(bo, CustomerInfoVO.class, request);

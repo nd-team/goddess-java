@@ -1,11 +1,12 @@
 package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
+import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.bidding.entity.BiddingInfo;
-import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 
 import java.util.List;
 
@@ -25,6 +26,16 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     default Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个招标信息
+     *
+     * @return class BiddingInfoBO
+     */
+    default BiddingInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 招标信息
      *
@@ -99,12 +110,13 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
      * 汇总
      *
      * @param cities cities
-     * @return class biddingInfoBO
+     * @return class BiddingInfoCollectBO
      * @throws SerException
      */
-    default BiddingInfoBO collectBiddingInfo(String [] cities) throws SerException {
+    default List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {
         return null;
     }
+
     /**
      * 获取地市
      *
@@ -113,6 +125,7 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     default List<String> getBiddingInfoCities() throws SerException {
         return null;
     }
+
     /**
      * 发送邮件
      *

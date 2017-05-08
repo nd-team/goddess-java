@@ -40,6 +40,7 @@ public class CompetitorCollectAct {
      * 新增竞争对手汇总
      *
      * @param to 竞争对手汇总信息
+     * @return class CompetitorCollectVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -56,6 +57,7 @@ public class CompetitorCollectAct {
      * 编辑竞争对手汇总
      *
      * @param to 竞争对手汇总信息
+     * @return class CompetitorCollectVO
      * @version v1
      */
     @PutMapping("v1/edit")
@@ -120,6 +122,7 @@ public class CompetitorCollectAct {
      * 列表
      *
      * @param dto 分页条件
+     * @return class CompetitorCollectVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -135,6 +138,7 @@ public class CompetitorCollectAct {
     /**
      * 汇总
      *
+     * @return class CollectionTotalVO
      * @version v1
      */
     @GetMapping("v1/total")
@@ -167,6 +171,7 @@ public class CompetitorCollectAct {
      * 根据id查询竞争对手记录
      *
      * @param id 竞争对手Id
+     * @return class CompetitorCollectVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")

@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.function.api.FunctionAPI;
@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -30,7 +31,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("function")
 public class FunctionAction {
 
     @Autowired
@@ -117,10 +117,10 @@ public class FunctionAction {
      */
     @LoginAuth
     @GetMapping("v1/list")
-    public Result list() throws ActException {
+    public Result list(HttpServletRequest request) throws ActException {
         try {
             List<FunctionBO> functionBOS = functionAPI.list(null);
-            List<FunctionVO> functionVOS = BeanTransform.copyProperties(functionBOS, FunctionVO.class);
+            List<FunctionVO> functionVOS = BeanTransform.copyProperties(functionBOS, FunctionVO.class,request);
             return ActResult.initialize(functionVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -135,10 +135,10 @@ public class FunctionAction {
      * @version v1
      */
     @GetMapping("v1/{type}/list")
-    public Result list(@PathVariable FunctionType type) throws ActException {
+    public Result list(@PathVariable FunctionType type,HttpServletRequest request) throws ActException {
         try {
             List<FunctionBO> functionBOS = functionAPI.list(type);
-            List<FunctionVO> functionVOS = BeanTransform.copyProperties(functionBOS, FunctionVO.class);
+            List<FunctionVO> functionVOS = BeanTransform.copyProperties(functionBOS, FunctionVO.class,request);
             return ActResult.initialize(functionVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

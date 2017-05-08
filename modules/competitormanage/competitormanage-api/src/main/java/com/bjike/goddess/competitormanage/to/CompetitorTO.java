@@ -19,7 +19,8 @@ import javax.validation.constraints.NotNull;
  */
 public class CompetitorTO extends BaseTO {
 
-    public interface Organization{}
+    public interface Organization {
+    }
 
     /**
      * 市场信息收集序号
@@ -47,6 +48,7 @@ public class CompetitorTO extends BaseTO {
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空", groups = {ADD.class, EDIT.class})
     private BusinessType businessType;
 
     /**
@@ -87,55 +89,55 @@ public class CompetitorTO extends BaseTO {
     /**
      * 主管部门
      */
-    @NotBlank(message = "主管部门不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "主管部门不能为空", groups = {CompetitorTO.Organization.class})
     private String directDepartment;
 
     /**
      * 主管名称
      */
-    @NotBlank(message = "主管部门不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "主管部门不能为空", groups = {CompetitorTO.Organization.class})
     private String director;
 
     /**
      * 主管职权
      */
-    @NotBlank(message = "主管职权不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "主管职权不能为空", groups = {CompetitorTO.Organization.class})
     private String directAuthority;
 
     /**
      * 负责事项
      */
-    @NotBlank(message = "负责事项不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "负责事项不能为空", groups = {CompetitorTO.Organization.class})
     private String chargeItems;
 
     /**
      * 客户信息表序号
      */
-    @NotBlank(message = "客户信息表序号不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "客户信息表序号不能为空", groups = {CompetitorTO.Organization.class})
     private String customerInfoCode;
 
     /**
      * 分管部门
      */
-    @NotBlank(message = "分管部门不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "分管部门不能为空", groups = {CompetitorTO.Organization.class})
     private String branchedDepartment;
 
     /**
      * 负责人名称
      */
-    @NotBlank(message = "负责人名称不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "负责人名称不能为空", groups = {CompetitorTO.Organization.class})
     private String chargeMan;
 
     /**
      * 负责人职权
      */
-    @NotBlank(message = "负责人职权不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "负责人职权不能为空", groups = {CompetitorTO.Organization.class})
     private String chargeManAuthority;
 
     /**
      * 接口人
      */
-    @NotBlank(message = "接口人不能为空",groups = {CompetitorTO.Organization.class})
+    @NotBlank(message = "接口人不能为空", groups = {CompetitorTO.Organization.class})
     private String interfaceMan;
 
 

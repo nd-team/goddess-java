@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("storage/user")
 public class StorageUserAction {
 
     @Autowired

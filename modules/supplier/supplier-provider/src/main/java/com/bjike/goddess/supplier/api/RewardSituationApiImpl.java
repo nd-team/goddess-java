@@ -43,4 +43,9 @@ public class RewardSituationApiImpl implements RewardSituationAPI {
     public RewardSituationBO delete(String id) throws SerException {
         return rewardSituationSer.delete(id);
     }
+
+    @Override
+    public RewardSituationBO getById(String id) throws SerException {
+        return rewardSituationSer.getById(id);
+    }
 }

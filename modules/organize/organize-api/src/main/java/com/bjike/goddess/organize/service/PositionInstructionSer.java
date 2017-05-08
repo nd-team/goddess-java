@@ -93,4 +93,58 @@ public interface PositionInstructionSer extends Ser<PositionInstruction, Positio
         return null;
     }
 
+    /**
+     * 根据角度id查询说明书数据
+     *
+     * @param angleId 角度数据id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> findByAngle(String angleId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据维度id查询说明书数据
+     *
+     * @param dimensionId 维度数据id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> findByDimension(String dimensionId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据分类id查询说明书数据
+     *
+     * @param classifyId 分类数据id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> findByClassify(String classifyId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据操作类型id查询说明书数据
+     *
+     * @param operateId 操作类型数据id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> findByOperate(String operateId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据体现类型查询说明书数据
+     *
+     * @param reflectId 体现类型数据id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionInstructionBO> findByReflect(String reflectId) throws SerException {
+        return null;
+    }
 }

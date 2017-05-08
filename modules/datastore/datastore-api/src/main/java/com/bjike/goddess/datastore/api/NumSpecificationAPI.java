@@ -18,16 +18,22 @@ import java.util.List;
  */
 public interface NumSpecificationAPI {
     /**
-     * 数据存储-编号规范列表总条数
+     * 数据存储编号规范列表总条数
      */
     default Long countNumSpecification(NumSpecificationDTO numSpecificationDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个数据存储编号规范
+     * @return class NumSpecificationBO
+     */
+    default NumSpecificationBO getOne(String id) throws SerException {return null;}
+
 
     /**
-     * 数据存储-编号规范
+     * 数据存储编号规范
      *
-     * @param numSpecificationDTO 数据存储-编号规范dto
+     * @param numSpecificationDTO 数据存储编号规范dto
      * @return class NumSpecificationBO
      * @throws SerException
      */
@@ -36,9 +42,9 @@ public interface NumSpecificationAPI {
     }
 
     /**
-     * 添加数据存储-编号规范
+     * 添加数据存储编号规范
      *
-     * @param numSpecificationTO 数据存储-编号规范数据to
+     * @param numSpecificationTO 数据存储编号规范数据to
      * @return class NumSpecificationBO
      * @throws SerException
      */
@@ -47,9 +53,9 @@ public interface NumSpecificationAPI {
     }
 
     /**
-     * 编辑数据存储-编号规范
+     * 编辑数据存储编号规范
      *
-     * @param numSpecificationTO 数据存储-编号规范数据to
+     * @param numSpecificationTO 数据存储编号规范数据to
      * @return class NumSpecificationBO
      * @throws SerException
      */
@@ -58,7 +64,7 @@ public interface NumSpecificationAPI {
     }
 
     /**
-     * 根据id删除数据存储-编号规范
+     * 根据id删除数据存储编号规范
      *
      * @param id
      * @throws SerException

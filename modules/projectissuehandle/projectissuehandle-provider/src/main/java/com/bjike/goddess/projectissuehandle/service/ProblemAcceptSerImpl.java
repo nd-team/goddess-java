@@ -10,7 +10,6 @@ import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +36,12 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     }
 
     @Override
+    public ProblemAcceptBO getOne(String id) throws SerException {
+        ProblemAccept problemAccept = super.findById(id);
+        return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class, true);
+    }
+
+    @Override
     public List<ProblemAcceptBO> findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         problemAcceptDTO.getSorts().add("createTime=desc");
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
@@ -44,7 +49,6 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return problemAcceptBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
         ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class, true);
@@ -53,7 +57,6 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
         ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
@@ -63,7 +66,6 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return BeanTransform.copyProperties(problemAcceptTO, ProblemAcceptBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeProblemAccept(String id) throws SerException {
         try {
@@ -74,40 +76,29 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String internalProjectName, String projectType) throws SerException {
         //TODO: xiazhili 2017-03-24 未做导出
         return null;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
-
     public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         /**
          * 内部项目名称
          */
-        if(StringUtils.isNotBlank(problemAcceptDTO.getInternalProjectName())){
+        if (StringUtils.isNotBlank(problemAcceptDTO.getInternalProjectName())) {
             problemAcceptDTO.getConditions().add(Restrict.eq("internalProjectName", problemAcceptDTO.getInternalProjectName()));
         }
         /**
          * 工程类型
          */
-        if(StringUtils.isNotBlank(problemAcceptDTO.getProjectType())){
+        if (StringUtils.isNotBlank(problemAcceptDTO.getProjectType())) {
             problemAcceptDTO.getConditions().add(Restrict.eq("projectType", problemAcceptDTO.getProjectType()));
         }
-        List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO,true);
-        List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts,ProblemAcceptBO.class);
+        List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
+        List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
         return problemAcceptBOS;
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public void upload() throws SerException {
-        //TODO: xiazhili 2017-03-24 未做上传
-        return;
-
     }
 
 }

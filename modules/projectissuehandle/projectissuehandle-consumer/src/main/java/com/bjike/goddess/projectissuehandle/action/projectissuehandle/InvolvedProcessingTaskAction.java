@@ -1,24 +1,27 @@
 package com.bjike.goddess.projectissuehandle.action.projectissuehandle;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI;
 import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
-import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
-import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import com.bjike.goddess.projectissuehandle.vo.InvolvedProcessingTaskVO;
-import com.bjike.goddess.projectissuehandle.vo.ProblemAcceptVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -32,10 +35,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectissuehandle/involvedprocessingtask")
-public class InvolvedProcessingTaskAction {
+@RequestMapping("involvedprocessingtask")
+public class InvolvedProcessingTaskAction extends BaseFileAction {
     @Autowired
     private InvolvedProcessingTaskAPI involvedProcessingTaskAPI;
+    @Autowired
+    private FileAPI fileAPI;
+
     /**
      * 参与处理人员的任务分配列表总条数
      *
@@ -54,6 +60,24 @@ public class InvolvedProcessingTaskAction {
     }
 
     /**
+     * 一个参与处理人员的任务分配
+     *
+     * @param id
+     * @return class InvolvedProcessingTaskVO
+     * @des 获取一个参与处理人员的任务分配
+     * @version v1
+     */
+    @GetMapping("v1/task/{id}")
+    public Result task(@PathVariable String id) throws ActException {
+        try {
+            InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(involvedProcessingTaskBO, InvolvedProcessingTaskVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 参与处理人员的任务分配列表
      *
      * @param involvedProcessingTaskDTO 参与处理人员的任务分配dto
@@ -61,11 +85,11 @@ public class InvolvedProcessingTaskAction {
      * @des 获取所有参与处理人员的任务分配
      * @version v1
      */
-    @GetMapping("v1/listInvolvedProcessingTask")
-    public Result findListInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(InvolvedProcessingTaskDTO involvedProcessingTaskDTO, HttpServletRequest request) throws ActException {
         try {
             List<InvolvedProcessingTaskVO> involvedProcessingTaskVOS = BeanTransform.copyProperties
-                    (involvedProcessingTaskAPI.findListInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class);
+                    (involvedProcessingTaskAPI.findListInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class,request);
             return ActResult.initialize(involvedProcessingTaskVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -80,8 +104,9 @@ public class InvolvedProcessingTaskAction {
      * @des 添加参与处理人员的任务分配
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result addInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO,BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) InvolvedProcessingTaskTO involvedProcessingTaskTO, BindingResult bindingResult) throws ActException {
         try {
             InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.insertInvolvedProcessingTask(involvedProcessingTaskTO);
             return ActResult.initialize(involvedProcessingTaskBO);
@@ -98,8 +123,9 @@ public class InvolvedProcessingTaskAction {
      * @des 编辑参与处理人员的任务分配
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
-    public Result editInvolvedProcessingTask(InvolvedProcessingTaskTO involvedProcessingTaskTO) throws ActException {
+    public Result editInvolvedProcessingTask(@Validated(EDIT.class) InvolvedProcessingTaskTO involvedProcessingTaskTO,BindingResult bindingResult) throws ActException {
         try {
             InvolvedProcessingTaskBO involvedProcessingTaskBO = involvedProcessingTaskAPI.editInvolvedProcessingTask(involvedProcessingTaskTO);
             return ActResult.initialize(involvedProcessingTaskBO);
@@ -116,7 +142,7 @@ public class InvolvedProcessingTaskAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteInvolvedProcessingTask(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             involvedProcessingTaskAPI.removeInvolvedProcessingTask(id);
             return new ActResult("delete success");
@@ -133,16 +159,17 @@ public class InvolvedProcessingTaskAction {
      * @des 搜索获取所有参与处理人员的任务分配
      * @version v1
      */
-    @GetMapping("v1/searchInvolvedProcessingTask")
-    public Result searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws ActException {
+    @GetMapping("v1/search")
+    public Result search(InvolvedProcessingTaskDTO involvedProcessingTaskDTO, HttpServletRequest request) throws ActException {
         try {
             List<InvolvedProcessingTaskVO> involvedProcessingTaskVOS = BeanTransform.copyProperties
-                    (involvedProcessingTaskAPI.searchInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class);
+                    (involvedProcessingTaskAPI.searchInvolvedProcessingTask(involvedProcessingTaskDTO), InvolvedProcessingTaskVO.class,request);
             return ActResult.initialize(involvedProcessingTaskVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导出参与处理人员的任务分配
      *
@@ -152,7 +179,7 @@ public class InvolvedProcessingTaskAction {
     public Result exportExcel(String internalProjectName, String handler) throws ActException {
         String excel = null;
         try {
-            excel = involvedProcessingTaskAPI.exportExcel(internalProjectName,handler);
+            excel = involvedProcessingTaskAPI.exportExcel(internalProjectName, handler);
             return new ActResult(excel);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -165,10 +192,12 @@ public class InvolvedProcessingTaskAction {
      *
      * @version v1
      */
+
     @PostMapping("v1/upload")
-    public Result upload() throws ActException {
+    public Result upload(HttpServletRequest request) throws ActException {
         try {
-            involvedProcessingTaskAPI.upload();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

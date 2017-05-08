@@ -7,8 +7,12 @@ import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
+import com.bjike.goddess.bidding.vo.BidOpeningCollectVO;
 import com.bjike.goddess.bidding.vo.BidOpeningInfoVO;
+import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -32,7 +36,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("bidding/bidopeninginfo")
+@RequestMapping("bidopeninginfo")
 public class BidOpeningInfoAction {
     @Autowired
     private BidOpeningInfoAPI bidOpeningInfoAPI;
@@ -52,20 +56,38 @@ public class BidOpeningInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个开标信息
+     *
+     * @param id
+     * @return class BidOpeningInfoVO
+     * @des 获取一个开标信息
+     * @version v1
+     */
+    @GetMapping("v1/info/{id}")
+    public Result info(@PathVariable String id) throws ActException {
+        try {
+            BidOpeningInfoBO bidOpeningInfoBO = bidOpeningInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bidOpeningInfoBO, BidOpeningInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
-     * 开标信息
+     * 开标信息列表
      *
      * @param bidOpeningInfoDTO 开标信息dto
      * @return class BidOpeningInfoVO
      * @des 获取所有开标信息
      * @version v1
      */
-    @GetMapping("v1/listTenderInfo")
-    public Result findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(BidOpeningInfoDTO bidOpeningInfoDTO,HttpServletRequest request) throws ActException {
         try {
             List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.findListBidOpeningInfo(bidOpeningInfoDTO), BidOpeningInfoVO.class);
+                    bidOpeningInfoAPI.findListBidOpeningInfo(bidOpeningInfoDTO), BidOpeningInfoVO.class,request);
             return ActResult.initialize(bidOpeningInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,7 +103,7 @@ public class BidOpeningInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addBidOpeningInfo(@Validated BidOpeningInfoTO bidOpeningInfoTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) BidOpeningInfoTO bidOpeningInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BidOpeningInfoBO bidOpeningInfoBO = bidOpeningInfoAPI.insertBidOpeningInfo(bidOpeningInfoTO);
             return ActResult.initialize(bidOpeningInfoBO);
@@ -99,7 +121,7 @@ public class BidOpeningInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editBidOpeningInfo(@Validated BidOpeningInfoTO bidOpeningInfoTO,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated(EDIT.class) BidOpeningInfoTO bidOpeningInfoTO, BindingResult bindingResult) throws ActException {
         try {
             BidOpeningInfoBO bidOpeningInfoBO = bidOpeningInfoAPI.editBidOpeningInfo(bidOpeningInfoTO);
             return ActResult.initialize(bidOpeningInfoBO);
@@ -116,7 +138,7 @@ public class BidOpeningInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteBidOpeningInfo(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             bidOpeningInfoAPI.removeBidOpeningInfo(id);
             return new ActResult("delete success!");
@@ -126,24 +148,6 @@ public class BidOpeningInfoAction {
     }
 
     /**
-     * 汇总开标信息统计
-     *
-     * @param bidOpeningInfoDTO 开标信息bo
-     * @return class BidOpeningInfoVO
-     * @des 根据竞争公司(competitive) 汇总开标信息统计
-     * @version v1
-     */
-    @GetMapping("v1/collect")
-    public Result collectBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws ActException {
-        try {
-            List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
-                    bidOpeningInfoAPI.collectBidOpeningInfo(String.valueOf(bidOpeningInfoDTO)), BidOpeningInfoVO.class, true);
-            return ActResult.initialize(bidOpeningInfoVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
      * 搜索
      *
      * @param bidOpeningInfoDTO 开标信息dto
@@ -152,7 +156,7 @@ public class BidOpeningInfoAction {
      * @version v1
      */
     @GetMapping("v1/search")
-    public Result searchBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO,HttpServletRequest request) throws ActException {
+    public Result search(BidOpeningInfoDTO bidOpeningInfoDTO,HttpServletRequest request) throws ActException {
         try {
             List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
                     bidOpeningInfoAPI.searchBidOpeningInfo(bidOpeningInfoDTO),BidOpeningInfoVO.class);
@@ -179,6 +183,41 @@ public class BidOpeningInfoAction {
         }
 
     }
+    /**
+     * 汇总开标信息
+     *
+     * @param cities 地市
+     * @return class BidOpeningInfoVO
+     * @des 汇总开标信息
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(@RequestParam String[] cities) throws ActException {
+        try {
+            List<BidOpeningInfoVO> bidOpeningInfoVOS = BeanTransform.copyProperties(
+                    bidOpeningInfoAPI.collectBidOpening(cities), BidOpeningCollectVO.class);
+            return ActResult.initialize(bidOpeningInfoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取地市
+     *
+     * @des 获取地市集合
+     * @version v1
+     */
+    @GetMapping("v1/cities")
+    public Result cities() throws ActException {
+        try {
+            List<String> citiesList = bidOpeningInfoAPI.getBidOpeningInfoCities();
+            return ActResult.initialize(citiesList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 发送邮件

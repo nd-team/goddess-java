@@ -5,7 +5,9 @@ import com.bjike.goddess.projectmeasure.type.InvoiceForm;
 import com.bjike.goddess.projectmeasure.type.PaymentForm;
 import com.bjike.goddess.projectmeasure.type.RemitContent;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -42,7 +44,7 @@ public class ProjectCostStatus extends BaseEntity {
     /**
      * 发票形式
      */
-    @Column(name = "invoiceForm", nullable = false, columnDefinition = "TINYINT(2) COMMENT '发票形式'")
+    @Column(name = "invoiceForm", columnDefinition = "TINYINT(2) COMMENT '发票形式'")
     private InvoiceForm invoiceForm;
 
     /**

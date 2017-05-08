@@ -2,8 +2,6 @@ package com.bjike.goddess.datastore.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 数据存储文件规范业务传输对象
  *

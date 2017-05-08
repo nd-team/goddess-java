@@ -1,6 +1,5 @@
 package com.bjike.goddess.archive.action.archive;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.to.StaffRecordsUploadTO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -10,19 +9,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.FileAPI;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 员工档案
@@ -69,17 +63,9 @@ public class StaffRecordsAct extends BaseFileAction {
     @PostMapping("v1/uploadEnclosure")
     public Result uploadEnclosure(HttpServletRequest request, @Validated(ADD.class) StaffRecordsUploadTO to, BindingResult result) throws ActException {
         try {
-            Object o = RpcContext.getContext().getAttachment("storageToken");
 
             String path = "/" + to.getUsername() + "/" + to.getEnclosure();
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-
-            for (MultipartFile multipartFile : multipartFiles) {
-                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                map.put(multipartFile.getOriginalFilename(), bytes);
-            }
-            fileAPI.upload(map, path);
+            fileAPI.upload(this.getInputStreams(request, path));
             return new ActResult("上传成功");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

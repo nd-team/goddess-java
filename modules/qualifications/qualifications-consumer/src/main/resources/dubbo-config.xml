@@ -42,5 +42,7 @@
                      validation="true" id="qualificationsCollectApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI"
                      validation="true" id="fileApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
 
 </beans>

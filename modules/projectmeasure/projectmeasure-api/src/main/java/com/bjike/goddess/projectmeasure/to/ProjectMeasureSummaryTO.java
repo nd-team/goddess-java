@@ -1,8 +1,15 @@
 package com.bjike.goddess.projectmeasure.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.projectmeasure.type.CycleType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 项目测算汇总
@@ -21,7 +28,13 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     private String[] areas;
 
     /**
-     * 项目组
+     * 项目组,参数映射
+     */
+    @Size(groups = {ADD.class, EDIT.class}, message = "项目组数目必须大于0")
+    private String[] projectGroup;
+
+    /**
+     * 项目组,用于存在数据库
      */
     private String projectGroups;
 
@@ -36,18 +49,20 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     private String updateTime;
 
     /**
-     * 上次发送时间String
+     * 上次发送时间
      */
     private String lastTime;
 
     /**
      * 发送间隔
      */
+    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "发送间隔必须是大于0的整数")
     private Integer sendInterval;
 
     /**
      * 发送时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送时间格式不能为空")
     private CycleType cycle;
 
     /**
@@ -58,11 +73,13 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 汇总时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总时间格式不能为空")
     private CycleType detailCycle;
 
     /**
      * 发送对象
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
     private String emails;
 
     /**
@@ -76,6 +93,14 @@ public class ProjectMeasureSummaryTO extends BaseTO {
 
     public void setAreas(String[] areas) {
         this.areas = areas;
+    }
+
+    public String[] getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String[] projectGroup) {
+        this.projectGroup = projectGroup;
     }
 
     public String getProjectGroups() {

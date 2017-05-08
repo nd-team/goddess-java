@@ -1,7 +1,6 @@
 package com.bjike.goddess.projectissuehandle.vo;
 
-import com.bjike.goddess.projectissuehandle.enums.ProblemEmergencyDegree;
-import com.bjike.goddess.projectissuehandle.enums.ProblemTypes;
+import com.bjike.goddess.projectissuehandle.enums.*;
 
 import java.time.LocalDate;
 
@@ -58,7 +57,7 @@ public class ProblemAcceptVO {
     /**
      * 通知方式
      */
-    private String noticeWay;
+    private NoticeWay noticeWay;
 
     /**
      * 问题具体内容
@@ -83,12 +82,12 @@ public class ProblemAcceptVO {
     /**
      * 问题处理时间
      */
-    private String problemProcessingTime;
+    private ProblemProcessingTime problemProcessingTime;
 
     /**
      * 受影响部门
      */
-    private String affectedDepartment;
+    private AffectedDepartment affectedDepartment;
 
 
     public String getId() {
@@ -155,11 +154,11 @@ public class ProblemAcceptVO {
         this.projectType = projectType;
     }
 
-    public String getNoticeWay() {
+    public NoticeWay getNoticeWay() {
         return noticeWay;
     }
 
-    public void setNoticeWay(String noticeWay) {
+    public void setNoticeWay(NoticeWay noticeWay) {
         this.noticeWay = noticeWay;
     }
 
@@ -195,19 +194,19 @@ public class ProblemAcceptVO {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
-    public String getProblemProcessingTime() {
+    public ProblemProcessingTime getProblemProcessingTime() {
         return problemProcessingTime;
     }
 
-    public void setProblemProcessingTime(String problemProcessingTime) {
+    public void setProblemProcessingTime(ProblemProcessingTime problemProcessingTime) {
         this.problemProcessingTime = problemProcessingTime;
     }
 
-    public String getAffectedDepartment() {
+    public AffectedDepartment getAffectedDepartment() {
         return affectedDepartment;
     }
 
-    public void setAffectedDepartment(String affectedDepartment) {
+    public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
     }
 }

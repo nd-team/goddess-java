@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
+import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -23,6 +24,14 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
      * 开标信息列表总条数
      */
     default Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个开标信息
+     *
+     * @return class BidOpeningInfoBO
+     */
+    default BidOpeningInfoBO getOne(String id) throws SerException {
         return null;
     }
     /**
@@ -99,12 +108,13 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
      * 汇总
      *
      * @param cities cities
-     * @return class bidOpeningInfoBO
+     * @return class BidOpeningCollectBO
      * @throws SerException
      */
-    default BidOpeningInfoBO collectBidOpeningInfo(String cities) throws SerException {
+    default List<BidOpeningCollectBO> collectBidOpening(String[] cities) throws SerException {
         return null;
     }
+
     /**
      * 地市
      *

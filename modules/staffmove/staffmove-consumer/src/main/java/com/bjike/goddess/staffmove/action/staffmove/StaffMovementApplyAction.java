@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffmove.action.staffmove;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -50,6 +51,24 @@ public class StaffMovementApplyAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个人员调动申请
+     *
+     * @param id
+     * @return class StaffMovementApplyVO
+     * @des 获取一个人员调动申请
+     * @version v1
+     */
+    @GetMapping("v1/move/{id}")
+    public Result move(@PathVariable String id) throws ActException {
+        try {
+            StaffMovementApplyBO staffMovementApplyBO = staffMovementApplyAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(staffMovementApplyBO, StaffMovementApplyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 人员调动申请列表
@@ -59,11 +78,11 @@ public class StaffMovementApplyAction {
      * @des 获取所有人员调动申请
      * @version v1
      */
-    @GetMapping("v1/listStaffMovementApply")
-    public Result findListStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(StaffMovementApplyDTO staffMovementApplyDTO,  HttpServletRequest request) throws ActException {
         try {
             List<StaffMovementApplyVO> staffMovementApplyVOS = BeanTransform.copyProperties
-                    (staffMovementApplyAPI.findListStaffMovementApply(staffMovementApplyDTO),StaffMovementApplyVO.class);
+                    (staffMovementApplyAPI.findListStaffMovementApply(staffMovementApplyDTO),StaffMovementApplyVO.class,request);
             return ActResult.initialize(staffMovementApplyVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -79,7 +98,7 @@ public class StaffMovementApplyAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addStaffMovementApply(@Validated StaffMovementApplyTO staffMovementApplyTO, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+    public Result add(@Validated(ADD.class) StaffMovementApplyTO staffMovementApplyTO, BindingResult bindingResult) throws ActException {
         try {
             StaffMovementApplyBO staffMovementApplyBO = staffMovementApplyAPI.insertStaffMovementApply(staffMovementApplyTO);
             return ActResult.initialize(staffMovementApplyBO);
@@ -97,7 +116,7 @@ public class StaffMovementApplyAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editStaffMovementApply(@Validated StaffMovementApplyTO staffMovementApplyTO,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated StaffMovementApplyTO staffMovementApplyTO,BindingResult bindingResult) throws ActException {
         try {
             StaffMovementApplyBO staffMovementApplyBO = staffMovementApplyAPI.editStaffMovementApply(staffMovementApplyTO);
             return ActResult.initialize(staffMovementApplyBO);
@@ -114,7 +133,7 @@ public class StaffMovementApplyAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteStaffMovementApply(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             staffMovementApplyAPI.removeStaffMovementApply(id);
             return new ActResult("delete success");
@@ -131,7 +150,7 @@ public class StaffMovementApplyAction {
      * @version v1
      */
     @PostMapping("v1/audit")
-    public Result auditStaffMovementApply(StaffMovementApplyTO staffMovementApplyTO,HttpServletRequest request) throws ActException {
+    public Result audit(StaffMovementApplyTO staffMovementApplyTO,HttpServletRequest request) throws ActException {
         try {
             StaffMovementApplyBO staffMovementApplyBO = staffMovementApplyAPI.auditStaffMovementApply(staffMovementApplyTO);
             return ActResult.initialize(staffMovementApplyBO);

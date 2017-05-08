@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 合作情况
  *
@@ -35,16 +37,16 @@ public class CooperationSituationAct {
      * 根据供应商基本信息ID查询合作情况
      *
      * @param id 供应商基本信息ID
-     * @version v1
      * @return class CooperationSituationVO
+     * @version v1
      */
     @GetMapping("v1/findByInformation/{id}")
-    public Result findByInformation(@PathVariable String id) throws ActException {
+    public Result findByInformation(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(
                     BeanTransform.copyProperties(
                             cooperationSituationAPI.findByInformation(id)
-                            , CooperationSituationVO.class));
+                            , CooperationSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -54,13 +56,13 @@ public class CooperationSituationAct {
      * 保存供应商合作情况数据
      *
      * @param to 供应商合作情况传输对象
-     * @version v1
      * @return class CooperationSituationVO
+     * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) CooperationSituationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) CooperationSituationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.save(to), CooperationSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.save(to), CooperationSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -70,13 +72,13 @@ public class CooperationSituationAct {
      * 修改供应商合作情况数据
      *
      * @param to 供应商合作情况传输对象
-     * @version v1
      * @return class CooperationSituationVO
+     * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) CooperationSituationTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) CooperationSituationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.update(to), CooperationSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.update(to), CooperationSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -86,16 +88,33 @@ public class CooperationSituationAct {
      * 删除供应商合作情况数据
      *
      * @param id 供应商合作情况id
-     * @version v1
      * @return class CooperationSituationVO
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.delete(id), CooperationSituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.delete(id), CooperationSituationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据id获取供应商合作情况数据
+     *
+     * @param id 供应商合作情况数据id
+     * @return class CooperationSituationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(cooperationSituationAPI.getById(id), CooperationSituationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

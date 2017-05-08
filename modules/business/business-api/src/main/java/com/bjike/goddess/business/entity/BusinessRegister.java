@@ -21,73 +21,73 @@ public class BusinessRegister extends BaseEntity {
     /**
      * 注册公司名称
      */
-    @Column(name = "registerCompanyName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册公司名称'")
+    @Column(name = "registerCompanyName", columnDefinition = "VARCHAR(255)   COMMENT '注册公司名称'")
     private String registerCompanyName;
 
     /**
      * 注册号/统一社会信用代码
      */
-    @Column(name = "registerNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册号/统一社会信用代码'")
+    @Column(name = "registerNum", columnDefinition = "VARCHAR(255)   COMMENT '注册号/统一社会信用代码'")
     private String registerNum;
 
     /**
      * 经营期限
      */
-    @Column(name = "operationPeriod", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '经营期限'")
+    @Column(name = "operationPeriod",  columnDefinition = "VARCHAR(255)   COMMENT '经营期限'")
     private String operationPeriod;
 
     /**
      * 注册类型
      */
-    @Column(name = "registerType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册类型'")
+    @Column(name = "registerType",  columnDefinition = "VARCHAR(255)   COMMENT '注册类型'")
     private String registerType;
 
     /**
      * 注册资本
      */
-    @Column(name = "registerCapital", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '注册资本'")
+    @Column(name = "registerCapital",  columnDefinition = "VARCHAR(255)   COMMENT '注册资本'")
     private String registerCapital;
 
     /**
      * 经营范围
      */
-    @Column(name = "operationScope", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '经营范围'")
+    @Column(name = "operationScope", columnDefinition = "VARCHAR(255)   COMMENT '经营范围'")
     private String operationScope;
 
     /**
      * 法人
      */
-    @Column(name = "legalPerson", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '法人'")
+    @Column(name = "legalPerson", columnDefinition = "VARCHAR(255)   COMMENT '法人'")
     private String legalPerson;
 
     /**
      * 股东
      */
-    @Column(name = "shareholders", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '股东'")
+    @Column(name = "shareholders", columnDefinition = "VARCHAR(255)   COMMENT '股东'")
     private String shareholders;
 
     /**
      * 股权比例
      */
-    @Column(name = "equityRatio", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '股权比例'")
+    @Column(name = "equityRatio", columnDefinition = "VARCHAR(255)   COMMENT '股权比例'")
     private String equityRatio;
 
     /**
      * 地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地址'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '地址'")
     private String address;
 
     /**
      * 相关资料（名称）
      */
-    @Column(name = "cursorAdapter", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '相关资料（名称）'")
+    @Column(name = "cursorAdapter", columnDefinition = "VARCHAR(255)   COMMENT '相关资料（名称）'")
     private String cursorAdapter;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

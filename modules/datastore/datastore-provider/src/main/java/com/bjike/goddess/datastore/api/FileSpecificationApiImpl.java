@@ -31,6 +31,10 @@ public class FileSpecificationApiImpl implements FileSpecificationAPI {
     public Long countFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
         return fileSpecificationSer.countFileSpecification(fileSpecificationDTO);
     }
+    @Override
+    public FileSpecificationBO getOne(String id) throws SerException {
+        return fileSpecificationSer.getOne(id);
+    }
 
     @Override
     public List<FileSpecificationBO> findListFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {

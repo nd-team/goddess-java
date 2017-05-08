@@ -68,7 +68,7 @@ public class AngleApiImpl implements AngleAPI {
 
     @Override
     public AngleBO open(String id) throws SerException {
-        return angleSer.delete(id);
+        return angleSer.open(id);
     }
 
     @Override

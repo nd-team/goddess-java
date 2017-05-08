@@ -6,6 +6,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
+import com.bjike.goddess.market.enums.MarketProjectNature;
 import com.bjike.goddess.market.to.MarketInfoTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -29,11 +30,23 @@ import java.util.List;
 @Service
 public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> implements MarketInfoSer {
 
+    @Override
+    public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
+        marketInfoDTO.getSorts().add("createTime=desc");
+        Long count = super.count(marketInfoDTO);
+        return count;
+    }
+    @Override
+    public MarketInfoBO getOne(String id) throws SerException {
+        MarketInfo marketInfo = super.findById(id);
+        return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
+    }
     @Cacheable
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         List<MarketInfo> marketInfos = super.findByCis(marketInfoDTO, true);
-        return BeanTransform.copyProperties(marketInfos, MarketInfoBO.class);
+        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos,MarketInfoBO.class,true);
+        return marketInfoBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -44,21 +57,20 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             //判断是否为有效信息
             if (marketInfo.getEffective()) {
                 //判断是否为新项目
-                if (!StringUtils.isNotEmpty(marketInfo.getProjectNature())) {
-                    marketInfo.setProjectNature("新项目");
+                if (marketInfo.getProjectNature().equals(MarketProjectNature.NEWPROJECT)) {
+                    marketInfo.setEffective(true);
+                } else if (marketInfo.getProjectNature().equals(MarketProjectNature.OLDPROJECT)) {
+                    marketInfo.setEffective(false);
                 }
-                marketInfo.setEffective(true);
-            } else {
-                marketInfo.setCreateTime(LocalDateTime.now());
-                super.save(marketInfo);
             }
+            marketInfo.setCreateTime(LocalDateTime.now());
+            super.save(marketInfo);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
       /*  try {

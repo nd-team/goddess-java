@@ -221,4 +221,16 @@ public class DateUtil {
         return LocalDateTime.ofInstant(instant, zoneId).toLocalDate();
     }
 
+    /**
+     * Date转LocalDateTime
+     *
+     * @param date 日期
+     * @return
+     */
+    public static LocalDateTime changeLocaDateTime(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        return LocalDateTime.ofInstant(instant, zoneId);
+    }
+
 }

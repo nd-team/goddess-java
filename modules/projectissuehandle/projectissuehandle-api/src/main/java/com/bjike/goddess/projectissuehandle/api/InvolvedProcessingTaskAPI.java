@@ -23,6 +23,16 @@ public interface InvolvedProcessingTaskAPI {
     default Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个参与处理人员的任务分配
+     *
+     * @return class InvolvedProcessingTaskBO
+     */
+    default InvolvedProcessingTaskBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 参与处理人员的任务分配
      *
@@ -82,14 +92,5 @@ public interface InvolvedProcessingTaskAPI {
     default List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return null;
     }
-
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
-
 
 }

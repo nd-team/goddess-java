@@ -3,9 +3,6 @@ package com.bjike.goddess.bidding.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * 招标信息业务传输对象
  *
@@ -132,59 +129,6 @@ public class BiddingInfoBO extends BaseBO {
      * 备注
      */
     private String remark;
-    /**
-     * 个数
-     */
-    private int counts;
-    /**
-     * 数据库枚举转换
-     */
-    private int enumConvert;
-    /**
-     * 地区汇总集合
-     */
-    private List<Map<String, String>> areaMap;
-
-    /**
-     * 招投标类型汇总集合
-     */
-    private List<Map<String, String>> biddingType;
-    /**
-     * 业务类型汇总集合
-     */
-    private List<Map<String, String>> businessType;
-
-    public int getEnumConvert() {
-        return enumConvert;
-    }
-
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
-    }
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
-
-    public void setBiddingType(List<Map<String, String>> biddingType) {
-        this.biddingType = biddingType;
-    }
-
-    public void setBusinessType(List<Map<String, String>> businessType) {
-        this.businessType = businessType;
-    }
-
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
 
     public String getWebName() {
         return webName;
@@ -368,13 +312,5 @@ public class BiddingInfoBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public List<Map<String, String>> getBiddingType() {
-        return biddingType;
-    }
-
-    public List<Map<String, String>> getBusinessType() {
-        return businessType;
     }
 }

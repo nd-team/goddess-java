@@ -3,9 +3,8 @@ package com.bjike.goddess.projectissuehandle.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
-import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
-import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
+import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 
 import java.util.List;
@@ -26,6 +25,16 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 一个项目执行中的问题受理
+     *
+     * @return class ProblemAcceptBO
+     */
+    default ProblemAcceptBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 项目执行中的问题受理
      *
@@ -86,13 +95,6 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
         return null;
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
 
     /**
      * 获取地区

@@ -33,12 +33,17 @@ public class BusinessTaxChangeSerImpl extends ServiceImpl<BusinessTaxChange, Bus
         Long counts = super.count(businessTaxChangeDTO);
         return counts;
     }
+    @Override
+    public BusinessTaxChangeBO getOne(String id) throws SerException {
+        BusinessTaxChange businessTaxChange = super.findById(id);
+        return BeanTransform.copyProperties(businessTaxChange,BusinessTaxChangeBO.class,true);
+    }
 
     @Override
     public List<BusinessTaxChangeBO> findListBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         businessTaxChangeDTO.getSorts().add("createTime=desc");
         List<BusinessTaxChange> businessTaxChanges = super.findByCis(businessTaxChangeDTO,true);
-        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges,BusinessTaxChangeBO.class,true);
+        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges,BusinessTaxChangeBO.class);
         return businessTaxChangeBOS;
     }
 
