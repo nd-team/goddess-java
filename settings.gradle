@@ -7,14 +7,6 @@ include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
 include ':common:common-redis'
-//$demo 参考模块
-include ':demo:demo-ticket:demo-ticket-api'
-include ':demo:demo-ticket:demo-ticket-consumer'
-include ':demo:demo-ticket:demo-ticket-provider'
-//#demo 参考模块
-include ':demo:demo-card:demo-card-api'
-include ':demo:demo-card:demo-card-consumer'
-include ':demo:demo-card:demo-card-provider'
 //#template 生成类模板
 include ':modules:template:template-api'
 include ':modules:template:template-provider'
@@ -34,6 +26,7 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
+
 ////#staffentry 员工入职tanghaixiang
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
@@ -297,6 +290,8 @@ include ':modules:contractquotemanager:contractquotemanager-api'
 include ':modules:contractquotemanager:contractquotemanager-consumer'
 include ':modules:contractquotemanager:contractquotemanager-provider'
 
-
-
+//#quartz 任务调度模块-liguiqin
+include ':modules:function:function-api'
+include ':modules:function:function-consumer'
+include ':modules:function:function-provider'
 
