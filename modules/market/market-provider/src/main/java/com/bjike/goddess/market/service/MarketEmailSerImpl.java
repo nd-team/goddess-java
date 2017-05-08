@@ -8,9 +8,11 @@ import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketEmailBO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.entity.MarketEmail;
 import com.bjike.goddess.market.to.MarketEmailTO;
+import com.sun.org.apache.xerces.internal.dom.PSVIAttrNSImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 市场邮件发送定制业务实现
@@ -90,6 +93,74 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         if (areas == null || areas.length <= 0) {
             throw new SerException("汇总失败，请选择地区");
         }
+        String[] areasTemp = new String[areas.length];
+        for(int i = 0;i<areas.length;i++){
+            areasTemp[i] = "'"+areas[i]+"'";
+        }
+        String areaStr  = StringUtils.join(areasTemp, ",");
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(" SELECT * FROM ");
+        sb.append(" (SELECT A.*,B.first,B.second,B.third,C.has,C.notHas,D.fresh,D.old FROM ");
+        sb.append(" (SELECT area,MAX(CASE WHEN  workType='1' THEN workTypeCounts  END ) AS mobile, ");
+        sb.append(" MAX( CASE WHEN workType='2' THEN  workTypeCounts END ) AS soft, ");
+        sb.append(" MAX( CASE WHEN workType='3' THEN workTypeCounts END ) AS system, ");
+        sb.append(" MAX(  CASE WHEN workType='4' THEN  workTypeCounts END  ) AS plan ");
+        sb.append(" FROM  (  select count(*) as workTypeCounts , workType as workType ,area as area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY workType,area ORDER BY area  )a  GROUP BY area)A, ");
+        sb.append("  (  SELECT area,MAX(CASE WHEN  scale='1' THEN scaleCounts  END ) AS first, ");
+        sb.append(" MAX( CASE WHEN scale='2' THEN  scaleCounts END ) AS second, ");
+        sb.append(" MAX( CASE WHEN scale='3' THEN scaleCounts END ) AS third ");
+        sb.append(" FROM  (  select count(*) as scaleCounts , scale as scale,area AS area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY scale,area ORDER BY area  )a GROUP BY area)B, ");
+        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective='0' THEN effectiveCounts  END ) AS has, ");
+        sb.append(" MAX( CASE WHEN is_effective='1' THEN  effectiveCounts END ) AS notHas ");
+        sb.append(" FROM  (  select count(*) as effectiveCounts , is_effective as is_effective,area AS area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY is_effective,area ORDER BY area  )a GROUP BY area)C, ");
+        sb.append(" (  SELECT area, MAX(CASE WHEN  projectNature='1' THEN projectNatureCounts  END ) AS fresh, ");
+        sb.append(" MAX( CASE WHEN projectNature='2' THEN  projectNatureCounts END ) AS old ");
+        sb.append(" FROM  (   select count(*) as projectNatureCounts , projectNature as projectNature,area AS  area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY projectNature,area ORDER BY area  )a GROUP BY area)D ");
+        sb.append(" where A.area=B.area AND A.area=C.area AND A.area=D.area)F ");
+        sb.append(" UNION ");
+        sb.append("  SELECT '合计' AS area,sum(mobile)as mobile , sum(soft)as soft,sum(system)as system, ");
+        sb.append(" sum(plan)as plan,sum(first)as first,  sum(second)as second,sum(third)as third , ");
+        sb.append(" sum(has)as has,sum(notHas)as notHas,sum(fresh)as fresh,sum(old)as old  FROM ");
+        sb.append(" (SELECT A.*,B.first,B.second,B.third,C.has,C.notHas,D.fresh,D.old FROM ");
+        sb.append(" (SELECT area,MAX(CASE WHEN  workType='1' THEN workTypeCounts  END ) AS mobile, ");
+        sb.append(" MAX( CASE WHEN workType='2' THEN  workTypeCounts END ) AS soft, ");
+        sb.append(" MAX( CASE WHEN workType='3' THEN workTypeCounts END ) AS system, ");
+        sb.append(" MAX(  CASE WHEN workType='4' THEN  workTypeCounts END  ) AS plan ");
+        sb.append(" FROM  (  select count(*) as workTypeCounts , workType as workType ,area as area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY workType,area ORDER BY area  )a  GROUP BY area)A, ");
+        sb.append("  (  SELECT area,MAX(CASE WHEN  scale='1' THEN scaleCounts  END ) AS first, ");
+        sb.append(" MAX( CASE WHEN scale='2' THEN  scaleCounts END ) AS second, ");
+        sb.append(" MAX( CASE WHEN scale='3' THEN scaleCounts END ) AS third ");
+        sb.append(" FROM  (  select count(*) as scaleCounts , scale as scale,area AS area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY scale,area ORDER BY area  )a GROUP BY area)B, ");
+        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective='0' THEN effectiveCounts  END ) AS has, ");
+        sb.append(" MAX( CASE WHEN is_effective='1' THEN  effectiveCounts END ) AS notHas ");
+        sb.append(" FROM  (  select count(*) as effectiveCounts , is_effective as is_effective,area AS area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY is_effective,area ORDER BY area  )a GROUP BY area)C, ");
+        sb.append(" (  SELECT area, MAX(CASE WHEN  projectNature='1' THEN projectNatureCounts  END ) AS fresh, ");
+        sb.append(" MAX( CASE WHEN projectNature='2' THEN  projectNatureCounts END ) AS old ");
+        sb.append(" FROM  (   select count(*) as projectNatureCounts , projectNature as projectNature,area AS  area ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY projectNature,area ORDER BY area  )a GROUP BY area)D ");
+        sb.append(" where A.area=B.area AND A.area=C.area AND A.area=D.area)F ");
+
+        String sql = sb.toString();
+        sql =String.format(sql, areaStr,areaStr,areaStr,areaStr,areaStr,areaStr,areaStr,areaStr);
+        System.out.println(sql);
+        String[] fields = new String[]{"area","mobile","soft",
+                "system","plan","first","second","third","has","notHas","fresh","old"};
+        List<MarketCollectBO> collects  = super.findBySql(sql, MarketCollectBO.class,fields);
+
+        return collects;
+
+    }
+
+    public static void main(String[] args) {
+        String []areas = new String[]{};
         String areaStr  = StringUtils.join(areas, ",");
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT *  FROM (SELECT area,MAX(CASE WHEN  workType='1' THEN workTypeCounts ");
@@ -100,7 +171,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS plan FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as workTypeCounts , workType as workType ,area as area ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY workType,area ORDER BY area ");
         sb.append(" )a ");
         sb.append(" GROUP BY area)A, ");
@@ -113,7 +184,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS fourth FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as scaleCounts , scale as scale ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY scale,area ORDER BY area ");
         sb.append(" )a)B, ");
         sb.append(" ( ");
@@ -123,7 +194,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as effectiveCounts , is_effective as is_effective ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY is_effective,area ORDER BY area ");
         sb.append(" )a)C, ");
         sb.append(" ( ");
@@ -133,7 +204,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append("  select count(*) as projectNatureCounts , projectNature as projectNature ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY projectNature,area ORDER BY area ");
         sb.append(" )a)D ");
         sb.append(" UNION ");
@@ -149,7 +220,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS plan FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as workTypeCounts , workType as workType ,area as area ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY workType,area ORDER BY area ");
         sb.append(" )a ");
         sb.append(" GROUP BY area)A, ");
@@ -162,7 +233,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" ) AS fourth FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as scaleCounts , scale as scale ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY scale,area ORDER BY area ");
         sb.append(" )a)B, ");
         sb.append(" ( ");
@@ -172,7 +243,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append(" select count(*) as effectiveCounts , is_effective as is_effective ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY is_effective,area ORDER BY area ");
         sb.append(" )a)C, ");
         sb.append(" ( ");
@@ -182,19 +253,27 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" FROM ");
         sb.append(" ( ");
         sb.append("  select count(*) as projectNatureCounts , projectNature as projectNature ");
-        sb.append(" from  market_marketinfo a WHERE area in('%s') ");
+        sb.append(" from  market_marketinfo a WHERE area in(%s) ");
         sb.append(" GROUP BY projectNature,area ORDER BY area ");
         sb.append(" )a)D ");
 
         String sql = sb.toString();
         sql =String.format(sql, areaStr,areaStr,areaStr,areaStr,areaStr,areaStr,areaStr,areaStr);
         System.out.println(sql);
-        String[] fields = new String[]{"area","mobile","soft",
-                "system","plan","first","second","third","fourth","has","notHas","fresh","old"};
-        List<MarketCollectBO> collects  = super.findBySql(sql, MarketCollectBO.class,fields);
-
-        return collects;
     }
+
+    @Override
+    public List<String> getArea() throws SerException {
+        String [] fields = new String[]{"area"};
+        List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct area,1 from market_marketinfo group by area order by area asc ",MarketInfoBO.class,fields);
+
+        List<String> collectList = marketInfoBOS.stream().map(MarketInfoBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+
+
+        return collectList;
+    }
+
 
 
     /**
@@ -229,7 +308,10 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
                 break;
         }
         return unit;
+
     }
+
+
 
 //    /**
 //     * 数据库查询返回，然后添加map数组
@@ -282,7 +364,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
     /**
      * 将数据库返回的枚举int值转换，然后添加map数组
      */
-    public List<Map<String, String>> sqlQueryInt(String enumStr, List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
+   /* public List<Map<String, String>> sqlQueryInt(String enumStr, List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
         List<MarketEmailBO> marketEmailBOS = marketInfoSer.findBySql(sql, CusEmailBO.class, fields);
         if (marketEmailBOS != null && marketEmailBOS.size() > 0) {
             if (obj.size() == marketEmailBOS.size()) {
@@ -340,5 +422,5 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
             }
         }
         return mapList;
-    }
+    }*/
 }

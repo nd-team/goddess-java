@@ -6,19 +6,23 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
+import com.bjike.goddess.projectissuehandle.vo.CollectVO;
 import com.bjike.goddess.projectissuehandle.vo.ProblemHandlingResultVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -33,10 +37,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("problemhandlingresult")
-public class ProblemHandlingResultAction {
+public class ProblemHandlingResultAction extends BaseFileAction{
     @Autowired
     private ProblemHandlingResultAPI problemHandlingResultAPI;
 
+    @Autowired
+    private FileAPI fileAPI;
     /**
      * 确认问题处理结果列表总条数
      *
@@ -188,14 +194,49 @@ public class ProblemHandlingResultAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload() throws ActException {
+    public Result upload(HttpServletRequest request) throws ActException {
         try {
-            problemHandlingResultAPI.upload();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
 
     }
+    /**
+     * 汇总项目中问题受理和处理
+     *
+     * @param areas 地区
+     * @des 汇总项目中问题受理和处理管理
+     * @return  class CollectVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect ( @RequestParam String[] areas ) throws ActException {
+        try {
+            List<CollectVO> collectVOS = BeanTransform.copyProperties(
+                    problemHandlingResultAPI.collect(areas),CollectVO.class);
+            return ActResult.initialize(collectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取地区
+     *
+     * @des 获取地区集合
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result area() throws ActException {
+        try {
+            List<String> areaList = problemHandlingResultAPI.getArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

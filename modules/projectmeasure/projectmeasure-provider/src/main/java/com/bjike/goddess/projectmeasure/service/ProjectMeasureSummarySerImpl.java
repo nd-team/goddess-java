@@ -12,12 +12,15 @@ import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
 import com.bjike.goddess.projectmeasure.entity.*;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +54,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Autowired
     private MultipleProjectMultipleUISer multipleProjectMultipleUISer;
 
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 分页查询项目测算汇总邮件发送
      *
@@ -73,12 +79,45 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public ProjectMeasureSummaryBO save(ProjectMeasureSummaryTO to) throws SerException {
         ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
+        entity = setPatameter(to, entity);
         entity = super.save(entity);
         ProjectMeasureSummaryBO bo = BeanTransform.copyProperties(entity, ProjectMeasureSummaryBO.class);
         return bo;
+    }
+
+    /**
+     * 设置参数
+     *
+     * @param to
+     * @param entity
+     * @return
+     * @throws SerException
+     */
+    private ProjectMeasureSummary setPatameter(ProjectMeasureSummaryTO to, ProjectMeasureSummary entity) throws SerException {
+        String empNumberUsername = userAPI.currentUser().getEmployeeNumber() + userAPI.currentUser().getUsername();
+        entity.setStatus(Status.THAW);
+        entity.setCreateUser(empNumberUsername);
+        entity.setUpdateTime(LocalDateTime.now());
+        entity.setLastTime(LocalDateTime.now());
+        String[] projectGroup = to.getProjectGroup();
+        boolean projectGroupNotEmpty = (projectGroup != null) && (projectGroup.length > 0);
+        if (projectGroupNotEmpty) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < projectGroup.length; i ++) {
+                if (i < projectGroup.length - 1) {
+                    sb.append(projectGroup[i]).append(",");
+                } else {
+                    sb.append(projectGroup[i]);
+                }
+            }
+            entity.setProjectGroups(sb.toString());
+        } else {
+            throw new SerException("要发送的项目组不能为空");
+        }
+        return entity;
     }
 
     /**
@@ -88,36 +127,69 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void update(ProjectMeasureSummaryTO to) throws SerException {
-        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
-        super.update(entity);
+        if (StringUtils.isNotEmpty(to.getId())){
+            ProjectMeasureSummary model = super.findById(to.getId());
+            if (model != null) {
+                updateProjectMeasureSummary(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新项目测算汇总
+     *
+     * @param to
+     * @param model
+     */
+    private void updateProjectMeasureSummary(ProjectMeasureSummaryTO to, ProjectMeasureSummary model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        setPatameter(to, model);//设置参数
+        verify(model);//参数校验
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 校验参数
+     * @param model
+     */
+    private void verify(ProjectMeasureSummary model) {
     }
 
     /**
      * 冻结项目测算汇总邮件记录
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void thaw(ProjectMeasureSummaryTO to) throws SerException {
-        to.setStatus(Status.THAW);//将状态修改为冻结状态
-        update(to);//执行更新操作
+    @Transactional(rollbackFor = {SerException.class})
+    public void thaw(String id) throws SerException {
+        ProjectMeasureSummary entity = super.findById(id);
+        entity.setStatus(Status.THAW);//将状态修改为冻结状态
+        super.update(entity);//执行更新操作
     }
+
+
 
     /**
      * 解冻项目测算汇总邮件记录
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void congeal(ProjectMeasureSummaryTO to) throws SerException {
-        to.setStatus(Status.CONGEAL);//将状态修改为解冻状态
-        update(to);//执行更新操作
+    @Transactional(rollbackFor = {SerException.class})
+    public void congeal(String id) throws SerException {
+        ProjectMeasureSummary entity = super.findById(id);
+        entity.setStatus(Status.CONGEAL);//将状态修改为解冻状态
+        super.update(entity);//执行更新操作
     }
 
     /**
@@ -131,6 +203,12 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     public List<ProjectMeasureBO> summarize(ProjectMeasureSummaryTO to) throws SerException {
         List<ProjectMeasureBO> projectMeasureBOList = new ArrayList<>(0);
         String[] areas = to.getAreas();
+
+        boolean areasNotEmpty = (areas != null) && (areas.length > 0);
+        if (!areasNotEmpty) {
+            throw new SerException("汇总地区不能为空");
+        }
+
         for (String area : areas) {
             Integer projectNo = countProjectNo(area);//某一地区的项目数量
             Double projectProfit = countProjectProfit(area);//计算项目利润
