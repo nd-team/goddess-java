@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.consumer.file;
+package com.bjike.goddess.common.consumer.action;
 
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
