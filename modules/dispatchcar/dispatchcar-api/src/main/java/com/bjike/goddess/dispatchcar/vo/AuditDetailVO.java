@@ -1,6 +1,5 @@
-package com.bjike.goddess.dispatchcar.bo;
+package com.bjike.goddess.dispatchcar.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.dispatchcar.bean.AuditResult;
 import com.bjike.goddess.dispatchcar.bean.DispatchInfo;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class AuditDetailBO extends BaseBO {
+public class AuditDetailVO {
 
     /**
      * 出车信息
@@ -26,7 +25,6 @@ public class AuditDetailBO extends BaseBO {
      * 审核详情
      */
     private List<AuditResult> list;
-
 
     public DispatchInfo getInfo() {
         return info;

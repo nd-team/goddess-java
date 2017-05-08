@@ -424,11 +424,6 @@ public class DispatchCarInfoTO extends BaseTO {
         this.findType = findType;
     }
 
-    /**
-     * 文件转存
-     */
-    private Map<String, byte[]> map;
-
     public Status getStatus() {
         return status;
     }
@@ -843,14 +838,6 @@ public class DispatchCarInfoTO extends BaseTO {
 
     public void setAuditReceiptSugg(String auditReceiptSugg) {
         this.auditReceiptSugg = auditReceiptSugg;
-    }
-
-    public Map<String, byte[]> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, byte[]> map) {
-        this.map = map;
     }
 
     public String getFundAudtiTime() {

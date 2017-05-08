@@ -1,19 +1,19 @@
-package com.bjike.goddess.dispatchcar.vo;
+package com.bjike.goddess.dispatchcar.bean;
 
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 
+import java.io.Serializable;
+
 /**
- * 出车记录表现层对象
- *
- * @Author: [ Jason ]
- * @Date: [ 2017-04-12 05:26 ]
- * @Description: [ 出车记录表现层对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [Jason]
+ * @Date: [17-5-6 下午4:31]
+ * @Description: []
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-public class DispatchCarInfoVO {
+public class DispatchInfo implements Serializable {
 
     /**
      * id
@@ -230,17 +230,17 @@ public class DispatchCarInfoVO {
     private Double mealCost;
 
     /**
-     * 资金模块核对意见
+     * 资金模块意见
      */
     private String fundModuleSugg;
 
     /**
-     * 预算模块核对意见
+     * 预算模块意见
      */
     private String budgetModuleSugg;
 
     /**
-     * 任务下达人审核意见
+     * 任务下达人意见
      */
     private String principalSugg;
 
@@ -345,52 +345,12 @@ public class DispatchCarInfoVO {
      */
     private Double totalCost;
 
-    public Double getCost() {
-        return cost;
+    public String getId() {
+        return id;
     }
 
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-    public Double getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(Double totalCost) {
-        this.totalCost = totalCost;
-    }
-
-    public Double getOverWorkCost() {
-        return overWorkCost;
-    }
-
-    public void setOverWorkCost(Double overWorkCost) {
-        this.overWorkCost = overWorkCost;
-    }
-
-    public Double getOilCost() {
-        return oilCost;
-    }
-
-    public void setOilCost(Double oilCost) {
-        this.oilCost = oilCost;
-    }
-
-    public Double getOilWear() {
-        return oilWear;
-    }
-
-    public void setOilWear(Double oilWear) {
-        this.oilWear = oilWear;
-    }
-
-    public FindType getFindType() {
-        return findType;
-    }
-
-    public void setFindType(FindType findType) {
-        this.findType = findType;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNumber() {
@@ -809,14 +769,6 @@ public class DispatchCarInfoVO {
         this.status = status;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getFundAudtiTime() {
         return fundAudtiTime;
     }
@@ -849,14 +801,6 @@ public class DispatchCarInfoVO {
         this.fundAuditUser = fundAuditUser;
     }
 
-    public String getBudgetAuditUser() {
-        return budgetAuditUser;
-    }
-
-    public void setBudgetAuditUser(String budgetAuditUser) {
-        this.budgetAuditUser = budgetAuditUser;
-    }
-
     public Boolean getAuditReceiptResult() {
         return auditReceiptResult;
     }
@@ -865,11 +809,67 @@ public class DispatchCarInfoVO {
         this.auditReceiptResult = auditReceiptResult;
     }
 
+    public String getBudgetAuditUser() {
+        return budgetAuditUser;
+    }
+
+    public void setBudgetAuditUser(String budgetAuditUser) {
+        this.budgetAuditUser = budgetAuditUser;
+    }
+
     public String getPayPlan() {
         return payPlan;
     }
 
     public void setPayPlan(String payPlan) {
         this.payPlan = payPlan;
+    }
+
+    public FindType getFindType() {
+        return findType;
+    }
+
+    public void setFindType(FindType findType) {
+        this.findType = findType;
+    }
+
+    public Double getOilWear() {
+        return oilWear;
+    }
+
+    public void setOilWear(Double oilWear) {
+        this.oilWear = oilWear;
+    }
+
+    public Double getOilCost() {
+        return oilCost;
+    }
+
+    public void setOilCost(Double oilCost) {
+        this.oilCost = oilCost;
+    }
+
+    public Double getOverWorkCost() {
+        return overWorkCost;
+    }
+
+    public void setOverWorkCost(Double overWorkCost) {
+        this.overWorkCost = overWorkCost;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public Double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = totalCost;
     }
 }
