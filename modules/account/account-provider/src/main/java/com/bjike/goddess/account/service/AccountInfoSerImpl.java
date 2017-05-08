@@ -66,7 +66,6 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
         }
         return BeanTransform.copyProperties(accountInfoTO,AccountInfoBO.class);
     }
-
     @Override
     public void removeAccountInfo(String id) throws SerException {
         super.remove(id);
