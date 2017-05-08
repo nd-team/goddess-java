@@ -129,7 +129,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
         if (StringUtils.isNotBlank(to.getId())) {
             DeviceRepair model = super.findById(to.getId());
             if (model != null) {
-//                checkWelfareModule(model);//检测当前用户是否是福利模块负责人
+                checkWelfareModule(model);//检测当前用户是否是福利模块负责人
                 welfareAudit(to, model);
             } else {
                 throw new SerException("福利模块审核对象不能为空.");
@@ -152,7 +152,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     public void pmAudit(String id, AuditState pmAuditState) throws SerException {
         DeviceRepair model = super.findById(id);
         if (model != null) {
-//            checkPm(model); //检查当前用户是否是项目经理
+            checkPm(model); //检查当前用户是否是项目经理
             model.setPmAuditState(pmAuditState);//项目经理审核状态
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
