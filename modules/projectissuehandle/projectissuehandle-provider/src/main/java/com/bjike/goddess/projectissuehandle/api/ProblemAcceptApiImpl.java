@@ -64,10 +64,4 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
         return problemAcceptSer.searchProblemAccept(problemAcceptDTO);
     }
 
-    @Override
-    public void upload() throws SerException {
-        problemAcceptSer.upload();
-
-    }
-
 }

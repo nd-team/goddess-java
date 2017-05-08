@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
+import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: [xiazhili]
@@ -104,6 +106,37 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         return null;
     }
     @Override
+    public List<BidOpeningCollectBO> collectBidOpening(String[] cities) throws SerException {
+        if(cities == null || cities.length <= 0){
+            throw new SerException("汇总失败，请选择地市");
+        }
+        String[] citiesTemp = new String[cities.length];
+        for(int i = 0;i<cities.length;i++){
+            citiesTemp[i] = "'"+cities[i]+"'";
+        }
+        String areaStr = StringUtils.join(citiesTemp, ",");
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT cities,competitive AS competitive FROM bidding_bidopeninginfo a WHERE cities IN (%s) ");
+        sb.append(" GROUP BY competitive ,cities ORDER BY cities ");
+        String sql = sb.toString();
+        sql = String.format(sql,areaStr);
+        String [] fields = new String[]{"cities","competitive"};
+        List<BidOpeningCollectBO> bidOpeningCollectBOS = super.findBySql(sql,BidOpeningInfoBO.class,fields);
+        return bidOpeningCollectBOS;
+    }
+
+    @Override
+    public List<String> getBidOpeningInfoCities() throws SerException {
+        String [] fields = new String[]{"cities"};
+        List<BidOpeningInfoBO> bidOpeningInfoBOS = super.findBySql("select distinct cities,1 from bidding_bidopeninginfo group by cities order by cities asc ",BidOpeningInfoBO.class,fields);
+
+        List<String> citiesList = bidOpeningInfoBOS.stream().map(BidOpeningInfoBO::getCities)
+                .filter(cities -> (cities != null || !"".equals(cities.trim()))).distinct().collect(Collectors.toList());
+
+
+        return citiesList;
+    }
+    /*@Override
     public BidOpeningInfoBO collectBidOpeningInfo(String cities) throws SerException {
         List<BidOpeningInfoBO> bidOpeningInfoBOList = new ArrayList<>();
         //先查询地市
@@ -120,7 +153,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
         bidOpeningInfoBOList.add(bidOpeningInfoBO);
 
         return null;
-    }
+    }*/
     /**
      *
      * 数据库查询返回，然后添加map数组

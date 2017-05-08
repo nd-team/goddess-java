@@ -11,15 +11,13 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
 	<dubbo:consumer check="false" timeout="15000" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" ref="problemAcceptApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" ref="problemHandlingResultApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" ref="involvedProcessingTaskApiImpl"/>
+	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
+	<dubbo:reference  validation="true" id="businessRegisterApiImpl" interface="com.bjike.goddess.business.api.BusinessRegisterAPI" />
+	<dubbo:reference  validation="true" id="businessAnnualInfoApiImpl" interface="com.bjike.goddess.business.api.BusinessAnnualInfoAPI" />
+	<dubbo:reference  validation="true" id="businessTaxChangeApiImpl" interface="com.bjike.goddess.business.api.BusinessTaxChangeAPI" />
 
 </beans>
