@@ -8,10 +8,11 @@ import com.bjike.goddess.businessproject.vo.ContractCategoryVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,42 @@ public class ContractCategoryAction {
     private ContractCategoryAPI contractCategoryAPI;
 
     /**
+     * 列表总条数
+     *
+     * @param contractCategoryDTO 项目合同类型信息dto
+     * @des 获取所有项目合同类型信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ContractCategoryDTO contractCategoryDTO) throws ActException {
+        try {
+            Long count = contractCategoryAPI.countContractCategory(contractCategoryDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个项目合同类型
+     *
+     * @param id 项目项目合同类型信息id
+     * @des 根据id获取项目项目合同类型信息
+     * @return  class ContractCategoryVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ContractCategoryVO projectCarryVO = BeanTransform.copyProperties(
+                    contractCategoryAPI.getOneById(id), ContractCategoryVO.class);
+            return ActResult.initialize(projectCarryVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目合同类型列表
      *
      * @param contractCategoryDTO 项目合同类型信息dto
@@ -44,7 +81,7 @@ public class ContractCategoryAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findListContractCategory(ContractCategoryDTO contractCategoryDTO, HttpServletRequest request) throws ActException {
+    public Result findListContractCategory(ContractCategoryDTO contractCategoryDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<ContractCategoryVO> contractCategoryVOList = BeanTransform.copyProperties(
                     contractCategoryAPI.listContractCategory(contractCategoryDTO), ContractCategoryVO.class, true);
