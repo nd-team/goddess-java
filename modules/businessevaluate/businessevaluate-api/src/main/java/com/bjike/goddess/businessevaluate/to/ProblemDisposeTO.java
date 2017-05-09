@@ -1,7 +1,12 @@
 package com.bjike.goddess.businessevaluate.to;
 
 import com.bjike.goddess.businessevaluate.enums.*;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目问题受理和处理
@@ -14,109 +19,133 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class ProblemDisposeTO extends BaseTO {
 
+    public interface Qualitative{}
+    public interface Ration{}
+
     /**
      * 来源
      */
+    @NotBlank(message = "来源不能为空", groups = {ADD.class, EDIT.class})
     private String source;
 
     /**
      * 通知方式
      */
+    @NotBlank(message = "通知方式不能为空", groups = {ADD.class, EDIT.class})
     private String informWay;
 
     /**
      * 影响部门
      */
+    @NotBlank(message = "影响部门不能为空", groups = {ADD.class, EDIT.class})
     private String affectDepartment;
 
     /**
      * 时间紧急程度
      */
+    @NotBlank(message = "时间紧急程度不能为空", groups = {ADD.class, EDIT.class})
     private String urgencyLevel;
 
     /**
      * 责任人员
      */
+    @NotBlank(message = "责任人员不能为空", groups = {ADD.class, EDIT.class})
     private String dutyMan;
 
     /**
      * 处理人员
      */
+    @NotBlank(message = "处理人员不能为空", groups = {ADD.class, EDIT.class})
     private String disposeMan;
 
     /**
      * 反应类型
      */
+    @NotBlank(message = "反应类型不能为空", groups = {ADD.class, EDIT.class})
     private String responseType;
 
     /**
      * 详细情况
      */
+    @NotBlank(message = "详细情况不能为空", groups = {ADD.class, EDIT.class})
     private String detail;
 
     /**
      * 受理开始时间
      */
+    @NotBlank(message = "受理开始时间不能为空", groups = {ADD.class, EDIT.class})
     private String disposeStartTime;
 
     /**
      * 受理终止时间
      */
+    @NotBlank(message = "受理终止时间不能为空", groups = {ADD.class, EDIT.class})
     private String disposeEndTime;
 
     /**
      * 经验总结
      */
+    @NotBlank(message = "经验总结不能为空", groups = {ADD.class, EDIT.class})
     private String sufferSummary;
 
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空", groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
     /**
      * 影响模块
      */
+    @NotBlank(message = "影响模块不能为空",groups = {ProblemDisposeTO.Qualitative.class})
     private String affectModule;
 
     /**
      * 规定完成时间
      */
+    @NotNull(message = "影响模块不能为空",groups = {ProblemDisposeTO.Qualitative.class})
     private StipulateFinishTime stipulateFinishTime;
 
     /**
      * 影响部门数
      */
+    @NotNull(message = "影响模块不能为空",groups = {ProblemDisposeTO.Qualitative.class})
     private AffectDeptAmount affectDeptAmount;
 
     /**
      * 问题受理难度
      */
+    @NotNull(message = "影响模块不能为空",groups = {ProblemDisposeTO.Qualitative.class})
     private ProblemDifficulty problemDifficulty;
 
     /**
      * 是否按时完成
      */
+    @NotNull(message = "影响模块不能为空",groups = {ProblemDisposeTO.Qualitative.class})
     private FinishOnTime finishOnTime;
 
     /**
      * 错误情况
      */
+    @NotNull(message = "错误情况不能为空",groups = {ProblemDisposeTO.Ration.class})
     private ErrorCase errorCase;
 
     /**
      * 错误类型
      */
+    @NotNull(message = "错误情况不能为空",groups = {ProblemDisposeTO.Ration.class})
     private ErrorType errorType;
 
     /**
      * 指标规定
      */
+    @NotNull(message = "指标规定不能为空",groups = {ProblemDisposeTO.Ration.class})
     private KpiStipulate kpiStipulate;
 
     /**
      * 违约金确认单评分
      */
+    @NotNull(message = "违约金确认单评分不能为空",groups = {ProblemDisposeTO.Ration.class})
     private Double grade;
 
     public String getSource() {

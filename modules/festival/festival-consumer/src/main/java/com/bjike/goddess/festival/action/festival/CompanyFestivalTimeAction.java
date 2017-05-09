@@ -3,7 +3,7 @@ package com.bjike.goddess.festival.action.festival;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.CompanyFestivalTimeAPI;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -61,11 +60,11 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
-    @GetMapping("v1/list")
-    public Result findListCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listCompanyFestivalTime")
+    public Result findListCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult) throws ActException {
         try {
             List<CompanyFestivalTimeVO> companyFestivalTimeVOList = BeanTransform.copyProperties(
-                    companyFestivalTimeAPI.listCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, request);
+                    companyFestivalTimeAPI.listCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, true);
             return ActResult.initialize(companyFestivalTimeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -138,11 +137,11 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
-    @GetMapping("v1/getComDetail")
-    public Result getCompanyFestivalTimeDetail (@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/getCompanyFestivalTimeDetail")
+    public Result getCompanyFestivalTimeDetail (@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult) throws ActException {
         try {
-            CompanyFestivalTimeVO companyFestivalTimeVOS = BeanTransform.copyProperties(
-                    companyFestivalTimeAPI.getCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, request);
+            List<CompanyFestivalTimeVO> companyFestivalTimeVOS = BeanTransform.copyProperties(
+                    companyFestivalTimeAPI.getCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, true);
             return ActResult.initialize(companyFestivalTimeVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

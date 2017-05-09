@@ -19,10 +19,6 @@ public class ProblemHandlingResultVO {
      */
     private String id;
     /**
-     * 地区
-     */
-    private String area;
-    /**
      * 年份
      */
     private String year;
@@ -113,14 +109,6 @@ public class ProblemHandlingResultVO {
 
     public void setYear(String year) {
         this.year = year;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public String getExternalContractProjectName() {

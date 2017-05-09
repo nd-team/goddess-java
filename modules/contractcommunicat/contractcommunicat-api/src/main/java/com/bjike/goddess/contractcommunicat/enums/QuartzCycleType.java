@@ -10,10 +10,12 @@ package com.bjike.goddess.contractcommunicat.enums;
  * @Copy: [com.bjike]
  */
 public enum QuartzCycleType {
+
     /**
      * 年
      */
     YEAR(0),
+
     /**
      * 季度
      */
@@ -41,15 +43,17 @@ public enum QuartzCycleType {
     MINUTE(6);
 
 
-    private int value;
+    private int code;
 
-    private QuartzCycleType(int value) {
-        this.value = value;
+    QuartzCycleType(int code) {
+        this.code = code;
     }
 
-    public int getValue() {
-        return value;
+    public int getCode() {
+        return code;
     }
 
-
+    public void setCode(int code) {
+        this.code = code;
+    }
 }

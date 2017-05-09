@@ -2,9 +2,7 @@ package com.bjike.goddess.business.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -42,7 +40,7 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 状态(是否公示)
      */
-    @Column(name = "is_status", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'")
+    @Column(name = "is_status",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
     private Boolean status;
 
     /**

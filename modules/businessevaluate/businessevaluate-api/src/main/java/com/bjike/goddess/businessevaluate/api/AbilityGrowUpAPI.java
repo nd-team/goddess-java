@@ -48,4 +48,13 @@ public interface AbilityGrowUpAPI {
      * @return 能力成长结果集
      */
     List<AbilityGrowUpBO> pageList(AbilityGrowUpDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(AbilityGrowUpDTO dto) throws SerException;
+
+    AbilityGrowUpBO findById(String id) throws SerException;
 }

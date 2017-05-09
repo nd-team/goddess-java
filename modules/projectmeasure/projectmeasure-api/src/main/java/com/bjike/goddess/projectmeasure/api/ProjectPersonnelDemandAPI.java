@@ -19,23 +19,6 @@ import java.util.List;
 public interface ProjectPersonnelDemandAPI {
 
     /**
-     * 根据id查询项目人员需求
-     *
-     * @param id 项目人员需求唯一标识
-     * @return class ProjectPersonnelDemandBO
-     * @throws SerException
-     */
-    ProjectPersonnelDemandBO findById(String id) throws SerException;
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目人员需求dto
-     * @throws SerException
-     */
-    Long count(ProjectPersonnelDemandDTO dto) throws SerException;
-
-    /**
      * 分页查询项目人员需求
      *
      * @return class ProjectPersonnelDemandBO

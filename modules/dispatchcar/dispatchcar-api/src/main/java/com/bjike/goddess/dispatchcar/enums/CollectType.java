@@ -10,10 +10,15 @@ package com.bjike.goddess.dispatchcar.enums;
  * @Copy: [com.bjike]
  */
 public enum CollectType {
+
     /**
      * 地区
      */
     AREA(0),
+
+    /**
+     * 司机
+     */
     DRIVER(1);
 
     private int code;

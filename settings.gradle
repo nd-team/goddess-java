@@ -92,6 +92,7 @@ include ':modules:capability:capability-provider'
 //include ':modules:contractquotemanager:contractquotemanager-consumer'
 //include ':modules:contractquotemanager:contractquotemanager-provider'
 
+//#proearlymarketcost 项目前期的市场费用管理
 //include ':modules:proearlymarketcost:proearlymarketcost-api'
 //include ':modules:proearlymarketcost:proearlymarketcost-consumer'
 //include ':modules:proearlymarketcost:proearlymarketcost-provider'
@@ -215,13 +216,10 @@ include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
 
 //#staffwelfaremanage 员工福利
-//include ':modules:staffwelfare:staffwelfaremanage-api'
-//include ':modules:staffwelfare:staffwelfaremanage-consumer'
-//include ':modules:staffwelfare:staffwelfaremanage-provider'
-//#dispatchcar 出车管理
-//include ':modules:dispatchcar:dispatchcar-api'
-//include ':modules:dispatchcar:dispatchcar-consumer'
-//include ':modules:dispatchcar:dispatchcar-provider'
+include ':modules:staffwelfare:staffwelfaremanage-api'
+include ':modules:staffwelfare:staffwelfaremanage-consumer'
+include ':modules:staffwelfare:staffwelfaremanage-provider'
+
 
 //#materialbuy 物资购买
 include ':modules:materialbuy:materialbuy-api'
@@ -260,13 +258,40 @@ include ':modules:materialreceive:materialreceive-consumer'
 include ':modules:materialreceive:materialreceive-provider'
 
 //#employeecontract 员工合同管理
-//include ':modules:employee-contract:employee-contract-api'
-//include ':modules:employee-contract:employee-contract-consumer'
-//include ':modules:employee-contract:employee-contract-provider'
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
+
+//dispatchcar 出车管理
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+
+//#fundrecords 资金流水
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
+
+//#fundrecords 银行流水
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'
+
+//#dimission 离职模块
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
+
+//#otherexpenses 其他费用
+include ':modules:otherexpenses:otherexpenses-api'
+include ':modules:otherexpenses:otherexpenses-consumer'
+include ':modules:otherexpenses:otherexpenses-provider'
+
 //#incomecheck 收入核算资金回笼 tanghaixiang
 include ':modules:incomecheck:incomecheck-api'
 include ':modules:incomecheck:incomecheck-consumer'
 include ':modules:incomecheck:incomecheck-provider'
+
 
 //#quartz 任务调度模块-liguiqin
 include ':modules:function:function-api'

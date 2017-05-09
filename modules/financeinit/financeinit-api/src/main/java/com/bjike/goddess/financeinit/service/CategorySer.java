@@ -86,10 +86,5 @@ public interface CategorySer extends Ser<Category, CategoryDTO> {
      */
     default CategoryBO listById (String id) throws SerException {return null;}
 
-    /**
-     * 获取对应类的一级名
-     */
-    default List<String> listFirstName(CategoryTO categoryTO) throws SerException {return null;}
-
 
 }

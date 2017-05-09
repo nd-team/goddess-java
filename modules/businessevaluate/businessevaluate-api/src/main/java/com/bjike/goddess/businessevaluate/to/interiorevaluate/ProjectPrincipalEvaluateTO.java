@@ -1,6 +1,9 @@
 package com.bjike.goddess.businessevaluate.to.interiorevaluate;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 商务负责人评价
@@ -16,11 +19,13 @@ public class ProjectPrincipalEvaluateTO extends BaseTO {
     /**
      * 评价现场工作人员情况
      */
+    @NotBlank(message = "评价现场工作人员情况不能为空",groups = {ADD.class, EDIT.class})
     private String evaluateFrontline;
 
     /**
      * 评价商务部工作情况
      */
+    @NotBlank(message = "评价商务部工作情况不能为空",groups = {ADD.class, EDIT.class})
     private String evaluateBusiness;
 
     /**
@@ -31,6 +36,7 @@ public class ProjectPrincipalEvaluateTO extends BaseTO {
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
 

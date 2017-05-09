@@ -23,9 +23,6 @@
 
 	<dubbo:reference  validation="true" id="finoddinforApiImpl" interface="com.bjike.goddess.lendreimbursement.api.FinoddinforAPI" />
 	<dubbo:reference  validation="true" id="lendEditContentApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendEditContentAPI" />
-	<dubbo:reference  validation="true" id="applyLendApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ApplyLendAPI" />
-	<dubbo:reference  validation="true" id="applyLendCopyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ApplyLendCopyAPI" />
-	<dubbo:reference  validation="true" id="lendAuditDetailApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendAuditDetailAPI" />
 
 	<dubbo:reference  validation="true" id="reimburseAnalisisorApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAnalisisorAPI" />
 	<dubbo:reference  validation="true" id="reimburseAuditLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI" />

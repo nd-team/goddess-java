@@ -7,7 +7,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.bo.CategoryBO;
 import com.bjike.goddess.financeinit.bo.FirstSubjectBO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
-import com.bjike.goddess.financeinit.dto.FirstSubjectDTO;
 import com.bjike.goddess.financeinit.entity.Category;
 import com.bjike.goddess.financeinit.entity.FirstSubject;
 import com.bjike.goddess.financeinit.enums.CategoryName;
@@ -43,61 +42,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     private FirstSubjectSer firstSubjectSer;
 
     @Override
-    public List<String> listFirstName(CategoryTO categoryTO) throws SerException {
-        FirstSubjectDTO firstSubjectDTO = new FirstSubjectDTO();
-        switch (categoryTO.getCategoryName().name()) {
-            case "ASSETS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","资产类"));
-                break;
-            case "LIABILITIES":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","负债类"));
-                break;
-            case "COMMON":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","共同类"));
-                break;
-            case "RIGHTSINTERESTS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","权益类"));
-                break;
-            case "COST":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","成本类"));
-                break;
-            case "PROFITLOSS":
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","损益类"));
-                break;
-            default:
-                firstSubjectDTO.getConditions().add(Restrict.eq("category","资产类"));
-                break;
-        }
-        List<FirstSubject> list = firstSubjectSer.findByCis( firstSubjectDTO );
-        List<String> firstName = list.stream().map(FirstSubject::getName).collect(Collectors.toList());
-        return firstName;
-    }
-
-    @Override
     public Long countCategory(CategoryDTO categoryDTO) throws SerException {
-        switch (categoryDTO.getCategoryName().name()) {
-            case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
-                break;
-            case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.LIABILITIES));
-                break;
-            case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COMMON));
-                break;
-            case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.RIGHTSINTERESTS));
-                break;
-            case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COST));
-                break;
-            case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.PROFITLOSS));
-                break;
-            default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
-                break;
-        }
         Long count = super.count( categoryDTO );
         return count;
     }
@@ -113,29 +58,6 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     
     @Override
     public List<CategoryBO> listCategory(CategoryDTO categoryDTO) throws SerException {
-        switch (categoryDTO.getCategoryName().name()) {
-            case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
-                break;
-            case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.LIABILITIES));
-                break;
-            case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COMMON));
-                break;
-            case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.RIGHTSINTERESTS));
-                break;
-            case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COST));
-                break;
-            case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.PROFITLOSS));
-                break;
-            default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
-                break;
-        }
         List<Category> list = super.findByCis(categoryDTO, true);
         List<CategoryBO> categoryBOList = new ArrayList<>();
         list.stream().forEach(str -> {

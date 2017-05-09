@@ -43,7 +43,7 @@ public class BusinessTaxChangeSerImpl extends ServiceImpl<BusinessTaxChange, Bus
     public List<BusinessTaxChangeBO> findListBusinessTaxChange(BusinessTaxChangeDTO businessTaxChangeDTO) throws SerException {
         businessTaxChangeDTO.getSorts().add("createTime=desc");
         List<BusinessTaxChange> businessTaxChanges = super.findByCis(businessTaxChangeDTO,true);
-        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges,BusinessTaxChangeBO.class);
+        List<BusinessTaxChangeBO> businessTaxChangeBOS = BeanTransform.copyProperties(businessTaxChanges,BusinessTaxChangeBO.class,true);
         return businessTaxChangeBOS;
     }
 

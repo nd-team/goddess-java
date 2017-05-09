@@ -2,6 +2,8 @@ package com.bjike.goddess.contractquotemanager.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import javax.persistence.Column;
+
 /**
  * 合同节点标准信息业务传输对象
  *

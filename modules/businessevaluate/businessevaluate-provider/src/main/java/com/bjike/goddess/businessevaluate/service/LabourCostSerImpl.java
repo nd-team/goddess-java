@@ -80,4 +80,5 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
         }
         return boList;
     }
+
 }

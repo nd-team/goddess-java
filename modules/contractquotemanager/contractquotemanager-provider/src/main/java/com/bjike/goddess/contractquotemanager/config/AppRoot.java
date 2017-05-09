@@ -23,6 +23,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
-public class AppRoot {
+public class AppRoot{
 
 }

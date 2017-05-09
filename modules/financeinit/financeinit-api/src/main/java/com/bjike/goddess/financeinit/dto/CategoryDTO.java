@@ -1,10 +1,7 @@
 package com.bjike.goddess.financeinit.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.financeinit.enums.CategoryName;
 import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 类别数据传输对象
@@ -17,7 +14,6 @@ import javax.validation.constraints.NotNull;
  */
 public class CategoryDTO extends BaseDTO {
 
-    public interface TestList{}
 
     /**
      * 一级科目名
@@ -38,12 +34,6 @@ public class CategoryDTO extends BaseDTO {
      * 说明
      */
     private String remark;
-
-    /**
-     * 类别
-     */
-    @NotNull(groups = {CategoryDTO.TestList.class} , message = "类别不能为空")
-    private CategoryName categoryName;
 
 
     public String getFirstSubjectName() {
@@ -76,13 +66,5 @@ public class CategoryDTO extends BaseDTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public CategoryName getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(CategoryName categoryName) {
-        this.categoryName = categoryName;
     }
 }

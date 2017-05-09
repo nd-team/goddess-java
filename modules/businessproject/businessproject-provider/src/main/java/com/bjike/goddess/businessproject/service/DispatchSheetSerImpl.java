@@ -31,22 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchSheetDTO> implements DispatchSheetSer {
 
-    @Override
-    public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
-        searchCondition( dispatchSheetDTO);
-
-        Long count = super.count( dispatchSheetDTO );
-        return count;
-    }
-
-    @Override
-    public DispatchSheetBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能呢为空");
-        }
-        DispatchSheet dispatchSheet = super.findById(id);
-        return BeanTransform.copyProperties(dispatchSheet, DispatchSheetBO.class );
-    }
+    
     @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         searchCondition( dispatchSheetDTO);

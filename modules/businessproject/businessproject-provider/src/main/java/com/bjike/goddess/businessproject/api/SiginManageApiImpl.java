@@ -26,16 +26,6 @@ public class SiginManageApiImpl implements SiginManageAPI {
     private SiginManageSer siginManageSer;
 
     @Override
-    public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
-        return siginManageSer.countSiginManage(siginManageDTO);
-    }
-
-    @Override
-    public SiginManageBO getOneById(String id) throws SerException {
-        return siginManageSer.getOneById(id);
-    }
-
-    @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         return siginManageSer.listSiginManage(siginManageDTO);
     }

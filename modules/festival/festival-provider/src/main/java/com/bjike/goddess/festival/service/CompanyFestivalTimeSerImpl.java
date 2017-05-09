@@ -65,23 +65,15 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyFestivalTimeBO editCompanyFestivalTime(CompanyFestivalTimeTO companyFestivalTimeTO) throws SerException {
-        if(StringUtils.isBlank( companyFestivalTimeTO.getId())){
-            throw new SerException("id不能为空,编辑失败");
-        }
-        CompanyFestivalTime temp = super.findById( companyFestivalTimeTO.getId() );
-
         CompanyFestivalTimeDTO dto = new CompanyFestivalTimeDTO();
         dto.getConditions().add(Restrict.eq("name",companyFestivalTimeTO.getName()));
-        List<CompanyFestivalTime> list = super.findByCis( dto );
-        if( list != null && list.size()>0){
-            for( CompanyFestivalTime cft : list){
-                if( ! cft.getId().equals(temp.getId()) ){
-                    throw new SerException("已存在一条该节日名称，节日名称不能相同,编辑失败");
-                }
-            }
+        Long count = super.count( dto );
+        if( count >0 ){
+            throw new SerException("已存在一条该节日名称，节日名称不能相同,编辑失败");
         }
 
         CompanyFestivalTime companyFestivalTime = BeanTransform.copyProperties(companyFestivalTimeTO,CompanyFestivalTime.class,true);
+        CompanyFestivalTime temp = super.findById( companyFestivalTimeTO.getId() );
 
         BeanUtils.copyProperties(companyFestivalTime,temp,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());

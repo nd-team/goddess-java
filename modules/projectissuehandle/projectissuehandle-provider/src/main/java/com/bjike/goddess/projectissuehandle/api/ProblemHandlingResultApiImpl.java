@@ -2,7 +2,6 @@ package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.service.ProblemHandlingResultSer;
@@ -69,13 +68,10 @@ public class ProblemHandlingResultApiImpl implements ProblemHandlingResultAPI {
     public List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return problemHandlingResultSer.searchProblemHandlingResult(problemHandlingResultDTO);
     }
-    @Override
-    public List<CollectBO> collect(String [] areas)throws SerException{
-        return problemHandlingResultSer.collect(areas);
-    }
-    @Override
-    public List<String> getArea() throws SerException {
-        return problemHandlingResultSer.getArea();
+
+    public void upload() throws SerException {
+        problemHandlingResultSer.upload();
+
     }
 
 }

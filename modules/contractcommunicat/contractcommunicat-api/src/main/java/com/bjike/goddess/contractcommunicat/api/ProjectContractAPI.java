@@ -2,8 +2,10 @@ package com.bjike.goddess.contractcommunicat.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
+import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 
 import java.util.List;
@@ -37,12 +39,14 @@ public interface ProjectContractAPI {
 
     /**
      * 删除
+     *
      * @param id 商务承包洽谈ID
      */
     void delete(String id) throws SerException;
 
     /**
      * 分页查询
+     *
      * @param dto 商务承包洽谈查询对象
      * @return 商务承包洽谈结果集
      */
@@ -50,15 +54,33 @@ public interface ProjectContractAPI {
 
     /**
      * 商务承包洽谈汇总
-     * @param dto 商务承包洽谈查询对象
+     *
+     * @param to 商务承包洽谈查询对象
      * @return 商务承包洽谈结果集
      */
-    List<ProjectContractBO> collect(ProjectContractDTO dto) throws SerException;
+    List<ProjectContractCollectBO> collect(CollectConditionTO to) throws SerException;
 
     /**
      * 定时发送邮件提示商务承包洽谈
+     *
      * @param cycle
      * @throws SerException
      */
-    void setCollectSend(QuartzCycleType cycle)  throws SerException ;
+    void setCollectSend(QuartzCycleType cycle) throws SerException;
+
+    /**
+     * 根据id查询记录
+     *
+     * @param id 项目承包id
+     * @return 项目承包记录
+     */
+    ProjectContractBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 项目承包记录
+     */
+    Long count(ProjectContractDTO dto) throws SerException;
 }

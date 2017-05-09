@@ -10,6 +10,7 @@ package com.bjike.goddess.businessevaluate.enums;
  * @Copy: [com.bjike]
  */
 public enum AffectDeptAmount {
+
     /**
      * 一个部门
      */

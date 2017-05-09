@@ -45,16 +45,16 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
     public List<BusinessAnnualInfoBO> findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         businessAnnualInfoDTO.getSorts().add("createTime=desc");
         List<BusinessAnnualInfo> businessAnnualInfos = super.findByCis(businessAnnualInfoDTO,true);
-        List<BusinessAnnualInfoBO> businessAnnualInfoBOS = BeanTransform.copyProperties(businessAnnualInfos, BusinessAnnualInfoBO.class);
+        List<BusinessAnnualInfoBO> businessAnnualInfoBOS = BeanTransform.copyProperties(businessAnnualInfos, BusinessRegisterBO.class,true);
         return businessAnnualInfoBOS;
     }
 
     @Override
     public BusinessAnnualInfoBO insertBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws SerException {
-        BusinessAnnualInfo businessAnnualInfo = BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfo.class,true);
+        BusinessAnnualInfo businessAnnualInfo = BeanTransform.copyProperties(businessAnnualInfoTO,BusinessRegister.class,true);
         businessAnnualInfo.setCreateTime(LocalDateTime.now());
         super.save(businessAnnualInfo);
-        return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class);
+        return BeanTransform.copyProperties(businessAnnualInfo,BusinessRegisterBO.class);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
         BeanTransform.copyProperties(businessAnnualInfoTO,businessAnnualInfo,true);
         businessAnnualInfo.setModifyTime(LocalDateTime.now());
         super.update(businessAnnualInfo);
-        return BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfoBO.class);
+        return BeanTransform.copyProperties(businessAnnualInfoTO,BusinessRegisterBO.class);
     }
 
     @Override

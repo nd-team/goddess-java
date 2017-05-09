@@ -66,4 +66,11 @@ public interface EvaluateProjectInfoAPI {
      * @throws SerException
      */
     List<ProjectProfitRateBO> profitScope() throws SerException;
+
+    /**
+     * 查询项目列表
+     *
+     * @return 项目结果集
+     */
+    List<EvaluateProjectInfoBO> findAll() throws SerException;
 }
