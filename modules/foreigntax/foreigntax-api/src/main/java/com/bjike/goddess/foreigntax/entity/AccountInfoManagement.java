@@ -22,25 +22,25 @@ public class AccountInfoManagement extends BaseEntity {
     /**
      * 公司
      */
-    @Column(name = "company", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司'")
+    @Column(name = "company", nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '公司'")
     private String company;
 
     /**
      * 所属月份
      */
-    @Column(name = "month", columnDefinition = "DATE   COMMENT '所属月份'")
+    @Column(name = "month", nullable = false,columnDefinition = "DATE   COMMENT '所属月份'")
     private LocalDate month;
 
     /**
      * 资料名称
      */
-    @Column(name = "dataName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '资料名称'")
+    @Column(name = "dataName", columnDefinition = "VARCHAR(255)   COMMENT '资料名称'")
     private String dataName;
 
     /**
      * 跟进人
      */
-    @Column(name = "followUpPeople", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '跟进人'")
+    @Column(name = "followUpPeople", columnDefinition = "VARCHAR(255)   COMMENT '跟进人'")
     private String followUpPeople;
 
 
