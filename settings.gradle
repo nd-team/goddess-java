@@ -46,7 +46,10 @@ include ':modules:market:market-provider'
 include ':modules:projectissuehandle:projectissuehandle-api'
 include ':modules:projectissuehandle:projectissuehandle-consumer'
 include ':modules:projectissuehandle:projectissuehandle-provider'
-
+//#market 市场信息管理
+include ':modules:market:market-api'
+include ':modules:market:market-consumer'
+include ':modules:market:market-provider'
 //#receivable 回款管理
 include ':modules:receivable:receivable-api'
 include ':modules:receivable:receivable-consumer'
@@ -129,3 +132,4 @@ include ':modules:voucher:voucher-provider'
 include ':modules:function:function-api'
 include ':modules:function:function-consumer'
 include ':modules:function:function-provider'
+
