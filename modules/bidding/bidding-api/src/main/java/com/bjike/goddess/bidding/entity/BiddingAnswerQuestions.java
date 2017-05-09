@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -24,7 +25,7 @@ public class BiddingAnswerQuestions extends BaseEntity {
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
@@ -36,8 +37,8 @@ public class BiddingAnswerQuestions extends BaseEntity {
     /**
      * 答疑时间
      */
-    @Column(name = "officeHour", nullable = false, columnDefinition = "DATE   COMMENT '答疑时间'")
-    private LocalDate officeHour;
+    @Column(name = "officeHour", columnDefinition = "DATETIME   COMMENT '答疑时间'")
+    private LocalDateTime officeHour;
 
     /**
      * 解答单位
@@ -74,11 +75,11 @@ public class BiddingAnswerQuestions extends BaseEntity {
         this.peopleAnswerQuestions = peopleAnswerQuestions;
     }
 
-    public LocalDate getOfficeHour() {
+    public LocalDateTime getOfficeHour() {
         return officeHour;
     }
 
-    public void setOfficeHour(LocalDate officeHour) {
+    public void setOfficeHour(LocalDateTime officeHour) {
         this.officeHour = officeHour;
     }
 

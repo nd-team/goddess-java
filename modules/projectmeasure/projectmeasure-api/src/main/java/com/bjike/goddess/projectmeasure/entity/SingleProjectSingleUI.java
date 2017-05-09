@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectmeasure.type.InterfaceSelect;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**

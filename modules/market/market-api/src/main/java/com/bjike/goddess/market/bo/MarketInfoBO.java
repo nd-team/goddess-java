@@ -1,6 +1,8 @@
 package com.bjike.goddess.market.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.market.enums.MarketProjectNature;
+import com.bjike.goddess.market.enums.MarketWorkType;
 import com.bjike.goddess.market.enums.Scale;
 
 
@@ -38,7 +40,7 @@ public class MarketInfoBO extends BaseBO {
     /**
      * 行业
      */
-    private String workProfession;
+    private MarketWorkType workType;
 
     /**
      * 技术类别
@@ -93,7 +95,7 @@ public class MarketInfoBO extends BaseBO {
     /**
      * 项目性质
      */
-    private String projectNature;
+    private MarketProjectNature projectNature;
 
     /**
      * 市场分析人员
@@ -178,12 +180,12 @@ public class MarketInfoBO extends BaseBO {
         this.infoCollectionDate = infoCollectionDate;
     }
 
-    public String getWorkProfession() {
-        return workProfession;
+    public MarketWorkType getWorkType() {
+        return workType;
     }
 
-    public void setWorkProfession(String workProfession) {
-        this.workProfession = workProfession;
+    public void setWorkType(MarketWorkType workType) {
+        this.workType = workType;
     }
 
     public String getTechnologyCategory() {
@@ -266,11 +268,11 @@ public class MarketInfoBO extends BaseBO {
         this.effective = effective;
     }
 
-    public String getProjectNature() {
+    public MarketProjectNature getProjectNature() {
         return projectNature;
     }
 
-    public void setProjectNature(String projectNature) {
+    public void setProjectNature(MarketProjectNature projectNature) {
         this.projectNature = projectNature;
     }
 

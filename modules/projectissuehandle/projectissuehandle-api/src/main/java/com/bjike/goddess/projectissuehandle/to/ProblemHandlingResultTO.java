@@ -27,7 +27,10 @@ public class ProblemHandlingResultTO extends BaseTO {
      * 年份
      */
     private String year;
-
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 合同外部项目名称
      */
@@ -108,6 +111,14 @@ public class ProblemHandlingResultTO extends BaseTO {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getExternalContractProjectName() {

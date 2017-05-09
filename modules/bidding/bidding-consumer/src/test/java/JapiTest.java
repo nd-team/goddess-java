@@ -8,22 +8,25 @@ import java.io.IOException;
 
 public class JapiTest {
 
-	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
-		JapiClient.setpostfixPath("/src/main/java");
-		JapiClient.setProjectJavaPath(
-				"modules/bidding/bidding-consumer");//主项目位置
-		JapiClient.setActionReletivePath("com/bjike/goddess/bidding/action");//主项目action位置
-		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"modules/bidding/bidding-api",
-				"common/common-api"
-		});
-		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
-		IProject project = ProjectImpl.init();
-		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
-		japiClientStorage.setProject(project);
-		japiClientStorage.autoSaveToDisk();
-		new JapiClientTransfer().autoTransfer(japiClientStorage);
-	}
+    public static void main(String[] args) throws IOException {
+        JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
+        JapiClient.setpostfixPath("/src/main/java");
+        JapiClient.setProjectJavaPath(
+                "modules/bidding/bidding-consumer");//主项目位置
+        JapiClient.setActionReletivePath("com/bjike/goddess/bidding/action");//主项目action位置
+        JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
+                "modules/bidding/bidding-api",
+                "common/common-api"
+        });
+        JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
+        JapiClient.setFlushServer(true);
+        IProject project = ProjectImpl.init();
+        JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
+        japiClientStorage.setProject(project);
+        japiClientStorage.autoSaveToDisk();
+        //JapiClient.delete(true);
+        new JapiClientTransfer().autoTransfer(japiClientStorage);
+    }
 
 }
+

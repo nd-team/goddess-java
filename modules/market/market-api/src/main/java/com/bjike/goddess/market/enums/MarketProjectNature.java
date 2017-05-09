@@ -28,26 +28,4 @@ public enum MarketProjectNature {
         return this.code;
     }
 
-
-    public static MarketProjectNature getEnumConvert(int code) {
-        MarketProjectNature marketProjectNature = MarketProjectNature.NEWPROJECT;
-        if (code == MarketProjectNature.NEWPROJECT.getCode()) {
-            marketProjectNature = MarketProjectNature.NEWPROJECT;
-        }
-        if (code == MarketProjectNature.OLDPROJECT.getCode()) {
-            marketProjectNature = MarketProjectNature.OLDPROJECT;
-        }
-        return marketProjectNature;
-    }
-
-    public static String getStrConvert(int code) {
-        String name = "";
-        if (code == MarketProjectNature.NEWPROJECT.getCode()) {
-            name = "新项目";
-        }
-        if (code == MarketProjectNature.OLDPROJECT.getCode()) {
-            name = "已有项目or进行中项目";
-        }
-        return name;
-    }
 }

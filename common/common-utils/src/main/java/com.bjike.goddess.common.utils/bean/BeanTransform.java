@@ -393,11 +393,20 @@ public class BeanTransform {
     }
 
     private static String[] getExcludes(HttpServletRequest request) {
-        return request.getParameterValues("_excludes");
+        String ex = request.getParameter("_excludes");
+        if (null != ex) {
+            return ex.split(",");
+        }
+        return null;
     }
 
     private static String[] getIncludes(HttpServletRequest request) {
-        return request.getParameterValues("_includes");
+        String in = request.getParameter("_includes");
+        if (null != in) {
+            return in.split(",");
+        }
+        return null;
+
     }
 
 }

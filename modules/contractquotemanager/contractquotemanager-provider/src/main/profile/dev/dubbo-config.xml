@@ -11,16 +11,16 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:provider filter="userFilter" timeout="${dubbo.provider.timeout}" />
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
+	<dubbo:service validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" ref="contractNodeStandardApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" ref="contractProjectInfoApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" ref="contractQuoteDataApiImpl"></dubbo:service>
 
-	<!--发布接口，供其它模块调用-->
-	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" ref="contractNodeStandardApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" ref="contractQuoteDataApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" ref="contractProjectInfoApiImpl"/>
 
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

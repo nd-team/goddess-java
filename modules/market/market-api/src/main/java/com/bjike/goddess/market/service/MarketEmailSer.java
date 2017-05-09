@@ -2,6 +2,7 @@ package com.bjike.goddess.market.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketEmailBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.entity.MarketEmail;
@@ -76,10 +77,18 @@ public interface MarketEmailSer extends Ser<MarketEmail, MarketEmailDTO> {
     /**
      * 汇总
      *
-     * @param area area
+     * @param areas
      * @return class MarketEmailBO
      */
-    default List<MarketEmailBO> collectMarketEmail(String[] area) throws SerException {
+    default List<MarketCollectBO> marketCollect (String[] areas) throws SerException {
+        return null;
+    }
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
         return null;
     }
 

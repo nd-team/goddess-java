@@ -1,6 +1,7 @@
 package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
+import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.enums.BiddingType;
 import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 招标信息业务实现
@@ -40,7 +42,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         Long count = super.count(biddingInfoDTO);
         return count;
     }
-    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public BiddingInfoBO getOne(String id) throws SerException {
+        BiddingInfo biddingInfo = super.findById(id);
+        return BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
+    }
     @Override
     public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
@@ -49,7 +55,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return biddingInfoBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
@@ -58,7 +63,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO editBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
@@ -68,12 +72,8 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingInfo(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 
@@ -84,7 +84,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return null;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         /**
@@ -133,14 +132,72 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return null;
     }
 
+    @Override
+    public List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {
+        if(cities == null || cities.length <= 0){
+            throw new SerException("汇总失败，请选择地市");
+        }
+        String[] citiesTemp = new String[cities.length];
+        for(int i = 0;i <cities.length;i++){
+            citiesTemp[i] = "'"+cities[i]+"'";
+        }
+        String citiesStr = StringUtils.join(citiesTemp,',');
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT * from ");
+        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
+        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
+        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
+        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
+        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
+        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
+        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
+        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
+        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
+        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
+        sb.append(" WHERE A.cities=B.cities)C ");
+        sb.append(" UNION ");
+        sb.append(" SELECT '合计' as area ,sum(invite) AS invite,sum(openly) AS openly,sum(mobile) AS mobile, ");
+        sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
+        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
+        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
+        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
+        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
+        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
+        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
+        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
+        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
+        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
+        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
+        sb.append(" WHERE A.cities=B.cities)C ");
+        String sql = sb.toString();
+        sql = String.format(sql,citiesStr,citiesStr,citiesStr,citiesStr);
+        String [] fields = new String[]{"cities","invite","openly","mobile","soft","system","plan"};
+        List<BiddingInfoCollectBO> biddingInfoCollectBOS = super.findBySql(sql,BiddingInfoCollectBO.class,fields);
+        return biddingInfoCollectBOS;
+    }
+    @Override
+    public List<String> getBiddingInfoCities() throws SerException {
+        String [] fields = new String[]{"cities"};
+        List<BiddingInfoBO> biddingInfoBOS = super.findBySql("select distinct cities,1 from bidding_biddinginfo group by cities order by cities asc ",BiddingInfoBO.class,fields);
+
+        List<String> citiesList = biddingInfoBOS.stream().map(BiddingInfoBO::getCities)
+                .filter(cities -> (cities != null || !"".equals(cities.trim()))).distinct().collect(Collectors.toList());
+
+
+        return citiesList;
+    }
+
+
     /**
      * 汇总
      *
      * @param cities cities
      * @return class biddingInfoBO
      * @throws SerException
-     */
-    public BiddingInfoBO collectBiddingInfo(String[] cities) throws SerException {
+     *//*
+    public List<BiddingInfoBO> collectBiddingInfo(String[] cities) throws SerException {
         List<BiddingInfoBO> biddingInfoList = new ArrayList<>();
         //先查询地市
         List<String> citie = biddingInfoAPI.getBiddingInfoCities();
@@ -167,17 +224,17 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             busTypeMapList = sqlQueryInt("BusinessType" ,busType,fields,sql,busTypeMapList);
 
             BiddingInfoBO biddingInfoBO = new BiddingInfoBO();
-            biddingInfoBO.setAreaMap(citieMapList);
+            *//*biddingInfoBO.setAreaMap(citieMapList);
             biddingInfoBO.setBiddingType(bidTypeMapList);
-            biddingInfoBO.setBusinessType(busTypeMapList);
+            biddingInfoBO.setBusinessType(busTypeMapList);*//*
             biddingInfoList.add(biddingInfoBO);
         }
-        return null;
+        return biddingInfoList;
     }
-    /**
+    *//**
      *
      * 数据库查询返回，然后添加map数组
-     */
+     *//*
     public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
         List<BiddingInfoBO> biddingInfoBOS = biddingInfoAPI.findBySql(sql, BiddingInfoBO.class, fields);
         if (biddingInfoBOS != null && biddingInfoBOS.size() > 0) {
@@ -185,7 +242,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                 for (BiddingInfoBO cbo : biddingInfoBOS) {
                     Map<String, String> areaMap = new HashMap<>();
                     areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+                    //areaMap.put("count", String.valueOf(cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (biddingInfoBOS.size() < obj.size()) {
@@ -208,7 +265,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                         Map<String, String> areaMap = new HashMap<>();
                         if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
                             areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+                      //      areaMap.put("count", String.valueOf(cbo.getCounts()));
                         }else {
                             areaMap.put("remark", o);
                             areaMap.put("count", 0+"");
@@ -223,10 +280,10 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
 
-    /**
+    *//**
      *
      * 将数据库返回的枚举int值转换，然后添加map数组
-     */
+     *//*
     public List<Map<String, String>> sqlQueryInt (String enumStr ,List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
         List<BiddingInfoBO> biddingInfoBOS = biddingInfoAPI.findBySql(sql, BiddingInfoBO.class, fields);
         if (biddingInfoBOS != null && biddingInfoBOS.size() > 0) {
@@ -234,11 +291,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                 for (BiddingInfoBO cbo : biddingInfoBOS) {
                     Map<String, String> areaMap = new HashMap<>();
                     if( enumStr.equals("BiddingType")){
-                        areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
+                   //     areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
                     }else if(enumStr.equals("BusinessType")){
-                        areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
+                   //     areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
                     }
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+                   // areaMap.put("count", String.valueOf(cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (biddingInfoBOS.size() < obj.size()) {
@@ -261,11 +318,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                         Map<String, String> areaMap = new HashMap<>();
                         if( !diffrent.contains( o ) && cbo.getRemark().equals(o)){
                             if( enumStr.equals("BiddingType")){
-                                areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
+                          //      areaMap.put("remark", BiddingType.getStrConvert( cbo.getEnumConvert()));
                             }else if(enumStr.equals("BusinessType")){
-                                areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
+                          //      areaMap.put("remark", BusinessType.getStrConvert( cbo.getEnumConvert()));
                             }
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+                            //areaMap.put("count", String.valueOf(cbo.getCounts()));
                         }else {
                             if( enumStr.equals("BiddingType")){
                                 areaMap.put("remark", BiddingType.getStrConvert( o ));
@@ -281,7 +338,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             }
         }
         return mapList;
-    }
+    }*/
 
 
 

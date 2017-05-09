@@ -1,8 +1,10 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectMultipleUIDTO;
+import com.bjike.goddess.projectmeasure.entity.MultipleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.service.MultipleProjectMultipleUISer;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectMultipleUITO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class MultipleProjectMultipleUIApiImpl implements MultipleProjectMultiple
 
     @Autowired
     private MultipleProjectMultipleUISer multipleProjectMultipleUISer;
+
+    /**
+     * 根据id查询多项目多个界面
+     *
+     * @param id 多项目多个界面唯一标识
+     * @return class MultipleProjectMultipleUIBO
+     * @throws SerException
+     */
+    @Override
+    public MultipleProjectMultipleUIBO findById(String id) throws SerException {
+        MultipleProjectMultipleUI model = multipleProjectMultipleUISer.findById(id);
+        return BeanTransform.copyProperties(model, MultipleProjectMultipleUIBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 多项目多个界面dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MultipleProjectMultipleUIDTO dto) throws SerException {
+        return multipleProjectMultipleUISer.count(dto);
+    }
 
     /**
      * 分页查询多项目多个界面

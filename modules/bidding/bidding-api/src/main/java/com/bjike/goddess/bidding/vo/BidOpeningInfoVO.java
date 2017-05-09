@@ -11,6 +11,10 @@ package com.bjike.goddess.bidding.vo;
  * @Copy: [ com.bjike ]
  */
 public class BidOpeningInfoVO {
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 招标编号
@@ -23,10 +27,13 @@ public class BidOpeningInfoVO {
     private String projectName;
 
     /**
-     * 开标时间String
+     * 开标时间
      */
     private String bidOpeningTime;
-
+    /**
+     * 开标地点
+     */
+    private String bidOpeningPlace;
     /**
      * 委托人
      */
@@ -50,13 +57,21 @@ public class BidOpeningInfoVO {
     /**
      * 竞争公司报价
      */
-    private String competitivePrice;
+    private Double competitivePrice;
 
     /**
      * 比率(%)
      */
-    private String ratio;
+    private Double ratio;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTenderNumber() {
         return tenderNumber;
@@ -80,6 +95,14 @@ public class BidOpeningInfoVO {
 
     public void setBidOpeningTime(String bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
+    }
+
+    public String getBidOpeningPlace() {
+        return bidOpeningPlace;
+    }
+
+    public void setBidOpeningPlace(String bidOpeningPlace) {
+        this.bidOpeningPlace = bidOpeningPlace;
     }
 
     public String getPrincipal() {
@@ -114,19 +137,19 @@ public class BidOpeningInfoVO {
         this.cities = cities;
     }
 
-    public String getCompetitivePrice() {
+    public Double getCompetitivePrice() {
         return competitivePrice;
     }
 
-    public void setCompetitivePrice(String competitivePrice) {
+    public void setCompetitivePrice(Double competitivePrice) {
         this.competitivePrice = competitivePrice;
     }
 
-    public String getRatio() {
+    public Double getRatio() {
         return ratio;
     }
 
-    public void setRatio(String ratio) {
+    public void setRatio(Double ratio) {
         this.ratio = ratio;
     }
 }

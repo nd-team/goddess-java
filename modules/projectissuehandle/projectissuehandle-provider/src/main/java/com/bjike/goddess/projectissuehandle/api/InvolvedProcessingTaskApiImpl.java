@@ -63,11 +63,4 @@ public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI 
     public List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return involvedProcessingTaskSer.searchInvolvedProcessingTask(involvedProcessingTaskDTO);
     }
-
-    @Override
-    public void upload() throws SerException {
-        involvedProcessingTaskSer.upload();
-
-    }
-
 }

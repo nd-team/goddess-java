@@ -2,6 +2,7 @@ package com.bjike.goddess.user.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.user.enums.UserType;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.Column;
@@ -65,6 +66,11 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户状态'", nullable = false)
     private Status status;
 
+    /**
+     * 用户类型
+     */
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '用户类型' ", nullable = false)
+    private UserType userType;
 
     public String getUsername() {
         return username;
@@ -130,4 +136,11 @@ public class User extends BaseEntity {
         this.employeeNumber = employeeNumber;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 }
