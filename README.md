@@ -72,7 +72,8 @@
                 private StorageUserAPI storageUserAPI;
                 @Override
                 public List<HIInfo> customerInterceptors() {
-                    HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+                    // */file 为需要拦截登录的action操作
+                    HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "*/file");
                     return Arrays.asList(storageInfo);
                 }
             }
