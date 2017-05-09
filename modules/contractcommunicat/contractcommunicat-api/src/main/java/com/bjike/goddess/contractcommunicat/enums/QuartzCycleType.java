@@ -15,6 +15,7 @@ public enum QuartzCycleType {
      * 年
      */
     YEAR(0),
+
     /**
      * 季度
      */

@@ -7,14 +7,6 @@ include ':common:common-provider'
 include ':common:common-jpa'
 include ':common:common-utils'
 include ':common:common-redis'
-//$demo 参考模块
-include ':demo:demo-ticket:demo-ticket-api'
-include ':demo:demo-ticket:demo-ticket-consumer'
-include ':demo:demo-ticket:demo-ticket-provider'
-//#demo 参考模块
-include ':demo:demo-card:demo-card-api'
-include ':demo:demo-card:demo-card-consumer'
-include ':demo:demo-card:demo-card-provider'
 //#template 生成类模板
 include ':modules:template:template-api'
 include ':modules:template:template-provider'
@@ -51,9 +43,9 @@ include ':modules:customer:customer-provider'
 //include ':modules:recruit:recruit-consumer'
 //include ':modules:recruit:recruit-provider'
 //#市场活动管理
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
+//include ':modules:marketactivitymanage:marketactivitymanage-api'
+//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+//include ':modules:marketactivitymanage:marketactivitymanage-provider'
 //#司机信息
 include ':modules:driverinfo:driverinfo-api'
 include ':modules:driverinfo:driverinfo-consumer'
@@ -83,15 +75,10 @@ include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
 
-//#市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
-
 //#竞争对手管理
-include ':modules:competitormanage:competitormanage-api'
-include ':modules:competitormanage:competitormanage-consumer'
-include ':modules:competitormanage:competitormanage-provider'
+//include ':modules:competitormanage:competitormanage-api'
+//include ':modules:competitormanage:competitormanage-consumer'
+//include ':modules:competitormanage:competitormanage-provider'
 //#商务项目合同管理tanghaixiang
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
@@ -116,17 +103,17 @@ include ':modules:intromanage:intromanage-consumer'
 include ':modules:intromanage:intromanage-provider'
 
 //#marketdevelopment 市场计划进度管理
-include ':modules:marketdevelopment:marketdevelopment-api'
-include ':modules:marketdevelopment:marketdevelopment-consumer'
-include ':modules:marketdevelopment:marketdevelopment-provider'
+//include ':modules:marketdevelopment:marketdevelopment-api'
+//include ':modules:marketdevelopment:marketdevelopment-consumer'
+//include ':modules:marketdevelopment:marketdevelopment-provider'
 //#projectissuehandle 项目问题受理
-include ':modules:projectissuehandle:projectissuehandle-api'
-include ':modules:projectissuehandle:projectissuehandle-consumer'
-include ':modules:projectissuehandle:projectissuehandle-provider'
+//include ':modules:projectissuehandle:projectissuehandle-api'
+//include ':modules:projectissuehandle:projectissuehandle-consumer'
+//include ':modules:projectissuehandle:projectissuehandle-provider'
 //#market 市场信息管理
-include ':modules:market:market-api'
-include ':modules:market:market-consumer'
-include ':modules:market:market-provider'
+//include ':modules:market:market-api'
+//include ':modules:market:market-consumer'
+//include ':modules:market:market-provider'
 //#商业能力互动tanghaixiang
 include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
@@ -257,9 +244,9 @@ include ':modules:foreigntax:foreigntax-consumer'
 include ':modules:foreigntax:foreigntax-provider'
 
 //#materialinstock 物资入库
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
+//include ':modules:materialinstock:materialinstock-api'
+//include ':modules:materialinstock:materialinstock-consumer'
+//include ':modules:materialinstock:materialinstock-provider'
 //#managefee 管理费tanghaixiang
 include ':modules:managefee:managefee-api'
 include ':modules:managefee:managefee-consumer'
@@ -300,4 +287,13 @@ include ':modules:otherexpenses:otherexpenses-api'
 include ':modules:otherexpenses:otherexpenses-consumer'
 include ':modules:otherexpenses:otherexpenses-provider'
 
+//#incomecheck 收入核算资金回笼 tanghaixiang
+include ':modules:incomecheck:incomecheck-api'
+include ':modules:incomecheck:incomecheck-consumer'
+include ':modules:incomecheck:incomecheck-provider'
 
+
+//#quartz 任务调度模块-liguiqin
+include ':modules:function:function-api'
+include ':modules:function:function-consumer'
+include ':modules:function:function-provider'

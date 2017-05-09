@@ -100,7 +100,6 @@ public class ProjectOutsourcingTO extends BaseTO {
     /**
      * 洽谈内容
      */
-    @NotBlank(message = "洽谈内容不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateContent;
 
     /**
