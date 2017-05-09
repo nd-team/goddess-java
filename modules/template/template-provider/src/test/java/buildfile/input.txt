@@ -1,11 +1,11 @@
-模块名:otherexpenses
-类名:OtherExpenses
-作者:邓钧仁
-描述:其他费用
+模块名:contractware
+类名:ProjectContract
+作者:xiazhili
+描述:项目合同
+
 
 #参数[变量类型  变量名 ]
 #parameter--------------
-
 (
 String area 地区;
 String project 项目组;
