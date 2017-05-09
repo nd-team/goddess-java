@@ -4,6 +4,8 @@ import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 商务项目合同基本信息管理
  *
@@ -15,60 +17,73 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class BaseInfoManageTO extends BaseTO {
 
+    public interface TestAdd{}
+    public interface TestEdit{}
+
     /**
      * 合同档案编号
      */
-    @NotBlank
+    @NotBlank(groups = {BaseInfoManageTO.TestEdit.class} , message = "合同档案编号不能为空" )
     private String contractNum;
 
     /**
      * 业务类型
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务类型不能为空" )
     private BusinessType businessType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务方向科目不能为空" )
     private String businessSubject;
 
     /**
      * 合同外部项目名称
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同外部项目名称不能为空" )
     private String outerProject;
 
     /**
      * 合同外部项目编号
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同外部项目编号不能为空" )
     private String outProjectNum;
 
     /**
      * 对应销售合同编号
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "对应销售合同编号不能为空" )
     private String saleContractNum;
 
     /**
      * 合作方式
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合作方式不能为空" )
     private BusinessCooperate businessCooperate;
 
     /**
      * 内部项目名称
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "内部项目名称不能为空" )
     private String innerProject;
 
     /**
      * 内部项目编号
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestEdit.class} , message = "内部项目编号不能为空" )
     private String innerProjectNum;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "地区不能为空" )
     private String area;
 
     /**
      * 所属项目组
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "所属项目组不能为空" )
     private String projectGroup;
 
     /**
@@ -79,101 +94,121 @@ public class BaseInfoManageTO extends BaseTO {
     /**
      * 签订时间(格式年月日)
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "签订时间(格式年月日)不能为空" )
     private String siginTime;
 
     /**
      * 合同金额
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同金额不能为空,且为数字" )
     private Double money;
 
     /**
      * 开工时间(格式年月日)
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "开工时间(格式年月日)不能为空" )
     private String startProjectTime;
 
     /**
      * 完工时间(格式年月日)
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "完工时间(格式年月日)不能为空" )
     private String endProjectTime;
 
     /**
      * 合同期限
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同期限不能为空" )
     private String contractRang;
 
     /**
      * 甲方公司名称
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方公司名称不能为空" )
     private String firstCompany;
 
     /**
      * 甲方联系人
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方联系人不能为空" )
     private String firstRelation;
 
     /**
      * 甲方联系人电话
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方联系人电话不能为空" )
     private String firstTel;
 
     /**
      * 乙方公司名称
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "乙方公司名称不能为空" )
     private String secondCompany;
 
     /**
      * 项目负责人
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "项目负责人不能为空" )
     private String projectCharge;
 
     /**
      * 项目负责人电话
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "项目负责人电话不能为空" )
     private String projectChargeTel;
 
     /**
      * 客户名称
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "客户名称不能为空" )
     private String customerName;
 
     /**
      * 合同内容
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同内容不能为空" )
     private String contractText;
 
     /**
      * 税率
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "税率不能为空,且为数字" )
     private Double rate;
 
     /**
      * 合同属性
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同属性不能为空" )
     private ContractProperty contractProperty;
 
     /**
      * 支付方式
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "支付方式不能为空" )
     private PayWays payWays;
 
     /**
      * 付款比例
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "付款比例不能为空" )
     private String payRate;
 
     /**
      * 结算费用来源
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "结算费用来源不能为空" )
     private PayFeeOrigin payFeeOrigin;
 
     /**
-     * 合同是否已归档
+     * 合同是否已归档(已归档/未归档)
      */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同是否已归档不能为空" )
     private String fileCondition;
 
     /**
      * 合同归档数量
      */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同归档数量不能为空,且为数字" )
     private Double fileCount;
 
     /**

@@ -26,6 +26,16 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     private DispatchSheetSer dispatchSheetSer;
 
     @Override
+    public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
+        return dispatchSheetSer.countDispatchSheet(dispatchSheetDTO);
+    }
+
+    @Override
+    public DispatchSheetBO getOneById(String id) throws SerException {
+        return dispatchSheetSer.getOneById(id);
+    }
+
+    @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         return dispatchSheetSer.listDispatchSheet(dispatchSheetDTO);
     }

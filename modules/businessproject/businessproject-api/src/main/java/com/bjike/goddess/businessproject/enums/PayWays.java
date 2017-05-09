@@ -10,6 +10,7 @@ package com.bjike.goddess.businessproject.enums;
  * @Copy: [com.bjike]
  */
 public enum PayWays {
+
     /**
      * 现金
      */
