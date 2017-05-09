@@ -9,8 +9,8 @@
         vi /etc/profile 
         alias del='7z d `ls | grep .jar$`  BOOT-INF/lib'
     4:执行 git add 之前先执行 del 命令
-    5:执行 gradle clean 清除jar,本地读取的时resources下的配置文件
-    
+    5:执行 gradle clean 清除jar,本地编译器读取的应该是resources下的配置文件,而不是读取profile/pro下的配置文件
+    
 # 2.拦截器使用: 添加自己的拦截器
     1:在 consumer config 下添加新建扫描拦截器类 CustomIntercept
        并实现  com.bjike.goddess.common.consumer.config.Interceptor接口 重写customerInterceptors方法
