@@ -45,7 +45,7 @@ public class EmployeeSecureAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result find(@Validated EmployeeSecureDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result find(EmployeeSecureDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<EmployeeSecureBO> list = employeeSecureAPI.find(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, EmployeeSecureVO.class, request));
