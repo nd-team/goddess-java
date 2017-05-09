@@ -40,7 +40,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     private UserDetailAPI userDetailAPI;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO save(RemoveEmployeeTO to) throws SerException {
         RemoveEmployee removeEmployee = BeanTransform.copyProperties(to, RemoveEmployee.class, true);
         super.save(removeEmployee);
@@ -48,7 +48,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO edit(RemoveEmployeeTO to) throws SerException {
         RemoveEmployee removeEmployee = super.findById(to.getId());
         LocalDateTime a = removeEmployee.getCreateTime();
@@ -73,7 +73,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public RemoveEmployeeBO delete(String id) throws SerException {
         super.remove(id);
         return null;

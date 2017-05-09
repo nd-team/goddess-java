@@ -40,7 +40,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     private MessageAPI messageAPI;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeAddBO save(BeforeAddTO to) throws SerException {
         //TODO:获取转正员工
         BeforeAdd canAdd = BeanTransform.copyProperties(to, BeforeAdd.class, true);
@@ -52,7 +52,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeAddBO completeAndConfirm(BeforeAddTO to) throws SerException {
         BeforeAdd canAdd = super.findById(to.getId());
         LocalDateTime a = canAdd.getCreateTime();
@@ -75,7 +75,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeAddBO delete(String id) throws SerException {
         super.remove(id);
         return null;

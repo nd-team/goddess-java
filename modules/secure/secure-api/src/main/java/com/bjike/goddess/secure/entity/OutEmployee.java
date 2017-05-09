@@ -2,7 +2,9 @@ package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -27,21 +29,34 @@ public class OutEmployee extends BaseEntity {
     /**
      * 离职时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME   COMMENT '离职时间'")
+    @Column(name = "endTime", nullable = false, columnDefinition = "DATE   COMMENT '离职时间'")
     private String endTime;
 
     /**
      * 是否继续购买
      */
-    @Column(name = "is_again",columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '是否继续购买'")
+    @Column(name = "is_again", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '是否继续购买'")
     private boolean isAgain;
 
     /**
      * 意见
      */
-    @Column(name = "advice",columnDefinition = "VARCHAR(255)   COMMENT '意见'")
+    @Column(name = "advice", columnDefinition = "VARCHAR(255)   COMMENT '意见'")
     private String advice;
 
+    /**
+     * 离职id
+     */
+    @Column(name = "dimission_id", unique = true, nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '离职id'")
+    private String dimissionId;
+
+    public String getDimissionId() {
+        return dimissionId;
+    }
+
+    public void setDimissionId(String dimissionId) {
+        this.dimissionId = dimissionId;
+    }
 
     public String getName() {
         return name;

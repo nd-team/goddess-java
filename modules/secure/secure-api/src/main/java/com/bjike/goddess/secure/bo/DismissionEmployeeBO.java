@@ -17,7 +17,11 @@ public class DismissionEmployeeBO extends BaseBO {
     /**
      * 离职员工id
      */
-    private String id;
+    private String dimissionId;
+    /**
+     * 离职时间
+     */
+    private String endTime;
 
     public String getName() {
         return name;
@@ -27,13 +31,19 @@ public class DismissionEmployeeBO extends BaseBO {
         this.name = name;
     }
 
-    @Override
-    public String getId() {
-        return id;
+    public String getEndTime() {
+        return endTime;
     }
 
-    @Override
-    public void setId(String id) {
-        this.id = id;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getDimissionId() {
+        return dimissionId;
+    }
+
+    public void setDimissionId(String dimissionId) {
+        this.dimissionId = dimissionId;
     }
 }

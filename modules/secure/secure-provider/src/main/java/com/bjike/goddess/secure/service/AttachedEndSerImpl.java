@@ -39,7 +39,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     private int day1;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void save() throws SerException {
         List<AttachedBO> list = attachedSer.findALL();
         if (list.size() > 0) {
@@ -66,7 +66,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedEndBO is_Again(AttachedEndTO to) throws SerException {
         AttachedEnd attachedEnd = super.findById(to.getId());
         LocalDateTime a = attachedEnd.getCreateTime();
@@ -89,7 +89,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
         int year=localDateTime.getYear();
         int month=localDateTime.getMonthValue();
         int day=localDateTime.getDayOfMonth();
-        if (year1!=year||month1!=month||day1!=day) {
+        if ((year1!=year)||(month1!=month)||(day1!=day)) {
             b = true;
         }
         if (b) {
@@ -110,7 +110,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedEndBO delete(String id) throws SerException {
         super.remove(id);
         return null;

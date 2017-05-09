@@ -36,7 +36,7 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     private RemoveEmployeeSer removeEmployeeSer;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public EmployeeSecureBO save(EmployeeSecureTO to) throws SerException {
         EmployeeSecure employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class, true);
         super.save(employeeSecure);
@@ -81,7 +81,7 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public EmployeeSecureBO edit(EmployeeSecureTO to) throws SerException {
         EmployeeSecure employeeSecure = super.findById(to.getId());
         LocalDateTime a = employeeSecure.getCreateTime();
@@ -94,7 +94,7 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(EmployeeSecureTO to) throws SerException {
 //        EmployeeSecure employeeSecure= super.findById(to.getId());
 //        employeeSecure.setStatus("已减员成功");
@@ -114,7 +114,7 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public EmployeeSecureBO delete(String id) throws SerException {
         super.remove(id);
         return null;

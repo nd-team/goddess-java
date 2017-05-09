@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implements AttachedSer {
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedBO save(AttachedTO to) throws SerException {
         Attached attached = BeanTransform.copyProperties(to, Attached.class, true);
         attached = super.save(attached);
@@ -35,7 +35,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedBO exameAndComplete(AttachedTO to) throws SerException {
         Attached attached = super.findById(to.getId());
         attached.setMoney(to.getMoney());
@@ -48,7 +48,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedBO delete(String id) throws SerException {
         super.remove(id);
         return null;
@@ -73,7 +73,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AttachedBO update(AttachedTO to) throws SerException {
         Attached attached = super.findById(to.getId());
         LocalDateTime a = attached.getCreateTime();

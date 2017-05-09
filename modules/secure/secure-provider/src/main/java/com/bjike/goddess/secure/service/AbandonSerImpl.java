@@ -1,6 +1,7 @@
 package com.bjike.goddess.secure.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.bo.AbandonBO;
@@ -27,7 +28,7 @@ import java.util.List;
 @Service
 public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements AbandonSer {
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AbandonBO save(AbandonTO to) throws SerException {
         Abandon abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         super.save(abandon);
@@ -35,14 +36,14 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AbandonBO delete(String id) throws SerException {
         super.remove(id);
         return null;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AbandonBO edit(AbandonTO to) throws SerException {
         Abandon abandon = super.findById(to.getId());
         LocalDateTime a = abandon.getCreateTime();

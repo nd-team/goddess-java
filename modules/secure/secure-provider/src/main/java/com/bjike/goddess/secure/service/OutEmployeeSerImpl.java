@@ -29,21 +29,9 @@ import java.util.List;
 public class OutEmployeeSerImpl extends ServiceImpl<OutEmployee, OutEmployeeDTO> implements OutEmployeeSer {
     @Autowired
     private BeforeRemoveEmployeeSer beforeRemoveEmployeeSer;
-    private boolean b = true;
 
     @Override
-    @Transactional
-    public void save() throws SerException {
-        List<DismissionEmployeeBO> list = beforeRemoveEmployeeSer.all();
-        for (DismissionEmployeeBO bo : list) {
-            OutEmployee outEmployee = new OutEmployee();
-            outEmployee.setName(bo.getName());
-            super.save(outEmployee);
-        }
-    }
-
-    @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public OutEmployeeBO is_again(OutEmployeeTO to) throws SerException {
         OutEmployee outEmployee = super.findById(to.getId());
         outEmployee.setIsAgain(to.getIsAgain());
@@ -53,17 +41,35 @@ public class OutEmployeeSerImpl extends ServiceImpl<OutEmployee, OutEmployeeDTO>
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public OutEmployeeBO delete(String id) throws SerException {
         super.remove(id);
         return null;
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public List<OutEmployeeBO> find(OutEmployeeDTO dto) throws SerException {
-        if (b) {
-            this.save();
-            b = false;
+        List<DismissionEmployeeBO> list1 = beforeRemoveEmployeeSer.all();
+        List<OutEmployee> all = findAll();
+        for (DismissionEmployeeBO d : list1) {
+            if (all.size() != 0) {
+                for (OutEmployee o : all) {
+                    if (!(o.getDimissionId().equals(d.getDimissionId()))) {
+                        OutEmployee outEmployee = new OutEmployee();
+                        outEmployee.setDimissionId(d.getDimissionId());
+                        outEmployee.setName(d.getName());
+                        outEmployee.setEndTime(d.getEndTime());
+                        super.save(outEmployee);
+                    }
+                }
+            } else {
+                OutEmployee outEmployee = new OutEmployee();
+                outEmployee.setDimissionId(d.getDimissionId());
+                outEmployee.setName(d.getName());
+                outEmployee.setEndTime(d.getEndTime());
+                super.save(outEmployee);
+            }
         }
         List<OutEmployee> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, OutEmployeeBO.class);

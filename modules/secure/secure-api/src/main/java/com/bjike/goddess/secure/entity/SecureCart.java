@@ -21,7 +21,7 @@ public class SecureCart extends BaseEntity {
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
@@ -39,7 +39,7 @@ public class SecureCart extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "arrival",columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "arrival", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String arrival;
 
     /**
@@ -84,6 +84,12 @@ public class SecureCart extends BaseEntity {
     @Column(name = "reason", columnDefinition = "VARCHAR(255)   COMMENT '曾补办原因明细'")
     private String reason;
 
+    /**
+     * 员工社保信息
+     */
+    @OneToOne(fetch = FetchType.EAGER/**, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}**/)
+    @JoinColumn(name = "employeeSecure_id", nullable = false, unique = true, columnDefinition = "VARCHAR(36)   COMMENT '员工社保信息'")
+    private EmployeeSecure employeeSecure;
 
     public String getName() {
         return name;
@@ -171,5 +177,13 @@ public class SecureCart extends BaseEntity {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public EmployeeSecure getEmployeeSecure() {
+        return employeeSecure;
+    }
+
+    public void setEmployeeSecure(EmployeeSecure employeeSecure) {
+        this.employeeSecure = employeeSecure;
     }
 }

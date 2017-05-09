@@ -17,7 +17,8 @@ public class JapiTest {
 				"modules/secure/secure-api",
 				"common/common-api",
 				"modules/dimission-api",
-				"modules/message-api"
+				"modules/message-api",
+				"modules/user-api"
 		});
 		JapiClient.setFlushServer(true);
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

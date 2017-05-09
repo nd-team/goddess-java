@@ -39,7 +39,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AddEmployeeBO edit(AddEmployeeTO to) throws SerException {
         AddEmployee addEmployee = super.findById(to.getId());
         LocalDateTime a = addEmployee.getCreateTime();
@@ -52,14 +52,14 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AddEmployeeBO delete(String id) throws SerException {
         super.remove(id);
         return null;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public AddEmployeeBO save(AddEmployeeTO to) throws SerException {
         AddEmployee addEmployee = BeanTransform.copyProperties(to, AddEmployee.class, true);
         super.save(addEmployee);

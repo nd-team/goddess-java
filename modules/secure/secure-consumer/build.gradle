@@ -38,7 +38,6 @@ dependencies {
     }
 
     compile project(":modules:secure:secure-api")
-    compile project(":modules:dimission:dimission-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

@@ -32,7 +32,7 @@ public class PayDetailSerImpl extends ServiceImpl<PayDetail, PayDetailDTO> imple
     private UserAPI userAPI;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public PayDetailBO save(PayDetailTO to) throws SerException {
         PayDetail payDetail = BeanTransform.copyProperties(to, PayDetail.class, true);
         super.save(payDetail);
@@ -40,7 +40,7 @@ public class PayDetailSerImpl extends ServiceImpl<PayDetail, PayDetailDTO> imple
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void edit(PayDetailTO to) throws SerException {
         PayDetail payDetail = super.findById(to.getId());
         LocalDateTime a = payDetail.getCreateTime();
@@ -64,7 +64,7 @@ public class PayDetailSerImpl extends ServiceImpl<PayDetail, PayDetailDTO> imple
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
         super.remove(id);
     }

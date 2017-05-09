@@ -49,7 +49,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     private UserDetailAPI userDetailAPI;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeRemoveEmployeeBO save(BeforeRemoveEmployeeTO to) throws SerException {
         BeforeRemoveEmployee beforeRemoveEmployee = BeanTransform.copyProperties(to, BeforeRemoveEmployee.class, true);
         super.save(beforeRemoveEmployee);
@@ -62,7 +62,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeRemoveEmployeeBO exam(BeforeRemoveEmployeeTO to) throws SerException {
         if (userDetailAPI.findByUserId(userAPI.currentUser().getId()).getDepartmentName().equals("总经办")) {
             BeforeRemoveEmployee beforeRemoveEmployee = super.findById(to.getId());
@@ -91,7 +91,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BeforeRemoveEmployeeBO delete(String id) throws SerException {
         super.remove(id);
         return null;
@@ -104,7 +104,8 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         for (DimissionInfoBO d : list) {
             DismissionEmployeeBO bo = new DismissionEmployeeBO();
             bo.setName(d.getUsername());
-            bo.setId(d.getId());
+            bo.setDimissionId(d.getId());
+            bo.setEndTime(d.getDimissionDate());
             boList.add(bo);
         }
         return boList;

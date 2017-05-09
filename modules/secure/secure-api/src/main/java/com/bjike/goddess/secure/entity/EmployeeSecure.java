@@ -21,19 +21,19 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 姓名
      */
-    @Column(name = "name",columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
      * 员工编号
      */
-    @Column(name = "employeeNum",columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name = "employeeNum", columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
     private String employeeNum;
 
     /**
      * 地区
      */
-    @Column(name = "arrival",columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "arrival", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String arrival;
 
     /**
@@ -45,13 +45,13 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 参保单位
      */
-    @Column(name = "secureDepartment",columnDefinition = "VARCHAR(255)   COMMENT '参保单位'")
+    @Column(name = "secureDepartment", columnDefinition = "VARCHAR(255)   COMMENT '参保单位'")
     private String secureDepartment;
 
     /**
      * 身份证号码
      */
-    @Column(name = "idCart",columnDefinition = "VARCHAR(255)   COMMENT '身份证号码'")
+    @Column(name = "idCart", columnDefinition = "VARCHAR(255)   COMMENT '身份证号码'")
     private String idCart;
 
     /**
@@ -63,31 +63,31 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 联系方式
      */
-    @Column(name = "tel",columnDefinition = "VARCHAR(255)   COMMENT '联系方式'")
+    @Column(name = "tel", columnDefinition = "VARCHAR(255)   COMMENT '联系方式'")
     private String tel;
 
     /**
      * 入职时间
      */
-    @Column(name = "startTime",  columnDefinition = "DATETIME   COMMENT '入职时间'")
+    @Column(name = "startTime", columnDefinition = "DATETIME   COMMENT '入职时间'")
     private String startTime;
 
     /**
      * 转正时间
      */
-    @Column(name = "officialTime",  columnDefinition = "DATETIME   COMMENT '转正时间'")
+    @Column(name = "officialTime", columnDefinition = "DATETIME   COMMENT '转正时间'")
     private String officialTime;
 
     /**
      * 前购买社保地市
      */
-    @Column(name = "beforeCity",  columnDefinition = "VARCHAR(255)   COMMENT '前购买社保地市'")
+    @Column(name = "beforeCity", columnDefinition = "VARCHAR(255)   COMMENT '前购买社保地市'")
     private String beforeCity;
 
     /**
      * 前地市参保时间
      */
-    @Column(name = "beforeTime",  columnDefinition = "DATETIME   COMMENT '前地市参保时间'")
+    @Column(name = "beforeTime", columnDefinition = "DATETIME   COMMENT '前地市参保时间'")
     private String beforeTime;
 
     /**
@@ -99,19 +99,19 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 参保时间
      */
-    @Column(name = "secureTime",columnDefinition = "DATETIME   COMMENT '参保时间'")
+    @Column(name = "secureTime", columnDefinition = "DATETIME   COMMENT '参保时间'")
     private String secureTime;
 
     /**
      * 参保类型
      */
-    @Column(name = "secureType",columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
+    @Column(name = "secureType", columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
     private String secureType;
 
     /**
      * 购买方式
      */
-    @Column(name = "payType",  columnDefinition = "VARCHAR(255)   COMMENT '购买方式'")
+    @Column(name = "payType", columnDefinition = "VARCHAR(255)   COMMENT '购买方式'")
     private String payType;
 
     /**
@@ -123,7 +123,7 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 运营商务部意见
      */
-    @Column(name = "businessAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '运营商务部意见'")
+    @Column(name = "businessAdvice", columnDefinition = "VARCHAR(255)   COMMENT '运营商务部意见'")
     private String businessAdvice;
 
     /**
@@ -141,9 +141,14 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "description",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String description;
 
+    /**
+     * 社保卡信息
+     */
+    @OneToOne(mappedBy = "employeeSecure", fetch = FetchType.EAGER/**, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}**/)
+    private SecureCart secureCart;
 
     public String getName() {
         return name;
@@ -169,11 +174,11 @@ public class EmployeeSecure extends BaseEntity {
         this.arrival = arrival;
     }
 
-    public String getGroup1() {
+    public String getTeam() {
         return team;
     }
 
-    public void setGroup1(String team) {
+    public void setTeam(String team) {
         this.team = team;
     }
 
@@ -311,5 +316,13 @@ public class EmployeeSecure extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public SecureCart getSecureCart() {
+        return secureCart;
+    }
+
+    public void setSecureCart(SecureCart secureCart) {
+        this.secureCart = secureCart;
     }
 }

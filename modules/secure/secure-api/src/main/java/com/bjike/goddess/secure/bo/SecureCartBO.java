@@ -2,8 +2,6 @@ package com.bjike.goddess.secure.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 社保卡基本信息业务传输对象
  *
@@ -70,6 +68,10 @@ public class SecureCartBO extends BaseBO {
      */
     private String reason;
 
+    /**
+     * 员工社保id
+     */
+    private String employeeSecureId;
 
     public String getName() {
         return name;
@@ -157,5 +159,13 @@ public class SecureCartBO extends BaseBO {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getEmployeeSecureId() {
+        return employeeSecureId;
+    }
+
+    public void setEmployeeSecureId(String employeeSecureId) {
+        this.employeeSecureId = employeeSecureId;
     }
 }

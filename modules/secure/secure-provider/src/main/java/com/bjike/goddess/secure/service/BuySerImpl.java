@@ -42,7 +42,7 @@ public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BuyBO edit(BuyTO to) throws SerException {
         Buy buy = super.findById(to.getId());
         LocalDateTime a = buy.getCreateTime();
@@ -67,7 +67,7 @@ public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BuyBO delete(String id) throws SerException {
         super.remove(id);
         return null;
@@ -80,7 +80,7 @@ public class BuySerImpl extends ServiceImpl<Buy, BuyDTO> implements BuySer {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public BuyBO save(BuyTO to) throws SerException {
         Buy buy = BeanTransform.copyProperties(to, Buy.class, true);
         buy = super.save(buy);
