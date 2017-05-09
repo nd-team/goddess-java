@@ -1,7 +1,6 @@
 package com.bjike.goddess.businessproject.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 商务项目合同类型
@@ -17,7 +16,6 @@ public class ContractCategoryTO extends BaseTO {
     /**
      * 合同类型名称
      */
-    @NotBlank(message = "合同类型名称不能为空")
     private String contractName;
 
     /**

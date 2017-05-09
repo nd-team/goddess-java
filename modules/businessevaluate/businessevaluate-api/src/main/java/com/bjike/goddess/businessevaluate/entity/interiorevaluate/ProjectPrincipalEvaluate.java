@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "businessevaluate_projectprincipalevaluate")
+@Table(name = "businessevaluate_projectprincipal")
 public class ProjectPrincipalEvaluate extends BaseEntity {
 
     /**
@@ -35,13 +35,13 @@ public class ProjectPrincipalEvaluate extends BaseEntity {
     /**
      * 其他
      */
-    @Column(name = "another", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '其他'")
+    @Column(name = "another", columnDefinition = "VARCHAR(255)   COMMENT '其他'")
     private String another;
 
     /**
      * 项目信息Id
      */
-    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目信息Id'")
+    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目信息Id'")
     private String projectInfoId;
 
 

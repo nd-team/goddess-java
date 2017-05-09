@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,10 +36,11 @@ public class ProjectProfitAct {
      * 分页查询利润率
      *
      * @param dto 分页条件
+     * @return class ProjectProfitRateVO
      * @version v1
      */
     @GetMapping("v1/profitPageList")
-    public Result profitPageList(EvaluateProjectInfoDTO dto) throws ActException {
+    public Result profitPageList(EvaluateProjectInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ProjectProfitRateVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.profitPageList(dto), ProjectProfitRateVO.class);
             return ActResult.initialize(voList);

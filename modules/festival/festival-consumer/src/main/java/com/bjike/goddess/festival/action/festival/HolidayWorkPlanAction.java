@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -41,11 +40,11 @@ public class HolidayWorkPlanAction {
      * @return  class HolidayWorkPlanVO
      * @version v1
      */
-    @GetMapping("v1/getHoliDetail")
-    public Result getHolidayWorkPlanDetail (@Validated(HolidayWorkPlanDTO.TESTFindDetail.class) HolidayWorkPlanDTO holidayWorkPlanDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/getHolidayWorkPlanDetail")
+    public Result getHolidayWorkPlanDetail (@Validated(HolidayWorkPlanDTO.TESTFindDetail.class) HolidayWorkPlanDTO holidayWorkPlanDTO, BindingResult bindingResult) throws ActException {
         try {
             List<HolidayWorkPlanVO> holidayWorkPlanVOS = BeanTransform.copyProperties(
-                    holidayWorkPlanAPI.getHolidayWorkPlan(holidayWorkPlanDTO.getHolidayProgrammeId()), HolidayWorkPlanVO.class, request);
+                    holidayWorkPlanAPI.getHolidayWorkPlan(holidayWorkPlanDTO.getHolidayProgrammeId()), HolidayWorkPlanVO.class, true);
             return ActResult.initialize(holidayWorkPlanVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

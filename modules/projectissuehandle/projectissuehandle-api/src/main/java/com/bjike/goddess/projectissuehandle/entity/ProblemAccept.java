@@ -65,7 +65,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 通知方式
      */
-    @Column(name = "noticeWay",  columnDefinition = "TINYINT(2)   COMMENT '通知方式'")
+    @Column(name = "noticeWay",  columnDefinition = "INT(2)   COMMENT '通知方式'")
     private NoticeWay noticeWay;
 
     /**
@@ -77,7 +77,7 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 问题类型
      */
-    @Column(name = "problemTypes", columnDefinition = "TINYINT(2)   COMMENT '问题类型'")
+    @Column(name = "problemTypes", columnDefinition = "INT(2)   COMMENT '问题类型'")
     private ProblemTypes problemTypes;
 
     /**
@@ -89,19 +89,19 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 问题紧急程度
      */
-    @Column(name = "problemEmergencyDegree", columnDefinition = "TINYINT(2)   COMMENT '问题紧急程度'")
+    @Column(name = "problemEmergencyDegree", columnDefinition = "INT(2)   COMMENT '问题紧急程度'")
     private ProblemEmergencyDegree problemEmergencyDegree;
 
     /**
      * 问题处理时间
      */
-    @Column(name = "problemProcessingTime", columnDefinition = "TINYINT(2)   COMMENT '问题处理时间'")
+    @Column(name = "problemProcessingTime", columnDefinition = "INT(2)   COMMENT '问题处理时间'")
     private ProblemProcessingTime problemProcessingTime;
 
     /**
      * 受影响部门
      */
-    @Column(name = "affectedDepartment",  columnDefinition = "TINYINT(2)   COMMENT '受影响部门'")
+    @Column(name = "affectedDepartment",  columnDefinition = "INT(2)   COMMENT '受影响部门'")
     private AffectedDepartment affectedDepartment;
     /**
      * 确认问题处理结果

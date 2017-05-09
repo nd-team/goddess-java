@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -42,10 +41,10 @@ public class WelfareAction {
      * @version v1
      */
     @GetMapping("v1/getWelfareDetail")
-    public Result getWelfareDetail (@Validated(WelfareDTO.TESTFindDetail.class) WelfareDTO welfareDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result getWelfareDetail (@Validated(WelfareDTO.TESTFindDetail.class) WelfareDTO welfareDTO, BindingResult bindingResult) throws ActException {
         try {
             List<WelfareVO> welfareVOS = BeanTransform.copyProperties(
-                    welfareAPI.getWelfare(welfareDTO.getHolidayProgrammeId()), WelfareVO.class, request);
+                    welfareAPI.getWelfare(welfareDTO.getHolidayProgrammeId()), WelfareVO.class, true);
             return ActResult.initialize(welfareVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

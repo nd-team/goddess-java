@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -42,11 +41,11 @@ public class NoticeThingAction {
      * @return  class NoticeThingVO
      * @version v1
      */
-    @GetMapping("v1/getNotiDetail")
-    public Result getNoticeThingDetail (@Validated(NoticeThingDTO.TESTFindDetail.class) NoticeThingDTO noticeThingDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/getNoticeThingDetail")
+    public Result getNoticeThingDetail (@Validated(NoticeThingDTO.TESTFindDetail.class) NoticeThingDTO noticeThingDTO, BindingResult bindingResult) throws ActException {
         try {
             List<NoticeThingVO> noticeThingVOS = BeanTransform.copyProperties(
-                    noticeThingAPI.getNoticeThing(noticeThingDTO.getHolidayProgrammeId()), NoticeThingVO.class, request);
+                    noticeThingAPI.getNoticeThing(noticeThingDTO.getHolidayProgrammeId()), NoticeThingVO.class, true);
             return ActResult.initialize(noticeThingVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

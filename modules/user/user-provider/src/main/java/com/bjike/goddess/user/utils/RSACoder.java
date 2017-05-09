@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.utils;
 
 
-import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
@@ -241,13 +240,5 @@ public class RSACoder {
         keyMap.put(PUBLIC_KEY, keyPair.getPublic());// 公钥
         keyMap.put(PRIVATE_KEY, keyPair.getPrivate());// 私钥
         return keyMap;
-    }
-
-    public static void main(String[] args)throws Exception {
-        Map<String,Key> keyMap = initKey();
-       String publicKey = RSACoder.getPublicKey(keyMap);
-       String privateKey = RSACoder.getPrivateKey(keyMap);
-        System.err.println("公钥: \n\r" + publicKey);
-        System.err.println("私钥： \n\r" + privateKey);
     }
 }

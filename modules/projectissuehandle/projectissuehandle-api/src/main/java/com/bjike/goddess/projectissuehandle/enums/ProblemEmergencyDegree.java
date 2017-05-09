@@ -5,7 +5,7 @@ package com.bjike.goddess.projectissuehandle.enums;
  *
  * @Author: [xiazhili]
  * @Date: [17-3-27]
- * @Description: []
+ * @Description: [问题紧急程度枚举]
  * @Version: [1.0.0]
  * @Copy: [com.bjike.goddess]
  */
@@ -21,7 +21,7 @@ public enum ProblemEmergencyDegree {
     /**
      * 紧急
      */
-    EMERGENCY(2);
+    EMERGENCY(2),;
 
     private int code;
 

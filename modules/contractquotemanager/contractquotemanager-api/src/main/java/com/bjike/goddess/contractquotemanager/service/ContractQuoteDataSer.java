@@ -3,8 +3,8 @@ package com.bjike.goddess.contractquotemanager.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
-import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
+import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
 
 import java.util.List;
@@ -20,88 +20,46 @@ import java.util.List;
  */
 public interface ContractQuoteDataSer extends Ser<ContractQuoteData, ContractQuoteDataDTO> {
 
-    /**
-     * 添加合同单价资料信息
-     *
-     * @param to 合同单价资料信息to
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
-    default ContractQuoteDataBO save(ContractQuoteDataTO to) throws SerException {
+    default ContractQuoteDataBO save(ContractQuoteDataTO contractQuoteDataTO) throws SerException {
         return null;
     }
 
-    /**
-     * 分页查询合同单价资料信息
-     *
-     * @param dto 合同单价资料信息dto
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
-    default List<ContractQuoteDataBO> list(ContractQuoteDataDTO dto) throws SerException {
+    default List<ContractQuoteDataBO> list(ContractQuoteDataDTO contractQuoteDataDTO) throws SerException {
         return null;
     }
 
-    /**
-     * 编辑合同单价资料信息
-     *
-     * @param to 合同单价资料信息to
-     * @throws SerException
-     */
-    default void update(ContractQuoteDataTO to) throws SerException {
+    default void update(ContractQuoteDataTO contractQuoteDataTO) throws SerException {
 
     }
 
-    /**
-     * 根据id删除合同单价资料信息
-     *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
-     */
     default void remove(String id) throws SerException {
 
     }
 
     /**
-     * 冻结合同单价资料信息
+     * 冻结使用状态
      *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
+     * @param id id
      */
     default void congealStatus(String id) throws SerException {
-
+        return;
     }
 
     /**
-     * 解冻合同单价资料信息
+     * 解冻使用状态
      *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
+     * @param id id
      */
     default void thawStatus(String id) throws SerException {
-
+        return;
     }
 
-    /**
-     * 汇总合同单价资料信息
-     *
-     * @param dto 合同单价资料信息dto
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
+
     default List<ContractQuoteDataBO> collect(ContractQuoteDataDTO dto) throws SerException {
         return null;
     }
 
-    /**
-     * 根据地区和项目组查询合同单价资料信息
-     *
-     * @param area 地区
-     * @param project 项目组
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
-    default List<ContractQuoteDataBO> searchs(String area, String project) throws SerException {
+    default List<ContractQuoteDataBO> searchs(ContractQuoteDataBO bo) throws SerException {
         return null;
     }
 

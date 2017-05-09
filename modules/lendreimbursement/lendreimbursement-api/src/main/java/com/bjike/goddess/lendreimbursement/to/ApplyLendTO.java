@@ -115,7 +115,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 金额
      */
-    @NotNull(groups = ApplyLendTO.TESTAddAndEdit.class,message ="金额不能为空" )
+    @NotBlank(groups = ApplyLendTO.TESTAddAndEdit.class,message ="金额不能为空" )
     private Double money;
 
     /**

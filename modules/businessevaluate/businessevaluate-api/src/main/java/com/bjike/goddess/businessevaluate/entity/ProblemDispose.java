@@ -91,13 +91,13 @@ public class ProblemDispose extends BaseEntity {
     /**
      * 项目信息Id
      */
-    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目信息Id'")
+    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目信息Id'")
     private String projectInfoId;
 
     /**
      * 影响模块
      */
-    @Column(name = "affectModule", columnDefinition = "TINYINT(2)   COMMENT '影响模块'")
+    @Column(name = "affectModule", columnDefinition = "VARCHAR(255)   COMMENT '影响模块'")
     private String affectModule;
 
     /**

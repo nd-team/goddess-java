@@ -48,4 +48,20 @@ public interface BusinessPrincipalEvaluateAPI {
      * @return 商务负责人评价结果集
      */
     List<BusinessPrincipalEvaluateBO> pageList(BusinessPrincipalEvaluateDTO dto) throws SerException;
+
+    /**
+     * 根据id查询商务负责人评价
+     *
+     * @param id 商务负责人评价id
+     * @return 商务负责人评价
+     */
+    BusinessPrincipalEvaluateBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(BusinessPrincipalEvaluateDTO dto) throws SerException;
 }

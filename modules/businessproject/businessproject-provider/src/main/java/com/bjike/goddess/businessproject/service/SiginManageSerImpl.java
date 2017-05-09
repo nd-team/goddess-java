@@ -39,21 +39,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Autowired
     private UserAPI userAPI;
 
-    @Override
-    public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
-        searchCondition( siginManageDTO);
-        Long count = super.count( siginManageDTO );
-        return count;
-    }
-
-    @Override
-    public SiginManageBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能呢为空");
-        }
-        SiginManage siginManage = super.findById(id);
-        return BeanTransform.copyProperties(siginManage, SiginManageBO.class );
-    }
+    
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         searchCondition( siginManageDTO);

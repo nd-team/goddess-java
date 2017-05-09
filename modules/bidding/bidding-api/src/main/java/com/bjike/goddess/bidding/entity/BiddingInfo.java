@@ -39,14 +39,14 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 招投标类型
      */
-    @Column(name = "biddingType", columnDefinition = "TINYINT(2)   COMMENT '招投标类型'")
+    @Column(name = "biddingType", columnDefinition = "INT(2)   COMMENT '招投标类型'")
     private BiddingType biddingType;
 
 
     /**
      * 业务类型
      */
-    @Column(name = "businessType", columnDefinition = "TINYINT(2)   COMMENT '业务类型'")
+    @Column(name = "businessType", columnDefinition = "INT(2)   COMMENT '业务类型'")
     private BusinessType businessType;
 
     /**
@@ -130,7 +130,7 @@ public class BiddingInfo extends BaseEntity {
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
+    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
     /**

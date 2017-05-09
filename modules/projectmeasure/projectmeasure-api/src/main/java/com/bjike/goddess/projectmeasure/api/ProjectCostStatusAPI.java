@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmeasure.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
+import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 
 import java.util.List;
@@ -17,23 +18,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProjectCostStatusAPI {
-
-    /**
-     * 根据id查询项目费用情况
-     *
-     * @param id 项目费用情况唯一标识
-     * @return class ProjectCostStatusBO
-     * @throws SerException
-     */
-    ProjectCostStatusBO findById(String id) throws SerException;
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目费用情况dto
-     * @throws SerException
-     */
-    Long count(ProjectCostStatusDTO dto) throws SerException;
 
     /**
      * 分页查询项目费用情况

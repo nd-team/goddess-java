@@ -7,12 +7,10 @@ import com.bjike.goddess.projectmeasure.bo.SingleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.to.SingleProjectMultipleUITO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,10 +47,9 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public SingleProjectMultipleUIBO save(SingleProjectMultipleUITO to) throws SerException {
         SingleProjectMultipleUI entity = BeanTransform.copyProperties(to, SingleProjectMultipleUI.class, true);
-        verify(entity);//参数校验
         entity = super.save(entity);
         SingleProjectMultipleUIBO bo = BeanTransform.copyProperties(entity, SingleProjectMultipleUIBO.class);
         return bo;
@@ -65,44 +62,10 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public void update(SingleProjectMultipleUITO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
-            SingleProjectMultipleUI model = super.findById(to.getId());
-            if (model != null) {
-                updateSMUI(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
-    }
-
-    /**
-     * 更新单个项目多个界面
-     *
-     * @param to
-     * @param model
-     */
-    private void updateSMUI(SingleProjectMultipleUITO to, SingleProjectMultipleUI model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        verify(model);//参数校验
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
-    }
-
-    /**
-     * 参数校验
-     *
-     * @param model
-     */
-    private void verify(SingleProjectMultipleUI model) throws SerException {
-
-        if ((model.getWorkload() != null) && (model.getWorkload() < 0)) {
-            throw new SerException("参数工作量workload必须是大于等于0的整数");
-        }
-
+        SingleProjectMultipleUI entity = BeanTransform.copyProperties(to, SingleProjectMultipleUI.class, true);
+        super.update(entity);
     }
 
     /**
@@ -112,7 +75,7 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public void remove(String id) throws SerException {
         super.remove(id);
     }

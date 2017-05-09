@@ -21,21 +21,6 @@ import java.util.List;
 public interface ContractCategorySer extends Ser<ContractCategory, ContractCategoryDTO> {
 
     /**
-     * 项目合同类型列表总条数
-     *
-     */
-    default Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据id获取项目合同类型列表
-     * @return class ContractCategoryBO
-     */
-    default ContractCategoryBO getOneById(String id) throws SerException {return null;}
-
-
-    /**
      * 合同类型列表
      * @return class ContractCategoryBO
      */

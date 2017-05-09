@@ -14,12 +14,9 @@
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--配置暴露的公共接口-->
-	<dubbo:reference validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" id="contractNodeStandardApiImpl"/>
-	<dubbo:reference validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" id="contractProjectInfoApiImpl"/>
-	<dubbo:reference validation="true" interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" id="contractQuoteDataApiImpl"/>
 
-	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+	<dubbo:reference validation="true" id="contractQuoteDataApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI" />
+	<dubbo:reference validation="true"  id="contractNodeStandardApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI" />
+	<dubbo:reference validation="true" id="ContractProjectInfoApiImpl" interface="com.bjike.goddess.contractquotemanager.api.ContractProjectInfoAPI" />
 
 </beans>

@@ -95,6 +95,13 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
         return null;
     }
 
+    /**
+     * 上传
+     */
+    default void upload() throws SerException {
+        return;
+
+    }
 
     /**
      * 获取地区

@@ -2,6 +2,8 @@ package com.bjike.goddess.contractquotemanager.vo;
 
 import com.bjike.goddess.common.api.type.Status;
 
+import javax.persistence.Column;
+
 /**
  * 合同单价资料信息表现层对象
  *
@@ -12,11 +14,6 @@ import com.bjike.goddess.common.api.type.Status;
  * @Copy: [ com.bjike ]
  */
 public class ContractQuoteDataVO {
-
-    /**
-     * id
-     */
-    private String id;
 
     /**
      * 客户名称
@@ -48,14 +45,10 @@ public class ContractQuoteDataVO {
      */
     private Status status;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    /**
+     * 附件
+     */
+// private Set<ModuleAttchment>  attchmentSet;
     public String getCustomerName() {
         return customerName;
     }
@@ -103,5 +96,12 @@ public class ContractQuoteDataVO {
     public void setStatus(Status status) {
         this.status = status;
     }
+// public Set<ModuleAttchment> getAttchmentSet () {
+// return attchmentSet;
+// }
+// public void setAttchmentSet (Set<ModuleAttchment> attchmentSet ) {
+// this.attchmentSet = attchmentSet ;
+// }
+//
 
 }

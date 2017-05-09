@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "businessevaluate_businessevaluatecollect")
+@Table(name = "businessevaluate_collect")
 public class BusinessEvaluateCollect extends BaseEntity {
 
     /**
@@ -33,8 +33,8 @@ public class BusinessEvaluateCollect extends BaseEntity {
     /**
      * 项目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
-    private String project;
+    @Column(name = "projectId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
+    private String projectId;
 
     /**
      * 创建人/修改人
@@ -45,7 +45,7 @@ public class BusinessEvaluateCollect extends BaseEntity {
     /**
      * 上次发送时间
      */
-    @Column(name = "lastSendTime", nullable = false, columnDefinition = "DATETIME   COMMENT '上次发送时间'")
+    @Column(name = "lastSendTime", columnDefinition = "DATETIME   COMMENT '上次发送时间'")
     private LocalDateTime lastSendTime;
 
     /**
@@ -57,19 +57,19 @@ public class BusinessEvaluateCollect extends BaseEntity {
     /**
      * 发送间隔类型
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔类型'")
+    @Column(name = "sendIntervalType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '发送间隔类型'")
     private SendIntervalType sendIntervalType;
 
     /**
      * 发送间隔
      */
-    @Column(name = "sendInterval", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送间隔'")
-    private String sendInterval;
+    @Column(name = "sendInterval", nullable = false, columnDefinition = "INT(11)   COMMENT '发送间隔'")
+    private Integer sendInterval;
 
     /**
-     * 汇总间隔
+     * 汇总间隔类型
      */
-    @Column(name = "collectInterval", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '汇总间隔'")
+    @Column(name = "collectInterval", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '汇总间隔'")
     private CollectIntervalType collectInterval;
 
     /**
@@ -93,12 +93,12 @@ public class BusinessEvaluateCollect extends BaseEntity {
         this.area = area;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getOperateUser() {
@@ -133,11 +133,11 @@ public class BusinessEvaluateCollect extends BaseEntity {
         this.sendIntervalType = sendIntervalType;
     }
 
-    public String getSendInterval() {
+    public Integer getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(String sendInterval) {
+    public void setSendInterval(Integer sendInterval) {
         this.sendInterval = sendInterval;
     }
 

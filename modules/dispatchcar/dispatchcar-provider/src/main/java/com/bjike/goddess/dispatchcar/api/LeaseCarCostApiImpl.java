@@ -1,6 +1,7 @@
 package com.bjike.goddess.dispatchcar.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.bo.LeaseCarCostBO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.service.LeaseCarCostSer;
@@ -43,5 +44,15 @@ public class LeaseCarCostApiImpl implements LeaseCarCostAPI {
     @Override
     public List<LeaseCarCostBO> pageList(LeaseCarCostDTO dto) throws SerException {
         return leaseCarCostSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(LeaseCarCostDTO dto) throws SerException {
+        return leaseCarCostSer.count(dto);
+    }
+
+    @Override
+    public LeaseCarCostBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(leaseCarCostSer.findById(id),LeaseCarCostBO.class);
     }
 }

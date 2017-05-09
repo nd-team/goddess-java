@@ -26,18 +26,7 @@ public class ProjectOutsourcingDTO extends BaseDTO {
      * 项目结果
      */
     private CommunicateResult communicateResult;
-    /**
-     * 内部项目名称
-     */
-    private String contractInProject;
-    /**
-     * 创建开始范围时间
-     */
-    private String startTime;
-    /**
-     * 创建结束范围时间
-     */
-    private String endTime;
+
 
     public String getCommunicateUser() {
         return communicateUser;
@@ -61,29 +50,5 @@ public class ProjectOutsourcingDTO extends BaseDTO {
 
     public void setCommunicateResult(CommunicateResult communicateResult) {
         this.communicateResult = communicateResult;
-    }
-
-    public String getContractInProject() {
-        return contractInProject;
-    }
-
-    public void setContractInProject(String contractInProject) {
-        this.contractInProject = contractInProject;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 }

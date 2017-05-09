@@ -3,7 +3,7 @@ package com.bjike.goddess.festival.action.festival;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.festival.api.HolidayProgrammeAPI;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -61,11 +60,11 @@ public class HolidayProgrammeAction {
      * @return  class HolidayProgrammeVO
      * @version v1
      */
-    @GetMapping("v1/list")
-    public Result findListHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listHolidayProgramme")
+    public Result findListHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO, BindingResult bindingResult) throws ActException {
         try {
             List<HolidayProgrammeVO> holidayProgrammeVOList = BeanTransform.copyProperties(
-                    holidayProgrammeAPI.listHolidayProgramme(holidayProgrammeDTO), HolidayProgrammeVO.class, request);
+                    holidayProgrammeAPI.listHolidayProgramme(holidayProgrammeDTO), HolidayProgrammeVO.class, true);
             return ActResult.initialize(holidayProgrammeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -85,7 +84,7 @@ public class HolidayProgrammeAction {
     public Result addHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO, BindingResult bindingResult) throws ActException {
         try {
             HolidayProgrammeBO holidayProgrammeBO1 = holidayProgrammeAPI.addHolidayProgramme(holidayProgrammeTO);
-            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,7 +104,7 @@ public class HolidayProgrammeAction {
     public Result editHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO) throws ActException {
         try {
             HolidayProgrammeBO holidayProgrammeBO1 = holidayProgrammeAPI.editHolidayProgramme(holidayProgrammeTO);
-            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

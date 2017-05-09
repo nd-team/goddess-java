@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.AbilityGrowUpDTO;
 import com.bjike.goddess.businessevaluate.service.AbilityGrowUpSer;
 import com.bjike.goddess.businessevaluate.to.AbilityGrowUpTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class AbilityGrowUpApiImpl implements AbilityGrowUpAPI {
     @Override
     public List<AbilityGrowUpBO> pageList(AbilityGrowUpDTO dto) throws SerException {
         return abilityGrowUpSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(AbilityGrowUpDTO dto) throws SerException {
+        return abilityGrowUpSer.count(dto);
+    }
+
+    @Override
+    public AbilityGrowUpBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(abilityGrowUpSer.findById(id),AbilityGrowUpBO.class);
     }
 }

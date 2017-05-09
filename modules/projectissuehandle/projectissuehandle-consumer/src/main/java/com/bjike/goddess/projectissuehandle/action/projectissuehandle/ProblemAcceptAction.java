@@ -192,9 +192,10 @@ public class ProblemAcceptAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request) throws ActException {
+    public Result upload(HttpServletRequest request,String path) throws ActException {
         try {
-            List<InputStream> inputStreams = super.getInputStreams(request);
+            path="/user/xxx/";
+            List<InputStream> inputStreams = getInputStreams(request,path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
