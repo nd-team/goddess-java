@@ -22,9 +22,9 @@ import javax.persistence.Table;
 public class MarketSesponse extends BaseEntity {
 
     /**
-     * 能力成长类型
+     * 渠道
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '能力成长类型'")
+    @Column(name = "channelType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '能力成长类型'")
     private ChannelType channelType;
 
     /**
@@ -48,7 +48,7 @@ public class MarketSesponse extends BaseEntity {
     /**
      * 项目信息Id
      */
-    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目信息Id'")
+    @Column(name = "projectInfoId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目信息Id'")
     private String projectInfoId;
 
 

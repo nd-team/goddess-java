@@ -67,5 +67,5 @@ public interface BusinessEvaluateCollectSer extends Ser<BusinessEvaluateCollect,
      * @return
      * @throws SerException
      */
-    List<EvaluateCollectTotalBO> collectPageList(String area, String project) throws SerException;
+    List<EvaluateCollectTotalBO> collectTotal(String area, String project) throws SerException;
 }

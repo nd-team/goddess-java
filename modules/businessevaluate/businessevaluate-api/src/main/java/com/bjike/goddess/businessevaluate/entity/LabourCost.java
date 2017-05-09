@@ -23,19 +23,19 @@ public class LabourCost extends BaseEntity {
     /**
      * 正常工资
      */
-    @Column(name = "normalSalary", columnDefinition = "DECIMAL(10,2)   COMMENT '正常工资'")
+    @Column(name = "normalSalary", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '正常工资'")
     private Double normalSalary;
 
     /**
      * 加班工资
      */
-    @Column(name = "overtimeSalary", columnDefinition = "DECIMAL(10,2)   COMMENT '加班工资'")
+    @Column(name = "overtimeSalary", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '加班工资'")
     private Double overtimeSalary;
 
     /**
      * 人员租赁费
      */
-    @Column(name = "staffLease", columnDefinition = "DECIMAL(10,2)   COMMENT '人员租赁费'")
+    @Column(name = "staffLease", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '人员租赁费'")
     private Double staffLease;
 
     /**

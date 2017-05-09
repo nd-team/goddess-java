@@ -1,6 +1,11 @@
 package com.bjike.goddess.businessevaluate.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 需求成本
@@ -16,16 +21,19 @@ public class DemandCostTO extends BaseTO {
     /**
      * 设备费用
      */
+    @NotNull(message = "设备费用不能为空",groups = {ADD.class, EDIT.class})
     private Double equipmentSalary;
 
     /**
      * 配置费用
      */
+    @NotNull(message = "配置费用不能为空",groups = {ADD.class, EDIT.class})
     private Double configSalary;
 
     /**
      * 车辆费用
      */
+    @NotNull(message = "车辆费用不能为空",groups = {ADD.class, EDIT.class})
     private Double carSalary;
 
     /**
@@ -36,6 +44,7 @@ public class DemandCostTO extends BaseTO {
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
     public Double getEquipmentSalary() {

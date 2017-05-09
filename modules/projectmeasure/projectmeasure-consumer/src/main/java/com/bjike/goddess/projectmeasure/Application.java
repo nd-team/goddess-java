@@ -21,7 +21,7 @@ import java.io.IOException;
  * @Copy: [com.bjike]
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.projectmeasure.action", "com.bjike.goddess.common.consumer"},
+@ComponentScan(basePackages = {"com.bjike.goddess.projectmeasure.action","com.bjike.goddess.common.consumer"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
@@ -31,7 +31,7 @@ public class Application {
 
     public static void main(String[] args) throws IOException {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class,args);
         System.in.read();
     }
 

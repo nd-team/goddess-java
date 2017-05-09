@@ -1,7 +1,12 @@
 package com.bjike.goddess.businessevaluate.to;
 
 import com.bjike.goddess.businessevaluate.enums.CooperateWay;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目基本信息
@@ -17,51 +22,61 @@ public class EvaluateProjectInfoTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 合作方式
      */
+    @NotNull(message = "合作方式不能为空", groups = {ADD.class, EDIT.class})
     private CooperateWay cooperateWay;
 
     /**
      * 工作量
      */
+    @NotBlank(message = "工作量不能为空", groups = {ADD.class, EDIT.class})
     private String workload;
 
     /**
      * 成本
      */
+    @NotNull(message = "成本不能为空", groups = {ADD.class, EDIT.class})
     private Double cost;
 
     /**
      * 总金额
      */
+    @NotNull(message = "总金额不能为空", groups = {ADD.class, EDIT.class})
     private Double totalAmount;
 
     /**
      * 税金
      */
+    @NotNull(message = "税金不能为空", groups = {ADD.class, EDIT.class})
     private Double taxes;
 
     /**
      * 管理费
      */
+    @NotNull(message = "管理费不能为空", groups = {ADD.class, EDIT.class})
     private Double manageCost;
 
     /**
      * 工期开始时间
      */
+    @NotBlank(message = "工期开始时间不能为空", groups = {ADD.class, EDIT.class})
     private String startTime;
 
     /**
      * 工期结束时间
      */
+    @NotBlank(message = "工期结束时间不能为空", groups = {ADD.class, EDIT.class})
     private String endTime;
 
     /**
@@ -72,14 +87,17 @@ public class EvaluateProjectInfoTO extends BaseTO {
     /**
      * 年
      */
+    @NotNull(message = "工期经历年数不能为空", groups = {ADD.class, EDIT.class})
     private Integer years;
     /**
      * 月
      */
+    @NotNull(message = "工期经历月数不能为空", groups = {ADD.class, EDIT.class})
     private Integer months;
     /**
      * 日
      */
+    @NotNull(message = "工期经历日数不能为空", groups = {ADD.class, EDIT.class})
     private Integer days;
 
 

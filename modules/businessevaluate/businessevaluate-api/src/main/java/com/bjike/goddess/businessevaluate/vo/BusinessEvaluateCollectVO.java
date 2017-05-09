@@ -27,7 +27,7 @@ public class BusinessEvaluateCollectVO {
     /**
      * 项目
      */
-    private String project;
+    private String projectId;
 
     /**
      * 创建人/修改人
@@ -52,7 +52,7 @@ public class BusinessEvaluateCollectVO {
     /**
      * 发送间隔
      */
-    private String sendInterval;
+    private Integer sendInterval;
 
     /**
      * 汇总间隔
@@ -68,7 +68,6 @@ public class BusinessEvaluateCollectVO {
      * 数据状态
      */
     private Status status;
-
 
     public String getId() {
         return id;
@@ -86,12 +85,12 @@ public class BusinessEvaluateCollectVO {
         this.area = area;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getOperateUser() {
@@ -126,11 +125,11 @@ public class BusinessEvaluateCollectVO {
         this.sendIntervalType = sendIntervalType;
     }
 
-    public String getSendInterval() {
+    public Integer getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(String sendInterval) {
+    public void setSendInterval(Integer sendInterval) {
         this.sendInterval = sendInterval;
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,12 +36,13 @@ public class OutAbilityGrowUpAct {
      * 分页查询
      *
      * @param dto 分页条件
+     * @return class AbilityGrowUpVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result delete(AbilityGrowUpDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result delete(AbilityGrowUpDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<AbilityGrowUpVO> voList = BeanTransform.copyProperties(abilityGrowUpAPI.pageList(dto), AbilityGrowUpVO.class);
+            List<AbilityGrowUpVO> voList = BeanTransform.copyProperties(abilityGrowUpAPI.pageList(dto), AbilityGrowUpVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

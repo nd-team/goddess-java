@@ -33,7 +33,7 @@ public class ProjectProfitRateVO {
     /**
      * 项目利润
      */
-    private Double Profit;
+    private Double profit;
 
     /**
      * 项目利润率
@@ -93,11 +93,11 @@ public class ProjectProfitRateVO {
     }
 
     public Double getProfit() {
-        return Profit;
+        return profit;
     }
 
     public void setProfit(Double profit) {
-        Profit = profit;
+        this.profit = profit;
     }
 
     public String getProjectProfitRate() {

@@ -1,10 +1,8 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectPersonnelDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
 import com.bjike.goddess.projectmeasure.service.ProjectPersonnelDemandSer;
 import com.bjike.goddess.projectmeasure.to.ProjectPersonnelDemandTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,30 +24,6 @@ public class ProjectPersonnelDemandApiImpl implements ProjectPersonnelDemandAPI 
 
     @Autowired
     private ProjectPersonnelDemandSer projectPersonnelDemandSer;
-
-    /**
-     * 根据id查询项目人员需求
-     *
-     * @param id 项目人员需求唯一标识
-     * @return class ProjectPersonnelDemandBO
-     * @throws SerException
-     */
-    @Override
-    public ProjectPersonnelDemandBO findById(String id) throws SerException {
-        ProjectPersonnelDemand model = projectPersonnelDemandSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectPersonnelDemandBO.class);
-    }
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目人员需求dto
-     * @throws SerException
-     */
-    @Override
-    public Long count(ProjectPersonnelDemandDTO dto) throws SerException {
-        return projectPersonnelDemandSer.count(dto);
-    }
 
     /**
      * 分页查询项目人员需求

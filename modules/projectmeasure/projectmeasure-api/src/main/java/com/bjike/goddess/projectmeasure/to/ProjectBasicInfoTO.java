@@ -1,13 +1,9 @@
 package com.bjike.goddess.projectmeasure.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 /**
  * 项目基本信息
@@ -23,61 +19,51 @@ public class ProjectBasicInfoTO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目名称不能为空")
     private String projectName;
 
     /**
      * 工作量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "工作量必须是大于0的整数")
     private Integer workload;
 
     /**
      * 项目开展成本
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目开展成本不能为空")
     private Double projectLaunchCost;
 
     /**
      * 金额
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "金额不能为空")
     private Double amount;
 
     /**
      * 合作方式
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "合作方式不能为空")
     private CooperationType cooperationType;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 起始时间
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "起始时间不能为空")
-    private String startTime;
+    private LocalDateTime startTime;
 
     /**
      * 经历时间
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "经历时间不能为空")
     private String duration;
 
     /**
      * 人工
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "人工数必须是大于0的整数")
     private Integer labour;
 
     /**
      * 人员数量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "人员数量必须是大于0的整数")
     private Integer numberOfStaff;
 
     /**
@@ -149,11 +135,11 @@ public class ProjectBasicInfoTO extends BaseTO {
         this.area = area;
     }
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

@@ -55,4 +55,7 @@
 	<!-- 商务评估汇总API -->
 	<dubbo:reference interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI" id="businessEvaluateCollectApiImpl" />
 
+	<!-- 部门API -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl" />
+
 </beans>
