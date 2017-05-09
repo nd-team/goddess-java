@@ -267,22 +267,4 @@ public class ProjectContractVO {
         this.abandon = abandon;
     }
 
-    public ProjectContractVO() {
-
-    }
-
-    public ProjectContractVO(String contractExtProject, String contractInProject, String communicateTimes,
-                             String communicateUser, String communicateObj, Double costBudget, Integer totalCooperate,
-                             Integer totalTrail, Integer totalAbandon) {
-        this.contractExtProject = contractExtProject;
-        this.contractInProject = contractInProject;
-        this.communicateTimes = communicateTimes;
-        this.communicateUser = communicateUser;
-        this.communicateObj = communicateObj;
-        this.costBudget = costBudget;
-        this.totalCooperate = totalCooperate;
-        this.totalTrail = totalTrail;
-        this.totalAbandon = totalAbandon;
-    }
-
 }

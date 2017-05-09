@@ -1,10 +1,10 @@
 package com.bjike.goddess.common.consumer.interceptor.login;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 
 /**
  * 登录安全拦截(仅检测是否有携带token,用token获取用户的时候再进行token有无效判定)
@@ -31,14 +32,32 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String contentType = request.getContentType();  //获取Content-Type
-        if ((contentType != null) && (contentType.toLowerCase().startsWith("multipart/"))) {
-            if (StringUtils.isBlank(request.getParameter("path"))) {
-                throw new SerException("path 不能为空!");
-            }
+        if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+            validatePath(request, response);
             return validateLogin(request, response);
         }
-        return  true;
+        Method method = ((HandlerMethod) handler).getMethod();
+        Class<?> clazz = method.getDeclaringClass();
+        //该类或者方法上是否有登录安全认证注解
+        if (clazz.isAnnotationPresent(StorageAuth.class) || method.isAnnotationPresent(StorageAuth.class)) {
+            validatePath(request, response);
+            return validateLogin(request, response);
+        }
+
+        return true;
+    }
+
+    private void validatePath(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (StringUtils.isBlank(request.getParameter("path"))) {
+            PrintWriter out = response.getWriter();
+            out.flush();
+            response.setContentType("text/html; charset=UTF-8"); //转码
+            response.setStatus(200);
+            ActResult result = new ActResult();
+            result.setMsg("path 不能为空!");
+            result.setCode(1);
+            out.println(JSON.toJSONString(result));
+        }
     }
 
 
@@ -81,8 +100,8 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
      */
     private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
         PrintWriter out = response.getWriter();
-        response.setContentType("text/html; charset=UTF-8"); //转码
         out.flush();
+        response.setContentType("text/html; charset=UTF-8"); //转码
         response.setStatus(200);
         ActResult result = new ActResult();
         result.setMsg(msg);

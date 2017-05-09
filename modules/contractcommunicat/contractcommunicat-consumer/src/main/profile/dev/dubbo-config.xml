@@ -19,4 +19,8 @@
 	<dubbo:reference id="projectContractApiImpl" interface="com.bjike.goddess.contractcommunicat.api.ProjectContractAPI" />
 	<dubbo:reference id="projectOutsourcingApiImpl" interface="com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI" />
 
+	<!-- 注册接口 -->
+
+	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+
 </beans>

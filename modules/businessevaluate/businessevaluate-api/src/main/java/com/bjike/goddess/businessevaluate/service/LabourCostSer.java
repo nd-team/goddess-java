@@ -43,4 +43,5 @@ public interface LabourCostSer extends Ser<LabourCost, LabourCostDTO> {
      * @return 劳动成本结果集
      */
     List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException;
+
 }

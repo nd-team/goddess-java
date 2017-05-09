@@ -1,7 +1,6 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
@@ -90,21 +89,11 @@ public interface ProblemHandlingResultAPI {
         return null;
     }
     /**
-     * 汇总
-     *
-     * @param areas
-     * @return class CollectBO
+     * 上传
      */
-    default List<CollectBO> collect(String [] areas)throws SerException{
-        return null;
-    }
-    /**
-     * 获取地区
-     *
-     * @return class String
-     */
-    default List<String> getArea() throws SerException {
-        return null;
+    default void upload() throws SerException {
+        return;
+
     }
 
 }

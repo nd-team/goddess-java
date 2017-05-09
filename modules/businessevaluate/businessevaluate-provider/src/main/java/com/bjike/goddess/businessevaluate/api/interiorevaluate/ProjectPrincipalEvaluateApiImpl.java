@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.interiorevaluate.ProjectPrincipalE
 import com.bjike.goddess.businessevaluate.service.interiorevaluate.ProjectPrincipalEvaluateSer;
 import com.bjike.goddess.businessevaluate.to.interiorevaluate.ProjectPrincipalEvaluateTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class ProjectPrincipalEvaluateApiImpl implements ProjectPrincipalEvaluate
     @Override
     public List<ProjectPrincipalEvaluateBO> pageList(ProjectPrincipalEvaluateDTO dto) throws SerException {
         return projectPrincipalEvaluateSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(ProjectPrincipalEvaluateDTO dto) throws SerException {
+        return projectPrincipalEvaluateSer.count(dto);
+    }
+
+    @Override
+    public ProjectPrincipalEvaluateBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(projectPrincipalEvaluateSer.findById(id),ProjectPrincipalEvaluateBO.class);
     }
 }

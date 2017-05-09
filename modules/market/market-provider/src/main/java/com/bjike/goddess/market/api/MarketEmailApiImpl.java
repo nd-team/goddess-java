@@ -66,8 +66,4 @@ public class MarketEmailApiImpl implements MarketEmailAPI {
     public List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
         return marketEmailSer.marketCollect(areas);
     }
-    @Override
-    public List<String> getArea() throws SerException {
-        return marketEmailSer.getArea();
-    }
 }

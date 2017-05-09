@@ -1,6 +1,5 @@
 package com.bjike.goddess.employeecontract.action.employeecontract;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -21,17 +20,12 @@ import com.bjike.goddess.employeecontract.vo.ContractInfoVO;
 import com.bjike.goddess.employeecontract.vo.ContractManageVO;
 import com.bjike.goddess.employeecontract.vo.ContractPersonalVO;
 import com.bjike.goddess.storage.api.FileAPI;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 合同管理
@@ -272,17 +266,7 @@ public class ContractManageAction extends BaseFileAction {
             if (null == entity)
                 throw new SerException("数据对象不存在");
             String path = "/" + entity.getUsername() + "/" + entity.getTypeName() + "/" + entity.getNatureName();
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-
-            if (o != null)
-                RpcContext.getContext().setAttachment("storageToken", o);
-
-            for (MultipartFile multipartFile : multipartFiles) {
-                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                map.put(multipartFile.getOriginalFilename(), bytes);
-            }
-            fileAPI.upload(map, path);
+            fileAPI.upload(this.getInputStreams(request, path));
             return new ActResult("上传成功");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

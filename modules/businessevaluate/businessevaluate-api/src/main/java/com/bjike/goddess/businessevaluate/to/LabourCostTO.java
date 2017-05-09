@@ -1,6 +1,11 @@
 package com.bjike.goddess.businessevaluate.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 劳动成本
@@ -16,16 +21,19 @@ public class LabourCostTO extends BaseTO {
     /**
      * 正常工资
      */
+    @NotNull(message = "正常工资不能为空",groups = {ADD.class, EDIT.class})
     private Double normalSalary;
 
     /**
      * 加班工资
      */
+    @NotNull(message = "加班工资不能为空",groups = {ADD.class, EDIT.class})
     private Double overtimeSalary;
 
     /**
      * 人员租赁费
      */
+    @NotNull(message = "人员租赁工资不能为空",groups = {ADD.class, EDIT.class})
     private Double staffLease;
 
     /**
@@ -36,6 +44,7 @@ public class LabourCostTO extends BaseTO {
     /**
      * 项目信息id
      */
+    @NotBlank(message = "项目Id不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
     public Double getNormalSalary() {

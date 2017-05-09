@@ -230,17 +230,17 @@ public class DispatchCarInfoVO {
     private Double mealCost;
 
     /**
-     * 资金模块意见
+     * 资金模块核对意见
      */
     private String fundModuleSugg;
 
     /**
-     * 预算模块意见
+     * 预算模块核对意见
      */
     private String budgetModuleSugg;
 
     /**
-     * 任务下达人意见
+     * 任务下达人审核意见
      */
     private String principalSugg;
 

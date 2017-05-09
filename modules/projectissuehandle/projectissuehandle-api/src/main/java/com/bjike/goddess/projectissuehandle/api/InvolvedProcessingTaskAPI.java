@@ -93,4 +93,13 @@ public interface InvolvedProcessingTaskAPI {
         return null;
     }
 
+    /**
+     * 上传
+     */
+    default void upload() throws SerException {
+        return;
+
+    }
+
+
 }

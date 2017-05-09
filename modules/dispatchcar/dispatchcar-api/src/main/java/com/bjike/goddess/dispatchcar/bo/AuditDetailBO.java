@@ -1,6 +1,10 @@
 package com.bjike.goddess.dispatchcar.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.dispatchcar.bean.AuditResult;
+import com.bjike.goddess.dispatchcar.bean.DispatchInfo;
+
+import java.util.List;
 
 /**
  * 出车记录审核详情
@@ -14,67 +18,29 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class AuditDetailBO extends BaseBO {
 
     /**
-     * 职位
+     * 出车信息
      */
-    private String position;
+    private DispatchInfo info;
 
     /**
-     * 审核人
+     * 审核详情
      */
-    private String auditUser;
+    private List<AuditResult> list;
 
-    /**
-     * 是否通过
-     */
-    private Boolean auditResult;
 
-    /**
-     * 审核时间
-     */
-    private String auditTime;
-
-    /**
-     * 审核意见
-     */
-    private String suggestion;
-
-    public String getPosition() {
-        return position;
+    public DispatchInfo getInfo() {
+        return info;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setInfo(DispatchInfo info) {
+        this.info = info;
     }
 
-    public String getAuditUser() {
-        return auditUser;
+    public List<AuditResult> getList() {
+        return list;
     }
 
-    public void setAuditUser(String auditUser) {
-        this.auditUser = auditUser;
-    }
-
-    public Boolean getAuditResult() {
-        return auditResult;
-    }
-
-    public void setAuditResult(Boolean auditResult) {
-        this.auditResult = auditResult;
-    }
-
-    public String getAuditTime() {
-        return auditTime;
-    }
-
-    public void setAuditTime(String auditTime) {
-        this.auditTime = auditTime;
-    }
-
-    public String getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(String suggestion) {
-        this.suggestion = suggestion;
+    public void setList(List<AuditResult> list) {
+        this.list = list;
     }
 }

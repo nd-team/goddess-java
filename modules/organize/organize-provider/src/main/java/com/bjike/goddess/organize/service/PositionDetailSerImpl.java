@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
+import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.to.PositionDetailTO;
@@ -106,6 +107,8 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Override
     public List<PositionDetailBO> findChildByArrangement(String postId) throws SerException {
         PositionDetail entity = super.findById(postId);
+        if (null == entity)
+            throw new SerException("该岗位不存在");
         List<ArrangementBO> arrangementList = arrangementSer.findChild(entity.getArrangement().getId());
         PositionDetailDTO dto = new PositionDetailDTO();
         try {
@@ -120,7 +123,11 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     @Override
     public List<PositionDetailBO> findParentByArrangement(String postId) throws SerException {
         PositionDetail entity = super.findById(postId);
+        if (null == entity)
+            throw new SerException("该岗位不存在");
         Arrangement arrangement = arrangementSer.findById(entity.getArrangement().getId());
+        if (arrangement.getParent() == null)
+            return new ArrayList<>(0);
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getParent().getId()));
         return this.transformationToBOList(super.findByCis(dto));
@@ -131,18 +138,35 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         return this.transformationToBO(super.findById(id));
     }
 
+    /**
+     * 检测岗位详细编号或岗位是否重复
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkUnique(PositionDetailTO to) throws SerException {
+        String[] fields = {"id","position"};
+        StringBuilder sql = new StringBuilder(" SELECT ");
+        sql.append(" id,position ").append(" FROM organize_position_detail ");
+        sql.append(" WHERE serialNumber='").append(to.getSerialNumber()).append("' OR position='").append(to.getPosition()).append("'");
+        List<PositionDetail> list = super.findBySql(sql.toString(), DepartmentDetail.class, fields);
+        if (list.size() > 0)
+            throw new SerException("岗位或编号已存在,无法保存");
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO save(PositionDetailTO to) throws SerException {
+        this.checkUnique(to);
         PositionDetail entity = BeanTransform.copyProperties(to, PositionDetail.class);
         entity.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
         if (null == entity.getDepartment())
             throw new SerException("部门不存在");
         entity.setArrangement(arrangementSer.findById(to.getArrangementId()));
-        if (null == entity.getDepartment())
+        if (null == entity.getArrangement())
             throw new SerException("岗位层级不存在");
         entity.setModule(moduleTypeSer.findById(to.getModuleId()));
-        if (null == entity.getDepartment())
+        if (null == entity.getModule())
             throw new SerException("模块类型不存在");
         entity.setStatus(entity.getDepartment().getStatus());
         super.save(entity);
@@ -157,15 +181,17 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         PositionDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
+        if (!entity.getSerialNumber().equals(to.getSerialNumber()) || !entity.getPosition().equals(to.getPosition()))
+            this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
         if (null == entity.getDepartment())
             throw new SerException("部门不存在");
         entity.setArrangement(arrangementSer.findById(to.getArrangementId()));
-        if (null == entity.getDepartment())
+        if (null == entity.getArrangement())
             throw new SerException("岗位层级不存在");
         entity.setModule(moduleTypeSer.findById(to.getModuleId()));
-        if (null == entity.getDepartment())
+        if (null == entity.getModule())
             throw new SerException("模块类型不存在");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

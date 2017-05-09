@@ -13,17 +13,12 @@ import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 人员资质
@@ -119,14 +114,7 @@ public class PersonnelQualificationAct extends BaseFileAction {
     public Result uploadEnclosure(HttpServletRequest request, String username) throws ActException {
         try {
             String path = "/" + username;
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-
-            for (MultipartFile multipartFile : multipartFiles) {
-                byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                map.put(multipartFile.getOriginalFilename(), bytes);
-            }
-            fileAPI.upload(map, path);
+            fileAPI.upload(this.getInputStreams(request, path));
             return new ActResult("上传成功");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

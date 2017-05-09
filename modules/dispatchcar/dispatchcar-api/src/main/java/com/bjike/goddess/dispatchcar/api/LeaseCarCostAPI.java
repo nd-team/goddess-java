@@ -48,4 +48,14 @@ public interface LeaseCarCostAPI {
      * @return 租车费用基本信息结果集
      */
     List<LeaseCarCostBO> pageList(LeaseCarCostDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(LeaseCarCostDTO dto) throws SerException;
+
+    LeaseCarCostBO findById(String id) throws SerException ;
 }

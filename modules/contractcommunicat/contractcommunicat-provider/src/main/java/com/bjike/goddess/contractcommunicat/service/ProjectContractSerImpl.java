@@ -5,10 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
+import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectContract;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -34,25 +36,25 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
-        ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class ,true);
+        ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
         to.setId(model.getId());
-        return BeanTransform.copyProperties(to,ProjectContractBO.class);
+        return BeanTransform.copyProperties(to, ProjectContractBO.class);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO editProjectContract(ProjectContractTO to) throws SerException {
 
-        if(!StringUtils.isEmpty(to.getId())){
+        if (!StringUtils.isEmpty(to.getId())) {
             ProjectContract model = super.findById(to.getId());
-            BeanTransform.copyProperties(to,model,true);
+            BeanTransform.copyProperties(to, model, true);
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
-        }else{
+        } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(to,ProjectContractBO.class);
+        return BeanTransform.copyProperties(to, ProjectContractBO.class);
     }
 
     @Override
@@ -60,32 +62,33 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     public List<ProjectContractBO> pageList(ProjectContractDTO dto) throws SerException {
 
         dto.getSorts().add("createTime=desc");
-        if(dto.getCommunicateUser()!=null){
-            dto.getConditions().add(Restrict.like("communicateUser",dto.getCommunicateUser()));
+        if (!StringUtils.isEmpty(dto.getCommunicateUser())) {
+            dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
         }
-        if(dto.getCommunicateObj()!=null){
-            dto.getConditions().add(Restrict.like("communicateObj",dto.getCommunicateObj()));
+        if (!StringUtils.isEmpty(dto.getCommunicateObj())) {
+            dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
         }
-        if(dto.getCommunicateResult()!=null){
-            dto.getConditions().add(Restrict.like("communicateResult",dto.getCommunicateResult()));
+        if (dto.getCommunicateResult() != null) {
+            dto.getConditions().add(Restrict.like("communicateResult", dto.getCommunicateResult()));
         }
 
-        List<ProjectContractBO> pageList = BeanTransform.copyProperties(super.findByPage(dto),ProjectContractBO.class);
+        List<ProjectContractBO> pageList = BeanTransform.copyProperties(super.findByPage(dto), ProjectContractBO.class);
         return pageList;
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<ProjectContractBO> collect(ProjectContractDTO dto) throws SerException {
+    public List<ProjectContractCollectBO> collect(CollectConditionTO to) throws SerException {
+        ProjectContractDTO dto = new ProjectContractDTO();
         dto.getSorts().add("createTime=desc");
-        if(dto.getContractInProject()!=null){
-            dto.getConditions().add(Restrict.like("contractInProject",dto.getContractInProject()));
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto.getConditions().add(Restrict.like("contractInProject", to.getContractInProject()));
         }
-        if(dto.getStartTime()!=null){
-            dto.getConditions().add(Restrict.gt("createTime",dto.getStartTime()));
+        if (!StringUtils.isEmpty(to.getStartTime())) {
+            dto.getConditions().add(Restrict.gt("createTime", to.getStartTime()));
         }
-        if(dto.getEndTime()!=null){
-            dto.getConditions().add(Restrict.lt("createTime",dto.getEndTime()));
+        if (!StringUtils.isEmpty(to.getEndTime())) {
+            dto.getConditions().add(Restrict.lt("createTime", to.getEndTime()));
         }
         return setCollectField(super.findByPage(dto));
 
@@ -98,31 +101,31 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     //设置汇总字段
-    public List<ProjectContractBO> setCollectField(List<ProjectContract> list) throws SerException{
-        List<ProjectContractBO>  boList = BeanTransform.copyProperties(list,ProjectContractBO.class);
+    public List<ProjectContractCollectBO> setCollectField(List<ProjectContract> list) throws SerException {
+        List<ProjectContractBO> boList = BeanTransform.copyProperties(list, ProjectContractBO.class);
 
+        List<ProjectContractCollectBO> returnBoList = BeanTransform.copyProperties(list, ProjectContractCollectBO.class);
         Integer totalCooperate = 0;
         Integer totalTrail = 0;
         Integer totalAbandon = 0;
 
-        if(boList != null && !boList.isEmpty()){
-            for(ProjectContractBO bo : boList){
-                if(bo.getProjectResult() == CommunicateResult.COOPERATE){
-                    bo.setCooperate(bo.getProjectResult());
+        if (returnBoList != null && !returnBoList.isEmpty()) {
+            for (ProjectContractCollectBO bo : returnBoList) {
+                if (bo.getProjectResult() == CommunicateResult.COOPERATE) {
+                    bo.setCooperate("项目合作");
                     totalCooperate++;
-                }else if(bo.getProjectResult() == CommunicateResult.TRAIL){
-                    bo.setTrail(bo.getProjectResult());
+                } else if (bo.getProjectResult() == CommunicateResult.TRAIL) {
+                    bo.setTrail("项目跟进");
                     totalTrail++;
-                }else if(bo.getProjectResult() == CommunicateResult.ABANDON){
-                    bo.setAbandon(bo.getProjectResult());
+                } else if (bo.getProjectResult() == CommunicateResult.ABANDON) {
+                    bo.setAbandon("项目丢弃");
                     totalAbandon++;
                 }
             }
-            Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-
-            ProjectContractBO total = new ProjectContractBO("合计" , null , null , null , null , totalCostBudget , totalCooperate , totalTrail , totalAbandon);
-            boList.add(total);
         }
-        return  boList;
+        Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
+        ProjectContractCollectBO total = new ProjectContractCollectBO("合计", null, null, null, null, totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
+        returnBoList.add(total);
+        return returnBoList;
     }
 }

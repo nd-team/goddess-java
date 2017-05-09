@@ -3,7 +3,8 @@ package com.bjike.goddess.storage.action.file;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -31,6 +32,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+@StorageAuth
 @RestController
 @RequestMapping("file")
 public class FileAction extends BaseFileAction {
@@ -45,9 +47,9 @@ public class FileAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, HttpServletRequest request, BindingResult result) throws ActException {
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class, request);
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -21,7 +21,7 @@ import java.util.List;
 public interface SupplierInformationSer extends Ser<SupplierInformation, SupplierInformationDTO> {
 
     /**
-     * 保存供应商基本信息数据
+     * 添加
      *
      * @param to 供应商信息传输对象
      * @return
@@ -32,7 +32,7 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
     }
 
     /**
-     * 修改供应商基本信息数据
+     * 编辑
      *
      * @param to 供应商信息传输对象
      * @return
@@ -43,7 +43,7 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
     }
 
     /**
-     * 修改供应商详细信息数据
+     * 编辑详细信息
      *
      * @param to 供应商信息传输对象
      * @return
@@ -60,6 +60,39 @@ public interface SupplierInformationSer extends Ser<SupplierInformation, Supplie
      * @throws SerException
      */
     default List<SupplierInformationBO> findOrderName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 供应商基本信息数据id
+     * @return
+     * @throws SerException
+     */
+    default SupplierInformationBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 供应商基本信息数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SupplierInformationBO> maps(SupplierInformationDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取供应商基本信息数据
+     *
+     * @param id 供应商基本信息数据id
+     * @return
+     * @throws SerException
+     */
+    default SupplierInformationBO getById(String id) throws SerException {
         return null;
     }
 
