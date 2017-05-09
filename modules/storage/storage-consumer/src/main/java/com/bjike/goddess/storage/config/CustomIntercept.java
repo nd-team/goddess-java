@@ -28,7 +28,7 @@ public class CustomIntercept implements Interceptor {
     @Override
     public List<HIInfo> customerInterceptors() {
 
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "*/file");
 
         /**
          * 暂时不加权限

@@ -89,8 +89,8 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
      */
     private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
         PrintWriter out = response.getWriter();
-        response.setContentType("text/html; charset=UTF-8"); //转码
         out.flush();
+        response.setContentType("text/html; charset=UTF-8"); //转码
         response.setStatus(200);
         ActResult result = new ActResult();
         result.setMsg(msg);
