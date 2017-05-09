@@ -1,7 +1,8 @@
-package com.bjike.goddess.common.consumer.file;
+package com.bjike.goddess.common.consumer.action;
 
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -22,6 +23,8 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public abstract class BaseFileAction {
+
+
     /**
      * 上传文件调用该方法获得文件流
      * 需要单独处理path
@@ -106,5 +109,25 @@ public abstract class BaseFileAction {
         }
     }
 
+    /**
+     * 上传文件转bytes
+     *
+     * @param request
+     * @return 文件列表[字节]
+     * @throws SerException
+     */
+    public List<byte[]> getBytes(HttpServletRequest request) throws SerException {
+        try {
+            List<MultipartFile> multipartFiles = getMultipartFile(request);
+            List<byte[]> bytesList = new ArrayList<>(multipartFiles.size());
+            for (MultipartFile mf : multipartFiles) {
+                byte[] bytes = IOUtils.toByteArray(mf.getInputStream());
+                bytesList.add(bytes);
+            }
+            return bytesList;
+        } catch (IOException e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
 }

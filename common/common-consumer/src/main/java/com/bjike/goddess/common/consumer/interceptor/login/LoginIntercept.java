@@ -2,7 +2,7 @@ package com.bjike.goddess.common.consumer.interceptor.login;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;

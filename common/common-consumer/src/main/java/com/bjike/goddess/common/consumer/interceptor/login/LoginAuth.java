@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.consumer.auth;
+package com.bjike.goddess.common.consumer.interceptor.auth;
 
 import java.lang.annotation.*;
 
