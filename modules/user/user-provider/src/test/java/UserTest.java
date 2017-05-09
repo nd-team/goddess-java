@@ -57,7 +57,6 @@ public class UserTest {
     @Test
     public void addUserDetails() throws SerException {
 
-        userDetailAPI.add();
 
     }
 
