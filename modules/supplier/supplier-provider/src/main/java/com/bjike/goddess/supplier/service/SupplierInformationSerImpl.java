@@ -152,7 +152,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     public List<SupplierInformationBO> maps(SupplierInformationDTO dto) throws SerException {
         dto.getSorts().add("serialNumber=desc");
         List<SupplierInformation> list = super.findByPage(dto);
-        if (null != list)
+        if (null != list && list.size() > 0)
             return BeanTransform.copyProperties(list, SupplierInformationBO.class);
         else
             return new ArrayList<SupplierInformationBO>(0);

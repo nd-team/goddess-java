@@ -11,6 +11,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.vo.PositionDetailUserVO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -155,6 +156,21 @@ public class PositionDetailUserAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findById(id), PositionDetailUserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @return class UserVO
+     * @version v1
+     */
+    @GetMapping("v1/findUserList")
+    public Result findUserList(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findUserList(), UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

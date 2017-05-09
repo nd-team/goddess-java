@@ -161,4 +161,9 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
                 return ArrangementType.ET;
         }
     }
+
+    @Override
+    public ArrangementBO getById(String id) throws SerException {
+        return this.transformBO(super.findById(id));
+    }
 }
