@@ -11,14 +11,13 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
 	<dubbo:consumer check="false" timeout="15000" />
-	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.subjectcollect.api.SubjectCollectAPI" ref="subjectCollectApiImpl"/>
+	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
+	<dubbo:reference  validation="true" id="contractorApiImpl" interface="com.bjike.goddess.receivable.api.ContractorAPI" />
+	<dubbo:reference  validation="true" id="receivableSubsidiaryApiImpl" interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" />
+
 
 </beans>

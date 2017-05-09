@@ -9,6 +9,7 @@ import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
 import com.bjike.goddess.subjectcollect.vo.SubjectCollectVO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +27,12 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("subjectcollect/subjectcollect")
+@RequestMapping("subjectcollect")
 public class SubjectCollectAction {
     @Autowired
     private SubjectCollectAPI subjectCollectAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
     /**
      * 导出
      *
