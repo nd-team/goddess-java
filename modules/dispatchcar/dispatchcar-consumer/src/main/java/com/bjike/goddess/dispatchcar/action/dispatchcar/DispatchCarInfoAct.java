@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
@@ -72,13 +73,14 @@ public class DispatchCarInfoAct {
     /**
      * 新增出车记录
      *
-     * @param to 出车记录
+     * @param editTO 出车记录
      * @return class DispatchCarInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result add(@Validated({ADD.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
             DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.addModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -89,13 +91,14 @@ public class DispatchCarInfoAct {
     /**
      * 编辑出车记录
      *
-     * @param to 出车记录
+     * @param editTO 出车记录
      * @return class DispatchCarInfoVO
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
             DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {

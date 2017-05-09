@@ -72,6 +72,20 @@ public class EvaluateProjectInfoVO {
      */
     private String experienceTime;
 
+    /**
+     * 年
+     */
+    private Integer years;
+
+    /**
+     * 月
+     */
+    private Integer months;
+
+    /**
+     * 日
+     */
+    private Integer days;
 
     public String getId() {
         return id;
@@ -167,5 +181,29 @@ public class EvaluateProjectInfoVO {
 
     public void setExperienceTime(String experienceTime) {
         this.experienceTime = experienceTime;
+    }
+
+    public Integer getYears() {
+        return years;
+    }
+
+    public void setYears(Integer years) {
+        this.years = years;
+    }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
     }
 }

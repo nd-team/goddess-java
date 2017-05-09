@@ -48,4 +48,20 @@ public interface DemandCostAPI {
      * @return 需求成本结果集
      */
     List<DemandCostBO> pageList(DemandCostDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总计里数
+     */
+    Long count(DemandCostDTO dto) throws SerException;
+
+    /**
+     * 根据id查询需求成本
+     *
+     * @param id 需求成本id
+     * @return 需求成本
+     */
+    DemandCostBO findById(String id) throws SerException;
 }

@@ -68,9 +68,13 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO insertModel(DispatchCarInfoTO to) throws SerException {
-
+        UserBO userBO = userAPI.findByUsername(to.getCarUser());
+        to.setUserNumber(userBO.getEmployeeNumber());
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
         DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
+        if(driver==null){
+            throw new SerException("司机不存在!");
+        }
         Double oilWear = driver.getCarFuel();
         if (to.getAircondition()) {
             oilWear = oilWear + 0.01;
@@ -89,8 +93,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
         //查找租车费用
         findCost(to);
-        //设置出车单号----IKE20170101-1...
-        setNumber(to);
+
         DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
         model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
         //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
@@ -118,6 +121,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
         model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
         model.setFindType(FindType.WAITAUDIT);
+        //设置出车单号----IKE20170101-1...
+        setNumber(model);
         super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, DispatchCarInfoBO.class);
@@ -126,13 +131,70 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO updateModel(DispatchCarInfoTO to) throws SerException {
-        DispatchCarInfo model = super.findById(to.getId());
-        if (model != null) {
-            BeanTransform.copyProperties(to, model, true);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
-        } else {
-            throw new SerException("更新对象不能为空");
+        if(to.getId()!=null){
+            DispatchCarInfo model = super.findById(to.getId());
+            if (model != null) {
+                UserBO userBO = userAPI.findByUsername(to.getCarUser());
+                to.setUserNumber(userBO.getEmployeeNumber());
+                //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
+                DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
+                if(driver==null){
+                    throw new SerException("司机不存在!");
+                }
+                Double oilWear = driver.getCarFuel();
+                if (to.getAircondition()) {
+                    oilWear = oilWear + 0.01;
+                }
+                if (to.getDowntown()) {
+                    oilWear = oilWear + 0.01;
+                }
+                to.setOilWear(oilWear);
+                to.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+                to.setAddOilAmount(to.getMileageSubtract() * oilWear);
+                if (to.getOilPrice() != null) {
+                    to.setOilCost(to.getAddOilAmount() * to.getOilPrice());
+                } else {
+                    to.setOilCost(0.0);
+                }
+
+                //查找租车费用
+                findCost(to);
+
+                BeanTransform.copyProperties(to, model, true);
+
+                model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
+                //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
+                //实际上班时长
+                Long workHours = ChronoUnit.HOURS.between(model.getStartTime(), model.getEndTime());
+                if (workHours > 8) {
+                    //当天22点
+                    LocalDateTime dateTime = LocalDateTime.of(model.getStartTime().toLocalDate(), LocalTime.of(22, 0));
+                    //出车开始时间+4 > 22:00 则补贴30元
+                    if (model.getStartTime().plusHours(4).isAfter(dateTime)) {
+                        model.setMealCost(30.0);
+                    } else {
+                        model.setMealCost(0.0);
+                    }
+                    if (!model.getSiesta()) {
+                        model.setOverWorkTime((int) (workHours - 8));
+                    } else {
+                        model.setOverWorkTime((int) (workHours - 8 - 1));
+                    }
+                } else {
+                    model.setMealCost(0.0);
+                    model.setOverWorkTime(0);
+                }
+                model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
+                model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
+                model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
+
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        }else{
+            throw new SerException("id不能为空");
         }
         return BeanTransform.copyProperties(to, DispatchCarInfoBO.class);
     }
@@ -828,7 +890,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     /**
      * //设置出车单号----IKE20170101-1...
      */
-    public void setNumber(DispatchCarInfoTO to) throws SerException {
+    public void setNumber(DispatchCarInfo model) throws SerException {
         String todayStr = LocalDate.now().toString();
         String todayNum = todayStr.replace("-", "");
 
@@ -837,11 +899,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         dto.getConditions().add(Restrict.like("createTime", todayStr));
         dto.getSorts().add("createTime=desc");
         dto.setLimit(1);
-        List<DispatchCarInfo> model = super.findByPage(dto);
+        List<DispatchCarInfo> list = super.findByPage(dto);
         StringBuilder numStr = new StringBuilder();
         //拼接出车单
-        if (model != null && !model.isEmpty()) {
-            String number = model.get(0).getNumber();
+        if (model != null && !list.isEmpty()) {
+            String number = list.get(0).getNumber();
             numStr.append(number.substring(0, 12));
             int lastNum = Integer.parseInt(number.substring(12)) + 1;
             numStr.append(lastNum);
@@ -851,7 +913,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             numStr.append("-");
             numStr.append("1");
         }
-        to.setNumber(numStr.toString());
+        model.setNumber(numStr.toString());
     }
 
     public LocalDateTime changeEndFormat(LocalDate date) throws SerException {

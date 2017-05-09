@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.ProjectCostDTO;
 import com.bjike.goddess.businessevaluate.service.ProjectCostSer;
 import com.bjike.goddess.businessevaluate.to.ProjectCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class ProjectCostApiImpl implements ProjectCostAPI {
     @Override
     public List<ProjectCostBO> pageList(ProjectCostDTO dto) throws SerException {
         return projectCostSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(ProjectCostDTO dto) throws SerException {
+        return projectCostSer.count(dto);
+    }
+
+    @Override
+    public ProjectCostBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(projectCostSer.findById(id),ProjectCostBO.class);
     }
 }

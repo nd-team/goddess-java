@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.DemandCostDTO;
 import com.bjike.goddess.businessevaluate.service.DemandCostSer;
 import com.bjike.goddess.businessevaluate.to.DemandCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class DemandCostApiImpl implements DemandCostAPI {
     @Override
     public List<DemandCostBO> pageList(DemandCostDTO dto) throws SerException {
         return demandCostSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(DemandCostDTO dto) throws SerException {
+        return demandCostSer.count(dto);
+    }
+
+    @Override
+    public DemandCostBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(demandCostSer.findById(id),DemandCostBO.class);
     }
 }

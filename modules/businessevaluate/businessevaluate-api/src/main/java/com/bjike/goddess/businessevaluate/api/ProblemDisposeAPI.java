@@ -48,4 +48,20 @@ public interface ProblemDisposeAPI {
      * @return 项目问题受理和处理结果集
      */
     List<ProblemDisposeBO> pageList(ProblemDisposeDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(ProblemDisposeDTO dto) throws SerException;
+
+    /**
+     * 根据id查询项目问题受理和处理
+     *
+     * @param id 项目问题受理和处理id
+     * @return 项目问题受理和处理
+     */
+    ProblemDisposeBO findById(String id) throws SerException;
 }

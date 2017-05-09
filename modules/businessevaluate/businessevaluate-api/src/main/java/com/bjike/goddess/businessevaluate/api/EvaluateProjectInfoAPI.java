@@ -73,4 +73,21 @@ public interface EvaluateProjectInfoAPI {
      * @return 项目结果集
      */
     List<EvaluateProjectInfoBO> findAll() throws SerException;
+
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(EvaluateProjectInfoDTO dto) throws SerException;
+
+    /**
+     * 根据id查询项目基本信息
+     *
+     * @param id 项目基本信息id
+     * @return 项目基本信息
+     */
+    EvaluateProjectInfoBO findById(String id)throws SerException;
 }

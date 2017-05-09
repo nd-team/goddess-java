@@ -57,16 +57,49 @@ public class ProjectAmountAct {
     }
 
     /**
-     * 查询项目金额信息
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ProjectAmountDTO dto) throws ActException {
+        try {
+            Long count = projectAmountAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目信息id查询项目金额信息
+     *
+     * @param id 项目信息id
+     * @return class ProjectAmountInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/findbyinfo/{id}")
+    public Result findInfoById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ProjectAmountInfoVO vo = BeanTransform.copyProperties(projectAmountAPI.findInfoById(id), ProjectAmountInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询项目金额信息
      *
      * @param id 项目金额信息id
      * @return class ProjectAmountInfoVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
-    public Result findInfoById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectAmountInfoVO vo = BeanTransform.copyProperties(projectAmountAPI.findInfoById(id), ProjectAmountInfoVO.class, request);
+            ProjectAmountInfoVO vo = BeanTransform.copyProperties(projectAmountAPI.findById(id), ProjectAmountInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

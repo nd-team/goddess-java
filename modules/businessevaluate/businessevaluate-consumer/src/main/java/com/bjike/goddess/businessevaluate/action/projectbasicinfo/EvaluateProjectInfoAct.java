@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,6 +35,40 @@ public class EvaluateProjectInfoAct {
     @Autowired
     private EvaluateProjectInfoAPI evaluateProjectInfoAPI;
 
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(EvaluateProjectInfoDTO dto) throws ActException {
+        try {
+            Long count = evaluateProjectInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询项目基本信息
+     *
+     * @param id 项目基本信息id
+     * @return class EvaluateProjectInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            EvaluateProjectInfoVO vo = BeanTransform.copyProperties(evaluateProjectInfoAPI.findById(id), EvaluateProjectInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    
     /**
      * 新增商务评估项目基本信息
      *

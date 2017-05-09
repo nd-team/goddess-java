@@ -61,4 +61,14 @@ public class EvaluateProjectInfoApiImpl implements EvaluateProjectInfoAPI {
     public List<EvaluateProjectInfoBO> findAll() throws SerException {
         return BeanTransform.copyProperties(evaluateProjectInfoSer.findAll(), EvaluateProjectInfoBO.class);
     }
+
+    @Override
+    public Long count(EvaluateProjectInfoDTO dto) throws SerException {
+        return evaluateProjectInfoSer.count(dto);
+    }
+
+    @Override
+    public EvaluateProjectInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(evaluateProjectInfoSer.findById(id),EvaluateProjectInfoBO.class);
+    }
 }

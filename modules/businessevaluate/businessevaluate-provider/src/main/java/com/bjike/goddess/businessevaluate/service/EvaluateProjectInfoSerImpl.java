@@ -68,6 +68,19 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
         if (!StringUtils.isEmpty(to.getId())) {
             EvaluateProjectInfo model = super.findById(to.getId());
             if (model != null) {
+                if (to.getYears() != null && to.getMonths() != null && to.getDays() != null) {
+                    StringBuilder experienceTime = new StringBuilder();
+                    experienceTime.append(to.getYears());
+                    experienceTime.append("年");
+                    experienceTime.append(to.getMonths());
+                    experienceTime.append("月");
+                    experienceTime.append(to.getDays());
+                    experienceTime.append("日");
+                    to.setExperienceTime(experienceTime.toString());
+                } else {
+                    throw new SerException("工期经历时间不能为空!");
+                }
+
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);

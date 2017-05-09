@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -23,26 +24,18 @@ import java.util.Map;
 public class DispatchCarInfoTO extends BaseTO {
 
     /**
-     * 出车单号
-     */
-    private String number;
-
-    /**
      * 司机名称
      */
-    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String driver;
 
     /**
      * 是否公司人员出车
      */
-    @NotNull(message = "'是否公司人员出车'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean companyDispatch;
 
     /**
      * 用车人
      */
-    @NotBlank(message = "'用车人'不能为空", groups = {ADD.class, EDIT.class})
     private String carUser;
 
     /**
@@ -53,103 +46,86 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 所属地区
      */
-    @NotBlank(message = "'地区'不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 所属项目组
      */
-    @NotBlank(message = "'项目组'不能为空", groups = {ADD.class, EDIT.class})
     private String group;
 
     /**
      * 是否立项
      */
-    @NotNull(message = "'是否立项'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean projectApproval;
 
     /**
      * 项目名称
      */
-    @NotBlank(message = "'项目名称'不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 科目类型
      */
-    @NotNull(message = "'科目类型'不能为空", groups = {ADD.class, EDIT.class})
     private Acctype acctype;
 
     /**
      * 出车日期
      */
-    @NotBlank(message = "'出车日期'不能为空", groups = {ADD.class, EDIT.class})
     private String dispatchDate;
 
     /**
      * 出车开始时间
      */
-    @NotBlank(message = "'出车开始时间'不能为空", groups = {ADD.class, EDIT.class})
     private String startTime;
 
     /**
      * 出车结束时间
      */
-    @NotBlank(message = "'出车结束时间'不能为空", groups = {ADD.class, EDIT.class})
     private String endTime;
 
     /**
      * 是否午休
      */
-    @NotNull(message = "'是否午休'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean siesta;
 
     /**
      * 加班时长
      */
-    @NotNull(message = "'加班时长'不能为空", groups = {ADD.class, EDIT.class})
     private Integer overWorkTime;
 
     /**
      * 用车事由
      */
-    @NotBlank(message = "'用车事由'不能为空", groups = {ADD.class, EDIT.class})
     private String dispatchReason;
 
     /**
      * 随同人员
      */
-    @NotBlank(message = "'随同人员'不能为空", groups = {ADD.class, EDIT.class})
     private String accompanyUser;
 
     /**
      * 车牌号码
      */
-    @NotBlank(message = "'车牌号码'不能为空", groups = {ADD.class, EDIT.class})
     private String carNumber;
 
     /**
      * 所用油卡编号
      */
-    @NotBlank(message = "'所用油卡编号'不能为空", groups = {ADD.class, EDIT.class})
     private String oilCardNumber;
 
     /**
      * 是否开空调
      */
-    @NotNull(message = "'是否开空调'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean aircondition;
 
     /**
      * 是否市内
      */
-    @NotNull(message = "'是否室内'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean downtown;
 
     /**
      * 当天是否加油
      */
-    @NotNull(message = "'当天是否加油'不能为空", groups = {ADD.class, EDIT.class})
     private Boolean addOil;
 
     /**
@@ -175,7 +151,6 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 油卡余额
      */
-    @NotNull(message = "'油卡余额'不能为空", groups = {ADD.class, EDIT.class})
     private Double oilCardBalance;
 
     /**
@@ -186,31 +161,26 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 任务下达人
      */
-    @NotBlank(message = "'任务下达人'不能为空", groups = {ADD.class, EDIT.class})
     private String principal;
 
     /**
      * 计划任务数量
      */
-    @NotNull(message = "'计划任务数量'不能为空", groups = {ADD.class, EDIT.class})
     private Integer planTaskAmount;
 
     /**
      * 完成任务数量
      */
-    @NotNull(message = "'完成任务数量'不能为空", groups = {ADD.class, EDIT.class})
     private Integer finishTaskAmount;
 
     /**
      * 出车开始里程数
      */
-    @NotNull(message = "'出车开始里程数'不能为空", groups = {ADD.class, EDIT.class})
     private Double startMileage;
 
     /**
      * 出车结束里程数
      */
-    @NotNull(message = "'出车结束里程数'不能为空", groups = {ADD.class, EDIT.class})
     private Double endMileage;
 
     /**
@@ -221,25 +191,22 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * GPS轨迹总里程数
      */
-    @NotNull(message = "'GPS轨迹总里程数'不能为空", groups = {ADD.class, EDIT.class})
     private Double mileageOfGPS;
 
     /**
      * 停车费
      */
-    @NotNull(message = "'停车费'不能为空", groups = {ADD.class, EDIT.class})
     private Double parkCost;
 
     /**
      * 过路费
      */
-    @NotNull(message = "'过路费'不能为空", groups = {ADD.class, EDIT.class})
     private Double roadCost;
 
     /**
      * 评价司机
      */
-    private String evaluatedriver;
+    private Evaluate evaluatedriver;
 
     /**
      * 小票附件
@@ -430,14 +397,6 @@ public class DispatchCarInfoTO extends BaseTO {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public String getDriver() {
@@ -728,11 +687,11 @@ public class DispatchCarInfoTO extends BaseTO {
         this.roadCost = roadCost;
     }
 
-    public String getEvaluatedriver() {
+    public Evaluate getEvaluatedriver() {
         return evaluatedriver;
     }
 
-    public void setEvaluatedriver(String evaluatedriver) {
+    public void setEvaluatedriver(Evaluate evaluatedriver) {
         this.evaluatedriver = evaluatedriver;
     }
 
