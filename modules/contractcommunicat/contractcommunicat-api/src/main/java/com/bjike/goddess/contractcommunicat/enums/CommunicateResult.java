@@ -15,10 +15,12 @@ public enum CommunicateResult {
      * 项目合作
      */
     COOPERATE(0),
+
     /**
      * 项目跟进
      */
     TRAIL(1),
+
     /**
      * 项目丢弃
      */

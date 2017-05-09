@@ -21,37 +21,37 @@ public class DormitoryInfo extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
-    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
+    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
     private String address;
 
     /**
      * 宿舍钥匙数量（把）
      */
-    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙数量（把）'")
+    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙数量（把）'")
     private Integer keysNumber;
 
     /**
      * 宿舍钥匙分配情况
      */
-    @Column(name = "keysDistribution", columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙分配情况'")
+    @Column(name = "keysDistribution", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙分配情况'")
     private String keysDistribution;
 
     /**
      * 宿舍负责人
      */
-    @Column(name = "head", columnDefinition = "VARCHAR(255)   COMMENT '宿舍负责人'")
+    @Column(name = "head", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍负责人'")
     private String head;
 
     /**

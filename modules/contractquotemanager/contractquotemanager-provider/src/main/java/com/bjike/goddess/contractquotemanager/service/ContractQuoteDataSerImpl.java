@@ -1,21 +1,27 @@
 package com.bjike.goddess.contractquotemanager.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.exception.RepException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
+import com.bjike.goddess.contractquotemanager.dao.ContractQuoteDataRep;
 import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
 import com.bjike.goddess.contractquotemanager.to.ContractQuoteDataTO;
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,183 +38,96 @@ import java.util.List;
 @Service
 public class ContractQuoteDataSerImpl extends ServiceImpl<ContractQuoteData, ContractQuoteDataDTO> implements ContractQuoteDataSer {
 
-    /**
-     * 分页查询合同单价资料信息
-     *
-     * @param dto 合同单价资料信息dto
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<ContractQuoteDataBO> list(ContractQuoteDataDTO dto) throws SerException {
-        List<ContractQuoteData> list = super.findByPage(dto);
-        List<ContractQuoteDataBO> boList = BeanTransform.copyProperties(list, ContractQuoteDataBO.class);
-        return boList;
+    @Override
+    public ContractQuoteDataBO save(ContractQuoteDataTO contractQuoteDataTO) throws SerException {
+        ContractQuoteData contractQuoteData = BeanTransform.copyProperties(contractQuoteDataTO, ContractQuoteData.class, true);
+        super.save(contractQuoteData);
+        contractQuoteDataTO.setId(contractQuoteData.getId());
+        return BeanTransform.copyProperties(contractQuoteDataTO, ContractQuoteDataBO.class, true);
+    }
+    @Override
+    public List<ContractQuoteDataBO> list(ContractQuoteDataDTO contractQuoteDataDTO) throws SerException {
+        List<ContractQuoteData> contractQuoteDatas = super.findByCis(contractQuoteDataDTO);
+        List<ContractQuoteDataBO> contractQuoteDataBOs = BeanTransform.copyProperties(contractQuoteDatas, ContractQuoteDataBO.class);
+        return contractQuoteDataBOs;
     }
 
-    /**
-     * 保存合同单价资料信息
-     *
-     * @param to 合同单价资料信息to
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
-    public ContractQuoteDataBO save(ContractQuoteDataTO to) throws SerException {
-        ContractQuoteData entity = BeanTransform.copyProperties(to, ContractQuoteData.class, true);
-        entity.setStatus(Status.THAW);//设置状态为解冻状态
-        entity = super.save(entity);
-        ContractQuoteDataBO bo = BeanTransform.copyProperties(entity, ContractQuoteDataBO.class);
-        return bo;
+    @Override
+    public void update(ContractQuoteDataTO contractQuoteDataTO) throws SerException {
+        ContractQuoteData contractQuoteData = super.findById(contractQuoteDataTO.getId());
+        BeanTransform.copyProperties(contractQuoteDataTO, contractQuoteData, true);
+        contractQuoteData.setModifyTime(LocalDateTime.now());
+        super.update(contractQuoteData);
     }
 
-    /**
-     * 根据id删除合同单价资料信息
-     *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
+    @Override
     public void remove(String id) throws SerException {
         super.remove(id);
     }
 
-    /**
-     * 更新合同单价资料信息
-     *
-     * @param to 合同单价资料信息to
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
-    public void update(ContractQuoteDataTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())) {
-            ContractQuoteData model = super.findById(to.getId());
-            if (model != null) {
-                updateContractQuoteData(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
-    }
-
-    /**
-     * 更新合同单价资料信息
-     *
-     * @param to    合同单价资料信息to
-     * @param model 合同单价资料信息
-     * @throws SerException
-     */
-    private void updateContractQuoteData(ContractQuoteDataTO to, ContractQuoteData model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
-    }
-
-    /**
-     * 冻结合同单价资料信息
-     *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
-     */
     @Override
-    @Transactional(rollbackFor = SerException.class)
     public void congealStatus(String id) throws SerException {
-        ContractQuoteData model = super.findById(id);
-        model.setStatus(Status.CONGEAL);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
+        ContractQuoteData contractQuoteData = super.findById(id);
+        contractQuoteData.setStatus(Status.CONGEAL);
+        contractQuoteData.setModifyTime(LocalDateTime.now());
+        super.update(contractQuoteData);
     }
 
-    /**
-     * 解冻合同单价资料信息唯一标识
-     *
-     * @param id 合同单价资料信息唯一标识
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
+    @Override
     public void thawStatus(String id) throws SerException {
-        ContractQuoteData model = super.findById(id);
-        model.setStatus(Status.THAW);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
+        ContractQuoteData contractQuoteData = super.findById(id);
+        contractQuoteData.setStatus(Status.THAW);
+        contractQuoteData.setModifyTime(LocalDateTime.now());
+        super.update(contractQuoteData);
     }
 
-    /**
-     * 汇总合同单价资料信息
-     *
-     * @param dto 合同单价资料信息dto
-     * @return
-     * @throws SerException
-     */
+
     @Override
     public List<ContractQuoteDataBO> collect(ContractQuoteDataDTO dto) throws SerException {
+        if(dto ==null){
+            throw new SerException("您好!查询条件为空,无法进行查询!");
+        }
+        if((dto.getArea()==null) || (dto.getArea().length == 0)){
+            throw new SerException("您好!地区列表为空,无法进行查询!");
 
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String[] areas = dto.getArea();
         String customerName = dto.getCustomerName();
         String startDate = dto.getStartDate();
         String endDate = dto.getEndDate();
-
-        Boolean areasNotEmpty = (areas != null) && (areas.length > 0);//地区不为空
-        LocalDate[] suitableDateStart = null;
-        try {
-            suitableDateStart = new LocalDate[]{LocalDate.parse(startDate), LocalDate.parse(endDate)};
-        } catch (Exception e) {
-            throw new SerException("时间为空或者时间格式错误(例:2010-12-31)");
+        List<ContractQuoteDataBO> list = new ArrayList<>(0);
+        for(String area : areas){
+           ContractQuoteDataDTO contractQuoteDateDTO = new ContractQuoteDataDTO();
+            contractQuoteDateDTO.getConditions().add(Restrict.eq("area",area));
+            contractQuoteDateDTO.getConditions().add(Restrict.eq("customerName",customerName));
+            ContractQuoteDataBO bo = new ContractQuoteDataBO();
+            bo.setArea(area);
+            bo.setCustomerName(customerName);
+            bo.setSuitableDateStart(startDate);
+            bo.setSuitableDateEnd(endDate);
+            list.add(bo);
         }
 
-        if (areasNotEmpty) {
-            List<ContractQuoteDataBO> totallist = new ArrayList<>(0);
-            for (String area : areas) {
-                ContractQuoteDataDTO contractDto = new ContractQuoteDataDTO();
-                contractDto.getConditions().add(Restrict.eq("area", area));
-                contractDto.getConditions().add(Restrict.eq("customerName", customerName));
-                contractDto.getConditions().add(Restrict.between("suitableDateStart", suitableDateStart));
-                contractDto.getSorts().add("suitableDateStart=desc");
-                List<ContractQuoteData> dataList = super.findByCis(contractDto);
 
-                if (!dataList.isEmpty()) {
-                    //当dataList为空时,拷贝会出错
-                    List<ContractQuoteDataBO> boList = BeanTransform.copyProperties(dataList, ContractQuoteDataBO.class);
-                    totallist.addAll(boList);
-                }
-            }
-            return totallist;
-        } else {
-            throw new SerException("您好,地区为空,无法进行查询.");
-        }
+        return BeanTransform.copyProperties(super.findByCis(dto), ContractQuoteDataBO.class);
     }
-
-    /**
-     * 根据地区或者项目组查询合同单价资料信息
-     *
-     * @param area    地区
-     * @param project 项目组
-     * @return class ContractQuoteDataBO
-     * @throws SerException
-     */
     @Override
-    public List<ContractQuoteDataBO> searchs(String area, String project) throws SerException {
+    public List<ContractQuoteDataBO> searchs(ContractQuoteDataBO bo) throws SerException {
         ContractQuoteDataDTO dto = new ContractQuoteDataDTO();
-
-        if (StringUtils.isNotBlank(area)) {
-            dto.getConditions().add(Restrict.eq("area", area));
+        if (bo.getArea() != null && !bo.getArea().equals("")) {
+            dto.getConditions().add(Restrict.eq("area", bo.getArea()));
+        }
+        if (bo.getProject() != null && !bo.getProject().equals("")) {
+            dto.getConditions().add(Restrict.eq("project", bo.getProject()));
         }
 
-        if (StringUtils.isNotBlank(project)) {
-            dto.getConditions().add(Restrict.eq("project", project));
-        }
-
-        List<ContractQuoteData> list = super.findByCis(dto);
-        List<ContractQuoteDataBO> boList = BeanTransform.copyProperties(list, ContractQuoteDataBO.class);
-
-        return boList;
+        return BeanTransform.copyProperties(super.findByCis(dto), ContractQuoteDataBO.class);
     }
 
 }

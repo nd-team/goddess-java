@@ -2,10 +2,8 @@ package com.bjike.goddess.contractquotemanager.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
-import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.service.ContractNodeStandardSer;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,102 +22,37 @@ import java.util.List;
  */
 @Service("contractNodeStandardApiImpl")
 public class ContractNodeStandardApiImpl implements ContractNodeStandardAPI {
-
     @Autowired
     private ContractNodeStandardSer contractNodeStandardSer;
 
-    /**
-     * 根据id查询合同节点标准信息
-     *
-     * @param id 合同节点标准信息唯一标识
-     * @return class CustomerInfoBO
-     * @throws SerException
-     */
     @Override
-    public ContractNodeStandardBO findById(String id) throws SerException {
-        ContractNodeStandard model = contractNodeStandardSer.findById(id);
-        return BeanTransform.copyProperties(model, ContractNodeStandardBO.class);
+    public ContractNodeStandardBO save(ContractNodeStandardTO contractNodeStandardTO) throws SerException {
+        return contractNodeStandardSer.save(contractNodeStandardTO);
     }
 
-    /**
-     * 计算总条数
-     *
-     * @param dto 合同节点标准信息dto
-     * @throws SerException
-     */
-    @Override
-    public Long count(ContractNodeStandardDTO dto) throws SerException {
-        return contractNodeStandardSer.count(dto);
-    }
-
-    /**
-     * 添加合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @return class ContractNodeStandardBO
-     * @throws SerException
-     */
-    @Override
-    public ContractNodeStandardBO save(ContractNodeStandardTO to) throws SerException {
-        return contractNodeStandardSer.save(to);
-    }
-
-    /**
-     * 分页查询合同节点标准信息
-     *
-     * @param dto 合同节点标准信息dto
-     * @return class ContractNodeStandardBO
-     * @throws SerException
-     */
     @Override
     public List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
         return contractNodeStandardSer.list(dto);
     }
 
-    /**
-     * 编辑合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @throws SerException
-     */
     @Override
-    public void update(ContractNodeStandardTO to) throws SerException {
-        contractNodeStandardSer.update(to);
+    public void update(ContractNodeStandardTO contractNodeStandardTO) throws SerException {
+        contractNodeStandardSer.update(contractNodeStandardTO);
     }
 
-    /**
-     * 根据id删除合同节点标准信息
-     *
-     * @param id 合同节点标准信息唯一标识
-     * @throws SerException
-     */
     @Override
     public void remove(String id) throws SerException {
         contractNodeStandardSer.remove(id);
     }
 
-    /**
-     * 汇总合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @return class ContractNodeStandardBO
-     * @throws SerException
-     */
     @Override
-    public List<ContractNodeStandardBO> collect(ContractNodeStandardTO to) throws SerException {
-        return contractNodeStandardSer.collect(to);
+    public List<ContractNodeStandardBO> collect(ContractNodeStandardBO bo) throws SerException {
+        return contractNodeStandardSer.collect(bo);
     }
 
-    /**
-     * 搜索合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @return
-     * @throws SerException
-     */
     @Override
-    public List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardTO to) throws SerException {
-        return contractNodeStandardSer.searchContractNodeStandard(to);
+    public List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardBO bo) throws SerException {
+        return contractNodeStandardSer.searchContractNodeStandard(bo);
     }
 
 }

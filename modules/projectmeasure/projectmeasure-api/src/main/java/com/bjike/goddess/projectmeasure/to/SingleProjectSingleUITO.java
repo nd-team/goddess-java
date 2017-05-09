@@ -1,13 +1,8 @@
 package com.bjike.goddess.projectmeasure.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.projectmeasure.type.InterfaceSelect;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 单个项目单个界面
@@ -23,31 +18,26 @@ public class SingleProjectSingleUITO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目名称不能为空")
     private String projectName;
 
     /**
      * 项目类别
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目类别不能为空")
     private ProjectCategory projectCategory;
 
     /**
      * 界面选择
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "界面选择不能为空")
     private InterfaceSelect interfaceSelect;
 
     /**
      * 工作量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "工作量必须是大于等于0的整数")
     private Integer workload;
 
     /**
      * 利润
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "利润必须是大于等于0的小数")
     private Double profit;
 
 

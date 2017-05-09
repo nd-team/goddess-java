@@ -1,11 +1,10 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.service.ProjectCostStatusSer;
+import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,30 +25,6 @@ public class ProjectCostStatusApiImpl implements ProjectCostStatusAPI {
 
     @Autowired
     private ProjectCostStatusSer projectCostStatusSer;
-
-    /**
-     * 根据id查询项目费用情况
-     *
-     * @param id 项目费用情况唯一标识
-     * @return class ProjectCostStatusBO
-     * @throws SerException
-     */
-    @Override
-    public ProjectCostStatusBO findById(String id) throws SerException {
-        ProjectCostStatus model = projectCostStatusSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectCostStatusBO.class);
-    }
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目费用情况dto
-     * @throws SerException
-     */
-    @Override
-    public Long count(ProjectCostStatusDTO dto) throws SerException {
-        return projectCostStatusSer.count(dto);
-    }
 
     /**
      * 分页查询项目费用情况

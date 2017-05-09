@@ -1,10 +1,8 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.service.ProjectBasicInfoSer;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,30 +24,6 @@ public class ProjectBasicInfoApiImpl implements ProjectBasicInfoAPI {
 
     @Autowired
     private ProjectBasicInfoSer projectBasicInfoSer;
-
-    /**
-     * 根据id查询项目基本信息
-     *
-     * @param id 项目基本信息唯一标识
-     * @return class ProjectBasicInfoBO
-     * @throws SerException
-     */
-    @Override
-    public ProjectBasicInfoBO findById(String id) throws SerException {
-        ProjectBasicInfo model = projectBasicInfoSer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectBasicInfoBO.class);
-    }
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目基本信息dto
-     * @throws SerException
-     */
-    @Override
-    public Long count(ProjectBasicInfoDTO dto) throws SerException {
-        return projectBasicInfoSer.count(dto);
-    }
 
     /**
      * 分页查询项目基本信息

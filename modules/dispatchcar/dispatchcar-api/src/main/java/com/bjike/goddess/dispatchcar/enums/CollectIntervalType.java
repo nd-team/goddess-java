@@ -10,22 +10,27 @@ package com.bjike.goddess.dispatchcar.enums;
  * @Copy: [com.bjike]
  */
 public enum CollectIntervalType {
+
     /**
      * 日
      */
     DAY(0),
+
     /**
      * 周
      */
     WEEK(1),
+
     /**
      * 月
      */
     MONTH(2),
+
     /**
      * 季度
      */
     QUARTER(3),
+
     /**
      * 年
      */

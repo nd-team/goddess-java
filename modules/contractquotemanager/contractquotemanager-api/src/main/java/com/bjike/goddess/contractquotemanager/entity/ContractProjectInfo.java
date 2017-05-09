@@ -21,91 +21,91 @@ public class ContractProjectInfo extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '地区'")
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组'")
+    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String project;
 
     /**
      * 项目内部结构
      */
-    @Column(name = "projectInner", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目内部结构'")
+    @Column(name = "projectInner", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目内部结构'")
     private String projectInner;
 
     /**
      * 派工项目名称
      */
-    @Column(name = "projectDispatch", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工项目名称'")
+    @Column(name = "projectDispatch", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '派工项目名称'")
     private String projectDispatch;
 
     /**
      * 派工单编号
      */
-    @Column(name = "dispatchCode", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单编号'")
+    @Column(name = "dispatchCode", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '派工单编号'")
     private String dispatchCode;
 
     /**
      * 派工合同号
      */
-    @Column(name = "dispatchContraCode", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工合同号'")
+    @Column(name = "dispatchContraCode", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '派工合同号'")
     private String dispatchContraCode;
 
     /**
      * 开工时间
      */
-    @Column(name = "startTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '开工时间'")
+    @Column(name = "startTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '开工时间'")
     private String startTime;
 
     /**
      * 完工时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '完工时间'")
+    @Column(name = "endTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '完工时间'")
     private String endTime;
 
     /**
      * 完工时间(单位：个月)
      */
-    @Column(name = "completeTime", nullable = false, columnDefinition = "INT(11) COMMENT '完工时间(单位：个月)'")
+    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '完工时间(单位：个月)'")
     private Integer completeTime;
 
     /**
      * 合同金额(单位:万元)
      */
-    @Column(name = "contractMoney", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '合同金额(单位:万元)'")
+    @Column(name = "contractMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '合同金额(单位:万元)'")
     private Double contractMoney;
 
     /**
      * 派工单位
      */
-    @Column(name = "dispatchUnit", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '派工单位'")
+    @Column(name = "dispatchUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '派工单位'")
     private String dispatchUnit;
 
     /**
      * 合同规模数
      */
-    @Column(name = "contractScale", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '合同规模数'")
+    @Column(name = "contractScale", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合同规模数'")
     private String contractScale;
 
     /**
      * 回款周期
      */
-    @Column(name = "receivableNum", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '回款周期'")
+    @Column(name = "receivableNum", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '回款周期'")
     private Double receivableNum;
 
     /**
      * 重点性
      */
-    @Column(name = "emphasis", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '重点性'")
+    @Column(name = "emphasis", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '重点性'")
     private String emphasis;
 
     /**
      * 难易程度
      */
-    @Column(name = "difficulty", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '难易程度'")
+    @Column(name = "difficulty", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '难易程度'")
     private String difficulty;
 
 

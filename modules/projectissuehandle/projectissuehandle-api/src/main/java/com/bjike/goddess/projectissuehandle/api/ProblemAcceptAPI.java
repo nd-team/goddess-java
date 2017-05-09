@@ -89,4 +89,13 @@ public interface ProblemAcceptAPI {
         return null;
     }
 
+    /**
+     * 上传
+     */
+    default void upload() throws SerException {
+        return;
+
+    }
+
+
 }
