@@ -22,6 +22,7 @@
 	<dubbo:service interface="com.bjike.goddess.subjectcollect.api.SubjectCollectAPI" ref="subjectCollectApiImpl"/>
 
 	<!--其他模块业务接口-->
+	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 
 
 </beans>

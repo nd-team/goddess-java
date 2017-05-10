@@ -30,23 +30,31 @@ import java.util.List;
 @CacheConfig(cacheNames = "receivableSerCache")
 @Service
 public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> implements ContractorSer {
-    @Cacheable
+    @Override
+    public Long countContractor(ContractorDTO contractorDTO) throws SerException {
+        Long count = super.count(contractorDTO);
+        return count;
+    }
+
+    @Override
+    public ContractorBO getOne(String id) throws SerException {
+        Contractor contractor = super.findById(id);
+        return BeanTransform.copyProperties(contractor,ContractorBO.class);
+    }
     @Override
     public List<ContractorBO> findListContractor(ContractorDTO contractorDTO) throws SerException {
         List<Contractor> contractors = super.findByCis(contractorDTO, true);
         return BeanTransform.copyProperties(contractors, ContractorBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO insertContractor(ContractorTO contractorTO) throws SerException {
-        Contractor contractor = BeanTransform.copyProperties(contractorTO,Contractor.class);
+        Contractor contractor = BeanTransform.copyProperties(contractorTO,Contractor.class,true);
         contractor.setCreateTime(LocalDateTime.now());
         super.save(contractor);
         return BeanTransform.copyProperties(contractor,ContractorBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO editContractor(ContractorTO contractorTO) throws SerException {
         if (!StringUtils.isEmpty(contractorTO.getId())) {
@@ -60,7 +68,6 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
         return BeanTransform.copyProperties(contractorTO, ContractorBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeContractor(String id) throws SerException {
         try {

@@ -18,5 +18,5 @@
 
 	<dubbo:reference  validation="true" id="subjectCollectApiImpl" interface="com.bjike.goddess.subjectcollect.api.SubjectCollectAPI" />
 
-
+	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 </beans>

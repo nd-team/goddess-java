@@ -2,12 +2,10 @@ package com.bjike.goddess.receivable.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.receivable.bo.ContractorBO;
-import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
-import com.bjike.goddess.receivable.dto.ContractorDTO;
-import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
+import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
-import com.bjike.goddess.receivable.to.ContractorTO;
+import com.bjike.goddess.receivable.entity.Contractor;
+import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
 import java.util.List;
@@ -22,6 +20,22 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, ReceivableSubsidiaryDTO> {
+    /**
+     * 回款明细列表总条数
+     */
+    default Long countReceivableSubsidiary(ReceivableSubsidiaryDTO receivableSubsidiaryDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个回款明细
+     *
+     * @return class ReceivableSubsidiaryBO
+     */
+    default ReceivableSubsidiaryBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 获取回款明细
      *
@@ -63,39 +77,49 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default void removeReceivableSubsidiary(String id) throws SerException {
 
     }
+
     /**
      * 签字审批时间
-     * @param auditDate
+     *
+     * @param auditTime
      */
-    default List<String> auditDate(String auditDate) throws SerException{
+    default List<String> auditTime(String auditTime) throws SerException {
         return null;
     }
+
     /**
      * ERP结算审批时间
-     * @param countDate
+     *
+     * @param countTime
      */
-    default List<String> countDate(String countDate) throws SerException{
+    default List<String> countTime(String countTime) throws SerException {
         return null;
     }
+
     /**
      * 发票审核时间
-     * @param billDate
+     *
+     * @param billTime
      */
-    default List<String> billDate(String billDate) throws SerException{
-        return  null;
-    }
-    /**
-     * 预计支付时间
-     * @param planDate
-     */
-    default String planDate(String planDate)throws SerException{
+    default List<String> billTime(String billTime) throws SerException {
         return null;
     }
+
+    /**
+     * 预计支付时间
+     *
+     * @param planTime
+     */
+    default String planTime(String planTime) throws SerException {
+        return null;
+    }
+
     /**
      * 时间
+     *
      * @param receivableSubsidiary
      */
-    default void editDate(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr)throws SerException{
+    default void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws SerException {
 
     }
 
@@ -104,7 +128,7 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
      *
      * @throws SerException
      */
-    default String exportExcel(String area,String start,String end) throws SerException {
+    default String exportExcel(String area, String start, String end) throws SerException {
         return null;
     }
 
@@ -115,96 +139,100 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
         return;
 
     }
-    /**
-     * 地区汇总
-     *
-     * @param area area
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectArea(String[] area) throws SerException {
-        return null;
-    }
-    /**
-     * 地区汇总详情
-     *
-     * @param area area
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectAreaDetail(String[] area) throws SerException {
-        return null;
-    }
-
 
     /**
      * 获取地区
      *
      * @return class String
      */
-    default List<String> getReceivableSubsidiaryArea() throws SerException {
+    default List<String> getArea() throws SerException {
         return null;
     }
-    /**
-     * 项目名称汇总
-     *
-     * @param innerName innerName
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectInnerName(String[] innerName) throws SerException {
-        return null;
-    }
-    /**
-     * 项目名称汇总详情
-     *
-     * @param innerName innerName
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectInnerNameDetail(String[] innerName) throws SerException {
-        return null;
-    }
-
 
     /**
      * 获取项目名称
      *
      * @return class String
      */
-    default List<String> getReceivableSubsidiaryInnerName() throws SerException {
+    default List<String> getInnerName() throws SerException {
         return null;
     }
-    /**
-     * 总包单位汇总
-     *
-     * @param contractor contractor
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectContractor(String[] contractor) throws SerException {
-        return null;
-    }
-    /**
-     * 总包单位汇总详情
-     *
-     * @param contractor contractor
-     * @return class ReceivableSubsidiaryBO
-     * @throws SerException
-     */
-    default List<ReceivableSubsidiaryBO> collectContractorDetail(String[] contractor) throws SerException {
-        return null;
-    }
-
 
     /**
      * 获取总包单位
      *
-     * @return class String
+     * @return class Contractor
      */
-    default List<String> getReceivableSubsidiaryContractor() throws SerException {
+    default List<Contractor> getContractor() throws SerException {
         return null;
     }
+
+    /**
+     * 地区汇总
+     *
+     * @param areas 地区
+     * @return class CollectAreaBO
+     * @throws SerException
+     */
+    default List<CollectAreaBO> collectArea(String[] areas) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目名称汇总
+     *
+     * @param innerNames 项目名称
+     * @return class ReceivableSubsidiaryBO
+     * @throws SerException
+     */
+    default List<CollectProjectNameBO> collectInnerName(String[] innerNames) throws SerException {
+        return null;
+    }
+
+    /**
+     * 总包单位汇总
+     *
+     * @param contractors 总包单位
+     * @return class CollectContractorBO
+     * @throws SerException
+     */
+    default List<CollectContractorBO> collectContractor(String[] contractors) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区汇总详情
+     *
+     * @param areas 地区
+     * @return class CollectAreaDetailBO
+     * @throws SerException
+     */
+    default List<CollectAreaDetailBO> collectAreaDetail(String[] areas) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目名称汇总详情
+     *
+     * @param innerNames 项目名称
+     * @return class CollectProjectNameDetailBO
+     * @throws SerException
+     */
+    default List<CollectProjectNameDetailBO> collectInnerNameDetail(String[] innerNames) throws SerException {
+        return null;
+    }
+
+    /**
+     * 总包单位汇总详情
+     *
+     * @param contractors 总包单位
+     * @return class CollectContractorBO
+     * @throws SerException
+     */
+    default List<CollectContractorBO> collectContractorDetail(String[] contractors) throws SerException {
+        return null;
+    }
+
     /**
      * 对比汇总
      *
@@ -215,15 +243,19 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
         return null;
     }
-    default List<String> getAreas() throws SerException{
+
+    default List<String> getAreas() throws SerException {
         return null;
     }
-    default List<String> getInnerNames() throws SerException{
+
+    default List<String> getInnerNames() throws SerException {
         return null;
     }
-    default List<String> getContractors() throws SerException{
+
+    default List<String> getContractors() throws SerException {
         return null;
     }
+
     /**
      * 发送邮件
      *

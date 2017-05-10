@@ -29,13 +29,13 @@ public class TaxManagement extends BaseEntity {
     /**
      * 所属月份
      */
-    @Column(name = "month", columnDefinition = "DATE   COMMENT '所属月份'")
+    @Column(name = "month", nullable = false,columnDefinition = "DATE   COMMENT '所属月份'")
     private LocalDate month;
 
     /**
      * 税种
      */
-    @Column(name = "taxType", columnDefinition = "VARCHAR(255)   COMMENT '税种'")
+    @Column(name = "taxType", nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '税种'")
     private String taxType;
 
     /**
@@ -53,13 +53,13 @@ public class TaxManagement extends BaseEntity {
     /**
      * 缴税状态
      */
-    @Column(name = "paymentStatus", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '缴费状态'")
+    @Column(name = "paymentStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '缴费状态'")
     private PaymentStatus paymentStatus;
 
     /**
      * 付款日期
      */
-    @Column(name = "paymentDate", nullable = false, columnDefinition = "DATE   COMMENT '付款日期'")
+    @Column(name = "paymentDate", columnDefinition = "DATE   COMMENT '付款日期'")
     private LocalDate paymentDate;
 
     /**
