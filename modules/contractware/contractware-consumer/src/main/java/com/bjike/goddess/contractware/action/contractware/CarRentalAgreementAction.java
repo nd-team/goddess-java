@@ -5,18 +5,14 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractware.api.CarRentalAgreementAPI;
 import com.bjike.goddess.contractware.bo.CarRentalAgreementBO;
-import com.bjike.goddess.contractware.bo.HousingContractBO;
 import com.bjike.goddess.contractware.dto.CarRentalAgreementDTO;
-import com.bjike.goddess.contractware.dto.HousingContractDTO;
 import com.bjike.goddess.contractware.to.CarRentalAgreementTO;
-import com.bjike.goddess.contractware.to.HousingContractTO;
 import com.bjike.goddess.contractware.vo.CarRentalAgreementVO;
-import com.bjike.goddess.contractware.vo.HousingContractVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +35,7 @@ import java.util.List;
 public class CarRentalAgreementAction {
     @Autowired
     private CarRentalAgreementAPI carRentalAgreementAPI;
+
     /**
      * 租车协议列表总条数
      *
@@ -87,7 +84,7 @@ public class CarRentalAgreementAction {
     public Result list(CarRentalAgreementDTO carRentalAgreementDTO, HttpServletRequest request) throws ActException {
         try {
             List<CarRentalAgreementVO> carRentalAgreementVOS = BeanTransform.copyProperties
-                    (carRentalAgreementAPI.findListCarRentalAgreement(carRentalAgreementDTO),CarRentalAgreementVO.class, request);
+                    (carRentalAgreementAPI.findListCarRentalAgreement(carRentalAgreementDTO), CarRentalAgreementVO.class, request);
             return ActResult.initialize(carRentalAgreementVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
