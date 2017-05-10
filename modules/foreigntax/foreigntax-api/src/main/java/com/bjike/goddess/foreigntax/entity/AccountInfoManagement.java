@@ -28,8 +28,8 @@ public class AccountInfoManagement extends BaseEntity {
     /**
      * 所属月份
      */
-    @Column(name = "month", nullable = false,columnDefinition = "DATE   COMMENT '所属月份'")
-    private LocalDate month;
+    @Column(name = "month", columnDefinition = "VARCHAR(255)   COMMENT '所属月份'")
+    private String month;
 
     /**
      * 资料名称
@@ -52,11 +52,11 @@ public class AccountInfoManagement extends BaseEntity {
         this.company = company;
     }
 
-    public LocalDate getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(LocalDate month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 
