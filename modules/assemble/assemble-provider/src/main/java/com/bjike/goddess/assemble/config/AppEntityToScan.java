@@ -1,18 +1,17 @@
 package com.bjike.goddess.assemble.config;
 
-import com.bjike.goddess.common.jpa.boot.JpaComponents;
+import com.bjike.goddess.common.jpa.boot.EntityToScanImpl;
 import org.springframework.stereotype.Component;
 
 /**
- * 继承扫描jpa
+ * 扫描entity
  *
  * @Author: [liguiqin]
- * @Date: [2016-11-23 15:47]
+ * @Date: [2017-01-11 17:15]
  * @Description: []
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 @Component
-public class AppComponents extends JpaComponents {
-
+public class AppEntityToScan extends EntityToScanImpl<AppRoot> {
 }

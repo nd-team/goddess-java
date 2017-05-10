@@ -12,10 +12,10 @@ public class JapiTest {
 		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 
-		JapiClient.setProjectJavaPath("demo/demo-assemble/demo-assemble-consumer");//主项目位置
-		JapiClient.setActionReletivePath("com/bjike/goddess/ticket/action");//主项目action位置
+		JapiClient.setProjectJavaPath("modules/assemble/assemble-consumer");//主项目位置
+		JapiClient.setActionReletivePath("com/bjike/goddess/assemble/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"demo/demo-assemble/demo-assemble-api",
+				"modules/assemble/assemble-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

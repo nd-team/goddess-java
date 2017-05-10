@@ -1,20 +1,29 @@
-package com.bjike.goddess.assemble.bo;
+package com.bjike.goddess.assemble.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Min;
 
 /**
+ * 演示demo功能信息
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class TicketBO extends BaseBO {
+public class ModuleVO {
+    public interface TESTDemoList{}
+    public interface TESTDemoListUP{}
 
-    private String account;//购买人账号
     /**
-     * 座位号
+     * 购买人账号
      */
+    private String account;
+    /**
+     * 座位号 D3608-2-2D
+     */
+    @NotBlank(groups = ModuleVO.TESTDemoList.class,message = "座位号不能为空")
     private String position;
     /**
      * 出发时间
@@ -23,6 +32,7 @@ public class TicketBO extends BaseBO {
     /**
      * 购票金额
      */
+    @Min(value = 10,message = "金额错误")
     private Integer money;
     /**
      * 票号
