@@ -23,6 +23,7 @@ public class JapiTest {
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
 		japiClientStorage.setProject(project);
 		japiClientStorage.autoSaveToDisk();
+		//JapiClient.delete(true);
 		new JapiClientTransfer().autoTransfer(japiClientStorage);
 	}
 

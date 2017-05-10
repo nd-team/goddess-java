@@ -36,6 +36,10 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
         return taxManagementSer.countTaxManagement(taxManagementDTO);
     }
     @Override
+    public TaxManagementBO getOne(String id)throws SerException{
+        return taxManagementSer.getOne(id);
+    }
+    @Override
     public List<TaxManagementBO> findListTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
         return  taxManagementSer.findListTaxManagement(taxManagementDTO);
     }
@@ -60,18 +64,22 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
 
     }
     @Override
-    public TaxManagementBO viewTaxManagement(String company,String taxType,String month) throws SerException {
-        return taxManagementSer.viewTaxManagement(company, taxType, month);
+    public List<TaxManagementBO> viewTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
+        return taxManagementSer.viewTaxManagement(taxManagementDTO);
 
     }
     @Override
-    public List<TaxCollectBO> collectTaxManagement(CollectTo to) throws SerException {
-        return taxManagementSer.collectTaxManagement(to);
+    public List<TaxCollectBO> collectTaxManagement(String [] company) throws SerException {
+        return taxManagementSer.collectTaxManagement(company);
 
     }
-
     @Override
+    public List<String> getCompany() throws SerException {
+        return taxManagementSer.getCompany();
+    }
+
+   /* @Override
     public List<TaxManagementBO> listByCompany(String company, String monthStart, String monthEnd) throws SerException {
         return taxManagementSer.listByCompany(company,monthStart,monthEnd);
-    }
+    }*/
 }

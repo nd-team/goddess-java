@@ -2,6 +2,7 @@ package com.bjike.goddess.projectissuehandle.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
@@ -96,11 +97,23 @@ public interface ProblemHandlingResultSer extends Ser<ProblemHandlingResult, Pro
     }
 
     /**
-     * 上传
+     * 汇总
+     *
+     * @param areas
+     * @return class CollectBO
      */
-    default void upload() throws SerException {
-        return;
-
+    default List<CollectBO> collect(String[] areas) throws SerException {
+        return null;
     }
+
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
+
 
 }

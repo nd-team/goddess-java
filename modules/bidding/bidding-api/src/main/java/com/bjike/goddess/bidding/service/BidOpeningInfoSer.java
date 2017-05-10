@@ -1,5 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
+import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -106,11 +107,11 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
     /**
      * 汇总
      *
-     * @param cities cities
-     * @return class bidOpeningInfoBO
+     * @param cities 地市
+     * @return class BidOpeningCollectBO
      * @throws SerException
      */
-    default BidOpeningInfoBO collectBidOpeningInfo(String cities) throws SerException {
+    default List<BidOpeningCollectBO> collectBidOpening(String [] cities) throws SerException {
         return null;
     }
     /**

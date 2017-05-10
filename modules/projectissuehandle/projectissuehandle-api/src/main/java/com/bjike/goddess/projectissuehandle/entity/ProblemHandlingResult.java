@@ -28,6 +28,11 @@ public class ProblemHandlingResult extends BaseEntity {
      */
     @Column(name = "year", columnDefinition = "VARCHAR(255)   COMMENT '年份'")
     private String year;
+    /**
+     * 地区
+     */
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
 
     /**
      * 合同外部项目名称
@@ -135,6 +140,14 @@ public class ProblemHandlingResult extends BaseEntity {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getExternalContractProjectName() {

@@ -1,12 +1,25 @@
-模块名:projectmarketfee
-类名:Grade
-作者:chenjunhao
-描述:等级设计
+模块名:contractware
+类名:ProjectContract
+作者:xiazhili
+描述:项目合同
+
 
 #参数[变量类型  变量名 ]
 #parameter--------------
-
 (
-String note 备注;
-String grade 等级;
+
+LocalDateTime time 时间;
+String contractName 合同名称;
+String internalName 内部名称;
+String contractId 合同编号;
+String principal 负责人;
+String heirTime 交接时间;
+String heir 交接人;
+Integer heirCount 交接数量;
+String preserver 保管人;
+String preserverPlace 保管地点;
+String remark 备注;
+
 )
+
+

@@ -3,7 +3,6 @@ package com.bjike.goddess.market.action.market;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.market.api.MarketEmailAPI;
@@ -12,7 +11,6 @@ import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.to.MarketEmailTO;
 import com.bjike.goddess.market.vo.MarketCollectVO;
 import com.bjike.goddess.market.vo.MarketEmailVO;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -97,7 +95,6 @@ public class MarketEmailAction {
      * @return  class MarketEmailVO
      * @version v1
      */
-    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated MarketEmailTO marketEmailTO,BindingResult bindingResult) throws ActException {
         try {
@@ -117,7 +114,6 @@ public class MarketEmailAction {
      * @return  class MarketEmailVO
      * @version v1
      */
-    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated  MarketEmailTO marketEmailTO, BindingResult bindingResult) throws ActException {
         try {
