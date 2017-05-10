@@ -1,6 +1,9 @@
 package com.bjike.goddess.foreigntax.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 外账资料管理
@@ -16,11 +19,13 @@ public class AccountInfoManagementTO extends BaseTO {
     /**
      * 公司
      */
+    @NotBlank(message = "公司不能为空",groups = {ADD.class, EDIT.class})
     private String company;
 
     /**
      * 所属月份
      */
+    @NotBlank(message = "所属月份不能为空",groups = {ADD.class, EDIT.class})
     private String month;
 
     /**

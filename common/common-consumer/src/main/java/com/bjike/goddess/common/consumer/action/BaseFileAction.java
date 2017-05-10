@@ -7,9 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,23 @@ import java.util.List;
  */
 public abstract class BaseFileAction {
 
+    /**
+     * 输出文件
+     * @param response
+     * @param bytes
+     * @param fileName
+     * @throws IOException
+     */
+    public void writeOutFile(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+        response.reset();
+        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.addHeader("Content-Length", "" + bytes.length);
+        OutputStream os = new BufferedOutputStream(response.getOutputStream());
+        response.setContentType("application/octet-stream");
+        os.write(bytes);// 输出文件
+        os.flush();
+        os.close();
+    }
 
     /**
      * 上传文件调用该方法获得文件流

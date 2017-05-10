@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -23,26 +23,26 @@ public class Contractor extends BaseEntity {
     /**
      * 名称
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '名称'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '名称'")
     private String name;
 
     /**
      * 百分比
      */
-    @Column(name = "percent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '百分比'")
+    @Column(name = "percent", columnDefinition = "VARCHAR(255)   COMMENT '百分比'")
     private Double percent;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     /**
      * 创建时间
      */
-    @Column(name = "creationTime", nullable = false, columnDefinition = "DATE   COMMENT '创建时间'")
-    private LocalDate creationTime;
+    @Column(name = "creationTime",  columnDefinition = "DATETIME   COMMENT '创建时间'")
+    private LocalDateTime creationTime;
 
     /**
      * 状态
@@ -50,6 +50,11 @@ public class Contractor extends BaseEntity {
     @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
+    /**
+     * 确认问题处理结果
+     */
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "contractor", fetch = FetchType.LAZY)
+    private ReceivableSubsidiary receivableSubsidiary;
 
     public String getName() {
         return name;
@@ -75,11 +80,11 @@ public class Contractor extends BaseEntity {
         this.remark = remark;
     }
 
-    public LocalDate getCreationTime() {
+    public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(LocalDate creationTime) {
+    public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
     }
 
@@ -89,5 +94,13 @@ public class Contractor extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public ReceivableSubsidiary getReceivableSubsidiary() {
+        return receivableSubsidiary;
+    }
+
+    public void setReceivableSubsidiary(ReceivableSubsidiary receivableSubsidiary) {
+        this.receivableSubsidiary = receivableSubsidiary;
     }
 }

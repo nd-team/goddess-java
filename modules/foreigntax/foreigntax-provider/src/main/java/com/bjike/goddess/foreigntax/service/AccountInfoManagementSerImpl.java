@@ -29,14 +29,17 @@ public class AccountInfoManagementSerImpl extends ServiceImpl<AccountInfoManagem
 
     @Override
     public Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
-        accountInfoManagementDTO.getSorts().add("createTime=desc");
         Long count = super.count(accountInfoManagementDTO);
         return count;
+    }
+    @Override
+    public AccountInfoManagementBO getOne(String id) throws SerException {
+        AccountInfoManagement accountInfoManagement = super.findById(id);
+        return BeanTransform.copyProperties(accountInfoManagement,AccountInfoManagementBO.class);
     }
 
     @Override
     public List<AccountInfoManagementBO> findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
-        accountInfoManagementDTO.getSorts().add("createTime=desc");
         List<AccountInfoManagement> accountInfoManagements = super.findByCis(accountInfoManagementDTO, true);
         List<AccountInfoManagementBO> accountInfoManagementBOS = BeanTransform.copyProperties(accountInfoManagements, AccountInfoManagementBO.class, true);
         return accountInfoManagementBOS;

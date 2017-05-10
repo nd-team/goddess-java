@@ -1,5 +1,7 @@
 package com.bjike.goddess.receivable.action.receivable;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,8 +13,11 @@ import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.to.ContractorTO;
 import com.bjike.goddess.receivable.vo.ContractorVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -25,24 +30,58 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("receivable/contractor")
+@RequestMapping("contractor")
 public class ContractorAction {
     @Autowired
     private ContractorAPI contractorAPI;
+    /**
+     * 承包商列表总条数
+     *
+     * @param contractorDTO 承包商列表dto
+     * @des 获取所有承包商列表总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ContractorDTO contractorDTO) throws ActException {
+        try {
+            Long count = contractorAPI.countContractor(contractorDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 获取承包商列表
+     * 一个承包商列表
+     *
+     * @param id
+     * @return class ContractorVO
+     * @des 获取一个承包商列表
+     * @version v1
+     */
+    @GetMapping("v1/contractor/{id}")
+    public Result contractor(@PathVariable String id) throws ActException {
+        try {
+            ContractorBO contractorBO = contractorAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(contractorBO, ContractorVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 承包商列表
      *
      * @param contractorDTO 承包商列表dto
      * @return class ContractorVO
      * @des 获取所有承包商列表
      * @version v1
      */
-    @GetMapping("v1/listContractor")
-    public Result findListContractor(ContractorDTO contractorDTO) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(ContractorDTO contractorDTO, HttpServletRequest request) throws ActException {
         try {
             List<ContractorVO> contractorVOS = BeanTransform.copyProperties
-                    (contractorAPI.findListContractor(contractorDTO), ContractorVO.class);
+                    (contractorAPI.findListContractor(contractorDTO), ContractorVO.class,request);
             return ActResult.initialize(contractorVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -58,7 +97,7 @@ public class ContractorAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addContractor(ContractorTO contractorTO) throws ActException {
+    public Result add(@Validated(ADD.class) ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
         try {
             ContractorBO contractorBO = contractorAPI.insertContractor(contractorTO);
             return ActResult.initialize(contractorBO);
@@ -76,7 +115,7 @@ public class ContractorAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editContractor(ContractorTO contractorTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
         try {
             ContractorBO contractorBO = contractorAPI.editContractor(contractorTO);
             return ActResult.initialize(contractorBO);
@@ -93,7 +132,7 @@ public class ContractorAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeContractor(String id) throws ActException {
+    public Result delete(String id) throws ActException {
         try {
             contractorAPI.removeContractor(id);
             return new ActResult("delete success");

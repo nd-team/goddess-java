@@ -64,19 +64,19 @@ public class AccountInfo extends BaseEntity {
     /**
      * 摘要
      */
-    @Column(name = "digest", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
+    @Column(name = "digest", columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
     private String digest;
 
     /**
      * 借方金额
      */
-    @Column(name = "debitAmount", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '借方金额'")
+    @Column(name = "debitAmount",  columnDefinition = "VARCHAR(255)   COMMENT '借方金额'")
     private Double debitAmount;
 
     /**
      * 贷方金额
      */
-    @Column(name = "creditAmount", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '贷方金额'")
+    @Column(name = "creditAmount", columnDefinition = "VARCHAR(255)   COMMENT '贷方金额'")
     private Double creditAmount;
 
 

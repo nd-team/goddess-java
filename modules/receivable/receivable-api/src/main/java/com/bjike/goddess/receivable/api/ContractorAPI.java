@@ -19,6 +19,21 @@ import java.util.List;
  */
 public interface ContractorAPI {
     /**
+     * 承包商列表总条数
+     */
+    default Long countContractor(ContractorDTO contractorDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个承包商列表
+     *
+     * @return class ContractorBO
+     */
+    default ContractorBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 获取承包商列表
      *
      * @param contractorDTO 承包商列表dto

@@ -26,6 +26,14 @@ public interface TaxManagementAPI {
         return null;
     }
     /**
+     * 一个税金管理
+     *
+     * @return class TaxManagementBO
+     */
+    default TaxManagementBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 税金管理
      *
      * @param taxManagementDTO 税金管理dto
@@ -78,25 +86,34 @@ public interface TaxManagementAPI {
      * 查看功能
      * @return class TaxManagementBO
      */
-    default TaxManagementBO viewTaxManagement(String company,String taxType,String month) throws SerException {
+    default List<TaxManagementBO> viewTaxManagement(TaxManagementDTO taxManagementDTO) throws SerException {
         return null;
 
     }
     /**
      * 汇总功能
-     * @return class TaxManagementBO
+     * @return class TaxCollectBO
      */
-    default List<TaxCollectBO> collectTaxManagement(CollectTo to) throws SerException {
+    default List<TaxCollectBO> collectTaxManagement(String []  company) throws SerException {
         return null;
 
     }
     /**
+     * 获取公司
+     *
+     * @return class String
+     */
+    default List<String> getCompany() throws SerException {
+        return null;
+    }
+
+    /**
      * 根据公司和时间查询
      * @return class TaxManagementBO
-     */
+     *//*
     default List<TaxManagementBO> listByCompany(String company,String monthStart,String monthEnd) throws SerException {
         return null;
 
     }
-
+*/
 }

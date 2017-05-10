@@ -38,6 +38,7 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:checkhost:checkhost-api")
+compile project(":modules:user:user-api")
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

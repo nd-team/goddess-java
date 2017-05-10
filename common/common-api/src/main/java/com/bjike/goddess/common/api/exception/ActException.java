@@ -21,4 +21,7 @@ public class ActException extends Exception {
     public ActException(String message) {
         super(message);
     }
+    public ActException(String message,Throwable throwable) {
+        super(message,throwable);
+    }
 }

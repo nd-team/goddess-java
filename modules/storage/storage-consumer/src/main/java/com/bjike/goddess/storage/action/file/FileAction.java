@@ -144,15 +144,9 @@ public class FileAction extends BaseFileAction {
     public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            filename = new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1");
             byte[] buffer = fileAPI.download(fileInfo);
-            response.reset();
-            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1"));
-            response.addHeader("Content-Length", "" + buffer.length);
-            OutputStream os = new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("application/octet-stream");
-            os.write(buffer);// 输出文件
-            os.flush();
-            os.close();
+            writeOutFile(response,buffer,filename);
             return new ActResult("download success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());
