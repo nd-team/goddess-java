@@ -723,10 +723,10 @@ public class ApplyLendAction {
      * @version v1
      */
     @GetMapping("v1/listAccountVoucher/{id}")
-    public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result listAccountVoucher(@PathVariable String id) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
+                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
