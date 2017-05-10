@@ -64,7 +64,6 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         });
         List<CustomerDetailBO> boList = BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class );
         return boList;
-
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -157,7 +156,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         }
     }
 
-    
+
     @Override
     public CustomerDetailBO getCustomerDetailById(String id) throws SerException {
         CustomerDetail customerDetail = super.findById( id );
@@ -180,7 +179,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     }
 
 
-    
+
     @Override
     public CustomerDetailBO getCustomerDetailByNum(String customerNum) throws SerException {
         CustomerBaseInfoDTO cBaseInfoDTO = new CustomerBaseInfoDTO();

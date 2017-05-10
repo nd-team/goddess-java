@@ -3,6 +3,7 @@ package com.bjike.goddess.businessproject.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -81,8 +82,8 @@ public class DispatchSheet extends BaseEntity {
     /**
      * 签订时间
      */
-    @Column(name = "siginTime",  columnDefinition = "VARCHAR(255)   COMMENT '签订时间'")
-    private String siginTime;
+    @Column(name = "siginTime",  columnDefinition = "DATE   COMMENT '签订时间'")
+    private LocalDate siginTime;
 
     /**
      * 项目负责人
@@ -130,13 +131,13 @@ public class DispatchSheet extends BaseEntity {
      * 开工日期
      */
     @Column(name = "startProjectTime", columnDefinition = "DATE   COMMENT '开工日期'")
-    private String startProjectTime;
+    private LocalDate startProjectTime;
 
     /**
      * 完工日期
      */
-    @Column(name = "endProjectTime",columnDefinition = "VARCHAR(255)   COMMENT '完工日期'")
-    private String endProjectTime;
+    @Column(name = "endProjectTime",columnDefinition = "DATE   COMMENT '完工日期'")
+    private LocalDate endProjectTime;
 
     /**
      * 派工金额
@@ -249,11 +250,11 @@ public class DispatchSheet extends BaseEntity {
         this.projectGroup = projectGroup;
     }
 
-    public String getSiginTime() {
+    public LocalDate getSiginTime() {
         return siginTime;
     }
 
-    public void setSiginTime(String siginTime) {
+    public void setSiginTime(LocalDate siginTime) {
         this.siginTime = siginTime;
     }
 
@@ -313,19 +314,19 @@ public class DispatchSheet extends BaseEntity {
         this.dispatchText = dispatchText;
     }
 
-    public String getStartProjectTime() {
+    public LocalDate getStartProjectTime() {
         return startProjectTime;
     }
 
-    public void setStartProjectTime(String startProjectTime) {
+    public void setStartProjectTime(LocalDate startProjectTime) {
         this.startProjectTime = startProjectTime;
     }
 
-    public String getEndProjectTime() {
+    public LocalDate getEndProjectTime() {
         return endProjectTime;
     }
 
-    public void setEndProjectTime(String endProjectTime) {
+    public void setEndProjectTime(LocalDate endProjectTime) {
         this.endProjectTime = endProjectTime;
     }
 

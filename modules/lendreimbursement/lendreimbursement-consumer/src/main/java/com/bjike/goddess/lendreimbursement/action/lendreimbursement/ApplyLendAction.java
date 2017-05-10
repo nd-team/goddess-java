@@ -3,7 +3,7 @@ package com.bjike.goddess.lendreimbursement.action.lendreimbursement;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
@@ -179,7 +179,7 @@ public class ApplyLendAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ApplyLendTO applyLendTO ,BindingResult bindingResult) throws ActException {
         //TODO: tanghaixiang 2017-04-10
-       return  new ActResult(null);
+        return  new ActResult(null);
     }
 
 
