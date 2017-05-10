@@ -4,10 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
+import com.bjike.goddess.projectmarketfee.bo.WarnBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.entity.CostAnalysis;
+import com.bjike.goddess.projectmarketfee.entity.Warn;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,9 @@ import java.util.Set;
 @CacheConfig(cacheNames = "projectmarketfeeSerCache")
 @Service
 public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisDTO> implements CostAnalysisSer {
+    @Autowired
+    private WarnSer warnSer;
+
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public CostAnalysisBO save(CostAnalysisTO to) throws SerException {
@@ -98,9 +104,9 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
         return set;
     }
 
-//    public List<CostAnalysisBO> arrivalCount(Integer month) throws SerException{
-//
-//    }
+    public List<CostAnalysisBO> arrivalCount(Integer month) throws SerException {
+
+    }
 
     /**
      * 获取所有项目名称
@@ -147,14 +153,22 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
         return set;
     }
 
-//    private List<CostAnalysisBO> all() throws SerException{
-//        List<CostAnalysis> list=super.findAll();
-//        List<CostAnalysisBO> boList=new ArrayList<CostAnalysisBO>();
-//        for (CostAnalysis costAnalysis:list){
-//            CostAnalysisBO costAnalysisBO=new CostAnalysisBO();
-//            BeanUtils.copyProperties(costAnalysis,costAnalysisBO);
-//            costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost()/costAnalysis.getExpectedIncome());
-//
-//        }
-//    }
+    private List<CostAnalysisBO> all() throws SerException {
+        List<CostAnalysis> list = super.findAll();
+        List<Warn> warns=warnSer.findAll();
+        List<CostAnalysisBO> boList = new ArrayList<CostAnalysisBO>();
+        for (CostAnalysis costAnalysis : list) {
+            CostAnalysisBO costAnalysisBO = new CostAnalysisBO();
+            BeanUtils.copyProperties(costAnalysis, costAnalysisBO);
+            costAnalysisBO.setExpectedScale(costAnalysis.getExpectedMarketCost() / costAnalysis.getExpectedIncome());
+            costAnalysisBO.setDifferences(costAnalysis.getExpectedMarketCost() - costAnalysisBO.getActualMarketCost());
+            costAnalysisBO.setExpectedScale(costAnalysisBO.getActualMarketCost() / costAnalysis.getExpectedIncome());
+            if(warns.size()!=0) {
+                Double a = costAnalysisBO.getActualScale() - costAnalysisBO.getExpectedScale();
+                if(a>warns.get(0).getWarnValue()){
+                    costAnalysisBO.setWarn("超出");
+                }
+            }
+        }
+    }
 }
