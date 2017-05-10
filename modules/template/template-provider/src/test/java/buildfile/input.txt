@@ -1,25 +1,12 @@
-模块名:outcarfare
-类名:WaitPay
+模块名:projectmarketfee
+类名:Grade
 作者:chenjunhao
-描述:等待付款
+描述:等级设计
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String driverName 司机名称;
-LocalDate carDate 出车日期;
-String number 单号;
-String arrival 地区;
-String carUser 用车人;
-String project 科目;
-Double carPrice 租车单价;
-Double overtimeHour 加班时长;
-Double overtimePrice 加班单价;
-Double overtimeFee 加班费;
-Double allowance 餐费补贴;
-Double parkFee 停车/过路费;
-Double amount 金额;
-String single 填单人;
-boolean isPay 是否付款;
+String note 备注;
+String grade 等级;
 )

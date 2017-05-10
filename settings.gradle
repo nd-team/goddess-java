@@ -334,3 +334,8 @@ include ':modules:outcarfare:outcarfare-provider'
 include ':modules:function:function-api'
 include ':modules:function:function-consumer'
 include ':modules:function:function-provider'
+
+//#projectmarketfee 项目前期的市场活动费
+include ':modules:projectmarketfee:projectmarketfee-api'
+include ':modules:projectmarketfee:projectmarketfee-consumer'
+include ':modules:projectmarketfee:projectmarketfee-provider'
