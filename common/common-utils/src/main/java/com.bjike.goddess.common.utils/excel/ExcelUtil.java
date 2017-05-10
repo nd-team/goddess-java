@@ -1,7 +1,6 @@
 package com.bjike.goddess.common.utils.excel;
 
 import com.bjike.goddess.common.utils.bean.ClazzUtils;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -34,27 +33,33 @@ public class ExcelUtil {
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
             List<ExcelTitle> titles = getExcelTitles(clazz, fields);
+            List<T> objects = new ArrayList<>();
             wb = new XSSFWorkbook(is); // 创建一个工作execl文档
             XSSFSheet sheet = wb.getSheetAt(0);
-            int rowTotal  = sheet.getLastRowNum(); //总行数
-            for(int i=0;i<rowTotal;i++){
-               XSSFRow row =  sheet.getRow(i);
+            int rowTotal = sheet.getLastRowNum(); //总行数
+            for (int i = 0; i < rowTotal; i++) {
+                XSSFRow row = sheet.getRow(i);
                 int cellTotal = row.getLastCellNum();//总列数
-                    for(int j=0;j<cellTotal;j++){
+                if (cellTotal > 0) {
+                    Object obj = clazz.newInstance();
+                    for (int j = 0; j < cellTotal; j++) {
                         Object val = (row.getCell(j));
                         titles.stream().forEach(et -> {
-                            if(et.notNull() && null==val){
-                                throw new RuntimeException("列:"+et.name()+"不能为空!");
+                            if (et.notNull() && null == val) {
+                                throw new RuntimeException("列:" + et.name() + "不能为空!");
+                            } else {
+                                setFieldValue(clazz,et.name(), val, fields);
                             }
                         });
                     }
-
+                    objects.add((T) obj);
+                }
             }
-
+            return objects;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        return null;
+
     }
 
     /**
@@ -108,5 +113,25 @@ public class ExcelUtil {
         }
         return excelTitles;
     }
+
+    /**
+     * 设置对象熟悉值
+     */
+    private static void setFieldValue(Object obj,String name,Object val,List<Field> fields)  {
+        try {
+            for(Field field: fields){
+                if(field.getName().equals(name)){
+                    field.setAccessible(true);// 设置属性可访问
+                    field.set(obj,val);
+                    break;
+                }
+            }
+        }catch (IllegalAccessException e){
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+
 
 }

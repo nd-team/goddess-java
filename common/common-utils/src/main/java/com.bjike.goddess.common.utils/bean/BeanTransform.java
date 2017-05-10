@@ -258,7 +258,6 @@ public class BeanTransform {
         Object target = beanInfo.getTarget();
         List<Field> s_fields = beanInfo.getSourceFields(); //源类属性列表
         List<Field> t_fields = beanInfo.getTargetFields();//目标类属性列表
-        List<Method> methods = beanInfo.getTargetMethods();//目标类所有方法
         boolean convertDate = beanInfo.isConvertDate();
         for (Field t_field : t_fields) {
             if (null != excludes) {
@@ -306,19 +305,8 @@ public class BeanTransform {
                             s_val = DateUtil.parseDateTime(String.valueOf(s_val));
                         }
                     }
-
-                    String methodName = "set" + upperCaseFirst(t_field.getName());
-                    try {
-                        for (Method m : methods) { //找到相应方法
-                            if (m.getName().equals(methodName)) {
-                                m.invoke(target, s_val);
-                                break;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    t_field.setAccessible(true);
+                    t_field.set(target,s_val);
                     break;
                 }
             }
@@ -369,10 +357,8 @@ public class BeanTransform {
         Class t_clazz = target.getClass();
         List<Field> s_fields = ClazzUtils.getFields(s_clazz); //源类属性列表
         List<Field> t_fields = ClazzUtils.getFields(t_clazz);//目标类属性列表
-        List<Method> methods = ClazzUtils.getMethods(t_clazz);//目标类所有方法
         beanInfo.setTargetFields(t_fields);
         beanInfo.setSourceFields(s_fields);
-        beanInfo.setTargetMethods(methods);
         return beanInfo;
     }
 
