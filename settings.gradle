@@ -27,6 +27,11 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
+
+include ':modules:assemble:assemble-api'
+include ':modules:assemble:assemble-consumer'
+include ':modules:assemble:assemble-provider'
+
 //#客户信息tanghaixiang
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
