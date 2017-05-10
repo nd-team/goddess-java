@@ -19,6 +19,22 @@ import java.util.List;
 public interface SiginManageAPI {
 
     /**
+     * 签订与立项列表总条数
+     *
+     */
+    default Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取签订与立项列表
+     * @return class SiginManageBO
+     */
+    default SiginManageBO getOneById(String id) throws SerException {return null;}
+
+
+
+    /**
      * 合同签订与立项信息列表
      * @return class SiginManageBO
      */

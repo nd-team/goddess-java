@@ -202,6 +202,22 @@ include ':modules:foreigntax:foreigntax-provider'
 include ':modules:managefee:managefee-api'
 include ':modules:managefee:managefee-consumer'
 include ':modules:managefee:managefee-provider'
+//#staffentry 员工入职tanghaixiang
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
+//#oilcardmanage
+include ':modules:oilcardmanage:oilcardmanage-api'
+include ':modules:oilcardmanage:oilcardmanage-consumer'
+include ':modules:oilcardmanage:oilcardmanage-provider'
+//#organize
+include ':modules:organize:organize-api'
+include ':modules:organize:organize-consumer'
+include ':modules:organize:organize-provider'
+//#driverinfo
+include ':modules:driverinfo:driverinfo-api'
+include ':modules:driverinfo:driverinfo-consumer'
+include ':modules:driverinfo:driverinfo-provider'
 
 
 //#account 明细账
@@ -258,6 +274,49 @@ include ':modules:voucher:voucher-api'
 include ':modules:voucher:voucher-consumer'
 include ':modules:voucher:voucher-provider'
 
+//#otherexpenses 其他费用
+include ':modules:otherexpenses:otherexpenses-api'
+include ':modules:otherexpenses:otherexpenses-consumer'
+include ':modules:otherexpenses:otherexpenses-provider'
+
+//#secure 社保模块
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
+
+//#courier 快递管理
+include ':modules:courier:courier-api'
+include ':modules:courier:courier-consumer'
+include ':modules:courier:courier-provider'
+
+//#budget 收入预算-往来账务情况
+include ':modules:budget:budget-api'
+include ':modules:budget:budget-consumer'
+include ':modules:budget:budget-provider'
+
+//#devicerepair 设备维修
+include ':modules:devicerepair:devicerepair-api'
+include ':modules:devicerepair:devicerepair-consumer'
+include ':modules:devicerepair:devicerepair-provider'
+
+//#contractquotemanager 合同单价
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
+
+//#incomecheck 收入核算资金回笼 tanghaixiang
+include ':modules:incomecheck:incomecheck-api'
+include ':modules:incomecheck:incomecheck-consumer'
+include ':modules:incomecheck:incomecheck-provider'
+//#businessproject 项目合同 tanghaixiang
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+
+//#outcarfare 出车费资金准备与支付业务流程
+include ':modules:outcarfare:outcarfare-api'
+include ':modules:outcarfare:outcarfare-consumer'
+include ':modules:outcarfare:outcarfare-provider'
 
 //#quartz 任务调度模块-liguiqin
 include ':modules:function:function-api'

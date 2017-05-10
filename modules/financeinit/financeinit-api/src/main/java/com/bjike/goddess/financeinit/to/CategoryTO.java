@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 类别
  *
@@ -14,6 +16,9 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [ com.bjike ]
  */
 public class CategoryTO extends BaseTO {
+
+    public interface TestAdd{}
+    public interface TestGetFirst{}
 
     /**
      * 代码
@@ -35,13 +40,13 @@ public class CategoryTO extends BaseTO {
     /**
      * 一级科目名
      */
-    @NotBlank(message = "一级科目名不能为空")
+    @NotBlank(groups = {CategoryTO.TestAdd.class} , message = "一级科目名不能为空")
     private String firstSubjectName;
 
     /**
      * 二级科目
      */
-    @NotBlank(message = "二级科目名不能为空")
+    @NotBlank(groups = {CategoryTO.TestAdd.class} ,message = "二级科目名不能为空")
     private String secondSubject;
 
     /**
@@ -57,6 +62,7 @@ public class CategoryTO extends BaseTO {
     /**
      * 类别
      */
+    @NotNull(groups = {CategoryTO.TestGetFirst.class} , message = "类别不能呢为空")
     private CategoryName categoryName;
 
     /**
