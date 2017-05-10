@@ -1,42 +1,36 @@
 package com.bjike.goddess.materialinstock.type;
 
 /**
- * 物资状态
- *
  * @Author: [sunfengtao]
- * @Date: [2017-04-21 17:11]
+ * @Date: [2017-05-09 17:31]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public enum MaterialState {
+public enum UseState {
 
     /**
-     * 完好
+     * 领用
      */
-    INTACT(0),
+    RECEIVE(0),
     /**
-     * 人为损坏
+     *　外借
      */
-    MANUAL_DAMAGE(1),
-    /**
-     * 自然损坏
-     */
-    NATURAL_DAMAGE(2),
+    CHECKOUT(1),
 
     /**
-     * 维修中
+     * 调动
      */
-    REPAIRING(3),
+    TRANSFER(2),
 
     /**
-     * 已报废
+     * 在库
      */
-    SCRAP(4);
+    INSTOCK(3);
 
     private int code;
 
-    MaterialState(int code) {
+    UseState(int code) {
         this.code = code;
     }
 

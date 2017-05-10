@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialinstock.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -7,14 +8,15 @@ import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
+import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * 物资入库业务实现
@@ -43,6 +45,55 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     }
 
     /**
+     * 根据物资状态和物资使用状态查询物资入库
+     *
+     * @param materialState 物资状态
+     * @param useState 物资使用状态
+     * @param dto 物资入库dto
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialInStockBO> findByState(MaterialState materialState, UseState useState, MaterialInStockDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("materialState", materialState));
+        dto.getConditions().add(Restrict.eq("useState", useState));
+        List<MaterialInStock> list = super.findByPage(dto);
+        List<MaterialInStockBO> listBO = BeanTransform.copyProperties(list, MaterialInStockBO.class);
+        return listBO;
+    }
+
+    /**
+     * 更新物资使用状态
+     *
+     * @param materialNum 物资编号集合
+     * @param useState 使用状态
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void updateUseState(String[] materialNum, UseState useState) throws SerException {
+        List<MaterialInStock> list = getMaterialInStocks(materialNum);
+        for (MaterialInStock model : list) {
+            model.setUseState(useState);
+        }
+        super.update(list);
+    }
+
+    /**
+     * 根据物资编号查询物资
+     *
+     * @param materialNum 物资编号
+     * @return 物资入库集合
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialInStock> getMaterialInStocks(String[] materialNum) throws SerException {
+        MaterialInStockDTO dto = new MaterialInStockDTO();
+        dto.getConditions().add(Restrict.in("stockEncoding", materialNum));//入库编码
+        return super.findByCis(dto);
+    }
+
+    /**
      * 保存物资入库
      *
      * @param to 物资入库to
@@ -50,12 +101,32 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MaterialInStockBO save(MaterialInStockTO to) throws SerException {
         MaterialInStock entity = BeanTransform.copyProperties(to, MaterialInStock.class, true);
-        entity.setStockEncoding(UUID.randomUUID().toString());
+        String stockEncoding = appendStockEncoding(entity);
+        entity.setStockEncoding(stockEncoding);
+        entity.setUseState(UseState.INSTOCK);//将使用状态设置为在库
         entity = super.save(entity);
         MaterialInStockBO bo = BeanTransform.copyProperties(entity, MaterialInStockBO.class);
         return bo;
+    }
+
+    /**
+     * 计算物资入库编码
+     *
+     * @param entity 物资入库实体
+     * @return 物资入库编码
+     */
+    private String appendStockEncoding(MaterialInStock entity) {
+        String area = entity.getStorageArea();//入库地区
+        String projectGroup = entity.getProjectGroup();//项目组
+        String materialType = entity.getMaterialType();//物资类型
+        String materialName = entity.getMaterialName();//物资名称
+        StringBuilder sb = new StringBuilder();
+        sb.append(area).append("-").append(projectGroup).append("-").append(materialType).append("-")
+                .append(materialName).append("-").append(LocalDateTime.now());
+        return sb.toString();
     }
 
     /**
@@ -65,6 +136,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -76,8 +148,9 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(MaterialInStockTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             MaterialInStock model = super.findById(to.getId());
             if (model != null) {
                 updateMaterialInStock(to, model);
@@ -92,7 +165,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     /**
      * 更新物资入库
      *
-     * @param to 物资入库to
+     * @param to    物资入库to
      * @param model 物资入库
      * @throws SerException
      */

@@ -6,9 +6,10 @@ import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
+import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 物资入库业务接口
@@ -28,6 +29,35 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      * @throws SerException
      */
     List<MaterialInStockBO> list(MaterialInStockDTO dto) throws SerException;
+
+    /**
+     * 根据物资状态和物资使用状态查询物资入库
+     *
+     * @param materialState 物资状态
+     * @param useState 物资使用状态
+     * @param dto 物资入库dto
+     * @return
+     * @throws SerException
+     */
+    List<MaterialInStockBO> findByState(MaterialState materialState, UseState useState, MaterialInStockDTO dto) throws SerException;
+
+    /**
+     * 更新物资使用状态
+     *
+     * @param materialNum 物资编号集合
+     * @param useState 使用状态
+     * @throws SerException
+     */
+    void updateUseState(String[] materialNum, UseState useState) throws SerException;
+
+    /**
+     * 根据物资编号查询物资
+     *
+     * @param materialNum 物资编号
+     * @return 物资入库集合
+     * @throws SerException
+     */
+    List<MaterialInStock> getMaterialInStocks(String[] materialNum) throws SerException;
 
     /**
      * 保存物资入库

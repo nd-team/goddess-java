@@ -3,6 +3,7 @@ package com.bjike.goddess.materialinstock.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,18 @@ import java.time.LocalDate;
 public class MaterialInStock extends BaseEntity {
 
     /**
+     * 项目组/部门
+     */
+    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组/部门'")
+    private String projectGroup;
+
+    /**
+     * 物品类型
+     */
+    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物品类型'")
+    private String materialType;
+
+    /**
      * 入库类型
      */
     @Column(name = "instockType", nullable = false, columnDefinition = "TINYINT(2) COMMENT '入库类型'")
@@ -40,12 +53,6 @@ public class MaterialInStock extends BaseEntity {
      */
     @Column(name = "materialName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资名称'")
     private String materialName;
-
-    /**
-     * 物品类型
-     */
-    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物品类型'")
-    private String materialType;
 
     /**
      * 申购日期
@@ -126,6 +133,12 @@ public class MaterialInStock extends BaseEntity {
     private MaterialState materialState;
 
     /**
+     * 使用状态
+     */
+    @Column(name = "useState", columnDefinition = "TINYINT(2) COMMENT '使用状态'")
+    private UseState useState;
+
+    /**
      * 外借人
      */
     @Column(name = "lender", columnDefinition = "VARCHAR(255) COMMENT '外借人'")
@@ -203,6 +216,13 @@ public class MaterialInStock extends BaseEntity {
     @Column(name = "comment", columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String comment;
 
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
 
     public InstockType getInstockType() {
         return instockType;
@@ -338,6 +358,14 @@ public class MaterialInStock extends BaseEntity {
 
     public void setMaterialState(MaterialState materialState) {
         this.materialState = materialState;
+    }
+
+    public UseState getUseState() {
+        return useState;
+    }
+
+    public void setUseState(UseState useState) {
+        this.useState = useState;
     }
 
     public String getLender() {
