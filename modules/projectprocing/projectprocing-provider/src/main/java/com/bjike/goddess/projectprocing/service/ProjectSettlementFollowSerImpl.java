@@ -133,7 +133,7 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
         List<CollectData> collectDataList = new ArrayList<>();
         //查询所有外包单位
         String[] fields = new String[]{"outsourcingUnit"};
-        List<ProjectSettlementFollow> projectSettlementFollows = super.findBySql("select outsourcingUnit,1 from projectprocing_projectsettlementfollow order by outsourcingUnit asc ", ProjectSettlementFollow.class, fields);
+        List<ProjectSettlementFollow> projectSettlementFollows = super.findBySql("select outsourcingUnit from projectprocing_projectsettlementfollow order by outsourcingUnit asc ", ProjectSettlementFollow.class, fields);
         List<String> units = projectSettlementFollows.stream().map(ProjectSettlementFollow::getOutsourcingUnit).filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
         for (String unit : units) {
             CollectData collectData = new CollectData();

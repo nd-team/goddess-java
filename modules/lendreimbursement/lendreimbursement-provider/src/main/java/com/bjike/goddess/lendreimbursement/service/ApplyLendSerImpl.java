@@ -152,7 +152,23 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (LendStatus.CHARGEPASS.equals(lend.getLendStatus()) || LendStatus.LISTERROR.equals(lend.getLendStatus())) {
             throw new SerException("负责人已审核过，不可再编辑");
         }
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setEstimateLendDate(applyLend.getEstimateLendDate());
+        lend.setLender( applyLend.getLender());
+        lend.setCharger( applyLend.getCharger());
+        lend.setArea( applyLend.getArea());
+        lend.setProjectGroup(applyLend.getProjectGroup());
+        lend.setProjectName(applyLend.getProjectName());
+        lend.setLendWay( applyLend.getLendWay());
+        lend.setFirstSubject(applyLend.getFirstSubject());
+        lend.setSecondSubject(applyLend.getSecondSubject());
+        lend.setThirdSubject(applyLend.getThirdSubject());
+        lend.setExplains(applyLend.getExplains());
+        lend.setWriteUp(applyLend.getWriteUp());
+        lend.setLendReson(applyLend.getLendReson());
+        lend.setMoney(applyLend.getMoney());
+        lend.setInvoice(applyLend.getInvoice());
+        lend.setRemark(applyLend.getRemark());
         //填单人
         lend.setFillSingler(userAPI.currentUser().getUsername());
         lend.setLendDate(LocalDate.now());
@@ -1182,7 +1198,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listLender() throws SerException {
         String[] fields = new String[]{"lender"};
         List<ApplyLend> list = super.findBySql(
-                "select lender ,1 from lendreimbursement_applylend group by lender ", ApplyLend.class, fields);
+                "select lender  from lendreimbursement_applylend group by lender ", ApplyLend.class, fields);
 
         List<String> lenderList = list.stream().map(ApplyLend::getLender)
                 .filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
@@ -1195,7 +1211,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
         List<ApplyLend> list = super.findBySql(
-                "select area ,1 from lendreimbursement_applylend group by area ", ApplyLend.class, fields);
+                "select area  from lendreimbursement_applylend group by area ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -1208,7 +1224,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listProjectGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
         List<ApplyLend> list = super.findBySql(
-                "select projectGroup ,1 from lendreimbursement_applylend group by projectGroup ", ApplyLend.class, fields);
+                "select projectGroup  from lendreimbursement_applylend group by projectGroup ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getProjectGroup)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -1221,7 +1237,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};
         List<ApplyLend> list = super.findBySql(
-                "select projectName ,1 from lendreimbursement_applylend group by projectName ", ApplyLend.class, fields);
+                "select projectName  from lendreimbursement_applylend group by projectName ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getProjectName)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());

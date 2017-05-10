@@ -78,7 +78,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     public List<String> getGiftByFestivalName() throws SerException {
         String[] fields = new String[]{"name"};
         List<GiftStandardBO> giftStandardBOList = super.findBySql(
-                "select name ,1 from festival_giftstandard where name  order by createTime desc ", GiftStandardBO.class, fields);
+                "select name  from festival_giftstandard where name  order by createTime desc ", GiftStandardBO.class, fields);
 
         List<String> list = giftStandardBOList.stream().map(GiftStandardBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());

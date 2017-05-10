@@ -130,7 +130,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
 
         EvaluateProjectInfoDTO dto = new EvaluateProjectInfoDTO();
         dto.getSorts().add("createTime=desc");
-        String sql = "select distinct area ,1 from businessevaluate_evaluateprojectinfo info where 0 = 0 ";
+        String sql = "select distinct area  from businessevaluate_evaluateprojectinfo info where 0 = 0 ";
         if (!StringUtils.isEmpty(project)) {
             dto.getConditions().add(Restrict.eq("project", project));
             sql = sql + "and info.project = '" + project + "'";

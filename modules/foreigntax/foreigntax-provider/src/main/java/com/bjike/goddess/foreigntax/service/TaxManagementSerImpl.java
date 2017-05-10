@@ -153,7 +153,7 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
     @Override
     public List<String> getCompany() throws SerException {
         String [] fields = new String[]{"company"};
-        List<TaxManagementBO> taxManagementBOS = super.findBySql("select distinct company,1 from foreigntax_taxmanagement group by company order by company asc ",TaxManagementBO.class,fields);
+        List<TaxManagementBO> taxManagementBOS = super.findBySql("select distinct company from foreigntax_taxmanagement group by company order by company asc ",TaxManagementBO.class,fields);
 
         List<String> companyList = taxManagementBOS.stream().map(TaxManagementBO::getCompany)
                 .filter(company -> (StringUtils.isNotBlank(company))).distinct().collect(Collectors.toList());

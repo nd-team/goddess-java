@@ -155,7 +155,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
     /*@Override
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct area,1 from market_marketinfo group by area order by area asc ", MarketInfoBO.class, fields);
+        List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct area from market_marketinfo group by area order by area asc ", MarketInfoBO.class, fields);
 
         List<String> collectList = marketInfoBOS.stream().map(MarketInfoBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());

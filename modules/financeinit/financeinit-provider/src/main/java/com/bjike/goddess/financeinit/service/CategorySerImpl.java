@@ -234,7 +234,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     @Override
     public List<String> getSecondSubject(CategoryDTO categoryDTO) throws SerException {
         String[] fields = new String[]{"secondSubject"};
-        List<CategoryBO> categoryBOList = super.findBySql("select fc.secondSubject ,1 from financeinit_category fc " +
+        List<CategoryBO> categoryBOList = super.findBySql("select fc.secondSubject  from financeinit_category fc " +
                 " inner join financeinit_firstsubject ff on fc.firstSubject_id = ff.id where ff.name = '" + categoryDTO.getFirstSubjectName() + "'", CategoryBO.class, fields);
 
         List<String> list = categoryBOList.stream().map(CategoryBO::getSecondSubject)
@@ -246,7 +246,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     @Override
     public List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {
         String[] fields = new String[]{"thirdSubject"};
-        List<CategoryBO> categoryBOList = super.findBySql("select fc.thirdSubject ,1 from financeinit_category fc " +
+        List<CategoryBO> categoryBOList = super.findBySql("select fc.thirdSubject  from financeinit_category fc " +
                 " inner join financeinit_firstsubject ff on fc.firstSubject_id = ff.id " +
                 " where ff.name = '" + categoryDTO.getFirstSubjectName() + "' and fc.secondSubject = '" + categoryDTO.getSecondSubject() + "'", CategoryBO.class, fields);
 

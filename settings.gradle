@@ -312,6 +312,10 @@ include ':modules:incomecheck:incomecheck-provider'
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'
 include ':modules:businessproject:businessproject-provider'
+//#lendreimbursement 借款与报销 tanghaixiang
+include ':modules:lendreimbursement:lendreimbursement-api'
+include ':modules:lendreimbursement:lendreimbursement-consumer'
+include ':modules:lendreimbursement:lendreimbursement-provider'
 
 //#outcarfare 出车费资金准备与支付业务流程
 include ':modules:outcarfare:outcarfare-api'

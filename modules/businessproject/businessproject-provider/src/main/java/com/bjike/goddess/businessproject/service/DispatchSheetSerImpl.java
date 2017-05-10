@@ -145,7 +145,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select area,1 from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select area from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
         List<String> areaList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());
@@ -157,7 +157,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listDispatchName() throws SerException {
         String[] fields = new String[]{"dispatchProject"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select dispatchProject,1 from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select dispatchProject from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
         List<String> dispatchProjectList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getDispatchProject)
                 .filter(str -> (str != null || !"".equals(str.trim())) ).distinct().collect(Collectors.toList());

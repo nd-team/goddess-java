@@ -115,7 +115,7 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
     @Override
     public List<String> listAllFirst() throws SerException {
         String[] field = new String[]{"name"};
-        String sql = " select name ,1 from financeinit_firstsubject group by name ";
+        String sql = " select name  from financeinit_firstsubject group by name ";
         List<FirstSubject> list = super.findBySql( sql , FirstSubject.class, field);
         List<String> names  = list.stream().map(FirstSubject::getName).collect(Collectors.toList());
         return names;

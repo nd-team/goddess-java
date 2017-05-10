@@ -101,7 +101,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         LocalDate end = voucherDate.with(TemporalAdjusters.lastDayOfMonth());
 
         String[] field = new String[]{"voucherNum"};
-        String sql = "select max(voucherNum) as voucherNum ,1 from voucher_vouchergenerate " +
+        String sql = "select max(voucherNum) as voucherNum  from voucher_vouchergenerate " +
                 " where voucherWord = '" + voucherWord + "' and voucherDate between '" + start + "' and '" + end + "' ";
         List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, field);
         if (list != null && list.size() > 0) {
@@ -1013,19 +1013,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public Long countRecord
-            (VoucherGenerateDTO
-                     voucherGenerateDTO) throws
-            SerException {
+    public Long countRecord (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         Long count = super.count(voucherGenerateDTO);
         return count;
     }
 
     @Override
-    public List<VoucherGenerateBO> listRecord
-            (VoucherGenerateDTO
-                     voucherGenerateDTO) throws
-            SerException {
+    public List<VoucherGenerateBO> listRecord (VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         voucherGenerateDTO.getSorts().add("createTime=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
         return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
@@ -1033,16 +1027,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
     @Override
-    public List<String> listFirstSubject
-            () throws SerException {
+    public List<String> listFirstSubject () throws SerException {
         List<String> list = firstSubjectAPI.listAllFirst();
         return list;
     }
 
     @Override
-    public List<String> listSubByFirst
-            (String firstSub) throws
-            SerException {
+    public List<String> listSubByFirst (String firstSub) throws SerException {
         CategoryDTO cdto = new CategoryDTO();
         cdto.setFirstSubjectName(firstSub);
         List<String> list = categoryAPI.getSecondSubject(cdto);
@@ -1050,9 +1041,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public List<String> listTubByFirst
-            (String firstSub, String secondSub) throws
-            SerException {
+    public List<String> listTubByFirst (String firstSub, String secondSub) throws SerException {
         CategoryDTO cdto = new CategoryDTO();
         cdto.setFirstSubjectName(firstSub);
         cdto.setSecondSubject(secondSub);
@@ -1061,30 +1050,27 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public List<String> listArea() throws
-            SerException {
+    public List<String> listArea() throws SerException {
         String[] field = new String[]{"area"};
-        String sql = " select area ,1 from voucher_vouchergenerate group by area ";
+        String sql = " select area  from voucher_vouchergenerate group by area ";
         List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, field);
         List<String> area = list.stream().map(VoucherGenerate::getArea).collect(Collectors.toList());
         return area;
     }
 
     @Override
-    public List<String> listProject() throws
-            SerException {
+    public List<String> listProject() throws SerException {
         String[] field = new String[]{"projectName"};
-        String sql = " select projectName ,1 from voucher_vouchergenerate group by projectName ";
+        String sql = " select projectName  from voucher_vouchergenerate group by projectName ";
         List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, field);
         List<String> area = list.stream().map(VoucherGenerate::getProjectName).collect(Collectors.toList());
         return area;
     }
 
     @Override
-    public List<String> listGroup() throws
-            SerException {
+    public List<String> listGroup() throws SerException {
         String[] field = new String[]{"projectGroup"};
-        String sql = " select projectGroup ,1 from voucher_vouchergenerate group by projectGroup ";
+        String sql = " select projectGroup  from voucher_vouchergenerate group by projectGroup ";
         List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, field);
         List<String> area = list.stream().map(VoucherGenerate::getProjectGroup).collect(Collectors.toList());
         return area;
@@ -1092,9 +1078,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     //Jason
     @Override
-    public List<VoucherGenerateBO> findFundRecord
-    (VoucherGenerateDTO dto) throws
-            SerException {
+    public List<VoucherGenerateBO> findFundRecord (VoucherGenerateDTO dto) throws SerException {
         //银行存款，库存现金 为必须条件 二者之一即可，由于OR封装尚未完善，需要手动遍历dto条件进行凭借
         String[] field = new String[]{"voucherDate", "createTime", "area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney"};
         StringBuilder sql = new StringBuilder(" select voucherDate , createTime , area , projectName , projectGroup , sumary , borrowMoney , loanMoney ,1 " +

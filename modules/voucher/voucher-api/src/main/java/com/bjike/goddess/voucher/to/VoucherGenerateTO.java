@@ -30,7 +30,7 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 凭证字
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "凭证字不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "凭证字不能为空")
     private String voucherWord;
 
     /**
@@ -41,19 +41,19 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 凭证日期
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "凭证日期不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "凭证日期不能为空")
     private String voucherDate;
 
     /**
      * 一级科目
      */
-    @NotNull(groups = VoucherGenerateTO.TestAdd.class, message = "一级科目不能为空")
+    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "一级科目不能为空")
     private List<String> firstSubjects;
 
     /**
      * 二级科目
      */
-    @NotNull(groups = VoucherGenerateTO.TestAdd.class, message = "二级科目不能为空")
+    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "二级科目不能为空")
     private List<String> secondSubjects;
 
     /**
@@ -64,37 +64,37 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 借方金额
      */
-    @NotNull(groups = VoucherGenerateTO.TestAdd.class, message = "借方金额不能为空")
+    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "借方金额不能为空")
     private List<Double> borrowMoneys;
 
     /**
      * 贷方金额
      */
-    @NotNull(groups = VoucherGenerateTO.TestAdd.class, message = "贷方金额不能为空")
+    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "贷方金额不能为空")
     private List<Double> loanMoneys;
 
     /**
      * 摘要
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "摘要不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "摘要不能为空")
     private String sumary;
 
     /**
      * 地区
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "地区不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目名称
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "项目名称不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "项目名称不能为空")
     private String projectName;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = VoucherGenerateTO.TestAdd.class, message = "项目组不能为空")
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
@@ -105,7 +105,7 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 票据数量
      */
-    @NotNull(groups = VoucherGenerateTO.TestAdd.class, message = "票据数量不能为空")
+    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "票据数量不能为空")
     private Double ticketNum;
 
     /**

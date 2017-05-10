@@ -94,7 +94,7 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     public List<String> listFestivalName() throws SerException {
         String[] fields = new String[]{"name"};
         List<CompanyFestivalTimeBO> companyFestivalTimeBOS = super.findBySql(
-                "select name ,1 from festival_companyfestivaltime  order by createTime desc ", CompanyFestivalTimeBO.class, fields);
+                "select name  from festival_companyfestivaltime  order by createTime desc ", CompanyFestivalTimeBO.class, fields);
 
         List<String> list = companyFestivalTimeBOS.stream().map(CompanyFestivalTimeBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
