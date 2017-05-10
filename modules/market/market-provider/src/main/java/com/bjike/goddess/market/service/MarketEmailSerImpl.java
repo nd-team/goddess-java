@@ -5,6 +5,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.market.bo.MarketCollectBO;
 import com.bjike.goddess.market.bo.MarketEmailBO;
+import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.market.dto.MarketEmailDTO;
 import com.bjike.goddess.market.entity.MarketEmail;
 import com.bjike.goddess.market.to.MarketEmailTO;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 市场邮件发送定制业务实现
@@ -84,7 +86,6 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         if (areas == null || areas.length <= 0) {
             throw new SerException("汇总失败，请选择地区");
         }
-
         String[] areasTemp = new String[areas.length];
         for (int i = 0; i < areas.length; i++) {
             areasTemp[i] = "'" + areas[i] + "'";
@@ -151,7 +152,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
     }
 
-   /* @Override
+    /*@Override
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
         List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct area,1 from market_marketinfo group by area order by area asc ", MarketInfoBO.class, fields);
@@ -161,8 +162,8 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
 
         return collectList;
-    }*/
-
+    }
+*/
 
     /**
      * 发送间隔单位转换
@@ -196,6 +197,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
                 break;
         }
         return unit;
+
     }
 
 
@@ -246,5 +248,67 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 //        return mapList;
 //    }
 
-        
+
+    /**
+     * 将数据库返回的枚举int值转换，然后添加map数组
+     */
+   /* public List<Map<String, String>> sqlQueryInt(String enumStr, List<Integer> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
+        List<MarketEmailBO> marketEmailBOS = marketInfoSer.findBySql(sql, CusEmailBO.class, fields);
+        if (marketEmailBOS != null && marketEmailBOS.size() > 0) {
+            if (obj.size() == marketEmailBOS.size()) {
+                for (MarketEmailBO cbo : marketEmailBOS) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    if (enumStr.equals("CustomerStatus")) {
+                        areaMap.put("remark", CustomerStatus.getStrConvert(cbo.getEnumConvert()));
+                    } else if (enumStr.equals("CustomerType")) {
+                        areaMap.put("remark", CustomerType.getStrConvert(cbo.getEnumConvert()));
+                    }
+                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+                    mapList.add(areaMap);
+                }
+            } else if (marketEmailBOS.size() < obj.size()) {
+                List<String> cbStr = new ArrayList<>();
+                for (MarketEmailBO cb : marketEmailBOS) {
+                    cbStr.add(cb.getRemark());
+                }
+
+                //获取到所有不同的int值  如：枚举
+                List<Integer> diffrent = new ArrayList<>();
+                for (Integer o : obj) {
+                    if (!cbStr.contains(o)) {
+                        diffrent.add(o);
+                    }
+                }
+
+                //存map
+                for (Integer o : obj) {
+                    for (MarketEmailBO cbo : marketEmailBOS) {
+                        Map<String, String> areaMap = new HashMap<>();
+                        if (!diffrent.contains(o) && cbo.getRemark().equals(o)) {
+                            if (enumStr.equals("MarketWorkType")) {
+                                areaMap.put("remark", CustomerStatus.getStrConvert(cbo.getEnumConvert()));
+                            } else if (enumStr.equals("MarketScaleType")) {
+                                areaMap.put("remark", CustomerType.getStrConvert(cbo.getEnumConvert()));
+                            } else if (enumStr.equals("MarketProjectNature")) {
+                                areaMap.put("remark", CustomerType.getStrConvert(cbo.getEnumConvert()));
+                            }
+                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+                        } else {
+                            if (enumStr.equals("MarketWorkType")) {
+                                areaMap.put("remark", CustomerStatus.getStrConvert(o));
+                            } else if (enumStr.equals("MarketScaleType")) {
+                                areaMap.put("remark", CustomerType.getStrConvert(o));
+                            } else if (enumStr.equals("MarketProjectNature")) {
+                                areaMap.put("remark", CustomerType.getStrConvert(o));
+                            }
+                            areaMap.put("count", 0 + "");
+                        }
+                        mapList.add(areaMap);
+                    }
+                }
+
+            }
+        }
+        return mapList;
+    }*/
 }
