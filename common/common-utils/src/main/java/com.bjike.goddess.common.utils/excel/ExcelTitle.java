@@ -22,5 +22,5 @@ public @interface ExcelTitle {
     public String name();
 
 
-    public boolean notNull() default true;
+    public boolean notNull() default false;
 }
