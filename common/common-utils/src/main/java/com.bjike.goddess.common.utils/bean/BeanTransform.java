@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -309,17 +308,14 @@ public class BeanTransform {
                     }
 
                     String methodName = "set" + upperCaseFirst(t_field.getName());
-                    Method ms = null;
                     try {
                         for (Method m : methods) { //找到相应方法
                             if (m.getName().equals(methodName)) {
-                                ms = m;
                                 m.invoke(target, s_val);
                                 break;
                             }
                         }
                     } catch (Exception e) {
-                        System.out.println(ms);
                         e.printStackTrace();
                     }
 
@@ -371,24 +367,9 @@ public class BeanTransform {
         BeanInfo beanInfo = new BeanInfo(source, target);
         Class s_clazz = source.getClass();
         Class t_clazz = target.getClass();
-        List<Field> s_fields = new ArrayList<>(); //源类属性列表
-        List<Field> t_fields = new ArrayList<>();//目标类属性列表
-        List<Method> methods = new ArrayList<>();//目标类所有方法
-        while (null != s_clazz) { //数据源类所有属性（包括父类）
-            s_fields.addAll(Arrays.asList(s_clazz.getDeclaredFields())); //源对象属性
-            s_clazz = s_clazz.getSuperclass();
-            if (Object.class.equals(s_clazz) || null == s_clazz) {
-                break;
-            }
-        }
-        while (null != t_clazz) { //目标类所有属性（包括父类）
-            t_fields.addAll(Arrays.asList(t_clazz.getDeclaredFields())); //源对象属性
-            methods.addAll(Arrays.asList(t_clazz.getDeclaredMethods()));
-            t_clazz = t_clazz.getSuperclass();
-            if (Object.class.equals(t_clazz) || null == t_clazz) {
-                break;
-            }
-        }
+        List<Field> s_fields = ClazzUtils.getFields(s_clazz); //源类属性列表
+        List<Field> t_fields = ClazzUtils.getFields(t_clazz);//目标类属性列表
+        List<Method> methods = ClazzUtils.getMethods(t_clazz);//目标类所有方法
         beanInfo.setTargetFields(t_fields);
         beanInfo.setSourceFields(s_fields);
         beanInfo.setTargetMethods(methods);

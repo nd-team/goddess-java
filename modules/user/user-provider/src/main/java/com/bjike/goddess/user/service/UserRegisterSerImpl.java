@@ -3,6 +3,7 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
+import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.bo.UserBO;
@@ -83,6 +84,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             User user = new User();
             user.setUsername(registerTO.getUsername());
             user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
+            user.setUserType(UserType.CUSTOMER);
             user.setCreateTime(LocalDateTime.now());
             user.setStatus(Status.THAW);
             user.setEmployeeNumber("IKE" + new Random().nextInt(999999));
