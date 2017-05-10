@@ -272,7 +272,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 寄件日期
      */
-    @NotBlank(groups = {ApplyLendTO.TESTReturnMoney.class},message ="寄件日期不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnSend.class},message ="寄件日期不能为空" )
     private String sendDate;
 
     /**
@@ -283,7 +283,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 收件地址
      */
-    @NotBlank(groups = {ApplyLendTO.TESTReturnMoney.class},message ="收件地址不能为空" )
+    @NotBlank(groups = {ApplyLendTO.TESTReturnSend.class},message ="收件地址不能为空" )
     private String receiveAddr;
 
     /**

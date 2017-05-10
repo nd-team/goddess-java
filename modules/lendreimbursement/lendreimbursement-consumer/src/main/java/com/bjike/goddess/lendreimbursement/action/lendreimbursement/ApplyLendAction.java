@@ -3,7 +3,7 @@ package com.bjike.goddess.lendreimbursement.action.lendreimbursement;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
@@ -179,7 +179,7 @@ public class ApplyLendAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ApplyLendTO applyLendTO ,BindingResult bindingResult) throws ActException {
         //TODO: tanghaixiang 2017-04-10
-       return  new ActResult(null);
+        return  new ActResult(null);
     }
 
 
@@ -723,10 +723,10 @@ public class ApplyLendAction {
      * @version v1
      */
     @GetMapping("v1/listAccountVoucher/{id}")
-    public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result listAccountVoucher(@PathVariable String id) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
+                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -32,7 +32,7 @@ public interface CategoryAPI {
      */
     default CategoryBO getOneById(String id) throws SerException {return null;}
 
-    
+
     /**
      * 类别列表
      * @return class CategoryBO
@@ -80,6 +80,14 @@ public interface CategoryAPI {
      * @return class String
      */
     default List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {return null;}
+
+
+    /**
+     * 获取对应类的一级名
+     */
+    default List<String> listFirstName(CategoryTO categoryTO) throws SerException {return null;}
+
+
 
 
 }

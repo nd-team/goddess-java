@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.entity.ContractCategory;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,8 +30,20 @@ import java.util.List;
 @Service
 public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, ContractCategoryDTO> implements ContractCategorySer {
 
+    @Override
+    public Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
+        Long count = super.count( contractCategoryDTO );
+        return count;
+    }
+    @Override
+    public ContractCategoryBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        ContractCategory contractCategory = super.findById(id);
+        return BeanTransform.copyProperties(contractCategory, ContractCategoryBO.class );
+    }
 
-    
     @Override
     public List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
         List<ContractCategory> list = super.findByPage(contractCategoryDTO);
