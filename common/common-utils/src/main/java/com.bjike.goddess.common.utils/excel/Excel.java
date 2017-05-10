@@ -22,7 +22,7 @@ public class Excel {
     /**
      * 开始行
      */
-    private Integer startRow = 0;
+    private Integer contentStartRow = 2;
     /**
      * 指定读取某个sheet
      */
@@ -72,12 +72,12 @@ public class Excel {
         this.titleBGColor = titleBGColor;
     }
 
-    public Integer getStartRow() {
-        return startRow;
+    public Integer getContentStartRow() {
+        return contentStartRow;
     }
 
-    public void setStartRow(Integer startRow) {
-        this.startRow = startRow;
+    public void setContentStartRow(Integer contentStartRow) {
+        this.contentStartRow = contentStartRow;
     }
 
     public Integer getSheetIndex() {

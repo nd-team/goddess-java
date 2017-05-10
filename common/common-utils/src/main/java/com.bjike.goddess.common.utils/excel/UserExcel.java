@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.utils.bean;
+package com.bjike.goddess.common.utils.excel;
 
 import com.bjike.goddess.common.utils.excel.ExcelTitle;
 import com.sun.istack.internal.NotNull;
@@ -14,22 +14,21 @@ import java.time.LocalTime;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class User {
-    @NotNull
-    @ExcelTitle(name = "姓名")
-    private String name = "黎贵钦";
+public class UserExcel {
+    @ExcelTitle(name = "姓名",notNull = true)
+    private String name  ;
     @ExcelTitle(name = "手机")
-    private String phone = "13457910241";
+    private String phone  ;
     @ExcelTitle(name = "性别")
-    private Integer sex = 1;
+    private Integer sex ;
     @ExcelTitle(name = "创建时间")
-    private LocalDateTime createTime = LocalDateTime.now();
+    private LocalDateTime createTime;
     @ExcelTitle(name = "日期")
-    private LocalDate date = LocalDate.now();
+    private LocalDate date ;
     @ExcelTitle(name = "时间")
-    private LocalTime time = LocalTime.now();
+    private LocalTime time ;
     @ExcelTitle(name = "资产")
-    private Double money = 20.22;
+    private Double money;
 
     public String getName() {
         return name;
