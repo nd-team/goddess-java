@@ -62,6 +62,8 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DeviceRepairBO save(DeviceRepairTO to) throws SerException {
+        String materialCoding = to.getMaterialCoding();//获取物资编号
+
         DeviceRepair entity = BeanTransform.copyProperties(to, DeviceRepair.class, true);
         entity.setWelfareAuditState(AuditState.UNAUDITED);//福利模块未审核
         entity.setPmAuditState(AuditState.UNAUDITED);     //项目经理未审核
