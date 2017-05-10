@@ -305,7 +305,6 @@ public class BeanTransform {
                             s_val = DateUtil.parseDateTime(String.valueOf(s_val));
                         }
                     }
-                    t_field.setAccessible(true);
                     t_field.set(target,s_val);
                     break;
                 }
