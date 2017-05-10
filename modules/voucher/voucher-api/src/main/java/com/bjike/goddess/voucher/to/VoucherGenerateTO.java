@@ -62,13 +62,13 @@ public class VoucherGenerateTO extends BaseTO {
     private List<String> thirdSubjects;
 
     /**
-     * 借方金额
+     * 借方金额且数据与贷方金额相反填如1-10
      */
     @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "借方金额不能为空")
     private List<Double> borrowMoneys;
 
     /**
-     * 贷方金额
+     * 贷方金额且数据与借方金额相反填如0-1
      */
     @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "贷方金额不能为空")
     private List<Double> loanMoneys;

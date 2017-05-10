@@ -9,6 +9,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         DispatchSheet temp = super.findById( dispatchSheetTO.getId());
 
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
-        BeanTransform.copyProperties( dispatchSheet , temp ,"id","createTime");
+        BeanUtils.copyProperties( dispatchSheet , temp ,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 

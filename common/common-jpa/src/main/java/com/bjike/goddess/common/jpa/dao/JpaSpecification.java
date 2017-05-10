@@ -117,9 +117,9 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                             Object[] vals = PrimitiveUtil.convertValuesByType(model.getValue());
                             CriteriaBuilder.In in = null;
                             if (existJoin) {
-                                in = cb.in(root.get(field));
-                            } else {
                                 in = cb.in(join.get(field));
+                            } else {
+                                in = cb.in(root.get(field));
                             }
                             for (int i = 0; i < vals.length; i++) {
                                 in.value(vals[i]);

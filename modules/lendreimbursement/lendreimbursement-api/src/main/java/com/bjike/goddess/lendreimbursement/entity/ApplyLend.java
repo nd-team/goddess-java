@@ -326,6 +326,7 @@ public class ApplyLend extends BaseEntity {
     @Column(name = "receiveTicket",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收票（是/否）'")
     private String receiveTicket;
 
+
     /**
      * 核对人
      */

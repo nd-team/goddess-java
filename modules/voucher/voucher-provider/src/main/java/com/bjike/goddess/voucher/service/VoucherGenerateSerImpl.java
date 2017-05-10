@@ -9,6 +9,7 @@ import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -105,7 +106,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 " where voucherWord = '" + voucherWord + "' and voucherDate between '" + start + "' and '" + end + "' ";
         List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, field);
         if (list != null && list.size() > 0) {
-            num = list.get(0).getVoucherNum() + 1;
+            if( list.get(0).getVoucherNum() != null ){
+                num = list.get(0).getVoucherNum() + 1;
+            }else{
+                num = 0d;
+            }
         }
         return num;
     }
@@ -117,6 +122,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
             throw new SerException("一级科目不能为空");
         }
+        //处理多个一级科目
+        UserBO userBO = userAPI.currentUser();
         List<String> first = voucherGenerateTO.getFirstSubjects();
         List<String> second = voucherGenerateTO.getSecondSubjects();
         List<String> third = voucherGenerateTO.getThirdSubjects();
@@ -129,7 +136,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         Double borrowSum = borrow.stream().mapToDouble(Double::shortValue).sum();
         Double loanSum = loan.stream().mapToDouble(Double::shortValue).sum();
-        if (borrowSum != loanSum) {
+        if (!borrowSum.equals( loanSum)) {
             throw new SerException("借贷方金额不相等，不能添加");
         }
         Double totalMoney = borrowSum;
@@ -138,7 +145,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         vt.setCreateTime(LocalDateTime.now());
         vt.setModifyTime(LocalDateTime.now());
         voucherTotalSer.save(vt);
-        //处理多个一级科目
+
+        String userName =  userBO.getUsername();
         for (int i = 0; i < voucherGenerateTO.getFirstSubjects().size(); i++) {
 
             VoucherGenerate temp = new VoucherGenerate();
@@ -149,7 +157,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             temp.setThirdSubject(third.get(i));
             temp.setBorrowMoney(borrow.get(i));
             temp.setLoanMoney(loan.get(i));
-            temp.setTicketer(userAPI.currentUser().getUsername());
+            temp.setTicketer( userName );
             temp.setCheckStatus(CheckStatus.NONE);
             temp.setTransferStatus(TransferStatus.NONE);
             temp.setAuditStatus(AuditStatus.NONE);

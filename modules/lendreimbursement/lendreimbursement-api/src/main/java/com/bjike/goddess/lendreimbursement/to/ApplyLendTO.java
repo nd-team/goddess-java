@@ -22,6 +22,7 @@ public class ApplyLendTO extends BaseTO {
     public interface TESTFinaceAudit{}
     public interface TESTManageAudit{}
     public interface TESTReturnMoney{}
+    public interface TESTCheckReturnMoney{}
     public interface TESTReturnSend{}
 
     /**
@@ -297,7 +298,7 @@ public class ApplyLendTO extends BaseTO {
     private String ticketDate;
 
     /**
-     * 收票情况
+     * 收票情况(是/否)
      */
     private String ticketCondition;
 
@@ -319,6 +320,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 核对内容
      */
+    @NotBlank(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
     private String checkcontent;
 
     /**
