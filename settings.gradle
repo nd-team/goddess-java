@@ -216,10 +216,18 @@ include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
 
 //#staffwelfaremanage 员工福利
+
+//include ':modules:staffwelfare:staffwelfaremanage-api'
+//include ':modules:staffwelfare:staffwelfaremanage-consumer'
+//include ':modules:staffwelfare:staffwelfaremanage-provider'
+//#dispatchcar 出车管理
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+
 include ':modules:staffwelfare:staffwelfaremanage-api'
 include ':modules:staffwelfare:staffwelfaremanage-consumer'
 include ':modules:staffwelfare:staffwelfaremanage-provider'
-
 
 //#materialbuy 物资购买
 include ':modules:materialbuy:materialbuy-api'
@@ -227,9 +235,9 @@ include ':modules:materialbuy:materialbuy-consumer'
 include ':modules:materialbuy:materialbuy-provider'
 
 //#dimission 离职模块
-//include ':modules:dimission:dimission-api'
-//include ':modules:dimission:dimission-consumer'
-//include ':modules:dimission:dimission-provider'
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
 //#businsurance 商业保险tanghaixiang
 include ':modules:businsurance:businsurance-api'
 include ':modules:businsurance:businsurance-consumer'
@@ -287,13 +295,47 @@ include ':modules:otherexpenses:otherexpenses-api'
 include ':modules:otherexpenses:otherexpenses-consumer'
 include ':modules:otherexpenses:otherexpenses-provider'
 
+//#secure 社保模块
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
+
+//#courier 快递管理
+include ':modules:courier:courier-api'
+include ':modules:courier:courier-consumer'
+include ':modules:courier:courier-provider'
+
+//#budget 收入预算-往来账务情况
+include ':modules:budget:budget-api'
+include ':modules:budget:budget-consumer'
+include ':modules:budget:budget-provider'
+
+//#devicerepair 设备维修
+include ':modules:devicerepair:devicerepair-api'
+include ':modules:devicerepair:devicerepair-consumer'
+include ':modules:devicerepair:devicerepair-provider'
+
+//#contractquotemanager 合同单价
+include ':modules:contractquotemanager:contractquotemanager-api'
+include ':modules:contractquotemanager:contractquotemanager-consumer'
+include ':modules:contractquotemanager:contractquotemanager-provider'
+
 //#incomecheck 收入核算资金回笼 tanghaixiang
 include ':modules:incomecheck:incomecheck-api'
 include ':modules:incomecheck:incomecheck-consumer'
 include ':modules:incomecheck:incomecheck-provider'
 
+//#outcarfare 出车费资金准备与支付业务流程
+include ':modules:outcarfare:outcarfare-api'
+include ':modules:outcarfare:outcarfare-consumer'
+include ':modules:outcarfare:outcarfare-provider'
 
 //#quartz 任务调度模块-liguiqin
 include ':modules:function:function-api'
 include ':modules:function:function-consumer'
 include ':modules:function:function-provider'
+
+//#projectmarketfee 项目前期的市场活动费
+include ':modules:projectmarketfee:projectmarketfee-api'
+include ':modules:projectmarketfee:projectmarketfee-consumer'
+include ':modules:projectmarketfee:projectmarketfee-provider'

@@ -1,20 +1,12 @@
-模块名:otherexpenses
-类名:OtherExpenses
-作者:邓钧仁
-描述:其他费用
+模块名:projectmarketfee
+类名:Grade
+作者:chenjunhao
+描述:等级设计
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String area 地区;
-String project 项目组;
-String type 类别;
-String name 项目名称;
-Integer year 年份;
-Integer month 月份;
-Double target 目标其他费用;
-Double actual 实际其他费用;
-Double ratio 比例;
-Double balance 差额;
+String note 备注;
+String grade 等级;
 )
