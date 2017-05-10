@@ -32,6 +32,5 @@
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" ref="problemAcceptApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" ref="problemHandlingResultApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" ref="involvedProcessingTaskApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.CollectAPI" ref="collectApiImpl"/>
 
 </beans>

@@ -178,42 +178,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return biddingInfoCollectBOS;
     }
 
-    public static void main(String[] args) {
-        String [] cities = new String[]{};
-        String citiesStr = StringUtils.join(cities,',');
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT * from ");
-        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
-        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
-        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
-        sb.append(" WHERE A.cities=B.cities)C ");
-        sb.append(" UNION ");
-        sb.append(" SELECT '合计' as area ,sum(invite) AS invite,sum(openly) AS openly,sum(mobile) AS mobile, ");
-        sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
-        sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
-        sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
-        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
-        sb.append(" WHERE A.cities=B.cities)C ");
-        String sql = sb.toString();
-        sql = String.format(sql,citiesStr,citiesStr,citiesStr,citiesStr);
-        System.out.println(sql);
-    }
     @Override
     public List<String> getBiddingInfoCities() throws SerException {
         String [] fields = new String[]{"cities"};
