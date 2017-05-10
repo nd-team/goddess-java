@@ -78,6 +78,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
     }
 
+    @Override
+    public List<VoucherGenerateBO> listNoPage(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        voucherGenerateDTO.getSorts().add("createTime=desc");
+        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+
+        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
+
+        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+    }
+
     //获取凭证字号
     public Double generateVoucherNum(VoucherGenerate voucherGenerate) throws SerException {
         Double num = 1d;

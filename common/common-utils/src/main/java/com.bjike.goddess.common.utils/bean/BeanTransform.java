@@ -309,14 +309,17 @@ public class BeanTransform {
                     }
 
                     String methodName = "set" + upperCaseFirst(t_field.getName());
+                    Method ms = null;
                     try {
                         for (Method m : methods) { //找到相应方法
                             if (m.getName().equals(methodName)) {
+                                ms = m;
                                 m.invoke(target, s_val);
                                 break;
                             }
                         }
                     } catch (Exception e) {
+                        System.out.println(ms);
                         e.printStackTrace();
                     }
 

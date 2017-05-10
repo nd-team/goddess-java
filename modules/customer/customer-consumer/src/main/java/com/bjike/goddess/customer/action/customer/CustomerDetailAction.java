@@ -74,7 +74,7 @@ public class CustomerDetailAction {
             List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
 
             if( customerDetailBOList == null ){
-                return ActResult.initialize(BeanTransform.copyProperties(customerDetailBOList, CustomerDetailVO.class));
+                return ActResult.initialize(null);
             }else {
                 customerDetailBOList.stream().forEach(str->{
                     CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);

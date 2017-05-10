@@ -195,7 +195,7 @@ public class ApplyLendVO {
     /**
      * 单据数量
      */
-    private String documentQuantity;
+    private Double documentQuantity;
 
     /**
      * 是否收到单据
@@ -603,11 +603,11 @@ public class ApplyLendVO {
         this.payOrigin = payOrigin;
     }
 
-    public String getDocumentQuantity() {
+    public Double getDocumentQuantity() {
         return documentQuantity;
     }
 
-    public void setDocumentQuantity(String documentQuantity) {
+    public void setDocumentQuantity(Double documentQuantity) {
         this.documentQuantity = documentQuantity;
     }
 

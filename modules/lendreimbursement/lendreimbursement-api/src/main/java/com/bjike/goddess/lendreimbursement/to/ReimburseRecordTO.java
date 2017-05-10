@@ -3,7 +3,6 @@ package com.bjike.goddess.lendreimbursement.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +25,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 报销单号数组
      */
-    @NotEmpty(groups = ReimburseRecordTO.TestPrePay.class, message = "报销单号数组不能为空")
+    @NotNull(groups = ReimburseRecordTO.TestPrePay.class, message = "报销单号数组不能为空")
     private String[] reimNumbers;
 
     /**
@@ -217,7 +216,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 是否已生成记账凭证(是/否)
      */
-    private String AccountFlag;
+    private String accountFlag;
 
     /**
      * 付款来源
@@ -524,11 +523,11 @@ public class ReimburseRecordTO extends BaseTO {
     }
 
     public String getAccountFlag() {
-        return AccountFlag;
+        return accountFlag;
     }
 
-    public void setAccountFlag(String AccountFlag) {
-        this.AccountFlag = AccountFlag;
+    public void setAccountFlag(String accountFlag) {
+        this.accountFlag = accountFlag;
     }
 
     public String getPayOrigin() {

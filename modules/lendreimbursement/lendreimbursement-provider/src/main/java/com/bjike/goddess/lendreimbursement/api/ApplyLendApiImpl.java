@@ -35,6 +35,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public ApplyLendBO getOneById(String id) throws SerException {
+        return applyLendSer.getOneById(id);
+    }
+
+    @Override
     public List<ApplyLendBO> listApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.listApplyLend(applyLendDTO);
     }
@@ -140,8 +145,18 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public Long countHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countHasAudit(applyLendDTO);
+    }
+
+    @Override
     public List<ApplyLendBO> listHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.listHasAudit(applyLendDTO);
+    }
+
+    @Override
+    public Long countWaitPay(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countWaitPay(applyLendDTO);
     }
 
     @Override
@@ -155,6 +170,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public Long countSureRecieve(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countSureRecieve(applyLendDTO);
+    }
+
+    @Override
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.listSureRecieveMoney(applyLendDTO);
     }
@@ -162,6 +182,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Override
     public ApplyLendBO editSureRecieveMoney(ApplyLendTO applyLendTO) throws SerException {
         return applyLendSer.editSureRecieveMoney(applyLendTO);
+    }
+
+    @Override
+    public Long countBorrowRecord(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countBorrowRecord( applyLendDTO);
     }
 
     @Override
@@ -185,6 +210,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public Long countReturn(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countReturn( applyLendDTO);
+    }
+
+    @Override
     public List<ApplyLendBO> listReturnMoneyRecord(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.listReturnMoneyRecord(applyLendDTO);
     }
@@ -200,6 +230,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public Long countBusCheck(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countBusCheck(applyLendDTO);
+    }
+
+    @Override
     public List<ApplyLendBO> listBusinessCheck(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.listBusinessCheck(applyLendDTO);
     }
@@ -207,6 +242,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Override
     public ApplyLendBO checkTicket(ApplyLendTO applyLendTO) throws SerException {
         return applyLendSer.checkTicket(applyLendTO);
+    }
+
+    @Override
+    public Long countRecTicket(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.countRecTicket( applyLendDTO);
     }
 
     @Override
