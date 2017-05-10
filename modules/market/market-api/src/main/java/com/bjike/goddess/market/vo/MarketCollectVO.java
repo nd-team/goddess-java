@@ -35,6 +35,10 @@ public class MarketCollectVO implements Serializable {
      */
     private Object third;
     /**
+     * 项目级别-D级市场信息数量
+     */
+    private Object fourth;
+    /**
      * 有效信息市场数量
      */
     private Object has;
@@ -109,6 +113,14 @@ public class MarketCollectVO implements Serializable {
 
     public void setThird(Object third) {
         this.third = third;
+    }
+
+    public Object getFourth() {
+        return fourth;
+    }
+
+    public void setFourth(Object fourth) {
+        this.fourth = fourth;
     }
 
     public Object getHas() {

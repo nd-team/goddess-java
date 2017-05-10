@@ -6,6 +6,7 @@ import com.bjike.goddess.businessevaluate.dto.BusinessEvaluateCollectDTO;
 import com.bjike.goddess.businessevaluate.service.BusinessEvaluateCollectSer;
 import com.bjike.goddess.businessevaluate.to.BusinessEvaluateCollectTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,16 @@ public class BusinessEvaluateCollectApiImpl implements BusinessEvaluateCollectAP
 
     @Override
     public List<EvaluateCollectTotalBO> collectionTotal(String area, String project) throws SerException {
-        return businessEvaluateCollectSer.collectPageList(area, project);
+        return businessEvaluateCollectSer.collectTotal(area, project);
+    }
+
+    @Override
+    public BusinessEvaluateCollectBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(businessEvaluateCollectSer.findById(id),BusinessEvaluateCollectBO.class);
+    }
+
+    @Override
+    public Long count(BusinessEvaluateCollectDTO dto) throws SerException {
+        return businessEvaluateCollectSer.count(dto);
     }
 }

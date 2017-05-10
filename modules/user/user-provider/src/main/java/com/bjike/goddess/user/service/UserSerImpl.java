@@ -103,13 +103,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public UserBO currentUser() throws SerException {
-        String employeeNumber = this.findByMaxField("employeeNumber", User.class);
-        UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("employeeNumber", employeeNumber));
-        if (null != dto) {
-            return BeanTransform.copyProperties(this.findOne(dto), UserBO.class);
-
-        } //获取当前用户直接给无需登录
+       //获取当前用户直接给无需登录
         String token = RpcTransmit.getUserToken();
         LoginUser loginUser = currentLoginUser(token);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
@@ -118,13 +112,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public UserBO currentUser(String userToken) throws SerException {
-        String employeeNumber = this.findByMaxField("employeeNumber", User.class);
-        UserDTO dto = new UserDTO();
-        dto.getConditions().add(Restrict.eq("employeeNumber", employeeNumber));
-        if (null != dto) {
-            return BeanTransform.copyProperties(this.findOne(dto), UserBO.class);
-
-        } //获取当前用户直接给无需登录
+        //获取当前用户直接给无需登录
         LoginUser loginUser = currentLoginUser(userToken);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
     }

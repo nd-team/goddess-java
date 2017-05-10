@@ -3,9 +3,11 @@ package com.bjike.goddess.contractcommunicat.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
+import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
 
     List<ProjectOutsourcingBO> pageList(ProjectOutsourcingDTO dto) throws SerException;
 
-    List<ProjectOutsourcingBO> collect(ProjectOutsourcingDTO dto) throws SerException;
+    List<ProjectOutsourcingCollectBO> collect(CollectConditionTO dto) throws SerException;
 
     void setCollectSend(QuartzCycleType cycle) throws SerException;
 }

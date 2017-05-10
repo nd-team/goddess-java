@@ -1,42 +1,12 @@
-模块名:devicerepair
-类名:DeviceRepair
-作者:sunfengtao
-描述:设备维修
+模块名:projectmarketfee
+类名:Grade
+作者:chenjunhao
+描述:等级设计
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String projectGroup 项目组;
-String projectName 项目名称;
-String applicant 申请人;
-String deviceName 设备名称;
-String materialCoding 物资编号;
-String handler 经手人;
-String devicePrincipal 设备负责人;
-String deviceIssue 设备出现的问题;
-String comment 备注;
-MaterialState materialState 物资状态;
-Double termOfService 保修期限(月);
-Boolean whetherWarranty 是否在保修期;
-String warrantyContact 保修联系人;
-String warrantyContactPhone 保修联系电话;
-String buyAddress 购买网址/店铺;
-String purchaseWay 购买途径;
-String repairWay 维修途径;
-String detectResult 检测结果;
-Boolean whetherRepair 是否可维修;
-String repairDeadline 维修后使用期限;
-Double repairPrice 维修价格;
-LocalDateTime planOverRepairTime 预计维修好时间;
-LocalDateTime planLoanTime 预计借款时间;
-String welfareModule 福利模块负责人;
-AuditState welfareAuditState 福利模块负责人审核状态;
-String pm 项目经理;
-AuditState pmAuditState 项目经理审核状态;
-String venderReceiptMode 厂家收款方式;
-String accountName 开户名称;
-String accountNumber 开户账号;
-String bankOfDeposit 开户行;
-Boolean whetherPayment 是否付款;
+String note 备注;
+String grade 等级;
 )

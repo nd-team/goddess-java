@@ -4,9 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.projectmeasure.type.CycleType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -62,7 +60,7 @@ public class ProjectMeasureSummary extends BaseEntity {
     /**
      * 汇总间隔
      */
-    @Column(name = "detailInterval", columnDefinition = "INT(11) COMMENT '汇总间隔'")
+    @Column(name = "detailInterval", nullable = false, columnDefinition = "INT(11) COMMENT '汇总间隔'")
     private Integer detailInterval;
 
     /**

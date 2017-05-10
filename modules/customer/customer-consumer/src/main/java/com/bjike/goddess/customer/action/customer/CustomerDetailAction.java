@@ -10,7 +10,6 @@ import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
-import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
@@ -86,6 +85,7 @@ public class CustomerDetailAction {
                 });
                 return ActResult.initialize(customerDetailVOList);
             }
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

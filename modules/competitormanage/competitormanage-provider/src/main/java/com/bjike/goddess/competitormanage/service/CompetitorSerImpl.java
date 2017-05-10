@@ -105,8 +105,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     /**
      * 更新数据（编辑、审核）
      *
-     * @param to 油卡基本信息
-     * @throws SerException 更新油卡异常
+     * @param to 竞争对手信息
      */
     public void updateModel(CompetitorTO to) throws SerException {
 

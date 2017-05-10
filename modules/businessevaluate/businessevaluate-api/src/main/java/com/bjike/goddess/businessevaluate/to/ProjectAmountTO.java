@@ -1,6 +1,11 @@
 package com.bjike.goddess.businessevaluate.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目金额
@@ -16,56 +21,67 @@ public class ProjectAmountTO extends BaseTO {
     /**
      * 成本
      */
+    @NotNull(message = "成本不能为空",groups = {ADD.class, EDIT.class})
     private Double cost;
 
     /**
      * 预算成本
      */
+    @NotNull(message = "预算成本不能为空",groups = {ADD.class, EDIT.class})
     private Double budgetCost;
 
     /**
      * 费用
      */
+    @NotNull(message = "费用不能为空",groups = {ADD.class, EDIT.class})
     private Double fee;
 
     /**
      * 预算费用
      */
+    @NotNull(message = "预算费用不能为空",groups = {ADD.class, EDIT.class})
     private Double budgetFee;
 
     /**
      * 管理费
      */
+    @NotNull(message = "管理费不能为空",groups = {ADD.class, EDIT.class})
     private Double manageFee;
 
     /**
      * 预算管理费
      */
+    @NotNull(message = "预算管理费不能为空",groups = {ADD.class, EDIT.class})
     private Double budgetManageFee;
 
     /**
      * 税金
      */
+    @NotNull(message = "税金不能为空",groups = {ADD.class, EDIT.class})
     private Double taxes;
 
     /**
      * 预算税金
      */
+    @NotNull(message = "预算税金不能为空",groups = {ADD.class, EDIT.class})
     private Double budgetTaxes;
 
     /**
      * 利润
      */
+    @NotNull(message = "利润不能为空",groups = {ADD.class, EDIT.class})
     private Double profit;
 
     /**
      * 预算利润
      */
+    @NotNull(message = "预算利润不能为空",groups = {ADD.class, EDIT.class})
     private Double budgetProfit;
 
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
 

@@ -1,36 +1,29 @@
 package com.bjike.goddess.projectissuehandle.bo;
 
-import java.io.Serializable;
+import com.bjike.goddess.common.api.bo.BaseBO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by ike on 17-5-3.
+ * 汇总项目执行中的问题受理及处理结果业务传输对象
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-03-27 10:49 ]
+ * @Description: [ 汇总项目执行中的问题受理及处理结果业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
-public class CollectBO implements Serializable {
-    private String area;
+public class CollectBO extends BaseBO {
+    /**
+     * 合同外部项目名称
+     */
     private String externalContractProjectName;
+
+    /**
+     * 内部项目名称
+     */
     private String internalProjectName;
-    private Object person;
-    private Object progress;
-    private Object deliver;
-    private Object device;
-    private Object elementary;
-    private Object emergency;
-    private Object intermediate;
-    private Object operator;
-    private Object vender;
-    private Object intergrator;
-    private Object goverment;
-    private Object innerstaff;
-    private Object complete;
-    private Object uncomplete;
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 
     public String getExternalContractProjectName() {
         return externalContractProjectName;
@@ -48,115 +41,115 @@ public class CollectBO implements Serializable {
         this.internalProjectName = internalProjectName;
     }
 
-    public Object getPerson() {
-        return person;
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 描述
+     */
+    private String remark;
+    /**
+     * 个数
+     */
+    private int counts;
+    /**
+     * 数据库枚举转换
+     */
+    private int enumConvert;
+    /**
+     * 地区汇总集合
+     */
+    private List<Map<String, String>> areaMap;
+
+    /**
+     * 问题类型汇总集合
+     */
+    private List<Map<String, String>> problemTypes;
+    /**
+     * 问题紧急程度汇总集合
+     */
+    private List<Map<String, String>> problemEmergencyDegree;
+    /**
+     * 问题对象汇总集合
+     */
+    private List<Map<String, String>> problemObject;
+    /**
+     * 问题处理结果汇总集合
+     */
+    private List<Map<String, String>> problemProcessingResult;
+
+
+    public String getArea() {
+        return area;
     }
 
-    public void setPerson(Object person) {
-        this.person = person;
+    public void setArea(String area) {
+        this.area = area;
     }
 
-    public Object getProgress() {
-        return progress;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setProgress(Object progress) {
-        this.progress = progress;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
-    public Object getDeliver() {
-        return deliver;
+    public int getCounts() {
+        return counts;
     }
 
-    public void setDeliver(Object deliver) {
-        this.deliver = deliver;
+    public void setCounts(int counts) {
+        this.counts = counts;
     }
 
-    public Object getDevice() {
-        return device;
+    public int getEnumConvert() {
+        return enumConvert;
     }
 
-    public void setDevice(Object device) {
-        this.device = device;
+    public void setEnumConvert(int enumConvert) {
+        this.enumConvert = enumConvert;
     }
 
-    public Object getElementary() {
-        return elementary;
+    public List<Map<String, String>> getAreaMap() {
+        return areaMap;
     }
 
-    public void setElementary(Object elementary) {
-        this.elementary = elementary;
+    public void setAreaMap(List<Map<String, String>> areaMap) {
+        this.areaMap = areaMap;
     }
 
-    public Object getEmergency() {
-        return emergency;
+    public List<Map<String, String>> getProblemTypes() {
+        return problemTypes;
     }
 
-    public void setEmergency(Object emergency) {
-        this.emergency = emergency;
+    public void setProblemTypes(List<Map<String, String>> problemTypes) {
+        this.problemTypes = problemTypes;
     }
 
-    public Object getIntermediate() {
-        return intermediate;
+    public List<Map<String, String>> getProblemEmergencyDegree() {
+        return problemEmergencyDegree;
     }
 
-    public void setIntermediate(Object intermediate) {
-        this.intermediate = intermediate;
+    public void setProblemEmergencyDegree(List<Map<String, String>> problemEmergencyDegree) {
+        this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
-    public Object getOperator() {
-        return operator;
+    public List<Map<String, String>> getProblemObject() {
+        return problemObject;
     }
 
-    public void setOperator(Object operator) {
-        this.operator = operator;
+    public void setProblemObject(List<Map<String, String>> problemObject) {
+        this.problemObject = problemObject;
     }
 
-    public Object getVender() {
-        return vender;
+    public List<Map<String, String>> getProblemProcessingResult() {
+        return problemProcessingResult;
     }
 
-    public void setVender(Object vender) {
-        this.vender = vender;
-    }
-
-    public Object getIntergrator() {
-        return intergrator;
-    }
-
-    public void setIntergrator(Object intergrator) {
-        this.intergrator = intergrator;
-    }
-
-    public Object getGoverment() {
-        return goverment;
-    }
-
-    public void setGoverment(Object goverment) {
-        this.goverment = goverment;
-    }
-
-    public Object getInnerstaff() {
-        return innerstaff;
-    }
-
-    public void setInnerstaff(Object innerstaff) {
-        this.innerstaff = innerstaff;
-    }
-
-    public Object getComplete() {
-        return complete;
-    }
-
-    public void setComplete(Object complete) {
-        this.complete = complete;
-    }
-
-    public Object getUncomplete() {
-        return uncomplete;
-    }
-
-    public void setUncomplete(Object uncomplete) {
-        this.uncomplete = uncomplete;
+    public void setProblemProcessingResult(List<Map<String, String>> problemProcessingResult) {
+        this.problemProcessingResult = problemProcessingResult;
     }
 }

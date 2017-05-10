@@ -8,12 +8,11 @@ import com.bjike.goddess.businessproject.vo.BaseInfoManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,42 +37,6 @@ public class BaseInfoManageAction {
     private BaseInfoManageAPI baseInfoManageAPI;
 
     /**
-     * 列表总条数
-     *
-     * @param baseInfoManageDTO 基本信息信息dto
-     * @des 获取所有基本信息信息总条数
-     * @version v1
-     */
-    @GetMapping("v1/count")
-    public Result count(BaseInfoManageDTO baseInfoManageDTO) throws ActException {
-        try {
-            Long count = baseInfoManageAPI.countBaseInfoManage(baseInfoManageDTO);
-            return ActResult.initialize(count);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 一个基本信息
-     *
-     * @param id 项目基本信息信息id
-     * @des 根据id获取项目基本信息信息
-     * @return  class BaseInfoManageVO
-     * @version v1
-     */
-    @GetMapping("v1/getOneById/{id}")
-    public Result getOneById(@PathVariable String id) throws ActException {
-        try {
-            BaseInfoManageVO projectCarryVO = BeanTransform.copyProperties(
-                    baseInfoManageAPI.getOneById(id), BaseInfoManageVO.class);
-            return ActResult.initialize(projectCarryVO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 项目合同列表
      *
      * @param baseInfoManageDTO 项目合同信息dto
@@ -81,8 +44,8 @@ public class BaseInfoManageAction {
      * @des 获取所有项目合同信息
      * @version v1
      */
-    @GetMapping("v1/list")
-    public Result findListBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listBaseInfoManage")
+    public Result findListBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO, HttpServletRequest request) throws ActException {
         try {
             List<BaseInfoManageVO> baseInfoManageVOList = BeanTransform.copyProperties(
                     baseInfoManageAPI.listBaseInfoManage(baseInfoManageDTO), BaseInfoManageVO.class, request);
@@ -105,7 +68,7 @@ public class BaseInfoManageAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addBaseInfoManage(@Validated({BaseInfoManageTO.TestAdd.class}) BaseInfoManageTO baseInfoManageTO) throws ActException {
+    public Result addBaseInfoManage( BaseInfoManageTO baseInfoManageTO) throws ActException {
         try {
             BaseInfoManageBO baseInfoManageBO1 = baseInfoManageAPI.addBaseInfoManage(baseInfoManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(baseInfoManageBO1, BaseInfoManageVO.class));
@@ -125,7 +88,7 @@ public class BaseInfoManageAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editBaseInfoManage(@Validated({BaseInfoManageTO.TestEdit.class}) BaseInfoManageTO baseInfoManageTO) throws ActException {
+    public Result editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws ActException {
         try {
             BaseInfoManageBO baseInfoManageBO1 = baseInfoManageAPI.editBaseInfoManage(baseInfoManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(baseInfoManageBO1, BaseInfoManageVO.class));

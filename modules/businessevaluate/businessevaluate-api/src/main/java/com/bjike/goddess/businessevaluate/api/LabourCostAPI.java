@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessevaluate.api;
 
+import com.bjike.goddess.businessevaluate.bo.EvaluateProjectInfoBO;
 import com.bjike.goddess.businessevaluate.bo.LabourCostBO;
 import com.bjike.goddess.businessevaluate.dto.LabourCostDTO;
 import com.bjike.goddess.businessevaluate.to.LabourCostTO;
@@ -48,4 +49,5 @@ public interface LabourCostAPI {
      * @return 劳动成本结果集
      */
     List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException;
+
 }

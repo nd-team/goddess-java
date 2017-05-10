@@ -12,13 +12,11 @@ import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.entity.ProjectCostStatus;
 import com.bjike.goddess.projectmeasure.entity.ProjectPersonnelDemand;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -61,10 +59,9 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public ProjectBasicInfoBO save(ProjectBasicInfoTO to) throws SerException {
         ProjectBasicInfo entity = BeanTransform.copyProperties(to, ProjectBasicInfo.class, true);
-        verify(entity);//参数校验
         entity = super.save(entity);
         ProjectBasicInfoBO bo = BeanTransform.copyProperties(entity, ProjectBasicInfoBO.class);
         return bo;
@@ -77,74 +74,10 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public void update(ProjectBasicInfoTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
-            ProjectBasicInfo model = super.findById(to.getId());
-            if (model != null) {
-                updateProjectBasicInfo(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
-    }
-
-    /**
-     * 更新项目基本信息
-     *
-     * @param to
-     * @param model
-     * @throws SerException
-     */
-    private void updateProjectBasicInfo(ProjectBasicInfoTO to, ProjectBasicInfo model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        verify(model);//参数校验
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
-    }
-
-    /**
-     * 参数校验
-     * @param model
-     */
-    private void verify(ProjectBasicInfo model) throws SerException, NumberFormatException {
-        if (model.getWorkload() <= 0) {
-            throw new SerException("参数工作量workload必须是大于0的整数");
-        }
-
-        if (model.getProjectLaunchCost() <= 0) {
-            throw new SerException("参数项目开展成本projectLaunchCost必须是大于0的小数");
-        }
-
-        if (model.getAmount() <= 0) {
-            throw new SerException("参数金额amount必须是大于0的小数");
-        }
-
-        if (model.getLabour() <= 0) {
-            throw new SerException("参数人工labor必须是大于0的整数");
-        }
-
-        if (model.getNumberOfStaff() <= 0) {
-            throw new SerException("参数人员数量numberOfStaff必须是大于0的整数");
-        }
-
-        if ((model.getDeviceCharge() != null) && (model.getDeviceCharge() < 0)) {
-            throw new SerException("参数设备费用deviceCharge必须是大于等于0的小数");
-        }
-
-        if ((model.getVehicleCharge() != null) && (model.getVehicleCharge() < 0)) {
-            throw new SerException("参数车辆费用vehicleCharge必须是大于等于0的小数");
-        }
-
-        if ((model.getConfigCharge() != null) && (model.getConfigCharge() < 0)) {
-            throw new SerException("参数配置费用configCharge必须是大于等于0的小数");
-        }
-
-        if ((model.getOtherCharge() != null) && (model.getOtherCharge() < 0)) {
-            throw new SerException("参数其他费用otherCharge必须是大于等于0的小数");
-        }
+        ProjectBasicInfo entity = BeanTransform.copyProperties(to, ProjectBasicInfo.class, true);
+        super.update(entity);
     }
 
     /**
@@ -154,7 +87,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
+    @Transactional
     public void remove(String id) throws SerException {
         ProjectBasicInfo entity = super.findById(id);
         String projectName = entity.getProjectName();//获取项目名称
@@ -168,8 +101,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
 
     /**
      * 根据项目名称删除项目人员需求
-     *
-     *
+     *　
      * @param projectName 项目名称
      * @throws SerException
      */

@@ -10,7 +10,6 @@ package com.bjike.goddess.businessproject.enums;
  * @Copy: [com.bjike]
  */
 public enum BusinessCooperate {
-
     /**
      * 租赁合同
      */

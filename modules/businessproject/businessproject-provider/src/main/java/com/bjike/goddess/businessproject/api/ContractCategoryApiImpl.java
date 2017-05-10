@@ -26,16 +26,6 @@ public class ContractCategoryApiImpl implements ContractCategoryAPI {
     private ContractCategorySer contractCategorySer;
 
     @Override
-    public Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
-        return contractCategorySer.countContractCategory( contractCategoryDTO);
-    }
-
-    @Override
-    public ContractCategoryBO getOneById(String id) throws SerException {
-        return contractCategorySer.getOneById(id);
-    }
-
-    @Override
     public List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
         return contractCategorySer.listContractCategory( contractCategoryDTO);
     }

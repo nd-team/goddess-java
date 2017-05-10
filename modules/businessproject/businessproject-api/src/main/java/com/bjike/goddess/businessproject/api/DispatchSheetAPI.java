@@ -18,20 +18,6 @@ import java.util.List;
  */
 public interface DispatchSheetAPI {
 
-    /**
-     * 派工单信息列表总条数
-     *
-     */
-    default Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据id获取派工单信息列表
-     * @return class DispatchSheetBO
-     */
-    default DispatchSheetBO getOneById(String id) throws SerException {return null;}
-
 
     /**
      * 派工单信息列表

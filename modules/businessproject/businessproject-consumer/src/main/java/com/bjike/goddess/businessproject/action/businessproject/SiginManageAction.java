@@ -8,11 +8,10 @@ import com.bjike.goddess.businessproject.vo.SiginManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.auth.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,42 +37,6 @@ public class SiginManageAction {
     private SiginManageAPI siginManageAPI;
 
     /**
-     * 列表总条数
-     *
-     * @param siginManageDTO 签订与立项dto
-     * @des 获取所有签订与立项总条数
-     * @version v1
-     */
-    @GetMapping("v1/count")
-    public Result count(SiginManageDTO siginManageDTO) throws ActException {
-        try {
-            Long count = siginManageAPI.countSiginManage(siginManageDTO);
-            return ActResult.initialize(count);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 一个签订与立项
-     *
-     * @param id 项目签订与立项id
-     * @des 根据id获取项目签订与立项
-     * @return  class SiginManageVO
-     * @version v1
-     */
-    @GetMapping("v1/getOneById/{id}")
-    public Result getOneById(@PathVariable String id) throws ActException {
-        try {
-            SiginManageVO projectCarryVO = BeanTransform.copyProperties(
-                    siginManageAPI.getOneById(id), SiginManageVO.class);
-            return ActResult.initialize(projectCarryVO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 项目签订与立项列表
      *
      * @param siginManageDTO 项目签订与立项信息dto
@@ -81,8 +44,8 @@ public class SiginManageAction {
      * @des 获取所有项目签订与立项信息
      * @version v1
      */
-    @GetMapping("v1/list")
-    public Result findListSiginManage(SiginManageDTO siginManageDTO,BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listSiginManage")
+    public Result findListSiginManage(SiginManageDTO siginManageDTO, HttpServletRequest request) throws ActException {
         try {
             List<SiginManageBO> list = siginManageAPI.listSiginManage(siginManageDTO);
             List<SiginManageVO> siginManageVOList =new ArrayList<>();
@@ -110,10 +73,10 @@ public class SiginManageAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addSiginManage(@Validated(SiginManageTO.TestAdd.class) SiginManageTO siginManageTO, BindingResult bindingResult) throws ActException {
+    public Result addSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.addSiginManage(siginManageTO);
-            return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -129,10 +92,10 @@ public class SiginManageAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editSiginManage(@Validated(SiginManageTO.TestAdd.class) SiginManageTO siginManageTO , BindingResult bindingResult) throws ActException {
+    public Result editSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.editSiginManage(siginManageTO);
-            return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -167,7 +130,7 @@ public class SiginManageAction {
      */
     @LoginAuth
     @PostMapping("v1/audit")
-    public Result auditSiginManage( SiginManageTO siginManageTO , BindingResult bindingResult) throws ActException {
+    public Result auditSiginManage(@Validated SiginManageTO siginManageTO) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.addSiginManage(siginManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));

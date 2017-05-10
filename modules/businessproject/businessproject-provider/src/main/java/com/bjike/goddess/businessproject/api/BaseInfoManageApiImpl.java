@@ -26,16 +26,6 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     private BaseInfoManageSer baseInfoManageSer;
 
     @Override
-    public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
-        return baseInfoManageSer.countBaseInfoManage( baseInfoManageDTO);
-    }
-
-    @Override
-    public BaseInfoManageBO getOneById(String id) throws SerException {
-        return baseInfoManageSer.getOneById(id);
-    }
-
-    @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         return baseInfoManageSer.listBaseInfoManage(baseInfoManageDTO);
     }

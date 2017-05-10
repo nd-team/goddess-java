@@ -5,10 +5,12 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
+import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -76,16 +78,17 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<ProjectOutsourcingBO> collect(ProjectOutsourcingDTO dto) throws SerException {
+    public List<ProjectOutsourcingCollectBO> collect(CollectConditionTO to) throws SerException {
+        ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
         dto.getSorts().add("createTime=desc");
-        if(dto.getContractInProject()!=null){
-            dto.getConditions().add(Restrict.like("contractInProject",dto.getContractInProject()));
+        if(!StringUtils.isEmpty(to.getContractInProject())){
+            dto.getConditions().add(Restrict.like("contractInProject",to.getContractInProject()));
         }
-        if(dto.getStartTime()!=null){
-            dto.getConditions().add(Restrict.gt("createTime",dto.getStartTime()));
+        if(!StringUtils.isEmpty(to.getStartTime())){
+            dto.getConditions().add(Restrict.gt("createTime",to.getStartTime()));
         }
-        if(dto.getEndTime()!=null){
-            dto.getConditions().add(Restrict.lt("createTime",dto.getEndTime()));
+        if(!StringUtils.isEmpty(to.getEndTime())){
+            dto.getConditions().add(Restrict.lt("createTime",to.getEndTime()));
         }
         return setCollectField(super.findByPage(dto));
 
@@ -98,32 +101,34 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     //设置汇总字段
-    public List<ProjectOutsourcingBO> setCollectField(List<ProjectOutsourcing> list) throws SerException{
+    public List<ProjectOutsourcingCollectBO> setCollectField(List<ProjectOutsourcing> list) throws SerException{
         List<ProjectOutsourcingBO>  boList = BeanTransform.copyProperties(list,ProjectOutsourcingBO.class);
 
+        List<ProjectOutsourcingCollectBO> returnBoList = BeanTransform.copyProperties(list, ProjectOutsourcingCollectBO.class);
         Integer totalCooperate = 0;
         Integer totalTrail = 0;
         Integer totalAbandon = 0;
 
-        if(boList != null && !boList.isEmpty()){
-            for(ProjectOutsourcingBO bo : boList){
-                if(bo.getProjectResult() == CommunicateResult.COOPERATE){
-                    bo.setCooperate(bo.getProjectResult());
+        if (returnBoList != null && !returnBoList.isEmpty()) {
+            for (ProjectOutsourcingCollectBO bo : returnBoList) {
+                if (bo.getProjectResult() == CommunicateResult.COOPERATE) {
+                    bo.setCooperate("项目合作");
                     totalCooperate++;
-                }else if(bo.getProjectResult() == CommunicateResult.TRAIL){
-                    bo.setTrail(bo.getProjectResult());
+                } else if (bo.getProjectResult() == CommunicateResult.TRAIL) {
+                    bo.setTrail("项目跟进");
                     totalTrail++;
-                }else if(bo.getProjectResult() == CommunicateResult.ABANDON){
-                    bo.setAbandon(bo.getProjectResult());
+                } else if (bo.getProjectResult() == CommunicateResult.ABANDON) {
+                    bo.setAbandon("项目丢弃");
                     totalAbandon++;
                 }
             }
-            Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-
-            ProjectOutsourcingBO total = new ProjectOutsourcingBO("合计" , null , null , null , null , null , totalCostBudget , totalCooperate , totalTrail , totalAbandon);
-            boList.add(total);
         }
 
-        return  boList;
+        Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
+        ProjectOutsourcingCollectBO total = new ProjectOutsourcingCollectBO("合计", null, null, null, null,null,
+                totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
+        returnBoList.add(total);
+
+        return  returnBoList;
     }
 }

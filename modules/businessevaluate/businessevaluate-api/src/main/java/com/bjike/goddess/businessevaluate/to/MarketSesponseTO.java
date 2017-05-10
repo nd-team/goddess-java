@@ -1,7 +1,12 @@
 package com.bjike.goddess.businessevaluate.to;
 
 import com.bjike.goddess.businessevaluate.enums.ChannelType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 市场反应和创新能力
@@ -15,28 +20,33 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class MarketSesponseTO extends BaseTO {
 
     /**
-     * 能力成长类型
+     * 渠道
      */
+    @NotNull(message = "渠道不能为空",groups = {ADD.class, EDIT.class})
     private ChannelType channelType;
 
     /**
      * 客户保持率
      */
+    @NotNull(message = "客户保持率不能为空",groups = {ADD.class, EDIT.class})
     private Double customerKeepRate;
 
     /**
      * 客户满意度
      */
+    @NotNull(message = "客户满意度不能为空",groups = {ADD.class, EDIT.class})
     private Double customerSatisfaction;
 
     /**
      * 客户满意度扣分事项
      */
+    @NotBlank(message = "客户满意度扣分事项不能为空",groups = {ADD.class, EDIT.class})
     private String deductionDetail;
 
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
 

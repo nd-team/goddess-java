@@ -6,6 +6,7 @@ import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
 import com.bjike.goddess.businessevaluate.service.EvaluateProjectInfoSer;
 import com.bjike.goddess.businessevaluate.to.EvaluateProjectInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,10 @@ public class EvaluateProjectInfoApiImpl implements EvaluateProjectInfoAPI {
     @Override
     public List<ProjectProfitRateBO> profitScope() throws SerException {
         return evaluateProjectInfoSer.profitScope();
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAll() throws SerException {
+        return BeanTransform.copyProperties(evaluateProjectInfoSer.findAll(), EvaluateProjectInfoBO.class);
     }
 }

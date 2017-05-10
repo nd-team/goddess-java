@@ -64,6 +64,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         });
         List<CustomerDetailBO> boList = BeanTransform.copyProperties(customerDetailBOArrayList, CustomerDetailBO.class );
         return boList;
+
     }
 
     @Transactional(rollbackFor = SerException.class)

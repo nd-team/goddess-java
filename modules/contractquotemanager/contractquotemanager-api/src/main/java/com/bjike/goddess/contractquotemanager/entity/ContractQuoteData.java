@@ -3,9 +3,7 @@ package com.bjike.goddess.contractquotemanager.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -14,7 +12,7 @@ import java.time.LocalDate;
  *
  * @Author: [ yewenbo ]
  * @Date: [ 2017-03-20T17:01:53.309 ]
- * @Description: [  ]
+ * @Description: [ 合同单价资料信息 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -25,19 +23,19 @@ public class ContractQuoteData extends BaseEntity {
     /**
      * 客户名称
      */
-    @Column(name = "customerName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '客户名称'")
+    @Column(name = "customerName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户名称'")
     private String customerName;
 
     /**
      * 项目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目'")
+    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
     private String project;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '地区'")
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
@@ -55,9 +53,14 @@ public class ContractQuoteData extends BaseEntity {
     /**
      * 使用状态 0正常,1过期
      */
-    @Column(columnDefinition = "TINYINT(2) COMMENT '使用状态'", nullable = false)
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '使用状态'", nullable = false, insertable = false)
     private Status status;
 
+    /**
+     * 附件
+     */
+//@Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '附件'"  )
+// private Set<ModuleAttchment>  attchmentSet;
     public String getCustomerName() {
         return customerName;
     }
@@ -105,5 +108,12 @@ public class ContractQuoteData extends BaseEntity {
     public void setStatus(Status status) {
         this.status = status;
     }
+// public Set<ModuleAttchment> getAttchmentSet () {
+// return attchmentSet;
+// }
+// public void setAttchmentSet (Set<ModuleAttchment> attchmentSet ) {
+// this.attchmentSet = attchmentSet ;
+// }
+
 
 }

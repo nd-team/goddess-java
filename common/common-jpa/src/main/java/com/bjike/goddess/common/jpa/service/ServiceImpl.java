@@ -202,6 +202,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
 
     @Override
     public <T> List<T> findBySql(String sql, Class clazz, String[] fields) throws SerException {
+
         List<Method> all_methods = new ArrayList<>(); //源类属性列表
         Class temp_clazz = clazz;
         while (null != temp_clazz) { //数据源类所有属性（包括父类）
@@ -224,7 +225,12 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         //解析查询结果
         try {
             for (int i = 0; i < resultList.size(); i++) {
-                Object[] arr_obj = (Object[]) resultList.get(i);
+                Object[] arr_obj = null;
+                if (fields.length > 1) {
+                    arr_obj = (Object[]) resultList.get(i);
+                } else {
+                    arr_obj = new Object[]{resultList.get(i)};
+                }
                 Object obj = clazz.newInstance();
                 for (int j = 0; j < fields.length; j++) {
                     for (Method m : methods) {

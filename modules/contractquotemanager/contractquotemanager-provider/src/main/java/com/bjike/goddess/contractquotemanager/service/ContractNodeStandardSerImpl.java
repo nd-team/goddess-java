@@ -1,19 +1,28 @@
 package com.bjike.goddess.contractquotemanager.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.exception.RepException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
+import com.bjike.goddess.contractquotemanager.dao.ContractNodeStandardRep;
+import com.bjike.goddess.contractquotemanager.dao.ContractQuoteDataRep;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
+import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,114 +37,66 @@ import java.util.List;
 @CacheConfig(cacheNames = "contractNodeStandardSerCache")
 @Service
 public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandard, ContractNodeStandardDTO> implements ContractNodeStandardSer {
+    @Autowired
+    private ContractNodeStandardRep contractNodeStandardRep;
 
-    /**
-     * 分页查询合同节点标准信息
-     *
-     * @param dto 合同节点标准信息dto
-     * @return class ContractNodeStandardBO
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
+    @Override
+    public ContractNodeStandardBO save(ContractNodeStandardTO contractNodeStandardTO) throws SerException {
+        ContractNodeStandard contractNodeStandard = BeanTransform.copyProperties(contractNodeStandardTO, ContractNodeStandard.class, true);
+        super.save(contractNodeStandard);
+        contractNodeStandardTO.setId(contractNodeStandard.getId());
+        return BeanTransform.copyProperties(contractNodeStandardTO, ContractNodeStandardBO.class, true);
+    }
+    @Override
     public List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
-        List<ContractNodeStandard> list = super.findByPage(dto);
-        List<ContractNodeStandardBO> boList = BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
-        return boList;
+        List<ContractNodeStandard> contractNodeStandards = super.findByCis(dto);
+        return BeanTransform.copyProperties(contractNodeStandards, ContractNodeStandardBO.class);
     }
 
-    /**
-     * 保存合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @return class ContractNodeStandardBO
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
-    public ContractNodeStandardBO save(ContractNodeStandardTO to) throws SerException {
-        ContractNodeStandard entity = BeanTransform.copyProperties(to, ContractNodeStandard.class, true);
-        entity = super.save(entity);
-        ContractNodeStandardBO bo = BeanTransform.copyProperties(entity, ContractNodeStandardBO.class);
-        return bo;
+    @Override
+    public void update(ContractNodeStandardTO contractNodeStandardTO) throws SerException {
+        ContractNodeStandard contractNodeStandard = super.findById(contractNodeStandardTO.getId());
+        BeanTransform.copyProperties(contractNodeStandardTO, contractNodeStandard, true);
+        contractNodeStandard.setModifyTime(LocalDateTime.now());
+        super.update(contractNodeStandard);
     }
 
-    /**
-     * 根据id删除合同节点标准信息
-     *
-     * @param id 合同节点标准信息唯一标识
-     * @throws SerException
-     */
-    @Override
     @Transactional(rollbackFor = SerException.class)
+    @Override
     public void remove(String id) throws SerException {
         super.remove(id);
     }
-
-    /**
-     * 更新合同节点标准信息
-     *
-     * @param to 合同节点标准信息to
-     * @throws SerException
-     */
     @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void update(ContractNodeStandardTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())) {
-            ContractNodeStandard model = super.findById(to.getId());
-            if (model != null) {
-                updateContractNodeStandard(to, model);
-            } else {
-                throw new SerException("更新对象不能为空");
-            }
-        } else {
-            throw new SerException("更新ID不能为空!");
-        }
-    }
-
-    /**
-     * 更新合同节点标准信息
-     *
-     * @param to    合同节点标准信息to
-     * @param model 合同节点标准信息
-     * @throws SerException
-     */
-    private void updateContractNodeStandard(ContractNodeStandardTO to, ContractNodeStandard model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
-        model.setModifyTime(LocalDateTime.now());
-        super.update(model);
-    }
-
-    @Override
-    public List<ContractNodeStandardBO> collect(ContractNodeStandardTO to) throws SerException {
+    public List<ContractNodeStandardBO> collect(ContractNodeStandardBO bo) throws SerException {
 
         ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
-
-        if (to.getDate() != null && !to.getDate().equals("")) {
-            dto.getConditions().add(Restrict.eq("date", to.getDate()));
+        if (bo.getDate() != null && !bo.getDate().equals("")) {
+            dto.getConditions().add(Restrict.eq("date", bo.getDate()));
         }
-        if (to.getArea() != null && !to.getArea().equals("")) {
-            dto.getConditions().add(Restrict.eq("area", to.getArea()));
+        if (bo.getArea() != null && !bo.getArea().equals("")) {
+            dto.getConditions().add(Restrict.eq("area", bo.getArea()));
         }
-        if (to.getProject() != null && !to.getProject().equals("")) {
-            dto.getConditions().add(Restrict.eq("project", to.getProject()));
+        if (bo.getProject() != null && !bo.getProject().equals("")) {
+            dto.getConditions().add(Restrict.eq("project", bo.getProject()));
         }
-        if (to.getNode() != null && !to.getNode().equals("")) {
-            dto.getConditions().add(Restrict.eq("node", to.getNode()));
+        if (bo.getNode() != null && !bo.getNode().equals("")) {
+            dto.getConditions().add(Restrict.eq("node", bo.getNode()));
         }
         return BeanTransform.copyProperties(super.findByCis(dto), ContractNodeStandardBO.class);
     }
 
     @Override
-    public List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardTO to) throws SerException {
+    public List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardBO bo) throws SerException {
 
         ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
 
-        if (to.getArea() != null && !to.getArea().equals("")) {
-            dto.getConditions().add(Restrict.eq("area", to.getArea()));
+        if (bo.getArea() != null && !bo.getArea().equals("")) {
+            dto.getConditions().add(Restrict.eq("area", bo.getArea()));
         }
-        if (to.getProject() != null && !to.getProject().equals("")) {
-            dto.getConditions().add(Restrict.eq("project", to.getProject()));
+        if (bo.getProject() != null && !bo.getProject().equals("")) {
+            dto.getConditions().add(Restrict.eq("project", bo.getProject()));
         }
         return BeanTransform.copyProperties(super.findByCis(dto), ContractNodeStandardBO.class);
     }

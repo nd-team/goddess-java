@@ -31,7 +31,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 报销发生日期
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "报销发生日期不能为空")
+    @NotNull(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "报销发生日期不能为空")
     private String occureDate;
 
     /**
