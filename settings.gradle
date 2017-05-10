@@ -23,6 +23,49 @@ include ':modules:storage:storage-api'
 include ':modules:storage:storage-consumer'
 include ':modules:storage:storage-provider'
 
+//#quartz 任务调度模块-liguiqin
+include ':modules:quartz:quartz-api'
+include ':modules:quartz:quartz-consumer'
+include ':modules:quartz:quartz-provider'
+//#客户信息tanghaixiang
+include ':modules:customer:customer-api'
+include ':modules:customer:customer-consumer'
+include ':modules:customer:customer-provider'
+
+////#商业能力展示tanghaixiang
+include ':modules:capability:capability-api'
+include ':modules:capability:capability-consumer'
+include ':modules:capability:capability-provider'
+
+////#商业能力互动tanghaixiang
+include ':modules:businessinteraction:businessinteraction-api'
+include ':modules:businessinteraction:businessinteraction-consumer'
+include ':modules:businessinteraction:businessinteraction-provider'
+
+
+//#简介管理
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
+
+//#marketdevelopment 市场计划进度管理
+//include ':modules:marketdevelopment:marketdevelopment-api'
+//include ':modules:marketdevelopment:marketdevelopment-consumer'
+//include ':modules:marketdevelopment:marketdevelopment-provider'
+//#projectissuehandle 项目问题受理
+//include ':modules:projectissuehandle:projectissuehandle-api'
+//include ':modules:projectissuehandle:projectissuehandle-consumer'
+//include ':modules:projectissuehandle:projectissuehandle-provider'
+//#market 市场信息管理
+//include ':modules:market:market-api'
+//include ':modules:market:market-consumer'
+//include ':modules:market:market-provider'
+//#商业能力互动tanghaixiang
+include ':modules:businessinteraction:businessinteraction-api'
+include ':modules:businessinteraction:businessinteraction-consumer'
+include ':modules:businessinteraction:businessinteraction-provider'
+
+
 ////#accommodation 住宿管理
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
@@ -38,6 +81,32 @@ include ':modules:bidding:bidding-provider'
 include ':modules:financeinit:financeinit-api'
 include ':modules:financeinit:financeinit-consumer'
 include ':modules:financeinit:financeinit-provider'
+
+//#项目验收、签字、结算进度管理tanghaixiang
+include ':modules:projectprocing:projectprocing-api'
+include ':modules:projectprocing:projectprocing-consumer'
+include ':modules:projectprocing:projectprocing-provider'
+//#法定节假日tanghaixiang
+include ':modules:festival:festival-api'
+include ':modules:festival:festival-consumer'
+include ':modules:festival:festival-provider'
+//#businessevaluate 商务评估
+include ':modules:businessevaluate:businessevaluate-api'
+include ':modules:businessevaluate:businessevaluate-consumer'
+include ':modules:businessevaluate:businessevaluate-provider'
+//#enterpriseculturemanage 企业文化管理
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
+//#annual 年假管理
+include ':modules:annual:annual-api'
+include ':modules:annual:annual-consumer'
+include ':modules:annual:annual-provider'
+//#contacts 通讯录管理
+include ':modules:contacts:contacts-api'
+include ':modules:contacts:contacts-consumer'
+include ':modules:contacts:contacts-provider'
+
 //market 市场信息管理
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
@@ -50,6 +119,7 @@ include ':modules:projectissuehandle:projectissuehandle-provider'
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
+
 //#receivable 回款管理
 include ':modules:receivable:receivable-api'
 include ':modules:receivable:receivable-consumer'
@@ -67,10 +137,66 @@ include ':modules:eggert:eggert-provider'
 include ':modules:voucher:voucher-api'
 include ':modules:voucher:voucher-consumer'
 include ':modules:voucher:voucher-provider'
+
+//#socialfee 社会缴费tanghaixiang
+include ':modules:socialfee:socialfee-api'
+include ':modules:socialfee:socialfee-consumer'
+include ':modules:socialfee:socialfee-provider'
+//#staffactivity 员工活动
+include ':modules:staffactivity:staffactivity-api'
+include ':modules:staffactivity:staffactivity-consumer'
+include ':modules:staffactivity:staffactivity-provider'
+//#firmreward 公司奖励
+include ':modules:firmreward:firmreward-api'
+include ':modules:firmreward:firmreward-consumer'
+include ':modules:firmreward:firmreward-provider'
+//#regularization 员工转正
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'
+
+//#interior-recommend 内部推荐
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+
+//#dispatchcar 出车管理
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+
+include ':modules:staffwelfare:staffwelfaremanage-api'
+include ':modules:staffwelfare:staffwelfaremanage-consumer'
+include ':modules:staffwelfare:staffwelfaremanage-provider'
+
+//#materialbuy 物资购买
+include ':modules:materialbuy:materialbuy-api'
+include ':modules:materialbuy:materialbuy-consumer'
+include ':modules:materialbuy:materialbuy-provider'
+
+//#dimission 离职模块
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
+//#businsurance 商业保险tanghaixiang
+include ':modules:businsurance:businsurance-api'
+include ':modules:businsurance:businsurance-consumer'
+include ':modules:businsurance:businsurance-provider'
+//#accruedtax 应交税金tanghaixiang
+include ':modules:accruedtax:accruedtax-api'
+include ':modules:accruedtax:accruedtax-consumer'
+include ':modules:accruedtax:accruedtax-provider'
+//#foreigntax foreigntax
+
 //#foreigntax 对外税务
 include ':modules:foreigntax:foreigntax-api'
 include ':modules:foreigntax:foreigntax-consumer'
 include ':modules:foreigntax:foreigntax-provider'
+
+//#managefee 管理费tanghaixiang
+include ':modules:managefee:managefee-api'
+include ':modules:managefee:managefee-consumer'
+include ':modules:managefee:managefee-provider'
 
 
 //#account 明细账
@@ -132,4 +258,9 @@ include ':modules:voucher:voucher-provider'
 include ':modules:function:function-api'
 include ':modules:function:function-consumer'
 include ':modules:function:function-provider'
+
+//#projectmarketfee 项目前期的市场活动费
+include ':modules:projectmarketfee:projectmarketfee-api'
+include ':modules:projectmarketfee:projectmarketfee-consumer'
+include ':modules:projectmarketfee:projectmarketfee-provider'
 

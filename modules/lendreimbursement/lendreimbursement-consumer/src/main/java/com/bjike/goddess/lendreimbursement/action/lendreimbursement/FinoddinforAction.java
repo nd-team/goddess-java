@@ -52,6 +52,24 @@ public class FinoddinforAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个报销单号
+     *
+     * @param id 报销单号信息id
+     * @des 根据id获取报销单号
+     * @return  class FinoddinforVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            FinoddinforVO finoddinforVO = BeanTransform.copyProperties(
+                    finoddinforAPI.getOneById(id), FinoddinforVO.class);
+            return ActResult.initialize(finoddinforVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 报销单号列表

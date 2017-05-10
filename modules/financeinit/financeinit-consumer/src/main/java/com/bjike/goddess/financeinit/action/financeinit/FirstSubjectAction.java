@@ -89,6 +89,21 @@ public class FirstSubjectAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 所有一级科目名称
+     *
+     * @des 获取所有一级科目信息
+     * @version v1
+     */
+    @GetMapping("v1/listAllFirst")
+    public Result listAllFirst( ) throws ActException {
+        try {
+            List<String> firstSubjectVOList = firstSubjectAPI.listAllFirst( );
+            return ActResult.initialize(firstSubjectVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加一级科目

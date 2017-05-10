@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,8 +47,16 @@ public class SiginManageAction {
     @GetMapping("v1/listSiginManage")
     public Result findListSiginManage(SiginManageDTO siginManageDTO, HttpServletRequest request) throws ActException {
         try {
-            List<SiginManageVO> siginManageVOList = BeanTransform.copyProperties(
-                    siginManageAPI.listSiginManage(siginManageDTO), SiginManageVO.class , request);
+            List<SiginManageBO> list = siginManageAPI.listSiginManage(siginManageDTO);
+            List<SiginManageVO> siginManageVOList =new ArrayList<>();
+            list.stream().forEach(str->{
+                SiginManageVO vo = BeanTransform.copyProperties(str, SiginManageVO.class,"businessType","businessCooperate","contractProperty");
+                vo.setBusinessType( str.getBusinessType());
+                vo.setBusinessCooperate(str.getBusinessCooperate());
+                vo.setContractProperty( str.getContractProperty());
+                siginManageVOList.add( vo );
+            });
+
             return ActResult.initialize(siginManageVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

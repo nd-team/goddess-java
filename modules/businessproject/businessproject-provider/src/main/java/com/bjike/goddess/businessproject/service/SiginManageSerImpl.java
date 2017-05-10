@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,14 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         searchCondition( siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);
-        List<SiginManageBO> siginManageBOS = BeanTransform.copyProperties(list, SiginManageBO.class);
+        List<SiginManageBO> siginManageBOS =new ArrayList<>();
+        list.stream().forEach(str->{
+            SiginManageBO bo = BeanTransform.copyProperties(str, SiginManageBO.class,"businessType","businessCooperate","contractProperty");
+            bo.setBusinessType( str.getBusinessType());
+            bo.setBusinessCooperate(str.getBusinessCooperate());
+            bo.setContractProperty( str.getContractProperty());
+            siginManageBOS.add( bo );
+        });
         return siginManageBOS;
     }
 

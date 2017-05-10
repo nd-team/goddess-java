@@ -31,6 +31,11 @@ public class LendAuditDetailApiImpl implements LendAuditDetailAPI {
     }
 
     @Override
+    public LendAuditDetailBO getOneById(String id) throws SerException {
+        return lendAuditDetailSer.getOneById(id);
+    }
+
+    @Override
     public List<LendAuditDetailBO> listLendAuditDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {
         return lendAuditDetailSer.listLendAuditDetail(lendAuditDetailDTO);
     }

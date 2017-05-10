@@ -194,7 +194,7 @@ public class ApplyLendBO extends BaseBO {
     /**
      * 单据数量
      */
-    private String documentQuantity;
+    private Double documentQuantity;
 
     /**
      * 是否收到单据
@@ -596,11 +596,11 @@ public class ApplyLendBO extends BaseBO {
         this.payOrigin = payOrigin;
     }
 
-    public String getDocumentQuantity() {
+    public Double getDocumentQuantity() {
         return documentQuantity;
     }
 
-    public void setDocumentQuantity(String documentQuantity) {
+    public void setDocumentQuantity(Double documentQuantity) {
         this.documentQuantity = documentQuantity;
     }
 
