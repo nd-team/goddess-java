@@ -1,8 +1,5 @@
 package com.bjike.goddess.common.utils.excel;
 
-import com.bjike.goddess.common.utils.excel.ExcelTitle;
-import com.sun.istack.internal.NotNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,19 +12,19 @@ import java.time.LocalTime;
  * @Copy: [com.bjike]
  */
 public class UserExcel {
-    @ExcelTitle(name = "姓名",notNull = true)
+    @ExcelHeader(name = "姓名",notNull = true)
     private String name  ;
-    @ExcelTitle(name = "手机")
+    @ExcelHeader(name = "手机")
     private String phone  ;
-    @ExcelTitle(name = "性别")
+    @ExcelHeader(name = "性别")
     private Integer sex ;
-    @ExcelTitle(name = "创建时间")
+    @ExcelHeader(name = "创建时间")
     private LocalDateTime createTime;
-    @ExcelTitle(name = "日期")
+    @ExcelHeader(name = "日期")
     private LocalDate date ;
-    @ExcelTitle(name = "时间")
+    @ExcelHeader(name = "时间")
     private LocalTime time ;
-    @ExcelTitle(name = "资产")
+    @ExcelHeader(name = "资产")
     private Double money;
 
     public String getName() {

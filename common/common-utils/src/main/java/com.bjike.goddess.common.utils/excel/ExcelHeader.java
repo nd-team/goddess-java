@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Excel 标题(表头)
+ * Excel 表头
  *
  * @Author: [liguiqin]
  * @Date: [2017-05-10 09:24]
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface ExcelTitle {
+public @interface ExcelHeader {
 
     public String name();
 
