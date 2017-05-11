@@ -122,13 +122,18 @@ public class ExcelUtil {
                 for (int j = 0; j < cellSize; j++) {
                     XSSFCell cell = row.createCell(j);
                     try {
-                        Field field = fields.get(j);
-                        fields.get(j).setAccessible(true);
-                        Object val = fields.get(j).get(obj);
-                        if (null != val) {
-                            if (field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
-                                val = DateUtil.dateToString((LocalDateTime) val);
+                        Object val = null;
+                        for (Field field : fields) {
+                            if (field.getAnnotation(ExcelHeader.class).name().equals(excelHeaders.get(j).name())) {
+                                field.setAccessible(true);
+                                val = field.get(obj);
+                                if (field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
+                                    val = DateUtil.dateToString((LocalDateTime) val);
+                                }
+                                break;
                             }
+                        }
+                        if (null != val) {
                             String cellValue = val.toString();
                             cell.setCellValue(val.toString());
                             if (excel.isAutoColumnWidth()) {
@@ -164,17 +169,17 @@ public class ExcelUtil {
         for (Field field : fields) {
             ExcelHeader eh = field.getAnnotation(ExcelHeader.class);
             if (null != eh) {
+                boolean exist = false;
                 if (null != excludes) { //过滤字段
-                    boolean exist = false;
                     for (String ex : excludes) {
                         if (ex.equals(field.getName())) {
                             exist = true;
                             break;
                         }
                     }
-                    if (!exist) {
-                        excelHeaders.add(eh);
-                    }
+                }
+                if (!exist) {
+                    excelHeaders.add(eh);
                 }
             }
         }
@@ -277,7 +282,7 @@ public class ExcelUtil {
      * @param row
      */
     private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) {
-        int cellSize = row.getLastCellNum();
+        int cellSize = excelHeaders.size();
         for (int i = 0; i < cellSize; i++) {
             XSSFCell cell = row.getCell(i);
             try {
@@ -352,9 +357,10 @@ public class ExcelUtil {
             /**
              * 对象列表转excel bytes
              */
-            Excel e = new Excel(1, 2);
-            e.setTitle("导出用户数据");
-            byte[] bytes = clazzToExcel(users, e);
+            Excel ex= new Excel(1, 2);
+            ex.setTitle("导出用户数据");
+         //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
+            byte[] bytes = clazzToExcel(users, ex);
             File out = new File("/home/lgq/out.xlsx");
             FileOutputStream fos = new FileOutputStream(out);
             fos.write(bytes);
