@@ -21,14 +21,17 @@ import java.util.List;
 public class VoucherGenerateTO extends BaseTO {
     public interface TestAdd {
     }
+    public interface TestPost {
+    }
 
     /**
      * id数组
      */
+    @NotNull(groups = {VoucherGenerateTO.TestPost.class} , message = "ids数组不能为空")
     private String[] ids;
 
     /**
-     * 凭证字
+     * 凭证字(付/转/记/收)
      */
     @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "凭证字不能为空")
     private String voucherWord;

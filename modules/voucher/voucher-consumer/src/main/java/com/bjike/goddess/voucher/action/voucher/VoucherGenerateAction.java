@@ -64,7 +64,26 @@ public class VoucherGenerateAction {
     public Result findList(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.listVoucherGenerate(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.listVoucherGenerate(voucherGenerateDTO), VoucherGenerateVO.class);
+            return ActResult.initialize(voucherGenerateVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个记账凭证
+     *
+     * @param id 记账凭证信息id
+     * @des 一个记账凭证
+     * @return class VoucherGenerateVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            VoucherGenerateVO voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.getById(id), VoucherGenerateVO.class);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -155,10 +174,10 @@ public class VoucherGenerateAction {
      * @version v1
      */
     @GetMapping("v1/listAudit")
-    public Result listAudit( VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    public Result listAudit(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.listAudit(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.listAudit(voucherGenerateDTO), VoucherGenerateVO.class);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -175,7 +194,7 @@ public class VoucherGenerateAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/audit")
+    @PatchMapping("v1/audit/{id}")
     public Result audit(@PathVariable String id) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.audit(id);
@@ -230,10 +249,10 @@ public class VoucherGenerateAction {
      * @version v1
      */
     @GetMapping("v1/listAudited")
-    public Result listAudited(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    public Result listAudited(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.listAudited(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.listAudited(voucherGenerateDTO), VoucherGenerateVO.class);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -251,7 +270,7 @@ public class VoucherGenerateAction {
      */
     @LoginAuth
     @PatchMapping("v1/posting")
-    public Result posting(@Validated VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result posting(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -421,7 +440,7 @@ public class VoucherGenerateAction {
      */
     @LoginAuth
     @PatchMapping("v1/checkAccount")
-    public Result checkAccount(@Validated VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result checkAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -682,7 +701,7 @@ public class VoucherGenerateAction {
      * @version v1
      */
     @GetMapping("v1/listSubByFirst")
-    public Result listSubByFirst(@RequestParam String firstSub ) throws ActException {
+    public Result listSubByFirst(@RequestParam String firstSub) throws ActException {
         try {
             List<String> userList = voucherGenerateAPI.listSubByFirst(firstSub);
             return ActResult.initialize(userList);
@@ -698,9 +717,9 @@ public class VoucherGenerateAction {
      * @version v1
      */
     @GetMapping("v1/listTubByFirst")
-    public Result listTubByFirst(@RequestParam String firstSub , @RequestParam String secondSub ) throws ActException {
+    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub) throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub );
+            List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
             return ActResult.initialize(userList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
