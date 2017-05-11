@@ -320,7 +320,7 @@ public class ExcelUtil {
         headerStyle.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
         headerStyle.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
         headerStyle.setFillForegroundColor(excel.getHeaderBGColor()); //DARK_YELLOW
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色solid_foreground
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
         headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         headerStyle.setWrapText(true);
 
