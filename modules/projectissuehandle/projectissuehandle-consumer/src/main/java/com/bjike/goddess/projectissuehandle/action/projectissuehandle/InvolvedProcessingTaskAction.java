@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -13,12 +14,14 @@ import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
 import com.bjike.goddess.projectissuehandle.vo.InvolvedProcessingTaskVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -33,10 +36,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("involvedprocessingtask")
-public class InvolvedProcessingTaskAction  {
+public class InvolvedProcessingTaskAction extends BaseFileAction {
     @Autowired
     private InvolvedProcessingTaskAPI involvedProcessingTaskAPI;
 
+    @Autowired
+    private FileAPI fileAPI;
     /**
      * 参与处理人员的任务分配列表总条数
      *
@@ -190,7 +195,8 @@ public class InvolvedProcessingTaskAction  {
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
         try {
-            involvedProcessingTaskAPI.upload();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
