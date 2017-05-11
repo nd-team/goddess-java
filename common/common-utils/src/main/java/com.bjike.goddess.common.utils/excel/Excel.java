@@ -26,34 +26,40 @@ public class Excel {
      * 标题
      */
     private String title;
-    /**
-     * 标题行高
-     */
-    private short titleHeight = 300;
-    /**
-     * 表头背景色
-     */
-    private short headerBGColor = IndexedColors.PALE_BLUE.getIndex();
+
     /**
      * 表头开始行
      */
     private Integer headerStartRow = 1;
     /**
+     * 内容开始行
+     */
+    private Integer contentStartRow = 2;
+
+    /**
+     * 标题行高
+     */
+    private short titleHeight = 300;
+
+    /**
      * 表头行高
      */
     private short headerHeight = 400;
     /**
-     * 内容背景色
-     */
-    private short contentBGColor = IndexedColors.WHITE.getIndex();
-    /**
-     * 内容开始行
-     */
-    private Integer contentStartRow = 2;
-    /**
      * content行高
      */
     private short contentHeight = 300;
+
+    /**
+     * 表头背景色
+     */
+    private short headerBGColor = IndexedColors.PALE_BLUE.getIndex();
+
+    /**
+     * 内容背景色
+     */
+    private short contentBGColor = IndexedColors.WHITE.getIndex();
+
     /**
      * 工作蒲命名
      */
@@ -67,7 +73,10 @@ public class Excel {
      */
     private boolean autoColumnWidth = true;
 
-    private String[] excludes; //excel导出过滤字段
+    /**
+     * excel导出过滤字段
+     */
+    private String[] excludes;
 
     public String getTitle() {
         return title;
