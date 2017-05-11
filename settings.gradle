@@ -55,7 +55,6 @@ include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
 
-
 //#简介管理
 include ':modules:intromanage:intromanage-api'
 include ':modules:intromanage:intromanage-consumer'
@@ -78,7 +77,6 @@ include ':modules:businessinteraction:businessinteraction-api'
 include ':modules:businessinteraction:businessinteraction-consumer'
 include ':modules:businessinteraction:businessinteraction-provider'
 
-
 ////#accommodation 住宿管理
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
@@ -88,7 +86,6 @@ include ':modules:accommodation:accommodation-provider'
 include ':modules:bidding:bidding-api'
 include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
-
 
 //#财务初始化tanghaixiang
 include ':modules:financeinit:financeinit-api'
@@ -227,7 +224,6 @@ include ':modules:driverinfo:driverinfo-api'
 include ':modules:driverinfo:driverinfo-consumer'
 include ':modules:driverinfo:driverinfo-provider'
 
-
 //#account 明细账
 include ':modules:account:account-api'
 include ':modules:account:account-consumer'
@@ -247,7 +243,6 @@ include ':modules:checkhost:checkhost-provider'
 include ':modules:rentutilitiespay:rentutilitiespay-api'
 include ':modules:rentutilitiespay:rentutilitiespay-consumer'
 include ':modules:rentutilitiespay:rentutilitiespay-provider'
-
 
 //#business 工商管理
 include ':modules:business:business-api'
@@ -335,4 +330,7 @@ include ':modules:function:function-provider'
 include ':modules:projectmarketfee:projectmarketfee-api'
 include ':modules:projectmarketfee:projectmarketfee-consumer'
 include ':modules:projectmarketfee:projectmarketfee-provider'
-
+//#contractcommunicat 商务洽谈
+include ':modules:contractcommunicat:contractcommunicat-api'
+include ':modules:contractcommunicat:contractcommunicat-consumer'
+include ':modules:contractcommunicat:contractcommunicat-provider'
