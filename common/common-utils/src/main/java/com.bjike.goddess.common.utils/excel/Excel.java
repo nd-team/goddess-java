@@ -67,6 +67,8 @@ public class Excel {
      */
     private boolean autoColumnWidth = true;
 
+    private String[] excludes; //excel导出过滤字段
+
     public String getTitle() {
         return title;
     }
@@ -153,5 +155,13 @@ public class Excel {
 
     public void setAutoColumnWidth(boolean autoColumnWidth) {
         this.autoColumnWidth = autoColumnWidth;
+    }
+
+    public String[] getExcludes() {
+        return excludes;
+    }
+
+    public void setExcludes(String[] excludes) {
+        this.excludes = excludes;
     }
 }

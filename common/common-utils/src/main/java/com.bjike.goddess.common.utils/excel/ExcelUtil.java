@@ -39,10 +39,10 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> transToClazz(File file, Class clazz, Excel excel) {
+    public static <T> List<T> excelToClazz(File file, Class clazz, Excel excel) {
         try {
             InputStream is = new FileInputStream(file);
-            return transToClazz(is, clazz, excel);
+            return excelToClazz(is, clazz, excel);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -57,11 +57,11 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> transToClazz(InputStream is, Class clazz, Excel excel) {
+    public static <T> List<T> excelToClazz(InputStream is, Class clazz, Excel excel) {
         XSSFWorkbook wb = null;
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
-            List<ExcelHeader> headers = getExcelHeaders(clazz, fields);
+            List<ExcelHeader> headers = getExcelHeaders(fields, null);
             List<T> objects = new ArrayList<>();
             wb = new XSSFWorkbook(is); // 创建一个工作execl文档
             XSSFSheet sheet = wb.getSheetAt(0);
@@ -96,51 +96,6 @@ public class ExcelUtil {
     }
 
     /**
-     * 初始化标题行及表头
-     *
-     * @param wb           excel对象
-     * @param sheet        哪个sheet
-     * @param excel        excel实体信息
-     * @param excelHeaders excel头
-     * @param cellSize     列长度
-     * @return
-     */
-    private static int initTitleAndHeader(XSSFWorkbook wb, XSSFSheet sheet, Excel excel, List<ExcelHeader> excelHeaders, int cellSize) {
-        int rowIndex = 0;
-        XSSFCellStyle titleStyle = wb.createCellStyle();  // 标题的样式
-        titleStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
-        titleStyle.setWrapText(true);
-
-        XSSFCellStyle headerStyle = wb.createCellStyle();  // 表头样式
-        headerStyle.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
-        headerStyle.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
-        headerStyle.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
-        headerStyle.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
-        headerStyle.setFillForegroundColor(excel.getHeaderBGColor()); //DARK_YELLOW
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色solid_foreground
-        headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
-        headerStyle.setWrapText(true);
-
-        if (StringUtils.isNotBlank(excel.getTitle())) { //设置标题
-            XSSFRow titleRow = sheet.createRow(rowIndex++);
-            titleRow.setHeight(excel.getTitleHeight());
-            XSSFCell cell = titleRow.createCell(0);
-            cell.setCellValue(excel.getTitle());
-            cell.setCellStyle(titleStyle);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, cellSize - 1));
-        }
-        XSSFRow headerRow = sheet.createRow(rowIndex++);
-        headerRow.setHeight(excel.getHeaderHeight());
-        for (int i = 0; i < excelHeaders.size(); i++) {//创建表头
-            XSSFCell cell = headerRow.createCell(i);
-            cell.setCellStyle(headerStyle);
-            cell.setCellValue(excelHeaders.get(i).name());
-
-        }
-        return rowIndex;
-    }
-
-    /**
      * 实体类转换成excel流
      *
      * @param objects 转换类 任意类属性作为表头
@@ -156,7 +111,7 @@ public class ExcelUtil {
 
         if (null != objects && objects.size() > 0) {
             List<Field> fields = ClazzUtils.getFields(objects.get(0).getClass()); //获得列表对象属性
-            List<ExcelHeader> excelHeaders = getExcelHeaders(objects.get(0).getClass(), fields); //获得表头
+            List<ExcelHeader> excelHeaders = getExcelHeaders(fields, excel.getExcludes()); //获得表头
             int rowSize = objects.size(); //数据行数
             int cellSize = excelHeaders.size();//数据列数
             int rowIndex = initTitleAndHeader(wb, sheet, excel, excelHeaders, cellSize);//初始化标题行及表头
@@ -176,11 +131,11 @@ public class ExcelUtil {
                             }
                             String cellValue = val.toString();
                             cell.setCellValue(val.toString());
-                            if(excel.isAutoColumnWidth()){
+                            if (excel.isAutoColumnWidth()) {
                                 int val_length = cellValue.getBytes().length; //获取数据值长度
                                 int name_length = excelHeaders.get(j).name().getBytes().length;//获取表头长度
                                 int columnWidth = val_length > name_length ? val_length : name_length;
-                                columnWidth = columnWidth > 30?columnWidth=30:columnWidth;
+                                columnWidth = columnWidth > 30 ? columnWidth = 30 : columnWidth;
                                 sheet.setColumnWidth(j, columnWidth * 275);
                             }
                             cell.setCellStyle(contentStyle);
@@ -201,16 +156,26 @@ public class ExcelUtil {
     /**
      * 获取标注excel的信息字段
      *
-     * @param clazz
      * @param fields
      * @return
      */
-    private static List<ExcelHeader> getExcelHeaders(Class clazz, List<Field> fields) {
+    private static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
         List<ExcelHeader> excelHeaders = new ArrayList<>(0);// 获取类上的所有注解信息
         for (Field field : fields) {
             ExcelHeader eh = field.getAnnotation(ExcelHeader.class);
             if (null != eh) {
-                excelHeaders.add(eh);
+                if (null != excludes) { //过滤字段
+                    boolean exist = false;
+                    for (String ex : excludes) {
+                        if (ex.equals(field.getName())) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        excelHeaders.add(eh);
+                    }
+                }
             }
         }
         return excelHeaders;
@@ -266,13 +231,11 @@ public class ExcelUtil {
 
         if (null != cell) {
             switch (cell.getCellTypeEnum()) {
-                //数值型
-                case NUMERIC:
+                case NUMERIC: //数值型
                     if (!HSSFDateUtil.isCellDateFormatted(cell)) {
                         BigDecimal big = new BigDecimal(cell.getNumericCellValue());
                         val = big.toString();
-                        //解决1234.0  去掉后面的.0
-                        if (StringUtils.isNotBlank(val)) {
+                        if (StringUtils.isNotBlank(val)) {//解决1234.0  去掉后面的.0
                             String[] item = val.split("[.]");
                             if (1 < item.length && "0".equals(item[1])) {
                                 val = item[0];
@@ -283,20 +246,19 @@ public class ExcelUtil {
                         return String.valueOf(date.getTime());
                     }
                     break;
-                //字符串类型
-                case STRING:
+
+                case STRING://字符串类型
                     val = String.valueOf(cell.getStringCellValue());
                     break;
-                // 公式类型
-                case FORMULA:
-                    //读公式计算值
-                    val = String.valueOf(cell.getNumericCellValue());
+
+                case FORMULA: // 公式类型
+                    val = String.valueOf(cell.getNumericCellValue()); //读公式计算值
                     if (val.equals("NaN")) {// 如果获取的数据值为非法值,则转换为获取字符串
                         val = cell.getStringCellValue();
                     }
                     break;
-                // 布尔类型
-                case BOOLEAN:
+
+                case BOOLEAN:// 布尔类型
                     val = String.valueOf(cell.getBooleanCellValue());
                     break;
                 default:
@@ -311,7 +273,7 @@ public class ExcelUtil {
     /**
      * 验证表头是否正确
      *
-     * @param excelHeaders
+     * @param excelHeaders 表头
      * @param row
      */
     private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) {
@@ -328,6 +290,52 @@ public class ExcelUtil {
                 throw new RuntimeException("Title数据类型只能为文本类型!");
             }
         }
+    }
+
+
+    /**
+     * 初始化标题行及表头
+     *
+     * @param wb           excel对象
+     * @param sheet        哪个sheet
+     * @param excel        excel实体信息
+     * @param excelHeaders excel头
+     * @param cellSize     列长度
+     * @return
+     */
+    private static int initTitleAndHeader(XSSFWorkbook wb, XSSFSheet sheet, Excel excel, List<ExcelHeader> excelHeaders, int cellSize) {
+        int rowIndex = 0;
+        XSSFCellStyle titleStyle = wb.createCellStyle();  // 标题的样式
+        titleStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        titleStyle.setWrapText(true);
+
+        XSSFCellStyle headerStyle = wb.createCellStyle();  // 表头样式
+        headerStyle.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
+        headerStyle.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
+        headerStyle.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
+        headerStyle.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
+        headerStyle.setFillForegroundColor(excel.getHeaderBGColor()); //DARK_YELLOW
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色solid_foreground
+        headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        headerStyle.setWrapText(true);
+
+        if (StringUtils.isNotBlank(excel.getTitle())) { //设置标题
+            XSSFRow titleRow = sheet.createRow(rowIndex++);
+            titleRow.setHeight(excel.getTitleHeight());
+            XSSFCell cell = titleRow.createCell(0);
+            cell.setCellValue(excel.getTitle());
+            cell.setCellStyle(titleStyle);
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, cellSize - 1));
+        }
+        XSSFRow headerRow = sheet.createRow(rowIndex++);
+        headerRow.setHeight(excel.getHeaderHeight());
+        for (int i = 0; i < excelHeaders.size(); i++) {//创建表头
+            XSSFCell cell = headerRow.createCell(i);
+            cell.setCellStyle(headerStyle);
+            cell.setCellValue(excelHeaders.get(i).name());
+
+        }
+        return rowIndex;
     }
 
 
