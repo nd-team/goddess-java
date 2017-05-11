@@ -2,10 +2,12 @@ package com.bjike.goddess.projectcost.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
 import com.bjike.goddess.projectcost.bo.CarCostBO;
 import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.entity.CarCost;
 import com.bjike.goddess.projectcost.to.CarCostTO;
+import com.bjike.goddess.projectcost.to.FindTO;
 
 import java.util.List;
 
@@ -96,4 +98,14 @@ public interface CarCostSer extends Ser<CarCost, CarCostDTO> {
         return null;
     }
 
+    /**
+     * 根据查询条件查询数据
+     *
+     * @param to 查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<CarCostBO> findByTO(FindTO to) throws SerException {
+        return null;
+    }
 }

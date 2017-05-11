@@ -1,126 +1,120 @@
 package com.bjike.goddess.projectcost.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-/**
-* 其他费用
-* @Author:			[ 邓钧仁 ]
-* @Date:			[  2017-05-04 05:02 ]
-* @Description:	[ 其他费用 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class OtherExpensesTO extends BaseTO { 
 
 /**
-* 地区
-*/
- private String  area; 
+ * 其他费用
+ *
+ * @Author: [ 邓钧仁 ]
+ * @Date: [ 2017-05-04 05:02 ]
+ * @Description: [ 其他费用 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class OtherExpensesTO extends BaseTO {
 
-/**
-* 项目组
-*/
- private String  project; 
+    /**
+     * 地区
+     */
+    private String area;
 
-/**
-* 类别
-*/
- private String  type; 
+    /**
+     * 项目组
+     */
+    private String project;
 
-/**
-* 项目名称
-*/
- private String  name; 
+    /**
+     * 类别
+     */
+    private String type;
 
-/**
-* 年份
-*/
- private Integer  year; 
+    /**
+     * 项目名称
+     */
+    private String name;
 
-/**
-* 月份
-*/
- private Integer  month; 
+    /**
+     * 年份
+     */
+    private Integer year;
 
-/**
-* 目标其他费用
-*/
- private Double  target; 
+    /**
+     * 月份
+     */
+    private Integer month;
 
-/**
-* 实际其他费用
-*/
- private Double  actual; 
+    /**
+     * 目标其他费用
+     */
+    private Double target;
 
-/**
-* 比例
-*/
- private Double  ratio; 
+    /**
+     * 实际其他费用
+     */
+    private Double actual;
 
-/**
-* 差额
-*/
- private Double  balance; 
+    public String getArea() {
+        return area;
+    }
 
+    public void setArea(String area) {
+        this.area = area;
+    }
 
+    public String getProject() {
+        return project;
+    }
 
- public String getArea () { 
- return area;
- } 
- public void setArea (String area ) { 
- this.area = area ; 
- } 
- public String getProject () { 
- return project;
- } 
- public void setProject (String project ) { 
- this.project = project ; 
- } 
- public String getType () { 
- return type;
- } 
- public void setType (String type ) { 
- this.type = type ; 
- } 
- public String getName () { 
- return name;
- } 
- public void setName (String name ) { 
- this.name = name ; 
- } 
- public Integer getYear () { 
- return year;
- } 
- public void setYear (Integer year ) { 
- this.year = year ; 
- } 
- public Integer getMonth () { 
- return month;
- } 
- public void setMonth (Integer month ) { 
- this.month = month ; 
- } 
- public Double getTarget () { 
- return target;
- } 
- public void setTarget (Double target ) { 
- this.target = target ; 
- } 
- public Double getActual () { 
- return actual;
- } 
- public void setActual (Double actual ) { 
- this.actual = actual ; 
- } 
- public Double getRatio () { 
- return ratio;
- } 
- public void setRatio (Double ratio ) { 
- this.ratio = ratio ; 
- } 
- public Double getBalance () { 
- return balance;
- } 
- public void setBalance (Double balance ) { 
- this.balance = balance ; 
- } 
- }
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Double getTarget() {
+        return target;
+    }
+
+    public void setTarget(Double target) {
+        this.target = target;
+    }
+
+    public Double getActual() {
+        return actual;
+    }
+
+    public void setActual(Double actual) {
+        this.actual = actual;
+    }
+
+}

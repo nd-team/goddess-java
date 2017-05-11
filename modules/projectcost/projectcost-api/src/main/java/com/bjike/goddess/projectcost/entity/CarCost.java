@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "projectcost_carcost")
+@Table(name = "projectcost_car_cost")
 public class CarCost extends BaseEntity {
 
     /**
@@ -25,6 +25,13 @@ public class CarCost extends BaseEntity {
      */
     @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
+
+    /**
+     * 项目组
+     */
+    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    private String project;
+
 
     /**
      * 项目名称
@@ -93,6 +100,14 @@ public class CarCost extends BaseEntity {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getName() {

@@ -2,9 +2,11 @@ package com.bjike.goddess.projectcost.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
 import com.bjike.goddess.projectcost.bo.OtherExpensesBO;
 import com.bjike.goddess.projectcost.dto.OtherExpensesDTO;
 import com.bjike.goddess.projectcost.entity.OtherExpenses;
+import com.bjike.goddess.projectcost.to.FindTO;
 import com.bjike.goddess.projectcost.to.OtherExpensesTO;
 
 import java.util.List;
@@ -65,17 +67,6 @@ public interface OtherExpensesSer extends Ser<OtherExpenses, OtherExpensesDTO> {
     }
 
     /**
-     * 修改实际车次
-     *
-     * @param to 其他费用传输对象
-     * @return
-     * @throws SerException
-     */
-    default OtherExpensesBO updateActual(OtherExpensesTO to) throws SerException {
-        return null;
-    }
-
-    /**
      * 根据id查询数据
      *
      * @param id 其他费用数据id
@@ -93,6 +84,17 @@ public interface OtherExpensesSer extends Ser<OtherExpenses, OtherExpensesDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据查询条件查询数据
+     *
+     * @param to 查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<OtherExpensesBO> findByTO(FindTO to) throws SerException {
         return null;
     }
 

@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 资质办理管理
  *
@@ -41,9 +43,9 @@ public class QualificationsHandleAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsHandleTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsHandleTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.save(to), QualificationsHandleVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.save(to), QualificationsHandleVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

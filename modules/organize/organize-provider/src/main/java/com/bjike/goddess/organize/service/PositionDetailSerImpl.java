@@ -114,6 +114,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             throw new SerException("该岗位不存在");
         List<ArrangementBO> arrangementList = arrangementSer.findChild(entity.getArrangement().getId());
         PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("department.id", entity.getDepartment().getId()));
         try {
             for (ArrangementBO arrangement : arrangementList)
                 dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getId()));
@@ -133,6 +134,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             return new ArrayList<>(0);
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getParent().getId()));
+        dto.getConditions().add(Restrict.eq("department.id", entity.getDepartment().getId()));
         return this.transformationToBOList(super.findByCis(dto));
     }
 

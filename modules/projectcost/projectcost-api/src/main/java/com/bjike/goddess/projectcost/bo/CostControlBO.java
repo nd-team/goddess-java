@@ -19,6 +19,11 @@ public class CostControlBO extends BaseBO {
     private String area;
 
     /**
+     * 项目组
+     */
+    private String project;
+
+    /**
      * 项目名称
      */
     private String name;
@@ -29,12 +34,12 @@ public class CostControlBO extends BaseBO {
     private String time;
 
     /**
-     * 目标人工时数
+     * 目标收入
      */
     private Double targetIncome;
 
     /**
-     * 实际人工时数
+     * 实际收入
      */
     private Double actualIncome;
 
@@ -79,14 +84,34 @@ public class CostControlBO extends BaseBO {
     private Double actualTotal;
 
     /**
-     * 目标利润率
+     * 目标利润
      */
     private Double targetProfit;
 
     /**
-     * 实际利润率
+     * 实际利润
      */
     private Double actualProfit;
+
+    /**
+     * 目标费用与收入比
+     */
+    private Double targetContrast;
+
+    /**
+     * 实际费用与收入比
+     */
+    private Double actualContrast;
+
+    /**
+     * 目标利润率
+     */
+    private Double targetRate;
+
+    /**
+     * 实际利润率
+     */
+    private Double actualRate;
 
 
     public String getArea() {
@@ -95,6 +120,14 @@ public class CostControlBO extends BaseBO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getName() {
@@ -207,5 +240,37 @@ public class CostControlBO extends BaseBO {
 
     public void setActualProfit(Double actualProfit) {
         this.actualProfit = actualProfit;
+    }
+
+    public Double getTargetContrast() {
+        return targetContrast;
+    }
+
+    public void setTargetContrast(Double targetContrast) {
+        this.targetContrast = targetContrast;
+    }
+
+    public Double getActualContrast() {
+        return actualContrast;
+    }
+
+    public void setActualContrast(Double actualContrast) {
+        this.actualContrast = actualContrast;
+    }
+
+    public Double getTargetRate() {
+        return targetRate;
+    }
+
+    public void setTargetRate(Double targetRate) {
+        this.targetRate = targetRate;
+    }
+
+    public Double getActualRate() {
+        return actualRate;
+    }
+
+    public void setActualRate(Double actualRate) {
+        this.actualRate = actualRate;
     }
 }

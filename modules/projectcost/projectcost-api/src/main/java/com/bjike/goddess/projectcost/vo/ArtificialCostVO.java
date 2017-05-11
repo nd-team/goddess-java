@@ -21,6 +21,11 @@ public class ArtificialCostVO {
     private String area;
 
     /**
+     * 项目组
+     */
+    private String project;
+
+    /**
      * 项目名称
      */
     private String name;
@@ -90,6 +95,14 @@ public class ArtificialCostVO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getName() {

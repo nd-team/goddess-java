@@ -6,6 +6,7 @@ import com.bjike.goddess.projectcost.bo.ArtificialCostBO;
 import com.bjike.goddess.projectcost.dto.ArtificialCostDTO;
 import com.bjike.goddess.projectcost.entity.ArtificialCost;
 import com.bjike.goddess.projectcost.to.ArtificialCostTO;
+import com.bjike.goddess.projectcost.to.FindTO;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public interface ArtificialCostSer extends Ser<ArtificialCost, ArtificialCostDTO
     }
 
     /**
-     * 修改实际车次
+     * 修改实际人工工时
      *
      * @param to 人工费用传输对象
      * @return
@@ -93,6 +94,17 @@ public interface ArtificialCostSer extends Ser<ArtificialCost, ArtificialCostDTO
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据查询条件查询数据
+     *
+     * @param to 查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<ArtificialCostBO> findByTO(FindTO to) throws SerException {
         return null;
     }
 

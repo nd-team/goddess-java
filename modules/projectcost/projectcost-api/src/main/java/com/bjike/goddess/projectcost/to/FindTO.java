@@ -3,15 +3,15 @@ package com.bjike.goddess.projectcost.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
- * 项目成本控制
+ * 查询条件传输对象
  *
  * @Author: [ 邓钧仁 ]
- * @Date: [ 2017-05-04 05:56 ]
- * @Description: [ 项目成本控制 ]
+ * @Date: [ 2017-05-04 05:19 ]
+ * @Description: [ 查询条件传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CostControlTO extends BaseTO {
+public class FindTO extends BaseTO {
 
     /**
      * 地区
@@ -39,20 +39,14 @@ public class CostControlTO extends BaseTO {
     private Integer month;
 
     /**
-     * 目标收入
+     * 开始时间
      */
-    private Double targetIncome;
+    private String start;
 
     /**
-     * 实际收入
+     * 结束时间
      */
-    private Double actualIncome;
-
-    /**
-     * 目标利润
-     */
-    private Double targetProfit;
-
+    private String end;
 
     public String getArea() {
         return area;
@@ -94,28 +88,19 @@ public class CostControlTO extends BaseTO {
         this.month = month;
     }
 
-    public Double getTargetIncome() {
-        return targetIncome;
+    public String getStart() {
+        return start;
     }
 
-    public void setTargetIncome(Double targetIncome) {
-        this.targetIncome = targetIncome;
+    public void setStart(String start) {
+        this.start = start;
     }
 
-    public Double getActualIncome() {
-        return actualIncome;
+    public String getEnd() {
+        return end;
     }
 
-    public void setActualIncome(Double actualIncome) {
-        this.actualIncome = actualIncome;
+    public void setEnd(String end) {
+        this.end = end;
     }
-
-    public Double getTargetProfit() {
-        return targetProfit;
-    }
-
-    public void setTargetProfit(Double targetProfit) {
-        this.targetProfit = targetProfit;
-    }
-
 }
