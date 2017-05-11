@@ -5,8 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI;
@@ -41,6 +41,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     private ProblemAcceptAPI problemAcceptAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 项目执行中的问题受理列表总条数
      *
@@ -88,7 +89,7 @@ public class ProblemAcceptAction extends BaseFileAction {
     public Result list(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
-                    (problemAcceptAPI.findListProblemAccept(problemAcceptDTO), ProblemAcceptVO.class,request);
+                    (problemAcceptAPI.findListProblemAccept(problemAcceptDTO), ProblemAcceptVO.class, request);
             return ActResult.initialize(problemAcceptVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -192,10 +193,10 @@ public class ProblemAcceptAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request,String path) throws ActException {
+    public Result upload(HttpServletRequest request, String path) throws ActException {
         try {
-            path="/user/xxx/";
-            List<InputStream> inputStreams = getInputStreams(request,path);
+            path = "/user/xxx/";
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success!");
         } catch (SerException e) {

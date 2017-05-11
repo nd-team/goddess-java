@@ -39,6 +39,7 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     compile project(":modules:driverinfo:driverinfo-api")
+    compile project(":modules:storage:storage-api")
     compile project(":common:common-utils")
 
     compile("org.springframework.boot:spring-boot-starter-web")

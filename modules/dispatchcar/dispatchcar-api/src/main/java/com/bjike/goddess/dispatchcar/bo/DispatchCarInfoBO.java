@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 
 /**
@@ -204,7 +205,7 @@ public class DispatchCarInfoBO extends BaseBO {
     /**
      * 评价司机
      */
-    private String evaluatedriver;
+    private Evaluate evaluatedriver;
 
     /**
      * 小票附件
@@ -686,11 +687,11 @@ public class DispatchCarInfoBO extends BaseBO {
         this.roadCost = roadCost;
     }
 
-    public String getEvaluatedriver() {
+    public Evaluate getEvaluatedriver() {
         return evaluatedriver;
     }
 
-    public void setEvaluatedriver(String evaluatedriver) {
+    public void setEvaluatedriver(Evaluate evaluatedriver) {
         this.evaluatedriver = evaluatedriver;
     }
 

@@ -195,7 +195,7 @@ public class ReimburseRecordVO {
     /**
      * 是否已生成记账凭证
      */
-    private String AccountFlag;
+    private String accountFlag;
 
     /**
      * 付款来源
@@ -502,11 +502,11 @@ public class ReimburseRecordVO {
     }
 
     public String getAccountFlag() {
-        return AccountFlag;
+        return accountFlag;
     }
 
-    public void setAccountFlag(String AccountFlag) {
-        this.AccountFlag = AccountFlag;
+    public void setAccountFlag(String accountFlag) {
+        this.accountFlag = accountFlag;
     }
 
     public String getPayOrigin() {

@@ -3,6 +3,7 @@ package com.bjike.goddess.financeinit.action.financeinit;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.AccountAPI;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -81,10 +83,10 @@ public class AccountAction {
      * @version v1
      */
     @GetMapping("v1/listAccount")
-    public Result findListAccount(AccountDTO accountDTO, BindingResult bindingResult) throws ActException {
+    public Result findListAccount(AccountDTO accountDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountVO> accountVOList = BeanTransform.copyProperties(
-                    accountAPI.listAccount(accountDTO), AccountVO.class);
+                    accountAPI.listAccount(accountDTO), AccountVO.class , request);
             return ActResult.initialize(accountVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -99,6 +101,7 @@ public class AccountAction {
      * @des 添加账户来源
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addAccount(@Validated AccountTO accountTO, BindingResult bindingResult) throws ActException {
         try {
@@ -118,8 +121,9 @@ public class AccountAction {
      * @des 添加账户来源
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result editAccount(@Validated AccountTO accountTO) throws ActException {
+    public Result editAccount(@Validated AccountTO accountTO,BindingResult bindingResult) throws ActException {
         try {
             AccountBO accountBO1 = accountAPI.editAccount(accountTO);
             return ActResult.initialize(BeanTransform.copyProperties(accountBO1, AccountVO.class));
@@ -135,6 +139,7 @@ public class AccountAction {
      * @des 根据id删除账户来源信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteAccount(@PathVariable String id) throws ActException {
         try {

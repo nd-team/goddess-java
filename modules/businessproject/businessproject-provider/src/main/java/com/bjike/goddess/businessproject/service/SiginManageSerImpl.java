@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,33 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Autowired
     private UserAPI userAPI;
 
-    
+    @Override
+    public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
+        searchCondition( siginManageDTO);
+        Long count = super.count( siginManageDTO );
+        return count;
+    }
+
+    @Override
+    public SiginManageBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        SiginManage siginManage = super.findById(id);
+        return BeanTransform.copyProperties(siginManage, SiginManageBO.class );
+    }
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         searchCondition( siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);
-        List<SiginManageBO> siginManageBOS = BeanTransform.copyProperties(list, SiginManageBO.class);
+        List<SiginManageBO> siginManageBOS =new ArrayList<>();
+        list.stream().forEach(str->{
+            SiginManageBO bo = BeanTransform.copyProperties(str, SiginManageBO.class,"businessType","businessCooperate","contractProperty");
+            bo.setBusinessType( str.getBusinessType());
+            bo.setBusinessCooperate(str.getBusinessCooperate());
+            bo.setContractProperty( str.getContractProperty());
+            siginManageBOS.add( bo );
+        });
         return siginManageBOS;
     }
 
@@ -151,7 +173,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Override
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<SiginManageBO> siginManageBOS =super.findBySql("select area,1 from businessproject_siginmanage order by area asc ", SiginManageBO.class, fields);
+        List<SiginManageBO> siginManageBOS =super.findBySql("select area from businessproject_siginmanage order by area asc ", SiginManageBO.class, fields);
 
         List<String> areaList  = siginManageBOS.stream().map(SiginManageBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());

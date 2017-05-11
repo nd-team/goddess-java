@@ -136,7 +136,7 @@ public class ProjectContractAct extends BaseFileAction {
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
         try {
-            String path = "/upload";
+            String path = "/contract";
             List<InputStream> inputStreams = this.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult();

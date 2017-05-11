@@ -46,10 +46,7 @@ public class BeanInfo {
      * 源类属性
      */
     private List<Field> targetFields;
-    /**
-     * 目标类方法
-     */
-    private List<Method> targetMethods;
+
 
     public Object getSource() {
         return source;
@@ -104,13 +101,6 @@ public class BeanInfo {
         this.targetFields = targetFields;
     }
 
-    public List<Method> getTargetMethods() {
-        return targetMethods;
-    }
-
-    public void setTargetMethods(List<Method> targetMethods) {
-        this.targetMethods = targetMethods;
-    }
 
     public String[] getIncludes() {
         return includes;

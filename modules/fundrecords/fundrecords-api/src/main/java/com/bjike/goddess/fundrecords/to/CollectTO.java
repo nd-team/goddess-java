@@ -21,13 +21,13 @@ public class CollectTO extends BaseTO {
     /**
      * 年份
      */
-    @NotNull(message = "年份不能为空", groups = {Collect.class})
+    @NotNull(message = "年份不能为空", groups = {CollectTO.Collect.class})
     private Integer year;
 
     /**
      * 月份
      */
-    @NotNull(message = "月份不能为空", groups = {Collect.class})
+    @NotNull(message = "月份不能为空", groups = {CollectTO.Collect.class})
     private Integer month;
 
     /**

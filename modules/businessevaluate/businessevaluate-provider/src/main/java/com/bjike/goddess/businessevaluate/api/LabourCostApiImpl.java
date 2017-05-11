@@ -6,6 +6,7 @@ import com.bjike.goddess.businessevaluate.dto.LabourCostDTO;
 import com.bjike.goddess.businessevaluate.service.LabourCostSer;
 import com.bjike.goddess.businessevaluate.to.LabourCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,16 @@ public class LabourCostApiImpl implements LabourCostAPI {
     @Override
     public List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException {
         return labourCostSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(LabourCostDTO dto) throws SerException {
+        return labourCostSer.count(dto);
+    }
+
+    @Override
+    public LabourCostBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(labourCostSer.findById(id),LabourCostBO.class);
     }
 
 

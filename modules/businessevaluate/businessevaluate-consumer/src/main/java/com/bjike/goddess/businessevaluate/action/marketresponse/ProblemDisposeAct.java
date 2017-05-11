@@ -83,6 +83,39 @@ public class ProblemDisposeAct {
     }
 
     /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ProblemDisposeDTO dto) throws ActException {
+        try {
+            Long count = problemDisposeAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询项目问题受理和处理
+     *
+     * @param id 项目问题受理和处理id
+     * @return class ProblemDisposeVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ProblemDisposeVO vo = BeanTransform.copyProperties(problemDisposeAPI.findById(id), ProblemDisposeVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 新增项目问题受理和处理
      *
      * @param to 项目问题受理和处理

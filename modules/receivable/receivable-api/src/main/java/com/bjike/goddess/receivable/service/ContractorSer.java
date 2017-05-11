@@ -3,6 +3,8 @@ package com.bjike.goddess.receivable.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.receivable.bo.ContractorBO;
+import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
+import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.dto.ContractorDTO;
 import com.bjike.goddess.receivable.to.ContractorTO;
@@ -19,6 +21,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ContractorSer extends Ser<Contractor, ContractorDTO> {
+    /**
+     * 承包商列表总条数
+     */
+    default Long countContractor(ContractorDTO contractorDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个承包商列表
+     *
+     * @return class ContractorBO
+     */
+    default ContractorBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取承包商列表
      *

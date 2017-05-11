@@ -1,6 +1,7 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
@@ -23,17 +24,21 @@ public interface ProblemHandlingResultAPI {
     default Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return null;
     }
+
     /**
      * 一个确认问题处理结果
+     *
      * @return class ProblemHandlingResultBO
      */
-    default ProblemHandlingResultBO getOne(String id) throws SerException {return null;}
+    default ProblemHandlingResultBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 确认问题处理结果
      *
      * @param problemHandlingResultDTO 确认问题处理结果dto
-     * @return class problemHandlingResultBO
+     * @return class ProblemHandlingResultBO
      * @throws SerException
      */
     default List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
@@ -54,7 +59,7 @@ public interface ProblemHandlingResultAPI {
      * 编辑确认问题处理结果
      *
      * @param problemHandlingResultTO 确认问题处理结果数据to
-     * @return class problemHandlingResultBO
+     * @return class ProblemHandlingResultBO
      * @throws SerException
      */
     default ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
@@ -88,12 +93,24 @@ public interface ProblemHandlingResultAPI {
     default List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         return null;
     }
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
 
+    /**
+     * 汇总
+     *
+     * @param areas
+     * @return class CollectBO
+     */
+    default List<CollectBO> collect(String[] areas) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
+        return null;
     }
 
 }

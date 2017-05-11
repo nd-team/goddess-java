@@ -37,7 +37,7 @@ public class EvaluateProjectInfo extends BaseEntity {
     /**
      * 项目名称
      */
-    @Column(name = "project", nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String project;
 
     /**
@@ -93,6 +93,24 @@ public class EvaluateProjectInfo extends BaseEntity {
      */
     @Column(name = "experienceTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '工期经历时间'")
     private String experienceTime;
+
+    /**
+     * 年
+     */
+    @Column(name = "years", nullable = false, columnDefinition = "INT(11)   COMMENT '工期经历X年'")
+    private Integer years;
+
+    /**
+     * 月
+     */
+    @Column(name = "months", nullable = false, columnDefinition = "INT(11)   COMMENT '工期经历X月'")
+    private Integer months;
+
+    /**
+     * 日
+     */
+    @Column(name = "days", nullable = false, columnDefinition = "INT(11)   COMMENT '工期经历X日'")
+    private Integer days;
 
 
     public String getArea() {
@@ -189,5 +207,29 @@ public class EvaluateProjectInfo extends BaseEntity {
 
     public void setExperienceTime(String experienceTime) {
         this.experienceTime = experienceTime;
+    }
+
+    public Integer getYears() {
+        return years;
+    }
+
+    public void setYears(Integer years) {
+        this.years = years;
+    }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
     }
 }

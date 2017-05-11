@@ -8,7 +8,6 @@ import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.enums.MarketProjectNature;
 import com.bjike.goddess.market.to.MarketInfoTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -36,16 +35,18 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         Long count = super.count(marketInfoDTO);
         return count;
     }
+
     @Override
     public MarketInfoBO getOne(String id) throws SerException {
         MarketInfo marketInfo = super.findById(id);
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
+
     @Cacheable
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         List<MarketInfo> marketInfos = super.findByCis(marketInfoDTO, true);
-        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos,MarketInfoBO.class,true);
+        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos, MarketInfoBO.class, true);
         return marketInfoBOS;
     }
 

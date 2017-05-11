@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:checkhost:checkhost-api")
+    compile project(":modules:user:user-api")
     compile project(":common:common-utils")
 }
 

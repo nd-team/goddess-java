@@ -32,6 +32,11 @@ public class FinoddinforApiImpl implements FinoddinforAPI {
     }
 
     @Override
+    public FinoddinforBO getOneById(String id) throws SerException {
+        return finoddinforSer.getOneById(id);
+    }
+
+    @Override
     public List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         return finoddinforSer.listFinoddinfor(finoddinforDTO);
     }

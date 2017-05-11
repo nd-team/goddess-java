@@ -28,6 +28,14 @@ public interface FinoddinforSer extends Ser<Finoddinfor, FinoddinforDTO> {
     default Long countFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取报销单号
+     * @return class FinoddinforBO
+     */
+    default FinoddinforBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 报销单号列表
      * @return class FinoddinforBO

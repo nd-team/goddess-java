@@ -42,7 +42,7 @@ public class FinanceCollectAct {
      * 周汇总
      *
      * @param startDate 开始时间
-     * @param startDate 结束时间
+     * @param endDate 结束时间
      * @return class FinanceCollectVO
      * @version v1
      */

@@ -6,6 +6,7 @@ import com.bjike.goddess.businessevaluate.dto.ProjectAmountDTO;
 import com.bjike.goddess.businessevaluate.service.ProjectAmountSer;
 import com.bjike.goddess.businessevaluate.to.ProjectAmountTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +51,15 @@ public class ProjectAmountApiImpl implements ProjectAmountAPI {
     @Override
     public List<ProjectAmountBO> pageList(ProjectAmountDTO dto) throws SerException {
         return projectAmountSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(ProjectAmountDTO dto) throws SerException {
+        return projectAmountSer.count(dto);
+    }
+
+    @Override
+    public ProjectAmountBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(projectAmountSer.findById(id), ProjectAmountBO.class);
     }
 }

@@ -9,8 +9,8 @@
         vi /etc/profile 
         alias del='7z d `ls | grep .jar$`  BOOT-INF/lib'
     4:执行 git add 之前先执行 del 命令
-    5:执行 gradle clean 清除jar,本地读取的时resources下的配置文件
-    
+    5:执行 gradle clean 清除jar,本地编译器读取的应该是resources下的配置文件,而不是读取profile/pro下的配置文件
+    
 # 2.拦截器使用: 添加自己的拦截器
     1:在 consumer config 下添加新建扫描拦截器类 CustomIntercept
        并实现  com.bjike.goddess.common.consumer.config.Interceptor接口 重写customerInterceptors方法
@@ -59,12 +59,13 @@
     public class TestAct {}
 
 # 6.文件上传
-    1:引入storageAPI
-    2:因上传文件使用的不是dubbo协议,而是hessian,所以要在 consumer build.gradle配置文件下 添加hessian依赖   
+    1:引入fileAPI
+    2.使用@StorageAuth注解.注解在类上面,代表整个类都校验登录,在方法上注解代表该方法需要校验登录
+    3:因上传文件使用的不是dubbo协议,而是hessian,所以要在 consumer build.gradle配置文件下 添加hessian依赖   
         compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"    
-    3:如果涉及文件上传,那么Action类必须继承 com.bjike.goddess.common.consumer.action.BaseFileAction 
+    4:如果涉及文件上传,那么Action类必须继承 com.bjike.goddess.common.consumer.action.BaseFileAction 
         以便通过getInputStreams()获取到上传文件的流,如果不需要文件上传,只是获取文件列表功能,则可以不继承BaseFileAction  
-    4:添加文件上传登录拦截器,见拦截器使用方法
+    5:添加文件上传登录拦截器,见拦截器使用方法
         例:拦截器
             @Component
             public class CustomIntercept implements Interceptor {
@@ -72,11 +73,12 @@
                 private StorageUserAPI storageUserAPI;
                 @Override
                 public List<HIInfo> customerInterceptors() {
-                    HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+                    // */file 为需要拦截登录的action操作
+                    HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "**/");
                     return Arrays.asList(storageInfo);
                 }
             }
-    注: storageAPI所有功能都必须包含:storageToken,path这两个参数 
+    注: fileAPI所有功能都必须包含:storageToken,path这两个参数 
     
  # 7.登录拦截
      1.使用@LoginAuth注解.注解在类上面,代表整个类都校验登录,在方法上注解代表该方法需要校验登录
