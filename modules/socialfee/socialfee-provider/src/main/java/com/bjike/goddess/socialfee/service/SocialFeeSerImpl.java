@@ -154,7 +154,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
     @Override
     public List<String> listPayFeer() throws SerException {
         String[] field = new String[]{"payFeer"};
-        String sql = " select payFeer ,1 from socialfee_socialfee group by payFeer ";
+        String sql = " select payFeer  from socialfee_socialfee group by payFeer ";
         List<SocialFee> list = super.findBySql(sql, SocialFee.class, field);
         List<String> payFeerList = list.stream().map(SocialFee::getPayFeer).collect(Collectors.toList());
         return payFeerList;
@@ -163,7 +163,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
     @Override
     public List<String> listEmpName() throws SerException {
         String[] field = new String[]{"empName"};
-        String sql = " select empName ,1 from socialfee_socialfee group by empName ";
+        String sql = " select empName  from socialfee_socialfee group by empName ";
         List<SocialFee> list = super.findBySql(sql, SocialFee.class, field);
         List<String> empNameList = list.stream().map(SocialFee::getEmpName).collect(Collectors.toList());
         return empNameList;
@@ -200,7 +200,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String payTimeDur = startYearMonth + "-" + endYearMonth;
         if (StringUtils.isBlank(company) && StringUtils.isBlank(emp)) {
             if (timeFlag) {
-                sql.append(" select sum(totalMoney) as totalMoney ,1 from socialfee_socialfee where 1=1 ");
+                sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
                 sql.append(sqlAppend);
                 list = super.findBySql(sql.toString(), SocialFeeBO.class, field);
                 list.stream().forEach(str -> {
@@ -230,7 +230,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney ,1 from socialfee_socialfee where 1=1 ");
+        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {
             sql.append(sqlAppend);
@@ -259,7 +259,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney ,1 from socialfee_socialfee where 1=1 ");
+        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and payFeer = '" + company + "' ");
         if (timeFlag) {
             sql.append(sqlAppend);
@@ -288,7 +288,7 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
 
         String[] field = new String[]{"totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney ,1 from socialfee_socialfee where 1=1 ");
+        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and payFeer = '" + company + "' ");
         sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {

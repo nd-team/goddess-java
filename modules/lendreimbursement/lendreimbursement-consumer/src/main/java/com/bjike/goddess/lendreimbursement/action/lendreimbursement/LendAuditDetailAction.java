@@ -52,7 +52,7 @@ public class LendAuditDetailAction {
     /**
      * 一个借款审核人员
      *
-     * @param id 报销单号信息id
+     * @param id 借款审核人员列表信息id
      * @des 根据id获取借款审核人员
      * @return  class LendAuditDetailVO
      * @version v1

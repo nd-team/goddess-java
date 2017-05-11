@@ -177,7 +177,7 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
     @Override
     public List<String> listAllCompanyName() throws SerException {
         String[] fields = new String[]{"companyName"};
-        List<CooperCapabilityBO> cooperBOS =super.findBySql("select companyName ,1 from capability_coopercapability group by companyName " , CooperCapabilityBO.class, fields);
+        List<CooperCapabilityBO> cooperBOS =super.findBySql("select companyName  from capability_coopercapability group by companyName " , CooperCapabilityBO.class, fields);
 
         List<String> name = cooperBOS.stream().map(CooperCapabilityBO::getCompanyName).collect(Collectors.toList());
         return name;

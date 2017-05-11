@@ -113,7 +113,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     public List<CollectionTotalBO> collectionTotal() throws SerException {
 
         //查询地区
-        List<Competitor> competitorList = competitorSer.findBySql("select distinct area ,1 from competitormanage_competitor", Competitor.class, new String[]{"area"});
+        List<Competitor> competitorList = competitorSer.findBySql("select distinct area  from competitormanage_competitor", Competitor.class, new String[]{"area"});
 
         List<Competitor> list = competitorSer.findAll();
         List<CollectionTotalBO> returnList = new ArrayList<CollectionTotalBO>();

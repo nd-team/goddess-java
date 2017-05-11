@@ -3,6 +3,7 @@ package com.bjike.goddess.lendreimbursement.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
@@ -152,7 +153,23 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (LendStatus.CHARGEPASS.equals(lend.getLendStatus()) || LendStatus.LISTERROR.equals(lend.getLendStatus())) {
             throw new SerException("负责人已审核过，不可再编辑");
         }
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setEstimateLendDate(applyLend.getEstimateLendDate());
+        lend.setLender( applyLend.getLender());
+        lend.setCharger( applyLend.getCharger());
+        lend.setArea( applyLend.getArea());
+        lend.setProjectGroup(applyLend.getProjectGroup());
+        lend.setProjectName(applyLend.getProjectName());
+        lend.setLendWay( applyLend.getLendWay());
+        lend.setFirstSubject(applyLend.getFirstSubject());
+        lend.setSecondSubject(applyLend.getSecondSubject());
+        lend.setThirdSubject(applyLend.getThirdSubject());
+        lend.setExplains(applyLend.getExplains());
+        lend.setWriteUp(applyLend.getWriteUp());
+        lend.setLendReson(applyLend.getLendReson());
+        lend.setMoney(applyLend.getMoney());
+        lend.setInvoice(applyLend.getInvoice());
+        lend.setRemark(applyLend.getRemark());
         //填单人
         lend.setFillSingler(userAPI.currentUser().getUsername());
         lend.setLendDate(LocalDate.now());
@@ -315,8 +332,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("负责人审核失败，未填id");
         }
         ApplyLend lend = super.findById(applyLendTO.getId());
-
-        lend.setCharger(userAPI.currentUser().getUsername());
+//        String token =  RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        lend.setCharger(userBO.getUsername());
         lend.setChargerOpinion(applyLendTO.getChargerOpinion());
         lend.setChargerPass(applyLendTO.getChargerPass());
         if ("是".equals(applyLendTO.getChargerPass())) {
@@ -328,7 +346,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         super.update(lend);
 
         //存审核详情表
-        UserBO userBO = userAPI.currentUser();
+//        UserBO userBO = userAPI.currentUser(token);
         UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
         PositionBO positionBO = new PositionBO();
         if (userDetailBO != null) {
@@ -363,7 +381,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else if (lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部审核失败，此单为申请单有误编辑过来的，先得要负责人先审");
         }
-        lend.setFinacer(userAPI.currentUser().getUsername());
+        UserBO userBO = userAPI.currentUser();
+        lend.setFinacer(userBO.getUsername());
         lend.setFincerOpinion(applyLendTO.getFincerOpinion());
         lend.setFincerPass(applyLendTO.getFincerPass());
         if ("是".equals(applyLendTO.getFincerPass())) {
@@ -375,7 +394,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         super.update(lend);
 
         //存审核详情表
-        UserBO userBO = userAPI.currentUser();
+//        UserBO userBO = userAPI.currentUser();
         UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
         PositionBO positionBO = new PositionBO();
         if (userDetailBO != null) {
@@ -402,10 +421,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("总经办审核失败，未填id");
         }
         ApplyLend lend = super.findById(applyLendTO.getId());
-
+        UserBO userBO = userAPI.currentUser();
         //说明财务还没审核
         if (lend.getLendStatus().getCode() == 3 || lend.getLendStatus().getCode() == 4) {
-            lend.setManager(userAPI.currentUser().getUsername());
+            lend.setManager(userBO.getUsername());
             lend.setManagerOpinion(applyLendTO.getManagerOpinion());
             lend.setManagerPass(applyLendTO.getManagerPass());
             lend.setModifyTime(LocalDateTime.now());
@@ -416,7 +435,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("总经办审核失败，财务运营部还未审核");
         }
 
-        lend.setManager(userAPI.currentUser().getUsername());
+        lend.setManager(userBO.getUsername());
         lend.setManagerOpinion(applyLendTO.getManagerOpinion());
         lend.setManagerPass(applyLendTO.getManagerPass());
         if ("是".equals(applyLendTO.getManagerPass())) {
@@ -428,7 +447,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         super.update(lend);
 
         //存审核详情表
-        UserBO userBO = userAPI.currentUser();
+//        UserBO userBO = userAPI.currentUser();
         UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
         PositionBO positionBO = new PositionBO();
         if (userDetailBO != null) {
@@ -459,7 +478,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (lend.getLendStatus().getCode() == 0 || lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部冻结失败，负责人还未审核");
         }
-        lend.setFinacer(userAPI.currentUser().getUsername());
+        UserBO userBO = userAPI.currentUser();
+        lend.setFinacer(userBO.getUsername());
         lend.setFincerOpinion(applyLendTO.getFincerOpinion());
         lend.setFincerPass("未处理");
 
@@ -692,9 +712,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
-        dto.getConditions().add(Restrict.eq("lendStatus", 3));
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
         //LendStatus.MANAGEPASS
-        dto.getConditions().add(Restrict.or("lendStatus", 7));
+//        dto.getConditions().add(Restrict.or("lendStatus", 7));
         Long counts = super.count(dto);
         return counts;
     }
@@ -705,9 +725,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLendDTO dto = applyLendDTO;
         dto.getConditions().add(Restrict.eq("payCondition", "否"));
         //LendStatus.FINACEPASS
-        dto.getConditions().add(Restrict.eq("lendStatus", 3));
+        dto.getConditions().add(Restrict.in("lendStatus", new Integer[]{3,7}));
         //LendStatus.MANAGEPASS
-        dto.getConditions().add(Restrict.or("lendStatus", 7));
+//        dto.getConditions().add(Restrict.or("lendStatus", 7));
         List<ApplyLend> applyLend = super.findByCis(dto, true);
         return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
     }
@@ -725,7 +745,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setPayOrigin( applyLend.getPayOrigin());
+        lend.setPayDate( applyLend.getPayDate());
         //支付人
         lend.setPayer(userAPI.currentUser().getUsername());
         lend.setPayCondition("是");
@@ -738,6 +760,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public Long countSureRecieve(ApplyLendDTO applyLendDTO) throws SerException {
         String userName = userAPI.currentUser().getUsername();
         ApplyLendDTO dto = applyLendDTO;
+        dto.getConditions().add(Restrict.eq("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("fillSingler", userName));
         dto.getConditions().add(Restrict.or("lender", userName));
         Long counts = super.count(dto);
@@ -748,6 +771,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
         String userName = userAPI.currentUser().getUsername();
         ApplyLendDTO dto = applyLendDTO;
+        dto.getConditions().add(Restrict.eq("payCondition", "是"));
         dto.getConditions().add(Restrict.eq("fillSingler", userName));
         dto.getConditions().add(Restrict.or("lender", userName));
         List<ApplyLend> applyLend = super.findByCis(dto, true);
@@ -762,10 +786,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("编辑失败，id不能为空");
         }
 
-        ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
-        ApplyLend lend = super.findById(applyLendTO.getId());
+        String id = applyLendTO.getId();
+        ApplyLend lend = super.findById(id);
 
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
         //确认收款
         lend.setReceivePay("是");
         lend.setModifyTime(LocalDateTime.now());
@@ -803,8 +826,13 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
-
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setReimMoney(applyLend.getReimMoney());
+        lend.setLendMoney(applyLend.getLendMoney());
+        lend.setReturnMoney(applyLend.getReturnMoney());
+        lend.setReturnDate(applyLend.getReturnDate());
+        lend.setReturnWays(applyLend.getReturnWays());
+        lend.setReturnAccount(applyLend.getReturnAccount());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
@@ -820,7 +848,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        lend.setSendDate(applyLend.getSendDate());
+        lend.setSendCondition( applyLend.getSendCondition());
+        lend.setReceiveAddr( applyLend.getReceiveAddr());
 
         lend.setDocumentQuantity(applyLendTO.getDocumentQuantity());
         lend.setModifyTime(LocalDateTime.now());
@@ -850,6 +881,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         accountVoucherBO.setBorrowResion(lend.getLendReson());
         accountVoucherBO.setSubject("其他应收款-" + lend.getLender());
         accountVoucherBO.setBorrowMoney(lend.getMoney());
+        accountVoucherBO.setLoanMoney(0d);
         list.add(accountVoucherBO);
 
         accountVoucherBO = new AccountVoucherBO();
@@ -861,6 +893,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         accountVoucherBO.setBorrowResion(lend.getLendReson());
         accountVoucherBO.setSubject(lend.getPayOrigin());
         accountVoucherBO.setLoanMoney(lend.getMoney());
+        accountVoucherBO.setBorrowMoney(0d);
         list.add(accountVoucherBO);
 
         Double borrowMoney = list.stream().mapToDouble(AccountVoucherBO::getBorrowMoney).sum();
@@ -922,6 +955,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             accountVoucherBO.setBorrowResion(lend.getLendReson());
             accountVoucherBO.setSubject(lend.getFirstSubject() + "-" + lend.getSecondSubject() + "-" + lend.getThirdSubject());
             accountVoucherBO.setBorrowMoney(lend.getReimMoney());
+            accountVoucherBO.setLoanMoney(0d);
             list.add(accountVoucherBO);
 
             accountVoucherBO = new AccountVoucherBO();
@@ -933,6 +967,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             accountVoucherBO.setBorrowResion(lend.getLendReson());
             accountVoucherBO.setSubject(lend.getReturnAccount());
             accountVoucherBO.setBorrowMoney(lend.getReturnMoney());
+            accountVoucherBO.setLoanMoney(0d);
             list.add(accountVoucherBO);
 
 
@@ -944,6 +979,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             accountVoucherBO.setTicketUser(userName);
             accountVoucherBO.setBorrowResion(lend.getLendReson());
             accountVoucherBO.setSubject("其他应收款-" + lend.getLender());
+            accountVoucherBO.setBorrowMoney(0d);
             accountVoucherBO.setLoanMoney(lend.getLendMoney());
             list.add(accountVoucherBO);
 
@@ -969,6 +1005,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             accountVoucherBO.setBorrowResion(lend.getLendReson());
             accountVoucherBO.setSubject(lend.getFirstSubject() + "-" + lend.getSecondSubject() + "-" + lend.getThirdSubject());
             accountVoucherBO.setBorrowMoney(lend.getLendMoney());
+            accountVoucherBO.setLoanMoney(0d);
             list.add(accountVoucherBO);
 
             accountVoucherBO = new AccountVoucherBO();
@@ -980,6 +1017,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             accountVoucherBO.setBorrowResion(lend.getLendReson());
             accountVoucherBO.setSubject("其他应收款-" + lend.getLender());
             accountVoucherBO.setLoanMoney(lend.getLendMoney());
+            accountVoucherBO.setBorrowMoney(0d);
             list.add(accountVoucherBO);
 
             Double borrowMoney = list.stream().mapToDouble(AccountVoucherBO::getBorrowMoney).sum();
@@ -1002,7 +1040,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
 
     @Override
-    public List<ApplyLendBO> checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+    public ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("失败，id不能为空");
         }
@@ -1011,7 +1049,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
 
         lend.setChecker(userAPI.currentUser().getUsername());
         lend.setCheckDate(LocalDate.now());
@@ -1048,19 +1086,20 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("失败，id不能为空");
         }
-        if (StringUtils.isBlank(applyLendTO.getCheckcontent())) {
-            throw new SerException("失败，核对内容不能为空");
+        if (StringUtils.isBlank(applyLendTO.getTicketCondition())) {
+            throw new SerException("失败，收票情况不能为空");
         }
-        if (!"否".equals(applyLendTO.getDocumentCondition()) || !"是".equals(applyLendTO.getDocumentCondition())) {
+        if (!"否".equals(applyLendTO.getDocumentCondition()) && !"是".equals(applyLendTO.getDocumentCondition())) {
             throw new SerException("失败，是否收到单据填写是或否");
         }
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
+//        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
 
         lend.setDocumentCondition(applyLendTO.getDocumentCondition());
         lend.setTicketer(userAPI.currentUser().getUsername());
         lend.setTicketCondition(applyLendTO.getTicketCondition());
+        lend.setReceiveTicket(applyLendTO.getReceiveTicket());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
@@ -1144,7 +1183,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             sb.append("SELECT  projectGroup,lender, area,")
                     .append("  projectName,  firstSubject,  secondSubject, ")
                     .append("  thirdSubject, payCondition, money ")
-                    .append("   FROM lendreimbursement_applylend where area = '" + applyLendDTO.getProjectGroup().trim() + "'");
+                    .append("   FROM lendreimbursement_applylend where projectGroup = '" + applyLendDTO.getProjectGroup().trim() + "'");
             collectDataBOList = super.findBySql(sb.toString(), CollectDataBO.class, fields);
         } else {
             fields = new String[]{"projectGroup", "money"};
@@ -1167,7 +1206,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             sb.append("SELECT  projectName,lender, area,")
                     .append("  projectGroup,  firstSubject,  secondSubject, ")
                     .append("  thirdSubject, payCondition, money ")
-                    .append("   FROM lendreimbursement_applylend where area = '" + applyLendDTO.getProjectName().trim() + "'");
+                    .append("   FROM lendreimbursement_applylend where projectName = '" + applyLendDTO.getProjectName().trim() + "'");
             collectDataBOList = super.findBySql(sb.toString(), CollectDataBO.class, fields);
         } else {
             fields = new String[]{"projectName", "money"};
@@ -1182,7 +1221,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listLender() throws SerException {
         String[] fields = new String[]{"lender"};
         List<ApplyLend> list = super.findBySql(
-                "select lender ,1 from lendreimbursement_applylend group by lender ", ApplyLend.class, fields);
+                "select lender  from lendreimbursement_applylend group by lender ", ApplyLend.class, fields);
 
         List<String> lenderList = list.stream().map(ApplyLend::getLender)
                 .filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
@@ -1195,7 +1234,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
         List<ApplyLend> list = super.findBySql(
-                "select area ,1 from lendreimbursement_applylend group by area ", ApplyLend.class, fields);
+                "select area  from lendreimbursement_applylend group by area ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -1208,7 +1247,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listProjectGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
         List<ApplyLend> list = super.findBySql(
-                "select projectGroup ,1 from lendreimbursement_applylend group by projectGroup ", ApplyLend.class, fields);
+                "select projectGroup  from lendreimbursement_applylend group by projectGroup ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getProjectGroup)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -1221,7 +1260,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<String> listProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};
         List<ApplyLend> list = super.findBySql(
-                "select projectName ,1 from lendreimbursement_applylend group by projectName ", ApplyLend.class, fields);
+                "select projectName  from lendreimbursement_applylend group by projectName ", ApplyLend.class, fields);
 
         List<String> areaList = list.stream().map(ApplyLend::getProjectName)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());

@@ -173,7 +173,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Override
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<SiginManageBO> siginManageBOS =super.findBySql("select area,1 from businessproject_siginmanage order by area asc ", SiginManageBO.class, fields);
+        List<SiginManageBO> siginManageBOS =super.findBySql("select area from businessproject_siginmanage order by area asc ", SiginManageBO.class, fields);
 
         List<String> areaList  = siginManageBOS.stream().map(SiginManageBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());

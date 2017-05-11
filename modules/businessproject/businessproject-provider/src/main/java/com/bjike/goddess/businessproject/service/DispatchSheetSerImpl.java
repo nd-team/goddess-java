@@ -9,6 +9,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         DispatchSheet temp = super.findById( dispatchSheetTO.getId());
 
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
-        BeanTransform.copyProperties( dispatchSheet , temp ,"id","createTime");
+        BeanUtils.copyProperties( dispatchSheet , temp ,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
@@ -145,7 +146,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select area,1 from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select area from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
         List<String> areaList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());
@@ -157,7 +158,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listDispatchName() throws SerException {
         String[] fields = new String[]{"dispatchProject"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select dispatchProject,1 from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select dispatchProject from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
         List<String> dispatchProjectList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getDispatchProject)
                 .filter(str -> (str != null || !"".equals(str.trim())) ).distinct().collect(Collectors.toList());
