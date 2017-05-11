@@ -135,8 +135,7 @@ public class ExcelUtil {
                                 int name_length = excelHeaders.get(j).name().getBytes().length;//获取表头长度
                                 int columnWidth = val_length > name_length ? val_length : name_length;
                                 columnWidth = columnWidth > 30 ? 30 : columnWidth;
-                                //设置自动宽度
-                                sheet.setColumnWidth(j, columnWidth * 275);
+                                sheet.setColumnWidth(j, columnWidth * 275);//设置自动宽度
                             }
                         }
                         cell.setCellStyle(contentStyle);
