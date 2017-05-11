@@ -72,6 +72,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         voucherGenerateDTO.getSorts().add("createTime=desc");
+        voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
@@ -137,7 +138,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowSum = borrow.stream().mapToDouble(Double::shortValue).sum();
         Double loanSum = loan.stream().mapToDouble(Double::shortValue).sum();
         if (!borrowSum.equals( loanSum)) {
-            throw new SerException("借贷方金额不相等，不能添加");
+            throw new SerException("借方和贷方金额不相等，不能添加");
         }
         Double totalMoney = borrowSum;
         VoucherTotal vt = new VoucherTotal();
@@ -173,18 +174,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Transactional(rollbackFor = SerException.class)
     @Override
     public VoucherGenerateBO editVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        if(StringUtils.isBlank(voucherGenerateTO.getId())){
+            throw new SerException("id不能为空");
+        }
         if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
             throw new SerException("一级科目不能为空");
         }
-        Double borrowSum = voucherGenerateTO.getBorrowMoneys().stream().mapToDouble(Double::shortValue).sum();
-        Double loanSum = voucherGenerateTO.getLoanMoneys().stream().mapToDouble(Double::shortValue).sum();
-        if (borrowSum != loanSum) {
-            throw new SerException("借贷方金额不相等，不能添加");
+
+        VoucherGenerate temp = super.findById(voucherGenerateTO.getId());
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.eq("totalId",temp.getTotalId()));
+        dto.getConditions().add(Restrict.ne("id",temp.getId()));
+        List<VoucherGenerate> otherList = super.findByCis( dto );
+
+        Double borrowSum = voucherGenerateTO.getBorrowMoneys().stream().mapToDouble(Double::shortValue).sum()
+                + otherList.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanSum = voucherGenerateTO.getLoanMoneys().stream().mapToDouble(Double::shortValue).sum()
+                + otherList.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+        if (!borrowSum.equals(loanSum)) {
+            throw new SerException("借方和贷方金额不相等，不能编辑");
         }
         Double totalMoney = borrowSum;
 
         VoucherGenerate voucherGenerate = BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerate.class, true);
-        VoucherGenerate temp = super.findById(voucherGenerateTO.getId());
 
         //修改合计金额
         VoucherTotal vt = voucherTotalSer.findById(temp.getTotalId());
@@ -193,7 +205,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherTotalSer.update(vt);
 
 
-        BeanTransform.copyProperties(voucherGenerate, temp);
+        BeanTransform.copyProperties(voucherGenerate, temp,true);
         temp.setFirstSubject(voucherGenerateTO.getFirstSubjects().get(0));
         temp.setSecondSubject(voucherGenerateTO.getSecondSubjects().get(0));
         temp.setThirdSubject(voucherGenerateTO.getThirdSubjects().get(0));
@@ -206,7 +218,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         temp.setAuditStatus(AuditStatus.NONE);
 
         super.update(temp);
-        return BeanTransform.copyProperties(temp, VoucherGenerateBO.class);
+        VoucherGenerateBO bo = BeanTransform.copyProperties(temp, VoucherGenerateBO.class);
+        return bo;
     }
 
     @Transactional(rollbackFor = SerException.class)

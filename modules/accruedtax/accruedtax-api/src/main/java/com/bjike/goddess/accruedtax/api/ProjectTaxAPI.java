@@ -29,9 +29,12 @@ public interface ProjectTaxAPI {
 
     /**
      * 项目上列表id
+     *
      * @return class ProjectTaxBO
      */
-    default ProjectTaxBO getOneById (String id) throws SerException {return null;}
+    default ProjectTaxBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**

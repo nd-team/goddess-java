@@ -96,7 +96,7 @@ public class VoucherGenerateAction {
      *
      * @param voucherGenerateTO 记账凭证基本信息数据bo
      * @return class VoucherGenerateVO
-     * @des 添加记账凭证
+     * @des 编辑记账凭证
      * @version v1
      */
     @LoginAuth

@@ -184,5 +184,22 @@ public class BaseInfoManageAction {
         }
     }
 
+    /**
+     * 所有甲方公司
+     *
+     * @des 获取所有甲方公司
+     * @version v1
+     */
+    @GetMapping("v1/listCompany")
+    public Result listCompany(  ) throws ActException {
+        try {
+            List<String> list = baseInfoManageAPI.listFirstCompany( );
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }
