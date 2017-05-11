@@ -7,12 +7,21 @@ import com.bjike.goddess.materialcheck.bo.MaterialInventoryBO;
 import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialInventory;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
+import com.bjike.goddess.materialcheck.type.InventoryType;
+import com.bjike.goddess.materialinstock.bo.AttributeBO;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
+import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,6 +36,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "materialcheckSerCache")
 @Service
 public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, MaterialInventoryDTO> implements MaterialInventorySer {
+
+    @Autowired
+    private MaterialInStockSer materialInStockSer;
 
     /**
      * 分页查询物资盘点
@@ -150,4 +162,75 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
         model.setZjbOpinion(zjbStatus);
         super.update(model);
     }
+
+    /**
+     * 物资盘点
+     *
+     * @param inventoryType 物资盘点类型
+     * @return class MaterialInventoryBO
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<MaterialInventoryBO> materialInventory(InventoryType inventoryType) throws SerException {
+        List<MaterialInventoryBO> inventoryBOList = new ArrayList<>(0);
+        //查询到所有类型的存储地区,项目组,物品类型,物资名称
+        List<AttributeBO> attributeBOList = materialInStockSer.findAllKindsType();
+        if (attributeBOList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        //依次遍历计算每条记录
+        for (AttributeBO bo : attributeBOList) {
+            List<MaterialInStockBO> boList = materialInStockSer.findByAttribute(bo);
+            String area = bo.getStorageArea();//地区
+            String projectGroup = bo.getProjectGroup();//项目组
+            String type = bo.getMaterialType();        //物资类型
+            String deviceName = bo.getMaterialName();  //设备名称
+            String unit = bo.getUnit();                //单位
+            Integer accountNo = boList.size();         //账目数
+            Double total = boList.stream().mapToDouble(c -> c.getUnitPrice()).sum();//计算总额
+            Integer stockNo = Math.toIntExact(boList.stream().filter(c -> c.getUseState() == UseState.INSTOCK).count());//计算库存数
+            Integer receiveNo = Math.toIntExact(boList.stream().filter(c -> c.getUseState() == UseState.RECEIVE).count());//计算领用数
+            Integer repairNo = Math.toIntExact(boList.stream().filter(c -> c.getMaterialState() == MaterialState.REPAIRING).count());//计算维修数
+            Integer transferNo = Math.toIntExact(boList.stream().filter(c -> c.getUseState() == UseState.TRANSFER).count());//计算调动数
+            Integer scrapNo = Math.toIntExact(boList.stream().filter(c -> c.getMaterialState() == MaterialState.SCRAP).count());//计算报废数
+            Integer inventoryLossNo = accountNo - stockNo - receiveNo - repairNo - transferNo - scrapNo;
+            inventoryLossNo = (inventoryLossNo > 0) ? inventoryLossNo : 0;//计算盘亏数
+            Double inventoryLossTotal = (accountNo == 0) ? 0 : (total * inventoryLossNo / accountNo);//计算盘亏总额
+            Integer inventorySurplusNo = accountNo - stockNo - receiveNo - repairNo - transferNo - scrapNo;
+            inventorySurplusNo = (inventorySurplusNo < 0) ? -inventorySurplusNo : 0;   //计算盘盈数
+            Double inventorySurplusTotal = (accountNo == 0) ? 0 : (total * inventorySurplusNo / accountNo);//计算盘盈总额
+
+            //逐个设置属性
+            MaterialInventoryBO materialInventoryBO = new MaterialInventoryBO();
+            materialInventoryBO.setArea(area);
+            materialInventoryBO.setProjectGroup(projectGroup);
+            materialInventoryBO.setType(type);
+            materialInventoryBO.setDeviceName(deviceName);
+            materialInventoryBO.setUnit(unit);
+            materialInventoryBO.setAccountNo(accountNo);
+            materialInventoryBO.setTotal(total);
+            materialInventoryBO.setStockNo(stockNo);
+            materialInventoryBO.setReceiveNo(receiveNo);
+            materialInventoryBO.setRepairNo(repairNo);
+            materialInventoryBO.setTransferNo(transferNo);
+            materialInventoryBO.setScrapNo(scrapNo);
+            materialInventoryBO.setInventoryLossNo(inventoryLossNo);
+            materialInventoryBO.setInventoryLossTotal(inventoryLossTotal);
+            materialInventoryBO.setInventorySurplusNo(inventorySurplusNo);
+            materialInventoryBO.setInventorySurplusTotal(inventorySurplusTotal);
+            materialInventoryBO.setInventoryType(inventoryType);
+
+            inventoryBOList.add(materialInventoryBO);
+        }
+
+        //如果不为空,则拷贝数据并且保存
+        if (!inventoryBOList.isEmpty()) {
+            List<MaterialInventory> inventoryList = BeanTransform.copyProperties(inventoryBOList, MaterialInventory.class, true);
+            super.save(inventoryList);
+        }
+
+        return inventoryBOList;
+    }
+
 }

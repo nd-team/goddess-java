@@ -71,7 +71,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
         MaterialTransfer entity = BeanTransform.copyProperties(to, MaterialTransfer.class, true);
-        entity = setAttributes(entity);
+        entity = setAttributes(entity);//设置物资属性
         entity = super.save(entity);
         MaterialTransferBO bo = BeanTransform.copyProperties(entity, MaterialTransferBO.class);
         return bo;
@@ -268,6 +268,5 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
             throw new SerException("您好,您不是福利模块负责人,无权审核.");
         }
     }
-
 
 }

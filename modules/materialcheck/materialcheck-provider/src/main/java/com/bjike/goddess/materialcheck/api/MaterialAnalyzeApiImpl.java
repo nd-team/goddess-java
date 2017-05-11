@@ -7,6 +7,7 @@ import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialAnalyze;
 import com.bjike.goddess.materialcheck.service.MaterialAnalyzeSer;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
+import com.bjike.goddess.materialcheck.type.InventoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,17 @@ public class MaterialAnalyzeApiImpl implements MaterialAnalyzeAPI {
     @Override
     public void update(MaterialAnalyzeTO to) throws SerException {
         materialAnalyzeSer.update(to);
+    }
+
+    /**
+     * 物资分析
+     *
+     * @param inventoryType 物资分析类型
+     * @return class MaterialAnalyzeBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialAnalyzeBO> materialAnalyze(InventoryType inventoryType) throws SerException {
+        return materialAnalyzeSer.materialAnalyze(inventoryType);
     }
 }

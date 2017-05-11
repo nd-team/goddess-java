@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
@@ -14,9 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 物资入库业务实现
@@ -60,6 +62,22 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         List<MaterialInStock> list = super.findByPage(dto);
         List<MaterialInStockBO> listBO = BeanTransform.copyProperties(list, MaterialInStockBO.class);
         return listBO;
+    }
+
+    /**
+     * 根据物资编号查询物资入库
+     *
+     * @param materialCoding 物资编号
+     * @return class MaterialInStockBO
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public MaterialInStockBO findByMaterialCoding(String materialCoding) throws SerException {
+        MaterialInStockDTO dto = new MaterialInStockDTO();
+        dto.getConditions().add(Restrict.eq("stockEncoding", materialCoding));
+        MaterialInStock model = super.findOne(dto);
+        return BeanTransform.copyProperties(model, MaterialInStockBO.class);
     }
 
     /**
@@ -173,6 +191,53 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
+    }
+
+    /**
+     * 查询存储地区,项目组,物品类型,物资名称所有不同的类型
+     *
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<AttributeBO> findAllKindsType() throws SerException {
+        List<MaterialInStock> list = super.findAll();
+        Set<MaterialInStock> set = new HashSet<>(0);
+        set.addAll(list);//这里会自动去除重复的对象
+        return getAttributeBos(set);
+    }
+
+    /**
+     * 获取非重复对象的属性
+     *
+     * @param set 去除重复的对象
+     * @return
+     */
+    private List<AttributeBO> getAttributeBos(Set<MaterialInStock> set) {
+        if (CollectionUtils.isEmpty(set)) {
+            return Collections.emptyList();
+        }
+        List<MaterialInStock> list = new ArrayList<>(set);
+        List<AttributeBO> boList = BeanTransform.copyProperties(list, AttributeBO.class);
+        return boList;
+    }
+
+    /**
+     * 根据属性查找物资入库
+     *
+     * @param bo 属性bo
+     * @return class MaterialInStock
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialInStockBO> findByAttribute(AttributeBO bo) throws SerException {
+        MaterialInStockDTO dto = new MaterialInStockDTO();
+        dto.getConditions().add(Restrict.eq("storageArea", bo.getStorageArea())); //存储地区
+        dto.getConditions().add(Restrict.eq("projectGroup", bo.getProjectGroup()));//项目组
+        dto.getConditions().add(Restrict.eq("materialType",bo.getMaterialType())); //物资类型
+        dto.getConditions().add(Restrict.eq("materialName", bo.getMaterialName()));//物资名称
+        List<MaterialInStock> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, MaterialInStockBO.class);
     }
 
 }

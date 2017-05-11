@@ -1,5 +1,6 @@
 package com.bjike.goddess.devicerepair.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -11,6 +12,10 @@ import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.type.MaterialState;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
+import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +41,9 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
 
     @Autowired
     private UserAPI userAPI;
+
+    @Autowired
+    private MaterialInStockSer materialInStockSer;
 
     /**
      * 分页查询设备维修
@@ -63,8 +71,10 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     @Transactional(rollbackFor = SerException.class)
     public DeviceRepairBO save(DeviceRepairTO to) throws SerException {
         String materialCoding = to.getMaterialCoding();//获取物资编号
-
+        MaterialInStockBO inStockBO = materialInStockSer.findByMaterialCoding(materialCoding);
+        String materialName = inStockBO.getMaterialName();   //获取设备名称
         DeviceRepair entity = BeanTransform.copyProperties(to, DeviceRepair.class, true);
+        entity.setDeviceName(materialName);               //设置设备名称
         entity.setWelfareAuditState(AuditState.UNAUDITED);//福利模块未审核
         entity.setPmAuditState(AuditState.UNAUDITED);     //项目经理未审核
         entity.setWhetherPayment(Boolean.FALSE);

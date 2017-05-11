@@ -6,6 +6,7 @@ import com.bjike.goddess.materialcheck.bo.MaterialInventoryBO;
 import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialInventory;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
+import com.bjike.goddess.materialcheck.type.InventoryType;
 
 import java.util.List;
 
@@ -80,5 +81,14 @@ public interface MaterialInventorySer extends Ser<MaterialInventory, MaterialInv
      * @throws SerException
      */
     void zjbConfirm(String id, String zjbStatus) throws SerException;
+
+    /**
+     * 物资盘点
+     *
+     * @param inventoryType 物资盘点类型
+     * @return class MaterialInventoryBO
+     * @throws SerException
+     */
+    List<MaterialInventoryBO> materialInventory(InventoryType inventoryType) throws SerException;
 
 }

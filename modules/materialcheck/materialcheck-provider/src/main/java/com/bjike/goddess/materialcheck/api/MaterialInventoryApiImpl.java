@@ -7,6 +7,7 @@ import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialInventory;
 import com.bjike.goddess.materialcheck.service.MaterialInventorySer;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
+import com.bjike.goddess.materialcheck.type.InventoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -131,5 +132,17 @@ public class MaterialInventoryApiImpl implements MaterialInventoryAPI {
     @Override
     public void zjbConfirm(String id, String zjbStatus) throws SerException {
         materialInventorySer.zjbConfirm(id, zjbStatus);
+    }
+
+    /**
+     * 物资盘点
+     *
+     * @param inventoryType 物资盘点类型
+     * @return class MaterialInventoryBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialInventoryBO> materialInventory(InventoryType inventoryType) throws SerException {
+        return materialInventorySer.materialInventory(inventoryType);
     }
 }

@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:materialcheck:materialcheck-api")
+    compile project(":modules:materialinstock:materialinstock-api")
     compile project(":common:common-utils")
 }
 
