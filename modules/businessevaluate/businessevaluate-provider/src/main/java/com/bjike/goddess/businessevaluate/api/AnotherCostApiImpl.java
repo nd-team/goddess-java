@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.AnotherCostDTO;
 import com.bjike.goddess.businessevaluate.service.AnotherCostSer;
 import com.bjike.goddess.businessevaluate.to.AnotherCostTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class AnotherCostApiImpl implements AnotherCostAPI {
     @Override
     public List<AnotherCostBO> pageList(AnotherCostDTO dto) throws SerException {
         return anotherCostSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(AnotherCostDTO dto) throws SerException {
+        return anotherCostSer.count(dto);
+    }
+
+    @Override
+    public AnotherCostBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(anotherCostSer.findById(id), AnotherCostBO.class);
     }
 }

@@ -36,7 +36,7 @@
     <!-- 油卡管理API -->
     <dubbo:reference interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" id="oilCardBasicApiImpl"/>
 
-    <!-- 油卡管理API -->
+    <!-- 司机API -->
     <dubbo:reference interface="com.bjike.goddess.driverinfo.api.DriverInfoAPI" id="driverInfoApiImpl"/>
 
 

@@ -84,7 +84,6 @@ public class ProjectAmountTO extends BaseTO {
     @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String projectInfoId;
 
-
     public Double getCost() {
         return cost;
     }

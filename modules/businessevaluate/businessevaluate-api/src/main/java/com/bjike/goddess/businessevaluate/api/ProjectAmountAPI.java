@@ -57,4 +57,20 @@ public interface ProjectAmountAPI {
      * @return 项目金额结果集
      */
     List<ProjectAmountBO> pageList(ProjectAmountDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(ProjectAmountDTO dto) throws SerException;
+
+    /**
+     * 根据id查询项目金额
+     *
+     * @param id 项目金额id
+     * @return 项目金额
+     */
+    ProjectAmountBO findById(String id) throws SerException;
 }

@@ -39,6 +39,39 @@ public class LabourCostAct {
     private EvaluateProjectInfoAPI evaluateProjectInfoAPI;
 
     /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(LabourCostDTO dto) throws ActException {
+        try {
+            Long count = labourCostAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询项目基本信息
+     *
+     * @param id 项目基本信息id
+     * @return class LabourCostVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            LabourCostVO vo = BeanTransform.copyProperties(labourCostAPI.findById(id), LabourCostVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 查询所有项目
      *
      * @return class EvaluateProjectInfoVO

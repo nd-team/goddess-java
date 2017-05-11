@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 
 import javax.persistence.Column;
@@ -250,8 +251,8 @@ public class DispatchCarInfo extends BaseEntity {
     /**
      * 评价司机
      */
-    @Column(name = "evaluatedriver", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '评价司机'")
-    private String evaluatedriver;
+    @Column(name = "evaluatedriver", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '评价司机'")
+    private Evaluate evaluatedriver;
 
     /**
      * 小票附件
@@ -758,11 +759,11 @@ public class DispatchCarInfo extends BaseEntity {
         this.roadCost = roadCost;
     }
 
-    public String getEvaluatedriver() {
+    public Evaluate getEvaluatedriver() {
         return evaluatedriver;
     }
 
-    public void setEvaluatedriver(String evaluatedriver) {
+    public void setEvaluatedriver(Evaluate evaluatedriver) {
         this.evaluatedriver = evaluatedriver;
     }
 

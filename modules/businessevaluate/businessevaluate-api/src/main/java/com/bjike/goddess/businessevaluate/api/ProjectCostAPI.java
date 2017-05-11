@@ -48,4 +48,18 @@ public interface ProjectCostAPI {
      * @return 项目费用结果集
      */
     List<ProjectCostBO> pageList(ProjectCostDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(ProjectCostDTO dto) throws SerException;
+
+    /**
+     * 根据id查询项目费用
+     * @param id 项目费用id
+     * @return 项目费用
+     */
+    ProjectCostBO findById(String id) throws SerException;
 }

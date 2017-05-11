@@ -49,4 +49,20 @@ public interface AnotherCostAPI {
      * @return 其它成本结果集
      */
     List<AnotherCostBO> pageList(AnotherCostDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(AnotherCostDTO dto) throws SerException;
+
+    /**
+     * 根据id查询其他成本
+     * @param id 其他成本id
+     * @return 其他成本
+     * @throws SerException
+     */
+    AnotherCostBO findById(String id) throws SerException;
 }

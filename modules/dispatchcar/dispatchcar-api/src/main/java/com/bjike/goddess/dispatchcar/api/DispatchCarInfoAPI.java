@@ -201,4 +201,13 @@ public interface DispatchCarInfoAPI {
     }
 
     List<AuditResultBO> findAuditResult(String id) throws SerException;
+
+    /**
+     * 付款计划
+     *
+     * @param id            出车记录
+     * @param budgetPayDate 预计付款时间
+     * @param payPlan       付款计划
+     */
+    void predict(String id, String budgetPayDate, String payPlan) throws SerException;
 }

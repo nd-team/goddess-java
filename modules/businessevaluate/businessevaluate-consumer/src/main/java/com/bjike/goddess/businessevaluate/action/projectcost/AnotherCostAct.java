@@ -40,6 +40,39 @@ public class AnotherCostAct {
     private EvaluateProjectInfoAPI evaluateProjectInfoAPI;
 
     /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AnotherCostDTO dto) throws ActException {
+        try {
+            Long count = anotherCostAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询其它成本
+     *
+     * @param id 其它成本id
+     * @return class AnotherCostVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            AnotherCostVO vo = BeanTransform.copyProperties(anotherCostAPI.findById(id), AnotherCostVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    
+    /**
      * 查询所有项目
      *
      * @return class EvaluateProjectInfoVO

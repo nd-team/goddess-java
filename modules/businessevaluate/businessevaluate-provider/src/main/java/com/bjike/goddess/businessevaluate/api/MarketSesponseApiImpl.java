@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.MarketSesponseDTO;
 import com.bjike.goddess.businessevaluate.service.MarketSesponseSer;
 import com.bjike.goddess.businessevaluate.to.MarketSesponseTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class MarketSesponseApiImpl implements MarketSesponseAPI {
     @Override
     public List<MarketSesponseBO> pageList(MarketSesponseDTO dto) throws SerException {
         return marketSesponseSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(MarketSesponseDTO dto) throws SerException {
+        return marketSesponseSer.count(dto);
+    }
+
+    @Override
+    public MarketSesponseBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(marketSesponseSer.findById(id), MarketSesponseBO.class);
     }
 }
