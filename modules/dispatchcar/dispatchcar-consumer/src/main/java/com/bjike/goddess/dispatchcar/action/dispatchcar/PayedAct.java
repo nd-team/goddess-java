@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,13 +37,14 @@ public class PayedAct {
     private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     /**
-     * 等待审核页面分页查询
+     * 列表分页查询
      *
      * @param dto 分页条件
+     * @return class DispatchCarInfoVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result pageList(DispatchCarInfoDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("findType", FindType.PAYED));
             List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class);
@@ -55,13 +58,14 @@ public class PayedAct {
      * 审核详情
      *
      * @param id 出车记录id
+     * @return class AuditResultVO
      * @version v1
      */
-    @GetMapping("v1/findAudit/{id}")
-    public Result findAudit(@PathVariable String id) throws ActException {
+    @GetMapping("v1/audit/{id}")
+    public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), DispatchCarInfoVO.class);
-            return ActResult.initialize(vo);
+            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAuditResult(id), AuditResultVO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

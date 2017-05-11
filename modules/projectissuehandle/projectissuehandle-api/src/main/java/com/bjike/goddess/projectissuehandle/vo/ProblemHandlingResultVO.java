@@ -19,13 +19,13 @@ public class ProblemHandlingResultVO {
      */
     private String id;
     /**
-     * 地区
-     */
-    private String area;
-    /**
      * 年份
      */
     private String year;
+    /**
+     * 地区
+     */
+    private String area;
 
     /**
      * 合同外部项目名称

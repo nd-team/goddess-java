@@ -48,4 +48,8 @@ public interface FrontlineEvaluateAPI {
      * @return 一线体系评价结果集
      */
     List<FrontlineEvaluateBO> pageList(FrontlineEvaluateDTO dto) throws SerException;
+
+    Long count(FrontlineEvaluateDTO dto) throws SerException;
+
+    FrontlineEvaluateBO findById(String id) throws SerException;
 }

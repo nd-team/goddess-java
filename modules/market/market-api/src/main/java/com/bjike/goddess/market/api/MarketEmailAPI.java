@@ -84,6 +84,7 @@ public interface MarketEmailAPI {
     default List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
         return null;
     }
+
     /**
      * 获取地区
      *
@@ -92,6 +93,5 @@ public interface MarketEmailAPI {
     default List<String> getArea() throws SerException {
         return null;
     }
-
 
 }

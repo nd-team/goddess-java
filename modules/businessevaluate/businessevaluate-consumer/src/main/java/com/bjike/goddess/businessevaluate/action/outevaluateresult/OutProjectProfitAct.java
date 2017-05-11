@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,12 +34,13 @@ public class OutProjectProfitAct {
     /**
      * 查询利润率最高最低项目信息
      *
+     * @return class ProjectProfitRateVO
      * @version v1
      */
-    @GetMapping("v1/profitScope")
-    public Result profitScope() throws ActException {
+    @GetMapping("v1/profitscope")
+    public Result profitScope(HttpServletRequest request) throws ActException {
         try {
-            List<ProjectProfitRateVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.profitScope(), ProjectProfitRateVO.class);
+            List<ProjectProfitRateVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.profitScope(), ProjectProfitRateVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -5,8 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI;
@@ -124,7 +124,6 @@ public class ProblemHandlingResultAction extends BaseFileAction{
      * @des 编辑确认问题处理结果
      * @version v1
      */
-    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ProblemHandlingResultTO problemHandlingResultTO,BindingResult bindingResult) throws ActException {
         try {

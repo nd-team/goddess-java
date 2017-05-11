@@ -4,9 +4,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.projectmeasure.type.InterfaceSelect;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
@@ -61,13 +59,13 @@ public class MultipleProjectMultipleUI extends BaseEntity {
     /**
      * 项目利润对比
      */
-    @Column(name = "projectProfitContrast", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目利润对比'")
+    @Column(name = "projectProfitContrast", columnDefinition = "VARCHAR(255) COMMENT '项目利润对比'")
     private String projectProfitContrast;
 
     /**
      * 界面利润对比
      */
-    @Column(name = "interfaceProfitContrast", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '界面利润对比'")
+    @Column(name = "interfaceProfitContrast", columnDefinition = "VARCHAR(255) COMMENT '界面利润对比'")
     private String interfaceProfitContrast;
 
 

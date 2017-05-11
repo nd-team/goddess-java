@@ -145,13 +145,4 @@ public class AccountInfoBO extends BaseBO {
         this.creditAmount = creditAmount;
     }
 
-    public AccountInfoBO(String area, String projectName, String projectGroup,
-                                  Double debitAmount, Double creditAmount) {
-        this.area = area;
-        this.projectName = projectName;
-        this.projectGroup = projectGroup;
-        this.debitAmount = debitAmount;
-        this.creditAmount = creditAmount;
-
-    }
 }

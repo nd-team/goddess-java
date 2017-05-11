@@ -1,11 +1,13 @@
 package com.bjike.goddess.dispatchcar.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
@@ -65,7 +67,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<AuditDetailBO> findAudit(String id) throws SerException {
+    public AuditDetailBO findAudit(String id) throws SerException {
         return dispatchCarInfoSer.findAudit(id);
     }
 
@@ -122,5 +124,32 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public List<FinanceAnalyzeBO> selectAnalyze(FinanceCollectTO to) throws SerException {
         return dispatchCarInfoSer.selectAnalyze(to);
+    }
+
+    @Override
+    public Long count(DispatchCarInfoDTO dto) throws SerException {
+        return dispatchCarInfoSer.count(dto);
+    }
+
+    @Override
+    public DispatchCarInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(dispatchCarInfoSer.findById(id), DispatchCarInfoBO.class);
+    }
+
+    @Override
+    public List<DispatchCarInfoBO> allWaitPay() throws SerException {
+        DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+        dto.getConditions().add(Restrict.eq("findType", FindType.WAITPAY));
+        return BeanTransform.copyProperties(dispatchCarInfoSer.findByCis(dto), DispatchCarInfoBO.class);
+    }
+
+    @Override
+    public List<AuditResultBO> findAuditResult(String id) throws SerException {
+        return dispatchCarInfoSer.findAuditResults(id);
+    }
+
+    @Override
+    public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
+        dispatchCarInfoSer.predict(id,budgetPayDate,payPlan);
     }
 }

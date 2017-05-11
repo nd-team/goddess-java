@@ -1,5 +1,6 @@
 package com.bjike.goddess.account.api;
 
+import com.bjike.goddess.account.bo.AccountCollectBO;
 import com.bjike.goddess.account.bo.AccountInfoBO;
 import com.bjike.goddess.account.dto.AccountInfoDTO;
 import com.bjike.goddess.account.to.AccountInfoTO;
@@ -18,7 +19,22 @@ import java.util.List;
  */
 public interface AccountInfoAPI {
     /**
-     * 获取明细账信息
+     * 明细账信息列表总条数
+     */
+    default Long countAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个明细账信息
+     *
+     * @return class AccountInfoBO
+     */
+    default AccountInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 明细账信息
      *
      * @param accountInfoDTO 明细账信息dto
      * @return class accountInfoBO
@@ -60,9 +76,21 @@ public interface AccountInfoAPI {
     }
     /**
      * 汇总
-     * @return 汇总
+     *
+     * @param areas
+     * @return AccountCollectBO
      */
-    List<AccountInfoBO> collectAccountInfo(String area,String projectName,String projectGroup) throws SerException;
+    default List<AccountCollectBO> collectAccountInfo(String[] areas) throws SerException{
+        return null;
+    }
+    /**
+     * 地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
 
 
 

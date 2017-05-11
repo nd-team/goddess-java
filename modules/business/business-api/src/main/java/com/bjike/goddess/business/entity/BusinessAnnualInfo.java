@@ -2,9 +2,7 @@ package com.bjike.goddess.business.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -30,8 +28,8 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 报告年份
      */
-    @Column(name = "reportYear", columnDefinition = "DATE   COMMENT '报告年份'")
-    private LocalDate reportYear;
+    @Column(name = "reportYear", columnDefinition = "VARCHAR(255)   COMMENT '报告年份'")
+    private String reportYear;
 
     /**
      * 提交日期
@@ -42,7 +40,7 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 状态(是否公示)
      */
-    @Column(name = "is_status", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'")
+    @Column(name = "is_status",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
     private Boolean status;
 
     /**
@@ -60,11 +58,11 @@ public class BusinessAnnualInfo extends BaseEntity {
         this.companyName = companyName;
     }
 
-    public LocalDate getReportYear() {
+    public String getReportYear() {
         return reportYear;
     }
 
-    public void setReportYear(LocalDate reportYear) {
+    public void setReportYear(String reportYear) {
         this.reportYear = reportYear;
     }
 

@@ -74,7 +74,7 @@ public class CustomerDetailAction {
             List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
 
             if( customerDetailBOList == null ){
-                return ActResult.initialize(BeanTransform.copyProperties(customerDetailBOList, CustomerDetailVO.class));
+                return ActResult.initialize(null);
             }else {
                 customerDetailBOList.stream().forEach(str->{
                     CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
@@ -188,9 +188,9 @@ public class CustomerDetailAction {
      */
     @GetMapping("v1/exportInfo")
     public Result exportCustomerBasicInfo(String area ,String customerName) throws ActException {
-            //TODO : tanghaixiang 2017-03-16 导出未做
+        //TODO : tanghaixiang 2017-03-16 导出未做
 //            customerDetailAPI.deleteCustomerDetail(id);
-            return new ActResult("export success!");
+        return new ActResult("export success!");
 
     }
 

@@ -50,6 +50,25 @@ public class LendAuditDetailAction {
     }
 
     /**
+     * 一个借款审核人员
+     *
+     * @param id 借款审核人员列表信息id
+     * @des 根据id获取借款审核人员
+     * @return  class LendAuditDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            LendAuditDetailVO lendAuditDetailVO = BeanTransform.copyProperties(
+                    lendAuditDetailAPI.getOneById(id), LendAuditDetailVO.class);
+            return ActResult.initialize(lendAuditDetailVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 借款审核人员列表
      *
      * @param lendAuditDetailDTO 借款审核人员信息dto

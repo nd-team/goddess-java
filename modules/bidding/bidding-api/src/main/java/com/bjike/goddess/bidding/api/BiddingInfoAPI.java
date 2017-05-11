@@ -122,8 +122,6 @@ public interface BiddingInfoAPI {
         return null;
     }
 
-
-
     /**
      * 发送邮件
      *

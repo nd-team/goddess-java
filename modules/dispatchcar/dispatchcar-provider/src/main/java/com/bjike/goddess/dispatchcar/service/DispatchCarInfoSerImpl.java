@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.dispatchcar.bean.AuditResult;
+import com.bjike.goddess.dispatchcar.bean.DispatchInfo;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
@@ -30,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -67,9 +68,13 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO insertModel(DispatchCarInfoTO to) throws SerException {
-
+        UserBO userBO = userAPI.findByUsername(to.getCarUser());
+        to.setUserNumber(userBO.getEmployeeNumber());
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
         DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
+        if (driver == null) {
+            throw new SerException("司机不存在!");
+        }
         Double oilWear = driver.getCarFuel();
         if (to.getAircondition()) {
             oilWear = oilWear + 0.01;
@@ -88,8 +93,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
         //查找租车费用
         findCost(to);
-        //设置出车单号----IKE20170101-1...
-        setNumber(to);
+
         DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
         model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
         //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
@@ -117,21 +121,79 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
         model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
         model.setFindType(FindType.WAITAUDIT);
+        //设置出车单号----IKE20170101-1...
+        setNumber(model);
         super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, DispatchCarInfoBO.class);
+        return BeanTransform.copyProperties(model, DispatchCarInfoBO.class);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO updateModel(DispatchCarInfoTO to) throws SerException {
-        DispatchCarInfo model = super.findById(to.getId());
-        if (model != null) {
-            BeanTransform.copyProperties(to, model, true);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
+        if (to.getId() != null) {
+            DispatchCarInfo model = super.findById(to.getId());
+            if (model != null) {
+                UserBO userBO = userAPI.findByUsername(to.getCarUser());
+                to.setUserNumber(userBO.getEmployeeNumber());
+                //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
+                DriverInfoBO driver = driverInfoAPI.findByDriver(to.getDriver());
+                if (driver == null) {
+                    throw new SerException("司机不存在!");
+                }
+                Double oilWear = driver.getCarFuel();
+                if (to.getAircondition()) {
+                    oilWear = oilWear + 0.01;
+                }
+                if (to.getDowntown()) {
+                    oilWear = oilWear + 0.01;
+                }
+                to.setOilWear(oilWear);
+                to.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+                to.setAddOilAmount(to.getMileageSubtract() * oilWear);
+                if (to.getOilPrice() != null) {
+                    to.setOilCost(to.getAddOilAmount() * to.getOilPrice());
+                } else {
+                    to.setOilCost(0.0);
+                }
+
+                //查找租车费用
+                findCost(to);
+
+                BeanTransform.copyProperties(to, model, true);
+
+                model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
+                //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
+                //实际上班时长
+                Long workHours = ChronoUnit.HOURS.between(model.getStartTime(), model.getEndTime());
+                if (workHours > 8) {
+                    //当天22点
+                    LocalDateTime dateTime = LocalDateTime.of(model.getStartTime().toLocalDate(), LocalTime.of(22, 0));
+                    //出车开始时间+4 > 22:00 则补贴30元
+                    if (model.getStartTime().plusHours(4).isAfter(dateTime)) {
+                        model.setMealCost(30.0);
+                    } else {
+                        model.setMealCost(0.0);
+                    }
+                    if (!model.getSiesta()) {
+                        model.setOverWorkTime((int) (workHours - 8));
+                    } else {
+                        model.setOverWorkTime((int) (workHours - 8 - 1));
+                    }
+                } else {
+                    model.setMealCost(0.0);
+                    model.setOverWorkTime(0);
+                }
+                model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
+                model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
+                model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
+
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
         } else {
-            throw new SerException("更新对象不能为空");
+            throw new SerException("id不能为空");
         }
         return BeanTransform.copyProperties(to, DispatchCarInfoBO.class);
     }
@@ -162,16 +224,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
     }
 
-    public static void main(String[] args) {
-        LocalDateTime start = LocalDateTime.of(2017, 4, 17, 8, 30, 0);
-        LocalDateTime end = LocalDateTime.of(2017, 4, 17, 18, 0, 0);
-
-        long test = Duration.between(start, end).toHours();
-
-        System.out.println(test);
-
-    }
-
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<DispatchCarInfoBO> pageList(DispatchCarInfoDTO dto) throws SerException {
@@ -188,43 +240,100 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<AuditDetailBO> findAudit(String id) throws SerException {
+    public AuditDetailBO findAudit(String id) throws SerException {
         DispatchCarInfo model = super.findById(id);
-        List<AuditDetailBO> boList = new ArrayList<AuditDetailBO>();
+        if (model == null) {
+            throw new SerException("审核对象不存在!");
+        }
 
+        DispatchInfo info = BeanTransform.copyProperties(model, DispatchInfo.class);
+
+        AuditDetailBO returnBO = new AuditDetailBO();
+        returnBO.setInfo(info);
+
+        List<AuditResult> list = new ArrayList<AuditResult>();
         if (model != null) {
             DateUtil dateUtil = new DateUtil();
             //查询资金审核结果
             if (!StringUtils.isEmpty(model.getFundModuleSugg()) && model.getFundAuditTime() != null) {
-                AuditDetailBO bo = new AuditDetailBO();
+                AuditResult bo = new AuditResult();
                 bo.setAuditUser(model.getFundAuditUser());
                 bo.setPosition("资金模块负责人");
                 bo.setSuggestion(model.getFundModuleSugg());
                 bo.setAuditTime(dateUtil.dateToString(model.getFundAuditTime()));
-                boList.add(bo);
+                list.add(bo);
             }
             //预算审核结果
             if (!StringUtils.isEmpty(model.getBudgetModuleSugg()) && model.getBudgetAuditTime() != null) {
-                AuditDetailBO bo = new AuditDetailBO();
+                AuditResult bo = new AuditResult();
                 bo.setAuditUser(model.getBudgetAuditUser());
                 bo.setPosition("预算模块负责人");
                 bo.setSuggestion(model.getBudgetModuleSugg());
                 bo.setAuditTime(dateUtil.dateToString(model.getBudgetAuditTime()));
-                boList.add(bo);
+                list.add(bo);
             }
             //项目负责人/任务下发人审核结果
             if (!StringUtils.isEmpty(model.getPrincipalSugg()) && model.getPrincipalAuditTime() != null) {
-                AuditDetailBO bo = new AuditDetailBO();
+                AuditResult bo = new AuditResult();
                 bo.setAuditUser(model.getPrincipal());
                 bo.setPosition("项目模块负责人");
                 bo.setSuggestion(model.getPrincipal());
                 bo.setAuditResult(model.getAuditResult());
                 bo.setAuditTime(dateUtil.dateToString(model.getPrincipalAuditTime()));
-                boList.add(bo);
+                list.add(bo);
             }
-            return boList;
+            returnBO.setList(list);
+            return returnBO;
         }
-        return boList;
+        return returnBO;
+    }
+
+    /**
+     * 查询审核结果
+     *
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<AuditResultBO> findAuditResults(String id) throws SerException {
+        DispatchCarInfo model = super.findById(id);
+        if (model == null) {
+            throw new SerException("审核对象不存在!");
+        }
+
+        List<AuditResultBO> list = new ArrayList<AuditResultBO>();
+        if (model != null) {
+            DateUtil dateUtil = new DateUtil();
+            //查询资金审核结果
+            if (!StringUtils.isEmpty(model.getFundModuleSugg()) && model.getFundAuditTime() != null) {
+                AuditResultBO bo = new AuditResultBO();
+                bo.setAuditUser(model.getFundAuditUser());
+                bo.setPosition("资金模块负责人");
+                bo.setSuggestion(model.getFundModuleSugg());
+                bo.setAuditTime(dateUtil.dateToString(model.getFundAuditTime()));
+                list.add(bo);
+            }
+            //预算审核结果
+            if (!StringUtils.isEmpty(model.getBudgetModuleSugg()) && model.getBudgetAuditTime() != null) {
+                AuditResultBO bo = new AuditResultBO();
+                bo.setAuditUser(model.getBudgetAuditUser());
+                bo.setPosition("预算模块负责人");
+                bo.setSuggestion(model.getBudgetModuleSugg());
+                bo.setAuditTime(dateUtil.dateToString(model.getBudgetAuditTime()));
+                list.add(bo);
+            }
+            //项目负责人/任务下发人审核结果
+            if (!StringUtils.isEmpty(model.getPrincipalSugg()) && model.getPrincipalAuditTime() != null) {
+                AuditResultBO bo = new AuditResultBO();
+                bo.setAuditUser(model.getPrincipal());
+                bo.setPosition("项目模块负责人");
+                bo.setSuggestion(model.getPrincipal());
+                bo.setAuditResult(model.getAuditResult());
+                bo.setAuditTime(dateUtil.dateToString(model.getPrincipalAuditTime()));
+                list.add(bo);
+            }
+        }
+        return list;
     }
 
     @Override
@@ -333,13 +442,13 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
 
         List<DispatchCarInfo> proejctList = null;
-        if(collectType==CollectType.AREA){
+        if (collectType == CollectType.AREA) {
             //分组查询地区、项目组、项目
-            proejctList = super.findBySql("select area , project_group , project ,1 from dispatchcar_basicinfo group by area , project_group , project ",
+            proejctList = super.findBySql("select area , project_group , project  from dispatchcar_basicinfo group by area , project_group , project ",
                     DispatchCarInfo.class, new String[]{"area", "group", "project"});
-        }else{
+        } else {
             //分组查询地区、项目组、项目
-            proejctList = super.findBySql("select driver , project_group , project ,1 from dispatchcar_basicinfo group by driver , project_group , project ",
+            proejctList = super.findBySql("select driver , project_group , project  from dispatchcar_basicinfo group by driver , project_group , project ",
                     DispatchCarInfo.class, new String[]{"area", "group", "project"});
         }
 
@@ -364,22 +473,22 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     public List<FinanceCollectBO> weekCollect(String startDate, String endDate) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
-        LocalDateTime start = null;
-        LocalDateTime end = null;
+        LocalDate start = null;
+        LocalDate end = null;
         //页面初始化时(即不填写查询时间)加载本周汇总记录
         if (StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate)) {
-            start = changeStartFormat(DateUtil.getStartWeek());
-            end = changeEndFormat(DateUtil.getEndWeek());
+            start = DateUtil.getStartWeek();
+            end = DateUtil.getEndWeek();
         } else {
             if (!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
-                start = DateUtil.parseDateTime(startDate);
-                end = DateUtil.parseDateTime(endDate);
+                start = DateUtil.parseDate(startDate);
+                end = DateUtil.parseDate(endDate);
             } else {
                 throw new SerException("请选择查询时间段!");
             }
         }
-        LocalDateTime[] condition = new LocalDateTime[]{start, end};
-        dto.getConditions().add(Restrict.between("createTime", condition));
+        LocalDate[] condition = new LocalDate[]{start, end};
+        dto.getConditions().add(Restrict.between("dispatchDate", condition));
 
         return financeCollect(dto);
     }
@@ -409,20 +518,31 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
+    public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
+        DispatchCarInfo model = super.findById(id);
+        if(model!=null){
+            model.setBudgetPayDate(DateUtil.parseDate(budgetPayDate));
+            model.setPayPlan(payPlan);
+        }else{
+            throw new SerException("编辑对象不能为空");
+        }
+    }
+
+    @Override
     public List<FinanceCollectBO> monthCollect(Integer year, Integer month) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
-        LocalDateTime start = null;
-        LocalDateTime end = null;
+        LocalDate start = null;
+        LocalDate end = null;
         //页面初始化时(即不填写查询时间)加载本月汇总记录
         if (StringUtils.isEmpty(year) && StringUtils.isEmpty(month)) {
-            start = changeStartFormat(DateUtil.getStartMonth());
-            end = changeEndFormat(DateUtil.getEndMonth());
+            start = DateUtil.getStartMonth();
+            end = DateUtil.getEndMonth();
         } else {
-            start = changeStartFormat(DateUtil.getStartDayOfMonth(year, month));
-            end = changeEndFormat(DateUtil.getEndDaYOfMonth(year, month));
+            start = DateUtil.getStartDayOfMonth(year, month);
+            end = DateUtil.getEndDaYOfMonth(year, month);
         }
-        LocalDateTime[] condition = new LocalDateTime[]{start, end};
-        dto.getConditions().add(Restrict.between("createTime", condition));
+        LocalDate[] condition = new LocalDate[]{start, end};
+        dto.getConditions().add(Restrict.between("dispatchDate", condition));
 
         return financeCollect(dto);
     }
@@ -432,10 +552,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
 
         //年份、月份必填
-        LocalDateTime start = changeStartFormat(DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth()));
-        LocalDateTime end = changeEndFormat(DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth()));
-        LocalDateTime[] condition = new LocalDateTime[]{start, end};
-        dto.getConditions().add(Restrict.between("createTime", condition));
+        LocalDate start = DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth());
+        LocalDate end = DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth());
+        LocalDate[] condition = new LocalDate[]{start, end};
+        dto.getConditions().add(Restrict.between("dispatchDate", condition));
 
         if (to.getAcctype() != null) {
             dto.getConditions().add(Restrict.eq("acctype", to.getAcctype()));
@@ -465,19 +585,19 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         DispatchCarInfoDTO lastDTO = new DispatchCarInfoDTO();
         DispatchCarInfoDTO totoalDTO = new DispatchCarInfoDTO();
         //年份、月份必填:指定月份及制定月份的上一月
-        LocalDateTime start = changeStartFormat(DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth()));
-        LocalDateTime end = changeEndFormat(DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth()));
-        LocalDateTime lastStart = changeStartFormat(DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth() - 1));
-        LocalDateTime lastEnd = changeEndFormat(DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth() - 1));
+        LocalDate start = DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth());
+        LocalDate end = DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth());
+        LocalDate lastStart = DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth() - 1);
+        LocalDate lastEnd = DateUtil.getEndDaYOfMonth(to.getYear(), to.getMonth() - 1);
 
-        LocalDateTime[] currentTime = new LocalDateTime[]{start, end};
-        LocalDateTime[] lastTime = new LocalDateTime[]{lastStart, lastEnd};
+        LocalDate[] currentTime = new LocalDate[]{start, end};
+        LocalDate[] lastTime = new LocalDate[]{lastStart, lastEnd};
 
-        currentDTO.getConditions().add(Restrict.between("createTime", currentTime));
-        lastDTO.getConditions().add(Restrict.between("createTime", lastTime));
+        currentDTO.getConditions().add(Restrict.between("dispatchDate", currentTime));
+        lastDTO.getConditions().add(Restrict.between("dispatchDate", lastTime));
 
         //总费用
-        totoalDTO.getConditions().add(Restrict.between("createTime", currentTime));
+        totoalDTO.getConditions().add(Restrict.between("dispatchDate", currentTime));
 
         if (to.getAcctype() != null) {
             currentDTO.getConditions().add(Restrict.eq("acctype", to.getAcctype()));
@@ -492,8 +612,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             lastDTO.getConditions().add(Restrict.eq("group", to.getGroup()));
         }
         if (!StringUtils.isEmpty(to.getProject())) {
-            currentDTO.getConditions().add(Restrict.eq("group", to.getProject()));
-            lastDTO.getConditions().add(Restrict.eq("group", to.getProject()));
+            currentDTO.getConditions().add(Restrict.eq("project", to.getProject()));
+            lastDTO.getConditions().add(Restrict.eq("project", to.getProject()));
         }
         if (!StringUtils.isEmpty(to.getDriver())) {
             currentDTO.getConditions().add(Restrict.eq("driver", to.getDriver()));
@@ -530,7 +650,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
         Double percent = 0.0;
         String percentStr = "";
-        if (percent == 0) {
+        if (totalCost == 0) {
             percent = null;
             percentStr = null;
         } else {
@@ -538,7 +658,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             DecimalFormat format = new DecimalFormat("#.00");
             percentStr = format.format(percent) + "%";
         }
-
 
         //根据分析页面(条件)不同返回不同的分析结果
         if (!StringUtils.isEmpty(to.getArea())) {
@@ -646,29 +765,29 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public void setDayCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectIntervalType collectIntervalType) {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
-        currentDTO.getConditions().add(Restrict.like("createTime", today.toString()));
-        lastDTO.getConditions().add(Restrict.like("createTime", yesterday.toString()));
+        currentDTO.getConditions().add(Restrict.like("dispatchDate", today.toString()));
+        lastDTO.getConditions().add(Restrict.like("dispatchDate", yesterday.toString()));
     }
 
     //查询周、月、季、年
     public void setCondition(DispatchCarInfoDTO currentDTO, DispatchCarInfoDTO lastDTO, DispatchCollectBO bo, CollectIntervalType collectIntervalType) throws SerException {
-        LocalDateTime currentStarDay = null;
-        LocalDateTime currentEndDay = null;
+        LocalDate currentStarDay = null;
+        LocalDate currentEndDay = null;
 
-        LocalDateTime lastStarDay = null;
-        LocalDateTime lastEndDay = null;
+        LocalDate lastStarDay = null;
+        LocalDate lastEndDay = null;
 
         switch (collectIntervalType) {
             case WEEK:
-                currentStarDay = changeStartFormat(DateUtil.getStartWeek());
-                currentEndDay = changeStartFormat(DateUtil.getEndWeek());
+                currentStarDay = DateUtil.getStartWeek();
+                currentEndDay = DateUtil.getEndWeek();
                 lastStarDay = currentStarDay.minusWeeks(1);
                 lastEndDay = currentEndDay.minusWeeks(1);
 
                 break;
             case MONTH:
-                currentStarDay = changeStartFormat(DateUtil.getStartMonth());
-                currentEndDay = changeStartFormat(DateUtil.getEndMonth());
+                currentStarDay = DateUtil.getStartMonth();
+                currentEndDay = DateUtil.getEndMonth();
                 lastStarDay = currentStarDay.minusMonths(1);
                 lastEndDay = currentEndDay.minusMonths(1);
 
@@ -676,46 +795,46 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             case QUARTER:
                 Date date = new Date();
                 date.getMonth();
-                currentStarDay = changeStartFormat(DateUtil.getStartDayOfMonth(getQuarterStart(date.getMonth())));
-                currentEndDay = changeStartFormat(DateUtil.getEndDaYOfMonth(getQuarterEnd(date.getMonth())));
+                currentStarDay = DateUtil.getStartDayOfMonth(getQuarterStart(date.getMonth()));
+                currentEndDay = DateUtil.getEndDaYOfMonth(getQuarterEnd(date.getMonth()));
                 lastStarDay = currentStarDay.minusMonths(3);
                 lastEndDay = currentEndDay.minusMonths(3);
 
                 break;
             case YEAR:
-                currentStarDay = changeStartFormat(DateUtil.getStartYear());
-                currentEndDay = changeStartFormat(DateUtil.getEndYear());
+                currentStarDay = DateUtil.getStartYear();
+                currentEndDay = DateUtil.getEndYear();
                 lastStarDay = currentStarDay.minusYears(1);
                 lastEndDay = currentEndDay.minusYears(1);
 
                 break;
         }
 
-        LocalDateTime[] currentCondition = new LocalDateTime[]{currentStarDay, currentEndDay};
-        LocalDateTime[] lastCondition = new LocalDateTime[]{lastStarDay, lastEndDay};
+        LocalDate[] currentCondition = new LocalDate[]{currentStarDay, currentEndDay};
+        LocalDate[] lastCondition = new LocalDate[]{lastStarDay, lastEndDay};
 
-        currentDTO.getConditions().add(Restrict.between("createTime", currentCondition));
-        lastDTO.getConditions().add(Restrict.between("createTime", lastCondition));
+        currentDTO.getConditions().add(Restrict.between("dispatchDate", currentCondition));
+        lastDTO.getConditions().add(Restrict.between("dispatchDate", lastCondition));
     }
 
     //根据月份获取季度开始月
     public int getQuarterStart(int month) {
         int months[] = {0, 3, 6, 9};
-        if (month >= 0 && month <= 2) // 1-3月;0,1,2
+        if (month >= 0 && month <= 2) // 1-3月;0,2
             return months[0];
         else if (month >= 3 && month <= 5) // 4-6月;3,4,5
             return months[1];
         else if (month >= 6 && month <= 8) // 7-9月;6,7,8
             return months[2];
         else
-            // 10-12月;10,11,12
+            // 10-12月;1012
             return months[3];
     }
 
     //根据月份获取季度结束月
     public int getQuarterEnd(int month) {
         int months[] = {2, 5, 8, 11};
-        if (month >= 0 && month <= 2) // 1-3月;0,1,2
+        if (month >= 0 && month <= 2) // 1-3月;0,2
             return months[0];
         else if (month >= 3 && month <= 5) // 4-6月;3,4,5
             return months[1];
@@ -782,7 +901,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     /**
      * //设置出车单号----IKE20170101-1...
      */
-    public void setNumber(DispatchCarInfoTO to) throws SerException {
+    public void setNumber(DispatchCarInfo model) throws SerException {
         String todayStr = LocalDate.now().toString();
         String todayNum = todayStr.replace("-", "");
 
@@ -791,11 +910,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         dto.getConditions().add(Restrict.like("createTime", todayStr));
         dto.getSorts().add("createTime=desc");
         dto.setLimit(1);
-        List<DispatchCarInfo> model = super.findByPage(dto);
+        List<DispatchCarInfo> list = super.findByPage(dto);
         StringBuilder numStr = new StringBuilder();
         //拼接出车单
-        if (model != null && !model.isEmpty()) {
-            String number = model.get(0).getNumber();
+        if (model != null && !list.isEmpty()) {
+            String number = list.get(0).getNumber();
             numStr.append(number.substring(0, 12));
             int lastNum = Integer.parseInt(number.substring(12)) + 1;
             numStr.append(lastNum);
@@ -805,12 +924,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             numStr.append("-");
             numStr.append("1");
         }
-        to.setNumber(numStr.toString());
-    }
-
-    public LocalDateTime changeStartFormat(LocalDate date) throws SerException {
-        String StartDayTime = date.toString() + " 00:00:00";
-        return LocalDateTime.parse(StartDayTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        model.setNumber(numStr.toString());
     }
 
     public LocalDateTime changeEndFormat(LocalDate date) throws SerException {

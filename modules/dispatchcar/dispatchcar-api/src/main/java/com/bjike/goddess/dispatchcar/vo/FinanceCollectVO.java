@@ -14,7 +14,7 @@ import com.bjike.goddess.dispatchcar.enums.Acctype;
 public class FinanceCollectVO {
 
     /**
-     * 记录id
+     * 出车记录id
      */
     private String id;
 

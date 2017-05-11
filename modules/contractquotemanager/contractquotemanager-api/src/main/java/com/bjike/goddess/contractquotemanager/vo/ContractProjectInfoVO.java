@@ -218,5 +218,4 @@ public class ContractProjectInfoVO {
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
-
 }

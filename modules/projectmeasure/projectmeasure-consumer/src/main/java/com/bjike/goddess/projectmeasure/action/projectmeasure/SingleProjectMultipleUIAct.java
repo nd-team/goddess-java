@@ -13,11 +13,10 @@ import com.bjike.goddess.projectmeasure.dto.SingleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.to.SingleProjectMultipleUITO;
 import com.bjike.goddess.projectmeasure.vo.SingleProjectMultipleUIVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,47 +29,11 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("smui")
+@RequestMapping("projectmeasure/singleprojectmultipleui")
 public class SingleProjectMultipleUIAct {
 
     @Autowired
     private SingleProjectMultipleUIAPI singleProjectMultipleUIAPI;
-
-    /**
-     * 根据id查询单个项目多个界面
-     *
-     * @param id 单个项目多个界面唯一标识
-     * @return class SingleProjectMultipleUIVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/smui/{id}")
-    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
-        try {
-            SingleProjectMultipleUIBO bo = singleProjectMultipleUIAPI.findById(id);
-            SingleProjectMultipleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectMultipleUIVO.class, request);
-            return ActResult.initialize(vo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 计算总数量
-     *
-     * @param dto 单个项目多个界面dto
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/count")
-    public Result count(@Validated SingleProjectMultipleUIDTO dto, BindingResult result) throws ActException {
-        try {
-            Long count = singleProjectMultipleUIAPI.count(dto);
-            return ActResult.initialize(count);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 分页查询单个项目多个界面
@@ -81,10 +44,10 @@ public class SingleProjectMultipleUIAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated SingleProjectMultipleUIDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result list(SingleProjectMultipleUIDTO dto) throws ActException {
         try {
             List<SingleProjectMultipleUIBO> boList = singleProjectMultipleUIAPI.list(dto);
-            List<SingleProjectMultipleUIVO> voList = BeanTransform.copyProperties(boList, SingleProjectMultipleUIVO.class, request);
+            List<SingleProjectMultipleUIVO> voList = BeanTransform.copyProperties(boList, SingleProjectMultipleUIVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -100,10 +63,10 @@ public class SingleProjectMultipleUIAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) SingleProjectMultipleUITO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated({ADD.class}) SingleProjectMultipleUITO to) throws ActException {
         try {
             SingleProjectMultipleUIBO bo = singleProjectMultipleUIAPI.save(to);
-            SingleProjectMultipleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectMultipleUIVO.class, request);
+            SingleProjectMultipleUIVO vo = BeanTransform.copyProperties(bo, SingleProjectMultipleUIVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -135,7 +98,7 @@ public class SingleProjectMultipleUIAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) SingleProjectMultipleUITO to, BindingResult result) throws ActException {
+    public Result edit(@Validated({EDIT.class}) SingleProjectMultipleUITO to) throws ActException {
         try {
             singleProjectMultipleUIAPI.update(to);
             return new ActResult("edit success!");

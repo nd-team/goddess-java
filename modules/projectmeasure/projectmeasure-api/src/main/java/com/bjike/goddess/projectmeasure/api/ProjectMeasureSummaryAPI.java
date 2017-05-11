@@ -20,23 +20,6 @@ import java.util.List;
 public interface ProjectMeasureSummaryAPI {
 
     /**
-     * 根据id查询项目测算汇总
-     *
-     * @param id 项目测算汇总唯一标识
-     * @return class ProjectMeasureSummaryBO
-     * @throws SerException
-     */
-    ProjectMeasureSummaryBO findById(String id) throws SerException;
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目测算汇总dto
-     * @throws SerException
-     */
-    Long count(ProjectMeasureSummaryDTO dto) throws SerException;
-
-    /**
      * 分页查询项目测算汇总邮件发送
      *
      * @param dto 项目测算汇总dto
@@ -73,18 +56,18 @@ public interface ProjectMeasureSummaryAPI {
     /**
      * 解冻项目测算汇总
      *
-     * @param id 项目测算汇总唯一标识
+     * @param to 项目测算汇总to
      * @throws SerException
      */
-    void thaw(String id) throws SerException;
+    void thaw(ProjectMeasureSummaryTO to) throws SerException;
 
     /**
      * 冻结项目测算汇总
      *
-     * @param id 项目测算汇总唯一标识
+     * @param to 项目测算汇总to
      * @throws SerException
      */
-    void congeal(String id) throws SerException;
+    void congeal(ProjectMeasureSummaryTO to) throws SerException;
 
     /**
      * 项目测算汇总

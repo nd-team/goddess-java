@@ -1,11 +1,16 @@
 package com.bjike.goddess.projectissuehandle.vo;
 
-import java.io.Serializable;
-
 /**
- * Created by ike on 17-5-3.
+ * 汇总项目执行中的问题受理及处理结果表现层对象
+ *
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-03-27 10:49 ]
+ * @Description: [ 汇总项目执行中的问题受理及处理结果表现层对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
-public class CollectVO implements Serializable {
+public class CollectVO {
+
     /**
      * 地区
      */
@@ -19,6 +24,7 @@ public class CollectVO implements Serializable {
      * 内部项目名称
      */
     private String internalProjectName;
+
     /**
      * 人员类
      */

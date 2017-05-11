@@ -32,7 +32,7 @@ public interface CategoryAPI {
      */
     default CategoryBO getOneById(String id) throws SerException {return null;}
 
-    
+
     /**
      * 类别列表
      * @return class CategoryBO

@@ -9,12 +9,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
-import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
+import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,23 +28,24 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("financeaudit")
+@RequestMapping("finance")
 public class FinanceAuditAct {
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     /**
-     * 财务核对页面分页查询
+     * 列表分页查询
      *
      * @param dto 分页条件
+     * @return class DispatchCarInfoVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result pageList(DispatchCarInfoDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("findType", FindType.FINANCEAUDIT));
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -54,12 +56,30 @@ public class FinanceAuditAct {
      * 审核详情
      *
      * @param id 出车记录id
+     * @return class AuditResultVO
      * @version v1
      */
-    @GetMapping("v1/findAudit/{id}")
-    public Result findAudit(@PathVariable String id) throws ActException {
+    @GetMapping("v1/audit/{id}")
+    public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), DispatchCarInfoVO.class);
+            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAuditResult(id), AuditResultVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询出车记录
+     *
+     * @param id 出车记录id
+     * @return class DispatchCarInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findDetail(id), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -67,16 +87,17 @@ public class FinanceAuditAct {
     }
 
     /**
-     * 收到单据数据查询
+     * 查询总记录数
      *
-     * @param id 出车记录id
+     * @param dto 查询条件
      * @version v1
      */
-    @GetMapping("v1/findDetail/{id}")
-    public Result findById(@PathVariable String id) throws ActException {
+    @GetMapping("v1/count")
+    public Result count(DispatchCarInfoDTO dto) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findDetail(id), DispatchCarInfoVO.class);
-            return ActResult.initialize(vo);
+            dto.getConditions().add(Restrict.eq("findType", FindType.FINANCEAUDIT));
+            Long count = dispatchCarInfoAPI.count(dto);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -85,17 +106,17 @@ public class FinanceAuditAct {
     /**
      * 单据审核
      *
-     * @param id 出车记录id
-     * @param auditReceiptSugg 审核意见
+     * @param id                 出车记录id
+     * @param auditReceiptSugg   审核意见
      * @param receiveReceiptDate 签收日期
      * @param auditReceiptResult 审核结果
      * @version v1
      */
-    @PostMapping("v1/receiptAudit")
-    public Result receiptAudit(String id, String auditReceiptSugg ,String receiveReceiptDate,Boolean auditReceiptResult) throws ActException {
+    @PostMapping("v1/receipt")
+    public Result receiptAudit(@RequestParam String id, @RequestParam String auditReceiptSugg, @RequestParam String receiveReceiptDate, @RequestParam Boolean auditReceiptResult) throws ActException {
         try {
-            dispatchCarInfoAPI.receiptAudit(id,auditReceiptSugg,receiveReceiptDate,auditReceiptResult);
-            return new ActResult();
+            dispatchCarInfoAPI.receiptAudit(id, auditReceiptSugg, receiveReceiptDate, auditReceiptResult);
+            return new ActResult("审核成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -40,6 +40,16 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
     }
 
     @Override
+    public FinoddinforBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        Finoddinfor finoddinfor = super.findById(id);
+        return BeanTransform.copyProperties(finoddinfor, FinoddinforBO.class );
+    }
+
+
+    @Override
     public List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         finoddinforDTO.getSorts().add("runNum=desc");
         finoddinforDTO.getConditions().add(Restrict.eq(STATUS,Status.THAW));
@@ -130,7 +140,7 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
     public String getMinRunNum() throws SerException {
         String[] fields = new String[]{"runNum"};
         List<Finoddinfor> finoddinforList =
-                super.findBySql("select min(runNum) ,1 from lendreimbursement_finoddinfor where status=0 ",
+                super.findBySql("select min(runNum)  from lendreimbursement_finoddinfor where status=0 ",
                         Finoddinfor.class, fields);
 
         List<String> strs = finoddinforList.stream().map(Finoddinfor::getRunNum)

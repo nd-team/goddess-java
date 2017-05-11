@@ -33,6 +33,7 @@ public class ProblemHandlingResult extends BaseEntity {
      */
     @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
+
     /**
      * 合同外部项目名称
      */
@@ -84,7 +85,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题相关部门
      */
-    @Column(name = "problemRelevantDepartment", columnDefinition = "TINYINT(2)   COMMENT '问题相关部门'")
+    @Column(name = "problemRelevantDepartment", columnDefinition = "INT(2)   COMMENT '问题相关部门'")
     private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
@@ -108,7 +109,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题处理结果
      */
-    @Column(name = "problemProcessingResult", columnDefinition = "TINYINT(2)   COMMENT '问题处理结果'")
+    @Column(name = "problemProcessingResult", columnDefinition = "INT(2)   COMMENT '问题处理结果'")
     private ProblemProcessingResult problemProcessingResult;
 
     /**

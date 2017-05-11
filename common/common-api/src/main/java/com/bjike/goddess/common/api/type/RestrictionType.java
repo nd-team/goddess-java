@@ -27,6 +27,7 @@ public enum RestrictionType {
      * 在什么范围之间
      */
     IN,//在什么范围之间
+
     /**
      * 大于
      */
@@ -50,7 +51,8 @@ public enum RestrictionType {
 
     ISNULL,//为空
 
-    ISNOTNULL,;//不为空
+    ISNOTNULL,//不为空
+    NOTIN;
 
 
     public static RestrictionType valueOf(Object val) {
@@ -80,6 +82,8 @@ public enum RestrictionType {
                 return RestrictionType.ISNULL;
             case "ISNOTNULL":
                 return RestrictionType.ISNOTNULL;
+            case "NOTIN":
+                return RestrictionType.NOTIN;
             default:
                 return RestrictionType.EQ;
         }
@@ -106,7 +110,7 @@ public enum RestrictionType {
             case OR:
                 return "or";
             case NE:
-                return "ne";
+                return "notEqual";
             case ISNULL:
                 return "isNull";
             case ISNOTNULL:

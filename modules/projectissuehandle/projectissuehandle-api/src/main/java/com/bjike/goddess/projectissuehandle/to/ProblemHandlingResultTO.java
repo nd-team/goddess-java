@@ -31,6 +31,7 @@ public class ProblemHandlingResultTO extends BaseTO {
      * 地区
      */
     private String area;
+
     /**
      * 合同外部项目名称
      */

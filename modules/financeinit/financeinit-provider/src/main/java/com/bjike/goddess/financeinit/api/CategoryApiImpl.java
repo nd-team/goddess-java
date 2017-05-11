@@ -35,7 +35,7 @@ public class CategoryApiImpl implements CategoryAPI {
     public CategoryBO getOneById(String id) throws SerException {
         return categorySer.getOneById(id);
     }
-    
+
     @Override
     public List<CategoryBO> listCategory(CategoryDTO categoryDTO) throws SerException {
         return categorySer.listCategory(categoryDTO);

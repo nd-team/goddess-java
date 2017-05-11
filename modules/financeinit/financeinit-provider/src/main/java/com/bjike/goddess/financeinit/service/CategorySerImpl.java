@@ -77,25 +77,25 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     public Long countCategory(CategoryDTO categoryDTO) throws SerException {
         switch (categoryDTO.getCategoryName().name()) {
             case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
                 break;
             case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.LIABILITIES));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",1));
                 break;
             case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COMMON));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",2));
                 break;
             case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.RIGHTSINTERESTS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",3));
                 break;
             case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COST));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",4));
                 break;
             case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.PROFITLOSS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",5));
                 break;
             default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
                 break;
         }
         Long count = super.count( categoryDTO );
@@ -110,30 +110,30 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         Category category = super.findById(id);
         return BeanTransform.copyProperties(category, CategoryBO.class );
     }
-    
+
     @Override
     public List<CategoryBO> listCategory(CategoryDTO categoryDTO) throws SerException {
         switch (categoryDTO.getCategoryName().name()) {
             case "ASSETS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
                 break;
             case "LIABILITIES":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.LIABILITIES));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",1));
                 break;
             case "COMMON":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COMMON));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",2));
                 break;
             case "RIGHTSINTERESTS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.RIGHTSINTERESTS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",3));
                 break;
             case "COST":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.COST));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",4));
                 break;
             case "PROFITLOSS":
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.PROFITLOSS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",5));
                 break;
             default:
-                categoryDTO.getConditions().add(Restrict.eq("categoryName",CategoryName.ASSETS));
+                categoryDTO.getConditions().add(Restrict.eq("categoryName",0));
                 break;
         }
         List<Category> list = super.findByCis(categoryDTO, true);
@@ -234,7 +234,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     @Override
     public List<String> getSecondSubject(CategoryDTO categoryDTO) throws SerException {
         String[] fields = new String[]{"secondSubject"};
-        List<CategoryBO> categoryBOList = super.findBySql("select fc.secondSubject ,1 from financeinit_category fc " +
+        List<CategoryBO> categoryBOList = super.findBySql("select fc.secondSubject  from financeinit_category fc " +
                 " inner join financeinit_firstsubject ff on fc.firstSubject_id = ff.id where ff.name = '" + categoryDTO.getFirstSubjectName() + "'", CategoryBO.class, fields);
 
         List<String> list = categoryBOList.stream().map(CategoryBO::getSecondSubject)
@@ -246,7 +246,7 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     @Override
     public List<String> getThirdSubject(CategoryDTO categoryDTO) throws SerException {
         String[] fields = new String[]{"thirdSubject"};
-        List<CategoryBO> categoryBOList = super.findBySql("select fc.thirdSubject ,1 from financeinit_category fc " +
+        List<CategoryBO> categoryBOList = super.findBySql("select fc.thirdSubject  from financeinit_category fc " +
                 " inner join financeinit_firstsubject ff on fc.firstSubject_id = ff.id " +
                 " where ff.name = '" + categoryDTO.getFirstSubjectName() + "' and fc.secondSubject = '" + categoryDTO.getSecondSubject() + "'", CategoryBO.class, fields);
 
@@ -265,25 +265,25 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
         switch (firstSubjectBO.getCategory()) {
             case "资产类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.ASSETS));
+                cdto.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
             case "负债类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.LIABILITIES));
+                cdto.getConditions().add(Restrict.eq("categoryName", 1));
                 break;
             case "共同类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.COMMON));
+                cdto.getConditions().add(Restrict.eq("categoryName", 2));
                 break;
             case "权益类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.RIGHTSINTERESTS));
+                cdto.getConditions().add(Restrict.eq("categoryName", 3));
                 break;
             case "成本类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.COST));
+                cdto.getConditions().add(Restrict.eq("categoryName", 4));
                 break;
             case "损益类":
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.PROFITLOSS));
+                cdto.getConditions().add(Restrict.eq("categoryName", 5));
                 break;
             default:
-                cdto.getConditions().add(Restrict.eq("categoryName", CategoryName.ASSETS));
+                cdto.getConditions().add(Restrict.eq("categoryName", 0));
                 break;
         }
 

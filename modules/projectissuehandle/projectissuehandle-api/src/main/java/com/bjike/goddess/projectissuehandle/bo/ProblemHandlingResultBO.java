@@ -26,6 +26,7 @@ public class ProblemHandlingResultBO extends BaseBO {
      * 地区
      */
     private String area;
+
     /**
      * 合同外部项目名称
      */

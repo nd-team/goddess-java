@@ -66,9 +66,27 @@ public interface BusinessEvaluateCollectAPI {
 
     /**
      * 汇总详情
-     * @param area 汇总条件地区
+     *
+     * @param area    汇总条件地区
      * @param project 汇总条件项目
      * @return 汇总结果
      */
     List<EvaluateCollectTotalBO> collectionTotal(String area, String project) throws SerException;
+
+    /**
+     * 根据id查询汇总记录
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    BusinessEvaluateCollectBO findById(String id) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(BusinessEvaluateCollectDTO dto) throws SerException;
 }

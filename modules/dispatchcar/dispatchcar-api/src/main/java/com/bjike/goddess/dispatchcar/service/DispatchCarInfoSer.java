@@ -75,7 +75,15 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @param id 出车记录id
      * @return 审核详情结果集
      */
-    List<AuditDetailBO> findAudit(String id) throws SerException;
+    AuditDetailBO findAudit(String id) throws SerException;
+
+    /**
+     * 查询审核结果
+     *
+     * @param id 出车记录id
+     * @return 审核结果集
+     */
+    List<AuditResultBO> findAuditResults(String id) throws SerException;
 
     /**
      * 资金核对意见
@@ -165,4 +173,12 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      */
     FinanceCollectBO findCollectDetail(String id) throws SerException;
 
+    /**
+     * 付款计划
+     *
+     * @param id            出车记录
+     * @param budgetPayDate 预计付款时间
+     * @param payPlan       付款计划
+     */
+    void predict(String id, String budgetPayDate, String payPlan) throws SerException;
 }

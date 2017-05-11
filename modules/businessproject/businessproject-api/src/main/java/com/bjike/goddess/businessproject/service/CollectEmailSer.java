@@ -20,8 +20,6 @@ import java.util.List;
  */
 public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
-
-
     /**
      * 总条数
      */

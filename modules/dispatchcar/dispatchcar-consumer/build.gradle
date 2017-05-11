@@ -38,6 +38,7 @@ dependencies {
     }
 
     compile project(":modules:dispatchcar:dispatchcar-api")
+    compile project(":modules:storage:storage-api")
     compile group: 'commons-io', name: 'commons-io', version: "$commons_io_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }

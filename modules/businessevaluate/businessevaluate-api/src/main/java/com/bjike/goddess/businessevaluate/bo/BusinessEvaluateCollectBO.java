@@ -27,6 +27,11 @@ public class BusinessEvaluateCollectBO extends BaseBO {
     private String project;
 
     /**
+     * 项目Id
+     */
+    private String projectId;
+
+    /**
      * 创建人/修改人
      */
     private String operateUser;
@@ -49,7 +54,7 @@ public class BusinessEvaluateCollectBO extends BaseBO {
     /**
      * 发送间隔
      */
-    private String sendInterval;
+    private Integer sendInterval;
 
     /**
      * 汇总间隔
@@ -73,14 +78,6 @@ public class BusinessEvaluateCollectBO extends BaseBO {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
     }
 
     public String getOperateUser() {
@@ -115,11 +112,11 @@ public class BusinessEvaluateCollectBO extends BaseBO {
         this.sendIntervalType = sendIntervalType;
     }
 
-    public String getSendInterval() {
+    public Integer getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(String sendInterval) {
+    public void setSendInterval(Integer sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -145,5 +142,21 @@ public class BusinessEvaluateCollectBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

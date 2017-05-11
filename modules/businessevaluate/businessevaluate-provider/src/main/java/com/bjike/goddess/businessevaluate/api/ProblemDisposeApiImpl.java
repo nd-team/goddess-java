@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.ProblemDisposeDTO;
 import com.bjike.goddess.businessevaluate.service.ProblemDisposeSer;
 import com.bjike.goddess.businessevaluate.to.ProblemDisposeTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class ProblemDisposeApiImpl implements ProblemDisposeAPI {
     @Override
     public List<ProblemDisposeBO> pageList(ProblemDisposeDTO dto) throws SerException {
         return problemDisposeSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(ProblemDisposeDTO dto) throws SerException {
+        return problemDisposeSer.count(dto);
+    }
+
+    @Override
+    public ProblemDisposeBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(problemDisposeSer.findById(id), ProblemDisposeBO.class);
     }
 }

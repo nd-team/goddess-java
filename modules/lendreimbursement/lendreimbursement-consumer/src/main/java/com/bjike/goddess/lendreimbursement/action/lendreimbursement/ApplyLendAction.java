@@ -8,10 +8,8 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
-import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
 import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
@@ -22,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -53,6 +50,25 @@ public class ApplyLendAction {
         try {
             Long count = applyLendAPI.countApplyLend(applyLendDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个申请借款
+     *
+     * @param id 项目签订与立项id
+     * @des 根据id获取申请借款
+     * @return  class ApplyLendVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            ApplyLendVO applyLendVO = BeanTransform.copyProperties(
+                    applyLendAPI.getOneById(id), ApplyLendVO.class);
+            return ActResult.initialize(applyLendVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -163,7 +179,7 @@ public class ApplyLendAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ApplyLendTO applyLendTO ,BindingResult bindingResult) throws ActException {
         //TODO: tanghaixiang 2017-04-10
-       return  new ActResult(null);
+        return  new ActResult(null);
     }
 
 
@@ -297,11 +313,11 @@ public class ApplyLendAction {
     }
 
     /**
-     * 运营商误部冻结
+     * 运营商务部冻结
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
-     * @des 运营商误部冻结
+     * @des 运营商务部冻结
      * @version v1
      */
     @LoginAuth
@@ -466,6 +482,23 @@ public class ApplyLendAction {
     }
 
     /**
+     * 已审核或分析记录总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有已审核或分析记录总条数
+     * @version v1
+     */
+    @GetMapping("v1/countHasAudit")
+    public Result countHasAudit(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countHasAudit(applyLendDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 已审核或分析记录列表
      *
      * @param applyLendDTO 申请借款信息dto
@@ -477,8 +510,25 @@ public class ApplyLendAction {
     public Result findListHasAudit(ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listHasAudit(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listHasAudit(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 等待付款总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有等待付款总条数
+     * @version v1
+     */
+    @GetMapping("v1/countWaitPay")
+    public Result countWaitPay(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countWaitPay(applyLendDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -504,11 +554,11 @@ public class ApplyLendAction {
     }
 
     /**
-     * 等待付款的付款编辑
+     * 付款
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
-     * @des 等待付款的付款编辑
+     * @des 等待付款的付款
      * @version v1
      */
     @LoginAuth
@@ -536,6 +586,23 @@ public class ApplyLendAction {
     }
 
     /**
+     * 确认收款总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有确认收款总条数
+     * @version v1
+     */
+    @GetMapping("v1/countRecieve")
+    public Result countSureRecieve(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countSureRecieve(applyLendDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 确认收款列表
      *
      * @param applyLendDTO 申请借款信息dto
@@ -547,7 +614,7 @@ public class ApplyLendAction {
     public Result findListSureRecieve(ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listSureRecieveMoney(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listSureRecieveMoney(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -555,11 +622,11 @@ public class ApplyLendAction {
     }
 
     /**
-     * 确认收款编辑
+     * 确认收款
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
-     * @des 确认收款编辑
+     * @des 确认收款
      * @version v1
      */
     @LoginAuth
@@ -567,7 +634,24 @@ public class ApplyLendAction {
     public Result editSureRecieve(  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editSureRecieveMoney(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款记录总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有借款记录总条数
+     * @version v1
+     */
+    @GetMapping("v1/countBorRecord")
+    public Result countBorrowRecord(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countBorrowRecord(applyLendDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -585,7 +669,7 @@ public class ApplyLendAction {
     public Result findListBorrowRecord(ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listBorrowRecord(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listBorrowRecord(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -605,7 +689,7 @@ public class ApplyLendAction {
     public Result editReturn(  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editReturnBorrowRecord(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -624,7 +708,7 @@ public class ApplyLendAction {
     public Result editSend(@Validated(ApplyLendTO.TESTReturnSend.class) ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editBorrowRecordSend(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -639,10 +723,10 @@ public class ApplyLendAction {
      * @version v1
      */
     @GetMapping("v1/listAccountVoucher/{id}")
-    public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result listAccountVoucher(@PathVariable String id) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
+                    applyLendAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -673,6 +757,23 @@ public class ApplyLendAction {
     public Result uploadFileBorrow(ApplyLendTO applyLendTO ,BindingResult bindingResult) throws ActException {
         //TODO: tanghaixiang 2017-04-10
         return  new ActResult(null);
+    }
+
+    /**
+     * 还款记录总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有还款记录总条数
+     * @version v1
+     */
+    @GetMapping("v1/countReturn")
+    public Result countReturn(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countReturn(applyLendDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
@@ -708,18 +809,18 @@ public class ApplyLendAction {
     }
 
     /**
-     * 借款记录生成记账凭证
+     * 还款记录生成记账凭证
      *
      * @param id 申请借款信息id
      * @return class AccountVoucherVO
      * @des 借款记录生成记账凭证
      * @version v1
      */
-    @GetMapping("v1/listAccountVoucherByReturn/{id}")
-    public Result listVoucherReturn(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/listVoucherByReturn/{id}")
+    public Result listVoucherReturn(@PathVariable String id ) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByReturnMoney(id), AccountVoucherVO.class, true);
+                    applyLendAPI.listAccountVoucherByReturnMoney(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -734,12 +835,30 @@ public class ApplyLendAction {
      * @des 还款记录还款核对
      * @version v1
      */
-    @GetMapping("v1/listCheckReturn")
-    public Result listCheckReturn(@Validated(ApplyLendTO.TESTReturnMoney.class) ApplyLendTO applyLendTO, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/checkReturn")
+    public Result checkReturn(@Validated(ApplyLendTO.TESTCheckReturnMoney.class) ApplyLendTO applyLendTO ) throws ActException {
         try {
-            List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.checkReturnMoney(applyLendTO), ApplyLendVO.class, true);
+            ApplyLendVO applyLendVOList = BeanTransform.copyProperties(
+                    applyLendAPI.checkReturnMoney(applyLendTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 帐务核对总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有帐务核对总条数
+     * @version v1
+     */
+    @GetMapping("v1/countBusCheck")
+    public Result countBusCheck(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countBusCheck(applyLendDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -754,10 +873,10 @@ public class ApplyLendAction {
      * @version v1
      */
     @GetMapping("v1/listBusinessCheck")
-    public Result listBusinessCheck(@Validated ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
+    public Result listBusinessCheck( ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listBusinessCheck(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listBusinessCheck(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -795,6 +914,24 @@ public class ApplyLendAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 已收票总条数
+     *
+     * @param applyLendDTO 申请借款信息dto
+     * @des 获取所有已收票总条数
+     * @version v1
+     */
+    @GetMapping("v1/countRecTicket")
+    public Result countRecTicket(ApplyLendDTO applyLendDTO) throws ActException {
+        try {
+            Long count = applyLendAPI.countRecTicket(applyLendDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 已收票记录

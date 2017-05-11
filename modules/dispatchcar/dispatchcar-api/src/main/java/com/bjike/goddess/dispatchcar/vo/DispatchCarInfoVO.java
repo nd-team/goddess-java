@@ -2,6 +2,7 @@ package com.bjike.goddess.dispatchcar.vo;
 
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 
 /**
@@ -207,7 +208,7 @@ public class DispatchCarInfoVO {
     /**
      * 评价司机
      */
-    private String evaluatedriver;
+    private Evaluate evaluatedriver;
 
     /**
      * 小票附件
@@ -230,17 +231,17 @@ public class DispatchCarInfoVO {
     private Double mealCost;
 
     /**
-     * 资金模块意见
+     * 资金模块核对意见
      */
     private String fundModuleSugg;
 
     /**
-     * 预算模块意见
+     * 预算模块核对意见
      */
     private String budgetModuleSugg;
 
     /**
-     * 任务下达人意见
+     * 任务下达人审核意见
      */
     private String principalSugg;
 
@@ -689,11 +690,11 @@ public class DispatchCarInfoVO {
         this.roadCost = roadCost;
     }
 
-    public String getEvaluatedriver() {
+    public Evaluate getEvaluatedriver() {
         return evaluatedriver;
     }
 
-    public void setEvaluatedriver(String evaluatedriver) {
+    public void setEvaluatedriver(Evaluate evaluatedriver) {
         this.evaluatedriver = evaluatedriver;
     }
 

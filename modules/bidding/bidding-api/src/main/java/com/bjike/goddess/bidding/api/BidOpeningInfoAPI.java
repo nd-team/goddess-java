@@ -105,14 +105,13 @@ public interface BidOpeningInfoAPI {
     /**
      * 汇总
      *
-     * @param cities cities
+     * @param cities 地市
      * @return class BidOpeningCollectBO
      * @throws SerException
      */
-    default List<BidOpeningCollectBO> collectBidOpening(String[] cities) throws SerException {
+    default List<BidOpeningCollectBO> collectBidOpening(String [] cities) throws SerException {
         return null;
     }
-
     /**
      * 地市
      *

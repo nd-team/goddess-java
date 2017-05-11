@@ -2,13 +2,13 @@ package com.bjike.goddess.common.consumer.action;
 
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +22,25 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public abstract class BaseFileAction {
+
+    /**
+     * 输出文件
+     * @param response
+     * @param bytes
+     * @param fileName
+     * @throws IOException
+     */
+    public void writeOutFile(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+        response.reset();
+        response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.addHeader("Content-Length", "" + bytes.length);
+        OutputStream os = new BufferedOutputStream(response.getOutputStream());
+        response.setContentType("application/octet-stream");
+        os.write(bytes);// 输出文件
+        os.flush();
+        os.close();
+    }
+
     /**
      * 上传文件调用该方法获得文件流
      * 需要单独处理path
@@ -106,5 +125,25 @@ public abstract class BaseFileAction {
         }
     }
 
+    /**
+     * 上传文件转bytes
+     *
+     * @param request
+     * @return 文件列表[字节]
+     * @throws SerException
+     */
+    public List<byte[]> getBytes(HttpServletRequest request) throws SerException {
+        try {
+            List<MultipartFile> multipartFiles = getMultipartFile(request);
+            List<byte[]> bytesList = new ArrayList<>(multipartFiles.size());
+            for (MultipartFile mf : multipartFiles) {
+                byte[] bytes = IOUtils.toByteArray(mf.getInputStream());
+                bytesList.add(bytes);
+            }
+            return bytesList;
+        } catch (IOException e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
 }

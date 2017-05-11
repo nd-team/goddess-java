@@ -121,16 +121,26 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     public List<BusinessEvaluateCollectBO> pageList(BusinessEvaluateCollectDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         List<BusinessEvaluateCollect> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
+
+        List<BusinessEvaluateCollectBO> boList = BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
+
+        for(BusinessEvaluateCollectBO bo : boList){
+            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectId());
+            if (info != null) {
+                bo.setProject(info.getProject());
+            }
+        }
+
+        return boList;
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<EvaluateCollectTotalBO> collectPageList(String area, String project) throws SerException {
+    public List<EvaluateCollectTotalBO> collectTotal(String area, String project) throws SerException {
 
         EvaluateProjectInfoDTO dto = new EvaluateProjectInfoDTO();
         dto.getSorts().add("createTime=desc");
-        String sql = "select distinct area ,1 from businessevaluate_evaluateprojectinfo info where 0 = 0 ";
+        String sql = "select distinct area  from businessevaluate_evaluateprojectinfo info where 0 = 0 ";
         if (!StringUtils.isEmpty(project)) {
             dto.getConditions().add(Restrict.eq("project", project));
             sql = sql + "and info.project = '" + project + "'";
@@ -143,7 +153,7 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         List<EvaluateProjectInfo> areaList = evaluateProjectInfoSer.findBySql(sql, EvaluateProjectInfo.class, new String[]{"area"});
         //查询符合条件的项目信息
         List<EvaluateProjectInfo> infoList = evaluateProjectInfoSer.findByCis(dto);
-        List<EvaluateCollectTotalBO> boList = BeanTransform.copyProperties(areaList, BusinessEvaluateCollectBO.class);
+        List<EvaluateCollectTotalBO> boList = BeanTransform.copyProperties(areaList, EvaluateCollectTotalBO.class);
 
         if (boList != null && !boList.isEmpty()) {
 
@@ -228,7 +238,12 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         if (list != null && !list.isEmpty()) {
             Double cost = 0.0;
             for (ProjectCost model : list) {
-                cost = cost + model.getServiceCost() + model.getEntertainCost() + model.getCommission() + model.getAnother();
+                if(model.getAnother()!=null){
+                    cost = cost + model.getServiceCost() + model.getEntertainCost() + model.getCommission() + model.getAnother();
+                }else{
+                    cost = cost + model.getServiceCost() + model.getEntertainCost() + model.getCommission();
+                }
+
             }
             totalCost = cost;
         }

@@ -23,7 +23,7 @@ public class ProjectCost extends BaseEntity {
     /**
      * 服务费用
      */
-    @Column(name = "serviceCost", columnDefinition = "VARCHAR(255)   COMMENT '服务费用'")
+    @Column(name = "serviceCost", columnDefinition = "DECIMAL(10,2)   COMMENT '服务费用'")
     private Double serviceCost;
 
     /**
@@ -35,13 +35,13 @@ public class ProjectCost extends BaseEntity {
     /**
      * 提成
      */
-    @Column(name = "commission", columnDefinition = "VARCHAR(255)   COMMENT '提成'")
+    @Column(name = "commission", columnDefinition = "DECIMAL(10,2)   COMMENT '提成'")
     private Double commission;
 
     /**
      * 其它
      */
-    @Column(name = "another", columnDefinition = "VARCHAR(255)   COMMENT '其它'")
+    @Column(name = "another", columnDefinition = "DECIMAL(10,2)   COMMENT '其它'")
     private Double another;
 
     /**

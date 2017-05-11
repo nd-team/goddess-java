@@ -111,9 +111,6 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HolidayProgrammeBO editHolidayProgramme(HolidayProgrammeTO holidayProgrammeTO) throws SerException {
-        if(StringUtils.isBlank(holidayProgrammeTO.getId())){
-            throw new SerException("id不能为空");
-        }
         HolidayProgramme holidayProgramme = BeanTransform.copyProperties(holidayProgrammeTO,HolidayProgramme.class,true);
         HolidayProgramme temp = super.findById( holidayProgrammeTO.getId() );
 

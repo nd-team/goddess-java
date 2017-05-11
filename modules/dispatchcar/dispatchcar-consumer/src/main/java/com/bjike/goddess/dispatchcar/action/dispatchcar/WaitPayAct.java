@@ -10,11 +10,12 @@ import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,16 +35,17 @@ public class WaitPayAct {
     private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     /**
-     * 等待付款页面分页查询
+     * 列表分页查询
      *
      * @param dto 分页条件
+     * @return class DispatchCarInfoVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result pageList(DispatchCarInfoDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("findType", FindType.WAITPAY));
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -54,29 +56,32 @@ public class WaitPayAct {
      * 审核详情
      *
      * @param id 出车记录id
+     * @return class AuditResultVO
      * @version v1
      */
-    @GetMapping("v1/findAudit/{id}")
-    public Result findAudit(@PathVariable String id) throws ActException {
+    @GetMapping("v1/audit/{id}")
+    public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), DispatchCarInfoVO.class);
-            return ActResult.initialize(vo);
+            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAuditResult(id), AuditResultVO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 单据审核
+     * 预计付款
      *
-     * @param to 预计付款信息
+     * @param id 出车记录id
+     * @param budgetPayDate 预计付款日期
+     * @param payPlan       付款计划
      * @version v1
      */
     @PostMapping("v1/predict")
-    public Result predict(DispatchCarInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result predict(@RequestParam String id, @RequestParam String budgetPayDate, @RequestParam String payPlan) throws ActException {
         try {
-            dispatchCarInfoAPI.editModel(to);
-            return new ActResult();
+            dispatchCarInfoAPI.predict(id,budgetPayDate,payPlan);
+            return new ActResult("添加计划成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -92,7 +97,7 @@ public class WaitPayAct {
     public Result pay(@PathVariable String id) throws ActException {
         try {
             dispatchCarInfoAPI.pay(id);
-            return new ActResult();
+            return new ActResult("付款成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

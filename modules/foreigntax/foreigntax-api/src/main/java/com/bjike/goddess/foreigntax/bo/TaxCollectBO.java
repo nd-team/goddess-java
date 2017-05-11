@@ -1,9 +1,6 @@
 package com.bjike.goddess.foreigntax.bo;
 
-import com.bjike.goddess.foreigntax.enums.PaymentStatus;
-
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * @Author: [xiazhili]
@@ -38,20 +35,6 @@ public class TaxCollectBO implements Serializable {
      */
     private Double tax;
 
-    /**
-     * 缴税状态
-     */
-    private PaymentStatus paymentStatus;
-
-    /**
-     * 付款日期
-     */
-    private String paymentDate;
-
-    /**
-     * 付款单位
-     */
-    private String paymentUnit;
 
     public String getCompany() {
         return company;
@@ -91,30 +74,6 @@ public class TaxCollectBO implements Serializable {
 
     public void setTax(Double tax) {
         this.tax = tax;
-    }
-
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public String getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(String paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentUnit() {
-        return paymentUnit;
-    }
-
-    public void setPaymentUnit(String paymentUnit) {
-        this.paymentUnit = paymentUnit;
     }
 
 

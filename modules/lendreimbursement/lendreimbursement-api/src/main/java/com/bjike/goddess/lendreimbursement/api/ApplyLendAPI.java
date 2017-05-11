@@ -30,6 +30,14 @@ public interface ApplyLendAPI {
     }
 
     /**
+     * 根据id获取申请借款
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO getOneById(String id) throws SerException {return null;}
+
+
+
+    /**
      * 申请借款列表
      *
      * @return class ApplyLendBO
@@ -231,6 +239,12 @@ public interface ApplyLendAPI {
         return null;
     }
 
+    /**
+     * 已审核/分析记录列表列表总条数
+     */
+    default Long countHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 已审核/分析记录列表
@@ -241,6 +255,12 @@ public interface ApplyLendAPI {
         return null;
     }
 
+    /**
+     * 等待付款总条数
+     */
+    default Long countWaitPay(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 等待付款列表
@@ -263,6 +283,13 @@ public interface ApplyLendAPI {
     }
 
     /**
+     * 确认收款总条数
+     */
+    default Long countSureRecieve(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 确认收款列表
      *
      * @return class ApplyLendBO
@@ -278,6 +305,13 @@ public interface ApplyLendAPI {
      * @return class ApplyLendBO
      */
     default ApplyLendBO editSureRecieveMoney(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 借款记录总条数
+     */
+    default Long countBorrowRecord(ApplyLendDTO applyLendDTO) throws SerException {
         return null;
     }
 
@@ -320,6 +354,12 @@ public interface ApplyLendAPI {
         return null;
     }
 
+    /**
+     * 还款记录总条数
+     */
+    default Long countReturn(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 还款记录
@@ -348,9 +388,17 @@ public interface ApplyLendAPI {
      * @param applyLendTO applyLendTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+    default ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         return null;
     }
+
+    /**
+     * 帐务核对总条数
+     */
+    default Long countBusCheck(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 帐务核对记录
@@ -369,6 +417,13 @@ public interface ApplyLendAPI {
      * @return class ApplyLendBO
      */
     default ApplyLendBO checkTicket(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 已收票总条数
+     */
+    default Long countRecTicket(ApplyLendDTO applyLendDTO) throws SerException {
         return null;
     }
 

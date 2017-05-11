@@ -8,9 +8,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
-import com.bjike.goddess.subjectcollect.vo.SubjectCollectVO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +29,12 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("subjectcollect/subjectcollect")
+@RequestMapping("subjectcollect")
 public class SubjectCollectAction {
     @Autowired
     private SubjectCollectAPI subjectCollectAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
     /**
      * 导出
      *
@@ -63,78 +68,6 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 汇总
-     *
-     * @param firstSubject 科目
-     * @des 根据科目汇总
-     * @return  class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collect")
-    public Result collectSubjectCollect(@NotBlank String[] firstSubject) throws ActException {
-        try {
-            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectSubjectCollect(firstSubject),SubjectCollectVO.class,true);
-            return ActResult.initialize(subjectCollectVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
-     * 汇总地区
-     *
-     * @param area 地区
-     * @des 根据地区汇总
-     * @return  class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collectArea")
-    public Result collectArea ( @NotBlank String[] area ) throws ActException {
-        try {
-            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectArea(area),SubjectCollectVO.class,true);
-            return ActResult.initialize(subjectCollectVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
-     * 汇总项目名称
-     *
-     * @param projectName 项目名称
-     * @des 根据项目名称汇总
-     * @return  class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collectProjectName")
-    public Result collectProjectName ( @NotBlank String[] projectName ) throws ActException {
-        try {
-            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectProjectName(projectName),SubjectCollectVO.class,true);
-            return ActResult.initialize(subjectCollectVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
-     * 汇总项目组
-     *
-     * @param projectGroup 项目名称
-     * @des 根据项目名称汇总
-     * @return  class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collectProjectGroup")
-    public Result collectProjectGroup ( @NotBlank String[] projectGroup ) throws ActException {
-        try {
-            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectProjectGroup(projectGroup),SubjectCollectVO.class,true);
-            return ActResult.initialize(subjectCollectVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
      * 对比汇总
      *
      * @param subjectCollectTO 对比汇总数据to
@@ -146,6 +79,81 @@ public class SubjectCollectAction {
         try {
             List<SubjectCollectBO> subjectCollectBOS = subjectCollectAPI.collectCompare(subjectCollectTO);
             return ActResult.initialize(subjectCollectBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 已审核科目汇总
+     *
+     * @param voucherGenerateDTO 记账凭证信息dto
+     * @return class VoucherGenerateVO
+     * @des 在所有已审核记账凭证信息进行科目汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectSub")
+    public Result collectSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 已审核地区汇总
+     *
+     * @param voucherGenerateDTO 记账凭证信息dto
+     * @return class VoucherGenerateVO
+     * @des 在所有已审核记账凭证信息进行地区汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectArea")
+    public Result collectArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 已审核项目组汇总
+     *
+     * @param voucherGenerateDTO 记账凭证信息dto
+     * @return class VoucherGenerateVO
+     * @des 在所有已审核记账凭证信息进行项目组汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectGroup")
+    public Result collectGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 已审核项目名称汇总
+     *
+     * @param voucherGenerateDTO 记账凭证信息dto
+     * @return class VoucherGenerateVO
+     * @des 在所有已审核记账凭证信息进行项目名称汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectPname")
+    public Result collectPname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+        try {
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectPname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

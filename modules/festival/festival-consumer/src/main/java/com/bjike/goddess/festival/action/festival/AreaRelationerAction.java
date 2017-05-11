@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -43,10 +42,10 @@ public class AreaRelationerAction {
      * @version v1
      */
     @GetMapping("v1/getAreaRelationerDetail")
-    public Result getAreaRelationerDetail (@Validated(AreaRelationerDTO.TESTFindDetail.class) AreaRelationerDTO areaRelationerDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result getAreaRelationerDetail (@Validated(AreaRelationerDTO.TESTFindDetail.class) AreaRelationerDTO areaRelationerDTO, BindingResult bindingResult) throws ActException {
         try {
             List<AreaRelationerVO> areaRelationerVOS = BeanTransform.copyProperties(
-                    areaRelationerAPI.getAreaRelationer(areaRelationerDTO.getHolidayProgrammeId()), AreaRelationerVO.class, request);
+                    areaRelationerAPI.getAreaRelationer(areaRelationerDTO.getHolidayProgrammeId()), AreaRelationerVO.class, true);
             return ActResult.initialize(areaRelationerVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

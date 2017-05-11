@@ -48,4 +48,20 @@ public interface LabourCostAPI {
      * @return 劳动成本结果集
      */
     List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(LabourCostDTO dto) throws SerException;
+
+    /**
+     * 根据id查询劳动成本
+     *
+     * @param id 劳动成本id
+     * @return 劳动成本
+     */
+    LabourCostBO findById(String id) throws SerException;
 }

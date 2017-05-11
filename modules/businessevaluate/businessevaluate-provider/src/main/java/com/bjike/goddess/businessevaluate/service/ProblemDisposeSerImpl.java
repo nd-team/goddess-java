@@ -73,8 +73,7 @@ public class ProblemDisposeSerImpl extends ServiceImpl<ProblemDispose, ProblemDi
     /**
      * 更新数据（编辑、审核）
      *
-     * @param to 油卡基本信息
-     * @throws SerException 更新油卡异常
+     * @param to 问题处理
      */
     public void updateModelInfo(ProblemDisposeTO to) throws SerException {
 

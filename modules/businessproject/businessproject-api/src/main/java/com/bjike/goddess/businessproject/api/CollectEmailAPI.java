@@ -12,14 +12,11 @@ import java.util.List;
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-03-16T19:08:18.882 ]
- * @Description: [ 商务项目合同邮件发送定制业务接口 ]
+ * @Description: [ 客户汇总邮件发送定制业务接口 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public interface CollectEmailAPI {
-
-
-
 
     /**
      * 总条数

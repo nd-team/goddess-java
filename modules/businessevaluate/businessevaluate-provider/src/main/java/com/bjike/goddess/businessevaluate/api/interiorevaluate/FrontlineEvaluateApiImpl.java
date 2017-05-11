@@ -5,6 +5,7 @@ import com.bjike.goddess.businessevaluate.dto.interiorevaluate.FrontlineEvaluate
 import com.bjike.goddess.businessevaluate.service.interiorevaluate.FrontlineEvaluateSer;
 import com.bjike.goddess.businessevaluate.to.interiorevaluate.FrontlineEvaluateTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class FrontlineEvaluateApiImpl implements FrontlineEvaluateAPI {
     @Override
     public List<FrontlineEvaluateBO> pageList(FrontlineEvaluateDTO dto) throws SerException {
         return frontlineEvaluateSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(FrontlineEvaluateDTO dto) throws SerException {
+        return frontlineEvaluateSer.count(dto);
+    }
+
+    @Override
+    public FrontlineEvaluateBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(frontlineEvaluateSer.findById(id),FrontlineEvaluateBO.class);
     }
 }

@@ -26,6 +26,11 @@ public class ProjectAmountVO {
     private Double budgetCost;
 
     /**
+     * 成本差额
+     */
+    private Double costSubtract;
+
+    /**
      * 费用
      */
     private Double fee;
@@ -34,6 +39,11 @@ public class ProjectAmountVO {
      * 预算费用
      */
     private Double budgetFee;
+
+    /**
+     * 费用差额
+     */
+    private Double feeSubtract;
 
     /**
      * 管理费
@@ -46,6 +56,11 @@ public class ProjectAmountVO {
     private Double budgetManageFee;
 
     /**
+     * 管理费差额
+     */
+    private Double manageFeeSubtract;
+
+    /**
      * 税金
      */
     private Double taxes;
@@ -56,6 +71,11 @@ public class ProjectAmountVO {
     private Double budgetTaxes;
 
     /**
+     * 税金差额
+     */
+    private Double taxesSubtract;
+
+    /**
      * 利润
      */
     private Double profit;
@@ -64,6 +84,11 @@ public class ProjectAmountVO {
      * 预算利润
      */
     private Double budgetProfit;
+
+    /**
+     * 利润差额
+     */
+    private Double profitSubtract;
 
     /**
      * 项目信息Id
@@ -216,5 +241,45 @@ public class ProjectAmountVO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Double getCostSubtract() {
+        return costSubtract;
+    }
+
+    public void setCostSubtract(Double costSubtract) {
+        this.costSubtract = costSubtract;
+    }
+
+    public Double getFeeSubtract() {
+        return feeSubtract;
+    }
+
+    public void setFeeSubtract(Double feeSubtract) {
+        this.feeSubtract = feeSubtract;
+    }
+
+    public Double getManageFeeSubtract() {
+        return manageFeeSubtract;
+    }
+
+    public void setManageFeeSubtract(Double manageFeeSubtract) {
+        this.manageFeeSubtract = manageFeeSubtract;
+    }
+
+    public Double getTaxesSubtract() {
+        return taxesSubtract;
+    }
+
+    public void setTaxesSubtract(Double taxesSubtract) {
+        this.taxesSubtract = taxesSubtract;
+    }
+
+    public Double getProfitSubtract() {
+        return profitSubtract;
+    }
+
+    public void setProfitSubtract(Double profitSubtract) {
+        this.profitSubtract = profitSubtract;
     }
 }

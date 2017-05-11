@@ -160,7 +160,7 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     public List<String> listAllSelfName() throws SerException {
 
         String[] fields = new String[]{"name"};
-        List<SelfCapabilityBO> selfBOS =super.findBySql("select name ,1 from capability_selfcapability group by name " , SelfCapabilityBO.class, fields);
+        List<SelfCapabilityBO> selfBOS =super.findBySql("select name  from capability_selfcapability group by name " , SelfCapabilityBO.class, fields);
 
         List<String> name = selfBOS.stream().map(SelfCapabilityBO::getName).collect(Collectors.toList());
         return name;

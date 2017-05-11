@@ -182,9 +182,9 @@ public class BiddingInfoAction {
     }
 
     /**
-     * 获取地市
+     * 获取地区
      *
-     * @des 获取地市集合
+     * @des 获取地区集合
      * @version v1
      */
     @GetMapping("v1/cities")

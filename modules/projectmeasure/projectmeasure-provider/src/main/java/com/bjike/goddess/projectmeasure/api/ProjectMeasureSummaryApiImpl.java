@@ -1,11 +1,9 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
-import com.bjike.goddess.projectmeasure.entity.ProjectMeasureSummary;
 import com.bjike.goddess.projectmeasure.service.ProjectMeasureSummarySer;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +25,6 @@ public class ProjectMeasureSummaryApiImpl implements ProjectMeasureSummaryAPI {
 
     @Autowired
     private ProjectMeasureSummarySer projectMeasureSummarySer;
-
-    /**
-     * 根据id查询项目测算汇总
-     *
-     * @param id 项目测算汇总唯一标识
-     * @return class ProjectMeasureSummaryBO
-     * @throws SerException
-     */
-    @Override
-    public ProjectMeasureSummaryBO findById(String id) throws SerException {
-        ProjectMeasureSummary model = projectMeasureSummarySer.findById(id);
-        return BeanTransform.copyProperties(model, ProjectMeasureSummaryBO.class);
-    }
-
-    /**
-     * 计算总条数
-     *
-     * @param dto 项目测算汇总dto
-     * @throws SerException
-     */
-    @Override
-    public Long count(ProjectMeasureSummaryDTO dto) throws SerException {
-        return projectMeasureSummarySer.count(dto);
-    }
 
     /**
      * 分页查询项目测算汇总邮件发送
@@ -101,23 +75,23 @@ public class ProjectMeasureSummaryApiImpl implements ProjectMeasureSummaryAPI {
     /**
      * 解冻项目测算汇总邮件记录
      *
-     * @param id 项目测算汇总唯一标识
+     * @param to 项目测算汇总to
      * @throws SerException
      */
     @Override
-    public void thaw(String id) throws SerException {
-        projectMeasureSummarySer.thaw(id);
+    public void thaw(ProjectMeasureSummaryTO to) throws SerException {
+        projectMeasureSummarySer.thaw(to);
     }
 
     /**
      * 冻结项目测算汇总邮件记录
      *
-     * @param id 项目测算汇总唯一标识
+     * @param to 项目测算汇总to
      * @throws SerException
      */
     @Override
-    public void congeal(String id) throws SerException {
-        projectMeasureSummarySer.congeal(id);
+    public void congeal(ProjectMeasureSummaryTO to) throws SerException {
+        projectMeasureSummarySer.congeal(to);
     }
 
     /**

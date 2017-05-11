@@ -49,6 +49,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return problemAcceptBOS;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
         ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class, true);
@@ -57,6 +58,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
         ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
@@ -66,6 +68,7 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         return BeanTransform.copyProperties(problemAcceptTO, ProblemAcceptBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeProblemAccept(String id) throws SerException {
         try {
@@ -76,13 +79,16 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String internalProjectName, String projectType) throws SerException {
         //TODO: xiazhili 2017-03-24 未做导出
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
+
     public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         /**
          * 内部项目名称
@@ -99,6 +105,14 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
         List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
         return problemAcceptBOS;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void upload() throws SerException {
+        //TODO: xiazhili 2017-03-24 未做上传
+        return;
+
     }
 
 }

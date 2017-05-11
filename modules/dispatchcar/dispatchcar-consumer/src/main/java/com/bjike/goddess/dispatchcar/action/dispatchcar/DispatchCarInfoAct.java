@@ -5,26 +5,23 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
-import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 出车记录
@@ -37,21 +34,58 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("dispatchcarinfo")
-public class DispatchCarInfoAct {
+public class DispatchCarInfoAct extends BaseFileAction{
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private FileAPI fileAPI;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DispatchCarInfoDTO dto) throws ActException {
+        try {
+            Long count = dispatchCarInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id出车记录
+     *
+     * @param id 出车记录id
+     * @return class DispatchCarInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findById(id), DispatchCarInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 新增出车记录
      *
-     * @param to 出车记录
+     * @param editTO 出车记录
+     * @return class DispatchCarInfoVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) DispatchCarInfoTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated({ADD.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.addModel(to), DispatchCarInfoVO.class);
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.addModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -61,13 +95,15 @@ public class DispatchCarInfoAct {
     /**
      * 编辑出车记录
      *
-     * @param to 出车记录
+     * @param editTO 出车记录
+     * @return class DispatchCarInfoVO
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult) throws ActException {
+    @PutMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class);
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -80,11 +116,11 @@ public class DispatchCarInfoAct {
      * @param id 出车记录id
      * @version v1
      */
-    @GetMapping("v1/freeze/{id}")
+    @PatchMapping("v1/freeze/{id}")
     public Result freeze(@PathVariable String id) throws ActException {
         try {
             dispatchCarInfoAPI.freeze(id);
-            return new ActResult();
+            return new ActResult("冻结成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -96,11 +132,11 @@ public class DispatchCarInfoAct {
      * @param id 出车记录id
      * @version v1
      */
-    @GetMapping("v1/breakFreeze/{id}")
+    @PatchMapping("v1/unfreeze/{id}")
     public Result breakFreeze(@PathVariable String id) throws ActException {
         try {
             dispatchCarInfoAPI.breakFreeze(id);
-            return new ActResult();
+            return new ActResult("解冻成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -113,36 +149,16 @@ public class DispatchCarInfoAct {
      * @param id      出车id
      * @version v1
      */
-    @GetMapping("v1/fileUpload/{id}")
+    @PostMapping("v1/upload/{id}")
     public Result fileUpload(HttpServletRequest request, BindingResult bindingResult, @PathVariable String id) throws ActException {
         try {
-            //文件上传
-            try {
-                List<MultipartFile> multipartFiles = this.getMultipartFile(request);
-                Map<String, byte[]> map = new HashMap<>(multipartFiles.size());
-                for (MultipartFile multipartFile : multipartFiles) {
-                    byte[] bytes = IOUtils.toByteArray(multipartFile.getInputStream());
-                    map.put(multipartFile.getOriginalFilename(), bytes);
-                }
-                DispatchCarInfoTO to = new DispatchCarInfoTO();
-                to.setId(id);
-                to.setMap(map);
-                dispatchCarInfoAPI.fileUpload(to);
-            } catch (IOException e) {
-                throw new ActException(e.getMessage());
-            }
-            return new ActResult();
-        } catch (SerException e) {
+            String path = "dispatchCar";
+            fileAPI.upload(this.getInputStreams(request, path.toString()));
+            return new ActResult("上传成功");
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
-    }
 
-    private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
-        if (null != request && !ServletFileUpload.isMultipartContent(request)) {
-            throw new SerException("上传表单不是multipart/form-data类型");
-        }
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
-        return multiRequest.getFiles("file");
     }
 
     /**
@@ -151,38 +167,23 @@ public class DispatchCarInfoAct {
      * @param id 出车记录id
      * @version v1
      */
-    @GetMapping("v1/findFiles/{id}")
+    @GetMapping("v1/files/{id}")
     public Result findFiles(@PathVariable String id) throws ActException {
-            //// TODO: 17-4-14 查看附件
-            return ActResult.initialize("success!");
-    }
-
-    /**
-     * 根据id查询出车记录
-     *
-     * @param id 出车记录id
-     * @version v1
-     */
-    @GetMapping("v1/findDetail/{id}")
-    public Result findDetail(@PathVariable String id) throws ActException {
-        try {
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findDetail(id), DispatchCarInfoVO.class);
-            return ActResult.initialize(vo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
+        //// TODO: 17-4-14 查看附件
+        return ActResult.initialize("success!");
     }
 
     /**
      * 审核详情
      *
      * @param id 出车记录id
+     * @return class AuditDetailVO
      * @version v1
      */
-    @GetMapping("v1/findAudit/{id}")
-    public Result findAudit(@PathVariable String id) throws ActException {
+    @GetMapping("v1/audit/{id}")
+    public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), DispatchCarInfoVO.class);
+            AuditDetailVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), AuditDetailVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -190,15 +191,16 @@ public class DispatchCarInfoAct {
     }
 
     /**
-     * 出车记录分页查询
+     * 列表分页查询
      *
      * @param dto 分页条件
+     * @return class DispatchCarInfoVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
-    public Result pageList(DispatchCarInfoDTO dto) throws ActException {
+    @GetMapping("v1/list")
+    public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

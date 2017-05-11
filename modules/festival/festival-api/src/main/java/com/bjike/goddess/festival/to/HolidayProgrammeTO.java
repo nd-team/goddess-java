@@ -76,7 +76,7 @@ public class HolidayProgrammeTO extends BaseTO {
     private String operateAudit;
 
     /**
-     * 是否通过(是/否)
+     * 是否通过
      */
     private String passCondition;
 

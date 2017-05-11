@@ -2,8 +2,13 @@ package com.bjike.goddess.businessevaluate.to;
 
 import com.bjike.goddess.businessevaluate.enums.CollectIntervalType;
 import com.bjike.goddess.businessevaluate.enums.SendIntervalType;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 商务评估汇总
@@ -19,22 +24,14 @@ public class BusinessEvaluateCollectTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目
      */
-    private String project;
-
-    /**
-     * 创建人/修改人
-     */
-    private String operateUser;
-
-    /**
-     * 上次发送时间
-     */
-    private String lastSendTime;
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
+    private String projectId;
 
     /**
      * 备注
@@ -44,28 +41,26 @@ public class BusinessEvaluateCollectTO extends BaseTO {
     /**
      * 发送间隔类型
      */
+    @NotNull(message = "发送间隔类型不能为空",groups = {ADD.class, EDIT.class})
     private SendIntervalType sendIntervalType;
 
     /**
      * 发送间隔
      */
-    private String sendInterval;
+    @NotNull(message = "发送间隔不能为空",groups = {ADD.class, EDIT.class})
+    private Integer sendInterval;
 
     /**
      * 汇总间隔
      */
+    @NotNull(message = "汇总间隔不能为空",groups = {ADD.class, EDIT.class})
     private CollectIntervalType collectInterval;
 
     /**
      * 发送对象
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String sendUser;
-
-    /**
-     * 数据状态
-     */
-    private Status status;
-
 
     public String getArea() {
         return area;
@@ -75,28 +70,12 @@ public class BusinessEvaluateCollectTO extends BaseTO {
         this.area = area;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getOperateUser() {
-        return operateUser;
-    }
-
-    public void setOperateUser(String operateUser) {
-        this.operateUser = operateUser;
-    }
-
-    public String getLastSendTime() {
-        return lastSendTime;
-    }
-
-    public void setLastSendTime(String lastSendTime) {
-        this.lastSendTime = lastSendTime;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getRemark() {
@@ -115,11 +94,11 @@ public class BusinessEvaluateCollectTO extends BaseTO {
         this.sendIntervalType = sendIntervalType;
     }
 
-    public String getSendInterval() {
+    public Integer getSendInterval() {
         return sendInterval;
     }
 
-    public void setSendInterval(String sendInterval) {
+    public void setSendInterval(Integer sendInterval) {
         this.sendInterval = sendInterval;
     }
 
@@ -139,11 +118,4 @@ public class BusinessEvaluateCollectTO extends BaseTO {
         this.sendUser = sendUser;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

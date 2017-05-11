@@ -86,4 +86,12 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
         return null;
     }
 
+    /**
+     * 获取内部项目编号
+     * @return class String
+     */
+    default List<String> getInnerNum( ) throws  SerException {
+        return null;
+    }
+
 }

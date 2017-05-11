@@ -26,7 +26,6 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
-
 ////#staffentry 员工入职tanghaixiang
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
@@ -40,9 +39,9 @@ include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
 //#招聘模块
-include ':modules:recruit:recruit-api'
-include ':modules:recruit:recruit-consumer'
-include ':modules:recruit:recruit-provider'
+//include ':modules:recruit:recruit-api'
+//include ':modules:recruit:recruit-consumer'
+//include ':modules:recruit:recruit-provider'
 //#市场活动管理
 //include ':modules:marketactivitymanage:marketactivitymanage-api'
 //include ':modules:marketactivitymanage:marketactivitymanage-consumer'
@@ -261,34 +260,6 @@ include ':modules:materialreceive:materialreceive-consumer'
 include ':modules:materialreceive:materialreceive-provider'
 
 //#employeecontract 员工合同管理
-include ':modules:employee-contract:employee-contract-api'
-include ':modules:employee-contract:employee-contract-consumer'
-include ':modules:employee-contract:employee-contract-provider'
-
-//#materialtransfer 物资调用
-include ':modules:materialtransfer:materialtransfer-api'
-include ':modules:materialtransfer:materialtransfer-consumer'
-include ':modules:materialtransfer:materialtransfer-provider'
-
-//#otherexpenses 其他费用
-include ':modules:otherexpenses:otherexpenses-api'
-include ':modules:otherexpenses:otherexpenses-consumer'
-include ':modules:otherexpenses:otherexpenses-provider'
-
-//#devicerepair 设备维修
-include ':modules:devicerepair:devicerepair-api'
-include ':modules:devicerepair:devicerepair-consumer'
-include ':modules:devicerepair:devicerepair-provider'
-
-//#contractquotemanager 合同单价
-include ':modules:contractquotemanager:contractquotemanager-api'
-include ':modules:contractquotemanager:contractquotemanager-consumer'
-include ':modules:contractquotemanager:contractquotemanager-provider'
-
-//#quartz 任务调度模块-liguiqin
-include ':modules:function:function-api'
-include ':modules:function:function-consumer'
-include ':modules:function:fution-provider'
 //include ':modules:employee-contract:employee-contract-api'
 //include ':modules:employee-contract:employee-contract-consumer'
 //include ':modules:employee-contract:employee-contract-provider'

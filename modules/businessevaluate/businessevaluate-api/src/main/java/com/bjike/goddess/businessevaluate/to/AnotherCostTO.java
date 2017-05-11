@@ -1,6 +1,11 @@
 package com.bjike.goddess.businessevaluate.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 其它成本
@@ -16,16 +21,19 @@ public class AnotherCostTO extends BaseTO {
     /**
      * 名称
      */
+    @NotBlank(message = "名称不能为空",groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 成本
      */
+    @NotNull(message = "成本不能为空",groups = {ADD.class,EDIT.class})
     private Double salary;
 
     /**
      * 项目信息Id
      */
+    @NotBlank(message = "项目不能为空",groups = {ADD.class,EDIT.class})
     private String projectInfoId;
 
 

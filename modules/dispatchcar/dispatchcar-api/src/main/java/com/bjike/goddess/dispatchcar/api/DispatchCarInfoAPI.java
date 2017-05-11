@@ -80,7 +80,7 @@ public interface DispatchCarInfoAPI {
      * @param id 出车记录id
      * @return 审核详情结果集
      */
-    List<AuditDetailBO> findAudit(String id) throws SerException;
+    AuditDetailBO findAudit(String id) throws SerException;
 
     /**
      * 资金核对意见
@@ -144,7 +144,7 @@ public interface DispatchCarInfoAPI {
     /**
      * 财务月汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
      * @return 月汇总结果集
      */
@@ -174,4 +174,40 @@ public interface DispatchCarInfoAPI {
      * @throws SerException
      */
     List<FinanceAnalyzeBO> selectAnalyze(FinanceCollectTO to) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 查询结果
+     */
+    Long count(DispatchCarInfoDTO dto) throws SerException;
+
+    /**
+     * 根据id查询出车记录
+     *
+     * @param id 出车记录id
+     * @return 出车记录
+     */
+    DispatchCarInfoBO findById(String id) throws SerException;
+
+    /**
+     * 查询全部等待付款出车记录
+     *
+     * @return 等待付款出车记录
+     */
+    default List<DispatchCarInfoBO> allWaitPay() throws SerException {
+        return null;
+    }
+
+    List<AuditResultBO> findAuditResult(String id) throws SerException;
+
+    /**
+     * 付款计划
+     *
+     * @param id            出车记录
+     * @param budgetPayDate 预计付款时间
+     * @param payPlan       付款计划
+     */
+    void predict(String id, String budgetPayDate, String payPlan) throws SerException;
 }

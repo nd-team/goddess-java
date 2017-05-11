@@ -29,7 +29,7 @@ public class BaseInfoManageTO extends BaseTO {
     /**
      * 业务类型
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务类型不能为空" )
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务类型不能为空" )
     private BusinessType businessType;
 
     /**
