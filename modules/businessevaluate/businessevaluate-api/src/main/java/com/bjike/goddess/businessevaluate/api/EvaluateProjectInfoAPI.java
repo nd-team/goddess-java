@@ -89,5 +89,20 @@ public interface EvaluateProjectInfoAPI {
      * @param id 项目基本信息id
      * @return 项目基本信息
      */
-    EvaluateProjectInfoBO findById(String id)throws SerException;
+    EvaluateProjectInfoBO findById(String id) throws SerException;
+
+    /**
+     * 查询项目信息所有地区
+     *
+     * @return 所有地区
+     */
+    List<EvaluateProjectInfoBO> findAllArea() throws SerException;
+
+    /**
+     * 查询项目信息所有地区
+     *
+     * @return 所有地区
+     */
+    List<EvaluateProjectInfoBO> findAllProejct() throws SerException;
+
 }

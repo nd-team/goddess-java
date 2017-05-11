@@ -140,7 +140,7 @@ public class MarketSesponseAct {
     }
 
     /**
-     * 分页查询项目基本信息
+     * 列表分页查询
      *
      * @param dto 分页条件
      * @return class MarketSesponseVO

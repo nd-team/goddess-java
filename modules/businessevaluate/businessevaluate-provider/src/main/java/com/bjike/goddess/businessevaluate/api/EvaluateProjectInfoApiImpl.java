@@ -3,6 +3,7 @@ package com.bjike.goddess.businessevaluate.api;
 import com.bjike.goddess.businessevaluate.bo.EvaluateProjectInfoBO;
 import com.bjike.goddess.businessevaluate.bo.ProjectProfitRateBO;
 import com.bjike.goddess.businessevaluate.dto.EvaluateProjectInfoDTO;
+import com.bjike.goddess.businessevaluate.entity.EvaluateProjectInfo;
 import com.bjike.goddess.businessevaluate.service.EvaluateProjectInfoSer;
 import com.bjike.goddess.businessevaluate.to.EvaluateProjectInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -70,5 +71,15 @@ public class EvaluateProjectInfoApiImpl implements EvaluateProjectInfoAPI {
     @Override
     public EvaluateProjectInfoBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(evaluateProjectInfoSer.findById(id),EvaluateProjectInfoBO.class);
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAllArea() throws SerException {
+        return evaluateProjectInfoSer.findAllArea();
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAllProejct() throws SerException {
+        return evaluateProjectInfoSer.findAllProject();
     }
 }

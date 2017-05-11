@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
@@ -13,6 +14,7 @@ import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,10 +34,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("dispatchcarinfo")
-public class DispatchCarInfoAct {
+public class DispatchCarInfoAct extends BaseFileAction{
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 查询总记录数
@@ -96,7 +100,7 @@ public class DispatchCarInfoAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
             DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
@@ -147,8 +151,14 @@ public class DispatchCarInfoAct {
      */
     @PostMapping("v1/upload/{id}")
     public Result fileUpload(HttpServletRequest request, BindingResult bindingResult, @PathVariable String id) throws ActException {
-        //// TODO: 17-5-6  
-        return new ActResult("success");
+        try {
+            String path = "dispatchCar";
+            fileAPI.upload(this.getInputStreams(request, path.toString()));
+            return new ActResult("上传成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+
     }
 
     /**

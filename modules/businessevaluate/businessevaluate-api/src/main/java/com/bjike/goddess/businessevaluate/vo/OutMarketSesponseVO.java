@@ -11,7 +11,7 @@ import com.bjike.goddess.businessevaluate.enums.ChannelType;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class MarketSesponseVO {
+public class OutMarketSesponseVO {
 
     /**
      * id

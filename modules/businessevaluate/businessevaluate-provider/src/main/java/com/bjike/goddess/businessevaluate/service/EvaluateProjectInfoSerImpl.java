@@ -191,6 +191,20 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
         return swapSize(boList);
     }
 
+    @Override
+    public List<EvaluateProjectInfoBO> findAllArea() throws SerException {
+        String sql = "select distinct area ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
+        List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"area"});
+        return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAllProject() throws SerException {
+        String sql = "select distinct project ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
+        List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"project"});
+        return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
+    }
+
     //排序利润率最高最低项目
     public List<ProjectProfitRateBO> swapSize(List<ProjectProfitRateBO> boList) throws SerException {
         //设置最快最慢月份

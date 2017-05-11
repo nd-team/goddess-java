@@ -34,16 +34,6 @@ public class BusinessEvaluateCollectTO extends BaseTO {
     private String projectId;
 
     /**
-     * 创建人/修改人
-     */
-    private String operateUser;
-
-    /**
-     * 上次发送时间
-     */
-    private String lastSendTime;
-
-    /**
      * 备注
      */
     private String remark;
@@ -72,12 +62,6 @@ public class BusinessEvaluateCollectTO extends BaseTO {
     @NotBlank(message = "项目不能为空",groups = {ADD.class, EDIT.class})
     private String sendUser;
 
-    /**
-     * 数据状态
-     */
-    private Status status;
-
-
     public String getArea() {
         return area;
     }
@@ -92,22 +76,6 @@ public class BusinessEvaluateCollectTO extends BaseTO {
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
-    }
-
-    public String getOperateUser() {
-        return operateUser;
-    }
-
-    public void setOperateUser(String operateUser) {
-        this.operateUser = operateUser;
-    }
-
-    public String getLastSendTime() {
-        return lastSendTime;
-    }
-
-    public void setLastSendTime(String lastSendTime) {
-        this.lastSendTime = lastSendTime;
     }
 
     public String getRemark() {
@@ -150,11 +118,4 @@ public class BusinessEvaluateCollectTO extends BaseTO {
         this.sendUser = sendUser;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

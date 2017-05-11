@@ -4,9 +4,7 @@ import com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI;
 import com.bjike.goddess.businessevaluate.api.EvaluateProjectInfoAPI;
 import com.bjike.goddess.businessevaluate.dto.BusinessEvaluateCollectDTO;
 import com.bjike.goddess.businessevaluate.to.BusinessEvaluateCollectTO;
-import com.bjike.goddess.businessevaluate.vo.BusinessEvaluateCollectVO;
-import com.bjike.goddess.businessevaluate.vo.EvaluateCollectTotalVO;
-import com.bjike.goddess.businessevaluate.vo.EvaluateProjectInfoVO;
+import com.bjike.goddess.businessevaluate.vo.*;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -51,6 +49,38 @@ public class BusinessEvaluateCollectAct {
     public Result porjects(HttpServletRequest request) throws ActException {
         try {
             List<EvaluateProjectInfoVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.findAll(), EvaluateProjectInfoVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区
+     *
+     * @return class AreasVO
+     * @version v1
+     */
+    @GetMapping("v1/areas")
+    public Result ares(HttpServletRequest request) throws ActException {
+        try {
+            List<AreasVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.findAllArea(),AreasVO.class,request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有不重复项目名称
+     *
+     * @return class ProjectsVO
+     * @version v1
+     */
+    @GetMapping("v1/allproject")
+    public Result allproject(HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectsVO> voList = BeanTransform.copyProperties(evaluateProjectInfoAPI.findAllProejct(),ProjectsVO.class,request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -173,7 +203,7 @@ public class BusinessEvaluateCollectAct {
     }
 
     /**
-     * 分页查询汇总定时器
+     * 列表分页查询
      *
      * @param dto 分页条件
      * @return class BusinessEvaluateCollectVO
@@ -192,8 +222,8 @@ public class BusinessEvaluateCollectAct {
     /**
      * 汇总详情
      *
-     * @param area    汇总条件
-     * @param project 汇总条件
+     * @param area    地区
+     * @param project 项目
      * @return class EvaluateCollectTotalVO
      * @version v1
      */

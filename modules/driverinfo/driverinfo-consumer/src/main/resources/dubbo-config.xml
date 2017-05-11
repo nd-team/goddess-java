@@ -15,5 +15,11 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!-- 注册接口-->
+
+
+	<!-- 司机信息API -->
 	<dubbo:reference id="driverInfoApiImpl" interface="com.bjike.goddess.driverinfo.api.DriverInfoAPI" />
+
+	<!-- 文件上传API -->
+	<dubbo:reference id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 </beans>

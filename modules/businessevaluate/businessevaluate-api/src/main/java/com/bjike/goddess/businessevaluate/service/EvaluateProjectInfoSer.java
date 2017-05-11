@@ -61,4 +61,20 @@ public interface EvaluateProjectInfoSer extends Ser<EvaluateProjectInfo, Evaluat
      * @throws SerException
      */
     List<ProjectProfitRateBO> profitScope() throws SerException;
+
+    /**
+     * 查询所有不重复地区
+     *
+     * @return
+     * @throws SerException
+     */
+    List<EvaluateProjectInfoBO> findAllArea() throws SerException;
+
+    /**
+     * 查询所有不重复项目
+     *
+     * @return
+     * @throws SerException
+     */
+    List<EvaluateProjectInfoBO> findAllProject() throws SerException;
 }

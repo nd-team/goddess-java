@@ -79,13 +79,12 @@ public class FinanceAuditAct {
     @GetMapping("v1/find/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findDetail(id), DispatchCarInfoVO.class, request);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findDetail(id), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 
     /**
      * 查询总记录数

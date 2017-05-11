@@ -93,13 +93,13 @@ public class ProjectAmountAct {
      * 根据id查询项目金额信息
      *
      * @param id 项目金额信息id
-     * @return class ProjectAmountInfoVO
+     * @return class ProjectAmountVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectAmountInfoVO vo = BeanTransform.copyProperties(projectAmountAPI.findById(id), ProjectAmountInfoVO.class, request);
+            ProjectAmountVO vo = BeanTransform.copyProperties(projectAmountAPI.findById(id), ProjectAmountVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -76,9 +76,9 @@ include ':modules:bidding:bidding-consumer'
 include ':modules:bidding:bidding-provider'
 
 //#竞争对手管理
-//include ':modules:competitormanage:competitormanage-api'
-//include ':modules:competitormanage:competitormanage-consumer'
-//include ':modules:competitormanage:competitormanage-provider'
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
 //#商务项目合同管理tanghaixiang
 include ':modules:businessproject:businessproject-api'
 include ':modules:businessproject:businessproject-consumer'

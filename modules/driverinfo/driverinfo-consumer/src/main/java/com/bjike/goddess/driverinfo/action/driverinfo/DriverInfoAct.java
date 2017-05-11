@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.driverinfo.api.DriverInfoAPI;
@@ -12,6 +13,7 @@ import com.bjike.goddess.driverinfo.bo.DriverInfoBO;
 import com.bjike.goddess.driverinfo.dto.DriverInfoDTO;
 import com.bjike.goddess.driverinfo.to.DriverInfoTO;
 import com.bjike.goddess.driverinfo.vo.DriverInfoVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -31,10 +33,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("driverinfo")
-public class DriverInfoAct {
+public class DriverInfoAct extends BaseFileAction {
 
     @Autowired
     private DriverInfoAPI driverInfoAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 新增司机信息
@@ -126,9 +130,14 @@ public class DriverInfoAct {
      * @version v1
      */
     @PostMapping("v1/uploadImage")
-    public Result uploadImage(String name, HttpServletRequest request) {
-        // TODO: 17-3-20
-        return null;
+    public Result uploadImage(String name, HttpServletRequest request) throws ActException {
+        try {
+            String path = "driverinfo";
+            fileAPI.upload(this.getInputStreams(request, path.toString()));
+            return new ActResult("上传成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**

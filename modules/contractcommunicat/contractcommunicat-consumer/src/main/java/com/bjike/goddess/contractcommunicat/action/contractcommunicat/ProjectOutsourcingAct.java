@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI;
@@ -16,12 +17,14 @@ import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectContractVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingCollectVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -35,10 +38,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("outsource")
-public class ProjectOutsourcingAct {
+public class ProjectOutsourcingAct extends BaseFileAction {
 
     @Autowired
     private ProjectOutsourcingAPI projectOutsourcingAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 根据id查询项目承包洽谈
@@ -129,9 +134,15 @@ public class ProjectOutsourcingAct {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request) {
-        // TODO: 17-3-20
-        return new ActResult("success");
+    public Result upload(HttpServletRequest request) throws ActException {
+        try {
+            String path = "/contract";
+            List<InputStream> inputStreams = this.getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult();
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
