@@ -347,7 +347,7 @@ public class ExcelUtil {
             File file = new File("/home/lgq/user.xlsx");
             InputStream is = new FileInputStream(file);
             Excel excel = new Excel();
-            List<UserExcel> users = transToClazz(is, UserExcel.class, excel);
+            List<UserExcel> users = excelToClazz(is, UserExcel.class, excel);
 
             /**
              * 对象列表转excel bytes
