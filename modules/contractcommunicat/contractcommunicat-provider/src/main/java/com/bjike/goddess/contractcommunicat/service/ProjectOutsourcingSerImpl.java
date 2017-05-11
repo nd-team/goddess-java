@@ -36,25 +36,85 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO saveProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
-        ProjectOutsourcing model = BeanTransform.copyProperties(to, ProjectOutsourcing.class ,true);
+        isExist(to);
+        ProjectOutsourcing model = BeanTransform.copyProperties(to, ProjectOutsourcing.class, true);
         super.save(model);
         to.setId(model.getId());
-        return BeanTransform.copyProperties(to,ProjectOutsourcingBO.class);
+        return BeanTransform.copyProperties(to, ProjectOutsourcingBO.class);
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO editProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
 
-        if(!StringUtils.isEmpty(to.getId())){
+        if (!StringUtils.isEmpty(to.getId())) {
             ProjectOutsourcing model = super.findById(to.getId());
-            BeanTransform.copyProperties(to,model,true);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
-        }else{
+            if (model != null) {
+                isExist(to);
+                BeanTransform.copyProperties(to, model, true);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            } else {
+                throw new SerException("编辑对象不能为空");
+            }
+
+        } else {
             throw new SerException("更新ID不能为空!");
         }
-        return BeanTransform.copyProperties(to,ProjectOutsourcingBO.class);
+        return BeanTransform.copyProperties(to, ProjectOutsourcingBO.class);
+    }
+
+    //校验字段是否存在
+    public void isExist(ProjectOutsourcingTO to) throws SerException {
+        ProjectOutsourcingDTO dto = null;
+        if (!StringUtils.isEmpty(to.getContractExtProject())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("contractExtProject", to.getContractExtProject()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("合同外部项目名称已经存在!");
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractExtCode())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("contractExtCode", to.getContractExtCode()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("合同外部编号已经存在!");
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("内部项目名称已经存在!");
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractInCode())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("contractInCode", to.getContractInCode()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("内部项目编号已经存在!");
+            }
+        }
+        if (!StringUtils.isEmpty(to.getOutsourcingProject())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("outsourcingProject", to.getOutsourcingProject()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("外包项目名称已经存在!");
+            }
+        }
+        if (!StringUtils.isEmpty(to.getOutsourcingCode())) {
+            dto = new ProjectOutsourcingDTO();
+            dto.getConditions().add(Restrict.eq("outsourcingCode", to.getOutsourcingCode()));
+            List<ProjectOutsourcing> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                throw new SerException("外包项目编号已经存在!");
+            }
+        }
     }
 
     @Override
@@ -62,17 +122,17 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     public List<ProjectOutsourcingBO> pageList(ProjectOutsourcingDTO dto) throws SerException {
 
         dto.getSorts().add("createTime=desc");
-        if(dto.getCommunicateUser()!=null){
-            dto.getConditions().add(Restrict.like("communicateUser",dto.getCommunicateUser()));
+        if (dto.getCommunicateUser() != null) {
+            dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
         }
-        if(dto.getCommunicateObj()!=null){
-            dto.getConditions().add(Restrict.like("communicateObj",dto.getCommunicateObj()));
+        if (dto.getCommunicateObj() != null) {
+            dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
         }
-        if(dto.getCommunicateResult()!=null){
-            dto.getConditions().add(Restrict.like("communicateResult",dto.getCommunicateResult()));
+        if (dto.getCommunicateResult() != null) {
+            dto.getConditions().add(Restrict.like("communicateResult", dto.getCommunicateResult()));
         }
 
-        List<ProjectOutsourcingBO> pageList = BeanTransform.copyProperties(super.findByPage(dto),ProjectOutsourcingBO.class);
+        List<ProjectOutsourcingBO> pageList = BeanTransform.copyProperties(super.findByPage(dto), ProjectOutsourcingBO.class);
         return pageList;
     }
 
@@ -81,14 +141,14 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     public List<ProjectOutsourcingCollectBO> collect(CollectConditionTO to) throws SerException {
         ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
         dto.getSorts().add("createTime=desc");
-        if(!StringUtils.isEmpty(to.getContractInProject())){
-            dto.getConditions().add(Restrict.like("contractInProject",to.getContractInProject()));
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto.getConditions().add(Restrict.like("contractInProject", to.getContractInProject()));
         }
-        if(!StringUtils.isEmpty(to.getStartTime())){
-            dto.getConditions().add(Restrict.gt("createTime",to.getStartTime()));
+        if (!StringUtils.isEmpty(to.getStartTime())) {
+            dto.getConditions().add(Restrict.gt("createTime", to.getStartTime()));
         }
-        if(!StringUtils.isEmpty(to.getEndTime())){
-            dto.getConditions().add(Restrict.lt("createTime",to.getEndTime()));
+        if (!StringUtils.isEmpty(to.getEndTime())) {
+            dto.getConditions().add(Restrict.lt("createTime", to.getEndTime()));
         }
         return setCollectField(super.findByPage(dto));
 
@@ -101,8 +161,8 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     //设置汇总字段
-    public List<ProjectOutsourcingCollectBO> setCollectField(List<ProjectOutsourcing> list) throws SerException{
-        List<ProjectOutsourcingBO>  boList = BeanTransform.copyProperties(list,ProjectOutsourcingBO.class);
+    public List<ProjectOutsourcingCollectBO> setCollectField(List<ProjectOutsourcing> list) throws SerException {
+        List<ProjectOutsourcingBO> boList = BeanTransform.copyProperties(list, ProjectOutsourcingBO.class);
 
         List<ProjectOutsourcingCollectBO> returnBoList = BeanTransform.copyProperties(list, ProjectOutsourcingCollectBO.class);
         Integer totalCooperate = 0;
@@ -125,10 +185,10 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         }
 
         Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-        ProjectOutsourcingCollectBO total = new ProjectOutsourcingCollectBO("合计", null, null, null, null,null,
+        ProjectOutsourcingCollectBO total = new ProjectOutsourcingCollectBO("合计", null, null, null, null, null,
                 totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
         returnBoList.add(total);
 
-        return  returnBoList;
+        return returnBoList;
     }
 }

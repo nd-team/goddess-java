@@ -48,4 +48,19 @@ public interface MarketSesponseAPI {
      * @return 市场反应和创新能力结果集
      */
     List<MarketSesponseBO> pageList(MarketSesponseDTO dto) throws SerException;
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto 查询条件
+     * @return 总记录数
+     */
+    Long count(MarketSesponseDTO dto) throws SerException;
+
+    /**
+     * 根据id查询市场反应和创新能力
+     * @param id 市场反应和创新能力id
+     * @return 市场反应和创新能力
+     */
+    MarketSesponseBO findById(String id) throws SerException;
 }

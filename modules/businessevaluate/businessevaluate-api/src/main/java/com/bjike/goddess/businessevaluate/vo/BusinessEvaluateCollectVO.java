@@ -27,7 +27,7 @@ public class BusinessEvaluateCollectVO {
     /**
      * 项目
      */
-    private String projectId;
+    private String project;
 
     /**
      * 创建人/修改人
@@ -83,14 +83,6 @@ public class BusinessEvaluateCollectVO {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
     }
 
     public String getOperateUser() {
@@ -155,5 +147,13 @@ public class BusinessEvaluateCollectVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 }

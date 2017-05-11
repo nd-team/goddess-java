@@ -152,7 +152,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
     }
 
-    /*@Override
+    @Override
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
         List<MarketInfoBO> marketInfoBOS = super.findBySql("select distinct area from market_marketinfo group by area order by area asc ", MarketInfoBO.class, fields);
@@ -163,7 +163,7 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
         return collectList;
     }
-*/
+
 
     /**
      * 发送间隔单位转换

@@ -85,5 +85,13 @@ public interface MarketEmailAPI {
         return null;
     }
 
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
 
 }

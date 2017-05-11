@@ -44,14 +44,22 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     public ProjectAmountInfoBO findInfoById(String id) throws SerException {
         ProjectAmountInfoBO bo = new ProjectAmountInfoBO();
         EvaluateProjectInfo info = evaluateProjectInfoSer.findById(id);
+        if(info==null){
+            throw new SerException("项目不存在");
+        }
         bo.setCost(info.getCost());
-        bo.setFee(info.getManageCost());
+        bo.setManageFee(info.getManageCost());
         bo.setTaxes(info.getTaxes());
+
         //查询设置费用
         ProjectCostDTO projectCostDTO = new ProjectCostDTO();
         projectCostDTO.getConditions().add(Restrict.eq("projectInfoId", id));
         ProjectCost projectCost = projectCostSer.findOne(projectCostDTO);
-        Double fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission();
+        Double fee = 0.0;
+        if (projectCost != null) {
+            fee = projectCost.getServiceCost() + projectCost.getEntertainCost() + projectCost.getCommission();
+        }
+
         bo.setFee(fee);
         //利润 = 项目总金额 - 成本 -管理费 -税金 - 费用
         Double profit = info.getTotalAmount() - info.getCost() - info.getManageCost() - info.getTaxes() - fee;
@@ -97,7 +105,7 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
             //设置差额
             for (ProjectAmountBO bo : boList) {
                 bo.setCostSubtract(bo.getCost() - bo.getBudgetCost());
-                bo.setFeeSubtract(bo.getFee() - bo.getFeeSubtract());
+                bo.setFeeSubtract(bo.getFee() - bo.getBudgetFee());
                 bo.setManageFeeSubtract(bo.getManageFee() - bo.getBudgetManageFee());
                 bo.setTaxesSubtract(bo.getTaxes() - bo.getBudgetTaxes());
                 bo.setProfitSubtract(bo.getProfit() - bo.getBudgetProfit());

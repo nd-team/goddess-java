@@ -117,7 +117,7 @@ public class WaitAuditAct {
      * 预算核对意见
      *
      * @param id               出车记录id
-     * @param budgetModuleSugg 出车记录id
+     * @param budgetModuleSugg 意见
      * @version v1
      */
     @GetMapping("v1/budgetsugg")
@@ -134,7 +134,7 @@ public class WaitAuditAct {
      * 项目负责人或任务下发人审核
      *
      * @param id            出车记录id
-     * @param principalSugg 出车记录id
+     * @param principalSugg 审核意见
      * @param auditResult   审核结果
      * @version v1
      */

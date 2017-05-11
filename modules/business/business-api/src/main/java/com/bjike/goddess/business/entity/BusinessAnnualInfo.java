@@ -28,8 +28,8 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 报告年份
      */
-    @Column(name = "reportYear", columnDefinition = "DATE   COMMENT '报告年份'")
-    private LocalDate reportYear;
+    @Column(name = "reportYear", columnDefinition = "VARCHAR(255)   COMMENT '报告年份'")
+    private String reportYear;
 
     /**
      * 提交日期
@@ -58,11 +58,11 @@ public class BusinessAnnualInfo extends BaseEntity {
         this.companyName = companyName;
     }
 
-    public LocalDate getReportYear() {
+    public String getReportYear() {
         return reportYear;
     }
 
-    public void setReportYear(LocalDate reportYear) {
+    public void setReportYear(String reportYear) {
         this.reportYear = reportYear;
     }
 

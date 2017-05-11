@@ -80,12 +80,8 @@ public class WaitPayAct {
     @PostMapping("v1/predict")
     public Result predict(@RequestParam String id, @RequestParam String budgetPayDate, @RequestParam String payPlan) throws ActException {
         try {
-            DispatchCarInfoTO to = new DispatchCarInfoTO();
-            to.setId(id);
-            to.setBudgetPayDate(budgetPayDate);
-            to.setPayPlan(payPlan);
-            dispatchCarInfoAPI.editModel(to);
-            return new ActResult("审核成功");
+            dispatchCarInfoAPI.predict(id,budgetPayDate,payPlan);
+            return new ActResult("添加计划成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

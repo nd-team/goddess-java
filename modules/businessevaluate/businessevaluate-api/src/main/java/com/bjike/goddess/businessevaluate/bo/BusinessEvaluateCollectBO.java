@@ -24,6 +24,11 @@ public class BusinessEvaluateCollectBO extends BaseBO {
     /**
      * 项目
      */
+    private String project;
+
+    /**
+     * 项目Id
+     */
     private String projectId;
 
     /**
@@ -73,14 +78,6 @@ public class BusinessEvaluateCollectBO extends BaseBO {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
     }
 
     public String getOperateUser() {
@@ -145,5 +142,21 @@ public class BusinessEvaluateCollectBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

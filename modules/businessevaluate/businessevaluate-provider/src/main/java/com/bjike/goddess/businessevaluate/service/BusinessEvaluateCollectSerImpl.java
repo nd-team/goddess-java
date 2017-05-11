@@ -121,7 +121,17 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     public List<BusinessEvaluateCollectBO> pageList(BusinessEvaluateCollectDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         List<BusinessEvaluateCollect> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
+
+        List<BusinessEvaluateCollectBO> boList = BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
+
+        for(BusinessEvaluateCollectBO bo : boList){
+            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectId());
+            if (info != null) {
+                bo.setProject(info.getProject());
+            }
+        }
+
+        return boList;
     }
 
     @Override
