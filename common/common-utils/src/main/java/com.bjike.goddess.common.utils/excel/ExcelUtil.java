@@ -5,10 +5,7 @@ import com.bjike.goddess.common.utils.bean.DataTypeUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
@@ -68,7 +65,8 @@ public class ExcelUtil {
             validateHeader(headers, sheet.getRow(excel.getHeaderStartRow()));
             int rowTotal = sheet.getLastRowNum(); //总行数
             for (int i = 0; i < rowTotal; i++) {
-                XSSFRow row = sheet.getRow(excel.getContentStartRow() + i);
+                int rowIndex = excel.getContentStartRow() + i;
+                XSSFRow row = sheet.getRow(rowIndex);
                 if (null != row) {
                     int cellTotal = row.getLastCellNum();//总列数
                     if (cellTotal > 0) {
@@ -77,7 +75,7 @@ public class ExcelUtil {
                             ExcelHeader eh = headers.get(j);
                             Object val = convertValue(getCellValue(row.getCell(j)), eh, fields);
                             if (eh.notNull() && null == val) {
-                                throw new RuntimeException("列:" + eh.name() + "不能为空!");
+                                throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
                             } else if (null != val) {
                                 setFieldValue(obj, eh.name(), val, fields);
                             }
@@ -89,7 +87,6 @@ public class ExcelUtil {
             }
             return objects;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
 
@@ -105,16 +102,13 @@ public class ExcelUtil {
     public static <T> byte[] clazzToExcel(List<T> objects, Excel excel) throws Exception {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet(excel.getSheetName());
-
-        XSSFCellStyle contentStyle = wb.createCellStyle();  // 内容的样式
-        contentStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
-
         if (null != objects && objects.size() > 0) {
             List<Field> fields = ClazzUtils.getFields(objects.get(0).getClass()); //获得列表对象属性
             List<ExcelHeader> excelHeaders = getExcelHeaders(fields, excel.getExcludes()); //获得表头
             int rowSize = objects.size(); //数据行数
             int cellSize = excelHeaders.size();//数据列数
             int rowIndex = initTitleAndHeader(wb, sheet, excel, excelHeaders, cellSize);//初始化标题行及表头
+            XSSFCellStyle contentStyle = getStyle(wb, excel.getContentBGColor());
             for (int i = 0; i < rowSize; i++) {
                 Object obj = objects.get(i);
                 XSSFRow row = sheet.createRow(rowIndex++);
@@ -143,8 +137,8 @@ public class ExcelUtil {
                                 columnWidth = columnWidth > 30 ? columnWidth = 30 : columnWidth;
                                 sheet.setColumnWidth(j, columnWidth * 275);
                             }
-                            cell.setCellStyle(contentStyle);
                         }
+                        cell.setCellStyle(contentStyle);
                     } catch (Exception e) {
                         throw new RuntimeException(e.getMessage());
                     }
@@ -314,13 +308,7 @@ public class ExcelUtil {
         titleStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         titleStyle.setWrapText(true);
 
-        XSSFCellStyle headerStyle = wb.createCellStyle();  // 表头样式
-        headerStyle.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
-        headerStyle.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
-        headerStyle.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
-        headerStyle.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
-        headerStyle.setFillForegroundColor(excel.getHeaderBGColor()); //DARK_YELLOW
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
+        XSSFCellStyle headerStyle = getStyle(wb, excel.getHeaderBGColor());
         headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         headerStyle.setWrapText(true);
 
@@ -343,6 +331,21 @@ public class ExcelUtil {
         return rowIndex;
     }
 
+    private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
+        // 内容的样式
+        XSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        if (color != IndexedColors.WHITE.getIndex()) {
+            style.setFillForegroundColor(color); //DARK_YELLOW
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
+            style.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
+            style.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
+            style.setBorderTop(BorderStyle.THIN);// 单元格边框假粗细
+            style.setBorderBottom(BorderStyle.THIN);// 单元格边框粗细
+        }
+        return style;
+    }
+
 
     public static void main(String[] args) throws Exception {
         try {
@@ -357,9 +360,9 @@ public class ExcelUtil {
             /**
              * 对象列表转excel bytes
              */
-            Excel ex= new Excel(1, 2);
+            Excel ex = new Excel(1, 2);
             ex.setTitle("导出用户数据");
-         //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
+            //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
             byte[] bytes = clazzToExcel(users, ex);
             File out = new File("/home/lgq/out.xlsx");
             FileOutputStream fos = new FileOutputStream(out);
