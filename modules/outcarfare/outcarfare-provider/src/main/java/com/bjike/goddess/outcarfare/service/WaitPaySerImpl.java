@@ -1,17 +1,21 @@
 package com.bjike.goddess.outcarfare.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.outcarfare.bo.*;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +33,11 @@ import java.util.Set;
 @CacheConfig(cacheNames = "outcarfareSerCache")
 @Service
 public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements WaitPaySer {
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
+
     @Override
     public WaitPayBO save(WaitPayTO to) throws SerException {
-        //TODO:查找所有等待付款的人
         WaitPay waitPay = BeanTransform.copyProperties(to, WaitPay.class, true);
         super.save(waitPay);
         return BeanTransform.copyProperties(waitPay, WaitPayBO.class);
@@ -39,7 +45,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public void pay(WaitPayTO to) throws SerException {
-        WaitPay waitPay=super.findById(to.getId());
+        WaitPay waitPay = super.findById(to.getId());
         waitPay.setIsPay(to.getIsPay());
         super.update(waitPay);
     }
@@ -51,8 +57,80 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
-        List<WaitPay> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, WaitPayBO.class);
+        List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
+        List<WaitPay> waitPays = super.findAll();
+        if (list != null) {
+            for (DispatchCarInfoBO v : list) {
+                if (waitPays.size() == 0) {
+                    WaitPay waitPay = new WaitPay();
+                    BeanUtils.copyProperties(v, waitPay);
+                    waitPay.setDriverName(v.getDriver());
+                    waitPay.setCarDate(v.getDispatchDate());
+                    waitPay.setNumber(v.getNumber());
+                    waitPay.setArrival(v.getArea());
+                    waitPay.setCarPrice(v.getCarRentalCost());
+                    waitPay.setOvertimeHour((double) v.getOverWorkTime());
+                    waitPay.setOvertimeFee(v.getOverWorkCost());
+                    waitPay.setAllowance(v.getMealCost());
+                    waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
+                    waitPay.setAmount(v.getCost());
+                    waitPay.setDispatchCarInfoId(v.getId());
+                    super.save(waitPay);
+                } else {
+                    boolean b1 = true;
+                    for (WaitPay p : waitPays) {
+                        if (p.getDispatchCarInfoId().equals(v.getId())) {
+                            LocalDateTime a = p.getCreateTime();
+                            LocalDateTime b = p.getModifyTime();
+                            String id = p.getId();
+                            BeanUtils.copyProperties(v, p);
+                            p.setId(id);
+                            p.setCreateTime(a);
+                            p.setModifyTime(b);
+                            p.setDriverName(v.getDriver());
+                            p.setCarDate(v.getDispatchDate());
+                            p.setNumber(v.getNumber());
+                            p.setArrival(v.getArea());
+                            p.setCarPrice(v.getCarRentalCost());
+                            p.setOvertimeHour((double) v.getOverWorkTime());
+                            p.setOvertimeFee(v.getOverWorkCost());
+                            p.setAllowance(v.getMealCost());
+                            p.setParkFee(v.getParkCost() + v.getRoadCost());
+                            p.setAmount(v.getCost());
+                            p.setDispatchCarInfoId(v.getId());
+                            p.setDispatchCarInfoId(v.getId());
+                            super.update(p);
+                            b1 = false;
+                        }
+                    }
+                    if (b1) {
+                        WaitPay waitPay = new WaitPay();
+                        BeanUtils.copyProperties(v, waitPay);
+                        waitPay.setDispatchCarInfoId(v.getId());
+                        waitPay.setDriverName(v.getDriver());
+                        waitPay.setCarDate(v.getDispatchDate());
+                        waitPay.setNumber(v.getNumber());
+                        waitPay.setArrival(v.getArea());
+                        waitPay.setCarPrice(v.getCarRentalCost());
+                        waitPay.setOvertimeHour((double) v.getOverWorkTime());
+                        waitPay.setOvertimeFee(v.getOverWorkCost());
+                        waitPay.setAllowance(v.getMealCost());
+                        waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
+                        waitPay.setAmount(v.getCost());
+                        waitPay.setDispatchCarInfoId(v.getId());
+                        super.save(waitPay);
+                    }
+                }
+            }
+        }
+        for (WaitPay p : super.findAll()) {
+            DispatchCarInfo v = find(p.getDispatchCarInfoId());
+            if (v == null/*||v.getPay()*/) {
+                super.remove(p.getId());
+            }
+        }
+        List<WaitPay> l = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(l, WaitPayBO.class);
     }
 
     @Override
@@ -64,7 +142,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<DriverCountBO> driverCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
-        List<PayBO> list=findAlreadyPays();
+        List<PayBO> list = findAlreadyPays();
         Set<String> drivers = findAllDrivers();
         Set<Double> prices = findAllPrices();
         List<DriverCountBO> boList = new ArrayList<DriverCountBO>();
@@ -104,7 +182,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<ArrivalCountBO> arrivalCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
-        List<PayBO> list=findAlreadyPays();
+        List<PayBO> list = findAlreadyPays();
         Set<String> arrivals = findAllArrivals();
         Set<Double> prices = findAllPrices();
         List<ArrivalCountBO> boList = new ArrayList<ArrivalCountBO>();
@@ -144,7 +222,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<CarUserCountBO> carUserCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
-        List<PayBO> list=findAlreadyPays();
+        List<PayBO> list = findAlreadyPays();
         Set<String> carUsers = findAllCarUsers();
         Set<Double> prices = findAllPrices();
         List<CarUserCountBO> boList = new ArrayList<CarUserCountBO>();
@@ -254,5 +332,28 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             set.add(w.getCarPrice());
         }
         return set;
+    }
+
+    /**
+     * 通过id查找出车记录
+     *
+     * @param id 出车记录id
+     * @return class DispatchCarInfo
+     * @throws SerException
+     */
+    private DispatchCarInfo find(String id) throws SerException {
+        String[] ids = new String[]{id};
+        List<DispatchCarInfo> list = null;
+        for (String i : ids) {
+            String sql = "SELECT id,is_pay\n" +
+                    "from dispatchcar_basicinfo \n" +
+                    "where id='" + i + "'";
+            String[] fields = new String[]{"id", "is_pay"};
+            list = super.findBySql(sql, DispatchCarInfo.class, fields);
+        }
+        if ((list != null) && (list.size() != 0)) {
+            return list.get(0);
+        }
+        return null;
     }
 }

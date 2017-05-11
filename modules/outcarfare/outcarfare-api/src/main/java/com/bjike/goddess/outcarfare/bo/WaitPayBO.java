@@ -1,6 +1,7 @@
 package com.bjike.goddess.outcarfare.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.outcarfare.type.Acctype;
 
 /**
  * 等待付款业务传输对象
@@ -41,7 +42,7 @@ public class WaitPayBO extends BaseBO {
     /**
      * 科目
      */
-    private String project;
+    private Acctype acctype;
 
     /**
      * 租车单价
@@ -129,12 +130,12 @@ public class WaitPayBO extends BaseBO {
         this.carUser = carUser;
     }
 
-    public String getProject() {
-        return project;
+    public Acctype getAcctype() {
+        return acctype;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setAcctype(Acctype acctype) {
+        this.acctype = acctype;
     }
 
     public Double getCarPrice() {
