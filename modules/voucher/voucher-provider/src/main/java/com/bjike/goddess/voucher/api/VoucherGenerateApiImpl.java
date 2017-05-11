@@ -3,6 +3,7 @@ package com.bjike.goddess.voucher.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,5 +234,10 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<VoucherGenerateBO> listStatistic(VoucherGenerateDTO voucherGenerateDTO, String condition) throws SerException {
         return voucherGenerateSer.listStatistic(voucherGenerateDTO, condition);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> allSales() throws SerException {
+        return voucherGenerateSer.allSales();
     }
 }

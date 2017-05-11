@@ -50,6 +50,35 @@ public class CostAnalysisVO {
      */
     private Double expectedMarketCost;
 
+    /**
+     * 实际市场费
+     */
+    private Double actualMarketCost;
+
+    /**
+     * 差额
+     */
+    private Double differences;
+
+    /**
+     * 预计占比
+     */
+    private Double expectedScale;
+
+    /**
+     * 实际占比
+     */
+    private Double actualScale;
+
+    /**
+     * 预警
+     */
+    private String warn;
+
+    /**
+     * 等级评定
+     */
+    private String grade;
 
     public String getId() {
         return id;
@@ -113,5 +142,53 @@ public class CostAnalysisVO {
 
     public void setExpectedMarketCost(Double expectedMarketCost) {
         this.expectedMarketCost = expectedMarketCost;
+    }
+
+    public Double getActualMarketCost() {
+        return actualMarketCost;
+    }
+
+    public void setActualMarketCost(Double actualMarketCost) {
+        this.actualMarketCost = actualMarketCost;
+    }
+
+    public Double getDifferences() {
+        return differences;
+    }
+
+    public void setDifferences(Double differences) {
+        this.differences = differences;
+    }
+
+    public Double getExpectedScale() {
+        return expectedScale;
+    }
+
+    public void setExpectedScale(Double expectedScale) {
+        this.expectedScale = expectedScale;
+    }
+
+    public Double getActualScale() {
+        return actualScale;
+    }
+
+    public void setActualScale(Double actualScale) {
+        this.actualScale = actualScale;
+    }
+
+    public String getWarn() {
+        return warn;
+    }
+
+    public void setWarn(String warn) {
+        this.warn = warn;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

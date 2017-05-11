@@ -2,6 +2,7 @@ package com.bjike.goddess.projectmarketfee.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
+import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.service.CostAnalysisSer;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
@@ -47,5 +48,25 @@ public class CostAnalysisApiImpl implements CostAnalysisAPI {
     @Override
     public CostAnalysisBO findByID(String id) throws SerException {
         return costAnalysisSer.findByID(id);
+    }
+
+    @Override
+    public List<CostAnalysisCountBO> arrivalCount(Integer year, Integer month) throws SerException {
+        return costAnalysisSer.arrivalCount(year, month);
+    }
+
+    @Override
+    public List<CostAnalysisCountBO> projectGroupCount(Integer year, Integer month) throws SerException {
+        return costAnalysisSer.projectGroupCount(year, month);
+    }
+
+    @Override
+    public List<CostAnalysisCountBO> projectNameCount(Integer year, Integer month) throws SerException {
+        return costAnalysisSer.projectNameCount(year, month);
+    }
+
+    @Override
+    public List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
+        return costAnalysisSer.findDetail(arrival, projectGroup, projectName);
     }
 }

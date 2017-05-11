@@ -3,6 +3,7 @@ package com.bjike.goddess.voucher.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
 import java.util.List;
@@ -408,4 +409,14 @@ public interface VoucherGenerateAPI {
      * @return 资金流水记录
      */
     List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
+
+    /**
+     * chenjunhao
+     * 查询所有一级科目为销售费用的记录
+     * @return class VoucherGenerateBO
+     * @throws SerException
+     */
+    default List<VoucherGenerateBO> allSales() throws SerException{
+        return null;
+    }
 }
