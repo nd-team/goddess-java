@@ -10,6 +10,7 @@ import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
+import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
@@ -85,7 +86,6 @@ public class CustomerDetailAction {
                 });
                 return ActResult.initialize(customerDetailVOList);
             }
-
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -188,9 +188,9 @@ public class CustomerDetailAction {
      */
     @GetMapping("v1/exportInfo")
     public Result exportCustomerBasicInfo(String area ,String customerName) throws ActException {
-            //TODO : tanghaixiang 2017-03-16 导出未做
+        //TODO : tanghaixiang 2017-03-16 导出未做
 //            customerDetailAPI.deleteCustomerDetail(id);
-            return new ActResult("export success!");
+        return new ActResult("export success!");
 
     }
 
