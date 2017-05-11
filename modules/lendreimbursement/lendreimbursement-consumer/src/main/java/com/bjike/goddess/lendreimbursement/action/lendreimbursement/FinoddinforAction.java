@@ -3,7 +3,7 @@ package com.bjike.goddess.lendreimbursement.action.lendreimbursement;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.FinoddinforAPI;
@@ -48,6 +48,24 @@ public class FinoddinforAction {
         try {
             Long count = finoddinforAPI.countFinoddinfor(finoddinforDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 一个报销单号
+     *
+     * @param id 报销单号信息id
+     * @des 根据id获取报销单号
+     * @return  class FinoddinforVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            FinoddinforVO finoddinforVO = BeanTransform.copyProperties(
+                    finoddinforAPI.getOneById(id), FinoddinforVO.class);
+            return ActResult.initialize(finoddinforVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -151,5 +169,5 @@ public class FinoddinforAction {
         }
     }
 
-    
+
 }

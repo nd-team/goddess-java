@@ -16,6 +16,10 @@ import java.util.Map;
  */
 public class CollectBO extends BaseBO {
     /**
+     * 地区
+     */
+    private String area;
+    /**
      * 合同外部项目名称
      */
     private String externalContractProjectName;
@@ -24,6 +28,71 @@ public class CollectBO extends BaseBO {
      * 内部项目名称
      */
     private String internalProjectName;
+
+    /**
+     * 人员类
+     */
+    private Object person;
+    /**
+     * 进度类
+     */
+    private Object progress;
+    /**
+     * 交付类
+     */
+    private Object deliver;
+    /**
+     * 设备类
+     */
+    private Object device;
+    /**
+     * 初级
+     */
+    private Object elementary;
+    /**
+     * 中级
+     */
+    private Object emergency;
+    /**
+     * 紧急
+     */
+    private Object intermediate;
+    /**
+     * 运营商
+     */
+    private Object operator;
+    /**
+     * 厂家
+     */
+    private Object vender;
+    /**
+     * 集成商
+     */
+    private Object intergrator;
+    /**
+     * 政府机关
+     */
+    private Object goverment;
+    /**
+     * 内部员工
+     */
+    private Object innerstaff;
+    /**
+     * 完成
+     */
+    private Object complete;
+    /**
+     * 未完成
+     */
+    private Object uncomplete;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getExternalContractProjectName() {
         return externalContractProjectName;
@@ -41,115 +110,115 @@ public class CollectBO extends BaseBO {
         this.internalProjectName = internalProjectName;
     }
 
-    /**
-     * 地区
-     */
-    private String area;
-
-    /**
-     * 描述
-     */
-    private String remark;
-    /**
-     * 个数
-     */
-    private int counts;
-    /**
-     * 数据库枚举转换
-     */
-    private int enumConvert;
-    /**
-     * 地区汇总集合
-     */
-    private List<Map<String, String>> areaMap;
-
-    /**
-     * 问题类型汇总集合
-     */
-    private List<Map<String, String>> problemTypes;
-    /**
-     * 问题紧急程度汇总集合
-     */
-    private List<Map<String, String>> problemEmergencyDegree;
-    /**
-     * 问题对象汇总集合
-     */
-    private List<Map<String, String>> problemObject;
-    /**
-     * 问题处理结果汇总集合
-     */
-    private List<Map<String, String>> problemProcessingResult;
-
-
-    public String getArea() {
-        return area;
+    public Object getPerson() {
+        return person;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setPerson(Object person) {
+        this.person = person;
     }
 
-    public String getRemark() {
-        return remark;
+    public Object getProgress() {
+        return progress;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setProgress(Object progress) {
+        this.progress = progress;
     }
 
-    public int getCounts() {
-        return counts;
+    public Object getDeliver() {
+        return deliver;
     }
 
-    public void setCounts(int counts) {
-        this.counts = counts;
+    public void setDeliver(Object deliver) {
+        this.deliver = deliver;
     }
 
-    public int getEnumConvert() {
-        return enumConvert;
+    public Object getDevice() {
+        return device;
     }
 
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
+    public void setDevice(Object device) {
+        this.device = device;
     }
 
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
+    public Object getElementary() {
+        return elementary;
     }
 
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
+    public void setElementary(Object elementary) {
+        this.elementary = elementary;
     }
 
-    public List<Map<String, String>> getProblemTypes() {
-        return problemTypes;
+    public Object getEmergency() {
+        return emergency;
     }
 
-    public void setProblemTypes(List<Map<String, String>> problemTypes) {
-        this.problemTypes = problemTypes;
+    public void setEmergency(Object emergency) {
+        this.emergency = emergency;
     }
 
-    public List<Map<String, String>> getProblemEmergencyDegree() {
-        return problemEmergencyDegree;
+    public Object getIntermediate() {
+        return intermediate;
     }
 
-    public void setProblemEmergencyDegree(List<Map<String, String>> problemEmergencyDegree) {
-        this.problemEmergencyDegree = problemEmergencyDegree;
+    public void setIntermediate(Object intermediate) {
+        this.intermediate = intermediate;
     }
 
-    public List<Map<String, String>> getProblemObject() {
-        return problemObject;
+    public Object getOperator() {
+        return operator;
     }
 
-    public void setProblemObject(List<Map<String, String>> problemObject) {
-        this.problemObject = problemObject;
+    public void setOperator(Object operator) {
+        this.operator = operator;
     }
 
-    public List<Map<String, String>> getProblemProcessingResult() {
-        return problemProcessingResult;
+    public Object getVender() {
+        return vender;
     }
 
-    public void setProblemProcessingResult(List<Map<String, String>> problemProcessingResult) {
-        this.problemProcessingResult = problemProcessingResult;
+    public void setVender(Object vender) {
+        this.vender = vender;
+    }
+
+    public Object getIntergrator() {
+        return intergrator;
+    }
+
+    public void setIntergrator(Object intergrator) {
+        this.intergrator = intergrator;
+    }
+
+    public Object getGoverment() {
+        return goverment;
+    }
+
+    public void setGoverment(Object goverment) {
+        this.goverment = goverment;
+    }
+
+    public Object getInnerstaff() {
+        return innerstaff;
+    }
+
+    public void setInnerstaff(Object innerstaff) {
+        this.innerstaff = innerstaff;
+    }
+
+    public Object getComplete() {
+        return complete;
+    }
+
+    public void setComplete(Object complete) {
+        this.complete = complete;
+    }
+
+    public Object getUncomplete() {
+        return uncomplete;
+    }
+
+    public void setUncomplete(Object uncomplete) {
+        this.uncomplete = uncomplete;
     }
 }

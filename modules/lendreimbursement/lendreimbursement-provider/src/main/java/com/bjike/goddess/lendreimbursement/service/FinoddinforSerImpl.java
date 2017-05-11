@@ -40,6 +40,16 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
     }
 
     @Override
+    public FinoddinforBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        Finoddinfor finoddinfor = super.findById(id);
+        return BeanTransform.copyProperties(finoddinfor, FinoddinforBO.class );
+    }
+
+
+    @Override
     public List<FinoddinforBO> listFinoddinfor(FinoddinforDTO finoddinforDTO) throws SerException {
         finoddinforDTO.getSorts().add("runNum=desc");
         finoddinforDTO.getConditions().add(Restrict.eq(STATUS,Status.THAW));

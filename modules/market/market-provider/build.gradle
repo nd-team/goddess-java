@@ -31,6 +31,6 @@ dependencies {
     compile project(":modules:market:market-api")
     compile project(":common:common-utils")
     /*导入其他模块api*/
-    compile project(":modules:customer:customer-api")
+    //compile project(":modules:customer:customer-api")
 }
 

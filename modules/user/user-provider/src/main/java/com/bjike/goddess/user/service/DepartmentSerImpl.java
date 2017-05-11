@@ -12,6 +12,7 @@ import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.to.DepartmentTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import java.util.List;
 public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> implements DepartmentSer {
 
 
+    @Cacheable
     @Override
     public List<DepartmentBO> treeData(String id) throws SerException {
         DepartmentDTO dto = new DepartmentDTO();

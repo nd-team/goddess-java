@@ -3,13 +3,14 @@ package com.bjike.goddess.customer.action.customer;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.auth.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
 import com.bjike.goddess.customer.dto.CustomerDetailDTO;
+import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
 import com.bjike.goddess.customer.vo.CusFamilyMemberVO;
@@ -71,15 +72,20 @@ public class CustomerDetailAction {
         try {
             List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
             List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
-            customerDetailBOList.stream().forEach(str->{
-                CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
-                CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
-                customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
-                customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
-                customerDetailVOList.add( customerDetailVO );
-            });
-            return ActResult.initialize(customerDetailVOList);
+
+            if( customerDetailBOList == null ){
+                return ActResult.initialize(null);
+            }else {
+                customerDetailBOList.stream().forEach(str->{
+                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
+                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
+                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                    CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
+                    customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+                    customerDetailVOList.add( customerDetailVO );
+                });
+                return ActResult.initialize(customerDetailVOList);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -182,9 +188,9 @@ public class CustomerDetailAction {
      */
     @GetMapping("v1/exportInfo")
     public Result exportCustomerBasicInfo(String area ,String customerName) throws ActException {
-            //TODO : tanghaixiang 2017-03-16 导出未做
+        //TODO : tanghaixiang 2017-03-16 导出未做
 //            customerDetailAPI.deleteCustomerDetail(id);
-            return new ActResult("export success!");
+        return new ActResult("export success!");
 
     }
 

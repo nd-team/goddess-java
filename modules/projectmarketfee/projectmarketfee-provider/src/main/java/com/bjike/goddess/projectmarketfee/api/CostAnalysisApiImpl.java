@@ -1,0 +1,51 @@
+package com.bjike.goddess.projectmarketfee.api;
+
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
+import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
+import com.bjike.goddess.projectmarketfee.service.CostAnalysisSer;
+import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 费用效益分析业务接口实现
+ *
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-05-09 04:35 ]
+ * @Description: [ 费用效益分析业务接口实现 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@Service("costAnalysisApiImpl")
+public class CostAnalysisApiImpl implements CostAnalysisAPI {
+    @Autowired
+    private CostAnalysisSer costAnalysisSer;
+
+    @Override
+    public CostAnalysisBO save(CostAnalysisTO to) throws SerException {
+        return costAnalysisSer.save(to);
+    }
+
+    @Override
+    public void edit(CostAnalysisTO to) throws SerException {
+        costAnalysisSer.edit(to);
+    }
+
+    @Override
+    public List<CostAnalysisBO> list(CostAnalysisDTO dto) throws SerException {
+        return costAnalysisSer.list(dto);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        costAnalysisSer.delete(id);
+    }
+
+    @Override
+    public CostAnalysisBO findByID(String id) throws SerException {
+        return costAnalysisSer.findByID(id);
+    }
+}

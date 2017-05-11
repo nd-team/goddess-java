@@ -1,6 +1,9 @@
 package com.bjike.goddess.businessproject.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 商务项目派工单信息管理
@@ -13,124 +16,150 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class DispatchSheetTO extends BaseTO {
 
+    public interface TestAdd{}
+
     /**
      * 内部项目编号
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "内部项目编号不能为空")
     private String innerProjectNum;
 
     /**
      * 业务类型
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "业务类型不能为空")
     private String businessType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "业务方向科目不能为空")
     private String businessSubject;
 
     /**
      * 合同外部项目名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "合同外部项目名称不能为空")
     private String outerProject;
 
     /**
      * 合同外部项目编号
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "合同外部项目编号不能为空")
     private String outProjectNum;
 
     /**
      * 对应销售合同编号
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "对应销售合同编号不能为空")
     private String saleContractNum;
 
     /**
      * 合作方式
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "合作方式不能为空")
     private String businessCooperate;
 
     /**
      * 内部项目名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "内部项目名称不能为空")
     private String innerProject;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "地区不能为空")
     private String area;
 
     /**
      * 所属项目组
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "所属项目组不能为空")
     private String projectGroup;
 
     /**
-     * 签订时间
+     * 签订时间（年月日）
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "签订时间不能为空,且为年月日")
     private String siginTime;
 
     /**
      * 项目负责人
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "项目负责人不能为空")
     private String projectCharge;
 
     /**
      * 派工单名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "派工单名称不能为空")
     private String dispatchProject;
 
     /**
      * 派工单编号
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "派工单编号不能为空")
     private String dispatchNum;
 
     /**
      * 总包单位名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "总包单位名称不能为空")
     private String majorCompany;
 
     /**
      * 分包单位名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "分包单位名称不能为空")
     private String subCompany;
 
     /**
      * 客户名称
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "客户名称不能为空")
     private String customerName;
 
     /**
      * 派工内容
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "派工内容不能为空")
     private String dispatchText;
 
     /**
-     * 开工日期
+     * 开工日期(年月日）
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "开工日期不能为空,且为年月日")
     private String startProjectTime;
 
     /**
-     * 完工日期
+     * 完工日期(年月日）
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "完工日期不能为空,且为年月日")
     private String endProjectTime;
 
     /**
      * 派工金额
      */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "派工金额不能为空,且为数字")
     private Double money;
 
     /**
-     * 是否完工
+     * 是否完工（已完工/未完工）
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "是否完工不能为空")
     private String completeProject;
 
     /**
-     * 合同是否已归档
+     * 合同是否已归档（已归档/未归档）
      */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "合同是否已归档不能为空")
     private String fileCondition;
 
     /**
      * 合同归档数量
      */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "合同归档数量不能为空,且为数字")
     private Double fileCount;
 
     /**

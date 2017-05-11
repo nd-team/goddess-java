@@ -12,5 +12,42 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class TaxManagementDTO extends BaseDTO {
+    /**
+     * 公司
+     */
+    private String company;
 
+    /**
+     * 所属月份
+     */
+    private String month;
+
+    /**
+     * 税种
+     */
+    private String taxType;
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(String taxType) {
+        this.taxType = taxType;
+    }
 }

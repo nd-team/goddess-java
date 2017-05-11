@@ -33,6 +33,14 @@ public interface VoucherGenerateAPI {
     default List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         return null;
     }
+    /**
+     * 不分页记账凭证列表
+     *
+     * @return class VoucherGenerateBO
+     */
+    default List<VoucherGenerateBO> listNoPage(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 添加

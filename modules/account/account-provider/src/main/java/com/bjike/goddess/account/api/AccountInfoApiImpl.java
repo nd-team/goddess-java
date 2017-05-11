@@ -1,10 +1,13 @@
 package com.bjike.goddess.account.api;
 
+import com.bjike.goddess.account.bo.AccountCollectBO;
 import com.bjike.goddess.account.bo.AccountInfoBO;
 import com.bjike.goddess.account.dto.AccountInfoDTO;
+import com.bjike.goddess.account.entity.AccountInfo;
 import com.bjike.goddess.account.service.AccountInfoSer;
 import com.bjike.goddess.account.to.AccountInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,15 @@ public class AccountInfoApiImpl implements AccountInfoAPI {
     @Autowired
     private AccountInfoSer accountInfoSer;
     @Override
+    public Long countAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
+        return accountInfoSer.countAccountInfo(accountInfoDTO);
+    }
+
+    @Override
+    public AccountInfoBO getOne(String id) throws SerException {
+        return accountInfoSer.getOne(id);
+    }
+    @Override
     public List<AccountInfoBO> findListAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
         return accountInfoSer.findListAccountInfo(accountInfoDTO);
     }
@@ -43,11 +55,15 @@ public class AccountInfoApiImpl implements AccountInfoAPI {
 
     @Override
     public void removeAccountInfo(String id) throws SerException {
-        accountInfoSer.remove(id);
+        accountInfoSer.removeAccountInfo(id);
     }
     @Override
-    public List<AccountInfoBO> collectAccountInfo(String area,String projectName,String projectGroup) throws SerException{
-        return accountInfoSer.collectAccountInfo(area, projectName, projectGroup);
+    public List<AccountCollectBO> collectAccountInfo(String [] areas) throws SerException{
+        return accountInfoSer.collectAccountInfo(areas);
+    }
+    @Override
+    public List<String> getArea() throws SerException {
+        return accountInfoSer.getArea();
     }
 
 

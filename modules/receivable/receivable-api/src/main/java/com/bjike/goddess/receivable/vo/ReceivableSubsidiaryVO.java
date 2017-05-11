@@ -1,5 +1,7 @@
 package com.bjike.goddess.receivable.vo;
 
+import com.bjike.goddess.receivable.entity.Contractor;
+
 /**
  * 回款明细表现层对象
  *
@@ -78,7 +80,7 @@ public class ReceivableSubsidiaryVO {
     /**
      * 已交维数量
      */
-    private Double paytax;
+    private Double payTax;
 
     /**
      * 未交维数量
@@ -103,32 +105,32 @@ public class ReceivableSubsidiaryVO {
     /**
      * 完工时间
      */
-    private String finishDate;
+    private String finishTime;
 
     /**
      * 验收交维时间
      */
-    private String checkDate;
+    private String checkTime;
 
     /**
      * 签字审批时间
      */
-    private String auditDate;
+    private String auditTime;
 
     /**
      * 结算审批时间
      */
-    private String countDate;
+    private String countTime;
 
     /**
      * 发票审核时间
      */
-    private String billDate;
+    private String billTime;
 
     /**
      * 预计支付时间
      */
-    private String planDate;
+    private String planTime;
 
     /**
      * 管理费(实际数量金额*承包商比例)
@@ -138,7 +140,7 @@ public class ReceivableSubsidiaryVO {
     /**
      * 到账时间
      */
-    private Double accountDate;
+    private String accountTime;
 
     /**
      * 结算进度:A
@@ -188,7 +190,7 @@ public class ReceivableSubsidiaryVO {
     /**
      * 承包商
      */
-    private String contractor;
+    private Contractor contractor;
 
     /**
      * 是否已支付
@@ -315,12 +317,12 @@ public class ReceivableSubsidiaryVO {
         this.unfinishMoney = unfinishMoney;
     }
 
-    public Double getPaytax() {
-        return paytax;
+    public Double getPayTax() {
+        return payTax;
     }
 
-    public void setPaytax(Double paytax) {
-        this.paytax = paytax;
+    public void setPayTax(Double payTax) {
+        this.payTax = payTax;
     }
 
     public Double getUndeal() {
@@ -355,52 +357,52 @@ public class ReceivableSubsidiaryVO {
         this.realCountMoney = realCountMoney;
     }
 
-    public String getFinishDate() {
-        return finishDate;
+    public String getFinishTime() {
+        return finishTime;
     }
 
-    public void setFinishDate(String finishDate) {
-        this.finishDate = finishDate;
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
     }
 
-    public String getCheckDate() {
-        return checkDate;
+    public String getCheckTime() {
+        return checkTime;
     }
 
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
+    public void setCheckTime(String checkTime) {
+        this.checkTime = checkTime;
     }
 
-    public String getAuditDate() {
-        return auditDate;
+    public String getAuditTime() {
+        return auditTime;
     }
 
-    public void setAuditDate(String auditDate) {
-        this.auditDate = auditDate;
+    public void setAuditTime(String auditTime) {
+        this.auditTime = auditTime;
     }
 
-    public String getCountDate() {
-        return countDate;
+    public String getCountTime() {
+        return countTime;
     }
 
-    public void setCountDate(String countDate) {
-        this.countDate = countDate;
+    public void setCountTime(String countTime) {
+        this.countTime = countTime;
     }
 
-    public String getBillDate() {
-        return billDate;
+    public String getBillTime() {
+        return billTime;
     }
 
-    public void setBillDate(String billDate) {
-        this.billDate = billDate;
+    public void setBillTime(String billTime) {
+        this.billTime = billTime;
     }
 
-    public String getPlanDate() {
-        return planDate;
+    public String getPlanTime() {
+        return planTime;
     }
 
-    public void setPlanDate(String planDate) {
-        this.planDate = planDate;
+    public void setPlanTime(String planTime) {
+        this.planTime = planTime;
     }
 
     public Double getManagementFee() {
@@ -411,12 +413,12 @@ public class ReceivableSubsidiaryVO {
         this.managementFee = managementFee;
     }
 
-    public Double getAccountDate() {
-        return accountDate;
+    public String getAccountTime() {
+        return accountTime;
     }
 
-    public void setAccountDate(Double accountDate) {
-        this.accountDate = accountDate;
+    public void setAccountTime(String accountTime) {
+        this.accountTime = accountTime;
     }
 
     public String getProgressA() {
@@ -491,11 +493,11 @@ public class ReceivableSubsidiaryVO {
         this.moreMoney = moreMoney;
     }
 
-    public String getContractor() {
+    public Contractor getContractor() {
         return contractor;
     }
 
-    public void setContractor(String contractor) {
+    public void setContractor(Contractor contractor) {
         this.contractor = contractor;
     }
 
