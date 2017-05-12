@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.user.dto.rbac.RoleDTO;
 import com.bjike.goddess.user.entity.rbac.Role;
 import com.bjike.goddess.user.bo.rbac.RoleBO;
-import com.bjike.goddess.user.bo.rbac.RoleTreeBO;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 
 import java.util.List;

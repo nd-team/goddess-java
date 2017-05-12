@@ -2,7 +2,6 @@ package com.bjike.goddess.user.api.rbac;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.rbac.RoleBO;
-import com.bjike.goddess.user.bo.rbac.RoleTreeBO;
 import com.bjike.goddess.user.service.rbac.RoleSer;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 import org.springframework.beans.factory.annotation.Autowired;
