@@ -30,6 +30,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
         if (e instanceof ActException) {
+            actResult.setCode(1);
             httpServletResponse.setStatus(SUCCESS_STATUS);
         } else {
             httpServletResponse.setStatus(EXCEPTION_STATUS);
