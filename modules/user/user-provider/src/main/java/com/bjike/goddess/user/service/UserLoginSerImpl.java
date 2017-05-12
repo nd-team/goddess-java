@@ -19,6 +19,7 @@ import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserLoginLogTO;
 import com.bjike.goddess.user.to.UserLoginTO;
+import com.bjike.goddess.user.utils.RSACoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,10 +130,11 @@ public class UserLoginSerImpl implements UserLoginSer {
         String account = loginTO.getAccount();
         try {
             //该密码经过公钥加密
-//            byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword(),
-//                    userSer.privateKey());
-//            String password = new String(decodedData); //得到明文密码
-            if (PasswordHash.validatePassword(loginTO.getPassword(), persistUser.getPassword())) {
+            byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword().trim(),
+                    userSer.privateKey());
+            String password = new String(decodedData); //得到明文密码
+//             password = loginTO.getPassword();
+            if (PasswordHash.validatePassword(password, persistUser.getPassword())) {
                 token = createToken(persistUser, loginTO);
             } else { //密码错误
                 PwdErrSession.put(account);

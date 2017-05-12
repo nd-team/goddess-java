@@ -65,7 +65,7 @@ public class HystrixCommandAdvice {
 
             @Override
             protected Object getFallback() {
-                return new ActResult("服务不可用");
+                return new ActResult(1,"服务不可用");
             }
         };
     }

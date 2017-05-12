@@ -46,6 +46,7 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         return BeanTransform.copyProperties(groups, GroupBO.class);
     }
 
+    @Transactional
     @Override
     public void remove(String id) throws SerException {
         List<Group> children = getChild(id);
@@ -79,9 +80,12 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         }
         group.setHasChild(false);
         super.save(group);
-        return BeanTransform.copyProperties(group, GroupBO.class);
+        GroupBO bo = BeanTransform.copyProperties(group, GroupBO.class);
+        return bo;
     }
 
+
+    @Transactional
     @Override
     public void update(GroupTO groupTO) throws SerException {
         Group group = super.findById(groupTO.getId());

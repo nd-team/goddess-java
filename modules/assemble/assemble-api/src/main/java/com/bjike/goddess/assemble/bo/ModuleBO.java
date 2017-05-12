@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 模块 * @Author: [liguiqin]
+ * 模块
+ *
+ * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
  * @Version: [1.0.0]
