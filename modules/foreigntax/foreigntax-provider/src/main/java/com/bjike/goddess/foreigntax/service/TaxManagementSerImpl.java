@@ -203,8 +203,8 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
      * @param to 过滤条件传输对象
      * @return
      * @throws SerException
-     *//*
-    private List<TaxManagement> getListByFilter(CollectTo to) throws SerException {
+     */
+    /**private List<TaxManagement> getListByFilter(CollectTo to) throws SerException {
         TaxManagementDTO dto = new TaxManagementDTO();
         if (StringUtils.isNotBlank(to.getCompany())){
             dto.getConditions().add(Restrict.eq("company", to.getCompany()));
@@ -217,7 +217,7 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         }
         return super.findByCis(dto);
     }
-
+**/
     @Override
     public List<TaxManagementBO> listByCompany(String company, String monthStart, String monthEnd) throws SerException {
         TaxManagementDTO dto = new TaxManagementDTO();
@@ -228,5 +228,5 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         }
         List<TaxManagement> list = super.findByCis(dto);
         return BeanTransform.copyProperties( list , TaxManagementBO.class);
-    }*/
+    }
 }

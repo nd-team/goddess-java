@@ -110,10 +110,10 @@ public interface TaxManagementAPI {
     /**
      * 根据公司和时间查询
      * @return class TaxManagementBO
-     *//*
+     */
     default List<TaxManagementBO> listByCompany(String company,String monthStart,String monthEnd) throws SerException {
         return null;
 
     }
-*/
+
 }
