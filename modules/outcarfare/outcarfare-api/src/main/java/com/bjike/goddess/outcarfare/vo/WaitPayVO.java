@@ -1,6 +1,7 @@
 package com.bjike.goddess.outcarfare.vo;
 
-import com.bjike.goddess.outcarfare.type.Acctype;
+
+import com.bjike.goddess.dispatchcar.enums.Acctype;
 
 /**
  * 等待付款表现层对象

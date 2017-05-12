@@ -1,7 +1,8 @@
 package com.bjike.goddess.outcarfare.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.outcarfare.type.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Acctype;
+
 
 /**
  * 等待付款业务传输对象

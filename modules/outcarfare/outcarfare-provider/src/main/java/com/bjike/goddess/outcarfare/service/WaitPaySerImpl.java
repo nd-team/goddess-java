@@ -69,9 +69,11 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     waitPay.setNumber(v.getNumber());
                     waitPay.setArrival(v.getArea());
                     waitPay.setCarPrice(v.getCarRentalCost());
+                    waitPay.setAcctype(v.getAcctype());
                     waitPay.setOvertimeHour((double) v.getOverWorkTime());
                     waitPay.setOvertimeFee(v.getOverWorkCost());
                     waitPay.setAllowance(v.getMealCost());
+                    waitPay.setOvertimePrice(v.getCarRentalCost()/8);
                     waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
                     waitPay.setAmount(v.getCost());
                     waitPay.setDispatchCarInfoId(v.getId());
@@ -91,12 +93,14 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                             p.setCarDate(v.getDispatchDate());
                             p.setNumber(v.getNumber());
                             p.setArrival(v.getArea());
+                            p.setAcctype(v.getAcctype());
                             p.setCarPrice(v.getCarRentalCost());
                             p.setOvertimeHour((double) v.getOverWorkTime());
                             p.setOvertimeFee(v.getOverWorkCost());
                             p.setAllowance(v.getMealCost());
                             p.setParkFee(v.getParkCost() + v.getRoadCost());
                             p.setAmount(v.getCost());
+                            p.setOvertimePrice(v.getCarRentalCost()/8);
                             p.setDispatchCarInfoId(v.getId());
                             p.setDispatchCarInfoId(v.getId());
                             super.update(p);
@@ -111,12 +115,14 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         waitPay.setCarDate(v.getDispatchDate());
                         waitPay.setNumber(v.getNumber());
                         waitPay.setArrival(v.getArea());
+                        waitPay.setAcctype(v.getAcctype());
                         waitPay.setCarPrice(v.getCarRentalCost());
                         waitPay.setOvertimeHour((double) v.getOverWorkTime());
                         waitPay.setOvertimeFee(v.getOverWorkCost());
                         waitPay.setAllowance(v.getMealCost());
                         waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
                         waitPay.setAmount(v.getCost());
+                        waitPay.setOvertimePrice(v.getCarRentalCost()/8);
                         waitPay.setDispatchCarInfoId(v.getId());
                         super.save(waitPay);
                     }
@@ -124,8 +130,8 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             }
         }
         for (WaitPay p : super.findAll()) {
-            DispatchCarInfo v = find(p.getDispatchCarInfoId());
-            if (v == null/*||v.getPay()*/) {
+            DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getDispatchCarInfoId());
+            if (v == null||v.getPay()) {
                 super.remove(p.getId());
             }
         }

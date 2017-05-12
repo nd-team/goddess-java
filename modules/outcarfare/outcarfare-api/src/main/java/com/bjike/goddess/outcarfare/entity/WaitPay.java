@@ -1,7 +1,7 @@
 package com.bjike.goddess.outcarfare.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.outcarfare.type.Acctype;
+import com.bjike.goddess.dispatchcar.enums.Acctype;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
