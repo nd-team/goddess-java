@@ -3,6 +3,7 @@ package com.bjike.goddess.projectmarketfee.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
+import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.entity.CostAnalysis;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
@@ -68,6 +69,55 @@ public interface CostAnalysisSer extends Ser<CostAnalysis, CostAnalysisDTO> {
      * @throws SerException
      */
     default CostAnalysisBO findByID(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class CostAnalysisCountBO
+     * @throws SerException
+     */
+    default List<CostAnalysisCountBO> arrivalCount(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目组汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class CostAnalysisCountBO
+     * @throws SerException
+     */
+    default List<CostAnalysisCountBO> projectGroupCount(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目名称汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class CostAnalysisCountBO
+     * @throws SerException
+     */
+    default List<CostAnalysisCountBO> projectNameCount(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找明细
+     *
+     * @param arrival      地区
+     * @param projectGroup 项目组
+     * @param projectName  项目名称
+     * @return class CostAnalysisBO
+     * @throws SerException
+     */
+    default List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
         return null;
     }
 }

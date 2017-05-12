@@ -175,4 +175,23 @@ public class SiginManageAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 所有地区
+     *
+     * @des 获取所有项目签订与立项所有地区
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea(  ) throws ActException {
+        try {
+            List<String> list = siginManageAPI.listArea( );
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

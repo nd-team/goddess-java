@@ -1,5 +1,8 @@
 package com.bjike.goddess.outcarfare.vo;
 
+
+import com.bjike.goddess.dispatchcar.enums.Acctype;
+
 /**
  * 等待付款表现层对象
  *
@@ -28,8 +31,7 @@ public class WaitPayVO {
     /**
      * 单号
      */
-    private String number;
-
+    private Acctype acctype;
     /**
      * 地区
      */
@@ -115,12 +117,12 @@ public class WaitPayVO {
         this.carDate = carDate;
     }
 
-    public String getNumber() {
-        return number;
+    public Acctype getAcctype() {
+        return acctype;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setAcctype(Acctype acctype) {
+        this.acctype = acctype;
     }
 
     public String getArrival() {

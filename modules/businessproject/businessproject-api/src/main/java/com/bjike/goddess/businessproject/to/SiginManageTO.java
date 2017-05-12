@@ -82,9 +82,9 @@ public class SiginManageTO extends BaseTO {
     private String endProjectTime;
 
     /**
-     * 签订状态(是否已签订)
+     * 签订状态(已签订/未签订)
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空")
+    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空(已签订/未签订)")
     private String siginStatus;
 
     /**

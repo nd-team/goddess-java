@@ -74,6 +74,25 @@ public class PayTaxAction {
     }
 
     /**
+     * 应交税金列表
+     *
+     * @param id 应交税金信息id
+     * @des 获取所有应交税金信息
+     * @return  class PayTaxVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            PayTaxVO payTaxVOList = BeanTransform.copyProperties(
+                    payTaxAPI.getOneById( id), PayTaxVO.class);
+            return ActResult.initialize(payTaxVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加应交税金
      *
      * @param payTaxTO 应交税金基本信息数据to

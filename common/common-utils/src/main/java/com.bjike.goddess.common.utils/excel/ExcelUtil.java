@@ -10,6 +10,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -73,7 +74,7 @@ public class ExcelUtil {
                         Object obj = clazz.newInstance();
                         for (int j = 0; j < cellTotal; j++) {
                             ExcelHeader eh = headers.get(j);
-                            Object val = convertValue(getCellValue(row.getCell(j)), eh, fields);
+                            Object val = convertValue(getCellValue(row.getCell(j), eh), eh, fields);
                             if (eh.notNull() && null == val) {
                                 throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
                             } else if (null != val) {
@@ -99,7 +100,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> byte[] clazzToExcel(List<T> objects, Excel excel) throws Exception {
+    public static <T> byte[] clazzToExcel(List<T> objects, Excel excel) {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet(excel.getSheetName());
         if (null != objects && objects.size() > 0) {
@@ -121,8 +122,11 @@ public class ExcelUtil {
                             if (field.getAnnotation(ExcelHeader.class).name().equals(excelHeaders.get(j).name())) {
                                 field.setAccessible(true);
                                 val = field.get(obj);
-                                if (field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
+                                if (null != val && field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
                                     val = DateUtil.dateToString((LocalDateTime) val);
+                                }
+                                if (field.getType().isEnum()) {
+                                    val = handlerEnum(field, val);
                                 }
                                 break;
                             }
@@ -148,7 +152,13 @@ public class ExcelUtil {
             LOGGER.info("clazzToExcel: objects is null !");
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        wb.write(os);
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         return os.toByteArray();
     }
 
@@ -188,11 +198,16 @@ public class ExcelUtil {
             for (Field field : fields) {
                 if (field.getAnnotation(ExcelHeader.class).name().equals(name)) {
                     field.setAccessible(true);// 设置属性可访问
-                    field.set(obj, val);
+                    if (field.getType().isEnum()) {
+                        field.set(obj, field.getType().getField(val.toString()).get(val.toString()));
+                    } else {
+                        field.set(obj, val);
+                    }
+
                     break;
                 }
             }
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
@@ -211,10 +226,17 @@ public class ExcelUtil {
         if (StringUtils.isBlank(val)) {
             return value;
         }
-        for (Field f : fields) {
-            if (f.getAnnotation(ExcelHeader.class).name().equals(et.name())) {
-                return DataTypeUtils.convertDataType(val, f.getType().getSimpleName());
+        try {
+            for (Field f : fields) {
+                if (f.getAnnotation(ExcelHeader.class).name().equals(et.name())) {
+                    if(et.name().equals("性别")){
+                        return  val;
+                    }
+                    return DataTypeUtils.convertDataType(val, f.getType().getSimpleName());
+                }
             }
+        } catch (Exception e) {
+            throw new RuntimeException("请检查列【" + et.name() + "】类型");
         }
         return value;
     }
@@ -225,48 +247,52 @@ public class ExcelUtil {
      * @param cell
      * @return
      */
-    private static String getCellValue(Cell cell) {
+    private static String getCellValue(Cell cell, ExcelHeader eh) {
         String val = null;
-
-        if (null != cell) {
-            switch (cell.getCellTypeEnum()) {
-                case NUMERIC: //数值型
-                    if (!HSSFDateUtil.isCellDateFormatted(cell)) {
-                        BigDecimal big = new BigDecimal(cell.getNumericCellValue());
-                        val = big.toString();
-                        if (StringUtils.isNotBlank(val)) {//解决1234.0  去掉后面的.0
-                            String[] item = val.split("[.]");
-                            if (1 < item.length && "0".equals(item[1])) {
-                                val = item[0];
+        try {
+            if (null != cell) {
+                switch (cell.getCellTypeEnum()) {
+                    case NUMERIC: //数值型
+                        if (!HSSFDateUtil.isCellDateFormatted(cell)) {
+                            BigDecimal big = new BigDecimal(cell.getNumericCellValue());
+                            val = big.toString();
+                            if (StringUtils.isNotBlank(val)) {//解决1234.0  去掉后面的.0
+                                String[] item = val.split("[.]");
+                                if (1 < item.length && "0".equals(item[1])) {
+                                    val = item[0];
+                                }
                             }
+                        } else {
+                            Date date = cell.getDateCellValue();
+                            return String.valueOf(date.getTime());
                         }
-                    } else {
-                        Date date = cell.getDateCellValue();
-                        return String.valueOf(date.getTime());
-                    }
-                    break;
+                        break;
 
-                case STRING://字符串类型
-                    val = String.valueOf(cell.getStringCellValue());
-                    break;
+                    case STRING://字符串类型
+                        val = String.valueOf(cell.getStringCellValue());
+                        break;
 
-                case FORMULA: // 公式类型
-                    val = String.valueOf(cell.getNumericCellValue()); //读公式计算值
-                    if (val.equals("NaN")) {// 如果获取的数据值为非法值,则转换为获取字符串
-                        val = cell.getStringCellValue();
-                    }
-                    break;
+                    case FORMULA: // 公式类型
+                        val = String.valueOf(cell.getNumericCellValue()); //读公式计算值
+                        if (val.equals("NaN")) {// 如果获取的数据值为非法值,则转换为获取字符串
+                            val = cell.getStringCellValue();
+                        }
+                        break;
 
-                case BOOLEAN:// 布尔类型
-                    val = String.valueOf(cell.getBooleanCellValue());
-                    break;
-                default:
-                    val = cell.getStringCellValue().toString();
+                    case BOOLEAN:// 布尔类型
+                        val = String.valueOf(cell.getBooleanCellValue());
+                        break;
+                    default:
+                        val = cell.getStringCellValue().toString();
+                }
+                return val;
+            } else {
+                return val;
             }
-            return val;
-        } else {
-            return val;
+        } catch (Exception e) {
+            throw new RuntimeException("请检查列【" + eh.name() + "】类型");
         }
+
     }
 
     /**
@@ -346,32 +372,10 @@ public class ExcelUtil {
         return style;
     }
 
-
-    public static void main(String[] args) throws Exception {
-        try {
-            /**
-             * excel 转对象
-             */
-            File file = new File("/home/lgq/user.xlsx");
-            InputStream is = new FileInputStream(file);
-            Excel excel = new Excel();
-            List<UserExcel> users = excelToClazz(is, UserExcel.class, excel);
-
-            /**
-             * 对象列表转excel bytes
-             */
-            Excel ex = new Excel(1, 2);
-            ex.setTitle("导出用户数据");
-            //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
-            byte[] bytes = clazzToExcel(users, ex);
-            File out = new File("/home/lgq/out.xlsx");
-            FileOutputStream fos = new FileOutputStream(out);
-            fos.write(bytes);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    private static String handlerEnum(Field field, Object val) {
+        return null;
     }
+
+
 
 }
