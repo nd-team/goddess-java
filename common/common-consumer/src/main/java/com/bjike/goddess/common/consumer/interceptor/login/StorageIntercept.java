@@ -73,7 +73,7 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
 
     private boolean validateLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Object obj = request.getParameter("storageToken");
+        Object obj = request.getHeader("storageToken");
         String token = null;
         if (null != obj) {
             token = obj.toString();
