@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contractquotemanager.bo.ContractQuoteDataBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractQuoteDataDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractQuoteData;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -158,7 +160,7 @@ public class ContractQuoteDataSerImpl extends ServiceImpl<ContractQuoteData, Con
         Boolean areasNotEmpty = (areas != null) && (areas.length > 0);//地区不为空
         LocalDate[] suitableDateStart = null;
         try {
-            suitableDateStart = new LocalDate[]{LocalDate.parse(startDate), LocalDate.parse(endDate)};
+            suitableDateStart = new LocalDate[]{DateUtil.parseDate(startDate), DateUtil.parseDate(endDate)};
         } catch (Exception e) {
             throw new SerException("时间为空或者时间格式错误(例:2010-12-31)");
         }
