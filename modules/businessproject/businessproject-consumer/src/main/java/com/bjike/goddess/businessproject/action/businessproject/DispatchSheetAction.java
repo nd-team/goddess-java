@@ -148,5 +148,22 @@ public class DispatchSheetAction {
         }
     }
 
+    /**
+     * 所有地区
+     *
+     * @des 获取所有项目派工单信息地区
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea(  ) throws ActException {
+        try {
+            List<String> list = dispatchSheetAPI.listArea( );
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.outcarfare.to;
 
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.dispatchcar.enums.Acctype;
 
 import javax.validation.constraints.NotNull;
 
@@ -43,7 +44,7 @@ public class WaitPayTO extends BaseTO {
     /**
      * 科目
      */
-    private String project;
+    private Acctype acctype;
 
     /**
      * 租车单价
@@ -132,12 +133,12 @@ public class WaitPayTO extends BaseTO {
         this.carUser = carUser;
     }
 
-    public String getProject() {
-        return project;
+    public Acctype getAcctype() {
+        return acctype;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setAcctype(Acctype acctype) {
+        this.acctype = acctype;
     }
 
     public Double getCarPrice() {

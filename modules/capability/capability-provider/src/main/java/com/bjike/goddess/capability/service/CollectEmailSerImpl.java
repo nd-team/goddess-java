@@ -173,6 +173,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<CollectData> collectDataList = new ArrayList<>();
         List<String> companys = Arrays.asList(companyOrName);
         for(String str : companys ) {
+            collectDataList = new ArrayList<>();
             String[] fields = new String[]{"counts","remark"};
             //专业资质认证数量
             String sql = "select count(professionAuthen) as counts , '专业资质认证数量' as remark from capability_companycapability where company = '"+str+"'  ";
@@ -236,6 +237,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<CollectData> collectDataList = new ArrayList<>();
         List<String> names = Arrays.asList(name);
         for(String str : names ) {
+            collectDataList = new ArrayList<>();
             String[] fields = new String[]{"counts", "remark"};
             //个人资质数量
             String sql = "select count(capacity) as counts , '个人资质数量' as remark from capability_selfcapability where name = '"+str+"'  ";
@@ -273,6 +275,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<CollectData> collectDataList = new ArrayList<>();
         List<String> companys = Arrays.asList(companyOrName);
         for(String str : companys ) {
+            collectDataList = new ArrayList<>();
             String[] fields = new String[]{"counts", "remark"};
             //专业资质认证数量
             String sql = "select count(professionAuthen) as counts , '专业资质认证数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";

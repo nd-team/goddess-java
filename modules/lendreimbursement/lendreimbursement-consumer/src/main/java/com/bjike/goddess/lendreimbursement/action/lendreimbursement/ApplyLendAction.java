@@ -246,7 +246,7 @@ public class ApplyLendAction {
      */
     @LoginAuth
     @PutMapping("v1/editWaitAudit")
-    public Result editWaitAudit( ApplyLendTO applyLendTO) throws ActException {
+    public Result editWaitAudit(@Validated(ApplyLendTO.TESTAddAndEdit.class) ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editWaitAudit(applyLendTO);
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
@@ -313,7 +313,7 @@ public class ApplyLendAction {
     }
 
     /**
-     * 运营商务部冻结
+     * 运营商务部申请冻结
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
@@ -416,7 +416,7 @@ public class ApplyLendAction {
      */
     @LoginAuth
     @PutMapping("v1/editError")
-    public Result editError( ApplyLendTO applyLendTO) throws ActException {
+    public Result editError(@Validated(ApplyLendTO.TESTAddAndEdit.class)  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editApplyError(applyLendTO);
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
@@ -470,8 +470,8 @@ public class ApplyLendAction {
      * @des 获取申请单有误审核详情副本
      * @version v1
      */
-    @GetMapping("v1/getErrorCopy")
-    public Result getErrorCopy(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/getErrorCopy/{id}")
+    public Result getErrorCopy(@PathVariable String id ) throws ActException {
         try {
             ApplyLendVO applyLendVO = BeanTransform.copyProperties(
                     applyLendAPI.getApplyApplyErrorCopy(id), ApplyLendVO.class);
