@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -198,7 +199,7 @@ public class ExcelUtil {
             for (Field field : fields) {
                 if (field.getAnnotation(ExcelHeader.class).name().equals(name)) {
                     field.setAccessible(true);// 设置属性可访问
-                    if (field.getType().isEnum()) {
+                    if (field.getType().isEnum() ) {
                         field.set(obj, field.getType().getField(val.toString()).get(val.toString()));
                     } else {
                         field.set(obj, val);
@@ -372,8 +373,14 @@ public class ExcelUtil {
         return style;
     }
 
+    /**
+     * 待处理枚举
+     * @param field
+     * @param val
+     * @return
+     */
     private static String handlerEnum(Field field, Object val) {
-        return null;
+        return val.toString();
     }
 
 
