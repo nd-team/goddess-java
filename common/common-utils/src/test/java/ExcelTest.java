@@ -1,5 +1,6 @@
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.dounine.japi.entity.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,11 +21,10 @@ public class ExcelTest {
             /**
              * excel 转对象
              */
-            File file = new File("/home/lgq/user.xlsx");
+            File file = new File("/home/ike/user.xlsx");
             InputStream is = new FileInputStream(file);
             Excel excel = new Excel();
             List<UserExcel> users = ExcelUtil.excelToClazz(is, UserExcel.class, excel);
-
             /**
              * 对象列表转excel bytes
              */
@@ -32,7 +32,7 @@ public class ExcelTest {
             ex.setTitle("导出用户数据");
             //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
             byte[] bytes = ExcelUtil.clazzToExcel(users, ex);
-            File out = new File("/home/lgq/out.xlsx");
+            File out = new File("/home/ike/out.xlsx");
             FileOutputStream fos = new FileOutputStream(out);
             fos.write(bytes);
 

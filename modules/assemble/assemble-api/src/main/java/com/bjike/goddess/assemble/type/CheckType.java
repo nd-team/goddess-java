@@ -17,13 +17,13 @@ public enum  CheckType {
      */
     NONE(1);
 
-    private int value;
+    private int code;
 
-    CheckType(int value){
-        this.value = value;
+    CheckType(int code){
+        this.code = code;
     }
 
-    public int getValue(){
-        return this.value;
+    public int getCode(){
+        return this.code;
     }
 }
