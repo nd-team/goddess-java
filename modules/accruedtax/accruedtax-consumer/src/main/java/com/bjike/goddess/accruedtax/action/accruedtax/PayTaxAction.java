@@ -74,7 +74,7 @@ public class PayTaxAction {
     }
 
     /**
-     * 应交税金列表
+     * 一个应交税金列表
      *
      * @param id 应交税金信息id
      * @des 获取所有应交税金信息
@@ -102,7 +102,7 @@ public class PayTaxAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addPayTax(@Validated PayTaxTO payTaxTO, BindingResult bindingResult) throws ActException {
+    public Result addPayTax(@Validated PayTaxTO payTaxTO) throws ActException {
         try {
             PayTaxBO payTaxBO1 = payTaxAPI.addPayTax(payTaxTO);
             return ActResult.initialize(BeanTransform.copyProperties(payTaxBO1,PayTaxVO.class));

@@ -210,16 +210,21 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
                 });
             }
         } else if (StringUtils.isBlank(company) && StringUtils.isNotBlank(emp)) {
-            //根据时间段和公司查数据
+            //根据时间段和公司查数据 缴费所属时期/纳税人名称/姓名/应缴金额
             ctCom(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         } else if (StringUtils.isNotBlank(company) && StringUtils.isBlank(emp)) {
-            //根据时间段和个人查数据
+            //根据时间段和个人查数据 缴费所属时期/纳税人名称/姓名/应缴金额
             ctEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         } else if (StringUtils.isNotBlank(company) && StringUtils.isNotBlank(emp)) {
-            //根据时间段和公司和个人查数据
+            //根据时间段和公司和个人查数据 缴费所属时期/纳税人名称/姓名/应缴金额
             ctComAndEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         }
 
+        list.stream().forEach(str->{
+            if(null == str.getTotalMoney()){
+                str.setTotalMoney(0d);
+            }
+        });
         return list;
     }
 
@@ -228,9 +233,9 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
-        String[] field = new String[]{"totalMoney"};
+        String[] field = new String[]{"payTime","payFeer","empName","totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" select payTime,payFeer ,empName,   totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {
             sql.append(sqlAppend);
@@ -257,9 +262,9 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
-        String[] field = new String[]{"totalMoney"};
+        String[] field = new String[]{"payTime","payFeer","empName","totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" select payTime,payFeer ,empName,   totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and payFeer = '" + company + "' ");
         if (timeFlag) {
             sql.append(sqlAppend);
@@ -286,9 +291,10 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         String company = socialFeeDTO.getPayFeer();
         String emp = socialFeeDTO.getEmpName();
 
-        String[] field = new String[]{"totalMoney"};
+        //缴费所属时期/纳税人名称/姓名/应缴金额
+        String[] field = new String[]{"payTime","payFeer","empName","totalMoney"};
         StringBuffer sql = new StringBuffer("");
-        sql.append(" select sum(totalMoney) as totalMoney  from socialfee_socialfee where 1=1 ");
+        sql.append(" select payTime,payFeer ,empName,   totalMoney  from socialfee_socialfee where 1=1 ");
         sql.append(" and payFeer = '" + company + "' ");
         sql.append(" and empName = '" + emp + "' ");
         if (timeFlag) {

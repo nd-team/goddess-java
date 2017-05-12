@@ -159,10 +159,10 @@ public class SocialFeeAction {
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(SocialFeeDTO socialFeeDTO, BindingResult bindingResult) throws ActException {
+    public Result collect(SocialFeeDTO socialFeeDTO) throws ActException {
         try {
             List<SocialFeeVO> socialFeeVOList = BeanTransform.copyProperties(
-                    socialFeeAPI.collect(socialFeeDTO), SocialFeeVO.class, true);
+                    socialFeeAPI.collect(socialFeeDTO), SocialFeeVO.class);
             return ActResult.initialize(socialFeeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
