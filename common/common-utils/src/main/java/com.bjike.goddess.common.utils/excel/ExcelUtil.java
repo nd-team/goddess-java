@@ -10,7 +10,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -126,7 +125,7 @@ public class ExcelUtil {
                                     val = DateUtil.dateToString((LocalDateTime) val);
                                 }
                                 if (field.getType().isEnum()) {
-                                    val = handlerEnum(field, val);
+                                    val = fieldToEnum(field, val);
                                 }
                                 break;
                             }
@@ -199,7 +198,8 @@ public class ExcelUtil {
                 if (field.getAnnotation(ExcelHeader.class).name().equals(name)) {
                     field.setAccessible(true);// 设置属性可访问
                     if (field.getType().isEnum()) {
-                        field.set(obj, field.getType().getField(val.toString()).get(val.toString()));
+                        enumToField(field,obj,val);
+
                     } else {
                         field.set(obj, val);
                     }
@@ -212,6 +212,7 @@ public class ExcelUtil {
         }
 
     }
+
 
     /**
      * excel数据类型转换成java对应类型
@@ -229,8 +230,8 @@ public class ExcelUtil {
         try {
             for (Field f : fields) {
                 if (f.getAnnotation(ExcelHeader.class).name().equals(et.name())) {
-                    if(et.name().equals("性别")){
-                        return  val;
+                    if (et.name().equals("性别")) {
+                        return val;
                     }
                     return DataTypeUtils.convertDataType(val, f.getType().getSimpleName());
                 }
@@ -372,10 +373,42 @@ public class ExcelUtil {
         return style;
     }
 
-    private static String handlerEnum(Field field, Object val) {
-        return null;
+    /**
+     * 属性转换枚举
+     * @param field
+     * @param val
+     * @return
+     */
+    private static String fieldToEnum(Field field, Object val) {
+        Field[] enum_fields = field.getType().getFields();
+        for (Field f : enum_fields) {
+            if (val.toString().equals(f.getName())) {
+                return f.getAnnotation(ExcelValue.class).name();
+            }
+        }
+        return val.toString();
     }
 
+
+    /**
+     * 枚举转换属性
+     * @param field
+     * @param obj
+     * @param val
+     */
+    private static  void enumToField(Field field,Object obj,Object val){
+        try {
+            Field[] enum_fields = field.getType().getFields();
+            for (Field f : enum_fields) {
+                if (val.toString().equals(f.getAnnotation(ExcelValue.class).name())) {
+                    field.set(obj, field.getType().getField(f.getName()).get(f.getName()));
+                }
+            }
+        }catch (Exception e){
+            throw  new RuntimeException(e.getMessage());
+        }
+
+    }
 
 
 }
