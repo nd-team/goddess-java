@@ -9,13 +9,15 @@ import java.io.IOException;
 public class JapiTest {
 
     public static void main(String[] args) throws IOException {
+//        JapiClient.delete(true);
         JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
         JapiClient.setProjectJavaPath("modules/outcarfare/outcarfare-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/outcarfare/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/outcarfare/outcarfare-api",
-                "common/common-api"
+                "common/common-api",
+                "modules/dispatchcar/dispatchcar-api"
         });
         JapiClient.setFlushServer(true);
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

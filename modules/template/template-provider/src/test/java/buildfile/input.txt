@@ -1,25 +1,19 @@
-模块名:contractware
-类名:ProjectContract
-作者:xiazhili
-描述:项目合同
-
+模块名:projectmarketfee
+类名:ProjectMarketFee
+作者:chenjunhao
+描述:项目前期的市场活动费
 
 #参数[变量类型  变量名 ]
 #parameter--------------
+
 (
-
-LocalDateTime time 时间;
-String contractName 合同名称;
-String internalName 内部名称;
-String contractId 合同编号;
-String principal 负责人;
-String heirTime 交接时间;
-String heir 交接人;
-Integer heirCount 交接数量;
-String preserver 保管人;
-String preserverPlace 保管地点;
-String remark 备注;
-
+String firstSubject 一级科目;
+String secondSubject 二级科目;
+String thirdSubject 三级科目;
+String area 地区;
+String projectGroup 项目组;
+String projectName 项目名称;
+LocalDate voucherDate 日期;
+Double borrowMoney 金额;
+String saleId 记账凭证销售费用id;
 )
-
-
