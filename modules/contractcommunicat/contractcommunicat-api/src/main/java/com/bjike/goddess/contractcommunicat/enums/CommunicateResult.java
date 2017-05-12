@@ -35,4 +35,17 @@ public enum CommunicateResult {
     public int getCode() {
         return this.code;
     }
+    public void  setCode(int code) {
+        this.code = code;
+    }
+
+    public static CommunicateResult getCommunicateResult(int code){
+        for(CommunicateResult result : CommunicateResult.values()){
+            if(code == result.getCode()){
+                return result;
+            }
+        }
+        return null;
+    }
+
 }
