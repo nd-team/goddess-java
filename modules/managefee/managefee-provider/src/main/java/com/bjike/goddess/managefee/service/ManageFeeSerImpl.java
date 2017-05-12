@@ -84,7 +84,11 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
         voucherGenerateDTO.setEndTime(endTime + "");
         List<VoucherGenerateBO> voucherList = voucherGenerateAPI.listStatistic(voucherGenerateDTO, "manageFee");
         //记账凭证里面的费用
-        Double money = voucherList.stream().mapToDouble(VoucherGenerateBO::getBorrowMoney).sum();
+
+        Double money = 0d;
+        if( voucherList!= null && voucherList.size()>0){
+            money = voucherList.stream().filter(str->str.getBorrowMoney()!=null).mapToDouble(VoucherGenerateBO::getBorrowMoney).sum();
+        }
 
         ManageFee manageFee = BeanTransform.copyProperties(manageFeeTO, ManageFee.class, true);
         if (money == null && manageFeeTO.getActualFee() == null) {
