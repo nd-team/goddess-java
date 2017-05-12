@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 项目成本控制业务实现
@@ -57,8 +58,14 @@ public class CostControlSerImpl extends ServiceImpl<CostControl, CostControlDTO>
         FindTO to = BeanTransform.copyProperties(entity, FindTO.class);
 
         List<ArtificialCostBO> artificialCostList = artificialCostSer.findByTO(to);
+        if (artificialCostList == null)
+            artificialCostList = new ArrayList<>(0);
         List<CarCostBO> carCostList = carCostSer.findByTO(to);
+        if (carCostList == null)
+            carCostList = new ArrayList<>(0);
         List<OtherExpensesBO> otherExpensesList = otherExpensesSer.findByTO(to);
+        if (otherExpensesList == null)
+            otherExpensesList = new ArrayList<>(0);
 
         entity.setTargetCost(artificialCostList.stream().mapToDouble(ArtificialCostBO::getTargetCost).sum());
         entity.setActualCost(artificialCostList.stream().mapToDouble(ArtificialCostBO::getActualCost).sum());
@@ -67,16 +74,31 @@ public class CostControlSerImpl extends ServiceImpl<CostControl, CostControlDTO>
         entity.setTargetOther(otherExpensesList.stream().mapToDouble(OtherExpensesBO::getTarget).sum());
         entity.setActualOther(otherExpensesList.stream().mapToDouble(OtherExpensesBO::getActual).sum());
         entity.setTargetTotal(entity.getTargetCost() + entity.getTargetCar() + entity.getTargetOther());
-        entity.setActualCost(entity.getActualCost() + entity.getActualCar() + entity.getActualOther());
+        entity.setActualTotal(entity.getActualCost() + entity.getActualCar() + entity.getActualOther());
+
         //计算利润
         entity.setTargetProfit(entity.getTargetIncome() - entity.getTargetTotal());
         entity.setActualProfit(entity.getActualIncome() - entity.getActualTotal());
+
         //计算收入比
-        entity.setTargetContrast(this.decimal(entity.getTargetIncome() / entity.getTargetTotal()));
-        entity.setActualContrast(this.decimal(entity.getActualIncome() / entity.getActualTotal()));
+        if (entity.getTargetTotal() == 0 || entity.getTargetIncome() == 0)
+            entity.setTargetContrast(0d);
+        else
+            entity.setTargetContrast(this.decimal(entity.getTargetIncome() / entity.getTargetTotal()));
+        if (entity.getActualIncome() == 0 || entity.getActualTotal() == 0)
+            entity.setActualContrast(0d);
+        else
+            entity.setActualContrast(this.decimal(entity.getActualIncome() / entity.getActualTotal()));
+
         //计算利润率
-        entity.setTargetRate(this.decimal(entity.getTargetProfit() / entity.getTargetIncome()));
-        entity.setActualRate(this.decimal(entity.getActualProfit() / entity.getActualIncome()));
+        if (entity.getTargetProfit() == 0 || entity.getTargetIncome() == 0)
+            entity.setTargetRate(0d);
+        else
+            entity.setTargetRate(this.decimal(entity.getTargetProfit() / entity.getTargetIncome()));
+        if (entity.getActualIncome() == 0 || entity.getActualProfit() == 0)
+            entity.setActualRate(0d);
+        else
+            entity.setActualRate(this.decimal(entity.getActualProfit() / entity.getActualIncome()));
     }
 
     private Double decimal(Double number) throws SerException {
@@ -134,10 +156,34 @@ public class CostControlSerImpl extends ServiceImpl<CostControl, CostControlDTO>
     }
 
     @Override
-    public HistogramBO histogramCollect(FindTO to) throws SerException {
+    public List<HistogramBO> histogramCollect(FindTO to) throws SerException {
         List<CostControl> list = this.selectByTo(to);
-//        List<String>
-        return null;
+        List<HistogramBO> collectList = new ArrayList<>(0);
+        String area = "";
+        for (CostControl entity : list) {
+            if (!area.equals(entity.getArea())) {
+                area = entity.getArea();
+                List<CostControl> temp = list.stream()
+                        .filter(c -> c.getArea().equals(entity.getArea()))
+                        .collect(Collectors.toList());
+                HistogramBO bo = new HistogramBO();
+                bo.setArea(area);
+                bo.setTargetIncome(temp.stream().mapToDouble(CostControl::getTargetIncome).sum());
+                bo.setActualIncome(temp.stream().mapToDouble(CostControl::getActualIncome).sum());
+                bo.setTargetCost(temp.stream().mapToDouble(CostControl::getTargetCost).sum());
+                bo.setActualCost(temp.stream().mapToDouble(CostControl::getActualCost).sum());
+                bo.setTargetCar(temp.stream().mapToDouble(CostControl::getTargetCar).sum());
+                bo.setActualCar(temp.stream().mapToDouble(CostControl::getActualCar).sum());
+                bo.setTargetOther(temp.stream().mapToDouble(CostControl::getTargetOther).sum());
+                bo.setActualOther(temp.stream().mapToDouble(CostControl::getActualOther).sum());
+                bo.setTargetTotal(temp.stream().mapToDouble(CostControl::getTargetTotal).sum());
+                bo.setActualTotal(temp.stream().mapToDouble(CostControl::getActualTotal).sum());
+                bo.setTargetProfit(temp.stream().mapToDouble(CostControl::getTargetProfit).sum());
+                bo.setActualProfit(temp.stream().mapToDouble(CostControl::getActualProfit).sum());
+                collectList.add(bo);
+            }
+        }
+        return collectList;
     }
 
     private List<CostControl> selectByTo(FindTO to) throws SerException {
@@ -148,6 +194,11 @@ public class CostControlSerImpl extends ServiceImpl<CostControl, CostControlDTO>
             dto.getConditions().add(Restrict.eq("project", to.getProject()));
         if (StringUtils.isNotBlank(to.getName()))
             dto.getConditions().add(Restrict.eq("name", to.getName()));
+        dto.getSorts().add("area=desc");
+        dto.getSorts().add("project=desc");
+        dto.getSorts().add("name=desc");
+        dto.getSorts().add("year=desc");
+        dto.getSorts().add("month=desc");
         List<CostControl> list = super.findByCis(dto);
         if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
             LocalDate start = LocalDate.parse(to.getStart()), end = LocalDate.parse(to.getEnd());

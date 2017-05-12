@@ -105,10 +105,17 @@ public interface CostControlSer extends Ser<CostControl, CostControlDTO> {
      * @return
      * @throws SerException
      */
-    default HistogramBO histogramCollect(FindTO to) throws SerException {
+    default List<HistogramBO> histogramCollect(FindTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 根据查询条件查询成本控制数据
+     *
+     * @param to 查询条件传输对象
+     * @return
+     * @throws SerException
+     */
     default List<CostControlBO> findByTo(FindTO to) throws SerException {
         return null;
     }

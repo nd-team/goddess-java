@@ -33,6 +33,8 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     private static final String type = "项目上";
 
+    //@TODO 在用户选择功能模块出来后把数据和其他费用模块链接在一起
+
     private void countExpenses(OtherExpenses entity) throws SerException {
         entity.setRatio(new BigDecimal(entity.getTarget() / entity.getActual() * 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
         entity.setBalance(entity.getTarget() - entity.getActual());
@@ -40,7 +42,7 @@ public class OtherExpensesSerImpl extends ServiceImpl<OtherExpenses, OtherExpens
 
     @Override
     public OtherExpensesBO save(OtherExpensesTO to) throws SerException {
-        OtherExpenses entity = new OtherExpenses();
+        OtherExpenses entity = BeanTransform.copyProperties(to,OtherExpenses.class);
         entity.setType(type);
         this.countExpenses(entity);
         super.save(entity);

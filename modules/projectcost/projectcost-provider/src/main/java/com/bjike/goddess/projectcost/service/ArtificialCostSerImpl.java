@@ -35,7 +35,10 @@ public class ArtificialCostSerImpl extends ServiceImpl<ArtificialCost, Artificia
         ArtificialCostBO bo = BeanTransform.copyProperties(entity, ArtificialCostBO.class);
         FindTO to = BeanTransform.copyProperties(entity, FindTO.class);
         List<ArtificialCost> list = this.findAsTO(to);
-        bo.setArtificial(this.decimal(list.stream().mapToDouble(ArtificialCost::getActualCost).sum() / entity.getActualCost()));
+        if (entity.getActualCost() == 0)
+            bo.setArtificial(0d);
+        else
+            bo.setArtificial(this.decimal(entity.getActualCost() / list.stream().mapToDouble(ArtificialCost::getActualCost).sum()));
         return bo;
     }
 

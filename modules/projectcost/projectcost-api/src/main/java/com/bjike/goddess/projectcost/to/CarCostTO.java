@@ -1,6 +1,11 @@
 package com.bjike.goddess.projectcost.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 车辆费用
@@ -16,31 +21,37 @@ public class CarCostTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class, EDIT.class})
     private String project;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 年份
      */
+    @NotNull(message = "年份不能为空", groups = {ADD.class, EDIT.class})
     private Integer year;
 
     /**
      * 月份
      */
+    @NotNull(message = "月份不能为空", groups = {ADD.class, EDIT.class})
     private Integer month;
 
     /**
      * 目标车次
      */
+    @NotNull(message = "目标车次不能为空", groups = {ADD.class, EDIT.class})
     private Integer targetDegree;
 
     /**
@@ -51,6 +62,7 @@ public class CarCostTO extends BaseTO {
     /**
      * 单价
      */
+    @NotNull(message = "单价不能为空", groups = {ADD.class, EDIT.class})
     private Double univalent;
 
     public String getArea() {
