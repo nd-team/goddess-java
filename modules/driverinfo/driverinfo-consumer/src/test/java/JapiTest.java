@@ -16,6 +16,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
+		//        JapiClient.delete(true);
 		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 
@@ -25,6 +26,7 @@ public class JapiTest {
 				"modules/driverinfo/driverinfo-api",
 				"common/common-api"
 		});
+		//        JapiClient.saveHistory(false);
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 
 		IProject project = ProjectImpl.init();

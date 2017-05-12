@@ -1,6 +1,11 @@
 package com.bjike.goddess.account.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 明细账信息
@@ -16,36 +21,43 @@ public class AccountInfoTO extends BaseTO {
     /**
      * 日期
      */
+    @NotNull(message = "日期不能为空",groups = {ADD.class, EDIT.class})
     private String date;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
      * 项目组/部门
      */
+    @NotBlank(message = "项目组/部门不能为空",groups = {ADD.class, EDIT.class})
     private String projectGroup;
 
     /**
      * 一级科目
      */
+    @NotBlank(message = "一级科目不能为空",groups = {ADD.class, EDIT.class})
     private String firstSubject;
 
     /**
      * 二级科目
      */
+    @NotBlank(message = "二级科目不能为空",groups = {ADD.class, EDIT.class})
     private String secondSubject;
 
     /**
      * 三级科目
      */
+    @NotBlank(message = "三级科目不能为空",groups = {ADD.class, EDIT.class})
     private String thirdSubject;
 
     /**

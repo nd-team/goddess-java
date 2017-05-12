@@ -31,6 +31,10 @@ public class AccountInfoManagementApiImpl implements AccountInfoManagementAPI {
     public Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
         return accountInfoManagementSer.countAccountInfoManagement(accountInfoManagementDTO);
     }
+    @Override
+    public AccountInfoManagementBO getOne(String id) throws SerException {
+        return accountInfoManagementSer.getOne(id);
+    }
 
     @Override
     public List<AccountInfoManagementBO> findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {

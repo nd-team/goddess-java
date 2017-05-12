@@ -68,6 +68,19 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
         if (!StringUtils.isEmpty(to.getId())) {
             EvaluateProjectInfo model = super.findById(to.getId());
             if (model != null) {
+                if (to.getYears() != null && to.getMonths() != null && to.getDays() != null) {
+                    StringBuilder experienceTime = new StringBuilder();
+                    experienceTime.append(to.getYears());
+                    experienceTime.append("年");
+                    experienceTime.append(to.getMonths());
+                    experienceTime.append("月");
+                    experienceTime.append(to.getDays());
+                    experienceTime.append("日");
+                    to.setExperienceTime(experienceTime.toString());
+                } else {
+                    throw new SerException("工期经历时间不能为空!");
+                }
+
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
@@ -176,6 +189,20 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
             boList.add(bo);
         }
         return swapSize(boList);
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAllArea() throws SerException {
+        String sql = "select distinct area ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
+        List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"area"});
+        return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
+    }
+
+    @Override
+    public List<EvaluateProjectInfoBO> findAllProject() throws SerException {
+        String sql = "select distinct project ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
+        List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"project"});
+        return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
     }
 
     //排序利润率最高最低项目

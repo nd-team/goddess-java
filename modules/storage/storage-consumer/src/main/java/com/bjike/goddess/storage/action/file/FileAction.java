@@ -3,7 +3,8 @@ package com.bjike.goddess.storage.action.file;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -31,6 +33,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+@StorageAuth
 @RestController
 @RequestMapping("file")
 public class FileAction extends BaseFileAction {
@@ -45,9 +48,9 @@ public class FileAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo,  BindingResult result,HttpServletRequest request) throws ActException {
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class );
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -142,15 +145,9 @@ public class FileAction extends BaseFileAction {
     public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            filename = new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1");
             byte[] buffer = fileAPI.download(fileInfo);
-            response.reset();
-            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1"));
-            response.addHeader("Content-Length", "" + buffer.length);
-            OutputStream os = new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("application/octet-stream");
-            os.write(buffer);// 输出文件
-            os.flush();
-            os.close();
+            writeOutFile(response,buffer,filename);
             return new ActResult("download success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

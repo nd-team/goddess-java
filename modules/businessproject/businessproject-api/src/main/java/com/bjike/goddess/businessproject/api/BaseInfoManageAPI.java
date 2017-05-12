@@ -19,6 +19,21 @@ import java.util.List;
 public interface BaseInfoManageAPI {
 
     /**
+     * 基本信息列表总条数
+     *
+     */
+    default Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取基本信息列表
+     * @return class BaseInfoManageBO
+     */
+    default BaseInfoManageBO getOneById(String id) throws SerException {return null;}
+
+
+    /**
      * 项目合同基本信息列表
      * @return class BaseInfoManageBO
      */
@@ -64,6 +79,13 @@ public interface BaseInfoManageAPI {
      * @return class String
      */
     default List<String> listFirstCompany( ) throws  SerException {
+        return null;
+    }
+    /**
+     * 获取内部项目编号
+     * @return class String
+     */
+    default List<String> getInnerNum( ) throws  SerException {
         return null;
     }
 

@@ -197,7 +197,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesName() throws SerException {
         String[] fields = new String[]{"name"};
-        List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select name,1 from rentutilitiespay_stayutilities order by name asc ", StayUtilitiesBO.class, fields);
+        List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select name from rentutilitiespay_stayutilities order by name asc ", StayUtilitiesBO.class, fields);
 
         List<String> nameList = stayUtilitiesBOS.stream().map(StayUtilitiesBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
@@ -209,7 +209,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesNum() throws SerException {
         String[] fields = new String[]{"num"};
-        List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select num,1 from rentutilitiespay_stayutilities order by num asc ", StayUtilitiesBO.class, fields);
+        List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select num from rentutilitiespay_stayutilities order by num asc ", StayUtilitiesBO.class, fields);
 
         List<String> nameList = stayUtilitiesBOS.stream().map(StayUtilitiesBO::getNum)
                 .filter(num -> (num != null || !"".equals(num.trim()))).distinct().collect(Collectors.toList());
@@ -221,7 +221,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select area,1 from rentutilitiespay_stayutilities order by area asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select area from rentutilitiespay_stayutilities order by area asc ", RentPayBO.class, fields);
 
         List<String> areaList = rentPayBOS.stream().map(RentPayBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -233,7 +233,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesProGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup,1 from rentutilitiespay_stayutilities order by projectGroup asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup from rentutilitiespay_stayutilities order by projectGroup asc ", RentPayBO.class, fields);
 
         List<String> proGroupList = rentPayBOS.stream().map(RentPayBO::getProjectGroup)
                 .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());
@@ -245,7 +245,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesProName() throws SerException {
         String[] fields = new String[]{"projectName"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectName,1 from rentutilitiespay_stayutilities order by projectName asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select projectName from rentutilitiespay_stayutilities order by projectName asc ", RentPayBO.class, fields);
 
         List<String> proNameList = rentPayBOS.stream().map(RentPayBO::getProjectName)
                 .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
@@ -257,7 +257,7 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     @Override
     public List<String> getStayUtilitiesAddress() throws SerException {
         String[] fields = new String[]{"address"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select address,1 from rentutilitiespay_stayutilities order by address asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select address from rentutilitiespay_stayutilities order by address asc ", RentPayBO.class, fields);
 
         List<String> addressList = rentPayBOS.stream().map(RentPayBO::getAddress)
                 .filter(address -> (address != null || !"".equals(address.trim()))).distinct().collect(Collectors.toList());

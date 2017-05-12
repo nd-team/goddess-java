@@ -113,6 +113,19 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                                 predicate = cb.isNotNull(root.get(field).as(clazz));
                             }
                             break;
+                        case NOTIN:
+                            Object[] vals = PrimitiveUtil.convertValuesByType(model.getValue());
+                            CriteriaBuilder.In in = null;
+                            if (existJoin) {
+                                in = cb.in(join.get(field));
+                            } else {
+                                in = cb.in(root.get(field));
+                            }
+                            for (int i = 0; i < vals.length; i++) {
+                                in.value(vals[i]);
+                            }
+                            predicate = cb.not(in);
+                            break;
                         case OR:
                             isOrPre = true;
                             if (existJoin) {
@@ -121,6 +134,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                                 predicate = cb.or(cb.equal(root.get(field).as(clazz), model.getValue()));
                             }
                             break;
+
                         default:
                             Object[] values = PrimitiveUtil.convertValuesByType(model.getValue());
                             if (type == RestrictionType.IN) {
@@ -168,10 +182,9 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
     private Method handlerMethod(CriteriaBuilder cb, Condition condition) {
         Method[] methods = cb.getClass().getDeclaredMethods();
         Method method = null;
-
+        String name = RestrictionType.getRestrict(condition.getRestrict());
         for (Method m : methods) {
             Class<?>[] types = m.getParameterTypes();
-            String name = RestrictionType.getRestrict(condition.getRestrict());
             if (m.getName().equals(name) &&
                     types[types.length - 1] != Expression.class) {
                 method = m;

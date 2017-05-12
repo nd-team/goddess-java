@@ -37,8 +37,22 @@ import java.util.stream.Collectors;
 @Service
 public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoManageDTO> implements BaseInfoManageSer {
 
+    @Override
+    public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        searchCondition( baseInfoManageDTO);
+        Long count = super.count( baseInfoManageDTO );
+        return count;
+    }
 
-    
+    @Override
+    public BaseInfoManageBO getOneById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能呢为空");
+        }
+        BaseInfoManage baseInfoManage = super.findById(id);
+        return BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class );
+    }
+
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         searchCondition( baseInfoManageDTO);
@@ -88,7 +102,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         super.remove( id );
     }
 
-    
+
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         BaseInfoManage baseInfoManage = new BaseInfoManage();
@@ -177,9 +191,21 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Override
     public List<String> listFirstCompany() throws SerException {
         String[] fields = new String[]{"firstCompany"};
-        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select firstCompany,1 from businessproject_baseinfomanage order by area asc ", BaseInfoManageBO.class, fields);
+        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select firstCompany from businessproject_baseinfomanage order by area asc ", BaseInfoManageBO.class, fields);
 
-        List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getArea)
+        List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getFirstCompany)
+                .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim())) ).distinct().collect(Collectors.toList());
+
+
+        return firstCompanyList;
+    }
+
+    @Override
+    public List<String> getInnerNum() throws SerException {
+        String[] fields = new String[]{"innerProjectNum"};
+        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select innerProjectNum from businessproject_baseinfomanage group by innerProjectNum order by area asc ", BaseInfoManageBO.class, fields);
+
+        List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getInnerProjectNum)
                 .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim())) ).distinct().collect(Collectors.toList());
 
 

@@ -13,6 +13,7 @@ import com.bjike.goddess.user.to.rbac.RoleTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +63,7 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
         super.remove(id);
     }
 
+     @Transactional
     @Override
     public RoleBO save(RoleTO roleTO) throws SerException {
         Role role = BeanTransform.copyProperties(roleTO, Role.class, true);
@@ -77,7 +79,8 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
         }
         role.setHasChild(false);
         super.save(role);
-        return BeanTransform.copyProperties(role, RoleBO.class);
+        RoleBO bo = BeanTransform.copyProperties(role, RoleBO.class);
+        return bo;
     }
 
     @Override

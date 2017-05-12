@@ -1,8 +1,11 @@
 package com.bjike.goddess.receivable.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.receivable.entity.Contractor;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 
 /**
  * 回款明细
@@ -18,11 +21,13 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空")
     private String area;
 
     /**
      * 项目内部名称
      */
+    @NotBlank(message = "项目内部名称不能为空")
     private String innerName;
 
     /**
@@ -33,112 +38,134 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 派工单价
      */
+    @NotNull(message = "地区不能为空")
     private Double taskPrice;
 
     /**
      * 合同规模数
      */
+    @NotNull(message = "合同规模数不能为空")
     private Double pactNum;
 
     /**
      * 合同规模金额(派工单价*合同规模数)
      */
+    @NotNull(message = "合同规模金额不能为空")
     private Double pactMoney;
 
     /**
      * 已派工量
      */
+    @NotNull(message = "已派工量不能为空")
     private Double pactSize;
 
     /**
      * 中兴派工金额(派工单价*已派工量)
      */
+    @NotNull(message = "中兴派工金额不能为空")
     private Double taskMoney;
 
     /**
      * 已完工量
      */
+    @NotNull(message = "已完工量不能为空")
     private Double finishNum;
 
     /**
      * 已完工金额(派工单价*已完工量)
      */
+    @NotNull(message = "已完工金额不能为空")
     private Double finishMoney;
 
     /**
      * 未完工量
      */
+    @NotNull(message = "未完工量不能为空")
     private Double unfinishNum;
 
     /**
      * 未完工金额(派工单价*未完工量)
      */
+    @NotNull(message = "未完工金额不能为空")
     private Double unfinishMoney;
 
     /**
      * 已交维数量
      */
-    private Double paytax;
+    @NotNull(message = "已交维数量不能为空")
+    private Double payTax;
 
     /**
      * 未交维数量
      */
+    @NotNull(message = "未交维数量不能为空")
     private Double undeal;
 
     /**
      * 违约金
      */
+    @NotNull(message = "违约金不能为空")
     private Double penalty;
 
     /**
      * 实际结算数量
      */
+    @NotNull(message = "实际结算数量不能为空")
     private Double realCountNum;
 
     /**
      * 实际数量金额
      */
+    @NotNull(message = "实际数量金额不能为空")
     private Double realCountMoney;
 
     /**
      * 完工时间
      */
-    private String finishDate;
+    @NotBlank(message = "完工时间不能为空")
+    private String finishTime;
 
     /**
      * 验收交维时间
      */
-    private String checkDate;
+    @NotBlank(message = "验收交维时间不能为空")
+    private String checkTime;
 
     /**
      * 签字审批时间
      */
-    private String auditDate;
+    @NotBlank(message = "签字审批时间不能为空")
+    private String auditTime;
 
     /**
      * 结算审批时间
      */
-    private String countDate;
+    @NotBlank(message = "结算审批时间不能为空")
+    private String countTime;
 
     /**
      * 发票审核时间
      */
-    private String billDate;
+    @NotBlank(message = "发票审核时间不能为空")
+    private String billTime;
 
     /**
      * 预计支付时间
      */
-    private String planDate;
+    @NotBlank(message = "预计支付时间不能为空")
+    private String planTime;
 
     /**
      * 管理费(实际数量金额*承包商比例)
      */
+    @NotNull(message = "管理费不能为空")
     private Double managementFee;
 
     /**
      * 到账时间
      */
-    private Double accountDate;
+    @NotBlank(message = "到账时间不能为空")
+    private String accountTime;
 
     /**
      * 结算进度:A
@@ -163,51 +190,61 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 到账金额(实际数量金额*管理费)
      */
+    @NotNull(message = "到账金额不能为空")
     private Double accountMoney;
 
     /**
      * 税金(到账金额*6.79%)
      */
+    @NotNull(message = "税金不能为空")
     private Double taxes;
 
     /**
      * 税后金额(到账金额-税金)
      */
+    @NotNull(message = "税后金额不能为空")
     private Double afterTax;
 
     /**
      * 剩余结算量(已派工量-实际结算数量)
      */
+    @NotNull(message = "剩余结算量不能为空")
     private Double moreNum;
 
     /**
      * 剩余结算金额(派工单价*剩余结算量)
      */
+    @NotNull(message = "剩余结算金额不能为空")
     private Double moreMoney;
 
     /**
      * 承包商
      */
-    private String contractor;
+    @NotNull(message = "承包商不能为空")
+    private Contractor contractor;
 
     /**
      * 是否已支付
      */
+    @NotNull(message = "是否已支付不能为空")
     private Boolean ispay;
 
     /**
      * 是否框架内
      */
+    @NotNull(message = "是否框架内不能为空")
     private Boolean isframe;
 
     /**
      * 是否有单次合同
      */
+    @NotNull(message = "是否有单次合同不能为空")
     private Boolean ispact;
 
     /**
      * 是否已走结算流程
      */
+    @NotNull(message = "是否已走结算流程不能为空")
     private Boolean isflow;
 
     //开始时间
@@ -312,12 +349,12 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.unfinishMoney = unfinishMoney;
     }
 
-    public Double getPaytax() {
-        return paytax;
+    public Double getPayTax() {
+        return payTax;
     }
 
-    public void setPaytax(Double paytax) {
-        this.paytax = paytax;
+    public void setPayTax(Double payTax) {
+        this.payTax = payTax;
     }
 
     public Double getUndeal() {
@@ -352,52 +389,52 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.realCountMoney = realCountMoney;
     }
 
-    public String getFinishDate() {
-        return finishDate;
+    public String getFinishTime() {
+        return finishTime;
     }
 
-    public void setFinishDate(String finishDate) {
-        this.finishDate = finishDate;
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
     }
 
-    public String getCheckDate() {
-        return checkDate;
+    public String getCheckTime() {
+        return checkTime;
     }
 
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
+    public void setCheckTime(String checkTime) {
+        this.checkTime = checkTime;
     }
 
-    public String getAuditDate() {
-        return auditDate;
+    public String getAuditTime() {
+        return auditTime;
     }
 
-    public void setAuditDate(String auditDate) {
-        this.auditDate = auditDate;
+    public void setAuditTime(String auditTime) {
+        this.auditTime = auditTime;
     }
 
-    public String getCountDate() {
-        return countDate;
+    public String getCountTime() {
+        return countTime;
     }
 
-    public void setCountDate(String countDate) {
-        this.countDate = countDate;
+    public void setCountTime(String countTime) {
+        this.countTime = countTime;
     }
 
-    public String getBillDate() {
-        return billDate;
+    public String getBillTime() {
+        return billTime;
     }
 
-    public void setBillDate(String billDate) {
-        this.billDate = billDate;
+    public void setBillTime(String billTime) {
+        this.billTime = billTime;
     }
 
-    public String getPlanDate() {
-        return planDate;
+    public String getPlanTime() {
+        return planTime;
     }
 
-    public void setPlanDate(String planDate) {
-        this.planDate = planDate;
+    public void setPlanTime(String planTime) {
+        this.planTime = planTime;
     }
 
     public Double getManagementFee() {
@@ -408,12 +445,12 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.managementFee = managementFee;
     }
 
-    public Double getAccountDate() {
-        return accountDate;
+    public String getAccountTime() {
+        return accountTime;
     }
 
-    public void setAccountDate(Double accountDate) {
-        this.accountDate = accountDate;
+    public void setAccountTime(String accountTime) {
+        this.accountTime = accountTime;
     }
 
     public String getProgressA() {
@@ -488,11 +525,11 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.moreMoney = moreMoney;
     }
 
-    public String getContractor() {
+    public Contractor getContractor() {
         return contractor;
     }
 
-    public void setContractor(String contractor) {
+    public void setContractor(Contractor contractor) {
         this.contractor = contractor;
     }
 

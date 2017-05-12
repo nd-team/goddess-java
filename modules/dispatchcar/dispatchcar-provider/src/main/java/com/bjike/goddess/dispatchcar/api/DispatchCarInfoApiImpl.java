@@ -147,4 +147,9 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     public List<AuditResultBO> findAuditResult(String id) throws SerException {
         return dispatchCarInfoSer.findAuditResults(id);
     }
+
+    @Override
+    public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
+        dispatchCarInfoSer.predict(id,budgetPayDate,payPlan);
+    }
 }

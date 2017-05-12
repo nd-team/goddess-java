@@ -1,8 +1,10 @@
 package com.bjike.goddess.receivable.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.receivable.bo.ContractorBO;
 import com.bjike.goddess.receivable.dto.ContractorDTO;
+import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.service.ContractorSer;
 import com.bjike.goddess.receivable.to.ContractorTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,15 @@ public class ContractorApiImpl implements ContractorAPI {
     @Autowired
     private ContractorSer contractorSer;
 
+    @Override
+    public Long countContractor(ContractorDTO contractorDTO) throws SerException {
+        return contractorSer.countContractor(contractorDTO);
+    }
+
+    @Override
+    public ContractorBO getOne(String id) throws SerException {
+        return contractorSer.getOne(id);
+    }
     @Override
     public List<ContractorBO> findListContractor(ContractorDTO contractorDTO) throws SerException {
         return contractorSer.findListContractor(contractorDTO);

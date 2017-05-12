@@ -26,6 +26,13 @@ public interface LendAuditDetailAPI {
     }
 
     /**
+     * 根据id获取分析情况记录
+     * @return class LendAuditDetailBO
+     */
+    default LendAuditDetailBO getOneById(String id) throws SerException {return null;}
+
+
+    /**
      *  分析情况记录
      * @param lendAuditDetailDTO lendAuditDetailDTO
      * @return class LendAuditDetailBO

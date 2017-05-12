@@ -42,6 +42,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public List<VoucherGenerateBO> listNoPage(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return voucherGenerateSer.listNoPage(voucherGenerateDTO);
+    }
+
+    @Override
     public List<VoucherGenerateBO> addVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return voucherGenerateSer.addVoucherGenerate(voucherGenerateTO);
     }

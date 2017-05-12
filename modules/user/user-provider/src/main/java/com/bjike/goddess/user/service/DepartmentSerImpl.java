@@ -12,7 +12,9 @@ import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.to.DepartmentTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.List;
 public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> implements DepartmentSer {
 
 
+    @Cacheable
     @Override
     public List<DepartmentBO> treeData(String id) throws SerException {
         DepartmentDTO dto = new DepartmentDTO();
@@ -47,6 +50,8 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
         return BeanTransform.copyProperties(departments, DepartmentBO.class);
     }
 
+
+    @Transactional
     @Override
     public void remove(String id) throws SerException {
         List<Department> children = getChild(id);
@@ -64,6 +69,8 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
         super.remove(id);
     }
 
+
+    @Transactional
     @Override
     public DepartmentBO save(DepartmentTO departmentTO) throws SerException {
         Department department = BeanTransform.copyProperties(departmentTO, Department.class, true);
@@ -82,6 +89,8 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
         return BeanTransform.copyProperties(department, DepartmentBO.class);
     }
 
+
+    @Transactional
     @Override
     public void update(DepartmentTO departmentTO) throws SerException {
         Department department = super.findById(departmentTO.getId());

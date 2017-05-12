@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -99,6 +100,8 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         return BeanTransform.copyProperties(permissions, PermissionBO.class);
     }
 
+    @Transactional
+
     @Override
     public void remove(String id) throws SerException {
 
@@ -117,6 +120,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         super.remove(id);
     }
 
+    @Transactional
     @Override
     public PermissionBO save(PermissionTO permissionTO) throws SerException {
         Permission permission = BeanTransform.copyProperties(permissionTO, Permission.class, true);
@@ -135,6 +139,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
         return BeanTransform.copyProperties(permission, PermissionBO.class);
     }
 
+    @Transactional
     @Override
     public void update(PermissionTO permissionTO) throws SerException {
         Permission permission = super.findById(permissionTO.getId());

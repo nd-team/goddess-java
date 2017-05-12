@@ -174,7 +174,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public List<String> getRentPayArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select area,1 from rentutilitiespay_rentpay order by area asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select area from rentutilitiespay_rentpay order by area asc ", RentPayBO.class, fields);
 
         List<String> areaList = rentPayBOS.stream().map(RentPayBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -186,7 +186,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public List<String> getRentPayProGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup,1 from rentutilitiespay_rentpay order by projectGroup asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup from rentutilitiespay_rentpay order by projectGroup asc ", RentPayBO.class, fields);
 
         List<String> proGroupList = rentPayBOS.stream().map(RentPayBO::getProjectGroup)
                 .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());
@@ -198,7 +198,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public List<String> getRentPayProName() throws SerException {
         String[] fields = new String[]{"projectName"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectName,1 from rentutilitiespay_rentpay order by projectName asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select projectName from rentutilitiespay_rentpay order by projectName asc ", RentPayBO.class, fields);
 
         List<String> proNameList = rentPayBOS.stream().map(RentPayBO::getProjectName)
                 .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
@@ -210,7 +210,7 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public List<String> getRentPayAddress() throws SerException {
         String[] fields = new String[]{"address"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select address,1 from rentutilitiespay_rentpay order by address asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select address from rentutilitiespay_rentpay order by address asc ", RentPayBO.class, fields);
 
         List<String> addressList = rentPayBOS.stream().map(RentPayBO::getAddress)
                 .filter(address -> (address != null || !"".equals(address.trim()))).distinct().collect(Collectors.toList());

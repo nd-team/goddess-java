@@ -1,5 +1,7 @@
 package com.bjike.goddess.foreigntax.action.foreigntax;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,8 +14,10 @@ import com.bjike.goddess.foreigntax.to.AccountInfoManagementTO;
 import com.bjike.goddess.foreigntax.vo.AccountInfoManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,6 +50,23 @@ public class AccountInfoManagementAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个外账资料管理
+     *
+     * @param id
+     * @return class AccountInfoManagementVO
+     * @des 获取一个外账资料管理
+     * @version v1
+     */
+    @GetMapping("v1/account/{id}")
+    public Result account(@PathVariable String id) throws ActException {
+        try {
+            AccountInfoManagementBO accountInfoManagementBO = accountInfoManagementAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(accountInfoManagementBO, AccountInfoManagementVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 外账资料管理列表
@@ -55,11 +76,11 @@ public class AccountInfoManagementAction {
      * @des 获取所有外账资料管理
      * @version v1
      */
-    @GetMapping("v1/listAccountInfoManagement")
-    public Result findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(AccountInfoManagementDTO accountInfoManagementDTO, HttpServletRequest request) throws ActException {
         try {
             List<AccountInfoManagementVO> accountInfoManagementVOS = BeanTransform.copyProperties
-                    (accountInfoManagementAPI.findListAccountInfoManagement(accountInfoManagementDTO),AccountInfoManagementVO.class);
+                    (accountInfoManagementAPI.findListAccountInfoManagement(accountInfoManagementDTO),AccountInfoManagementVO.class,request);
             return ActResult.initialize(accountInfoManagementVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -75,7 +96,7 @@ public class AccountInfoManagementAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) AccountInfoManagementTO accountInfoManagementTO, BindingResult bindingResult) throws ActException {
         try {
             AccountInfoManagementBO accountInfoManagementBO = accountInfoManagementAPI.insertAccountInfoManagement(accountInfoManagementTO);
             return ActResult.initialize(accountInfoManagementBO);
@@ -93,7 +114,7 @@ public class AccountInfoManagementAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) AccountInfoManagementTO accountInfoManagementTO,BindingResult bindingResult) throws ActException {
         try {
             AccountInfoManagementBO accountInfoManagementBO = accountInfoManagementAPI.editAccountInfoManagement(accountInfoManagementTO);
             return ActResult.initialize(accountInfoManagementBO);
@@ -110,7 +131,7 @@ public class AccountInfoManagementAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeAccountInfoManagement(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             accountInfoManagementAPI.removeAccountInfoManagement(id);
             return new ActResult("delete success");

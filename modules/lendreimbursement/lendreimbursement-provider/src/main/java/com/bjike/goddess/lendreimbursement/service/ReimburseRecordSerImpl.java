@@ -1190,7 +1190,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<String> listFirstSubject() throws SerException {
         String [] fields = new String[]{"firstSubject"};
-        String sql = " select firstSubject ,1 from lendreimbursement_reimburserecord group by firstSubject ";
+        String sql = " select firstSubject  from lendreimbursement_reimburserecord group by firstSubject ";
         List<ReimburseRecord> list = super.findBySql( sql , ReimburseRecord.class, fields);
         List<String> firstSubject =  list.stream().map(ReimburseRecord::getFirstSubject).collect(Collectors.toList());
         return firstSubject;
@@ -1199,7 +1199,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<String> listArea() throws SerException {
         String [] fields = new String[]{"area"};
-        String sql = " select area ,1 from lendreimbursement_reimburserecord group by area ";
+        String sql = " select area  from lendreimbursement_reimburserecord group by area ";
         List<ReimburseRecord> list = super.findBySql( sql , ReimburseRecord.class, fields);
         List<String> area =  list.stream().map(ReimburseRecord::getArea).collect(Collectors.toList());
         return area;
@@ -1208,7 +1208,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Override
     public List<String> listProject() throws SerException {
         String [] fields = new String[]{"project"};
-        String sql = " select project ,1 from lendreimbursement_reimburserecord group by project ";
+        String sql = " select project  from lendreimbursement_reimburserecord group by project ";
         List<ReimburseRecord> list = super.findBySql( sql , ReimburseRecord.class, fields);
         List<String> project =  list.stream().map(ReimburseRecord::getProject).collect(Collectors.toList());
         return project;

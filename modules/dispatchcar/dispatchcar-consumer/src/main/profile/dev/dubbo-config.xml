@@ -22,6 +22,9 @@
     <!-- 租车费用基本信息API -->
 	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" id="leaseCarCostApiImpl" />
 
+    <!-- 文件上传API -->
+	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl" />
+
 
 
 

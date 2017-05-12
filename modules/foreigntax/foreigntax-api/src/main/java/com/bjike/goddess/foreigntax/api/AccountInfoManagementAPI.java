@@ -23,6 +23,14 @@ public interface AccountInfoManagementAPI {
     default Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
         return null;
     }
+    /**
+     * 一个外账资料管理
+     *
+     * @return class AccountInfoManagementBO
+     */
+    default AccountInfoManagementBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 外账资料管理

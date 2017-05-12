@@ -31,9 +31,12 @@ public interface MarketEmailSer extends Ser<MarketEmail, MarketEmailDTO> {
 
     /**
      * 一个邮件
+     *
      * @return class MarketEmailBO
      */
-    default MarketEmailBO getOne(String id) throws SerException {return null;}
+    default MarketEmailBO getOne(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -80,7 +83,16 @@ public interface MarketEmailSer extends Ser<MarketEmail, MarketEmailDTO> {
      * @param areas
      * @return class MarketEmailBO
      */
-    default List<MarketCollectBO> marketCollect (String[] areas) throws SerException {
+    default List<MarketCollectBO> marketCollect(String[] areas) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
         return null;
     }
 
