@@ -133,7 +133,7 @@ public class UserLoginSerImpl implements UserLoginSer {
             byte[] decodedData = RSACoder.decryptByPrivateKey(loginTO.getPassword().trim(),
                     userSer.privateKey());
             String password = new String(decodedData); //得到明文密码
-//             password = loginTO.getPassword();
+             password = loginTO.getPassword(); //不使用加密公钥
             if (PasswordHash.validatePassword(password, persistUser.getPassword())) {
                 token = createToken(persistUser, loginTO);
             } else { //密码错误
