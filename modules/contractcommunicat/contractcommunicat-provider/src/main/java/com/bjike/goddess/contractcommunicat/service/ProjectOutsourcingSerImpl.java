@@ -17,16 +17,14 @@ import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.util.ExportExcelUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -170,7 +168,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
-    public void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException {
+    public void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException {
         List<ProjectOutsourcing> list = BeanTransform.copyProperties(toList, ProjectOutsourcing.class, true);
         super.save(list);
     }
@@ -188,11 +186,16 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             dto.getConditions().add(Restrict.lt("communicateDate", to.getEndDate()));
         }
         List<ProjectOutsourcing> list = super.findByCis(dto);
-        List<ProjectOutsourcingExcel> toList = BeanTransform.copyProperties(list, ProjectOutsourcingExcel.class);
+        List<ProjectOutsourcingExcel> toList = new ArrayList<ProjectOutsourcingExcel>();
+        for (ProjectOutsourcing model : list){
+            ProjectOutsourcingExcel excel = new ProjectOutsourcingExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         String path = "/home/ike/out.xlsx";
-        ExportExcelUtil.export(path,bytes);
+        ExportExcelUtil.export(path, bytes);
     }
 
     //设置汇总字段

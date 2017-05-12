@@ -166,7 +166,8 @@ public class ProjectContractAct extends BaseFileAction {
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<ProjectContractExcel> toList = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
-            projectContractAPI.leadExcel(toList);
+            List<ProjectContractTO> tos = BeanTransform.copyProperties(toList,ProjectContractTO.class);
+            projectContractAPI.leadExcel(tos);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

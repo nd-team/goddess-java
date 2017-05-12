@@ -1,5 +1,7 @@
 package com.bjike.goddess.contractcommunicat.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 项目结果
  *
@@ -14,16 +16,19 @@ public enum CommunicateResult {
     /**
      * 项目合作
      */
+    @ExcelValue(name = "项目合作")
     COOPERATE(0),
 
     /**
      * 项目跟进
      */
+    @ExcelValue(name = "项目跟进")
     TRAIL(1),
 
     /**
      * 项目丢弃
      */
+    @ExcelValue(name = "项目丢弃")
     ABANDON(2);
 
     private int code;

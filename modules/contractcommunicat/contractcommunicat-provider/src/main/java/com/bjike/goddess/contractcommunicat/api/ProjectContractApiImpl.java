@@ -72,7 +72,7 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     }
 
     @Override
-    public void leadExcel(List<ProjectContractExcel> toList) throws SerException {
+    public void leadExcel(List<ProjectContractTO> toList) throws SerException {
         projectContractSer.leadExcel(toList);
     }
 

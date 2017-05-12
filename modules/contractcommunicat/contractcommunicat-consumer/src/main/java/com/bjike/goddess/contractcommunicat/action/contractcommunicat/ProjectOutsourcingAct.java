@@ -160,7 +160,8 @@ public class ProjectOutsourcingAct extends BaseFileAction {
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<ProjectOutsourcingExcel> toList = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
-            projectOutsourcingAPI.leadExcel(toList);
+            List<ProjectOutsourcingTO> tos = BeanTransform.copyProperties(toList,ProjectOutsourcingTO.class);
+            projectOutsourcingAPI.leadExcel(tos);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
