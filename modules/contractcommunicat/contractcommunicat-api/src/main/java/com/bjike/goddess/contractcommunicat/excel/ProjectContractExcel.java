@@ -1,4 +1,4 @@
-package com.bjike.goddess.contractcommunicat.to;
+package com.bjike.goddess.contractcommunicat.excel;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -8,6 +8,7 @@ import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * 项目承包洽谈
@@ -18,89 +19,90 @@ import javax.validation.constraints.NotNull;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ProjectContractTO extends BaseTO {
+public class ProjectContractExcel extends BaseTO {
 
     /**
      * 合同外部项目名称
      */
-    @NotBlank(message = "合同外部项目名称不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "合同外部项目名称",notNull = true)
     private String contractExtProject;
 
     /**
      * 合同外部编号
      */
-    @NotBlank(message = "合同外部编号不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "合同外部编号",notNull = true)
     private String contractExtCode;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(message = "内部项目名称不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "内部项目名称",notNull = true)
     private String contractInProject;
 
     /**
      * 内部项目编号
      */
-    @NotBlank(message = "内部项目编号不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "内部项目编号",notNull = true)
     private String contractInCode;
 
     /**
      * 洽谈轮次
      */
-    @NotBlank(message = "洽谈轮次不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "洽谈轮次",notNull = true)
     private String communicateTimes;
 
     /**
      * 洽谈目的
      */
-    @NotBlank(message = "洽谈目的不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "洽谈目的",notNull = true)
     private String communicateGoal;
 
     /**
      * 洽谈时间
      */
-    @NotBlank(message = "洽谈时间不能为空!", groups = {ADD.class, EDIT.class})
-    private String communicateDate;
+    @ExcelHeader(name = "洽谈时间",notNull = true)
+    private LocalDateTime communicateDate;
 
     /**
      * 洽谈人
      */
-    @NotBlank(message = "洽谈人不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "洽谈人",notNull = true)
     private String communicateUser;
 
     /**
      * 洽谈对象
      */
-    @NotBlank(message = "洽谈对象不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "洽谈对象",notNull = true)
     private String communicateObj;
 
     /**
      * 洽谈地址
      */
-    @NotBlank(message = "洽谈地址不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "洽谈地址",notNull = true)
     private String communicateAddress;
 
     /**
      * 洽谈内容
      */
+    @ExcelHeader(name = "洽谈内容",notNull = true)
     private String communicateContent;
 
     /**
      * 费用预算
      */
-    @NotNull(message = "费用预算不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "费用预算",notNull = true)
     private Double costBudget;
 
     /**
      * 项目结果
      */
-    @NotNull(message = "项目结果不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "项目结果",notNull = true)
     private CommunicateResult projectResult;
 
     /**
      * 记录人
      */
-    @NotBlank(message = "记录人不能为空!", groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name = "记录人",notNull = true)
     private String recordUser;
 
     public String getContractExtProject() {
@@ -151,11 +153,11 @@ public class ProjectContractTO extends BaseTO {
         this.communicateGoal = communicateGoal;
     }
 
-    public String getCommunicateDate() {
+    public LocalDateTime getCommunicateDate() {
         return communicateDate;
     }
 
-    public void setCommunicateDate(String communicateDate) {
+    public void setCommunicateDate(LocalDateTime communicateDate) {
         this.communicateDate = communicateDate;
     }
 

@@ -1,13 +1,10 @@
-package com.bjike.goddess.contractcommunicat.to;
+package com.bjike.goddess.contractcommunicat.excel;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * 项目承包洽谈
@@ -18,66 +15,71 @@ import javax.validation.constraints.NotNull;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ProjectContractTO extends BaseTO {
+public class ProjectOutsourcingExcel extends BaseTO {
 
     /**
      * 合同外部项目名称
      */
-    @NotBlank(message = "合同外部项目名称不能为空!", groups = {ADD.class, EDIT.class})
     private String contractExtProject;
 
     /**
      * 合同外部编号
      */
-    @NotBlank(message = "合同外部编号不能为空!", groups = {ADD.class, EDIT.class})
     private String contractExtCode;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(message = "内部项目名称不能为空!", groups = {ADD.class, EDIT.class})
     private String contractInProject;
 
     /**
      * 内部项目编号
      */
-    @NotBlank(message = "内部项目编号不能为空!", groups = {ADD.class, EDIT.class})
     private String contractInCode;
+
+    /**
+     * 外包项目名称
+     */
+    private String outsourcingProject;
+
+    /**
+     * 外包项目编号
+     */
+    private String outsourcingCode;
+
+    /**
+     * 项目外包信息
+     */
+    private String outsourcingInfo;
 
     /**
      * 洽谈轮次
      */
-    @NotBlank(message = "洽谈轮次不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateTimes;
 
     /**
      * 洽谈目的
      */
-    @NotBlank(message = "洽谈目的不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateGoal;
 
     /**
      * 洽谈时间
      */
-    @NotBlank(message = "洽谈时间不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateDate;
 
     /**
      * 洽谈人
      */
-    @NotBlank(message = "洽谈人不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateUser;
 
     /**
      * 洽谈对象
      */
-    @NotBlank(message = "洽谈对象不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateObj;
 
     /**
      * 洽谈地址
      */
-    @NotBlank(message = "洽谈地址不能为空!", groups = {ADD.class, EDIT.class})
     private String communicateAddress;
 
     /**
@@ -88,19 +90,16 @@ public class ProjectContractTO extends BaseTO {
     /**
      * 费用预算
      */
-    @NotNull(message = "费用预算不能为空!", groups = {ADD.class, EDIT.class})
     private Double costBudget;
 
     /**
      * 项目结果
      */
-    @NotNull(message = "项目结果不能为空!", groups = {ADD.class, EDIT.class})
     private CommunicateResult projectResult;
 
     /**
      * 记录人
      */
-    @NotBlank(message = "记录人不能为空!", groups = {ADD.class, EDIT.class})
     private String recordUser;
 
     public String getContractExtProject() {
@@ -133,6 +132,30 @@ public class ProjectContractTO extends BaseTO {
 
     public void setContractInCode(String contractInCode) {
         this.contractInCode = contractInCode;
+    }
+
+    public String getOutsourcingProject() {
+        return outsourcingProject;
+    }
+
+    public void setOutsourcingProject(String outsourcingProject) {
+        this.outsourcingProject = outsourcingProject;
+    }
+
+    public String getOutsourcingCode() {
+        return outsourcingCode;
+    }
+
+    public void setOutsourcingCode(String outsourcingCode) {
+        this.outsourcingCode = outsourcingCode;
+    }
+
+    public String getOutsourcingInfo() {
+        return outsourcingInfo;
+    }
+
+    public void setOutsourcingInfo(String outsourcingInfo) {
+        this.outsourcingInfo = outsourcingInfo;
     }
 
     public String getCommunicateTimes() {
