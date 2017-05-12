@@ -191,7 +191,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Override
     public List<String> listFirstCompany() throws SerException {
         String[] fields = new String[]{"firstCompany"};
-        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select firstCompany from businessproject_baseinfomanage order by area asc ", BaseInfoManageBO.class, fields);
+        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select firstCompany from businessproject_baseinfomanage group by firstCompany order by firstCompany asc ", BaseInfoManageBO.class, fields);
 
         List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getFirstCompany)
                 .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim())) ).distinct().collect(Collectors.toList());

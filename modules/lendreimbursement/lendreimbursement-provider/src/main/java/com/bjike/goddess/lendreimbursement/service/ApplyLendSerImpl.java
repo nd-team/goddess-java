@@ -3,7 +3,6 @@ package com.bjike.goddess.lendreimbursement.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
@@ -24,7 +23,6 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +34,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +67,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
             applyLendDTO.getConditions().add(Restrict.eq("lender", applyLendDTO.getLender()));
         }
@@ -99,8 +97,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     public List<ApplyLendBO> listApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
 
         applyLendDTO.getSorts().add("createTime=desc");
-        //未收款
-        applyLendDTO.getConditions().add(Restrict.eq("receivePay", "否"));
+        //未收款且不在有误单里面
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,6,8,9}));
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
             applyLendDTO.getConditions().add(Restrict.eq("lender", applyLendDTO.getLender()));
         }
@@ -262,7 +261,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 4));
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 5));
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 9));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{3, 6, 7, 8}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2,3, 6, 7, 8}));
 
 
         if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
@@ -300,7 +299,26 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime", "lendStatus");
+//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime", "lendStatus");
+        lend.setEstimateLendDate(applyLend.getEstimateLendDate());
+        lend.setLender( applyLend.getLender());
+        lend.setCharger( applyLend.getCharger());
+        lend.setArea( applyLend.getArea());
+        lend.setProjectGroup(applyLend.getProjectGroup());
+        lend.setProjectName(applyLend.getProjectName());
+        lend.setLendWay( applyLend.getLendWay());
+        lend.setFirstSubject(applyLend.getFirstSubject());
+        lend.setSecondSubject(applyLend.getSecondSubject());
+        lend.setThirdSubject(applyLend.getThirdSubject());
+        lend.setExplains(applyLend.getExplains());
+        lend.setWriteUp(applyLend.getWriteUp());
+        lend.setLendReson(applyLend.getLendReson());
+        lend.setMoney(applyLend.getMoney());
+        lend.setInvoice(applyLend.getInvoice());
+        lend.setRemark(applyLend.getRemark());
+        //填单人
+        lend.setLendDate(applyLend.getLendDate());
+        lend.setModifyTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
@@ -341,6 +359,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             lend.setLendStatus(LendStatus.CHARGEPASS);
         } else if ("否".equals(applyLendTO.getChargerPass())) {
             lend.setLendStatus(LendStatus.CHARGENOTPASS);
+            lend.setLendError(9);
         }
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
@@ -592,10 +611,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         }
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
+        lend.setLendError(0);
 
-        if (!LendStatus.CHARGESURECONGEL.equals(lend.getLendStatus())) {
-            throw new SerException("编辑失败，此条数据负责人还未确认冻结状态");
-        }
+//        if (!LendStatus.CHARGESURECONGEL.equals(lend.getLendStatus())) {
+//            throw new SerException("编辑失败，此条数据负责人还未确认冻结状态");
+//        }
 
         //添加副本
         ApplyLendCopyDTO acdto = new ApplyLendCopyDTO();
@@ -607,18 +627,49 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             ac.setModifyTime(LocalDateTime.now());
             applyLendCopySer.update(ac);
         } else {
-            BeanUtils.copyProperties(lend, ac, "id", "createTime", "applyLendId");
+            ac = new ApplyLendCopy();
+            BeanUtils.copyProperties(lend, ac);
             ac.setApplyLendId(lend.getId());
             ac.setModifyTime(LocalDateTime.now());
             applyLendCopySer.save(ac);
         }
 
         //申请单有误编辑
-        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
+        BeanUtils.copyProperties(applyLend, lend, "id", "createTime"
+        ,"attender","writeUpCondition","noInvoiceRemark","goodsLink","fillSingler","lendDate","chargerOpinion","chargerPass","finacer","fincerOpinion"
+        ,"fincerPass","manager","managerOpinion","managerPass","proxyAuditRemark","payCondition","payer"
+        ,"payDate","payOrigin","documentQuantity","documentCondition","reimMoney","lendMoney","returnMoney","returnDate","returnWays","returnAccount"
+        ,"sender","sendDate","sendCondition","receiveAddr","ticketer","ticketDate","ticketCondition","receiveTicket"
+        ,"checker","checkDate","checkcontent","lendStatus","receivePay","lendError");
+        lend.setEstimateLendDate(applyLend.getEstimateLendDate());
+        lend.setLender( applyLend.getLender());
+        lend.setCharger( applyLend.getCharger());
+        lend.setArea( applyLend.getArea());
+        lend.setProjectGroup(applyLend.getProjectGroup());
+        lend.setProjectName(applyLend.getProjectName());
+        lend.setLendWay( applyLend.getLendWay());
+        lend.setFirstSubject(applyLend.getFirstSubject());
+        lend.setSecondSubject(applyLend.getSecondSubject());
+        lend.setThirdSubject(applyLend.getThirdSubject());
+        lend.setExplains(applyLend.getExplains());
+        lend.setWriteUp(applyLend.getWriteUp());
+        lend.setLendReson(applyLend.getLendReson());
+        lend.setMoney(applyLend.getMoney());
+        lend.setInvoice(applyLend.getInvoice());
+        lend.setRemark(applyLend.getRemark());
         //填单人
         lend.setFillSingler(userAPI.currentUser().getUsername());
+        lend.setLendDate(applyLend.getLendDate());
         lend.setModifyTime(LocalDateTime.now());
-        lend.setLendStatus(LendStatus.LISTERROR);
+        //未付款
+        applyLend.setPayCondition("否");
+        applyLend.setChargerPass("未处理");
+        applyLend.setManagerPass("未处理");
+        applyLend.setFincerPass("未处理");
+        //填单人
+//        lend.setFillSingler(userAPI.currentUser().getUsername());
+//        lend.setModifyTime(LocalDateTime.now());
+        lend.setLendStatus(LendStatus.NONE);
         super.update(lend);
 
 

@@ -198,7 +198,7 @@ public class CollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/collectSign")
-    public Result CollectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
+    public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
