@@ -16,8 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 资质办理计划
  *
@@ -41,10 +39,10 @@ public class QualificationsHandlePlanAct {
      * @return class QualificationsHandlePlanVO
      * @version v1
      */
-    @PostMapping("V1/save")
-    public Result save(@Validated(ADD.class) QualificationsHandlePlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/save")
+    public Result save(@Validated(ADD.class) QualificationsHandlePlanTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.save(to), QualificationsHandlePlanVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.save(to), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -58,9 +56,9 @@ public class QualificationsHandlePlanAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsHandlePlanTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsHandlePlanTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.update(to), QualificationsHandlePlanVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.update(to), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -90,9 +88,9 @@ public class QualificationsHandlePlanAct {
      * @version v1
      */
     @GetMapping("v1/findByHandle/{id}")
-    public Result findByHandle(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.findByHandle(id), QualificationsHandlePlanVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.findByHandle(id), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -106,9 +104,9 @@ public class QualificationsHandlePlanAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(QualificationsHandlePlanDTO dto, HttpServletRequest request) throws ActException {
+    public Result maps(QualificationsHandlePlanDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.maps(dto), QualificationsHandlePlanVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.maps(dto), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -136,9 +134,9 @@ public class QualificationsHandlePlanAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.getById(id), QualificationsHandlePlanVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.getById(id), QualificationsHandlePlanVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
