@@ -241,4 +241,12 @@ public class RSACoder {
         keyMap.put(PRIVATE_KEY, keyPair.getPrivate());// 私钥
         return keyMap;
     }
+
+    public static void main(String[] args)throws Exception {
+        Map<String,Key> keyMap = initKey();
+        String publicKey = RSACoder.getPublicKey(keyMap);
+        String privateKey = RSACoder.getPrivateKey(keyMap);
+        System.err.println("公钥: \n\r" + publicKey);
+        System.err.println("私钥： \n\r" + privateKey);
+    }
 }

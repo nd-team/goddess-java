@@ -209,7 +209,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public List<String> getCustomerBaseInfoCusNum() throws SerException {
         String[] fields = new String[]{"customerNum"};
         List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql(
-                "select customerNum ,1 from customer_customerbaseinfo where customerNum not in ( select d.customerNum from customer_customerdetail AS d\n" +
+                "select customerNum  from customer_customerbaseinfo where customerNum not in ( select d.customerNum from customer_customerdetail AS d\n" +
                         "  ) order by customerNum asc ", CustomerBaseInfoBO.class, fields);
 
         List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerNum)
@@ -222,7 +222,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<String> getCustomerBaseInfoArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct area,1 from customer_customerbaseinfo group by area  order by area asc ", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct area from customer_customerbaseinfo group by area  order by area asc ", CustomerBaseInfoBO.class, fields);
 
         List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -241,7 +241,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<String> getCustomerBaseInfoName() throws SerException {
         String[] fields = new String[]{"customerName"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct customername ,1 from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select distinct customername  from customer_customerbaseinfo", CustomerBaseInfoBO.class, fields);
 
         List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getCustomerName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
@@ -400,7 +400,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Override
     public List<String> getCustomerBaseInfoWorks() throws SerException {
         String[] fields = new String[]{"workProfession"};
-        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select workProfession ,1 from customer_customerbaseinfo group by workProfession", CustomerBaseInfoBO.class, fields);
+        List<CustomerBaseInfoBO> customerBaseInfoBOS = super.findBySql("select workProfession  from customer_customerbaseinfo group by workProfession", CustomerBaseInfoBO.class, fields);
 
         List<String> customerNameList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getWorkProfession)
                 .filter(name -> (name != null || !"".equals(name))).distinct().collect(Collectors.toList());

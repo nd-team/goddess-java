@@ -21,7 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 模块功能
- * Created by lake on 17-3-9.
+ * @Author: [liguiqin]
+ * @Date: [2017-03-03 10:20]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
 @RestController
 @RequestMapping("module")

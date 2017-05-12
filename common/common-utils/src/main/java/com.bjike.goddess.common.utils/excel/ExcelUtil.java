@@ -10,6 +10,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -121,8 +122,11 @@ public class ExcelUtil {
                             if (field.getAnnotation(ExcelHeader.class).name().equals(excelHeaders.get(j).name())) {
                                 field.setAccessible(true);
                                 val = field.get(obj);
-                                if (null!=val && field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
+                                if (null != val && field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
                                     val = DateUtil.dateToString((LocalDateTime) val);
+                                }
+                                if (field.getType().isEnum()) {
+                                    val = handlerEnum(field, val);
                                 }
                                 break;
                             }
@@ -134,8 +138,8 @@ public class ExcelUtil {
                                 int val_length = cellValue.getBytes().length; //获取数据值长度
                                 int name_length = excelHeaders.get(j).name().getBytes().length;//获取表头长度
                                 int columnWidth = val_length > name_length ? val_length : name_length;
-                                columnWidth = columnWidth > 30 ? columnWidth = 30 : columnWidth;
-                                sheet.setColumnWidth(j, columnWidth * 275);
+                                columnWidth = columnWidth > 30 ? 30 : columnWidth;
+                                sheet.setColumnWidth(j, columnWidth * 275);//设置自动宽度
                             }
                         }
                         cell.setCellStyle(contentStyle);
@@ -225,6 +229,9 @@ public class ExcelUtil {
         try {
             for (Field f : fields) {
                 if (f.getAnnotation(ExcelHeader.class).name().equals(et.name())) {
+                    if(et.name().equals("性别")){
+                        return  val;
+                    }
                     return DataTypeUtils.convertDataType(val, f.getType().getSimpleName());
                 }
             }
@@ -365,32 +372,10 @@ public class ExcelUtil {
         return style;
     }
 
-
-    public static void main(String[] args) throws Exception {
-        try {
-            /**
-             * excel 转对象
-             */
-            File file = new File("/home/lgq/user.xlsx");
-            InputStream is = new FileInputStream(file);
-            Excel excel = new Excel();
-            List<UserExcel> users = excelToClazz(is, UserExcel.class, excel);
-
-            /**
-             * 对象列表转excel bytes
-             */
-            Excel ex = new Excel(1, 2);
-            ex.setTitle("导出用户数据");
-            //   ex.setExcludes(new String[]{"name","phone"}); //过滤字段
-            byte[] bytes = clazzToExcel(users, ex);
-            File out = new File("/home/lgq/out.xlsx");
-            FileOutputStream fos = new FileOutputStream(out);
-            fos.write(bytes);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    private static String handlerEnum(Field field, Object val) {
+        return null;
     }
+
+
 
 }

@@ -30,6 +30,10 @@ public class RoleBO extends BaseBO {
      * 创建时间
      */
     private String createTime;
+    /**
+     * 是否有子节点
+     */
+    private Boolean hasChild;
 
     public String getName() {
         return name;
@@ -61,5 +65,13 @@ public class RoleBO extends BaseBO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
     }
 }

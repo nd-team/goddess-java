@@ -13,7 +13,7 @@ import java.io.IOException;
 @ComponentScan(basePackages = {"com.bjike.goddess.assemble.action", "com.bjike.goddess.assemble.config", "com.bjike.goddess.common.consumer"})
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
-public class Application{
+public class Application {
 
 
     public static void main(String[] args) throws IOException {

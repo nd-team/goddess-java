@@ -301,7 +301,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public List<String> getArea() throws SerException {
         String [] fields = new String[]{"area"};
-        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = super.findBySql("select distinct area,1 from receivable_receivablesubsidiary group by area order by area asc ",ReceivableSubsidiaryBO.class,fields);
+        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = super.findBySql("select distinct area from receivable_receivablesubsidiary group by area order by area asc ",ReceivableSubsidiaryBO.class,fields);
 
         List<String> areasList = receivableSubsidiaryBOS.stream().map(ReceivableSubsidiaryBO::getArea)
                 .filter(area -> (StringUtils.isNotBlank(area))).distinct().collect(Collectors.toList());
@@ -312,7 +312,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public List<String> getInnerName() throws SerException {
         String [] fields = new String[]{"innerName"};
-        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = super.findBySql("select distinct innerName,1 from receivable_receivablesubsidiary group by innerName order by innerName asc ",ReceivableSubsidiaryBO.class,fields);
+        List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = super.findBySql("select distinct innerName from receivable_receivablesubsidiary group by innerName order by innerName asc ",ReceivableSubsidiaryBO.class,fields);
 
         List<String> innerNamesList = receivableSubsidiaryBOS.stream().map(ReceivableSubsidiaryBO::getInnerName)
                 .filter(innerName -> (StringUtils.isNotBlank(innerName))).distinct().collect(Collectors.toList());
@@ -323,7 +323,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public List<Contractor> getContractor() throws SerException {
         String [] fields = new String[]{"name"};
-        List<Contractor> contractors = super.findBySql("select distinct contractor as name ,1 from receivable_receivablesubsidiary group by contractor order by contractor asc ",Contractor.class,fields);
+        List<Contractor> contractors = super.findBySql("select distinct contractor as name  from receivable_receivablesubsidiary group by contractor order by contractor asc ",Contractor.class,fields);
 
         return BeanTransform.copyProperties(contractors,ContractorBO.class);
     }

@@ -256,7 +256,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
                     return loginUser;
                 }
             }
-            throw new SerException("登录已过期!");
+            throw new SerException("expire");
         } else {
             throw new SerException("登录未登录");
         }

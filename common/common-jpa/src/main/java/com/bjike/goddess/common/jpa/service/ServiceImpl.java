@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -238,8 +239,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         if (m.getName().equals(method)) {
                             if (!m.getReturnType().isEnum()) { //忽略枚举类型
                                 m.invoke(obj, convertDataType(arr_obj[j]));
-
-
                             }
                             break;
                         }
@@ -306,6 +305,10 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 case "Timestamp":
                     val = val.substring(0, val.length() - 2);
                     obj = LocalDateTime.parse(val, FORMAT);
+                    break;
+                case "Date":
+                    val = val.substring(0, val.length());
+                    obj = LocalDate.parse(val, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     break;
 
             }

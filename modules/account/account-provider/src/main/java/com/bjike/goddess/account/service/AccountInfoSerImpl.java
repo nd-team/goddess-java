@@ -108,7 +108,7 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
     @Override
     public List<String> getArea() throws SerException {
         String [] fields = new String[]{"area"};
-        List<AccountCollectBO> accountCollectBOS = super.findBySql("select distinct area,1 from account_accountinfo group by area order by area asc ",AccountCollectBO.class,fields);
+        List<AccountCollectBO> accountCollectBOS = super.findBySql("select distinct area from account_accountinfo group by area order by area asc ",AccountCollectBO.class,fields);
 
         List<String> areaList = accountCollectBOS.stream().map(AccountCollectBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());

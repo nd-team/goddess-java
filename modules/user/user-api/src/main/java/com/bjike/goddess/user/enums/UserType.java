@@ -29,4 +29,17 @@ public enum UserType {
     public int getCode() {
         return this.code;
     }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public static UserType getExamType(int code) {
+        for (UserType examType : UserType.values()) {
+            if (code == examType.getCode()) {
+                return examType;
+            }
+        }
+        return null;
+    }
 }

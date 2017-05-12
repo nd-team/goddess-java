@@ -254,6 +254,11 @@ public class ReceivableSubsidiary extends BaseEntity {
      */
     @Column(name = "is_flow", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否已走结算流程'", insertable = false)
     private Boolean isflow;
+    /**
+     * 描述
+     */
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '描述'")
+    private String remark;
 
 
     private AuditStatus auditStatus;//是否签字审核
@@ -261,6 +266,13 @@ public class ReceivableSubsidiary extends BaseEntity {
     private AuditStatus billStatus;//是否发票审核
     private AuditStatus planStatus;//是否预支付
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getArea() {
         return area;

@@ -105,7 +105,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public List<String> getAllLevel() throws SerException {
         String[] fields = new String[]{"name"};
-        List<CustomerLevelBO> customerLevelBOS =super.findBySql("select name,1 from customer_customerlevel order by name asc ", CustomerLevelBO.class, fields);
+        List<CustomerLevelBO> customerLevelBOS =super.findBySql("select name from customer_customerlevel order by name asc ", CustomerLevelBO.class, fields);
 
         List<String> levelList  = customerLevelBOS.stream().map(CustomerLevelBO::getName).distinct().collect(Collectors.toList());
 

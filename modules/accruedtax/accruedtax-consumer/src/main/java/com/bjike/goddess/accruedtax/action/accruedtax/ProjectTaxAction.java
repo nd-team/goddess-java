@@ -54,6 +54,25 @@ public class ProjectTaxAction {
     }
 
     /**
+     * 一个项目上税金
+     *
+     * @param id 项目上税金信息id
+     * @des 一个项目上税金
+     * @return  class ProjectTaxVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            ProjectTaxVO projectTaxVOList = BeanTransform.copyProperties(
+                    projectTaxAPI.getOneById(id), ProjectTaxVO.class);
+            return ActResult.initialize(projectTaxVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 项目上税金列表
      *
      * @param projectTaxDTO 项目上税金信息dto

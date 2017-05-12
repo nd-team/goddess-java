@@ -67,6 +67,11 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
 
     @Override
     public List<String> listFirstCompany() throws SerException {
-        return null;
+        return baseInfoManageSer.listFirstCompany();
+    }
+
+    @Override
+    public List<String> getInnerNum() throws SerException {
+        return baseInfoManageSer.getInnerNum();
     }
 }

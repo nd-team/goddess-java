@@ -225,7 +225,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
-    public List<ApplyLendBO> checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+    public ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         return applyLendSer.checkReturnMoney(applyLendTO);
     }
 

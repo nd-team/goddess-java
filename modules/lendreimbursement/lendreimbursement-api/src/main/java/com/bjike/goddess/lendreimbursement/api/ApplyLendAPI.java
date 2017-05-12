@@ -388,7 +388,7 @@ public interface ApplyLendAPI {
      * @param applyLendTO applyLendTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+    default ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         return null;
     }
 

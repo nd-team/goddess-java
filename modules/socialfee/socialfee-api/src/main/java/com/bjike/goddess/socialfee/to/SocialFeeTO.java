@@ -1,7 +1,10 @@
 package com.bjike.goddess.socialfee.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.socialfee.entity.SocialFee;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 社会缴费
@@ -14,48 +17,55 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class SocialFeeTO extends BaseTO {
 
+    public interface TestAdd{}
+    public interface TestVoucher{}
+
     /**
      * 缴费所属年
      */
-    @NotBlank(message = "缴费所属年不能为空")
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class,SocialFeeTO.TestVoucher.class},message = "缴费所属年不能为空")
     private String payTimeYear;
 
     /**
      * 缴费所属月
      */
-    @NotBlank(message = "缴费所属月不能为空")
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class,SocialFeeTO.TestVoucher.class}, message = "缴费所属月不能为空")
     private String payTimeMonth;
 
     /**
      * 缴费所属时期
      */
-    @NotBlank(message = "缴费所属时期不能为空")
+    @NotBlank(groups = {SocialFeeTO.TestVoucher.class}, message = "缴费所属时期不能为空")
     private String payTime;
 
     /**
      * 纳税人名称
      */
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class} ,message = "纳税人名称不能为空")
     private String payFeer;
 
     /**
      * 单位社保号
      */
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class} ,message = "单位社保号不能为空")
     private String workSocalNum;
 
     /**
      * 姓名
      */
-    @NotBlank(message = "姓名不能为空")
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class,SocialFeeTO.TestVoucher.class} ,message = "姓名不能为空")
     private String empName;
 
     /**
      * 身份证明号码
      */
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class} ,message = "身份证明号码不能为空")
     private String cardNum;
 
     /**
      * 证件号
      */
+    @NotBlank(groups = {SocialFeeTO.TestAdd.class} ,message = "证件号不能为空")
     private String identityNum;
 
     /**
@@ -71,86 +81,103 @@ public class SocialFeeTO extends BaseTO {
     /**
      * 基本养老保险单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "基本养老保险单位不能为空,默认填0")
     private Double baseWork;
 
     /**
      * 基本养老保险个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "基本养老保险个人不能为空,默认填0")
     private Double baseEmp;
 
     /**
      * 工伤保险计费工资
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "工伤保险计费工资不能为空,默认填0")
     private Double injurySalary;
 
     /**
      * 工伤保险单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "工伤保险单位不能为空,默认填0")
     private Double injuryWork;
 
     /**
      * 工伤保险个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "工伤保险个人不能为空,默认填0")
     private Double injuryEmp;
 
     /**
      * 失业保险计费工资
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "失业保险计费工资不能为空,默认填0")
     private Double unemploySalary;
 
     /**
      * 失业保险单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "失业保险单位不能为空,默认填0")
     private Double unemployWork;
 
     /**
      * 失业保险个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "失业保险个人不能为空,默认填0")
     private Double unemployEmp;
 
     /**
      * 社会医疗保险计费工资
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "社会医疗保险计费工资不能为空,默认填0")
     private Double socialMediSalary;
 
     /**
      * 社会医疗保险单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "社会医疗保险单位不能为空,默认填0")
     private Double socialMediWork;
 
     /**
      * 社会医疗保险个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "社会医疗保险个人不能为空,默认填0")
     private Double socialMediEmp;
 
     /**
      * 重大疾病医疗补助计费工资
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "重大疾病医疗补助计费工资不能为空,默认填0")
     private Double illSalary;
 
     /**
      * 重大疾病医疗补助单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "重大疾病医疗补助单位不能为空,默认填0")
     private Double illWork;
 
     /**
      * 重大疾病医疗补助个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "重大疾病医疗补助个人不能为空,默认填0")
     private Double illEmp;
 
     /**
      * 生育保险计费工资
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "生育保险计费工资不能为空,默认填0")
     private Double pregnantSalary;
 
     /**
      * 生育保险单位
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "生育保险单位不能为空,默认填0")
     private Double pregnantWork;
 
     /**
      * 生育保险个人
      */
+    @NotNull(groups = {SocialFeeTO.TestAdd.class} ,message = "生育保险个人不能为空,默认填0")
     private Double pregnantEmp;
 
     /**

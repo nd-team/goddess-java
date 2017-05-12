@@ -53,7 +53,7 @@ public class TaxManagement extends BaseEntity {
     /**
      * 缴税状态
      */
-    @Column(name = "paymentStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '缴费状态'")
+    @Column(name = "paymentStatus", columnDefinition = "TINYINT(2)   COMMENT '缴费状态'")
     private PaymentStatus paymentStatus;
 
     /**

@@ -58,8 +58,8 @@ public class BaseInfoManageAction {
      * 一个基本信息
      *
      * @param id 项目基本信息信息id
+     * @return class BaseInfoManageVO
      * @des 根据id获取项目基本信息信息
-     * @return  class BaseInfoManageVO
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -91,8 +91,6 @@ public class BaseInfoManageAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
 
 
     /**
@@ -161,10 +159,43 @@ public class BaseInfoManageAction {
      * @version v1
      */
     @GetMapping("v1/getByInnerProjectNum")
-    public Result getBaseInfoManage(@NotBlank String innerProjectNum) throws ActException {
+    public Result getBaseInfoManage(String innerProjectNum) throws ActException {
         try {
             BaseInfoManageBO baseInfoManageBO1 = baseInfoManageAPI.getInfoByInnerProjectNum(innerProjectNum);
             return ActResult.initialize(BeanTransform.copyProperties(baseInfoManageBO1, BaseInfoManageVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取内部项目编号
+     *
+     * @des 获取内部项目编号
+     * @version v1
+     */
+    @GetMapping("v1/getInnerNum")
+    public Result getInnerNum() throws ActException {
+        try {
+            List<String> list = baseInfoManageAPI.getInnerNum();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有甲方公司
+     *
+     * @des 获取所有甲方公司
+     * @version v1
+     */
+    @GetMapping("v1/listCompany")
+    public Result listCompany(  ) throws ActException {
+        try {
+            List<String> list = baseInfoManageAPI.listFirstCompany( );
+
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

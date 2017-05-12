@@ -246,7 +246,7 @@ public class ApplyLendAction {
      */
     @LoginAuth
     @PutMapping("v1/editWaitAudit")
-    public Result editWaitAudit( ApplyLendTO applyLendTO) throws ActException {
+    public Result editWaitAudit(@Validated(ApplyLendTO.TESTAddAndEdit.class) ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editWaitAudit(applyLendTO);
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
@@ -313,7 +313,7 @@ public class ApplyLendAction {
     }
 
     /**
-     * 运营商务部冻结
+     * 运营商务部申请冻结
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
@@ -416,7 +416,7 @@ public class ApplyLendAction {
      */
     @LoginAuth
     @PutMapping("v1/editError")
-    public Result editError( ApplyLendTO applyLendTO) throws ActException {
+    public Result editError(@Validated(ApplyLendTO.TESTAddAndEdit.class)  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editApplyError(applyLendTO);
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
@@ -470,8 +470,8 @@ public class ApplyLendAction {
      * @des 获取申请单有误审核详情副本
      * @version v1
      */
-    @GetMapping("v1/getErrorCopy")
-    public Result getErrorCopy(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/getErrorCopy/{id}")
+    public Result getErrorCopy(@PathVariable String id ) throws ActException {
         try {
             ApplyLendVO applyLendVO = BeanTransform.copyProperties(
                     applyLendAPI.getApplyApplyErrorCopy(id), ApplyLendVO.class);
@@ -554,11 +554,11 @@ public class ApplyLendAction {
     }
 
     /**
-     * 等待付款的付款编辑
+     * 付款
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
-     * @des 等待付款的付款编辑
+     * @des 等待付款的付款
      * @version v1
      */
     @LoginAuth
@@ -614,7 +614,7 @@ public class ApplyLendAction {
     public Result findListSureRecieve(ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listSureRecieveMoney(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listSureRecieveMoney(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -622,11 +622,11 @@ public class ApplyLendAction {
     }
 
     /**
-     * 确认收款编辑
+     * 确认收款
      *
      * @param applyLendTO 申请借款基本信息数据bo
      * @return class ApplyLendVO
-     * @des 确认收款编辑
+     * @des 确认收款
      * @version v1
      */
     @LoginAuth
@@ -634,7 +634,7 @@ public class ApplyLendAction {
     public Result editSureRecieve(  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editSureRecieveMoney(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -669,7 +669,7 @@ public class ApplyLendAction {
     public Result findListBorrowRecord(ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listBorrowRecord(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listBorrowRecord(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -689,7 +689,7 @@ public class ApplyLendAction {
     public Result editReturn(  ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editReturnBorrowRecord(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -708,7 +708,7 @@ public class ApplyLendAction {
     public Result editSend(@Validated(ApplyLendTO.TESTReturnSend.class) ApplyLendTO applyLendTO) throws ActException {
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editBorrowRecordSend(applyLendTO);
-            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -809,18 +809,18 @@ public class ApplyLendAction {
     }
 
     /**
-     * 借款记录生成记账凭证
+     * 还款记录生成记账凭证
      *
      * @param id 申请借款信息id
      * @return class AccountVoucherVO
      * @des 借款记录生成记账凭证
      * @version v1
      */
-    @GetMapping("v1/listAccountVoucherByReturn/{id}")
-    public Result listVoucherReturn(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/listVoucherByReturn/{id}")
+    public Result listVoucherReturn(@PathVariable String id ) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listAccountVoucherByReturnMoney(id), AccountVoucherVO.class, true);
+                    applyLendAPI.listAccountVoucherByReturnMoney(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -835,11 +835,12 @@ public class ApplyLendAction {
      * @des 还款记录还款核对
      * @version v1
      */
-    @GetMapping("v1/listCheckReturn")
-    public Result listCheckReturn(@Validated(ApplyLendTO.TESTReturnMoney.class) ApplyLendTO applyLendTO, BindingResult bindingResult) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/checkReturn")
+    public Result checkReturn(@Validated(ApplyLendTO.TESTCheckReturnMoney.class) ApplyLendTO applyLendTO ) throws ActException {
         try {
-            List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.checkReturnMoney(applyLendTO), ApplyLendVO.class, true);
+            ApplyLendVO applyLendVOList = BeanTransform.copyProperties(
+                    applyLendAPI.checkReturnMoney(applyLendTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -872,10 +873,10 @@ public class ApplyLendAction {
      * @version v1
      */
     @GetMapping("v1/listBusinessCheck")
-    public Result listBusinessCheck(@Validated ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
+    public Result listBusinessCheck( ApplyLendDTO applyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
-                    applyLendAPI.listBusinessCheck(applyLendDTO), ApplyLendVO.class, true);
+                    applyLendAPI.listBusinessCheck(applyLendDTO), ApplyLendVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

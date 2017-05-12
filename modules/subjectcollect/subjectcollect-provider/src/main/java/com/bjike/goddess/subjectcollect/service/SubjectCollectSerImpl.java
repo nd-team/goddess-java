@@ -88,7 +88,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public List<String> getSubjectCollectFirstSubject() throws SerException {
         String[] fields = new String[]{"firstSubject"};
-        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select firstSubject,1 from subjectcollect_subjectcollect order by firstSubject asc ", SubjectCollectBO.class, fields);
+        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select firstSubject from subjectcollect_subjectcollect order by firstSubject asc ", SubjectCollectBO.class, fields);
 
         List<String> firstSubjectList = subjectCollectBOS.stream().map(SubjectCollectBO::getFirstSubject)
                 .filter(firstSubject -> (firstSubject != null || !"".equals(firstSubject.trim()))).distinct().collect(Collectors.toList());
@@ -139,7 +139,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public List<String> getSubjectCollectArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select area,1 from subjectcollect_subjectcollect order by area asc ", SubjectCollectBO.class, fields);
+        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select area from subjectcollect_subjectcollect order by area asc ", SubjectCollectBO.class, fields);
 
         List<String> areaList = subjectCollectBOS.stream().map(SubjectCollectBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -189,7 +189,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public List<String> getSubjectCollectProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};
-        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select projectName,1 from subjectcollect_subjectcollect order by projectName asc ", SubjectCollectBO.class, fields);
+        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select projectName from subjectcollect_subjectcollect order by projectName asc ", SubjectCollectBO.class, fields);
 
         List<String> proNameList = subjectCollectBOS.stream().map(SubjectCollectBO::getProjectName)
                 .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
@@ -239,7 +239,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public List<String> getSubjectCollectProjectGroup() throws SerException {
         String[] fields = new String[]{"projectGroup"};
-        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select projectGroup,1 from subjectcollect_subjectcollect order by projectGroup asc ", SubjectCollectBO.class, fields);
+        List<SubjectCollectBO> subjectCollectBOS = super.findBySql("select projectGroup from subjectcollect_subjectcollect order by projectGroup asc ", SubjectCollectBO.class, fields);
 
         List<String> proGroupList = subjectCollectBOS.stream().map(SubjectCollectBO::getProjectGroup)
                 .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());

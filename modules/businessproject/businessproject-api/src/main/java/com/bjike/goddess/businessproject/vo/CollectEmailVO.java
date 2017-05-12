@@ -88,6 +88,10 @@ public class CollectEmailVO {
     private String modifyTime;
 
     /**
+     * 汇总金额
+     */
+    private Double money;
+    /**
      * 个数
      */
     private int counts;
@@ -96,7 +100,31 @@ public class CollectEmailVO {
      * 数据库枚举转换
      */
     private int enumConvert;
+    /**
+     * 业务类型汇总集合
+     */
+    private List<Map<String, String>> busTypeMap;
 
+    /**
+     * 合作方式汇总集合
+     */
+    private List<Map<String, String>> cooperWaysMap;
+
+
+    /**
+     * 合同属性汇总集合
+     */
+    private List<Map<String, String>> contractPropertyMap;
+
+    /**
+     * 立项情况汇总集合
+     */
+    private List<Map<String, String>> makeProjectMap;
+
+    /**
+     * 合同签订情况汇总集合
+     */
+    private List<Map<String, String>> signMap;
 
     /**
      * 派工单个数
@@ -225,6 +253,14 @@ public class CollectEmailVO {
         this.modifyTime = modifyTime;
     }
 
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
     public int getCounts() {
         return counts;
     }
@@ -241,6 +277,45 @@ public class CollectEmailVO {
         this.enumConvert = enumConvert;
     }
 
+    public List<Map<String, String>> getBusTypeMap() {
+        return busTypeMap;
+    }
+
+    public void setBusTypeMap(List<Map<String, String>> busTypeMap) {
+        this.busTypeMap = busTypeMap;
+    }
+
+    public List<Map<String, String>> getCooperWaysMap() {
+        return cooperWaysMap;
+    }
+
+    public void setCooperWaysMap(List<Map<String, String>> cooperWaysMap) {
+        this.cooperWaysMap = cooperWaysMap;
+    }
+
+    public List<Map<String, String>> getContractPropertyMap() {
+        return contractPropertyMap;
+    }
+
+    public void setContractPropertyMap(List<Map<String, String>> contractPropertyMap) {
+        this.contractPropertyMap = contractPropertyMap;
+    }
+
+    public List<Map<String, String>> getMakeProjectMap() {
+        return makeProjectMap;
+    }
+
+    public void setMakeProjectMap(List<Map<String, String>> makeProjectMap) {
+        this.makeProjectMap = makeProjectMap;
+    }
+
+    public List<Map<String, String>> getSignMap() {
+        return signMap;
+    }
+
+    public void setSignMap(List<Map<String, String>> signMap) {
+        this.signMap = signMap;
+    }
 
     public Integer getDispatchProjectCount() {
         return dispatchProjectCount;

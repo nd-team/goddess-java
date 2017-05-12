@@ -140,7 +140,7 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
     public String getMinRunNum() throws SerException {
         String[] fields = new String[]{"runNum"};
         List<Finoddinfor> finoddinforList =
-                super.findBySql("select min(runNum) ,1 from lendreimbursement_finoddinfor where status=0 ",
+                super.findBySql("select min(runNum)  from lendreimbursement_finoddinfor where status=0 ",
                         Finoddinfor.class, fields);
 
         List<String> strs = finoddinforList.stream().map(Finoddinfor::getRunNum)

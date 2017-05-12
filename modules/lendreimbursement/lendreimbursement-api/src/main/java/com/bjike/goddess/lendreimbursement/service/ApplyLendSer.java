@@ -293,7 +293,7 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @param applyLendTO applyLendTO
      * @return class ApplyLendBO
      */
-    default List<ApplyLendBO> checkReturnMoney(ApplyLendTO applyLendTO) throws SerException { return null;}
+    default ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException { return null;}
 
 
     /**

@@ -1,6 +1,7 @@
 package com.bjike.goddess.outcarfare.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.dispatchcar.enums.Acctype;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,93 +24,98 @@ public class WaitPay extends BaseEntity {
     /**
      * 司机名称
      */
-    @Column(name = "driverName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '司机名称'")
+    @Column(name = "driverName", columnDefinition = "VARCHAR(255)   COMMENT '司机名称'")
     private String driverName;
 
     /**
      * 出车日期
      */
-    @Column(name = "carDate", nullable = false, columnDefinition = "DATE   COMMENT '出车日期'")
+    @Column(name = "carDate", columnDefinition = "DATE   COMMENT '出车日期'")
     private String carDate;
 
     /**
      * 单号
      */
-    @Column(name = "number", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '单号'")
+    @Column(name = "number",  columnDefinition = "VARCHAR(255)   COMMENT '单号'")
     private String number;
 
     /**
      * 地区
      */
-    @Column(name = "arrival", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "arrival", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String arrival;
 
     /**
      * 用车人
      */
-    @Column(name = "carUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用车人'")
+    @Column(name = "carUser", columnDefinition = "VARCHAR(255)   COMMENT '用车人'")
     private String carUser;
 
     /**
      * 科目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '科目'")
-    private String project;
+    @Column(name = "acctype", columnDefinition = "TINYINT(2)   COMMENT '科目'")
+    private Acctype acctype;
 
     /**
      * 租车单价
      */
-    @Column(name = "carPrice", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '租车单价'")
+    @Column(name = "carPrice",  columnDefinition = "DECIMAL(10,2)   COMMENT '租车单价'")
     private Double carPrice;
 
     /**
      * 加班时长
      */
-    @Column(name = "overtimeHour", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
+    @Column(name = "overtimeHour",  columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
     private Double overtimeHour;
 
     /**
      * 加班单价
      */
-    @Column(name = "overtimePrice", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '加班单价'")
+    @Column(name = "overtimePrice",  columnDefinition = "DECIMAL(10,2)   COMMENT '加班单价'")
     private Double overtimePrice;
 
     /**
      * 加班费
      */
-    @Column(name = "overtimeFee", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '加班费'")
+    @Column(name = "overtimeFee", columnDefinition = "DECIMAL(10,2)   COMMENT '加班费'")
     private Double overtimeFee;
 
     /**
      * 餐费补贴
      */
-    @Column(name = "allowance", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '餐费补贴'")
+    @Column(name = "allowance",  columnDefinition = "DECIMAL(10,2)   COMMENT '餐费补贴'")
     private Double allowance;
 
     /**
      * 停车/过路费
      */
-    @Column(name = "parkFee", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '停车/过路费'")
+    @Column(name = "parkFee",  columnDefinition = "DECIMAL(10,2)   COMMENT '停车/过路费'")
     private Double parkFee;
 
     /**
      * 金额
      */
-    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
+    @Column(name = "amount", columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
     private Double amount;
 
     /**
      * 填单人
      */
-    @Column(name = "single", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '填单人'")
+    @Column(name = "single", columnDefinition = "VARCHAR(255)   COMMENT '填单人'")
     private String single;
 
     /**
      * 是否付款
      */
-    @Column(name = "isPay",columnDefinition = "TINYINT(1)  COMMENT '是否付款'")
+    @Column(name = "isPay", columnDefinition = "TINYINT(1)  COMMENT '是否付款'")
     private boolean isPay;
 
+    /**
+     * 出车等待付款id
+     */
+    @Column(name = "dispatchCarInfo_id", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '出车等待付款id'")
+    private String dispatchCarInfoId;
 
     public String getDriverName() {
         return driverName;
@@ -151,12 +157,12 @@ public class WaitPay extends BaseEntity {
         this.carUser = carUser;
     }
 
-    public String getProject() {
-        return project;
+    public Acctype getAcctype() {
+        return acctype;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setAcctype(Acctype acctype) {
+        this.acctype = acctype;
     }
 
     public Double getCarPrice() {
@@ -229,5 +235,13 @@ public class WaitPay extends BaseEntity {
 
     public void setIsPay(boolean isPay) {
         this.isPay = isPay;
+    }
+
+    public String getDispatchCarInfoId() {
+        return dispatchCarInfoId;
+    }
+
+    public void setDispatchCarInfoId(String dispatchCarInfoId) {
+        this.dispatchCarInfoId = dispatchCarInfoId;
     }
 }

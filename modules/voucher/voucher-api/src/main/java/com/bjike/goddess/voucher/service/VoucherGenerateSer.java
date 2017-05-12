@@ -419,4 +419,14 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return 资金流水记录
      */
     List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
+
+    /**
+     * chenjunhao
+     * 查询所有一级科目为销售费用的记录
+     * @return class VoucherGenerateBO
+     * @throws SerException
+     */
+    default List<VoucherGenerateBO> allSales() throws SerException{
+        return null;
+    }
 }
