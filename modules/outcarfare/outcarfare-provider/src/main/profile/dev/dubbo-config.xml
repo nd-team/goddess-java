@@ -18,4 +18,6 @@
 
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.outcarfare.api.MoneyReadyAPI" ref="moneyReadyApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.outcarfare.api.WaitPayAPI" ref="waitPayApiImpl"/>
+
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoAPIApiImpl"/>
 </beans>

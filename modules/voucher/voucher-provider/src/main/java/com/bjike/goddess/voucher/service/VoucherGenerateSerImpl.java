@@ -1177,4 +1177,17 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         return listBO;
     }
+
+    //chenjunhao
+    @Override
+    public List<VoucherGenerateBO> allSales() throws SerException {
+        List<VoucherGenerate> all=super.findAll();
+        List<VoucherGenerate> list=new ArrayList<VoucherGenerate>();
+        for (VoucherGenerate v:all){
+            if("销售费用".equals(v.getFirstSubject())){
+                list.add(v);
+            }
+        }
+        return BeanTransform.copyProperties(list,VoucherGenerateBO.class);
+    }
 }

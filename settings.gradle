@@ -27,7 +27,7 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
-
+//#quartz 组装模块-liguiqin
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
@@ -324,11 +324,6 @@ include ':modules:lendreimbursement:lendreimbursement-provider'
 include ':modules:outcarfare:outcarfare-api'
 include ':modules:outcarfare:outcarfare-consumer'
 include ':modules:outcarfare:outcarfare-provider'
-
-//#quartz 任务调度模块-liguiqin
-include ':modules:function:function-api'
-include ':modules:function:function-consumer'
-include ':modules:function:function-provider'
 
 //#projectmarketfee 项目前期的市场活动费
 include ':modules:projectmarketfee:projectmarketfee-api'
