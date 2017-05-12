@@ -357,6 +357,13 @@ public class ExcelUtil {
         return rowIndex;
     }
 
+    /**
+     * 获取样式
+     *
+     * @param wb
+     * @param color
+     * @return
+     */
     private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
@@ -381,13 +388,14 @@ public class ExcelUtil {
      */
 
     private static String fieldToEnum(Field field, Object val) {
-        Field[] enum_fields = field.getType().getFields();
-        for (Field f : enum_fields) {
-            if (val.toString().equals(f.getName())) {
+        Field[] enumFields = field.getType().getFields();
+        String value = val.toString();
+        for (Field f : enumFields) {
+            if (value.equals(f.getName())) {
                 return f.getAnnotation(ExcelValue.class).name();
             }
         }
-        return val.toString();
+        return value;
     }
 
 
@@ -399,10 +407,11 @@ public class ExcelUtil {
      * @param val
      */
     private static void enumToField(Field field, Object obj, Object val) {
+        String value = val.toString();
         try {
-            Field[] enum_fields = field.getType().getFields();
-            for (Field f : enum_fields) {
-                if (val.toString().equals(f.getAnnotation(ExcelValue.class).name())) {
+            Field[] enumFields = field.getType().getFields();
+            for (Field f : enumFields) {
+                if (value.equals(f.getAnnotation(ExcelValue.class).name())) {
                     field.set(obj, field.getType().getField(f.getName()).get(f.getName()));
                 }
             }
