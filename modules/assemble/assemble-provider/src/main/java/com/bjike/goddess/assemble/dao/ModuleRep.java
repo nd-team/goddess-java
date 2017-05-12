@@ -5,7 +5,11 @@ import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 
 /**
- * Created by lake on 17-5-8.
+ * @Author: [liguiqin]
+ * @Date: [2017-03-03 10:20]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
 public interface ModuleRep extends JpaRep<Module,ModuleDTO>{
 }
