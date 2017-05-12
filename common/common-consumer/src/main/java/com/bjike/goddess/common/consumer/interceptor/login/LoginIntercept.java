@@ -35,7 +35,7 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object obj = request.getParameter("userToken");
+        Object obj = request.getHeader("userToken");
         String token = null;
         if (null != obj) {
             token = obj.toString();
