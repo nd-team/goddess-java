@@ -93,10 +93,10 @@ public class QueryTest {
 
     @Test
     public void findBySql() throws SerException {
-        String sql = "select  a.username,a.myDate" +
+        String sql = "select  a.username,a.userType" +
                 " from user a " ;
 
-        String[] fields = new String[]{"username","myDate"};
+        String[] fields = new String[]{"username","userType"};
         List<User> users = userAPI.findBySql(sql, User.class, fields);
         for (User info : users) {
             System.out.println(info.getId());

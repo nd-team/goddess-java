@@ -35,8 +35,9 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         } else {
             httpServletResponse.setStatus(EXCEPTION_STATUS);
             actResult.setCode(EXCEPTION_CODE);
-            if ("notLogin".equals(e.getMessage())) {
-                actResult.setCode(403);
+              if ("expire".equals(e.getMessage())) {
+                actResult.setCode(401);
+                  actResult.setMsg("登录已失效!");
             }
             LOGGER.error(e.getMessage());
         }
