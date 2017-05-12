@@ -83,7 +83,7 @@ public class SocialFeeAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addSocialFee(@Validated SocialFeeTO socialFeeTO, BindingResult bindingResult) throws ActException {
+    public Result addSocialFee(@Validated(SocialFeeTO.TestAdd.class) SocialFeeTO socialFeeTO, BindingResult bindingResult) throws ActException {
         try {
             SocialFeeBO socialFeeBO1 = socialFeeAPI.addSocialFee(socialFeeTO);
             return ActResult.initialize(BeanTransform.copyProperties(socialFeeBO1, SocialFeeVO.class, true));
@@ -103,7 +103,7 @@ public class SocialFeeAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editSocialFee(@Validated SocialFeeTO socialFeeTO) throws ActException {
+    public Result editSocialFee(@Validated(SocialFeeTO.TestAdd.class) SocialFeeTO socialFeeTO) throws ActException {
         try {
             SocialFeeBO socialFeeBO1 = socialFeeAPI.editSocialFee(socialFeeTO);
             return ActResult.initialize(BeanTransform.copyProperties(socialFeeBO1, SocialFeeVO.class, true));
@@ -261,7 +261,7 @@ public class SocialFeeAction {
      * @version v1
      */
     @PostMapping("v1/voucher")
-    public Result voucher(@Validated VoucherDataTO voucherDataTO) throws ActException {
+    public Result voucher(@Validated(SocialFeeTO.TestVoucher.class) VoucherDataTO voucherDataTO) throws ActException {
         try {
 
             VoucherDataBO voucherDataBO = socialFeeAPI.voucher(voucherDataTO);

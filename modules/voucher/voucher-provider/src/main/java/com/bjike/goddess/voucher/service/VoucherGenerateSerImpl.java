@@ -1161,11 +1161,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             voucherGenerateDTO.getConditions().add(Restrict.eq("projectGroup", voucherGenerateDTO.getProjectGroup()));
         }
         if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime()) && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
-            voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", Arrays.asList(voucherGenerateDTO.getStartTime(), voucherGenerateDTO.getEndTime())));
+            voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", new String[]{voucherGenerateDTO.getStartTime(), voucherGenerateDTO.getEndTime()}));
         }
         if ("manageFee".equals(condition)) {
-            voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", "管理费"));
-            voucherGenerateDTO.getConditions().add(Restrict.or("firstSubject", "管理费用"));
+            voucherGenerateDTO.getConditions().add(Restrict.in("firstSubject", new String[]{"管理费","管理费用"}));
+//            voucherGenerateDTO.getConditions().add(Restrict.or("firstSubject", "管理费用"));
         } else if ("outFee".equals(condition)) {
             voucherGenerateDTO.getConditions().add(Restrict.eq("firstSubject", "管理费"));
             voucherGenerateDTO.getConditions().add(Restrict.or("firstSubject", "管理费用"));
