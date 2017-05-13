@@ -1,7 +1,9 @@
 package com.bjike.goddess.assemble.to;
 
-import com.bjike.goddess.assemble.entity.Module;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 模块关联
@@ -15,29 +17,30 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class ModuleAssembleTO extends BaseTO {
 
     /**
-     * 模块
+     * 模块id
      */
-    private Module module;
+    @NotBlank(message = "模块id不能为空", groups = {ADD.class, EDIT.class})
+    private String moduleId;
 
     /**
-     * 关联模块
+     * 关联模块id
      */
-    private Module relation;
+    @NotBlank(message = "关联模块id不能为空", groups = {ADD.class, EDIT.class})
+    private String relationId;
 
-
-    public Module getModule() {
-        return module;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setModule(Module module) {
-        this.module = module;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
-    public Module getRelation() {
-        return relation;
+    public String getRelationId() {
+        return relationId;
     }
 
-    public void setRelation(Module relation) {
-        this.relation = relation;
+    public void setRelationId(String relationId) {
+        this.relationId = relationId;
     }
 }

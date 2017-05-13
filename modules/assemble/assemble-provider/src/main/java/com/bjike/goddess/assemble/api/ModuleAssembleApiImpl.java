@@ -1,5 +1,9 @@
 package com.bjike.goddess.assemble.api;
 
+import com.bjike.goddess.assemble.service.ModuleAssembleSer;
+import com.bjike.goddess.assemble.to.ModuleAssembleTO;
+import com.bjike.goddess.common.api.exception.SerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,5 +17,16 @@ import org.springframework.stereotype.Service;
  */
 @Service("moduleAssembleApiImpl")
 public class ModuleAssembleApiImpl implements ModuleAssembleAPI {
+    @Autowired
+    private ModuleAssembleSer moduleAssembleSer;
 
+    @Override
+    public void add(ModuleAssembleTO moduleAssembleTO) throws SerException {
+        moduleAssembleSer.add(moduleAssembleTO);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        moduleAssembleSer.delete(id);
+    }
 }
