@@ -29,6 +29,11 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
+    public ModuleBO findByName(String name) throws SerException {
+        return moduleSer.findByName(name);
+    }
+
+    @Override
     public void add(ModuleTO moduleTO) throws SerException {
         moduleSer.add(moduleTO);
     }
@@ -39,7 +44,7 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
-    public void check(String id, CheckType checkType) throws SerException {
-        moduleSer.check(id, checkType);
+    public void check(String moduleId,String[] relationIds, CheckType checkType) throws SerException {
+        moduleSer.check(moduleId, relationIds,checkType);
     }
 }

@@ -15,7 +15,11 @@ public enum  CheckType {
     /**
      * 未选中
      */
-    NONE(1);
+    NONE(1),
+    /**
+     * 删除
+     */
+    DELETE(2);
 
     private int code;
 
