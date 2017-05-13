@@ -64,7 +64,7 @@ public class ManageFeeAction {
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+            ManageFeeVO manageFeeVOList = BeanTransform.copyProperties(
                     manageFeeAPI.getOneById(id), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {
@@ -122,7 +122,7 @@ public class ManageFeeAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editManageFee(@Validated(ManageFeeTO.TestAdd.class) ManageFeeTO manageFeeTO) throws ActException {
+    public Result editManageFee(@Validated(ManageFeeTO.TestEdit.class) ManageFeeTO manageFeeTO) throws ActException {
         try {
             ManageFeeBO manageFeeBO1 = manageFeeAPI.editManageFee(manageFeeTO);
             return ActResult.initialize(BeanTransform.copyProperties(manageFeeBO1, ManageFeeVO.class));

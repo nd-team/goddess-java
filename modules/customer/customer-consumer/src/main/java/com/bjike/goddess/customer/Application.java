@@ -1,5 +1,7 @@
 package com.bjike.goddess.customer;
 
+import com.bjike.goddess.customer.config.CustomIntercept;
+import com.bjike.goddess.customer.config.PermissionConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +25,8 @@ public class Application {
 
     public static void main(String[] args) throws IOException {
 
+//        PermissionConfig permissionConfig = new PermissionConfig();
+//        permissionConfig.generatePerssion();
         SpringApplication.run(Application.class, args);
         System.in.read();
     }

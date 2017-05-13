@@ -76,14 +76,23 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
         CheckIncome checkIncome = BeanTransform.copyProperties(checkIncomeTO, CheckIncome.class, true);
 
         checkIncome.setActualIncome(checkIncomeTO.getActualIncome() == null ? 0d : checkIncomeTO.getActualIncome());
-        checkIncome.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        Double rate = checkIncome.getActualIncome() / checkIncome.getPlanIncome();
+        if(rate.isNaN() || rate.isInfinite()){
+            rate = 0d;
+        }
+        checkIncome.setRate( rate );
         checkIncome.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         checkIncome.setActualTask(checkIncomeTO.getActualTask() == null ? 0d : checkIncomeTO.getActualTask());
-        checkIncome.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        Double complateRate = checkIncome.getActualTask() / checkIncome.getTargetTask();
+        if(complateRate.isNaN() || complateRate.isInfinite()){
+            complateRate = 0d;
+        }
+        checkIncome.setCompleteRate( complateRate);
         checkIncome.setCreateTime(LocalDateTime.now());
         super.save(checkIncome);
         return BeanTransform.copyProperties(checkIncome, CheckIncomeBO.class);
     }
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -97,10 +106,18 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
 
         BeanUtils.copyProperties(checkIncome, temp, "id", "createTime");
         temp.setActualIncome(checkIncome.getActualIncome() == null ? 0d : checkIncome.getActualIncome());
-        temp.setRate(checkIncome.getActualIncome() / checkIncome.getPlanIncome());
+        Double rate = checkIncome.getActualIncome() / checkIncome.getPlanIncome();
+        if(rate.isNaN() || rate.isInfinite()){
+            rate = 0d;
+        }
+        temp.setRate( rate );
         temp.setBalance(checkIncome.getActualIncome() - checkIncome.getPlanIncome());
         temp.setActualTask(checkIncome.getActualTask() == null ? 0d : checkIncome.getActualTask());
-        temp.setCompleteRate(checkIncome.getActualTask() / checkIncome.getTargetTask());
+        Double complateRate = checkIncome.getActualTask() / checkIncome.getTargetTask();
+        if(complateRate.isNaN() || complateRate.isInfinite()){
+            complateRate = 0d;
+        }
+        temp.setCompleteRate( complateRate);
 
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);

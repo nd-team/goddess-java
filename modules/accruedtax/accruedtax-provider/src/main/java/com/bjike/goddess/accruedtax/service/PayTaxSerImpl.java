@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -146,8 +147,8 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         String sql = "select company , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
                 " ,(sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_paytax where 1=1  ";
         if( StringUtils.isNotBlank(company)){
-            field = new String[]{"company","taxDate","targetTax","planTax","actualTax","rate","balance"};
-            sql = " select company , taxDate , targetTax , planTax , actualTax , rate , balance from accruedtax_paytax where 1=1 and company ='"+company+"' ";
+            field = new String[]{"company","targetTax","planTax","actualTax","rate","balance","taxDate"};
+            sql = " select company  , targetTax , planTax , actualTax , rate , balance, taxDate from accruedtax_paytax where 1=1 and company ='"+company+"' ";
         }
         if( StringUtils.isNotBlank(payTaxDTO.getStartTime()) && StringUtils.isNotBlank(payTaxDTO.getEndTime()) ){
             LocalDate start = LocalDate.parse(payTaxDTO.getStartTime());
@@ -157,13 +158,21 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         if( StringUtils.isBlank(company)){
             sql = sql + " group by company ";
         }
-        List<PayTaxBO> list = super.findBySql(sql , PayTaxBO.class, field);
-        if( StringUtils.isBlank(company)){
-            list.stream().forEach(str->{
-                str.setTaxDate("");
-            });
+        List<PayTax> list = super.findBySql(sql , PayTax.class, field);
+
+        List<PayTaxBO> listBO = new ArrayList<>();
+        if( list != null && list.size()>0  ){
+            listBO = BeanTransform.copyProperties(list,PayTaxBO.class);
+            if(StringUtils.isBlank(company)){
+                listBO.stream().forEach(str->{
+                    str.setTaxDate("无");
+                });
+            }
+        }else{
+            PayTaxBO bo = new PayTaxBO();
+            listBO.add(bo);
         }
-        return list;
+        return listBO;
     }
 
     @Override
@@ -184,13 +193,21 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         if( StringUtils.isBlank(taxType)){
             sql = sql + " group by taxType ";
         }
-        List<PayTaxBO> list = super.findBySql(sql , PayTaxBO.class, field);
-        if( StringUtils.isBlank(taxType)){
-            list.stream().forEach(str->{
-                str.setTaxDate("");
-            });
+        List<PayTax> list = super.findBySql(sql , PayTax.class, field);
+
+        List<PayTaxBO> listBO = new ArrayList<>();
+        if( list != null && list.size()>0  ){
+            listBO = BeanTransform.copyProperties(list,PayTaxBO.class);
+            if(StringUtils.isBlank(taxType)){
+                listBO.stream().forEach(str->{
+                    str.setTaxDate("无");
+                });
+            }
+        }else{
+            PayTaxBO bo = new PayTaxBO();
+            listBO.add(bo);
         }
-        return list;
+        return listBO;
     }
 
     @Override
@@ -205,7 +222,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Override
     public List<String> listCompany() throws SerException {
         String [] field = new String[]{"company"};
-        String sql = "select company, 1 from accruedtax_paytax group by company ";
+        String sql = "select company from accruedtax_paytax group by company ";
         List<PayTax> list = super.findBySql( sql , PayTax.class, field );
         List<String> companyList = list.stream().map(PayTax::getCompany).collect(Collectors.toList());
         return companyList;
@@ -214,7 +231,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Override
     public List<String> listTaxType() throws SerException {
         String [] field = new String[]{"taxType"};
-        String sql = "select taxType, 1 from accruedtax_paytax group by taxType ";
+        String sql = "select taxType from accruedtax_paytax group by taxType ";
         List<PayTax> list = super.findBySql( sql , PayTax.class, field );
         List<String> companyList = list.stream().map(PayTax::getTaxType).collect(Collectors.toList());
         return companyList;
