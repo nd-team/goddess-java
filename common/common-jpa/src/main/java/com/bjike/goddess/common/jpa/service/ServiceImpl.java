@@ -8,7 +8,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.constant.FinalCommons;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.common.jpa.dao.JpaSpecification;
-import com.bjike.goddess.common.jpa.utils.CharacterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import javax.persistence.Query;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -204,10 +204,10 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     @Override
     public <T> List<T> findBySql(String sql, Class clazz, String[] fields) throws SerException {
 
-        List<Method> all_methods = new ArrayList<>(); //源类属性列表
+        List<Field> all_fields = new ArrayList<>(); //源类属性列表
         Class temp_clazz = clazz;
         while (null != temp_clazz) { //数据源类所有属性（包括父类）
-            all_methods.addAll(Arrays.asList(temp_clazz.getDeclaredMethods()));
+            all_fields.addAll(Arrays.asList(temp_clazz.getDeclaredFields()));
             temp_clazz = temp_clazz.getSuperclass();
             if (Object.class.equals(temp_clazz) || null == temp_clazz) {
                 break;
@@ -216,12 +216,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         Query nativeQuery = entityManager.createNativeQuery(sql);
         List<Object> resultList = nativeQuery.getResultList();
         List<T> list = new ArrayList<>(resultList.size());
-        List<Method> methods = new ArrayList<>();
-        for (Method m : all_methods) {
-            if (m.getName().indexOf("set") != -1) {
-                methods.add(m);
-            }
-        }
 
         //解析查询结果
         try {
@@ -234,11 +228,20 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 }
                 Object obj = clazz.newInstance();
                 for (int j = 0; j < fields.length; j++) {
-                    for (Method m : methods) {
-                        String method = "set" + CharacterUtil.upperCaseFirst(fields[j]);
-                        if (m.getName().equals(method)) {
-                            if (!m.getReturnType().isEnum()) { //忽略枚举类型
-                                m.invoke(obj, convertDataType(arr_obj[j]));
+                    for (Field field : all_fields) {
+                        if (field.getName().equals(fields[j])) {
+                            field.setAccessible(true);
+                            if (!field.getType().isEnum()) { //忽略枚举类型
+                                field.set(obj, convertDataType(arr_obj[j]));
+                            } else {
+                                Field[] enumFields = field.getType().getFields();
+                                for (int k = 0; k < enumFields.length; k++) {
+                                    int val = Integer.parseInt(arr_obj[j].toString());
+                                    String name = enumFields[k].getName();
+                                    if (val == k) {
+                                        field.set(obj, field.getType().getField(name).get(name));
+                                    }
+                                }
                             }
                             break;
                         }

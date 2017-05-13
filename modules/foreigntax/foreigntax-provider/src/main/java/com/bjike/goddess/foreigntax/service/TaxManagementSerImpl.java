@@ -221,10 +221,10 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
     @Override
     public List<TaxManagementBO> listByCompany(String company, String monthStart, String monthEnd) throws SerException {
         TaxManagementDTO dto = new TaxManagementDTO();
-//        List<String> con = Arrays.asList(monthStart,monthEnd);
+        List<String> con = Arrays.asList(monthStart,monthEnd);
         if (StringUtils.isNotBlank(company)) {
             dto.getConditions().add(Restrict.eq("company", company));
-            dto.getConditions().add(Restrict.between("month", new String[]{monthStart,monthEnd}));
+            dto.getConditions().add(Restrict.between("month", con));
         }
         List<TaxManagement> list = super.findByCis(dto);
         return BeanTransform.copyProperties( list , TaxManagementBO.class);

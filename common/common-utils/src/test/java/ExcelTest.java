@@ -1,5 +1,6 @@
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.dounine.japi.entity.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +25,6 @@ public class ExcelTest {
             InputStream is = new FileInputStream(file);
             Excel excel = new Excel();
             List<UserExcel> users = ExcelUtil.excelToClazz(is, UserExcel.class, excel);
-
             /**
              * 对象列表转excel bytes
              */

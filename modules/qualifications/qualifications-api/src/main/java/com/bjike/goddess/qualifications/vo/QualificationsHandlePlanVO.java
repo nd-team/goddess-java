@@ -18,7 +18,7 @@ public class QualificationsHandlePlanVO {
     /**
      * 资质办理
      */
-    private String handle_id;
+    private String handleId;
 
     /**
      * 准备开始时间
@@ -44,12 +44,12 @@ public class QualificationsHandlePlanVO {
         this.id = id;
     }
 
-    public String getHandle_id() {
-        return handle_id;
+    public String getHandleId() {
+        return handleId;
     }
 
-    public void setHandle_id(String handle_id) {
-        this.handle_id = handle_id;
+    public void setHandleId(String handleId) {
+        this.handleId = handleId;
     }
 
     public String getStartTime() {

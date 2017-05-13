@@ -69,10 +69,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         String startTime = time.getYear()+"-"+month+"-01";
         String endTime = time.with(TemporalAdjusters.lastDayOfMonth())+"";
         List<TaxManagementBO> taxManagementBOList = taxManagementAPI.listByCompany(payTaxTO.getCompany() ,startTime , endTime );
-        Double actualTax  = 0d;
-        if( taxManagementBOList!= null && taxManagementBOList.size()>0 ){
-            actualTax = taxManagementBOList.stream().filter(str->str.getTax()!=null).mapToDouble(TaxManagementBO::getTax).sum();
-        }
+        Double actualTax  = taxManagementBOList.stream().mapToDouble(TaxManagementBO::getTax).sum();
         Double tempTax = 0d;
         if( actualTax != null && payTaxTO.getActualTax() != actualTax ){
             tempTax = actualTax;
@@ -143,12 +140,14 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
     @Override
     public List<PayTaxBO> collectCompany(PayTaxDTO payTaxDTO) throws SerException {
         String company = payTaxDTO.getCompany();
+
         String[] field = new String[]{"company","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select company , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
                 " ,(sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_paytax where 1=1  ";
         if( StringUtils.isNotBlank(company)){
             field = new String[]{"company","targetTax","planTax","actualTax","rate","balance","taxDate"};
             sql = " select company  , targetTax , planTax , actualTax , rate , balance, taxDate from accruedtax_paytax where 1=1 and company ='"+company+"' ";
+
         }
         if( StringUtils.isNotBlank(payTaxDTO.getStartTime()) && StringUtils.isNotBlank(payTaxDTO.getEndTime()) ){
             LocalDate start = LocalDate.parse(payTaxDTO.getStartTime());
@@ -173,6 +172,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
             listBO.add(bo);
         }
         return listBO;
+
     }
 
     @Override
@@ -180,9 +180,8 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
         String taxType = payTaxDTO.getTaxType();
         String[] field = new String[]{"taxType","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select taxType , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
-                " ,(sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_paytax where 1=1  ";
-        if( StringUtils.isNotBlank(taxType)){
-            field = new String[]{"taxType","taxDate","targetTax","planTax","actualTax","rate","balance"};
+                " (sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_paytax where 1=1  ";
+        if( StringUtils.isBlank(taxType)){
             sql = " select taxType , taxDate , targetTax , planTax , actualTax , rate , balance from accruedtax_paytax where 1=1 and taxType ='"+taxType+"' ";
         }
         if( StringUtils.isNotBlank(payTaxDTO.getStartTime()) && StringUtils.isNotBlank(payTaxDTO.getEndTime()) ){
@@ -208,6 +207,7 @@ public class PayTaxSerImpl extends ServiceImpl<PayTax, PayTaxDTO> implements Pay
             listBO.add(bo);
         }
         return listBO;
+
     }
 
     @Override

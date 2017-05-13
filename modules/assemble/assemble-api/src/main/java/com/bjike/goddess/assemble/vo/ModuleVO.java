@@ -1,11 +1,14 @@
 package com.bjike.goddess.assemble.vo;
 
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.assemble.bo.ModuleBO;
+import com.bjike.goddess.assemble.type.CheckType;
 
-import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 演示demo功能信息
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
@@ -13,69 +16,51 @@ import javax.validation.constraints.Min;
  * @Copy: [com.bjike]
  */
 public class ModuleVO {
-    public interface TESTDemoList{}
-    public interface TESTDemoListUP{}
 
     /**
-     * 购买人账号
+     * id
      */
-    private String account;
+    private String id;
     /**
-     * 座位号 D3608-2-2D
+     * 模块名
      */
-    @NotBlank(groups = ModuleVO.TESTDemoList.class,message = "座位号不能为空")
-    private String position;
+    private String name;
     /**
-     * 出发时间
+     * 选中状态
      */
-    private String offTime;
-    /**
-     * 购票金额
-     */
-    @Min(value = 10,message = "金额错误")
-    private Integer money;
-    /**
-     * 票号
-     */
-    private String number;
+    private CheckType checkType;
 
-    public String getAccount() {
-        return account;
+    private List<ModuleBO> relations;
+
+    public String getId() {
+        return id;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getPosition() {
-        return position;
+    public String getName() {
+        return name;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getOffTime() {
-        return offTime;
+    public CheckType getCheckType() {
+        return checkType;
     }
 
-    public void setOffTime(String offTime) {
-        this.offTime = offTime;
+    public void setCheckType(CheckType checkType) {
+        this.checkType = checkType;
     }
 
-    public Integer getMoney() {
-        return money;
+    public List<ModuleBO> getRelations() {
+        return relations;
     }
 
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
+    public void setRelations(List<ModuleBO> relations) {
+        this.relations = relations;
     }
 }
