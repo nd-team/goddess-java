@@ -3,6 +3,7 @@ package com.bjike.goddess.socialfee.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.socialfee.bo.SocialFeeBO;
 import com.bjike.goddess.socialfee.bo.VoucherDataBO;
@@ -187,12 +188,12 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
         if (StringUtils.isNotBlank(start) && StringUtils.isNotBlank(end)) {
             String startYear = LocalDate.parse(start).getYear() + "";
             int startMonthValue = LocalDate.parse(start).getMonthValue();
-            String startMonth = startMonthValue < 10 ? "0" + startMonthValue : startMonthValue + "";
+            String startMonth =  startMonthValue + "";
             startYearMonth = startYear + startMonth;
 
             String endYear = LocalDate.parse(end).getYear() + "";
             int endMonthValue = LocalDate.parse(end).getMonthValue();
-            String endMonth = endMonthValue < 10 ? "0" + endMonthValue : endMonthValue + "";
+            String endMonth = endMonthValue + "";
             endYearMonth = endYear + endMonth;
             sqlAppend = " and payTime between '" + startYearMonth + "' and '" + endYearMonth + "' ";
             timeFlag = true;
@@ -210,14 +211,14 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
                 });
             }
         } else if (StringUtils.isBlank(company) && StringUtils.isNotBlank(emp)) {
-            //根据时间段和公司查数据
-            ctCom(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
+            //根据时间段和公司查数据 缴费所属时期/纳税人名称/姓名/应缴金额
+            list = ctCom(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         } else if (StringUtils.isNotBlank(company) && StringUtils.isBlank(emp)) {
-            //根据时间段和个人查数据
-            ctEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
+            //根据时间段和个人查数据 缴费所属时期/纳税人名称/姓名/应缴金额
+            list = ctEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         } else if (StringUtils.isNotBlank(company) && StringUtils.isNotBlank(emp)) {
-            //根据时间段和公司和个人查数据
-            ctComAndEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
+            //根据时间段和公司和个人查数据 缴费所属时期/纳税人名称/姓名/应缴金额
+            list = ctComAndEmp(socialFeeDTO, timeFlag, list, sqlAppend, payTimeDur);
         }
 
         return list;
@@ -338,12 +339,12 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
             throw  new SerException("您没有选择数据，请选择");
         }
         String time = socialFees.get(0).getPayTime();
-        Boolean bo = socialFees.stream().allMatch(str-> time.equals(str));
+        Boolean bo = socialFees.stream().allMatch(str-> time.equals(str.getPayTime()));
         if( !bo ){
             throw new SerException("您选择的数据的缴费所属时期不一致，请重新选择");
         }
 
-        Double totalMoney = socialFees.stream().mapToDouble(SocialFee::getTotalMoney).sum();
+        Double totalMoney = socialFees.stream().filter(str->str.getTotalMoney()!= null).mapToDouble(SocialFee::getTotalMoney).sum();
         int year = Integer.parseInt(socialFees.get(0).getPayTimeYear());
         int month = Integer.parseInt(socialFees.get(0).getPayTimeMonth());
         LocalDate vDate = LocalDate.of( year , month ,1);
@@ -401,11 +402,17 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
             String[] subs = str.split("-");
             if (subs.length == 1) {
                 firstSub.add(subs[0]);
+                secSub.add("无");
+                thirdSub.add("无");
             }
             if (subs.length == 2) {
+                firstSub.add(subs[0]);
                 secSub.add(subs[1]);
+                thirdSub.add("无");
             }
             if (subs.length >= 3) {
+                firstSub.add(subs[0]);
+                secSub.add(subs[1]);
                 thirdSub.add(subs[2]);
             }
         }
@@ -419,6 +426,8 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
                 throw new SerException("贷方金额不能为空");
             }
         }
+
+        String token = RpcTransmit.getUserToken();
 
         //看是否已经生成过记账凭证 payTimeYear:201704
         LocalDate time = LocalDate.parse( voucherDataTO.getVoucherDate());
@@ -450,16 +459,25 @@ public class SocialFeeSerImpl extends ServiceImpl<SocialFee, SocialFeeDTO> imple
             vgTO.setLoanMoneys(loans);
 
         }
+        RpcTransmit.transmitUserToken(token);
         List<VoucherGenerateBO> vgBO = voucherGenerateAPI.addVoucherGenerate(vgTO);
         if( vgBO != null && vgBO.size()>0 ){
             String ids ="";
             for(VoucherGenerateBO vg: vgBO){
                 ids +=vg.getId()+",";
             }
+
+            //先删除原先存在的
+            SocialFeeVoucherDTO sfvDTO = new SocialFeeVoucherDTO();
+            sfvDTO.getConditions().add(Restrict.eq("payTimeYear",time.getYear()+(time.getMonthValue() <10 ? "0"+time.getMonthValue(): time.getMonthValue()+"")));
+            List<SocialFeeVoucher> deleteSocialList = socialFeeVoucherSer.findByCis(sfvDTO);
+            socialFeeVoucherSer.remove( deleteSocialList );
+
             SocialFeeVoucher sfv = new SocialFeeVoucher();
             sfv.setPayTimeYear( time.getYear()+(time.getMonthValue() <10 ? "0"+time.getMonthValue(): time.getMonthValue()+""));
             sfv.setVoucherId( StringUtils.substringBeforeLast(ids,",") );
             sfv.setCreateTime( LocalDateTime.now());
+            sfv.setTotalMoney(borrows.stream().mapToDouble(Double::doubleValue).sum());
             socialFeeVoucherSer.save( sfv );
         }
         return BeanTransform.copyProperties(voucherDataTO,VoucherDataBO.class);
