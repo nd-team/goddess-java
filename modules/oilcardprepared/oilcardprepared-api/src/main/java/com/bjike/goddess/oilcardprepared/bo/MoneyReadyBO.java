@@ -3,11 +3,11 @@ package com.bjike.goddess.oilcardprepared.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 资金准备审核业务传输对象
+ * 资金审核准备业务传输对象
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核业务传输对象 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -52,6 +52,7 @@ public class MoneyReadyBO extends BaseBO {
      * 月份
      */
     private Integer month;
+
 
     public String getCategory() {
         return category;

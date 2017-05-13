@@ -100,7 +100,7 @@ public class WaitPayAct {
      * @return class WaitPayVO
      * @throws ActException
      */
-    @GetMapping("v1/count")
+    @GetMapping("v1/count/{startTime}/{endTime}")
     public Result count(@PathVariable String startTime, @PathVariable String endTime, HttpServletRequest request) throws ActException {
         try {
             List<WaitPayBO> list = waitPayAPI.count(startTime, endTime);
@@ -118,7 +118,7 @@ public class WaitPayAct {
      * @return class ContrastVO
      * @throws ActException
      */
-    @GetMapping("v1/contrast")
+    @GetMapping("v1/contrast/{month}")
     public Result contrast(@PathVariable Integer month, HttpServletRequest request) throws ActException {
         try {
             List<ContrastBO> list = waitPayAPI.contrast(month);

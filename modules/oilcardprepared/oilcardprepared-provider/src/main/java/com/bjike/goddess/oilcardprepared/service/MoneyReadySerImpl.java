@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 资金准备审核业务实现
+ * 资金审核准备业务实现
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核业务实现 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

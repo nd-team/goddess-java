@@ -1,18 +1,18 @@
 模块名:oilcardprepared
-类名:WaitPay
+类名:MoneyReady
 作者:chenjunhao
-描述:等待付款
+描述:资金审核准备
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String oilCardCode 油卡编号;
-String oilCardNumber 卡号;
-LocalDateTime rechargeDate 充值日期;
-Double rechargeMoney 充值金额;
-String rechargeUser 充值人;
-String rechargeWay 充值方式;
-Double balance 初始余额;
-Boolean pay 是否付款;
+String category 类别;
+String subject 科目;
+Double totalReserve 总准备金;
+String groupTeam 项目组;
+Double prorate 比例分配;
+Double reserve 准备金;
+Integer year 年份;
+Integer month 月份;
 )

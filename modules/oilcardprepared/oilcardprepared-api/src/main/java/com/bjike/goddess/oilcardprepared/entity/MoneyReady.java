@@ -8,11 +8,11 @@ import javax.persistence.Table;
 
 
 /**
- * 资金准备审核
+ * 资金审核准备
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -59,7 +59,7 @@ public class MoneyReady extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "INT(11)   COMMENT '年份'")
+    @Column(name = "year", nullable = false, columnDefinition = "INT(11)    COMMENT '年份'")
     private Integer year;
 
     /**
@@ -67,6 +67,7 @@ public class MoneyReady extends BaseEntity {
      */
     @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
     private Integer month;
+
 
     public String getCategory() {
         return category;

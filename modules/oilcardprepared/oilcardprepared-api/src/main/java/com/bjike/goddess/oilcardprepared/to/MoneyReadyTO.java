@@ -11,11 +11,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * 资金准备审核
+ * 资金审核准备
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

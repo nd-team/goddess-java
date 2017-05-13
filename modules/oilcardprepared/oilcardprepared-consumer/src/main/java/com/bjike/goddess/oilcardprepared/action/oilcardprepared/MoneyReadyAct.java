@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 资金准备审核
+ * 资金审核准备
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -129,7 +129,7 @@ public class MoneyReadyAct {
     }
 
     /**
-     * 汇总
+     * 汇总对比
      *
      * @param month   汇总的月份
      * @param request 请求对象

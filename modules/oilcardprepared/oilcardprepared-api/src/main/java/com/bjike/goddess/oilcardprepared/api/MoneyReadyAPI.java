@@ -9,11 +9,11 @@ import com.bjike.goddess.oilcardprepared.to.MoneyReadyTO;
 import java.util.List;
 
 /**
- * 资金准备审核业务接口
+ * 资金审核准备业务接口
  *
  * @Author: [ chenjunhao ]
- * @Date: [ 2017-05-05 02:41 ]
- * @Description: [ 资金准备审核业务接口 ]
+ * @Date: [ 2017-05-13 11:15 ]
+ * @Description: [ 资金审核准备业务接口 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -73,7 +73,7 @@ public interface MoneyReadyAPI {
     }
 
     /**
-     * 汇总
+     * 汇总对比
      *
      * @param month 汇总的月份
      * @return class MoneyReadyCountBO
