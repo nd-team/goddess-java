@@ -19,7 +19,7 @@ public class CommonalityVO {
 /**
 * 项目组/部门ID
 */
- private String  department_id; 
+ private String  departmentId; 
 
 /**
 * 邮箱地址
@@ -39,11 +39,11 @@ public class CommonalityVO {
  public void setId (String id ) { 
  this.id = id ; 
  } 
- public String getDepartment_id () { 
- return department_id;
+ public String getDepartmentId () { 
+ return departmentId;
  } 
- public void setDepartment_id (String department_id ) { 
- this.department_id = department_id ; 
+ public void setDepartmentId (String departmentId ) { 
+ this.departmentId = departmentId ; 
  } 
  public String getEmail () { 
  return email;

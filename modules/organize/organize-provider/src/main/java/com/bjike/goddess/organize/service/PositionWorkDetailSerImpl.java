@@ -75,7 +75,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
     @Override
     public PositionWorkDetailBO save(PositionWorkDetailTO to) throws SerException {
         PositionWorkDetail entity = BeanTransform.copyProperties(to, PositionWorkDetail.class);
-        entity.setInstructions(positionInstructionSer.findById(to.getInstructionId()));
+        entity.setInstruction(positionInstructionSer.findById(to.getInstructionId()));
         if (entity.getInstruction() == null)
             throw new SerException("岗位说明书为空,无法保存");
         super.save(entity);
@@ -92,7 +92,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setInstructions(positionInstructionSer.findById(to.getInstructionId()));
+        entity.setInstruction(positionInstructionSer.findById(to.getInstructionId()));
         if (entity.getInstruction() == null)
             throw new SerException("岗位说明书为空,无法保存");
         super.update(entity);

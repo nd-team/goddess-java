@@ -6,6 +6,7 @@ import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,11 +58,6 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public Boolean checkAsUserPositionDetail(String user_id, String[] position_ids) throws SerException {
-        return positionDetailUserSer.checkAsUserPositionDetail(user_id, position_ids);
-    }
-
-    @Override
     public Boolean checkAsUserArrangement(String user_id, String arrangement_id) throws SerException {
         return positionDetailUserSer.checkAsUserArrangement(user_id, arrangement_id);
     }
@@ -85,5 +81,15 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public PositionDetailUserBO findById(String id) throws SerException {
         return positionDetailUserSer.getById(id);
+    }
+
+    @Override
+    public List<UserBO> findByPosition(String position_id) throws SerException {
+        return positionDetailUserSer.findByPosition(position_id);
+    }
+
+    @Override
+    public List<UserBO> findUserList() throws SerException {
+        return positionDetailUserSer.findUserList();
     }
 }

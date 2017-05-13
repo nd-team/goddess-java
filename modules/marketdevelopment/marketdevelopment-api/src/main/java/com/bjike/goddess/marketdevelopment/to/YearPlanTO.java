@@ -63,13 +63,6 @@ public class YearPlanTO extends BaseTO {
     @NotNull(message = "各业务科目年度占比不能为空", groups = {ADD.class, EDIT.class})
     private Double courseAccounted;
 
-    /**
-     * 年任务量
-     */
-    @NotNull(message = "年任务量不能为空", groups = {ADD.class, EDIT.class})
-    private Double quota;
-
-
     public Integer getYear() {
         return year;
     }
@@ -124,13 +117,5 @@ public class YearPlanTO extends BaseTO {
 
     public void setCourseAccounted(Double courseAccounted) {
         this.courseAccounted = courseAccounted;
-    }
-
-    public Double getQuota() {
-        return quota;
-    }
-
-    public void setQuota(Double quota) {
-        this.quota = quota;
     }
 }

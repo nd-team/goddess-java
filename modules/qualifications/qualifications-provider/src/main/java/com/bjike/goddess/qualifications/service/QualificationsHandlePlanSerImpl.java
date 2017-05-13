@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,31 +34,53 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
     private QualificationsHandleSer handleSer;
 
     @Transactional(rollbackFor = SerException.class)
+
+    private QualificationsHandlePlanBO transformBO(QualificationsHandlePlan entity) throws SerException {
+        QualificationsHandlePlanBO bo = BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
+        bo.setHandleId(entity.getHandle().getId());
+        return bo;
+    }
+
+    private List<QualificationsHandlePlanBO> transformBOList(List<QualificationsHandlePlan> list) throws SerException {
+        List<QualificationsHandlePlanBO> bos = new ArrayList<>(0);
+        for (QualificationsHandlePlan entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
     @Override
     public QualificationsHandlePlanBO save(QualificationsHandlePlanTO to) throws SerException {
         QualificationsHandlePlan entity = BeanTransform.copyProperties(to, QualificationsHandlePlan.class, true);
         entity.setHandle(handleSer.findById(to.getHandleId()));
+        if (null == entity.getHandle())
+            throw new SerException("资质办理数据为空");
         super.save(entity);
-        return BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QualificationsHandlePlanBO update(QualificationsHandlePlanTO to) throws SerException {
-        QualificationsHandlePlan entity = BeanTransform.copyProperties(to, QualificationsHandlePlan.class, true), plan = super.findById(to.getId());
+        QualificationsHandlePlan entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setCreateTime(plan.getCreateTime());
         entity.setHandle(handleSer.findById(to.getHandleId()));
+        if (null == entity.getHandle())
+            throw new SerException("资质办理数据为空");
         super.save(entity);
-        return BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QualificationsHandlePlanBO delete(String id) throws SerException {
         QualificationsHandlePlan entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, QualificationsHandlePlanBO.class);
+        return this.transformBO(entity);
     }
 
     @Override
@@ -65,12 +88,12 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
         QualificationsHandlePlanDTO dto = new QualificationsHandlePlanDTO();
         dto.getConditions().add(Restrict.eq("handle.id", handleId));
         List<QualificationsHandlePlan> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list, QualificationsHandlePlanBO.class);
+        return this.transformBOList(list);
     }
 
     @Override
     public List<QualificationsHandlePlanBO> maps(QualificationsHandlePlanDTO dto) throws SerException {
-        return BeanTransform.copyProperties(super.findByPage(dto), QualificationsHandlePlanBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override
@@ -80,6 +103,9 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
 
     @Override
     public QualificationsHandlePlanBO getById(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id), QualificationsHandlePlanBO.class);
+        QualificationsHandlePlan entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return this.transformBO(entity);
     }
 }

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("otherexpenses")
-public class OtherExpensesAction {
+public class OtherExpensesAct {
 
     @Autowired
     private OtherExpensesAPI otherExpensesAPI;

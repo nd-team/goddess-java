@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -10,7 +11,6 @@ import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
-import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -40,8 +40,6 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Autowired
     private PositionDetailSer positionDetailSer;
-    @Autowired
-    private PositionAPI positionAPI;
     @Autowired
     private UserAPI userAPI;
 
@@ -170,33 +168,24 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public Boolean checkAsUserPositionDetail(String userId, String[] positionIds) throws SerException {
+    public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                for (String id : positionIds)
-                    if (detail.getId().equals(id))
+                for (String id : arrangementIds)
+                    if (detail.getArrangement().getId().equals(id))
                         return true;
         return false;
     }
 
     @Override
-    public Boolean checkAsUserArrangement(String userId, String arrangementId) throws SerException {
+    public Boolean checkAsUserModule(String userId, String... moduleIds) throws SerException {
         PositionDetailUser entity = this.findByUser(userId);
         if (null != entity)
             for (PositionDetail detail : entity.getPositionSet())
-                if (detail.getArrangement().getId().equals(arrangementId))
-                    return true;
-        return false;
-    }
-
-    @Override
-    public Boolean checkAsUserModule(String userId, String moduleId) throws SerException {
-        PositionDetailUser entity = this.findByUser(userId);
-        if (null != entity)
-            for (PositionDetail detail : entity.getPositionSet())
-                if (detail.getModule().getId().equals(moduleId))
-                    return true;
+                for (String id : moduleIds)
+                    if (detail.getModule().getId().equals(id))
+                        return true;
         return false;
     }
 
@@ -208,5 +197,28 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public PositionDetailUserBO getById(String id) throws SerException {
         return this.transformBO(super.findById(id));
+    }
+
+    @Override
+    public List<UserBO> findByPosition(String position_id) throws SerException {
+        String[] fields = {"id", "userId"};
+        String sql = "SELECT user_id,position_id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
+        List<PositionDetailUser> list = super.findBySql(String.format(sql, position_id), PositionDetailUser.class, fields);
+        List<UserBO> bos = new ArrayList<>(0);
+        for (PositionDetailUser entity : list) {
+            UserDTO dto = new UserDTO();
+            dto.getConditions().add(Restrict.eq(ID, super.findById(entity.getId()).getUserId()));
+            List<UserBO> userBOs = userAPI.findByCis(dto);
+            if (null != userBOs && userBOs.size() > 0)
+                bos.add(userBOs.get(0));
+        }
+        return bos;
+    }
+
+    @Override
+    public List<UserBO> findUserList() throws SerException {
+        UserDTO dto = new UserDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        return userAPI.findByCis(dto);
     }
 }
