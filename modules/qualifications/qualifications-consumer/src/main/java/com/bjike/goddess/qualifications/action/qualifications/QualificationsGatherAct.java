@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 资质办理信息采集
  *
@@ -40,9 +42,9 @@ public class QualificationsGatherAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsGatherTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsGatherTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.save(to), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.save(to), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -56,9 +58,9 @@ public class QualificationsGatherAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsGatherTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsGatherTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.update(to), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.update(to), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -67,14 +69,14 @@ public class QualificationsGatherAct {
     /**
      * 删除
      *
-     * @param id 资质办理传输对象
+     * @param id 资质办理传输数据id
      * @return class QualificationsGatherVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.delete(id), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.delete(id), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,9 +90,9 @@ public class QualificationsGatherAct {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(String type) throws ActException {
+    public Result findByType(String type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.findByType(type), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.findByType(type), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,9 +106,9 @@ public class QualificationsGatherAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(QualificationsGatherDTO dto) throws ActException {
+    public Result maps(QualificationsGatherDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.maps(dto), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.maps(dto), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -134,9 +136,9 @@ public class QualificationsGatherAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id) throws ActException {
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.getById(id), QualificationsGatherVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsGatherAPI.getById(id), QualificationsGatherVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

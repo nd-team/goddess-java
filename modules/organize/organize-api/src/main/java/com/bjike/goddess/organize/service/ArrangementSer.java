@@ -95,4 +95,15 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取岗位层级数据
+     *
+     * @param id 岗位层级数据id
+     * @return
+     * @throws SerException
+     */
+    default ArrangementBO getById(String id) throws SerException {
+        return null;
+    }
+
 }
