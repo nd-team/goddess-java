@@ -95,7 +95,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserArrangement(String user_id, String arrangement_id) throws SerException {
+    default Boolean checkAsUserArrangement(String user_id, String... arrangement_id) throws SerException {
         return null;
     }
 
@@ -107,7 +107,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserModule(String user_id, String module_id) throws SerException {
+    default Boolean checkAsUserModule(String user_id, String... module_id) throws SerException {
         return null;
     }
 
