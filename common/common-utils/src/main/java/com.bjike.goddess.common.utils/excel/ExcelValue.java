@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Excel 表头
+ * Excel 枚举类型解析使用注解
  *
  * @Author: [liguiqin]
  * @Date: [2017-05-10 09:24]
