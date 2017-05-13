@@ -5,6 +5,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -87,18 +88,6 @@ public interface PositionDetailUserAPI {
     }
 
     /**
-     * 检测用户是否在指定职位中
-     *
-     * @param user_id      用户id
-     * @param position_ids 职位详细id数组
-     * @return
-     * @throws SerException
-     */
-    default Boolean checkAsUserPositionDetail(String user_id, String[] position_ids) throws SerException {
-        return null;
-    }
-
-    /**
      * 检测用户是否在指定层级中
      *
      * @param user_id        用户id
@@ -154,5 +143,24 @@ public interface PositionDetailUserAPI {
         return null;
     }
 
+    /**
+     * 根据职位id查询用户信息
+     *
+     * @param position_id 职位id
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findByPosition(String position_id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取用户列表
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findUserList() throws SerException{
+        return null;
+    }
 
 }

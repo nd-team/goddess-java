@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 财务资料
  *
@@ -40,9 +42,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) FinanceInfoTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) FinanceInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.save(to), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.save(to), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -56,9 +58,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) FinanceInfoTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) FinanceInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.update(to), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.update(to), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -72,9 +74,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.delete(id), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.delete(id), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -87,9 +89,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @GetMapping("v1/all")
-    public Result all() throws ActException {
+    public Result all(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.all(), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.all(), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,9 +106,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(FinanceInfoDTO dto) throws ActException {
+    public Result maps(FinanceInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.maps(dto), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.maps(dto), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -134,9 +136,9 @@ public class FinanceInfoAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id) throws ActException {
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.getById(id), FinanceInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(financeInfoAPI.getById(id), FinanceInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

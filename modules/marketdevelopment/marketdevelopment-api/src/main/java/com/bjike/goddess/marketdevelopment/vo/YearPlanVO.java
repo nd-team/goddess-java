@@ -49,11 +49,11 @@ public class YearPlanVO {
      * 各业务科目年度占比
      */
     private Double courseAccounted;
-
-    /**
-     * 年任务量
-     */
-    private Double quota;
+//
+//    /**
+//     * 年任务量
+//     */
+//    private Double quota;
 
 
     public String getId() {
@@ -119,12 +119,12 @@ public class YearPlanVO {
     public void setCourseAccounted(Double courseAccounted) {
         this.courseAccounted = courseAccounted;
     }
-
-    public Double getQuota() {
-        return quota;
-    }
-
-    public void setQuota(Double quota) {
-        this.quota = quota;
-    }
+//
+//    public Double getQuota() {
+//        return quota;
+//    }
+//
+//    public void setQuota(Double quota) {
+//        this.quota = quota;
+//    }
 }
