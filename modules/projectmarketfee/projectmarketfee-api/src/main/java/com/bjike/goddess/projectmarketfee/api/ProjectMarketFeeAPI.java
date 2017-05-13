@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 
 import java.util.List;
 
@@ -103,16 +104,11 @@ public interface ProjectMarketFeeAPI {
     /**
      * 查找明细
      *
-     * @param firstSubject  一级科目
-     * @param secondSubject 二级科目
-     * @param thirdSubject  三级科目
-     * @param area          地区
-     * @param projectGroup  项目组
-     * @param projectName   项目名称
+     * @param to 项目前期的市场活动费汇总明细信息
      * @return class ProjectMarketFeeBO
      * @throws SerException
      */
-    default List<ProjectMarketFeeBO> findDetail(String firstSubject, String secondSubject, String thirdSubject, String area, String projectGroup, String projectName) throws SerException {
+    default List<ProjectMarketFeeBO> findDetail(ProjectMarketFeeTO to) throws SerException {
         return null;
     }
 

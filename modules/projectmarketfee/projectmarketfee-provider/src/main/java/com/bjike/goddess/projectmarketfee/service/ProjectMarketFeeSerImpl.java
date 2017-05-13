@@ -9,6 +9,7 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFee;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -411,19 +412,19 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
     }
 
     @Override
-    public List<ProjectMarketFeeBO> findDetail(String firstSubject, String secondSubject, String thirdSubject, String area, String projectGroup, String projectName) throws SerException {
+    public List<ProjectMarketFeeBO> findDetail(ProjectMarketFeeTO to) throws SerException {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT id,firstSubject,secondSubject,thirdSubject,projectGroup,area,projectName,borrowMoney\n" +
                 "from projectmarketfee_projectmarketfee");
         String[] fields = new String[]{"id", "firstSubject", "secondSubject", "thirdSubject", "projectGroup", "area", "projectName", "borrowMoney"};
         List<ProjectMarketFee> list = null;
-        if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area)) && (!"null".equals(projectGroup)) && (!"null".equals(projectName))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
-            String[] projectNames = new String[]{projectName};
-            String[] projectGroups = new String[]{projectGroup};
+        if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null) && (to.getProjectGroup() != null) && (to.getProjectName() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
+            String[] projectNames = new String[]{to.getProjectName()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "' AND area='" + areas[i] + "' AND projectName='" + projectNames[i] + "'");
@@ -435,12 +436,12 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "' AND area='" + areas[i] + "'");
@@ -452,11 +453,11 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND area='" + areas[i] + "'");
@@ -468,11 +469,11 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "'");
@@ -484,10 +485,10 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "'");
@@ -499,9 +500,9 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length && i < projectGroups.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND projectGroup='" + projectGroups[i] + "'");
                 String sql = sb.toString();

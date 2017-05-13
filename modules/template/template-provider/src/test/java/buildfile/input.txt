@@ -1,19 +1,18 @@
-模块名:projectmarketfee
-类名:ProjectMarketFee
+模块名:oilcardprepared
+类名:WaitPay
 作者:chenjunhao
-描述:项目前期的市场活动费
+描述:等待付款
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String firstSubject 一级科目;
-String secondSubject 二级科目;
-String thirdSubject 三级科目;
-String area 地区;
-String projectGroup 项目组;
-String projectName 项目名称;
-LocalDate voucherDate 日期;
-Double borrowMoney 金额;
-String saleId 记账凭证销售费用id;
+String oilCardCode 油卡编号;
+String oilCardNumber 卡号;
+LocalDateTime rechargeDate 充值日期;
+Double rechargeMoney 充值金额;
+String rechargeUser 充值人;
+String rechargeWay 充值方式;
+Double balance 初始余额;
+Boolean pay 是否付款;
 )

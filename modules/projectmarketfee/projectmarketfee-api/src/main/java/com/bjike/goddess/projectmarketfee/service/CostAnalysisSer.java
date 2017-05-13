@@ -111,13 +111,11 @@ public interface CostAnalysisSer extends Ser<CostAnalysis, CostAnalysisDTO> {
     /**
      * 查找明细
      *
-     * @param arrival      地区
-     * @param projectGroup 项目组
-     * @param projectName  项目名称
+     * @param to 费用效益汇总信息
      * @return class CostAnalysisBO
      * @throws SerException
      */
-    default List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
+    default List<CostAnalysisBO> findDetail(CostAnalysisTO to) throws SerException {
         return null;
     }
 }

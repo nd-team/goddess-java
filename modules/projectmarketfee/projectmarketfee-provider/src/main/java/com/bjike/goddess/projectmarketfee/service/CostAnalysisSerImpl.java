@@ -244,10 +244,10 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
     }
 
     @Override
-    public List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
-        String[] arrivals = new String[]{arrival};
-        String[] projectGroups = new String[]{projectGroup};
-        String[] projectNames = new String[]{projectName};
+    public List<CostAnalysisBO> findDetail(CostAnalysisTO to) throws SerException {
+        String[] arrivals = new String[]{to.getArrival()};
+        String[] projectGroups = new String[]{to.getProject()};
+        String[] projectNames = new String[]{to.getProjectName()};
         List<Warn> warns = warnSer.findAll();
         List<CostAnalysis> list = null;
         List<CostAnalysisBO> boList = new ArrayList<CostAnalysisBO>();
@@ -255,7 +255,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
         sb.append("SELECT project,arrival,year,month,projectName,expectedIncome,expectedMarketCost,grade\n" +
                 "from projectmarketfee_costanalysis");
         String[] fields = new String[]{"project", "arrival", "year", "month", "projectName", "expectedIncome", "expectedMarketCost", "grade"};
-        if ((!"null".equals(arrival)) && (!"null".equals(projectGroup)) && (!"null".equals(projectName))) {
+        if ((to.getArrival()!=null) && (to.getProject()!=null) && (to.getProjectName()!=null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE project='" + projectGroups[i] + "' AND arrival='" + arrivals[i] + "' AND projectName='" + projectNames[i] + "'");
                 String sql = sb.toString();
@@ -278,7 +278,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 boList.add(costAnalysisBO);
             }
             return boList;
-        } else if ((!"null".equals(arrival)) && (!"null".equals(projectGroup))) {
+        } else if ((to.getArrival()!=null) && (to.getProject()!=null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE project='" + projectGroups[i] + "' AND arrival='" + arrivals[i] + "'");
                 String sql = sb.toString();
@@ -301,7 +301,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 boList.add(costAnalysisBO);
             }
             return boList;
-        } else if ((!"null".equals(arrival))) {
+        } else if ((to.getArrival()!=null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE arrival='" + arrivals[i] + "'");
                 String sql = sb.toString();

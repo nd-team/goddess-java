@@ -333,3 +333,8 @@ include ':modules:projectmarketfee:projectmarketfee-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
+
+//#oilcardprepared 油卡充值准备与支付
+include ':modules:oilcardprepared:oilcardprepared-api'
+include ':modules:oilcardprepared:oilcardprepared-consumer'
+include ':modules:oilcardprepared:oilcardprepared-provider'

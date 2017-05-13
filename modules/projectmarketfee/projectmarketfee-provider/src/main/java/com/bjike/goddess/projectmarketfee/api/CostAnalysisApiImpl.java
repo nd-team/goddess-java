@@ -66,7 +66,7 @@ public class CostAnalysisApiImpl implements CostAnalysisAPI {
     }
 
     @Override
-    public List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
-        return costAnalysisSer.findDetail(arrival, projectGroup, projectName);
+    public List<CostAnalysisBO> findDetail(CostAnalysisTO to) throws SerException {
+        return costAnalysisSer.findDetail(to);
     }
 }

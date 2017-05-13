@@ -172,18 +172,16 @@ public class CostAnalysisAct {
     /**
      * 查找汇总信息对应的明细
      *
-     * @param arrival      地区
-     * @param projectGroup 项目组
-     * @param projectName  项目名称
-     * @param request      请求对象
+     * @param to      费用效益分析汇总信息
+     * @param request 请求对象
      * @return class CostAnalysisVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findDetail/{arrival}/{projectGroup}/{projectName}")
-    public Result findDetail(@PathVariable String arrival, @PathVariable String projectGroup, @PathVariable String projectName, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/findDetail")
+    public Result findDetail(CostAnalysisTO to, HttpServletRequest request) throws ActException {
         try {
-            List<CostAnalysisBO> list = costAnalysisAPI.findDetail(arrival, projectGroup, projectName);
+            List<CostAnalysisBO> list = costAnalysisAPI.findDetail(to);
             return ActResult.initialize(BeanTransform.copyProperties(list, CostAnalysisVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

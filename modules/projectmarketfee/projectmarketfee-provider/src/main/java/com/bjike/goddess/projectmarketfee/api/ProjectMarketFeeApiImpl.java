@@ -5,6 +5,7 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.service.ProjectMarketFeeSer;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,8 +61,8 @@ public class ProjectMarketFeeApiImpl implements ProjectMarketFeeAPI {
     }
 
     @Override
-    public List<ProjectMarketFeeBO> findDetail(String firstSubject, String secondSubject, String thirdSubject, String area, String projectGroup, String projectName) throws SerException {
-        return projectMarketFeeSer.findDetail(firstSubject, secondSubject, thirdSubject, area, projectGroup, projectName);
+    public List<ProjectMarketFeeBO> findDetail(ProjectMarketFeeTO to) throws SerException {
+        return projectMarketFeeSer.findDetail(to);
     }
 
     @Override

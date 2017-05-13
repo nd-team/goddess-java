@@ -9,13 +9,11 @@ import com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeAPI;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 import com.bjike.goddess.projectmarketfee.vo.ProjectMarketFeeCountVO;
 import com.bjike.goddess.projectmarketfee.vo.ProjectMarketFeeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -177,21 +175,16 @@ public class ProjectMarketFeeAct {
     /**
      * 查找汇总信息对应的明细
      *
-     * @param firstSubject  一级科目
-     * @param secondSubject 二级科目
-     * @param thirdSubject  三级科目
-     * @param area          地区
-     * @param projectGroup  项目组
-     * @param projectName   项目名称
-     * @param request       请求对象
+     * @param to      项目前期的市场活动费汇总明细信息
+     * @param request 请求对象
      * @return class ProjectMarketFeeVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findDetail/{firstSubject}/{secondSubject}/{thirdSubject}/{area}/{projectGroup}/{projectName}")
-    public Result findDetail(@PathVariable String firstSubject, @PathVariable String secondSubject, @PathVariable String thirdSubject, @PathVariable String area, @PathVariable String projectGroup, @PathVariable String projectName, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/findDetail")
+    public Result findDetail(ProjectMarketFeeTO to, HttpServletRequest request) throws ActException {
         try {
-            List<ProjectMarketFeeBO> list = projectMarketFeeAPI.findDetail(firstSubject, secondSubject, thirdSubject, area, projectGroup, projectName);
+            List<ProjectMarketFeeBO> list = projectMarketFeeAPI.findDetail(to);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectMarketFeeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
