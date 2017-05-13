@@ -1,6 +1,7 @@
 package com.bjike.goddess.oilcardprepared.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardprepared.bo.MoneyReadyBO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.oilcardprepared.entity.MoneyReady;
 import com.bjike.goddess.oilcardprepared.to.MoneyReadyTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.Set;
 @Service
 public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> implements MoneyReadySer {
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public MoneyReadyBO save(MoneyReadyTO to) throws SerException {
         MoneyReady m = BeanTransform.copyProperties(to, MoneyReady.class, true);
         super.save(m);
@@ -37,6 +40,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void edit(MoneyReadyTO to) throws SerException {
         MoneyReady moneyReady = super.findById(to.getId());
         LocalDateTime a = moneyReady.getCreateTime();
@@ -48,6 +52,7 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
         super.remove(id);
     }
