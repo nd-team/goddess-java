@@ -1,13 +1,10 @@
 package com.bjike.goddess.assemble.vo;
 
 import com.bjike.goddess.assemble.type.CheckType;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.Column;
-import javax.validation.constraints.Min;
 
 /**
  * 演示demo功能信息
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
@@ -17,13 +14,25 @@ import javax.validation.constraints.Min;
 public class ModuleVO {
 
     /**
+     * id
+     */
+    private String id;
+    /**
      * 模块名
      */
     private String name;
     /**
      * 选中状态
      */
-    private CheckType checkType ;
+    private CheckType checkType;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

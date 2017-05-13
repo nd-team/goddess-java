@@ -32,10 +32,6 @@ public class Module extends BaseEntity {
     @Column(name = "checkType", nullable = false, columnDefinition = "COMMENT='选中状态'")
     private CheckType checkType;
 
-    /**
-     * 关联模块列表
-     */
-    List<Module> modules;
 
     public String getName() {
         return name;
