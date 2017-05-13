@@ -29,6 +29,17 @@ public interface ModuleAPI {
     }
 
     /**
+     * 通过id查询模块
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default ModuleBO findByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
      * 添加模块
      *
      * @param moduleTO
@@ -51,11 +62,12 @@ public interface ModuleAPI {
     /**
      * 勾选模块
      *
-     * @param id
+     * @param moduleId
+     * @param relationIds
      * @param checkType
      * @throws SerException
      */
-    default void check(String id,  CheckType checkType) throws SerException {
+    default void check(String moduleId,String[] relationIds,  CheckType checkType) throws SerException {
 
     }
 

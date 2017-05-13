@@ -1,5 +1,6 @@
 package com.bjike.goddess.assemble.entity;
 
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -32,6 +33,12 @@ public class ModuleAssemble extends BaseEntity {
     @JoinColumn(name = "relation_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '关联模块id' ")
     private Module relation;
 
+    /**
+     * 选中状态
+     */
+    @Column(name = "checkType", nullable = false, columnDefinition = "TINYINT(2) COMMENT '选中状态'")
+    private CheckType checkType;
+
 
     public Module getModule() {
         return module;
@@ -47,5 +54,13 @@ public class ModuleAssemble extends BaseEntity {
 
     public void setRelation(Module relation) {
         this.relation = relation;
+    }
+
+    public CheckType getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(CheckType checkType) {
+        this.checkType = checkType;
     }
 }

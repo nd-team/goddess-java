@@ -1,5 +1,6 @@
 package com.bjike.goddess.assemble.to;
 
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
@@ -28,6 +29,8 @@ public class ModuleAssembleTO extends BaseTO {
     @NotBlank(message = "关联模块id不能为空", groups = {ADD.class, EDIT.class})
     private String relationId;
 
+    private CheckType checkType;
+
     public String getModuleId() {
         return moduleId;
     }
@@ -42,5 +45,13 @@ public class ModuleAssembleTO extends BaseTO {
 
     public void setRelationId(String relationId) {
         this.relationId = relationId;
+    }
+
+    public CheckType getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(CheckType checkType) {
+        this.checkType = checkType;
     }
 }

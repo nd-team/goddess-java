@@ -1,6 +1,10 @@
 package com.bjike.goddess.assemble.vo;
 
+import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.type.CheckType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 演示demo功能信息
@@ -26,6 +30,8 @@ public class ModuleVO {
      */
     private CheckType checkType;
 
+    private List<ModuleBO> relations;
+
     public String getId() {
         return id;
     }
@@ -48,5 +54,13 @@ public class ModuleVO {
 
     public void setCheckType(CheckType checkType) {
         this.checkType = checkType;
+    }
+
+    public List<ModuleBO> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<ModuleBO> relations) {
+        this.relations = relations;
     }
 }

@@ -20,13 +20,8 @@ public class ModuleTO extends BaseTO {
      * 模块名
      */
     @NotBlank(message = "模块名不能为空", groups = {ADD.class, EDIT.class})
-
     private String name;
-    /**
-     * 选中状态
-     */
-    @NotNull(message = "选中状态不能为空", groups = {ADD.class, EDIT.class})
-    private CheckType checkType;
+
 
     public String getName() {
         return name;
@@ -36,11 +31,4 @@ public class ModuleTO extends BaseTO {
         this.name = name;
     }
 
-    public CheckType getCheckType() {
-        return checkType;
-    }
-
-    public void setCheckType(CheckType checkType) {
-        this.checkType = checkType;
-    }
 }

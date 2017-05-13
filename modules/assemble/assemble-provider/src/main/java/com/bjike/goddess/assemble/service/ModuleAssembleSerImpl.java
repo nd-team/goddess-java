@@ -5,6 +5,7 @@ import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.assemble.entity.ModuleAssemble;
 import com.bjike.goddess.assemble.to.ModuleAssembleTO;
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -46,6 +47,10 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
                     ModuleAssemble moduleAssemble = new ModuleAssemble();
                     moduleAssemble.setModule(module);
                     moduleAssemble.setRelation(relation);
+                    moduleAssemble.setCheckType(to.getCheckType());
+                    if (null == to.getCheckType()) {
+                        moduleAssemble.setCheckType(CheckType.NONE);
+                    }
                     super.save(moduleAssemble);
                 } else {
                     throw new SerException("关联模块数据不存在");

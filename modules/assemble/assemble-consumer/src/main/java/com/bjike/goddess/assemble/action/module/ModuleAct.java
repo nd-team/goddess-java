@@ -52,6 +52,23 @@ public class ModuleAct {
     }
 
     /**
+     * 获取模块关联的列表
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/module/{name}")
+    public Result findByName(@PathVariable String name) throws ActException {
+        ActResult actResult = new ActResult();
+        try {
+            actResult.setData(BeanTransform.copyProperties(moduleAPI.findByName(name), ModuleVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage(), e.getCause());
+        }
+        return actResult;
+    }
+
+    /**
      * 添加模块
      *
      * @throws ActException
@@ -89,10 +106,10 @@ public class ModuleAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/check/{id}/{checkType}")
-    public Result check(@PathVariable String id, CheckType checkType) throws ActException {
+    @PutMapping("v1/check/{checkType}")
+    public Result check( String moduleId,String[] relationIds, @PathVariable CheckType checkType) throws ActException {
         try {
-            moduleAPI.check(id, checkType);
+            moduleAPI.check(moduleId,relationIds, checkType);
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }
