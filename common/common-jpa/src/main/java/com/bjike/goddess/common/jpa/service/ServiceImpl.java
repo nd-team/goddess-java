@@ -239,8 +239,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         if (m.getName().equals(method)) {
                             if (!m.getReturnType().isEnum()) { //忽略枚举类型
                                 m.invoke(obj, convertDataType(arr_obj[j]));
-
-
                             }
                             break;
                         }

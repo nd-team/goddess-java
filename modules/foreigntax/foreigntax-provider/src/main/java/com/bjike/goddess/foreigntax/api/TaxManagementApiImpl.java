@@ -78,8 +78,8 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
         return taxManagementSer.getCompany();
     }
 
-   /* @Override
+    @Override
     public List<TaxManagementBO> listByCompany(String company, String monthStart, String monthEnd) throws SerException {
         return taxManagementSer.listByCompany(company,monthStart,monthEnd);
-    }*/
+    }
 }

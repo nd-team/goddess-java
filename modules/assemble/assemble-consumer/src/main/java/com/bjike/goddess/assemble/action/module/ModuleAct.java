@@ -36,7 +36,6 @@ public class ModuleAct {
 
     /**
      * 获取列表
-     * @param moduleVO 模块
      * @throws ActException
      * @version v1
      */

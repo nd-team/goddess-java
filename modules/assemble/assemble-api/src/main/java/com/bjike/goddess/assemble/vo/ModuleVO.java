@@ -1,7 +1,9 @@
 package com.bjike.goddess.assemble.vo;
 
+import com.bjike.goddess.assemble.type.CheckType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 
 /**
@@ -13,69 +15,29 @@ import javax.validation.constraints.Min;
  * @Copy: [com.bjike]
  */
 public class ModuleVO {
-    public interface TESTDemoList{}
-    public interface TESTDemoListUP{}
 
     /**
-     * 购买人账号
+     * 模块名
      */
-    private String account;
+    private String name;
     /**
-     * 座位号 D3608-2-2D
+     * 选中状态
      */
-    @NotBlank(groups = ModuleVO.TESTDemoList.class,message = "座位号不能为空")
-    private String position;
-    /**
-     * 出发时间
-     */
-    private String offTime;
-    /**
-     * 购票金额
-     */
-    @Min(value = 10,message = "金额错误")
-    private Integer money;
-    /**
-     * 票号
-     */
-    private String number;
+    private CheckType checkType ;
 
-    public String getAccount() {
-        return account;
+    public String getName() {
+        return name;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPosition() {
-        return position;
+    public CheckType getCheckType() {
+        return checkType;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getOffTime() {
-        return offTime;
-    }
-
-    public void setOffTime(String offTime) {
-        this.offTime = offTime;
-    }
-
-    public Integer getMoney() {
-        return money;
-    }
-
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
+    public void setCheckType(CheckType checkType) {
+        this.checkType = checkType;
     }
 }

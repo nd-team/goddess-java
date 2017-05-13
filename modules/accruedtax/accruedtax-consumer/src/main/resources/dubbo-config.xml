@@ -15,6 +15,9 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
 	<dubbo:reference validation="true" id="taxManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" />
 
 	<dubbo:reference  validation="true" id="payTaxApiImpl" interface="com.bjike.goddess.accruedtax.api.PayTaxAPI" />

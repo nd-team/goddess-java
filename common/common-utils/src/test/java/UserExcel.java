@@ -1,4 +1,5 @@
-package com.bjike.goddess.common.utils.excel;
+
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class UserExcel {
     private String name  ;
     @ExcelHeader(name = "手机")
     private String phone  ;
-    @ExcelHeader(name = "性别")
+    @ExcelHeader(name = "年龄")
     private Integer sex ;
     @ExcelHeader(name = "创建时间")
     private LocalDateTime createTime;
@@ -26,6 +27,8 @@ public class UserExcel {
     private LocalTime time ;
     @ExcelHeader(name = "资产")
     private Double money;
+    @ExcelHeader(name = "性别")
+    private SexType sexType;
 
     public String getName() {
         return name;
@@ -81,5 +84,13 @@ public class UserExcel {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public SexType getSexType() {
+        return sexType;
+    }
+
+    public void setSexType(SexType sexType) {
+        this.sexType = sexType;
     }
 }
