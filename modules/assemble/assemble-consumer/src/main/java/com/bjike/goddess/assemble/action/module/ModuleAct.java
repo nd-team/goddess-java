@@ -57,7 +57,7 @@ public class ModuleAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/module/{name}")
+    @GetMapping("v1/list/{name}")
     public Result modulesByName(@PathVariable String name,CheckType checkType) throws ActException {
         ActResult actResult = new ActResult();
         try {
@@ -67,6 +67,7 @@ public class ModuleAct {
         }
         return actResult;
     }
+
 
     /**
      * 添加模块
