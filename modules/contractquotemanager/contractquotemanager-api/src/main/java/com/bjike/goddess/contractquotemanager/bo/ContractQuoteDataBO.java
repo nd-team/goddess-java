@@ -3,8 +3,6 @@ package com.bjike.goddess.contractquotemanager.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-
 /**
  * 合同单价资料信息业务传输对象
  *

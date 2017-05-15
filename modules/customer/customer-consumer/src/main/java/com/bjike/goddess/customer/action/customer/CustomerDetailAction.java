@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.api.CustomerDetailAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerDetailBO;
@@ -40,7 +41,8 @@ public class CustomerDetailAction {
 
     @Autowired
     private CustomerDetailAPI customerDetailAPI;
-
+    @Autowired
+    private CusPermissionAPI cusPermissionAPI;
 
     /**
      *  客户详细列表总条数
@@ -70,21 +72,26 @@ public class CustomerDetailAction {
     @GetMapping("v1/listCustomerDetail")
     public Result findListCustomerDetail(CustomerDetailDTO customerDetailDTO) throws ActException {
         try {
-            List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
-            List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
+            Boolean permission = cusPermissionAPI.getCusPermission("1");
+            if( permission ) {
+                List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
+                List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
 
-            if( customerDetailBOList == null ){
-                return ActResult.initialize(null);
-            }else {
-                customerDetailBOList.stream().forEach(str->{
-                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO() , CustomerLevelVO.class, true);
-                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
-                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                    CustomerDetailVO customerDetailVO = BeanTransform.copyProperties( str  , CustomerDetailVO.class, true);
-                    customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
-                    customerDetailVOList.add( customerDetailVO );
-                });
-                return ActResult.initialize(customerDetailVOList);
+                if (customerDetailBOList == null) {
+                    return ActResult.initialize(null);
+                } else {
+                    customerDetailBOList.stream().forEach(str -> {
+                        CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO(), CustomerLevelVO.class, true);
+                        CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
+                        customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                        CustomerDetailVO customerDetailVO = BeanTransform.copyProperties(str, CustomerDetailVO.class, true);
+                        customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+                        customerDetailVOList.add(customerDetailVO);
+                    });
+                    return ActResult.initialize(customerDetailVOList);
+                }
+            }else{
+                return  ActResult.initialize(null);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());

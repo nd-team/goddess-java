@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
@@ -37,6 +38,8 @@ public class CustomerBaseInfoAction {
 
     @Autowired
     private CustomerBaseInfoAPI customerBaseInfoAPI;
+    @Autowired
+    private CusPermissionAPI cusPermissionAPI;
 
     /**
      * 客户基本列表总条数
@@ -66,15 +69,20 @@ public class CustomerBaseInfoAction {
     @GetMapping("v1/listCustomerBaseInfo")
     public Result findListCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws ActException {
         try {
-            List<CustomerBaseInfoBO> customerBaseInfoBOList = customerBaseInfoAPI.listCustomerBaseInfo(customerBaseInfoDTO);
-            List<CustomerBaseInfoVO> customerBaseInfoVOList = new ArrayList<>();
-            customerBaseInfoBOList.stream().forEach(str->{
-                CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerLevelBO() , CustomerLevelVO.class, true);
-                CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str, CustomerBaseInfoVO.class);
-                customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                customerBaseInfoVOList.add( customerBaseInfoVO );
-            });
-            return ActResult.initialize(customerBaseInfoVOList);
+            Boolean permission = cusPermissionAPI.getCusPermission("1");
+            if( permission ) {
+                List<CustomerBaseInfoBO> customerBaseInfoBOList = customerBaseInfoAPI.listCustomerBaseInfo(customerBaseInfoDTO);
+                List<CustomerBaseInfoVO> customerBaseInfoVOList = new ArrayList<>();
+                customerBaseInfoBOList.stream().forEach(str -> {
+                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerLevelBO(), CustomerLevelVO.class, true);
+                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str, CustomerBaseInfoVO.class);
+                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                    customerBaseInfoVOList.add(customerBaseInfoVO);
+                });
+                return ActResult.initialize(customerBaseInfoVOList);
+            }else{
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

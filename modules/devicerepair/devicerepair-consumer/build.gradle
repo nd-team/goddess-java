@@ -38,6 +38,9 @@ dependencies {
     }
 
     compile project(":modules:devicerepair:devicerepair-api")
+    compile project(":modules:storage:storage-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile project(":modules:user:user-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

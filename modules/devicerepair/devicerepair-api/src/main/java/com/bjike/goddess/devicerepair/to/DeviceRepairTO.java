@@ -1,8 +1,13 @@
 package com.bjike.goddess.devicerepair.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.type.MaterialState;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 设备维修
@@ -18,46 +23,55 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 项目名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目名称不能为空")
     private String projectName;
 
     /**
      * 申请人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "申请人不能为空")
     private String applicant;
 
     /**
      * 设备名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
      * 物资编号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资编号不能为空")
     private String materialCoding;
 
     /**
      * 经手人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "经手人不能为空")
     private String handler;
 
     /**
      * 设备负责人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备负责人不能为空")
     private String devicePrincipal;
 
     /**
      * 设备出现的问题
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备出现的问题不能为空")
     private String deviceIssue;
 
     /**
@@ -68,16 +82,19 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 物资状态
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "物资状态不能为空")
     private MaterialState materialState;
 
     /**
      * 保修期限(月)
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "保修期限(月)不能为空")
     private Double termOfService;
 
     /**
      * 是否在保修期
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否在保修期不能为空")
     private Boolean whetherWarranty;
 
     /**
@@ -138,6 +155,7 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 福利模块负责人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "福利模块负责人不能为空")
     private String welfareModule;
 
     /**
@@ -148,6 +166,7 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 项目经理
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目经理不能为空")
     private String pm;
 
     /**

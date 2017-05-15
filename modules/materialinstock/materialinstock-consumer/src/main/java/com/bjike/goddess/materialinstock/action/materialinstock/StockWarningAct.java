@@ -40,7 +40,6 @@ public class StockWarningAct {
      * 根据id查询库存预警
      *
      * @param id      库存预警唯一标识
-     * @param request
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -57,11 +56,26 @@ public class StockWarningAct {
     }
 
     /**
+     * 计算总数量
+     *
+     * @param dto 库存预警dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated StockWarningDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = stockWarningAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询库存预警
      *
      * @param dto           库存预警dto
-     * @param bindingResult
-     * @param request
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -81,8 +95,6 @@ public class StockWarningAct {
      * 添加库存预警
      *
      * @param to      库存预警to
-     * @param result
-     * @param request
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -119,7 +131,6 @@ public class StockWarningAct {
      * 编辑库存预警
      *
      * @param to     库存预警to
-     * @param result
      * @throws ActException
      * @version v1
      */

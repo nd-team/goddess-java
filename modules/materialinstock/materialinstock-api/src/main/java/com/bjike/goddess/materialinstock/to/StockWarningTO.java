@@ -25,6 +25,18 @@ public class StockWarningTO extends BaseTO {
     private String area;
 
     /**
+     * 项目组/部门
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组/部门不能为空")
+    private String projectGroup;
+
+    /**
+     * 设备名称
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
+    private String deviceName;
+
+    /**
      * 下限值
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "下限值不能为空")
@@ -49,6 +61,22 @@ public class StockWarningTO extends BaseTO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public Double getLowerValue() {

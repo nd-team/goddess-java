@@ -24,7 +24,7 @@ public class Module extends BaseEntity {
     /**
      * 模块名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(32) COMMENT='模块名'")
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(32) COMMENT '模块名'")
     private String name;
 
     public String getName() {

@@ -6,7 +6,6 @@ import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 物资入库业务接口
@@ -27,6 +26,14 @@ public interface MaterialInStockAPI {
      * @throws SerException
      */
     MaterialInStockBO findById(String id) throws SerException;
+
+    /**
+     * 查询物资入库记录条数
+     *
+     * @param dto 物资入库dto
+     * @throws SerException
+     */
+    Long count(MaterialInStockDTO dto) throws SerException;
 
     /**
      * 分页查询物资入库
