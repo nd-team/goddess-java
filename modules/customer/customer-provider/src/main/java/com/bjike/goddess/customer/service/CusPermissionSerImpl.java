@@ -41,6 +41,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private PositionDetailUserAPI positionDetailUserAPI;
 
     @Override
+    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        if(StringUtils.isBlank(cusPermissionDTO.getDescription())){
+            cusPermissionDTO.getConditions().add(Restrict.like("description",cusPermissionDTO.getDescription()));
+        }
+        if(StringUtils.isBlank(cusPermissionDTO.getOperator())) {
+            cusPermissionDTO.getConditions().add(Restrict.like("operator", cusPermissionDTO.getOperator()));
+        }
+        Long count = super.count( cusPermissionDTO );
+        return count;
+    }
+
+    @Override
     public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
         if(StringUtils.isBlank(cusPermissionDTO.getDescription())){
             cusPermissionDTO.getConditions().add(Restrict.like("description",cusPermissionDTO.getDescription()));
@@ -59,6 +71,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         return BeanTransform.copyProperties(cusPermission,CusPermissionBO.class);
+    }
+
+    @Override
+    public List<String> listOperateById(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        CusPermission cusPermission = super.findById(id);
+        //提供接口
+//        positionDetailUserAPI
+
+        return null;
     }
 
     @Override
@@ -96,6 +120,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<CusPermission> addList = new ArrayList<>();
         for(int i=0 ;i<list.size();i++){
             CusPermission cPermission = list.get(i);
+            cPermission.setCreateTime(LocalDateTime.now());
+            cPermission.setModifyTime(LocalDateTime.now());
             if( addIdFlag.contains(cPermission.getIdFlag())){
                 addList.add( cPermission );
             }
@@ -130,7 +156,8 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public CusPermissionBO getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag) throws SerException {
+        Boolean flag = false;
         //但前用户
         UserBO userBO = userAPI.currentUser();
         String userId = userBO.getId();
@@ -149,9 +176,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         //checkAsUserPosition
         //checkAsUserArrangement
         //checkAsUserModule
-        positionDetailUserAPI.checkAsUserPosition(userId,operateIds);
-//        positionDetailUserAPI.checkAsUserArrangement(userId,operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId,operateIds);
+        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId,operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
+        if( positionFlag || arrangementFlag || moduleFlag ){
+            flag = true;
+        }else{
+            flag = false;
+        }
 
-        return BeanTransform.copyProperties(cusPermission,CusPermissionBO.class);
+        return flag;
     }
 }

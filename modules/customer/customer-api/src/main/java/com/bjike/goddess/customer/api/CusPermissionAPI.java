@@ -18,44 +18,75 @@ import java.util.List;
  */
 public interface CusPermissionAPI {
 
+
+    /**
+     * 客户权限列表总条数
+     */
+    default Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 客户权限列表
+     *
      * @param cusPermissionDTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException{return null;}
+    default List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 一个客户权限
+     *
      * @param id 客户权限id
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO getOneById(String id) throws SerException{return null;}
+    default CusPermissionBO getOneById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 客户权限操作者
+     *
+     * @throws SerException
+     */
+    default List<String>  listOperateById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 添加客户权限
+     *
      * @param cusPermissionTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException{return null;}
+    default CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑客户权限
+     *
      * @param cusPermissionTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException{return null;}
+    default CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据idFlag查询可以某种操作的客户权限
+     *
      * @param idFlag 客户权限idFlag
-     * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO getCusPermission(String idFlag) throws SerException{return null;}
+    default Boolean getCusPermission(String idFlag) throws SerException {
+        return null;
+    }
 }

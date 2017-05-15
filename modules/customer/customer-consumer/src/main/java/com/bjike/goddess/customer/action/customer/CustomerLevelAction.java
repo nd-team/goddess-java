@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.api.CustomerLevelAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
@@ -33,6 +34,8 @@ public class CustomerLevelAction {
 
     @Autowired
     private CustomerLevelAPI customerLevelAPI;
+    @Autowired
+    private CusPermissionAPI cusPermissionAPI;
 
     /**
      *  客户等级列表总条数
@@ -62,9 +65,14 @@ public class CustomerLevelAction {
     @GetMapping("v1/listCustomerLevel")
     public Result findListCustomerLevel(CustomerLevelDTO customerLevelDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<CustomerLevelVO> customerLevelVOList = BeanTransform.copyProperties(
-                    customerLevelAPI.listCustomerLevel(customerLevelDTO), CustomerLevelVO.class, true);
-            return ActResult.initialize(customerLevelVOList);
+            Boolean permissionLevel = cusPermissionAPI.getCusPermission("1");
+            if( permissionLevel ){
+                List<CustomerLevelVO> customerLevelVOList = BeanTransform.copyProperties(
+                        customerLevelAPI.listCustomerLevel(customerLevelDTO), CustomerLevelVO.class);
+                return ActResult.initialize(customerLevelVOList);
+            }else{
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,6 +1,8 @@
 package com.bjike.goddess.customer.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.customer.entity.CusPermission;
+import com.bjike.goddess.customer.enums.CusPermissionType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -38,7 +40,7 @@ public class CusPermissionTO extends BaseTO {
     /**
      * 类型
      */
-    private String type;
+    private CusPermissionType type;
 
     /**
      * 创建时间
@@ -83,11 +85,11 @@ public class CusPermissionTO extends BaseTO {
         this.operator = operator;
     }
 
-    public String getType() {
+    public CusPermissionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CusPermissionType type) {
         this.type = type;
     }
 

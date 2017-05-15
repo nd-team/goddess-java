@@ -147,19 +147,25 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
         }
 
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
-        String[] field = new String[]{"area", "year", "targetFee", "actualFee", "rate", "balance"};
+        String[] field = new String[]{"area",  "targetFee", "actualFee", "rate", "balance"};
         String sql = "";
         List<ManageFeeBO> list = new ArrayList<>();
+        int yearBegin  = start.getYear();
+        int yearEnd  = end.getYear();
         if (StringUtils.isBlank(manageFeeDTO.getArea())) {
-            sql = "select area , 1 as year , sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
+            sql = "select area , sum(targetFee) as targetFee , sum(actualFee) as actualFee ," +
                     "  (sum(actualFee)/sum(targetFee)) as rate , (sum(actualFee)-sum(targetFee)) as balance from managefee_managefee where 1= 1";
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql = sql + " and year between '" + start.getYear() + "' and '" + end.getYear() + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
+                sql = sql + " and year between '" + yearBegin + "' and '" +yearEnd + "' and month between '" + start.getMonthValue() + "' and '" + end.getMonthValue() + "' ";
             }
             sql = sql + " group by area  order by area desc ";
+            list = super.findBySql(sql, ManageFeeBO.class, field);
+            list.stream().forEach(str->{
+                str.setYear( yearBegin+"-"+yearEnd);
+            });
         } else {
             //如果有选地区，汇总表头：(地区/年份/月份/项目组/项目名称/类别/目标管理费/实际管理费/比例/差额)
-            field = new String[]{"area", "year", "month", "area", "project", "type", "targetFee", "actualFee", "rate", "balance"};
+            field = new String[]{"area", "year", "month", "projectGroup", "project", "type", "targetFee", "actualFee", "rate", "balance"};
             sql = "select area , year , month ,projectGroup , project,type, targetFee , actualFee ," +
                     "  (actualFee/targetFee) as rate , (actualFee-targetFee) as balance from managefee_managefee where 1=1 ";
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
@@ -334,7 +340,7 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
     @Override
     public List<String> areaList() throws SerException {
         String[] field = new String[]{"area"};
-        String sql = "select area , 1 from managefee_managefee group by area ";
+        String sql = "select area   from managefee_managefee group by area ";
         List<ManageFee> manageFeeList = super.findBySql(sql, ManageFee.class, field);
         List<String> list = manageFeeList.stream().map(ManageFee::getArea).collect(Collectors.toList());
         return list;
@@ -343,7 +349,7 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
     @Override
     public List<String> groupList() throws SerException {
         String[] field = new String[]{"projectGroup"};
-        String sql = "select projectGroup , 1 from managefee_managefee group by projectGroup ";
+        String sql = "select projectGroup  from managefee_managefee group by projectGroup ";
         List<ManageFee> manageFeeList = super.findBySql(sql, ManageFee.class, field);
         List<String> list = manageFeeList.stream().map(ManageFee::getProjectGroup).collect(Collectors.toList());
         return list;
@@ -352,7 +358,7 @@ public class ManageFeeSerImpl extends ServiceImpl<ManageFee, ManageFeeDTO> imple
     @Override
     public List<String> projectList() throws SerException {
         String[] field = new String[]{"project"};
-        String sql = "select project , 1 from managefee_managefee group by project ";
+        String sql = "select project  from managefee_managefee group by project ";
         List<ManageFee> manageFeeList = super.findBySql(sql, ManageFee.class, field);
         List<String> list = manageFeeList.stream().map(ManageFee::getProject).collect(Collectors.toList());
         return list;
