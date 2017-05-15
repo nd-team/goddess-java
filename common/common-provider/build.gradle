@@ -2,7 +2,6 @@ apply from: '../../config.gradle'
 
 dependencies {
 
-    compile group: 'org.hibernate', name: 'hibernate-core', version: "$hibernate_core_version"
     compile group: 'javax.el', name: 'javax.el-api', version: "$javax_el_api_version"
     compile group: 'org.glassfish.web', name: 'javax.el', version: "$javax_el_version"
     compile group: 'com.alibaba', name: 'fastjson', version: "$fastjson_version"
@@ -24,15 +23,21 @@ dependencies {
         exclude group: 'com.fasterxml', module: 'classmate'
     }
     compile(group: 'org.mengyun', name: 'tcc-transaction-spring', version: "$tcc_version") {
-        exclude group: 'org.springframework', module: 'spring-context'
-        exclude group: 'org.springframework', module: 'spring-aop'
         exclude group: 'org.springframework', module: 'spring-beans'
         exclude group: 'org.springframework', module: 'spring-core'
+        exclude group: 'org.springframework', module: 'spring-context'
+        exclude group: 'org.springframework', module: 'spring-aop'
+        exclude group: 'org.springframework', module: 'spring-expression'
+        exclude group: 'org.springframework', module: 'spring-web'
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.apache.zookeeper', module: 'zookeeper'
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'redis.clients', module: 'jedis'
 
+    }
+    compile(group: 'com.101tec', name: 'zkclient', version: "$zkclient_version") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'log4j', module: 'log4j'
     }
     testCompile group: 'org.springframework', name: 'spring-test', version: "$spring_version"
     compile(group: 'com.101tec', name: 'zkclient', version: "$zkclient_version") {
