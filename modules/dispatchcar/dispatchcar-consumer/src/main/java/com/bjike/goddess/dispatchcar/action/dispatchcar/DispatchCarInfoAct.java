@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("dispatchcarinfo")
-public class DispatchCarInfoAct extends BaseFileAction{
+public class DispatchCarInfoAct extends BaseFileAction {
 
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
@@ -84,7 +84,7 @@ public class DispatchCarInfoAct extends BaseFileAction{
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO, DispatchCarInfoTO.class);
             DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.addModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -102,7 +102,7 @@ public class DispatchCarInfoAct extends BaseFileAction{
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO,DispatchCarInfoTO.class);
+            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO, DispatchCarInfoTO.class);
             DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -155,7 +155,7 @@ public class DispatchCarInfoAct extends BaseFileAction{
             String path = "dispatchCar";
             fileAPI.upload(this.getInputStreams(request, path.toString()));
             return new ActResult("上传成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
 

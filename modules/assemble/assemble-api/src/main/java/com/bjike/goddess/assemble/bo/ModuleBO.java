@@ -23,11 +23,11 @@ public class ModuleBO extends BaseBO {
     /**
      * 选中状态
      */
-    private CheckType checkType ;
+    private CheckType checkType = CheckType.NONE;
     /**
      * 包含的模块
      */
-    private List<ModuleBO> relations;
+    private List<ModuleBO> contains = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -45,11 +45,11 @@ public class ModuleBO extends BaseBO {
         this.checkType = checkType;
     }
 
-    public List<ModuleBO> getRelations() {
-        return relations;
+    public List<ModuleBO> getContains() {
+        return contains;
     }
 
-    public void setRelations(List<ModuleBO> relations) {
-        this.relations = relations;
+    public void setContains(List<ModuleBO> contains) {
+        this.contains = contains;
     }
 }

@@ -64,7 +64,7 @@ public class CheckIncomeAction {
     @GetMapping("v1/getIndexById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            CheckIncomeVO checkIncomeVOList = BeanTransform.copyProperties(
+            List<CheckIncomeVO> checkIncomeVOList = BeanTransform.copyProperties(
                     checkIncomeAPI.getOneById(id), CheckIncomeVO.class);
             return ActResult.initialize(checkIncomeVOList);
         } catch (SerException e) {

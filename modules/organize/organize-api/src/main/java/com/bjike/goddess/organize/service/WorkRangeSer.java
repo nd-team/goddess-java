@@ -2,7 +2,9 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentWorkRangeBO;
+import com.bjike.goddess.organize.bo.WorkRangeBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.entity.WorkRange;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
@@ -136,58 +138,6 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
      * @throws SerException
      */
     default List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
-        return null;
-    }
-
-    /**
-     * 查询方向
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<DirectionBO> findDirection() throws SerException {
-        return null;
-    }
-
-    /**
-     * 查询科目
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<ProjectBO> findProject() throws SerException {
-        return null;
-    }
-
-    /**
-     * 查询分类
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<ClassifyBO> findClassify() throws SerException {
-        return null;
-    }
-
-    /**
-     * 关闭
-     *
-     * @param id 部门工作范围数据id
-     * @return
-     * @throws SerException
-     */
-    default WorkRangeBO close(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 开启
-     *
-     * @param id 部门工作范围数据id
-     * @return
-     * @throws SerException
-     */
-    default WorkRangeBO open(String id) throws SerException {
         return null;
     }
 }

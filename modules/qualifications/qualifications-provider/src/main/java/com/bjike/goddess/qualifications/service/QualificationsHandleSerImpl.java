@@ -125,24 +125,24 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     public QualificationsHandleBO saveForeign(QualificationsHandleForeignTO to) throws SerException {
         QualificationsHandle entity = super.findById(to.getId());
         entity.setCompanySet(new HashSet<>(0));
-        if (null != to.getCompanyIds())
-            for (String id : to.getCompanyIds())
+        if (null != to.getCompany_ids())
+            for (String id : to.getCompany_ids())
                 entity.getCompanySet().add(companyInfoSer.findById(id));
         entity.setFacilitySet(new HashSet<>(0));
-        if (null != to.getFacilityIds())
-            for (String id : to.getFacilityIds())
+        if (null != to.getFacility_ids())
+            for (String id : to.getFacility_ids())
                 entity.getFacilitySet().add(facilityInformationSer.findById(id));
         entity.setFinanceSet(new HashSet<>(0));
-        if (null != to.getFinanceIds())
-            for (String id : to.getFinanceIds())
+        if (null != to.getFinance_ids())
+            for (String id : to.getFinance_ids())
                 entity.getFinanceSet().add(financeInfoSer.findById(id));
         entity.setMaterialSet(new HashSet<>(0));
-        if (null != to.getMaterialIds())
-            for (String id : to.getMaterialIds())
+        if (null != to.getMaterial_ids())
+            for (String id : to.getMaterial_ids())
                 entity.getMaterialSet().add(auditMaterialSer.findById(id));
         entity.setPersonnelSet(new HashSet<>(0));
-        if (null != to.getPersonnelIds())
-            for (String id : to.getPersonnelIds())
+        if (null != to.getPersonnel_ids())
+            for (String id : to.getPersonnel_ids())
                 entity.getPersonnelSet().add(personnelInformationSer.findById(id));
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

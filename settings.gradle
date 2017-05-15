@@ -27,7 +27,7 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
-
+//#quartz 组装模块-liguiqin
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
@@ -325,11 +325,6 @@ include ':modules:outcarfare:outcarfare-api'
 include ':modules:outcarfare:outcarfare-consumer'
 include ':modules:outcarfare:outcarfare-provider'
 
-//#quartz 任务调度模块-liguiqin
-include ':modules:function:function-api'
-include ':modules:function:function-consumer'
-include ':modules:function:function-provider'
-
 //#projectmarketfee 项目前期的市场活动费
 include ':modules:projectmarketfee:projectmarketfee-api'
 include ':modules:projectmarketfee:projectmarketfee-consumer'
@@ -338,38 +333,3 @@ include ':modules:projectmarketfee:projectmarketfee-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
-
-//#archive 员工档案 dengjunren
-include ':modules:archive:archive-api'
-include ':modules:archive:archive-consumer'
-include ':modules:archive:archive-provider'
-
-//#attainment 人员综合素养调研 dengjunren
-include ':modules:attainment:attainment-api'
-include ':modules:attainment:attainment-consumer'
-include ':modules:attainment:attainment-provider'
-
-//#bonus 项目奖金包 dengjunren
-include ':modules:bonus:bonus-api'
-include ':modules:bonus:bonus-consumer'
-include ':modules:bonus:bonus-provider'
-
-//#employee-contract 员工合同管理 dengjunren
-include ':modules:employee-contract:employee-contract-api'
-include ':modules:employee-contract:employee-contract-consumer'
-include ':modules:employee-contract:employee-contract-provider'
-
-//#projectcost 项目上费用 dengjunren
-include ':modules:projectcost:projectcost-api'
-include ':modules:projectcost:projectcost-consumer'
-include ':modules:projectcost:projectcost-provider'
-
-//#qualifications 公司资质管理 dengjunren
-include ':modules:qualifications:qualifications-api'
-include ':modules:qualifications:qualifications-consumer'
-include ':modules:qualifications:qualifications-provider'
-
-//#supplier 供应商管理 dengjunren
-include ':modules:supplier:supplier-api'
-include ':modules:supplier:supplier-consumer'
-include ':modules:supplier:supplier-provider'

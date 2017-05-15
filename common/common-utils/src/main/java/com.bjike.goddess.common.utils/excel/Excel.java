@@ -6,8 +6,6 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import java.time.LocalDate;
 
 /**
- * Excel信息实体
- *
  * @Author: [liguiqin]
  * @Date: [2017-05-09 16:21]
  * @Description: [ ]

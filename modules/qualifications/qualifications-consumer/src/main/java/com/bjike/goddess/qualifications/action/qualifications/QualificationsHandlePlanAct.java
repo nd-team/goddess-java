@@ -39,7 +39,7 @@ public class QualificationsHandlePlanAct {
      * @return class QualificationsHandlePlanVO
      * @version v1
      */
-    @PostMapping("v1/save")
+    @PostMapping("V1/save")
     public Result save(@Validated(ADD.class) QualificationsHandlePlanTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandlePlanAPI.save(to), QualificationsHandlePlanVO.class));

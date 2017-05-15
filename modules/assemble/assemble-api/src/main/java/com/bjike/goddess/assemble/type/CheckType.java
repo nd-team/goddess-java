@@ -15,19 +15,15 @@ public enum  CheckType {
     /**
      * 未选中
      */
-    NONE(1),
-    /**
-     * 删除
-     */
-    DELETE(2);
+    NONE(1);
 
-    private int code;
+    private int value;
 
-    CheckType(int code){
-        this.code = code;
+    CheckType(int value){
+        this.value = value;
     }
 
-    public int getCode(){
-        return this.code;
+    public int getValue(){
+        return this.value;
     }
 }

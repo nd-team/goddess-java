@@ -25,7 +25,7 @@ public class Commonality extends BaseEntity {
      * 项目组/部门ID
      */
     @Column(name = "department_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目组/部门ID'", unique = true)
-    private String departmentId;
+    private String department_id;
 
     /**
      * 邮箱地址
@@ -40,12 +40,12 @@ public class Commonality extends BaseEntity {
     private Status status;
 
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getDepartment_id() {
+        return department_id;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment_id(String department_id) {
+        this.department_id = department_id;
     }
 
     public String getEmail() {

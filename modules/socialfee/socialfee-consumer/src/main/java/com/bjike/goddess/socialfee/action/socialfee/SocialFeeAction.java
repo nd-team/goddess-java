@@ -237,15 +237,15 @@ public class SocialFeeAction {
 
     /**
      * 生成记账凭证
-     * @param voucherDataTO 列表id数组
+     * @param ids 列表id数组
      * @return class VoucherDataVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/vGenerate")
-    public Result vGenerate(@Validated(VoucherDataTO.TestGenerate.class) VoucherDataTO voucherDataTO) throws ActException {
+    public Result vGenerate(String[] ids) throws ActException {
         try {
-            String[] ids = voucherDataTO.getIds();
+
             VoucherDataBO voucherDataBO = socialFeeAPI.vGenerate(ids);
             return ActResult.initialize(BeanTransform.copyProperties(voucherDataBO, VoucherDataVO.class));
         } catch (SerException e) {
@@ -261,7 +261,7 @@ public class SocialFeeAction {
      * @version v1
      */
     @PostMapping("v1/voucher")
-    public Result voucher(@Validated(VoucherDataTO.TestVoucher.class) VoucherDataTO voucherDataTO) throws ActException {
+    public Result voucher(@Validated(SocialFeeTO.TestVoucher.class) VoucherDataTO voucherDataTO) throws ActException {
         try {
 
             VoucherDataBO voucherDataBO = socialFeeAPI.voucher(voucherDataTO);

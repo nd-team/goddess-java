@@ -17,7 +17,7 @@ public class CommonalityBO extends BaseBO {
 /**
 * 项目组/部门ID
 */
- private String  departmentId; 
+ private String  department_id; 
 
 /**
 * 邮箱地址
@@ -31,11 +31,11 @@ public class CommonalityBO extends BaseBO {
 
 
 
- public String getDepartmentId () { 
- return departmentId;
+ public String getDepartment_id () { 
+ return department_id;
  } 
- public void setDepartmentId (String departmentId ) { 
- this.departmentId = departmentId ; 
+ public void setDepartment_id (String department_id ) { 
+ this.department_id = department_id ; 
  } 
  public String getEmail () { 
  return email;

@@ -16,8 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 设备信息
  *
@@ -42,9 +40,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) FacilityInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) FacilityInformationTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.save(to), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.save(to), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -58,9 +56,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) FacilityInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) FacilityInformationTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.update(to), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.update(to), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -74,9 +72,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.delete(id), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.delete(id), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +87,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @GetMapping("v1/all")
-    public Result all(HttpServletRequest request) throws ActException {
+    public Result all() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.all(), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.all(), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -106,9 +104,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(FacilityInformationDTO dto, HttpServletRequest request) throws ActException {
+    public Result maps(FacilityInformationDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.maps(dto), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.maps(dto), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -136,9 +134,9 @@ public class FacilityInformationAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.getById(id), FacilityInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(facilityInformationAPI.getById(id), FacilityInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

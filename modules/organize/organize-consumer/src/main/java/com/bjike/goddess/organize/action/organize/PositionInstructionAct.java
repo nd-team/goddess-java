@@ -41,8 +41,8 @@ public class PositionInstructionAct {
      * @return class PositionInstructionVO
      * @version v1
      */
-    @GetMapping("v1/findByPosition/{id}")
-    public Result findByPosition(@PathVariable String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findByPosition")
+    public Result findByPosition(String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionInstructionAPI.findByPosition(id), PositionInstructionVO.class, request));
         } catch (SerException e) {

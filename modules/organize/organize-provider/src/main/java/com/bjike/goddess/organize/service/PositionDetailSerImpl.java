@@ -42,8 +42,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     private ArrangementSer arrangementSer;
     @Autowired
     private ModuleTypeSer moduleTypeSer;
-    @Autowired
-    private PositionDetailUserSer positionDetailUserSer;
 
     private PositionDetailBO transformationToBO(PositionDetail entity) throws SerException {
         PositionDetailBO bo = BeanTransform.copyProperties(entity, PositionDetailBO.class);
@@ -59,7 +57,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setArrangementId(arrangement.getId());
         bo.setModuleId(moduleType.getId());
         bo.setModuleName(moduleType.getModule());
-        bo.setCurrent(positionDetailUserSer.findByPosition(entity.getId()).size() + "人");
         bo.setShowNumber(String.format("%s-%s-%s", department.getShowNumber(), arrangement.getSerialNumber(), entity.getSerialNumber()));
         return bo;
     }
@@ -114,7 +111,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             throw new SerException("该岗位不存在");
         List<ArrangementBO> arrangementList = arrangementSer.findChild(entity.getArrangement().getId());
         PositionDetailDTO dto = new PositionDetailDTO();
-        dto.getConditions().add(Restrict.eq("department.id", entity.getDepartment().getId()));
         try {
             for (ArrangementBO arrangement : arrangementList)
                 dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getId()));
@@ -134,7 +130,6 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             return new ArrayList<>(0);
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("arrangement.id", arrangement.getParent().getId()));
-        dto.getConditions().add(Restrict.eq("department.id", entity.getDepartment().getId()));
         return this.transformationToBOList(super.findByCis(dto));
     }
 
@@ -150,7 +145,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
      * @throws SerException
      */
     private void checkUnique(PositionDetailTO to) throws SerException {
-        String[] fields = {"id", "position"};
+        String[] fields = {"id","position"};
         StringBuilder sql = new StringBuilder(" SELECT ");
         sql.append(" id,position ").append(" FROM organize_position_detail ");
         sql.append(" WHERE serialNumber='").append(to.getSerialNumber()).append("' OR position='").append(to.getPosition()).append("'");

@@ -15,8 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 人员信息资料
  *
@@ -41,9 +39,9 @@ public class PersonnelInformationAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) PersonnelInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) PersonnelInformationTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.save(to), PersonnelInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.save(to), PersonnelInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +55,9 @@ public class PersonnelInformationAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) PersonnelInformationTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) PersonnelInformationTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.update(to), PersonnelInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.update(to), PersonnelInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +71,9 @@ public class PersonnelInformationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.delete(id), PersonnelInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.delete(id), PersonnelInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,9 +86,9 @@ public class PersonnelInformationAct {
      * @version v1
      */
     @GetMapping("v1/all")
-    public Result all(HttpServletRequest request) throws ActException {
+    public Result all() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.all(), PersonnelInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.all(), PersonnelInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,9 +102,9 @@ public class PersonnelInformationAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.getById(id), PersonnelInformationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(personnelInformationAPI.getById(id), PersonnelInformationVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

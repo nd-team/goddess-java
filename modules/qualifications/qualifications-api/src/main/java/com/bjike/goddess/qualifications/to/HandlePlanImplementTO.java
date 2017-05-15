@@ -22,7 +22,7 @@ public class HandlePlanImplementTO extends BaseTO {
      * 办理计划阶段
      */
     @NotBlank(message = "办理计划阶段不能为空", groups = {ADD.class, EDIT.class})
-    private String stageId;
+    private String stage_id;
 
     /**
      * 实施内容
@@ -55,12 +55,12 @@ public class HandlePlanImplementTO extends BaseTO {
     private Integer setbacks;
 
 
-    public String getStageId() {
-        return stageId;
+    public String getStage_id() {
+        return stage_id;
     }
 
-    public void setStageId(String stageId) {
-        this.stageId = stageId;
+    public void setStage_id(String stage_id) {
+        this.stage_id = stage_id;
     }
 
     public String getContent() {

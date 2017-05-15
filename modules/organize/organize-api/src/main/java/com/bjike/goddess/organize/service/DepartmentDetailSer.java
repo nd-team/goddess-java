@@ -2,8 +2,8 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.HierarchyBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
@@ -139,25 +139,6 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      * @throws SerException
      */
     default DepartmentDetailBO getById(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 查询所有地区
-     * @return
-     * @throws SerException
-     */
-    default List<AreaBO> findArea() throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据地区查询
-     * @param area
-     * @return
-     * @throws SerException
-     */
-    default List<DepartmentDetailBO> findByArea(String area) throws SerException {
         return null;
     }
 

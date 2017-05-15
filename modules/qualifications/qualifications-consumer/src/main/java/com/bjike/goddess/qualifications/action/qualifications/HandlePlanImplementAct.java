@@ -15,8 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 资质办理计划阶段实施工作记录
  *
@@ -57,9 +55,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) HandlePlanImplementTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) HandlePlanImplementTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.update(to), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.update(to), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +71,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.delete(id), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.delete(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +87,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @GetMapping("v1/findByStage")
-    public Result findByStageIds(String[] stageIds, HttpServletRequest request) throws ActException {
+    public Result findByStageIds(String[] stageIds) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStageIds(stageIds), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStageIds(stageIds), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +103,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @GetMapping("v1/findByStage/{id}")
-    public Result findByStage(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByStage(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStage(id), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByStage(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +119,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @GetMapping("v1/findByHandle/{id}")
-    public Result findByHandle(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByHandle(id), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.findByHandle(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,9 +135,9 @@ public class HandlePlanImplementAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.getById(id), HandlePlanImplementVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanImplementAPI.getById(id), HandlePlanImplementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

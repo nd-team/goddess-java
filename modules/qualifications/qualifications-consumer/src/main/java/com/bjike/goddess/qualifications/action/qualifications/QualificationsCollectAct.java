@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.QualificationsCollectAPI;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 通信系统集成资质进度汇总
+ * 资质办理进度汇总
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-20 10:39 ]
- * @Description: [ 通信系统集成资质进度汇总 ]
+ * @Description: [ 资质办理进度汇总 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -45,14 +45,14 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 保存
      *
-     * @param to 通信系统集成资质进度汇总传输对象
+     * @param to 资质办理进度汇总传输对象
      * @return class QualificationsCollectVO
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) QualificationsCollectTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) QualificationsCollectTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.save(to), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.save(to), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -61,14 +61,14 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 修改
      *
-     * @param to 通信系统集成资质进度汇总传输对象
+     * @param to 资质办理进度汇总传输对象
      * @return class QualificationsCollectVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) QualificationsCollectTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) QualificationsCollectTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.update(to), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.update(to), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -77,14 +77,14 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 删除
      *
-     * @param id 通信系统集成资质进度汇总数据id
+     * @param id 资质办理进度汇总数据id
      * @return class QualificationsCollectVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.delete(id), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.delete(id), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -93,14 +93,14 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 根据条件查询
      *
-     * @param to 通信系统集成资质进度汇总查询条件传输对象
+     * @param to 资质办理进度汇总查询条件传输对象
      * @return class QualificationsCollectVO
      * @version v1
      */
     @GetMapping("v1/findByFilter")
-    public Result findByFilter(QualificationsCollectFilterTO to, HttpServletRequest request) throws ActException {
+    public Result findByFilter(QualificationsCollectFilterTO to) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.findByFilter(to), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.findByFilter(to), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -109,14 +109,14 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 列表
      *
-     * @param dto 通信系统集成资质进度汇总数据传输对象
+     * @param dto 资质办理进度汇总数据传输对象
      * @return class QualificationsCollectVO
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(QualificationsCollectDTO dto, HttpServletRequest request) throws ActException {
+    public Result maps(QualificationsCollectDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.maps(dto), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.maps(dto), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -144,9 +144,9 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.getById(id), QualificationsCollectVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsCollectAPI.getById(id), QualificationsCollectVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -156,7 +156,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * 上传附件
      *
      * @param request 上传请求
-     * @param id      通信系统集成资质进度汇总数据id
+     * @param id      资质办理进度汇总数据id
      * @version v1
      */
     @PostMapping("v1/uploadEnclosure/{id}")

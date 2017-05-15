@@ -16,65 +16,65 @@ public class QualificationsHandleForeignTO extends BaseTO {
     /**
      * 人员信息资料ids
      */
-    private String[] personnelIds;
+    private String[] personnel_ids;
 
     /**
      * 设备信息资料ids
      */
-    private String[] facilityIds;
+    private String[] facility_ids;
 
     /**
      * 公司基本信息ids
      */
-    private String[] companyIds;
+    private String[] company_ids;
 
     /**
      * 财务资料ids
      */
-    private String[] financeIds;
+    private String[] finance_ids;
 
     /**
      * 审核资料ids
      */
-    private String[] materialIds;
+    private String[] material_ids;
 
-    public String[] getPersonnelIds() {
-        return personnelIds;
+    public String[] getPersonnel_ids() {
+        return personnel_ids;
     }
 
-    public void setPersonnelIds(String[] personnelIds) {
-        this.personnelIds = personnelIds;
+    public void setPersonnel_ids(String[] personnel_ids) {
+        this.personnel_ids = personnel_ids;
     }
 
-    public String[] getFacilityIds() {
-        return facilityIds;
+    public String[] getFacility_ids() {
+        return facility_ids;
     }
 
-    public void setFacilityIds(String[] facilityIds) {
-        this.facilityIds = facilityIds;
+    public void setFacility_ids(String[] facility_ids) {
+        this.facility_ids = facility_ids;
     }
 
-    public String[] getCompanyIds() {
-        return companyIds;
+    public String[] getCompany_ids() {
+        return company_ids;
     }
 
-    public void setCompanyIds(String[] companyIds) {
-        this.companyIds = companyIds;
+    public void setCompany_ids(String[] company_ids) {
+        this.company_ids = company_ids;
     }
 
-    public String[] getFinanceIds() {
-        return financeIds;
+    public String[] getFinance_ids() {
+        return finance_ids;
     }
 
-    public void setFinanceIds(String[] financeIds) {
-        this.financeIds = financeIds;
+    public void setFinance_ids(String[] finance_ids) {
+        this.finance_ids = finance_ids;
     }
 
-    public String[] getMaterialIds() {
-        return materialIds;
+    public String[] getMaterial_ids() {
+        return material_ids;
     }
 
-    public void setMaterialIds(String[] materialIds) {
-        this.materialIds = materialIds;
+    public void setMaterial_ids(String[] material_ids) {
+        this.material_ids = material_ids;
     }
 }

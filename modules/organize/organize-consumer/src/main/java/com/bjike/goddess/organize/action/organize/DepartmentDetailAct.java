@@ -10,7 +10,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
-import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -178,37 +177,5 @@ public class DepartmentDetailAct {
             throw new ActException(e.getMessage());
         }
     }
-
-    /**
-     * 根据地区查询部门项目组
-     *
-     * @param area 地区
-     * @return class DepartmentDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/findByArea")
-    public Result findByArea(String area, HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findByArea(area), DepartmentDetailVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 查询地区
-     *
-     * @return class AreaVO
-     * @version v1
-     */
-    @GetMapping("v1/findArea")
-    public Result findArea(HttpServletRequest request) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
 
 }

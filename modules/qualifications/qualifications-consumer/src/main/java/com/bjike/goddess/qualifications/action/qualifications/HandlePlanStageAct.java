@@ -15,8 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 资质办理计划阶段划分
  *
@@ -41,9 +39,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) HandlePlanStageTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result save(@Validated(ADD.class) HandlePlanStageTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.save(to), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.save(to), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -57,9 +55,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) HandlePlanStageTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result update(@Validated(EDIT.class) HandlePlanStageTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.update(to), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.update(to), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -73,9 +71,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.delete(id), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.delete(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -89,9 +87,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @GetMapping("v1/findByPlan")
-    public Result findByPlanIds(String[] ids, HttpServletRequest request) throws ActException {
+    public Result findByPlanIds(String[] ids) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlanIds(ids), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlanIds(ids), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -105,9 +103,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @GetMapping("v1/findByPlan/{id}")
-    public Result findByPlan(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByPlan(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlan(id), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByPlan(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +119,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @GetMapping("v1/findByHandle/{id}")
-    public Result findByHandle(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findByHandle(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByHandle(id), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.findByHandle(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,9 +135,9 @@ public class HandlePlanStageAct {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.getById(id), HandlePlanStageVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(handlePlanStageAPI.getById(id), HandlePlanStageVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

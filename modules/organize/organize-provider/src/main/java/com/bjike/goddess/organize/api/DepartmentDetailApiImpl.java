@@ -1,7 +1,6 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.service.DepartmentDetailSer;
@@ -86,15 +85,5 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public Long getTotal() throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         return departmentDetailSer.count(dto);
-    }
-
-    @Override
-    public List<AreaBO> findArea() throws SerException {
-        return departmentDetailSer.findArea();
-    }
-
-    @Override
-    public List<DepartmentDetailBO> findByArea(String area) throws SerException {
-        return departmentDetailSer.findByArea(area);
     }
 }

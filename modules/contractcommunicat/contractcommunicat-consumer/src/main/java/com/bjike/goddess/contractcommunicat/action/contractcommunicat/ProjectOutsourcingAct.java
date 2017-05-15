@@ -5,14 +5,17 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI;
-import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectContractVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingCollectVO;
@@ -136,8 +139,8 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
         try {
-            String path = "/contract";
-            List<InputStream> inputStreams = this.getInputStreams(request, path);
+            String path = "/outsource";
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult();
         } catch (SerException e) {
@@ -151,20 +154,34 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/leadExcel")
-    public Result leadExcel(HttpServletRequest request) {
-        // TODO: 17-3-20
-        return new ActResult("success");
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<ProjectOutsourcingExcel> toList = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
+            List<ProjectOutsourcingTO> tos = BeanTransform.copyProperties(toList,ProjectOutsourcingTO.class);
+            projectOutsourcingAPI.leadExcel(tos);
+            return new ActResult("上传成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
      * 导出Excel
      *
+     * @param to 导出条件
      * @version v1
      */
     @PostMapping("v1/exportExcel")
-    public Result exportExcel() {
-        // TODO: 17-3-20
-        return new ActResult("success");
+    public Result exportExcel(ExportExcelTO to) throws ActException {
+        try {
+            projectOutsourcingAPI.exportExcel(to);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**

@@ -2,7 +2,9 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentWorkRangeBO;
+import com.bjike.goddess.organize.bo.WorkRangeBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.service.WorkRangeSer;
 import com.bjike.goddess.organize.to.DepartmentWorkRangeTO;
@@ -91,30 +93,5 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     @Override
     public WorkRangeBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(workRangeSer.findById(id), WorkRangeBO.class);
-    }
-
-    @Override
-    public List<DirectionBO> findDirection() throws SerException {
-        return workRangeSer.findDirection();
-    }
-
-    @Override
-    public List<ProjectBO> findProject() throws SerException {
-        return workRangeSer.findProject();
-    }
-
-    @Override
-    public List<ClassifyBO> findClassify() throws SerException {
-        return workRangeSer.findClassify();
-    }
-
-    @Override
-    public WorkRangeBO close(String id) throws SerException {
-        return workRangeSer.close(id);
-    }
-
-    @Override
-    public WorkRangeBO open(String id) throws SerException {
-        return workRangeSer.open(id);
     }
 }

@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentWorkRangeBO;
+import com.bjike.goddess.organize.bo.WorkRangeBO;
 import com.bjike.goddess.organize.dto.WorkRangeDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.WorkRange;
@@ -163,79 +165,5 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     public List<WorkRangeBO> maps(WorkRangeDTO dto) throws SerException {
         dto.getSorts().add("modifyTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), WorkRangeBO.class);
-    }
-
-    @Override
-    public List<DirectionBO> findDirection() throws SerException {
-        WorkRangeDTO dto = new WorkRangeDTO();
-        dto.getSorts().add("direction=asc");
-        List<WorkRange> list = super.findByCis(dto);
-        List<DirectionBO> bos = new ArrayList<>(0);
-        String direction = "";
-        if (null != list)
-            for (WorkRange entity : list)
-                if (!entity.getDirection().equals(direction)) {
-                    direction = entity.getDirection();
-                    DirectionBO bo = new DirectionBO();
-                    bo.setDirection(direction);
-                    bos.add(bo);
-                }
-        return bos;
-    }
-
-    @Override
-    public List<ProjectBO> findProject() throws SerException {
-        WorkRangeDTO dto = new WorkRangeDTO();
-        dto.getSorts().add("project=asc");
-        List<WorkRange> list = super.findByCis(dto);
-        List<ProjectBO> bos = new ArrayList<>(0);
-        String project = "";
-        if (null != list)
-            for (WorkRange entity : list)
-                if (!entity.getProject().equals(project)) {
-                    project = entity.getProject();
-                    ProjectBO bo = new ProjectBO();
-                    bo.setProject(project);
-                    bos.add(bo);
-                }
-        return bos;
-    }
-
-    @Override
-    public List<ClassifyBO> findClassify() throws SerException {
-        WorkRangeDTO dto = new WorkRangeDTO();
-        dto.getSorts().add("classify=asc");
-        List<WorkRange> list = super.findByCis(dto);
-        List<ClassifyBO> bos = new ArrayList<>(0);
-        String classify = "";
-        if (null != list)
-            for (WorkRange entity : list)
-                if (!entity.getClassify().equals(classify)) {
-                    classify = entity.getClassify();
-                    ClassifyBO bo = new ClassifyBO();
-                    bo.setClassify(classify);
-                    bos.add(bo);
-                }
-        return bos;
-    }
-
-    @Override
-    public WorkRangeBO close(String id) throws SerException {
-        WorkRange entity = super.findById(id);
-        if (null == entity)
-            throw new SerException("数据对象不存在");
-        entity.setStatus(Status.CONGEAL);
-        super.save(entity);
-        return BeanTransform.copyProperties(entity, WorkRangeBO.class);
-    }
-
-    @Override
-    public WorkRangeBO open(String id) throws SerException {
-        WorkRange entity = super.findById(id);
-        if (null == entity)
-            throw new SerException("数据对象不存在");
-        entity.setStatus(Status.THAW);
-        super.save(entity);
-        return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }
 }

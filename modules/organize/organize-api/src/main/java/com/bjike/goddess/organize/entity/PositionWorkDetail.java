@@ -57,7 +57,7 @@ public class PositionWorkDetail extends BaseEntity {
     /**
      * 是否有模板
      */
-    @Column(name ="is_hasMould", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有模板'", nullable = false)
+    @Column(name ="is_hasMould", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有模板'", nullable = false, insertable = false)
     private Boolean hasMould;
 
     /**
@@ -88,7 +88,7 @@ public class PositionWorkDetail extends BaseEntity {
         return instruction;
     }
 
-    public void setInstruction(PositionInstruction instruction) {
+    public void setInstructions(PositionInstruction instruction) {
         this.instruction = instruction;
     }
 
@@ -130,14 +130,6 @@ public class PositionWorkDetail extends BaseEntity {
 
     public void setContain(String contain) {
         this.contain = contain;
-    }
-
-    public Boolean getHasMould() {
-        return hasMould;
-    }
-
-    public void setHasMould(Boolean hasMould) {
-        this.hasMould = hasMould;
     }
 
     public Boolean isHasMould() {

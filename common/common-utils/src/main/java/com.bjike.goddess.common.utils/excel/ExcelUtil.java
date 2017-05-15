@@ -63,18 +63,17 @@ public class ExcelUtil {
             wb = new XSSFWorkbook(is); // 创建一个工作execl文档
             XSSFSheet sheet = wb.getSheetAt(0);
             validateHeader(headers, sheet.getRow(excel.getHeaderStartRow()));
-            int rowSize = sheet.getLastRowNum(); //总行数
-            for (int i = 0; i < rowSize; i++) {
+            int rowTotal = sheet.getLastRowNum(); //总行数
+            for (int i = 0; i < rowTotal; i++) {
                 int rowIndex = excel.getContentStartRow() + i;
                 XSSFRow row = sheet.getRow(rowIndex);
                 if (null != row) {
-                    int cellSize = row.getLastCellNum();//总列数
-                    if (cellSize > 0) {
+                    int cellTotal = row.getLastCellNum();//总列数
+                    if (cellTotal > 0) {
                         Object obj = clazz.newInstance();
-                        for (int j = 0; j < cellSize; j++) {
+                        for (int j = 0; j < cellTotal; j++) {
                             ExcelHeader eh = headers.get(j);
-                            String cellVal = getCellValue(row.getCell(j), eh);
-                            Object val = convertValue(cellVal, eh, fields);
+                            Object val = convertValue(getCellValue(row.getCell(j), eh), eh, fields);
                             if (eh.notNull() && null == val) {
                                 throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
                             } else if (null != val) {
@@ -124,7 +123,8 @@ public class ExcelUtil {
                                 val = field.get(obj);
                                 if (null != val && field.getType().getTypeName().equals(LocalDateTime.class.getTypeName())) { //处理时间
                                     val = DateUtil.dateToString((LocalDateTime) val);
-                                } else if (null != val && field.getType().isEnum()) {
+                                }
+                                if (field.getType().isEnum()) {
                                     val = fieldToEnum(field, val);
                                 }
                                 break;
@@ -198,7 +198,8 @@ public class ExcelUtil {
                 if (field.getAnnotation(ExcelHeader.class).name().equals(name)) {
                     field.setAccessible(true);// 设置属性可访问
                     if (field.getType().isEnum()) {
-                        enumToField(field, obj, val);
+                        enumToField(field,obj,val);
+
                     } else {
                         field.set(obj, val);
                     }
@@ -217,23 +218,26 @@ public class ExcelUtil {
      * excel数据类型转换成java对应类型
      *
      * @param val
-     * @param eh
+     * @param et
      * @param fields
      * @return
      */
-    private static Object convertValue(String val, ExcelHeader eh, List<Field> fields) {
+    private static Object convertValue(String val, ExcelHeader et, List<Field> fields) {
         Object value = null;
         if (StringUtils.isBlank(val)) {
             return value;
         }
         try {
             for (Field f : fields) {
-                if (f.getAnnotation(ExcelHeader.class).name().equals(eh.name())) {
+                if (f.getAnnotation(ExcelHeader.class).name().equals(et.name())) {
+                    if (et.name().equals("性别")) {
+                        return val;
+                    }
                     return DataTypeUtils.convertDataType(val, f.getType().getSimpleName());
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("请检查列【" + eh.name() + "】类型");
+            throw new RuntimeException("请检查列【" + et.name() + "】类型");
         }
         return value;
     }
@@ -300,22 +304,16 @@ public class ExcelUtil {
      */
     private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) {
         int cellSize = excelHeaders.size();
-        int maxSize = row.getLastCellNum();
         for (int i = 0; i < cellSize; i++) {
-            if (i <= maxSize) {
-                XSSFCell cell = row.getCell(i);
-                String title = null;
-                try {
-                    title = cell.getStringCellValue();
-                } catch (Exception e) {
-                    throw new RuntimeException("excel表头数据类型只能为文本类型!");
-                }
+            XSSFCell cell = row.getCell(i);
+            try {
+                String title = cell.getStringCellValue();
                 String sysTitle = excelHeaders.get(i).name();
                 if (!title.equals(sysTitle)) {
-                    throw new RuntimeException("[" + title + "]列与系统设置的列[" + sysTitle + "]不匹配");
+                    throw new RuntimeException(title + "与系统设置的列[" + sysTitle + "]不匹配");
                 }
-            } else {
-                throw new RuntimeException("缺少该列[" + excelHeaders.get(i).name() + "]");
+            } catch (Exception e) {
+                throw new RuntimeException("Title数据类型只能为文本类型!");
             }
         }
     }
@@ -360,19 +358,12 @@ public class ExcelUtil {
         return rowIndex;
     }
 
-    /**
-     * 获取样式
-     *
-     * @param wb
-     * @param color
-     * @return
-     */
     private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         if (color != IndexedColors.WHITE.getIndex()) {
-            style.setFillForegroundColor(color);
+            style.setFillForegroundColor(color); //DARK_YELLOW
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
             style.setBorderLeft(BorderStyle.THIN); // 单元格边框粗细
             style.setBorderRight(BorderStyle.THIN);// 单元格边框粗细
@@ -384,42 +375,37 @@ public class ExcelUtil {
 
     /**
      * 属性转换枚举
-     *
      * @param field
      * @param val
      * @return
      */
-
     private static String fieldToEnum(Field field, Object val) {
-        Field[] enumFields = field.getType().getFields();
-        String value = val.toString();
-        for (Field f : enumFields) {
-            if (value.equals(f.getName())) {
+        Field[] enum_fields = field.getType().getFields();
+        for (Field f : enum_fields) {
+            if (val.toString().equals(f.getName())) {
                 return f.getAnnotation(ExcelValue.class).name();
             }
         }
-        return value;
+        return val.toString();
     }
 
 
     /**
      * 枚举转换属性
-     *
      * @param field
      * @param obj
      * @param val
      */
-    private static void enumToField(Field field, Object obj, Object val) {
-        String value = val.toString();
+    private static  void enumToField(Field field,Object obj,Object val){
         try {
-            Field[] enumFields = field.getType().getFields();
-            for (Field f : enumFields) {
-                if (value.equals(f.getAnnotation(ExcelValue.class).name())) {
+            Field[] enum_fields = field.getType().getFields();
+            for (Field f : enum_fields) {
+                if (val.toString().equals(f.getAnnotation(ExcelValue.class).name())) {
                     field.set(obj, field.getType().getField(f.getName()).get(f.getName()));
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        }catch (Exception e){
+            throw  new RuntimeException(e.getMessage());
         }
 
     }

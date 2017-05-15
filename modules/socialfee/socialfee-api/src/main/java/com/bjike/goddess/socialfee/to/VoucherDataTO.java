@@ -18,68 +18,52 @@ import java.util.List;
  */
 public class VoucherDataTO implements Serializable {
 
-    public interface TestVoucher{}
-    public interface TestGenerate{}
-    /**
-     * id数组
-     */
-    @NotNull(groups = {VoucherDataTO.TestGenerate.class} , message = "id数组不能为空")
-    private String[] ids;
-
     /**
      * 日期
      */
-    @NotBlank(groups = {VoucherDataTO.TestVoucher.class} ,message = "日期不能为空")
+    @NotBlank(message = "日期不能为空")
     private String voucherDate;
 
     /**
      * 摘要
      */
-    @NotBlank(groups = {VoucherDataTO.TestVoucher.class} ,message = "摘要不能为空")
+    @NotBlank(message = "摘要不能为空")
     private String sumary;
 
     /**
      * 会计科目数组
      */
-    @NotNull(groups = {VoucherDataTO.TestVoucher.class} ,message = "会计科目数组不能为空")
+    @NotNull(message = "会计科目数组不能为空")
     private List<String> subjects;
 
     /**
      * 借方金额数组
      */
-    @NotNull(groups = {VoucherDataTO.TestVoucher.class} ,message = "借方金额数组不能为空")
+    @NotNull(message = "借方金额数组不能为空")
     private List<Double> borrowMoneys;
 
     /**
      * 贷方金额数组
      */
-    @NotNull(groups = {VoucherDataTO.TestVoucher.class} ,message = "贷方金额数组不能为空")
+    @NotNull(message = "贷方金额数组不能为空")
     private List<Double> loanMoneys;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {VoucherDataTO.TestVoucher.class} ,message = "地区不能为空")
+    @NotBlank(message = "地区不能为空")
     private String areas;
     /**
-     * 项目名称
+     * 项目数组
      */
-    @NotBlank(groups = {VoucherDataTO.TestVoucher.class} ,message = "项目不能为空")
+    @NotBlank(message = "项目不能为空")
     private String projects;
     /**
      * 项目组
      */
-    @NotBlank(groups = {VoucherDataTO.TestVoucher.class} ,message = "项目组不能为空")
+    @NotBlank(message = "项目组不能为空")
     private String groups;
 
-
-    public String[] getIds() {
-        return ids;
-    }
-
-    public void setIds(String[] ids) {
-        this.ids = ids;
-    }
 
     public String getSumary() {
         return sumary;

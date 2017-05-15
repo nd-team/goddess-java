@@ -72,7 +72,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private InternalContactsBO transformBO(InternalContacts entity) throws SerException {
         InternalContactsBO bo = BeanTransform.copyProperties(entity, InternalContactsBO.class);
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUser_id()));
         List<UserBO> user = userAPI.findByCis(userDTO);
         if (user.size() != 0) {
             bo.setUsername(user.get(0).getUsername());
@@ -174,7 +174,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                     content.append("QQ号:").append(bo.getQq()).append(",");
                 if (StringUtils.isNotBlank(bo.getWeChat()))
                     content.append("微信号:").append(bo.getWeChat()).append(",");
-                String[] receivers = {bo.getUserId()};
+                String[] receivers = {bo.getUser_id()};
                 MessageTO message = new MessageTO(title, content.toString());
                 message.setMsgType(MsgType.SYS);
                 message.setRangeType(RangeType.SPECIFIED);

@@ -65,6 +65,13 @@ public class YearPlan extends BaseEntity {
     @Column(name = "courseAccounted", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '各业务科目年度占比'")
     private Double courseAccounted;
 
+    /**
+     * 年任务量
+     */
+    @Column(name = "quota", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '年任务量'")
+    private Double quota;
+
+
     public Integer getYear() {
         return year;
     }
@@ -121,4 +128,11 @@ public class YearPlan extends BaseEntity {
         this.courseAccounted = courseAccounted;
     }
 
+    public Double getQuota() {
+        return quota;
+    }
+
+    public void setQuota(Double quota) {
+        this.quota = quota;
+    }
 }

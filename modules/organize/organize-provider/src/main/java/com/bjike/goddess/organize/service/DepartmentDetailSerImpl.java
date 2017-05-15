@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
@@ -17,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 部门详细业务实现
@@ -171,27 +168,5 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Override
     public DepartmentDetailBO getById(String id) throws SerException {
         return this.transformationToBO(super.findById(id));
-    }
-
-    @Override
-    public List<AreaBO> findArea() throws SerException {
-        List<DepartmentDetail> list = super.findAll().stream()
-                .sorted(Comparator.comparing(DepartmentDetail::getArea))
-                .collect(Collectors.toList());
-        List<AreaBO> bos = new ArrayList<>(0);
-        String area = "";
-        for (DepartmentDetail entity : list)
-            if (!entity.getArea().equals(area)) {
-                area = entity.getArea();
-                bos.add(new AreaBO(area));
-            }
-        return bos;
-    }
-
-    @Override
-    public List<DepartmentDetailBO> findByArea(String area) throws SerException {
-        DepartmentDetailDTO dto = new DepartmentDetailDTO();
-        dto.getConditions().add(Restrict.eq("area", area));
-        return this.transformationToBOList(super.findByCis(dto));
     }
 }

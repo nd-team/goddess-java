@@ -55,6 +55,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         bo.setDevelopment(entity.getYear().getDevelopment());
         bo.setBusinessAccounted(entity.getYear().getBusinessAccounted());
         bo.setYearCourseAccounted(entity.getYear().getCourseAccounted());
+        bo.setYearQuota(entity.getYear().getQuota());
         return bo;
     }
 
@@ -78,7 +79,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         entity.setYear(yearPlanSer.findById(to.getYearId()));
         if (entity.getYear() == null)
             throw new SerException("年计划数据为空");
-        entity.setTotal(to.getQuota() + entity.getQuota() * entity.getAccounted());
+        entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted());
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -92,7 +93,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
                 MonthPlan entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setYear(yearPlanSer.findById(to.getYearId()));
-                entity.setTotal(to.getQuota() + entity.getQuota() * entity.getAccounted() / 100);
+                entity.setTotal(to.getQuota() + entity.getYear().getQuota() * entity.getAccounted() / 100);
                 super.update(entity);
                 entity.setModifyTime(LocalDateTime.now());
                 super.update(entity);
@@ -129,7 +130,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         String[] fields = {"id", "accounted", "courseAccounted", "leastQuota", "quota", "total", "yearId"};
-        StringBuilder sql = new StringBuilder(" SELECT m.id,m.accounted,m.courseAccounted,m.leastQuota,m.quota,m.total,m.year_id,m.yearQuota FROM marketdevelopment_month_plan AS m ");
+        StringBuilder sql = new StringBuilder(" SELECT m.id,m.accounted,m.courseAccounted,m.leastQuota,m.quota,m.total,m.year_id FROM marketdevelopment_month_plan AS m ");
         sql.append(" LEFT JOIN (SELECT id FROM marketdevelopment_year_plan WHERE year = ");
         sql.append(year);
         sql.append(") AS y ON y.id = m.year_id");
@@ -144,6 +145,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
             bo.setDevelopment(yearPlan.getDevelopment());
             bo.setBusinessAccounted(yearPlan.getBusinessAccounted());
             bo.setYearCourseAccounted(yearPlan.getCourseAccounted());
+            bo.setYearQuota(yearPlan.getQuota());
             bo.setMonth(super.findById(bo.getId()).getMonth());
         }
         return bos;
