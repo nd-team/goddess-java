@@ -15,10 +15,21 @@ public class StockWarningVO {
      * id
      */
     private String id;
+
     /**
      * 地区
      */
     private String area;
+
+    /**
+     * 项目组
+     */
+    private String projectGroup;
+
+    /**
+     * 设备名称
+     */
+    private String deviceName;
 
     /**
      * 下限值
@@ -50,6 +61,22 @@ public class StockWarningVO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public Double getLowerValue() {

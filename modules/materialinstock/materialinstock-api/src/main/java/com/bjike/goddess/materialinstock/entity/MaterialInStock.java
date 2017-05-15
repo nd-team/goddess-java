@@ -3,6 +3,7 @@ package com.bjike.goddess.materialinstock.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,30 @@ import java.time.LocalDate;
 public class MaterialInStock extends BaseEntity {
 
     /**
+     * 存储地区
+     */
+    @Column(name = "storageArea", columnDefinition = "VARCHAR(255) COMMENT '存储地区'")
+    private String storageArea;
+
+    /**
+     * 项目组/部门
+     */
+    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组/部门'")
+    private String projectGroup;
+
+    /**
+     * 物品类型
+     */
+    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物品类型'")
+    private String materialType;
+
+    /**
+     * 物资名称
+     */
+    @Column(name = "materialName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资名称'")
+    private String materialName;
+
+    /**
      * 入库类型
      */
     @Column(name = "instockType", nullable = false, columnDefinition = "TINYINT(2) COMMENT '入库类型'")
@@ -34,18 +59,6 @@ public class MaterialInStock extends BaseEntity {
      */
     @Column(name = "stockEncoding", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '入库编码'")
     private String stockEncoding;
-
-    /**
-     * 物资名称
-     */
-    @Column(name = "materialName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资名称'")
-    private String materialName;
-
-    /**
-     * 物品类型
-     */
-    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物品类型'")
-    private String materialType;
 
     /**
      * 申购日期
@@ -108,12 +121,6 @@ public class MaterialInStock extends BaseEntity {
     private LocalDate instockDate;
 
     /**
-     * 存储地区
-     */
-    @Column(name = "storageArea", columnDefinition = "VARCHAR(255) COMMENT '存储地区'")
-    private String storageArea;
-
-    /**
      * 存储位置
      */
     @Column(name = "storageSite", columnDefinition = "VARCHAR(255) COMMENT '存储位置'")
@@ -124,6 +131,12 @@ public class MaterialInStock extends BaseEntity {
      */
     @Column(name = "materialState", columnDefinition = "TINYINT(2) COMMENT '物资状态'")
     private MaterialState materialState;
+
+    /**
+     * 使用状态
+     */
+    @Column(name = "useState", columnDefinition = "TINYINT(2) COMMENT '使用状态'")
+    private UseState useState;
 
     /**
      * 外借人
@@ -203,6 +216,13 @@ public class MaterialInStock extends BaseEntity {
     @Column(name = "comment", columnDefinition = "VARCHAR(255) COMMENT '备注'")
     private String comment;
 
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
 
     public InstockType getInstockType() {
         return instockType;
@@ -340,6 +360,14 @@ public class MaterialInStock extends BaseEntity {
         this.materialState = materialState;
     }
 
+    public UseState getUseState() {
+        return useState;
+    }
+
+    public void setUseState(UseState useState) {
+        this.useState = useState;
+    }
+
     public String getLender() {
         return lender;
     }
@@ -443,4 +471,36 @@ public class MaterialInStock extends BaseEntity {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    /**
+     * 重写equals方法
+     * @param o
+     * @return
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MaterialInStock that = (MaterialInStock) o;
+
+        if (!storageArea.equals(that.storageArea)) return false;
+        if (!projectGroup.equals(that.projectGroup)) return false;
+        if (!materialType.equals(that.materialType)) return false;
+        return materialName.equals(that.materialName);
+    }
+
+    /**
+     * 重写hashCode方法,用于判断存储地区,项目组,物资类型,物资名称这四个属性是否相同
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        int result = storageArea.hashCode();
+        result = 31 * result + projectGroup.hashCode();
+        result = 31 * result + materialType.hashCode();
+        result = 31 * result + materialName.hashCode();
+        return result;
+    }
+
 }

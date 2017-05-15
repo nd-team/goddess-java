@@ -41,6 +41,17 @@ public class StockWarningApiImpl implements StockWarningAPI {
     }
 
     /**
+     * 查询库存预警记录条数
+     *
+     * @param dto 库存预警dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(StockWarningDTO dto) throws SerException {
+        return stockWarningSer.count(dto);
+    }
+
+    /**
      * 分页查询库存预警
      *
      * @return class StockWarningBO

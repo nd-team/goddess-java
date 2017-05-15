@@ -27,6 +27,18 @@ public class StockWarning extends BaseEntity {
     private String area;
 
     /**
+     * 项目组/部门
+     */
+    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组/部门'")
+    private String projectGroup;
+
+    /**
+     * 设备名称
+     */
+    @Column(name = "deviceName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '设备名称'")
+    private String deviceName;
+
+    /**
      * 下限值
      */
     @Column(name = "lowerValue", nullable = false, columnDefinition = "DECIMAL(10,2) COMMENT '下限值'")
@@ -51,6 +63,22 @@ public class StockWarning extends BaseEntity {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public Double getLowerValue() {
