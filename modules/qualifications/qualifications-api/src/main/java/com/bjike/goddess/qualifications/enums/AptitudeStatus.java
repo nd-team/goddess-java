@@ -14,23 +14,23 @@ public enum AptitudeStatus {
     /**
      * 准备办理
      */
-    READY(0)
+    READY(0),
     /**
-     *办理中
+     * 办理中
      */
-    , PROCESS(1)
+    PROCESS(1),
     /**
      * 办理成功
      */
-    , SUCCESS(2)
+    SUCCESS(2),
     /**
      * 已获取
      */
-    , OBTAIN(3)
+    OBTAIN(3),
     /**
      * 办理失败
      */
-    , FAIL(4);
+    FAIL(4);
 
 
     private int value;
