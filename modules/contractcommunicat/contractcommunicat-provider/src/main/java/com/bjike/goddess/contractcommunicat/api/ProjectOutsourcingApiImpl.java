@@ -7,8 +7,10 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +70,15 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     @Override
     public ProjectOutsourcingBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(projectOutsourcingSer.findById(id),ProjectOutsourcingBO.class);
+    }
+
+    @Override
+    public void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException {
+        projectOutsourcingSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportExcelTO to) throws SerException {
+        return projectOutsourcingSer.exportExcel(to);
     }
 }

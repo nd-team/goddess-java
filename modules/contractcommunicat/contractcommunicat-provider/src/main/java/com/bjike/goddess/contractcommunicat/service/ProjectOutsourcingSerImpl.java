@@ -4,13 +4,17 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -158,6 +162,31 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Transactional(rollbackFor = SerException.class)
     public void setCollectSend(QuartzCycleType cycle) throws SerException {
         // TODO: 17-3-20
+    }
+
+    @Override
+    public void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException {
+        List<ProjectOutsourcing> list = BeanTransform.copyProperties(toList, ProjectOutsourcing.class, true);
+        super.save(list);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportExcelTO to) throws SerException {
+        ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
+        }
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto.getConditions().add(Restrict.gt("communicateDate", to.getStartDate()));
+        }
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto.getConditions().add(Restrict.lt("communicateDate", to.getEndDate()));
+        }
+        List<ProjectOutsourcing> list = super.findByCis(dto);
+        List<ProjectOutsourcingExcel> toList = BeanTransform.copyProperties(list, ProjectOutsourcingExcel.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
     }
 
     //设置汇总字段
