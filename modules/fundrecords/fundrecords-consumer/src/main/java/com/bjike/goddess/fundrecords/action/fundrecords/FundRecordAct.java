@@ -96,7 +96,7 @@ public class FundRecordAct {
      * @return class FundRecordVO
      * @version v1
      */
-    @GetMapping("v1/pagelist")
+    @GetMapping("v1/list")
     public Result pageList(FundRecordDTO dto) throws ActException {
         try {
             List<FundRecordVO> voList = BeanTransform.copyProperties(fundRecordAPI.pageList(dto), FundRecordVO.class);
@@ -167,7 +167,7 @@ public class FundRecordAct {
     @GetMapping("v1/analyze")
     public Result analyze(@Validated({CollectTO.Collect.class}) CollectTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<AnalyzeVO> vo = BeanTransform.copyProperties(fundRecordAPI.analyze(to), ConditionCollectVO.class);
+            AnalyzeVO vo = BeanTransform.copyProperties(fundRecordAPI.analyze(to), AnalyzeVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
