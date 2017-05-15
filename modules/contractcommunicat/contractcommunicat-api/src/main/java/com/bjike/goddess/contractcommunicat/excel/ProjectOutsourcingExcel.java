@@ -20,86 +20,103 @@ public class ProjectOutsourcingExcel extends BaseTO {
     /**
      * 合同外部项目名称
      */
+    @ExcelHeader(name = "合同外部项目名称",notNull = true)
     private String contractExtProject;
 
     /**
      * 合同外部编号
      */
+    @ExcelHeader(name = "合同外部编号",notNull = true)
     private String contractExtCode;
 
     /**
      * 内部项目名称
      */
+    @ExcelHeader(name = "内部项目名称",notNull = true)
     private String contractInProject;
 
     /**
      * 内部项目编号
      */
+    @ExcelHeader(name = "内部项目编号",notNull = true)
     private String contractInCode;
 
     /**
      * 外包项目名称
      */
+    @ExcelHeader(name = "外包项目名称",notNull = true)
     private String outsourcingProject;
 
     /**
      * 外包项目编号
      */
+    @ExcelHeader(name = "外包项目编号",notNull = true)
     private String outsourcingCode;
 
     /**
      * 项目外包信息
      */
+    @ExcelHeader(name = "项目外包信息",notNull = true)
     private String outsourcingInfo;
 
     /**
      * 洽谈轮次
      */
+    @ExcelHeader(name = "洽谈轮次",notNull = true)
     private String communicateTimes;
 
     /**
      * 洽谈目的
      */
+    @ExcelHeader(name = "洽谈目的",notNull = true)
     private String communicateGoal;
 
     /**
      * 洽谈时间
      */
-    private String communicateDate;
+    @ExcelHeader(name = "洽谈时间",notNull = true)
+    private LocalDateTime communicateDate;
 
     /**
      * 洽谈人
      */
+    @ExcelHeader(name = "洽谈人",notNull = true)
     private String communicateUser;
 
     /**
      * 洽谈对象
      */
+    @ExcelHeader(name = "洽谈对象",notNull = true)
     private String communicateObj;
 
     /**
      * 洽谈地址
      */
+    @ExcelHeader(name = "洽谈地址",notNull = true)
     private String communicateAddress;
 
     /**
      * 洽谈内容
      */
+    @ExcelHeader(name = "洽谈内容",notNull = true)
     private String communicateContent;
 
     /**
      * 费用预算
      */
+    @ExcelHeader(name = "费用预算",notNull = true)
     private Double costBudget;
 
     /**
      * 项目结果
      */
+    @ExcelHeader(name = "项目结果",notNull = true)
     private CommunicateResult projectResult;
 
     /**
      * 记录人
      */
+    @ExcelHeader(name = "记录人",notNull = true)
     private String recordUser;
 
     public String getContractExtProject() {
@@ -174,11 +191,11 @@ public class ProjectOutsourcingExcel extends BaseTO {
         this.communicateGoal = communicateGoal;
     }
 
-    public String getCommunicateDate() {
+    public LocalDateTime getCommunicateDate() {
         return communicateDate;
     }
 
-    public void setCommunicateDate(String communicateDate) {
+    public void setCommunicateDate(LocalDateTime communicateDate) {
         this.communicateDate = communicateDate;
     }
 

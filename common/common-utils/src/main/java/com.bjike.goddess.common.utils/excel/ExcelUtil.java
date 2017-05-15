@@ -395,7 +395,12 @@ public class ExcelUtil {
         String value = val.toString();
         for (Field f : enumFields) {
             if (value.equals(f.getName())) {
-                return f.getAnnotation(ExcelValue.class).name();
+                try {
+                    return f.getAnnotation(ExcelValue.class).name();
+                }catch (Exception e){
+                    throw new RuntimeException("枚举未添加Excel注解");
+                }
+
             }
         }
         return value;

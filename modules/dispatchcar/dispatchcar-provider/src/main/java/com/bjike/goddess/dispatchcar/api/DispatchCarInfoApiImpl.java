@@ -9,11 +9,14 @@ import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
+import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -150,6 +153,24 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
 
     @Override
     public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
-        dispatchCarInfoSer.predict(id,budgetPayDate,payPlan);
+        dispatchCarInfoSer.predict(id, budgetPayDate, payPlan);
+    }
+
+    @Override
+    public List<DispatchCarInfoBO> getByConfition(ConditionTO to) throws SerException {
+        DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+        if (!StringUtils.isEmpty(to.getArea())) {
+            dto.getConditions().add(Restrict.eq("area",to.getArea()));
+        }
+        if (!StringUtils.isEmpty(to.getGroup())) {
+            dto.getConditions().add(Restrict.eq("group",to.getGroup()));
+        }
+        if (!StringUtils.isEmpty(to.getProject())) {
+            dto.getConditions().add(Restrict.eq("project",to.getProject()));
+        }
+        if (!StringUtils.isEmpty(to.getDispatchDate())) {
+            dto.getConditions().add(Restrict.between("dispatchDate",to.getDispatchDate()));
+        }
+        return BeanTransform.copyProperties(dispatchCarInfoSer.findByCis(dto), DispatchCarInfoBO.class);
     }
 }
