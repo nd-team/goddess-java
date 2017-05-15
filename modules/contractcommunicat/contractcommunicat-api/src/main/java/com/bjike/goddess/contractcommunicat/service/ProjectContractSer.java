@@ -1,17 +1,17 @@
 package com.bjike.goddess.contractcommunicat.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectContract;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -66,19 +66,4 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
      */
     void setCollectSend(QuartzCycleType cycle) throws SerException;
 
-    /**
-     * 导入Excel
-     *
-     * @param toList
-     * @throws SerException
-     */
-    void leadExcel(List<ProjectContractTO> toList) throws SerException;
-
-    /**
-     * 导出Excel
-     *
-     * @param to
-     * @throws SerException
-     */
-    void exportExcel(ExportExcelTO to) throws SerException;
 }

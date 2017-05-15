@@ -3,6 +3,8 @@ package com.bjike.goddess.assemble.api;
 import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.service.ModuleSer;
+import com.bjike.goddess.assemble.to.ModuleTO;
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,27 @@ public class ModuleApiImpl implements ModuleAPI {
     private ModuleSer moduleSer;
 
     @Override
-    public List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException{
-        moduleSer.list(moduleDTO);
-         return  null;
+    public List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException {
+        return moduleSer.list(moduleDTO);
+    }
+
+    @Override
+    public ModuleBO findByName(String name) throws SerException {
+        return moduleSer.findByName(name);
+    }
+
+    @Override
+    public void add(ModuleTO moduleTO) throws SerException {
+        moduleSer.add(moduleTO);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        moduleSer.delete(id);
+    }
+
+    @Override
+    public void check(String moduleId,String[] relationIds, CheckType checkType) throws SerException {
+        moduleSer.check(moduleId, relationIds,checkType);
     }
 }

@@ -1,7 +1,6 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.service.ArrangementSer;
@@ -43,7 +42,7 @@ public class ArrangementApiImpl implements ArrangementAPI {
 
     @Override
     public ArrangementBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(arrangementSer.findById(id), ArrangementBO.class);
+        return arrangementSer.getById(id);
     }
 
     @Override

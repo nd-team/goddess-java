@@ -3,7 +3,6 @@ package com.bjike.goddess.contractcommunicat.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -27,7 +26,7 @@ public class ProjectContractTO extends BaseTO {
     private String contractExtProject;
 
     /**
-     * 合同外部编号
+     * 合同项目编号
      */
     @NotBlank(message = "合同外部编号不能为空!", groups = {ADD.class, EDIT.class})
     private String contractExtCode;

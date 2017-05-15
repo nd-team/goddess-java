@@ -6,10 +6,8 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.service.ProjectContractSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,15 +67,5 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     @Override
     public Long count(ProjectContractDTO dto) throws SerException {
         return projectContractSer.count(dto);
-    }
-
-    @Override
-    public void leadExcel(List<ProjectContractTO> toList) throws SerException {
-        projectContractSer.leadExcel(toList);
-    }
-
-    @Override
-    public void exportExcel(ExportExcelTO to) throws SerException {
-        projectContractSer.exportExcel(to);
     }
 }

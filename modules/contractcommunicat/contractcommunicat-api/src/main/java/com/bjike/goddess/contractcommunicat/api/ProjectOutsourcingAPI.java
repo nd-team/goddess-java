@@ -5,9 +5,7 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 
 import java.util.List;
@@ -84,20 +82,4 @@ public interface ProjectOutsourcingAPI {
      * @return 项目外包洽谈
      */
     ProjectOutsourcingBO findById(String id) throws SerException;
-
-    /**
-     * 导入excel
-     *
-     * @param toList
-     * @throws SerException
-     */
-    void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException;
-
-    /**
-     * 导出Excel
-     *
-     * @param to 导出对象
-     * @throws SerException
-     */
-    void exportExcel(ExportExcelTO to) throws SerException;
 }

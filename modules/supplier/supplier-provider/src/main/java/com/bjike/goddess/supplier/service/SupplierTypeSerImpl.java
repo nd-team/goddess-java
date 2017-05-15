@@ -101,7 +101,7 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     public List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
         dto.getSorts().add("status=asc");
         List<SupplierType> list = super.findByPage(dto);
-        if (null == list)
+        if (null != list && list.size() > 0)
             return BeanTransform.copyProperties(list, SupplierTypeBO.class);
         else
             return new ArrayList<SupplierTypeBO>(0);

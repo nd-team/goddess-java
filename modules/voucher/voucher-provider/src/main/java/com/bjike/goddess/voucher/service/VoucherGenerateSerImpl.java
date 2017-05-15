@@ -229,22 +229,24 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("id不能为空");
         }
         VoucherGenerate voucherGenerate = super.findById(id);
-        Double borrow = voucherGenerate.getBorrowMoney();
-        Double loan = voucherGenerate.getLoanMoney();
+        if( voucherGenerate!= null ){
+            Double borrow = voucherGenerate.getBorrowMoney();
+            Double loan = voucherGenerate.getLoanMoney();
 
-        String totalId = voucherGenerate.getTotalId();
-        VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
-        voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
-        voucherTotal.setCreateTime(LocalDateTime.now());
-        voucherTotalSer.update(voucherTotal);
-        super.remove(id);
+            String totalId = voucherGenerate.getTotalId();
+            VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
+            voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
+            voucherTotal.setCreateTime(LocalDateTime.now());
+            voucherTotalSer.update(voucherTotal);
+            super.remove(id);
 
-        //删掉合计
-        VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
-        vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
-        List<VoucherGenerate> list = super.findByCis(vgDTO);
-        if (list == null) {
-            voucherTotalSer.remove(totalId);
+            //删掉合计
+            VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
+            vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
+            List<VoucherGenerate> list = super.findByCis(vgDTO);
+            if (list == null) {
+                voucherTotalSer.remove(totalId);
+            }
         }
     }
 
