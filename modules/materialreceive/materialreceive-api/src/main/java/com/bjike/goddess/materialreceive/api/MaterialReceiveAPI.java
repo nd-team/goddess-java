@@ -28,6 +28,14 @@ public interface MaterialReceiveAPI {
     MaterialReceiveBO findById(String id) throws SerException;
 
     /**
+     * 查询物资领用记录条数
+     *
+     * @param dto 物资领用dto
+     * @throws SerException
+     */
+    Long count(MaterialReceiveDTO dto) throws SerException;
+    
+    /**
      * 分页查询物资领用
      *
      * @return class MaterialReceiveBO

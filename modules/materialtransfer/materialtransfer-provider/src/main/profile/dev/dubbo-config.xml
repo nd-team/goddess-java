@@ -18,6 +18,8 @@
 
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialtransfer.api.MaterialTransferAPI" ref="materialTransferApiImpl"></dubbo:service>
 
-	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" validation="true" id="userApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" id="stockWarningApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

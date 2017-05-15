@@ -3,6 +3,7 @@ package com.bjike.goddess.materialinstock.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 
 /**
  * 物资入库业务传输对象
@@ -14,6 +15,11 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
  * @Copy: [ com.bjike ]
  */
 public class MaterialInStockBO extends BaseBO {
+
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
 
     /**
      * 入库类型
@@ -101,6 +107,11 @@ public class MaterialInStockBO extends BaseBO {
     private MaterialState materialState;
 
     /**
+     * 使用状态
+     */
+    private UseState useState;
+
+    /**
      * 外借人
      */
     private String lender;
@@ -165,6 +176,13 @@ public class MaterialInStockBO extends BaseBO {
      */
     private String comment;
 
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
 
     public InstockType getInstockType() {
         return instockType;
@@ -220,6 +238,14 @@ public class MaterialInStockBO extends BaseBO {
 
     public void setMaterialModel(String materialModel) {
         this.materialModel = materialModel;
+    }
+
+    public UseState getUseState() {
+        return useState;
+    }
+
+    public void setUseState(UseState useState) {
+        this.useState = useState;
     }
 
     public Integer getQuantity() {

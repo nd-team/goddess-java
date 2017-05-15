@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 项目组领用归还
@@ -32,6 +33,11 @@ public class ProjectGroupReceiveTO extends BaseTO {
      */
     @NotEmpty(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
     private String materialName;
+
+    /**
+     * 物资领用编号
+     */
+    private String materialNo;
 
     /**
      * 数量
@@ -64,6 +70,12 @@ public class ProjectGroupReceiveTO extends BaseTO {
     @NotEmpty(groups = {RETURNMATERIAL.class}, message = "归还人不能为空")
     private String returnPerson;
 
+    /**
+     * 领用编号
+     */
+    @Size(groups = {ADD.class, EDIT.class}, message = "领用数量必修是大于0的整数")
+    private String[] materialNum;
+
 
     public String getReceiveTime() {
         return receiveTime;
@@ -79,6 +91,14 @@ public class ProjectGroupReceiveTO extends BaseTO {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    public String getMaterialNo() {
+        return materialNo;
+    }
+
+    public void setMaterialNo(String materialNo) {
+        this.materialNo = materialNo;
     }
 
     public Integer getQuantity() {
@@ -119,5 +139,13 @@ public class ProjectGroupReceiveTO extends BaseTO {
 
     public void setReturnPerson(String returnPerson) {
         this.returnPerson = returnPerson;
+    }
+
+    public String[] getMaterialNum() {
+        return materialNum;
+    }
+
+    public void setMaterialNum(String[] materialNum) {
+        this.materialNum = materialNum;
     }
 }
