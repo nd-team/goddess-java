@@ -5,6 +5,7 @@ import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
 
@@ -210,4 +211,11 @@ public interface DispatchCarInfoAPI {
      * @param payPlan       付款计划
      */
     void predict(String id, String budgetPayDate, String payPlan) throws SerException;
+
+    /**
+     * 根据地区及项目组及项目名称及年份及月份查询出车记录
+     *
+     * @return
+     */
+    List<DispatchCarInfoBO> getByConfition(ConditionTO to) throws SerException;
 }

@@ -198,7 +198,8 @@ public class ExcelUtil {
                 if (field.getAnnotation(ExcelHeader.class).name().equals(name)) {
                     field.setAccessible(true);// 设置属性可访问
                     if (field.getType().isEnum()) {
-                        enumToField(field, obj, val);
+                        enumToField(field,obj,val);
+
                     } else {
                         field.set(obj, val);
                     }
@@ -374,12 +375,10 @@ public class ExcelUtil {
 
     /**
      * 属性转换枚举
-     *
      * @param field
      * @param val
      * @return
      */
-
     private static String fieldToEnum(Field field, Object val) {
         Field[] enum_fields = field.getType().getFields();
         for (Field f : enum_fields) {
@@ -393,12 +392,11 @@ public class ExcelUtil {
 
     /**
      * 枚举转换属性
-     *
      * @param field
      * @param obj
      * @param val
      */
-    private static void enumToField(Field field, Object obj, Object val) {
+    private static  void enumToField(Field field,Object obj,Object val){
         try {
             Field[] enum_fields = field.getType().getFields();
             for (Field f : enum_fields) {
@@ -406,8 +404,8 @@ public class ExcelUtil {
                     field.set(obj, field.getType().getField(f.getName()).get(f.getName()));
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        }catch (Exception e){
+            throw  new RuntimeException(e.getMessage());
         }
 
     }

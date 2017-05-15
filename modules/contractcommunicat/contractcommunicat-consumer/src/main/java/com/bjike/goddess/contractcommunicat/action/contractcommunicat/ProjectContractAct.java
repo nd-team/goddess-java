@@ -5,13 +5,18 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.api.ProjectContractAPI;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
+import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
+import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
+import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectContractColelctVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectContractVO;
@@ -22,7 +27,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -137,7 +145,7 @@ public class ProjectContractAct extends BaseFileAction {
     public Result upload(HttpServletRequest request) throws ActException {
         try {
             String path = "/contract";
-            List<InputStream> inputStreams = this.getInputStreams(request, path);
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult();
         } catch (SerException e) {
@@ -152,18 +160,46 @@ public class ProjectContractAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/leadExcel")
-    public Result leadExcel(HttpServletRequest request) {
-        return new ActResult("success");
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<ProjectContractExcel> toList = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
+            List<ProjectContractTO> tos = BeanTransform.copyProperties(toList,ProjectContractTO.class);
+            projectContractAPI.leadExcel(tos);
+            return new ActResult("上传成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        ProjectContractExcel to = new ProjectContractExcel();
+        to.setProjectResult(CommunicateResult.ABANDON);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(Arrays.asList(to), excel);
+        File out = new File("/home/ike/out.xlsx");
+        FileOutputStream fos = null;
+        fos = new FileOutputStream(out);
+        fos.write(bytes);
+
     }
 
     /**
      * 导出Excel
      *
+     * @param to 导出条件
      * @version v1
      */
     @PostMapping("v1/exportExcel")
-    public Result exportExcel() {
-        return new ActResult("success");
+    public Result exportExcel(ExportExcelTO to) throws ActException {
+        try {
+            projectContractAPI.exportExcel(to);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
