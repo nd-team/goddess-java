@@ -1,6 +1,4 @@
-package com.bjike.goddess.organize.bo;
-
-import com.bjike.goddess.common.api.bo.BaseBO;
+package com.bjike.goddess.organize.vo;
 
 /**
  * @Author: [dengjunren]
@@ -9,19 +7,24 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class OpinionBO extends BaseBO {
+public class OpinionVO {
+
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 字段
      */
     private String value;
 
-    public OpinionBO(String id, String value) {
-        this.id = id;
-        this.value = value;
+    public String getId() {
+        return id;
     }
 
-    public OpinionBO() {
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getValue() {

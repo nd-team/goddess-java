@@ -2,8 +2,8 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.organize.bo.DesignNumberInfoBO;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
 
@@ -118,5 +118,15 @@ public interface ModuleTypeAPI {
         return null;
     }
 
+
+    /**
+     * 查询未冻结模块选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
 
 }

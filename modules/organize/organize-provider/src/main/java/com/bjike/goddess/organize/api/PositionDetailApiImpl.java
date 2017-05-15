@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetail;
@@ -92,5 +93,10 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     public Long getTotal() throws SerException {
         PositionDetailDTO dto = new PositionDetailDTO();
         return positionDetailSer.count(dto);
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        return positionDetailSer.findThawOpinion();
     }
 }

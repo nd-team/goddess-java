@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.service.ArrangementSer;
 import com.bjike.goddess.organize.to.ArrangementTO;
@@ -64,5 +65,10 @@ public class ArrangementApiImpl implements ArrangementAPI {
     public Long getTotal() throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
         return arrangementSer.count(dto);
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        return arrangementSer.findThawOpinion();
     }
 }
