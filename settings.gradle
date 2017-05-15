@@ -333,3 +333,20 @@ include ':modules:projectmarketfee:projectmarketfee-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
+//#materialinstock 物资入库
+include ':modules:materialinstock:materialinstock-api'
+include ':modules:materialinstock:materialinstock-consumer'
+include ':modules:materialinstock:materialinstock-provider'
+//#materialreceive 物资领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
+//#materialtransfer 物资调用
+include ':modules:materialtransfer:materialtransfer-api'
+include ':modules:materialtransfer:materialtransfer-consumer'
+include ':modules:materialtransfer:materialtransfer-provider'
+//#materialcheck 物资盘点
+include ':modules:materialcheck:materialcheck-api'
+include ':modules:materialcheck:materialcheck-consumer'
+include ':modules:materialcheck:materialcheck-provider'
+

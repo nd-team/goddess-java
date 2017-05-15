@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,22 +97,18 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
         String project = projectTaxDTO.getProject();
         String[] field = new String[]{"project","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select project , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
-                " ,(sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_projecttax where 1=1  ";
+                " (sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_projecttax where 1=1  ";
         if( StringUtils.isNotBlank(project)){
-            field = new String[]{"project","taxDate","targetTax","planTax","actualTax","rate","balance"};
-            sql = " select project , taxDate , targetTax , planTax , actualTax , rate , balance from accruedtax_projecttax where 1=1 and project ='"+project+"' ";
+            sql = " select company , taxDate , targetTax , planTax , actualTax , rate , balance from accruedtax_projecttax where 1=1 and project ='"+project+"' ";
         }
         if( StringUtils.isNotBlank(projectTaxDTO.getStartTime()) && StringUtils.isNotBlank(projectTaxDTO.getEndTime()) ){
             LocalDate start = LocalDate.parse(projectTaxDTO.getStartTime());
             LocalDate end = LocalDate.parse(projectTaxDTO.getEndTime());
             sql = sql +" and taxDate between '"+start+"' and '"+end+"' ";
         }
-        if(StringUtils.isBlank(project)){
-            sql = sql + " group by project ";
-        }
-        List<ProjectTax> list = super.findBySql(sql , ProjectTax.class, field);
-        List<ProjectTaxBO> listBO = BeanTransform.copyProperties(list,ProjectTaxBO.class);
-        return listBO;
+        sql = sql + " group by project ";
+        List<ProjectTaxBO> list = super.findBySql(sql , ProjectTaxBO.class, field);
+        return list;
     }
 
     @Override
@@ -121,9 +116,8 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
         String taxType = projectTaxDTO.getTaxType();
         String[] field = new String[]{"taxType","targetTax","planTax","actualTax","rate","balance"};
         String sql = "select taxType , sum(targetTax) as targetTax, sum(planTax) as planTax, sum(actualTax) as actualTax " +
-                ", (sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_projecttax where 1=1  ";
-        if( StringUtils.isNotBlank(taxType)){
-            field = new String[]{"taxType","taxDate","targetTax","planTax","actualTax","rate","balance"};
+                " (sum(actualTax)/sum(planTax)) as rate , (sum(actualTax)-sum(planTax)) as balance from accruedtax_projecttax where 1=1  ";
+        if( StringUtils.isBlank(taxType)){
             sql = " select taxType , taxDate , targetTax , planTax , actualTax , rate , balance from accruedtax_projecttax where 1=1 and taxType ='"+taxType+"' ";
         }
         if( StringUtils.isNotBlank(projectTaxDTO.getStartTime()) && StringUtils.isNotBlank(projectTaxDTO.getEndTime()) ){
@@ -134,15 +128,14 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
         if( StringUtils.isBlank(taxType)){
             sql = sql + " group by taxType ";
         }
-        List<ProjectTax> list = super.findBySql(sql , ProjectTax.class, field);
-        List<ProjectTaxBO> listBO = BeanTransform.copyProperties(list,ProjectTaxBO.class);
-        return listBO;
+        List<ProjectTaxBO> list = super.findBySql(sql , ProjectTaxBO.class, field);
+        return list;
     }
 
     @Override
     public List<String> listProject() throws SerException {
         String [] field = new String[]{"project"};
-        String sql = "select project from accruedtax_projecttax group by project ";
+        String sql = "select project, 1 from accruedtax_projecttax group by project ";
         List<ProjectTax> list = super.findBySql( sql , ProjectTax.class, field );
         List<String> companyList = list.stream().map(ProjectTax::getProject).collect(Collectors.toList());
         return companyList;
@@ -151,7 +144,7 @@ public class ProjectTaxSerImpl extends ServiceImpl<ProjectTax, ProjectTaxDTO> im
     @Override
     public List<String> listTaxType() throws SerException {
         String [] field = new String[]{"taxType"};
-        String sql = "select taxType from accruedtax_projecttax group by taxType ";
+        String sql = "select taxType, 1 from accruedtax_projecttax group by taxType ";
         List<ProjectTax> list = super.findBySql( sql , ProjectTax.class, field );
         List<String> companyList = list.stream().map(ProjectTax::getTaxType).collect(Collectors.toList());
         return companyList;

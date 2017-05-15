@@ -64,7 +64,7 @@ public class CheckIndexAction {
     @GetMapping("v1/getIndexById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            CheckIndexVO checkIndexVOList = BeanTransform.copyProperties(
+            List<CheckIndexVO> checkIndexVOList = BeanTransform.copyProperties(
                     checkIndexAPI.getOneById(id), CheckIndexVO.class);
             return ActResult.initialize(checkIndexVOList);
         } catch (SerException e) {

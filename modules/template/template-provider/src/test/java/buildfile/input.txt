@@ -1,14 +1,19 @@
-模块名:customer
-类名:CusPermission
-作者:tanghaixiang
-描述:客户权限配置
+模块名:projectmarketfee
+类名:ProjectMarketFee
+作者:chenjunhao
+描述:项目前期的市场活动费
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String description 描述;
-String operator 操作对象;
-String createTime 创建时间;
-String modifyTime 修改时间;
+String firstSubject 一级科目;
+String secondSubject 二级科目;
+String thirdSubject 三级科目;
+String area 地区;
+String projectGroup 项目组;
+String projectName 项目名称;
+LocalDate voucherDate 日期;
+Double borrowMoney 金额;
+String saleId 记账凭证销售费用id;
 )

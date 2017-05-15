@@ -49,7 +49,7 @@ public class StockWarningSerImpl extends ServiceImpl<StockWarning, StockWarningD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public StockWarningBO save(StockWarningTO to) throws SerException {
         StockWarning entity = BeanTransform.copyProperties(to, StockWarning.class, true);
         entity = super.save(entity);
@@ -64,7 +64,7 @@ public class StockWarningSerImpl extends ServiceImpl<StockWarning, StockWarningD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -76,7 +76,7 @@ public class StockWarningSerImpl extends ServiceImpl<StockWarning, StockWarningD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(StockWarningTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             StockWarning model = super.findById(to.getId());
@@ -102,4 +102,5 @@ public class StockWarningSerImpl extends ServiceImpl<StockWarning, StockWarningD
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
+
 }

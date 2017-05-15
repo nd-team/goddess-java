@@ -42,6 +42,16 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
     }
 
     /**
+     * 查询物资入库记录条数
+     *
+     * @param dto 物资入库dto
+     * @throws SerException
+     */
+    public Long count(MaterialInStockDTO dto) throws SerException {
+        return materialInStockSer.count(dto);
+    }
+
+    /**
      * 分页查询物资入库
      *
      * @return class MaterialInStockBO
