@@ -244,8 +244,13 @@ public abstract class BaseFileAction {
             throw  new RuntimeException("不支持该格式文件:"+suffix);
         }
     }
-    public static boolean isContainChinese(String str) {
 
+    /**
+     * 是否包含中文
+     * @param str
+     * @return
+     */
+    private   boolean isContainChinese(String str) {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
         if (m.find()) {
