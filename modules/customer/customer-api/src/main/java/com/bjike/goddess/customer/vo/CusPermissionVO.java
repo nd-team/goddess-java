@@ -1,5 +1,7 @@
 package com.bjike.goddess.customer.vo;
 
+import com.bjike.goddess.customer.enums.CusPermissionType;
+
 /**
  * 客户权限配置表现层对象
  *
@@ -32,7 +34,7 @@ public class CusPermissionVO {
     /**
      * 类型
      */
-    private String type;
+    private CusPermissionType type;
     /**
      * 创建时间
      */
@@ -76,11 +78,11 @@ public class CusPermissionVO {
         this.operator = operator;
     }
 
-    public String getType() {
+    public CusPermissionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CusPermissionType type) {
         this.type = type;
     }
 

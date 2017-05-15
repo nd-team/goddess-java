@@ -7,6 +7,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CusEmailAPI;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
 import com.bjike.goddess.customer.to.CusEmailTO;
@@ -33,6 +34,8 @@ public class CusEmailAction {
 
     @Autowired
     private CusEmailAPI cusEmailAPI;
+    @Autowired
+    private CusPermissionAPI cusPermissionAPI;
 
     /**
      * 客户邮件汇总列表总条数
@@ -62,9 +65,14 @@ public class CusEmailAction {
     @GetMapping("v1/listCusEmail")
     public Result findListCusEmail(CusEmailDTO cusEmailDTO) throws ActException {
         try {
-            List<CusEmailVO> cusEmailVOList = BeanTransform.copyProperties(
-                    cusEmailAPI.listCusEmail(cusEmailDTO), CusEmailVO.class, true);
-            return ActResult.initialize(cusEmailVOList);
+            Boolean permission = cusPermissionAPI.getCusPermission("1");
+            if( permission ) {
+                List<CusEmailVO> cusEmailVOList = BeanTransform.copyProperties(
+                        cusEmailAPI.listCusEmail(cusEmailDTO), CusEmailVO.class, true);
+                return ActResult.initialize(cusEmailVOList);
+            }else{
+                return ActResult.initialize(null);
+            }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
