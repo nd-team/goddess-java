@@ -58,12 +58,12 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public Boolean checkAsUserArrangement(String user_id, String arrangement_id) throws SerException {
+    public Boolean checkAsUserArrangement(String user_id, String... arrangement_id) throws SerException {
         return positionDetailUserSer.checkAsUserArrangement(user_id, arrangement_id);
     }
 
     @Override
-    public Boolean checkAsUserModule(String user_id, String module_id) throws SerException {
+    public Boolean checkAsUserModule(String user_id, String... module_id) throws SerException {
         return positionDetailUserSer.checkAsUserModule(user_id, module_id);
     }
 
