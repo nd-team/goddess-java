@@ -181,7 +181,7 @@ public class PayTaxAction {
     public Result collectCom(PayTaxDTO payTaxDTO) throws ActException {
         try {
             List<PayTaxVO> payTaxVOList = BeanTransform.copyProperties(
-                    payTaxAPI.collectCompany(payTaxDTO), PayTaxVO.class );
+                    payTaxAPI.collectCompany(payTaxDTO), PayTaxVO.class);
             return ActResult.initialize(payTaxVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

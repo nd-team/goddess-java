@@ -5,23 +5,25 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.file.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.devicerepair.api.DeviceRepairAPI;
 import com.bjike.goddess.devicerepair.bo.DeviceRepairBO;
 import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
-import com.bjike.goddess.devicerepair.entity.DeviceRepair;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
+import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.vo.DeviceRepairVO;
-import jdk.nashorn.internal.ir.ReturnNode;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -35,15 +37,19 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("devicerepair")
-public class DeviceRepairAct {
+public class DeviceRepairAct extends BaseFileAction {
 
     @Autowired
     private DeviceRepairAPI deviceRepairAPI;
 
+    @Autowired
+    private FileAPI fileAPI;
+
+
     /**
      * 根据id查询设备维修
      *
-     * @param id      设备维修唯一标识
+     * @param id 设备维修唯一标识
      * @return class DeviceRepairVO
      * @throws ActException
      * @version v1
@@ -156,7 +162,7 @@ public class DeviceRepairAct {
      * @version v1
      */
     @PutMapping("v1/welfareAudit")
-    public Result welfareAudit(@Validated(EDIT.class) WelfareAuditTO to, BindingResult result) throws ActException {
+    public Result welfareAudit(@Validated(WelfareAuditTO.WelfareAudit.class) WelfareAuditTO to, BindingResult result) throws ActException {
         try {
             deviceRepairAPI.welfareAudit(to);
             return new ActResult("welfareAudit success!");
@@ -166,14 +172,32 @@ public class DeviceRepairAct {
     }
 
     /**
+     * 项目经理审核
+     *
+     * @param id           设备维修唯一标识
+     * @param pmAuditState 项目经理审核状态
+     * @throws ActException
+     * @version v1
+     */
+    @PatchMapping("v1/pmAudit/{id}")
+    public Result pmAudit(@PathVariable String id, @RequestParam(value = "pmAuditState") AuditState pmAuditState) throws ActException {
+        try {
+            deviceRepairAPI.pmAudit(id, pmAuditState);
+            return new ActResult("pmAudit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 设备报废
      *
-     * @param id 设备维修唯一标识
+     * @param id          设备维修唯一标识
      * @param deviceIssue 设备出现的问题
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/deviceScrap")
+    @PatchMapping("v1/deviceScrap/{id}")
     public Result deviceScrap(@PathVariable String id, @RequestParam(value = "deviceIssue") String deviceIssue) throws ActException {
         try {
             deviceRepairAPI.deviceScrap(id, deviceIssue);
@@ -188,9 +212,10 @@ public class DeviceRepairAct {
      *
      * @param to 设备维修to
      * @throws ActException
+     * @version v1
      */
-    @PatchMapping("v1/fetchDevice")
-    public Result fetchDevice(@Validated FetchDeviceTO to, BindingResult result) throws ActException {
+    @PutMapping("v1/fetchDevice")
+    public Result fetchDevice(@Validated(FetchDeviceTO.FetchDevice.class) FetchDeviceTO to, BindingResult result) throws ActException {
         try {
             deviceRepairAPI.fetchDevice(to);
             return new ActResult("fetchDevice success!");
@@ -199,7 +224,21 @@ public class DeviceRepairAct {
         }
     }
 
-    public Result upload() {
-        return null;
+    /**
+     * 上传附件
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/upload")
+    public Result upload(HttpServletRequest request) throws ActException {
+        try {
+            String path = "/upload/devicerepair";
+            List<InputStream> inputStream = this.getInputStreams(request, path);
+            fileAPI.upload(inputStream);
+            return new ActResult("上传成功!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 }

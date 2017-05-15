@@ -38,7 +38,7 @@ public interface ModuleSer extends Ser<Module,ModuleDTO> {
      * @return
      * @throws SerException
      */
-    default ModuleBO findByName(String name) throws SerException {
+    default ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
         return null;
     }
 

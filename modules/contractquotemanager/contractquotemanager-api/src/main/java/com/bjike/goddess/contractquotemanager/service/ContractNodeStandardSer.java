@@ -3,8 +3,8 @@ package com.bjike.goddess.contractquotemanager.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
-import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
+import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 
 import java.util.List;
@@ -21,26 +21,68 @@ import java.util.List;
 public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, ContractNodeStandardDTO> {
 
 
-    default ContractNodeStandardBO save(ContractNodeStandardTO contractQuoteDataTO) throws SerException {
+    /**
+     * 添加合同节点标准信息
+     *
+     * @param to 合同节点标准信息to
+     * @return class ContractNodeStandardBO
+     * @throws SerException
+     */
+    default ContractNodeStandardBO save(ContractNodeStandardTO to) throws SerException {
         return null;
     }
 
+    /**
+     * 分页查询合同节点标准信息
+     *
+     * @param dto 合同节点标准信息dto
+     * @return class ContractNodeStandardBO
+     * @throws SerException
+     */
     default List<ContractNodeStandardBO> list(ContractNodeStandardDTO dto) throws SerException {
         return null;
     }
 
-    default void update(ContractNodeStandardTO contractNodeStandardTO) throws SerException {
+    /**
+     * 编辑合同节点标准信息
+     *
+     * @param to 合同节点标准信息to
+     * @throws SerException
+     */
+    default void update(ContractNodeStandardTO to) throws SerException {
+
     }
 
+    /**
+     * 根据id删除合同节点标准信息
+     *
+     * @param id 合同节点标准信息唯一标识
+     * @throws SerException
+     */
     default void remove(String id) throws SerException {
 
     }
 
-    default List<ContractNodeStandardBO> collect(ContractNodeStandardBO bo) throws SerException {
+    /**
+     * 汇总合同节点标准信息
+     *
+     * @param to 合同节点标准信息to
+     * @return class ContractNodeStandardBO
+     * @throws SerException
+     */
+    default List<ContractNodeStandardBO> collect(ContractNodeStandardTO to) throws SerException {
         return null;
     }
 
-    default List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardBO bo) throws SerException {
+    /**
+     * 搜索合同节点标准信息
+     *
+     * @param to 合同节点标准信息to
+     * @return class ContractNodeStandardBO
+     * @throws SerException
+     */
+    default List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardTO to) throws SerException {
         return null;
     }
+
 }

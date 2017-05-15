@@ -6,9 +6,9 @@ import com.bjike.goddess.devicerepair.dto.DeviceRepairDTO;
 import com.bjike.goddess.devicerepair.to.DeviceRepairTO;
 import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
+import com.bjike.goddess.devicerepair.type.AuditState;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 设备维修业务接口
@@ -79,6 +79,15 @@ public interface DeviceRepairAPI {
      * @throws SerException
      */
     void welfareAudit(WelfareAuditTO to) throws SerException;
+
+    /**
+     * 项目经理审核状态
+     *
+     * @param id           设备维修唯一标识
+     * @param pmAuditState 项目经理审核状态
+     * @throws SerException
+     */
+    void pmAudit(String id, AuditState pmAuditState) throws SerException;
 
     /**
      * 设备报废

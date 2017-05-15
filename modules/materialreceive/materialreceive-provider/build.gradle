@@ -31,5 +31,6 @@ dependencies {
     compile project(":modules:materialreceive:materialreceive-api")
     compile project(":common:common-utils")
     compile project(":modules:user:user-api")
+    compile project(":modules:materialinstock:materialinstock-api")
 }
 

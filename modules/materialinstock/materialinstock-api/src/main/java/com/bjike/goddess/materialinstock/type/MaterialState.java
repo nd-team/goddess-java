@@ -22,7 +22,17 @@ public enum MaterialState {
     /**
      * 自然损坏
      */
-    NATURAL_DAMAGE(2);
+    NATURAL_DAMAGE(2),
+
+    /**
+     * 维修中
+     */
+    REPAIRING(3),
+
+    /**
+     * 已报废
+     */
+    SCRAP(4);
 
     private int code;
 

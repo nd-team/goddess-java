@@ -18,6 +18,12 @@ public class MaterialInStockVO {
      * id
      */
     private String id;
+
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
+
     /**
      * 入库类型
      */
@@ -175,6 +181,14 @@ public class MaterialInStockVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
     }
 
     public InstockType getInstockType() {

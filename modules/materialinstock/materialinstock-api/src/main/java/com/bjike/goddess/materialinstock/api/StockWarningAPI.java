@@ -28,6 +28,14 @@ public interface StockWarningAPI {
     StockWarningBO findById(String id) throws SerException;
 
     /**
+     * 查询库存预警记录条数
+     *
+     * @param dto 库存预警dto
+     * @throws SerException
+     */
+    Long count(StockWarningDTO dto) throws SerException;
+
+    /**
      * 分页查询库存预警
      *
      * @return class StockWarningBO
