@@ -16,7 +16,7 @@ public enum AuditState {
      */
     UNAUDITED(0),
     /**
-     * 已审核
+     * 审核通过
      */
     AUDITED(1),
     /**
