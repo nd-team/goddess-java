@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.ModuleType;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,5 +101,14 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
     public List<ModuleTypeBO> maps(ModuleTypeDTO dto) throws SerException {
         dto.getSorts().add("status=asc");
         return BeanTransform.copyProperties(super.findByPage(dto), ModuleTypeBO.class);
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        List<ModuleTypeBO> list = this.findByStatus(Status.THAW);
+        List<OpinionBO> bos =new ArrayList<>(0);
+        for(ModuleTypeBO entity : list)
+            bos.add(new OpinionBO(entity.getId(),entity.getModule()));
+        return bos;
     }
 }
