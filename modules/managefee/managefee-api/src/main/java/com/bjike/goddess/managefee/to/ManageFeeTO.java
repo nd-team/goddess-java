@@ -18,51 +18,53 @@ import javax.validation.constraints.NotNull;
 public class ManageFeeTO extends BaseTO {
 
     public interface TestAdd{}
+    public interface TestEdit{}
     /**
      * 地区
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "地区不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "项目组不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 项目名称
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "项目名称不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "项目名称不能为空")
     private String project;
 
     /**
      * 类别
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "类别不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "类别不能为空")
     private String type;
 
     /**
      * 年份
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "年份不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "年份不能为空")
     private String year;
 
     /**
      * 月份
      */
-    @NotBlank(groups = {ManageFeeTO.TestAdd.class} , message = "月份不能为空")
+    @NotBlank(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "月份不能为空")
     private String month;
 
     /**
      * 目标管理费
      */
-    @NotNull(groups = {ManageFeeTO.TestAdd.class} , message = "目标管理费不能为空,且为数字")
+    @NotNull(groups = {ManageFeeTO.TestAdd.class,ManageFeeTO.TestEdit.class} , message = "目标管理费不能为空,且为数字")
     private Double targetFee;
 
     /**
      * 实际管理费
      */
+    @NotNull(groups = {ManageFeeTO.TestEdit.class} , message = "实际管理费不能为空,且为数字")
     private Double actualFee;
 
     /**

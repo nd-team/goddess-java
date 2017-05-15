@@ -23,12 +23,13 @@
 	<dubbo:service  ref="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
 	<dubbo:service  ref="customerDetailApiImpl" interface="com.bjike.goddess.customer.api.CustomerDetailAPI" />
 	<dubbo:service  ref="customerLevelApiImpl" interface="com.bjike.goddess.customer.api.CustomerLevelAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
 
 </beans>
