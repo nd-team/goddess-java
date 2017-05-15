@@ -91,7 +91,7 @@ public interface ProjectOutsourcingAPI {
      * @param toList
      * @throws SerException
      */
-    void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException;
+    void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException;
 
     /**
      * 导出Excel

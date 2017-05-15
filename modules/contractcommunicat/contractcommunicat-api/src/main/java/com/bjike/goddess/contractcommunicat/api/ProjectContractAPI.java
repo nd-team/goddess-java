@@ -92,7 +92,7 @@ public interface ProjectContractAPI {
      * @param toList
      * @throws SerException
      */
-    void leadExcel(List<ProjectContractExcel> toList) throws SerException;
+    void leadExcel(List<ProjectContractTO> toList) throws SerException;
 
     /**
      * 导出Excel

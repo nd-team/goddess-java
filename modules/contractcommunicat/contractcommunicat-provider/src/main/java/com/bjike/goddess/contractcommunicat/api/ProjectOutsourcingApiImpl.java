@@ -73,7 +73,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     }
 
     @Override
-    public void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException {
+    public void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException {
         projectOutsourcingSer.leadExcel(toList);
     }
 

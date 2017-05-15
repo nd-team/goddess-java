@@ -444,11 +444,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         List<DispatchCarInfo> proejctList = null;
         if (collectType == CollectType.AREA) {
             //分组查询地区、项目组、项目
-            proejctList = super.findBySql("select area , project_group , project  from dispatchcar_basicinfo group by area , project_group , project ",
+            proejctList = super.findBySql("select area , project_group , project ,1 from dispatchcar_basicinfo group by area , project_group , project ",
                     DispatchCarInfo.class, new String[]{"area", "group", "project"});
         } else {
             //分组查询地区、项目组、项目
-            proejctList = super.findBySql("select driver , project_group , project  from dispatchcar_basicinfo group by driver , project_group , project ",
+            proejctList = super.findBySql("select driver , project_group , project ,1 from dispatchcar_basicinfo group by driver , project_group , project ",
                     DispatchCarInfo.class, new String[]{"area", "group", "project"});
         }
 
@@ -820,21 +820,21 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     //根据月份获取季度开始月
     public int getQuarterStart(int month) {
         int months[] = {0, 3, 6, 9};
-        if (month >= 0 && month <= 2) // 1-3月;0,2
+        if (month >= 0 && month <= 2) // 1-3月;0,1,2
             return months[0];
         else if (month >= 3 && month <= 5) // 4-6月;3,4,5
             return months[1];
         else if (month >= 6 && month <= 8) // 7-9月;6,7,8
             return months[2];
         else
-            // 10-12月;1012
+            // 10-12月;10,11,12
             return months[3];
     }
 
     //根据月份获取季度结束月
     public int getQuarterEnd(int month) {
         int months[] = {2, 5, 8, 11};
-        if (month >= 0 && month <= 2) // 1-3月;0,2
+        if (month >= 0 && month <= 2) // 1-3月;0,1,2
             return months[0];
         else if (month >= 3 && month <= 5) // 4-6月;3,4,5
             return months[1];

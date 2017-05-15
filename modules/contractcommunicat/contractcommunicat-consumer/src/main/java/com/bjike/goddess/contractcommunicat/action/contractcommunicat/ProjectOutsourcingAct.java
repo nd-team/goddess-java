@@ -161,7 +161,8 @@ public class ProjectOutsourcingAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<ProjectOutsourcingExcel> toList = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
+            List<ProjectOutsourcingExcel> tos = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
+            List<ProjectOutsourcingTO> toList = BeanTransform.copyProperties(tos,ProjectOutsourcingTO.class);
             projectOutsourcingAPI.leadExcel(toList);
             return new ActResult("上传成功");
         } catch (SerException e) {
@@ -178,7 +179,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     @PostMapping("v1/exportExcel")
     public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
-            String fileName = "项目外包洽谈";
+            String fileName = "项目外包洽谈.xlsx";
             super.writeOutFile(response, projectOutsourcingAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {

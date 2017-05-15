@@ -71,7 +71,7 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
      *
      * @param toList
      */
-    void leadExcel(List<ProjectOutsourcingExcel> toList) throws SerException;
+    void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException;
 
     /**
      * 导出excel
