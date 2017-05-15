@@ -8,9 +8,9 @@ import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialAnalyze;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
-import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,7 @@ import java.util.List;
 public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, MaterialAnalyzeDTO> implements MaterialAnalyzeSer {
 
     @Autowired
-    private MaterialInStockSer materialInStockSer;
+    private MaterialInStockAPI materialInStockAPI;
 
     /**
      * 分页查询物资分析
@@ -129,7 +129,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
     @Override
     public List<MaterialAnalyzeBO> materialAnalyze(InventoryType inventoryType) throws SerException {
         //查询所有类型的存储地区,项目组,物品类型,物资名称
-        List<AttributeBO> boList = materialInStockSer.findAllKindsType();
+        List<AttributeBO> boList = materialInStockAPI.findAllKindsType();
         if (CollectionUtils.isEmpty(boList)) {
             return Collections.emptyList();
         }
@@ -137,7 +137,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
         List<MaterialAnalyzeBO> analyzeBOList = new ArrayList<>(0);
         //依次遍历每条记录
         for (AttributeBO bo : boList) {
-            List<MaterialInStockBO> inStockBOList = materialInStockSer.findByAttribute(bo);
+            List<MaterialInStockBO> inStockBOList = materialInStockAPI.findByAttribute(bo);
             String area = bo.getStorageArea();//地区
             String projectGroup = bo.getProjectGroup();//项目组
             String type = bo.getMaterialType();        //物资类型

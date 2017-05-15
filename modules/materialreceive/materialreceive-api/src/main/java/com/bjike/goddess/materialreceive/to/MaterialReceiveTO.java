@@ -93,7 +93,6 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 物资编号
      */
-    @NotEmpty(groups = {RECEIVEOVER.class}, message = "物资编号不能为空")
     private String materialNo;
 
     /**
@@ -147,7 +146,7 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 领用编号
      */
-    @Size(groups = {ADD.class, EDIT.class}, message = "领用数量必修是大于0的整数")
+    @Size(groups = {ADD.class, EDIT.class, MATERIALRETURN.class}, message = "领用数量必修是大于0的整数")
     private String[] materialNum;
 
     public String getArea() {

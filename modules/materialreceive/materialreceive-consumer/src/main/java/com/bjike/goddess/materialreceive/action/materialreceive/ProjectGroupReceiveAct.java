@@ -39,7 +39,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 根据id查询项目组领用归还
      *
-     * @param id      项目组领用归还唯一标识
+     * @param id 项目组领用归还唯一标识
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -75,7 +75,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 分页查询项目组领用归还
      *
-     * @param dto           项目组领用归还dto
+     * @param dto 项目组领用归还dto
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -94,7 +94,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 添加项目组领用归还
      *
-     * @param to      项目组领用归还to
+     * @param to 项目组领用归还to
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -130,7 +130,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 编辑物资领用
      *
-     * @param to     物资领用to
+     * @param to 物资领用to
      * @throws ActException
      * @version v1
      */
@@ -147,7 +147,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 归还物资
      *
-     * @param to     物资领用to
+     * @param to 物资领用to
      * @throws ActException
      * @version v1
      */

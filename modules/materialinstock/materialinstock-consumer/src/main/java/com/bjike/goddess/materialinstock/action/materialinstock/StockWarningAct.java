@@ -39,7 +39,7 @@ public class StockWarningAct {
     /**
      * 根据id查询库存预警
      *
-     * @param id      库存预警唯一标识
+     * @param id 库存预警唯一标识
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -75,7 +75,7 @@ public class StockWarningAct {
     /**
      * 分页查询库存预警
      *
-     * @param dto           库存预警dto
+     * @param dto 库存预警dto
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -94,7 +94,7 @@ public class StockWarningAct {
     /**
      * 添加库存预警
      *
-     * @param to      库存预警to
+     * @param to 库存预警to
      * @return class StockWarningVO
      * @throws ActException
      * @version v1
@@ -130,7 +130,7 @@ public class StockWarningAct {
     /**
      * 编辑库存预警
      *
-     * @param to     库存预警to
+     * @param to 库存预警to
      * @throws ActException
      * @version v1
      */

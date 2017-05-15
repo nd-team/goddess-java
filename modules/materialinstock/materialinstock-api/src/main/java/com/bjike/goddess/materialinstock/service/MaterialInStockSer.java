@@ -1,6 +1,5 @@
 package com.bjike.goddess.materialinstock.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
@@ -12,7 +11,6 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 物资入库业务接口
@@ -37,8 +35,8 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      * 根据物资状态和物资使用状态查询物资入库
      *
      * @param materialState 物资状态
-     * @param useState 物资使用状态
-     * @param dto 物资入库dto
+     * @param useState      物资使用状态
+     * @param dto           物资入库dto
      * @return
      * @throws SerException
      */
@@ -57,7 +55,7 @@ public interface MaterialInStockSer extends Ser<MaterialInStock, MaterialInStock
      * 更新物资使用状态
      *
      * @param materialNum 物资编号集合
-     * @param useState 使用状态
+     * @param useState    使用状态
      * @throws SerException
      */
     void updateUseState(String[] materialNum, UseState useState) throws SerException;

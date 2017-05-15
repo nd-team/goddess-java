@@ -4,9 +4,10 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.entity.MaterialInStock;
-import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +37,7 @@ import java.util.List;
 public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive, ProjectGroupReceiveDTO> implements ProjectGroupReceiveSer {
 
     @Autowired
-    private MaterialInStockSer materialInStockSer;
+    private MaterialInStockAPI materialInStockAPI;
 
     /**
      * 分页查询项目组领用归还
@@ -61,7 +63,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Transactional(rollbackFor = SerException.class)
     public ProjectGroupReceiveBO save(ProjectGroupReceiveTO to) throws SerException {
         String[] materialNum = checkMaterialNum(to);//检查待领用的物资编号不能为空
-        materialInStockSer.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
+        materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
         Integer quantity = materialNum.length;
         StringBuilder materialNoSb = getMaterialNoSb(materialNum);
         ProjectGroupReceiveBO bo = saveModel(to, quantity, materialNoSb);
@@ -92,12 +94,13 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     private void updateUseState(String[] materialNum) throws SerException {
         MaterialInStockDTO dto = new MaterialInStockDTO();
         dto.getConditions().add(Restrict.in("stockEncoding", materialNum));
-        List<MaterialInStock> list = materialInStockSer.findByCis(dto);
-        for (MaterialInStock model : list) {
-            model.setUseState(UseState.RECEIVE);
+        List<MaterialInStockBO> listBO = materialInStockAPI.findBOByCis(dto);
+        if (!CollectionUtils.isEmpty(listBO)) {
+            for (MaterialInStockBO bo : listBO) {
+                bo.setUseState(UseState.RECEIVE);
+            }
+            materialInStockAPI.updateBO(listBO);
         }
-
-        materialInStockSer.update(list);
     }
 
 
@@ -170,7 +173,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     private void instockMaterials(ProjectGroupReceive model) throws SerException {
         String materialNo = model.getMaterialNo();//获取物资编号
         String[] materialNum = materialNo.split(",");
-        materialInStockSer.updateUseState(materialNum, UseState.INSTOCK);
+        materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
     }
 
     /**

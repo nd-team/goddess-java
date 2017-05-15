@@ -45,7 +45,6 @@ public class MaterialInStockAct extends BaseFileAction {
      * 根据id查询物资入库
      *
      * @param id      物资入库唯一标识
-     * @param request Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -82,8 +81,6 @@ public class MaterialInStockAct extends BaseFileAction {
      * 分页查询物资入库
      *
      * @param dto           物资入库dto
-     * @param bindingResult 参数绑定
-     * @param request       Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -103,8 +100,6 @@ public class MaterialInStockAct extends BaseFileAction {
      * 添加物资入库
      *
      * @param to      物资入库to
-     * @param result  绑定结果集
-     * @param request Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -141,7 +136,6 @@ public class MaterialInStockAct extends BaseFileAction {
      * 编辑物资入库
      *
      * @param to     物资入库to
-     * @param result 绑定结果集
      * @throws ActException
      * @version v1
      */
@@ -158,7 +152,6 @@ public class MaterialInStockAct extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @param request  上传请求
      * @param username 员工姓名(创建对应文件夹使用)
      * @version v1
      */
