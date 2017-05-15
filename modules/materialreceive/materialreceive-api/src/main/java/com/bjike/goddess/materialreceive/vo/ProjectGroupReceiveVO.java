@@ -26,6 +26,11 @@ public class ProjectGroupReceiveVO {
     private String materialName;
 
     /**
+     * 物资领用编号
+     */
+    private String materialNo;
+
+    /**
      * 数量
      */
     private Integer quantity;
@@ -73,6 +78,14 @@ public class ProjectGroupReceiveVO {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    public String getMaterialNo() {
+        return materialNo;
+    }
+
+    public void setMaterialNo(String materialNo) {
+        this.materialNo = materialNo;
     }
 
     public Integer getQuantity() {

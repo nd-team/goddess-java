@@ -16,6 +16,9 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" id="stockWarningApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.MaterialReceiveAPI" ref="materialReceiveApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialreceive.api.ProjectGroupReceiveAPI" ref="projectGroupReceiveApiImpl"></dubbo:service>

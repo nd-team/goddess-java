@@ -40,7 +40,6 @@ public class MaterialReceiveAct {
      * 根据id查询物资领用
      *
      * @param id      物资领用唯一标识
-     * @param request Http请求
      * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
@@ -57,11 +56,26 @@ public class MaterialReceiveAct {
     }
 
     /**
+     * 计算总数量
+     *
+     * @param dto 物资领用dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated MaterialReceiveDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = materialReceiveAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询物资领用
      *
      * @param dto           物资领用dto
-     * @param bindingResult 参数绑定
-     * @param request       Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -81,8 +95,6 @@ public class MaterialReceiveAct {
      * 添加物资领用
      *
      * @param to      物资领用to
-     * @param result  绑定结果集
-     * @param request Http请求
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -119,7 +131,6 @@ public class MaterialReceiveAct {
      * 编辑物资领用
      *
      * @param to     物资领用to
-     * @param result 绑定结果集
      * @throws ActException
      * @version v1
      */
@@ -136,8 +147,7 @@ public class MaterialReceiveAct {
     /**
      * 审核
      *
-     * @param to 物资领用to
-     * @param result 参数绑定
+     * @param to     物资领用to
      * @throws ActException
      * @version v1
      */
@@ -154,8 +164,7 @@ public class MaterialReceiveAct {
     /**
      * 领用完成
      *
-     * @param to 物资领用to
-     * @param result 参数绑定
+     * @param to     物资领用to
      * @throws ActException
      */
     @PutMapping("v1/receiveover")
@@ -171,8 +180,7 @@ public class MaterialReceiveAct {
     /**
      * 物资领用后归还
      *
-     * @param to 物资领用to
-     * @param result 参数绑定
+     * @param to     物资领用to
      * @throws ActException
      */
     @PutMapping("v1/materialreturn")
