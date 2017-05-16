@@ -71,7 +71,7 @@ public class ScheduleJob extends BaseEntity {
     /**
      * 任务调度组
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "scheduleJobGroup", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '任务调度组' ")
     private ScheduleJobGroup scheduleJobGroup;
 

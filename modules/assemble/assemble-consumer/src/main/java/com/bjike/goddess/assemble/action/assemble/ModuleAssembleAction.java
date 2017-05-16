@@ -31,7 +31,7 @@ public class ModuleAssembleAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result list(ModuleAssembleTO to) throws ActException {
+    public Result add(ModuleAssembleTO to) throws ActException {
         ActResult actResult = new ActResult();
         try {
             moduleAssembleAPI.add(to);
@@ -47,8 +47,8 @@ public class ModuleAssembleAction {
      * @throws ActException
      * @version v1
      */
-    @DeleteMapping("v1/delete/{id}")
-    public Result list(@PathVariable String id) throws ActException {
+    @DeleteMapping("v1/delete")
+    public Result delete( String id) throws ActException {
         ActResult actResult = new ActResult();
         try {
             moduleAssembleAPI.delete(id);

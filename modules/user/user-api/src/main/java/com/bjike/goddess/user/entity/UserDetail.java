@@ -57,28 +57,28 @@ public class UserDetail extends BaseEntity {
     @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '身份证' ")
     private String idCard;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", nullable = false, unique = true, columnDefinition = "VARCHAR(36) COMMENT '所属用户' ")
     private User user;
 
     /**
      * 所在部门
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "department_id", columnDefinition = "VARCHAR(36) COMMENT '所在部门' ")
     private Department department;
 
     /**
      * 所在用户组
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "group_id", columnDefinition = "VARCHAR(36) COMMENT '所在用户组' ")
     private Group group;
 
     /**
      * 职位
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "position_id", columnDefinition = "VARCHAR(36) COMMENT '职位' ")
     private Position position;
 
