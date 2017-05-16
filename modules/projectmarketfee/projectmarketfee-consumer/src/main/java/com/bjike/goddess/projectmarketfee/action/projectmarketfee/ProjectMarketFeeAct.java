@@ -9,14 +9,17 @@ import com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeAPI;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
-import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 import com.bjike.goddess.projectmarketfee.vo.ProjectMarketFeeCountVO;
 import com.bjike.goddess.projectmarketfee.vo.ProjectMarketFeeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目前期的市场活动费
@@ -175,17 +178,87 @@ public class ProjectMarketFeeAct {
     /**
      * 查找汇总信息对应的明细
      *
-     * @param to      项目前期的市场活动费汇总明细信息
+     * @param id      项目前期的市场活动费汇总明细信息
      * @param request 请求对象
      * @return class ProjectMarketFeeVO
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/findDetail")
-    public Result findDetail(ProjectMarketFeeTO to, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findDetail/{id}")
+    public Result findDetail(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<ProjectMarketFeeBO> list = projectMarketFeeAPI.findDetail(to);
+            List<ProjectMarketFeeBO> list = projectMarketFeeAPI.findDetail(id);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectMarketFeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto     dto
+     * @param request 请求对象
+     * @return class ProjectMarketFeeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(ProjectMarketFeeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            ProjectMarketFeeBO bo = projectMarketFeeAPI.countNum(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, ProjectMarketFeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查找
+     *
+     * @param id      id
+     * @param request 请求对象
+     * @return class ProjectMarketFeeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projectmarketfee/{id}")
+    public Result projectmarketfee(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ProjectMarketFeeBO bo = projectMarketFeeAPI.findByID(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, ProjectMarketFeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查所有年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allYears")
+    public Result allYears() throws ActException {
+        try {
+            Set<Integer> set = projectMarketFeeAPI.allYears();
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查所有月份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allMonths")
+    public Result allMonths() throws ActException {
+        try {
+            Set<Integer> set = projectMarketFeeAPI.allMonths();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

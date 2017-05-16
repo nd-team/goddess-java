@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目前期的市场活动费业务接口实现
@@ -61,12 +62,32 @@ public class ProjectMarketFeeApiImpl implements ProjectMarketFeeAPI {
     }
 
     @Override
-    public List<ProjectMarketFeeBO> findDetail(ProjectMarketFeeTO to) throws SerException {
-        return projectMarketFeeSer.findDetail(to);
+    public List<ProjectMarketFeeBO> findDetail(String id) throws SerException {
+        return projectMarketFeeSer.findDetail(id);
     }
 
     @Override
     public ProjectMarketFeeCountBO count(String projectGroup, String area, Integer year, Integer month, String projectName) throws SerException {
         return projectMarketFeeSer.count(projectGroup, area, year, month, projectName);
+    }
+
+    @Override
+    public ProjectMarketFeeBO countNum(ProjectMarketFeeDTO dto) throws SerException {
+        return projectMarketFeeSer.countNum(dto);
+    }
+
+    @Override
+    public ProjectMarketFeeBO findByID(String id) throws SerException {
+        return projectMarketFeeSer.findByID(id);
+    }
+
+    @Override
+    public Set<Integer> allYears() throws SerException {
+        return projectMarketFeeSer.allYears();
+    }
+
+    @Override
+    public Set<Integer> allMonths() throws SerException {
+        return projectMarketFeeSer.allMonths();
     }
 }

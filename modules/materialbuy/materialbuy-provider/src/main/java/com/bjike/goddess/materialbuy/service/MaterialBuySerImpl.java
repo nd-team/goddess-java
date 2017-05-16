@@ -5,15 +5,14 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
-import com.bjike.goddess.materialbuy.entity.DeviceType;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
-import com.bjike.goddess.materialbuy.vo.MaterialBuyVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +76,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
      */
     @Override
     public void update(MaterialBuyTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             MaterialBuy model = super.findById(to.getId());
             if (model != null) {
                 updateMaterialBuy(to, model);
@@ -92,7 +91,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     /**
      * 更新物资购买
      *
-     * @param to 物资购买to
+     * @param to    物资购买to
      * @param model 物资购买
      * @throws SerException
      */
@@ -135,5 +134,24 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public void areaPrincipalAudit(MaterialBuyTO to) throws SerException {
         update(to);
+    }
+
+    /**
+     * chenjunhao
+     * 查找所有未付款的信息
+     *
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuyBO> allWaits() throws SerException {
+        List<MaterialBuy> list = super.findAll();
+        List<MaterialBuy> l = new ArrayList<MaterialBuy>();
+        for (MaterialBuy m : list) {
+            if (!m.getIfPayment()) {
+                l.add(m);
+            }
+        }
+        return BeanTransform.copyProperties(l, MaterialBuyBO.class);
     }
 }

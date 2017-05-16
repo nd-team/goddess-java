@@ -47,8 +47,12 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public void pay(WaitPayTO to) throws SerException {
+    @Transactional(rollbackFor = {SerException.class})
+    public void confirmPay(WaitPayTO to) throws SerException {
         WaitPay waitPay = super.findById(to.getId());
+        if (waitPay == null) {
+            throw new SerException("查找不到该对象");
+        }
         waitPay.setPay(to.getPay());
         super.update(waitPay);
     }
@@ -74,6 +78,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
                     waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
                     waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
+                    waitPay.setPay(v.getPay());
                     super.save(waitPay);
                 } else {
                     boolean b1 = true;
@@ -96,6 +101,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
                         waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
                         waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
+                        waitPay.setPay(v.getPay());
                         super.save(waitPay);
                     }
                 }
@@ -216,7 +222,10 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     if (oilCardNumber.equals(w.getOilCardNumber()) && year.equals(w.getYear()) && month.equals(w.getMonth())) {
                         currentSum += w.getRechargeMoney();
                     }
-                    if (oilCardNumber.equals(w.getOilCardNumber()) && ((year - 1) == w.getYear()) && (w.getMonth() == 12)) {
+                    boolean b1 = oilCardNumber.equals(w.getOilCardNumber());
+                    boolean b2 = w.getYear().equals(year - 1);
+                    boolean b3 = w.getMonth().equals(12);
+                    if (b1 && b2 && b3) {
                         lastSum += w.getRechargeMoney();
                     }
                 }
@@ -276,7 +285,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         List<OilCardRechargeBO> list = null;
         for (String s : oilCardBasicIds) {
             String[] fields = new String[]{"rechargeDate", "rechargeMoney", "rechargeUser", "rechargeWay"};
-            String sql = "SELECT rechargeDate,rechargeMoney,rechargeUser,rechargeWay\n" +
+            String sql = "SELECT DATE_FORMAT(rechargeDate,\"%Y-%m-%d %T\") rechargeDate,rechargeMoney,rechargeUser,rechargeWay\n" +
                     "from oilcardmanage_recharge\n" +
                     "WHERE oilCardBasicId='" + s + "'";
             list = super.findBySql(sql, OilCardRechargeBO.class, fields);

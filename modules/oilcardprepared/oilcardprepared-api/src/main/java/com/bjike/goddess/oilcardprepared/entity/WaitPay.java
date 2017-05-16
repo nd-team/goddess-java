@@ -36,7 +36,7 @@ public class WaitPay extends BaseEntity {
     /**
      * 充值日期
      */
-    @Column(name = "rechargeDate", nullable = false, columnDefinition = "DATETIME   COMMENT '充值日期'")
+    @Column(name = "rechargeDate", columnDefinition = "DATETIME   COMMENT '充值日期'")
     private LocalDateTime rechargeDate;
 
     /**
@@ -78,13 +78,13 @@ public class WaitPay extends BaseEntity {
     /**
      * 月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "INT(11) COMMENT '月份'")
+    @Column(name = "month", columnDefinition = "INT(11) COMMENT '月份'")
     private Integer month;
 
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "INT(11) COMMENT '年份'")
+    @Column(name = "year", columnDefinition = "INT(11) COMMENT '年份'")
     private Integer year;
 
     public Integer getMonth() {

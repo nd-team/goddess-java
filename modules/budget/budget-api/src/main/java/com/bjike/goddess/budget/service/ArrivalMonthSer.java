@@ -4,6 +4,7 @@ import com.bjike.goddess.budget.bo.ArrivalMonthBO;
 import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
+import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalMonth;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -101,6 +102,17 @@ public interface ArrivalMonthSer extends Ser<ArrivalMonth, ArrivalMonthDTO> {
      * @throws SerException
      */
     default List<ArrivalWeekBO> findDetail(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ArrivalMonthDTO dto) throws SerException {
         return null;
     }
 }

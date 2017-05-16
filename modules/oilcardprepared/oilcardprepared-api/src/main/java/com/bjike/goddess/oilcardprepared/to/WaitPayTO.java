@@ -1,6 +1,9 @@
 package com.bjike.goddess.oilcardprepared.to;
 
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 等待付款
@@ -51,6 +54,7 @@ public class WaitPayTO extends BaseTO {
     /**
      * 是否付款
      */
+    @NotNull(groups = {EDIT.class}, message = "是否付款不能为空")
     private Boolean pay;
 
 

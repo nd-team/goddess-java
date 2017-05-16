@@ -51,7 +51,7 @@ public class WaitPayApiImpl implements WaitPayAPI {
     }
 
     @Override
-    public void pay(WaitPayTO to) throws SerException {
-        waitPaySer.pay(to);
+    public void confirmPay(WaitPayTO to) throws SerException {
+        waitPaySer.confirmPay(to);
     }
 }

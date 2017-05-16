@@ -7,6 +7,7 @@ import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目前期的市场活动费业务接口
@@ -34,7 +35,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> firstSubjectCount(String startTime, String endTime) throws SerException {
@@ -46,7 +47,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> secondSubjectCount(String startTime, String endTime) throws SerException {
@@ -58,7 +59,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> thirdSubjectCount(String startTime, String endTime) throws SerException {
@@ -70,7 +71,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> areaCount(String startTime, String endTime) throws SerException {
@@ -82,7 +83,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> projectGroupCount(String startTime, String endTime) throws SerException {
@@ -94,7 +95,7 @@ public interface ProjectMarketFeeAPI {
      *
      * @param startTime 开始时间
      * @param endTime   结束时间
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default List<ProjectMarketFeeCountBO> projectNameCount(String startTime, String endTime) throws SerException {
@@ -104,11 +105,11 @@ public interface ProjectMarketFeeAPI {
     /**
      * 查找明细
      *
-     * @param to 项目前期的市场活动费汇总明细信息
+     * @param id 项目前期的市场活动费汇总明细信息
      * @return class ProjectMarketFeeBO
      * @throws SerException
      */
-    default List<ProjectMarketFeeBO> findDetail(ProjectMarketFeeTO to) throws SerException {
+    default List<ProjectMarketFeeBO> findDetail(String id) throws SerException {
         return null;
     }
 
@@ -120,10 +121,52 @@ public interface ProjectMarketFeeAPI {
      * @param year         年份
      * @param month        月份
      * @param projectName  项目名称
-     * @return class ProjectMarketFeeCountBO
+     * @return class ProjectMarketFeeCountTO
      * @throws SerException
      */
     default ProjectMarketFeeCountBO count(String projectGroup, String area, Integer year, Integer month, String projectName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto 预警信息
+     * @return class ProjectMarketFeeBO
+     * @throows SerException
+     */
+    default ProjectMarketFeeBO countNum(ProjectMarketFeeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 通过id查找
+     *
+     * @param id id
+     * @return class ProjectMarketFeeBO
+     * @throws SerException
+     */
+    default ProjectMarketFeeBO findByID(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查所有年份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    default Set<Integer> allYears() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查所有月份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    default Set<Integer> allMonths() throws SerException {
         return null;
     }
 }

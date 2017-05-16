@@ -224,4 +224,9 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         }
         return list;
     }
+
+    @Override
+    public Long countNum(ArrivalMonthDTO dto) throws SerException{
+        return super.count(dto);
+    }
 }

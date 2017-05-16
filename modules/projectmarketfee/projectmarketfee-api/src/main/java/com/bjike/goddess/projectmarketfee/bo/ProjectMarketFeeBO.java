@@ -68,6 +68,19 @@ public class ProjectMarketFeeBO extends BaseBO {
      */
     private Integer month;
 
+    /**
+     * 总记录数
+     */
+    private Long num;
+
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
+
     public Integer getYear() {
         return year;
     }

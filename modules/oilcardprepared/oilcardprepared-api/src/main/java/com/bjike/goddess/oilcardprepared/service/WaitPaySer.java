@@ -37,7 +37,7 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
      * @param to 等待付款信息
      * @throws SerException
      */
-    default void pay(WaitPayTO to) throws SerException {
+    default void confirmPay(WaitPayTO to) throws SerException {
     }
 
     /**

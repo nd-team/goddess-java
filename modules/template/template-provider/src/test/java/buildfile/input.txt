@@ -1,7 +1,7 @@
-模块名:oilcardprepared
+模块名:equipmentprepared
 类名:MoneyReady
 作者:chenjunhao
-描述:资金审核准备
+描述:资金准备审核
 
 #参数[变量类型  变量名 ]
 #parameter--------------

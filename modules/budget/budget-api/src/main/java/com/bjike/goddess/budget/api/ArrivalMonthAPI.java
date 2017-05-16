@@ -101,4 +101,15 @@ public interface ArrivalMonthAPI {
     default List<ArrivalWeekBO> findDetail(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ArrivalMonthDTO dto) throws SerException {
+        return null;
+    }
 }

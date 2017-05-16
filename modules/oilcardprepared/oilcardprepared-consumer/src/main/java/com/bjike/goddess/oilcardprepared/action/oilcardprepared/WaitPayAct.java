@@ -43,10 +43,10 @@ public class WaitPayAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/pay")
-    public Result pay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
+    @PatchMapping("v1/confirmPay")
+    public Result confirmPay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
         try {
-            waitPayAPI.pay(to);
+            waitPayAPI.confirmPay(to);
             return new ActResult("编辑成功!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -99,6 +99,7 @@ public class WaitPayAct {
      * @param request   请求对象
      * @return class WaitPayVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/count/{startTime}/{endTime}")
     public Result count(@PathVariable String startTime, @PathVariable String endTime, HttpServletRequest request) throws ActException {
@@ -117,6 +118,7 @@ public class WaitPayAct {
      * @param request 请求对象
      * @return class ContrastVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/contrast/{month}")
     public Result contrast(@PathVariable Integer month, HttpServletRequest request) throws ActException {

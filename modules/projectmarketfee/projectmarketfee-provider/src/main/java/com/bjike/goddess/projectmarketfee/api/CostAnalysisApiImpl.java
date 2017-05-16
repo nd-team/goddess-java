@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 费用效益分析业务接口实现
@@ -66,7 +67,22 @@ public class CostAnalysisApiImpl implements CostAnalysisAPI {
     }
 
     @Override
-    public List<CostAnalysisBO> findDetail(CostAnalysisTO to) throws SerException {
-        return costAnalysisSer.findDetail(to);
+    public List<CostAnalysisBO> findDetail(String id) throws SerException {
+        return costAnalysisSer.findDetail(id);
+    }
+
+    @Override
+    public CostAnalysisBO countNum(CostAnalysisDTO dto) throws SerException {
+        return costAnalysisSer.countNum(dto);
+    }
+
+    @Override
+    public Set<Integer> allYears() throws SerException {
+        return costAnalysisSer.allYears();
+    }
+
+    @Override
+    public Set<Integer> allMonths() throws SerException {
+        return costAnalysisSer.allMonths();
     }
 }

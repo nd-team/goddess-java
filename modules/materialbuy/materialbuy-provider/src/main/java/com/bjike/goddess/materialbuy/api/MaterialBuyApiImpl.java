@@ -119,4 +119,16 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     public void areaPrincipalAudit(MaterialBuyTO to) throws SerException {
         materialBuySer.areaPrincipalAudit(to);
     }
+
+    /**
+     * chenjunhao
+     * 查找所有未付款的信息
+     *
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuyBO> allWaits() throws SerException {
+        return materialBuySer.allWaits();
+    }
 }

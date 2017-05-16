@@ -1,7 +1,6 @@
 package com.bjike.goddess.oilcardprepared.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.oilcardprepared.bo.MoneyReadyBO;

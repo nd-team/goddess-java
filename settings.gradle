@@ -379,3 +379,8 @@ include ':modules:qualifications:qualifications-provider'
 include ':modules:supplier:supplier-api'
 include ':modules:supplier:supplier-consumer'
 include ':modules:supplier:supplier-provider'
+
+//#equipmentprepared 设备购买资金准备与支付 chenjunhao
+include ':modules:equipmentprepared:equipmentprepared-api'
+include ':modules:equipmentprepared:equipmentprepared-consumer'
+include ':modules:equipmentprepared:equipmentprepared-provider'
