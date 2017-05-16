@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.customer.enums.CusPermissionType;
 
 import javax.persistence.Column;
 
@@ -31,7 +32,7 @@ public class CusPermissionBO extends BaseBO {
     /**
      * 类型
      */
-    private String type;
+    private CusPermissionType type;
     /**
      * 创建时间
      */
@@ -66,11 +67,11 @@ public class CusPermissionBO extends BaseBO {
         this.operator = operator;
     }
 
-    public String getType() {
+    public CusPermissionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CusPermissionType type) {
         this.type = type;
     }
 

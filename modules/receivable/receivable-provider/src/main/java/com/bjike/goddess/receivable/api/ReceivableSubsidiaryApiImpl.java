@@ -89,7 +89,7 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
         return receivableSubsidiarySer.getInnerName();
     }
     @Override
-    public List<Contractor> getContractor() throws SerException {
+    public List<String> getContractor() throws SerException {
         return receivableSubsidiarySer.getContractor();
     }
 

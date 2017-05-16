@@ -32,7 +32,7 @@ public class DepartmentVO {
     /**
      * 是否有子节点
      */
-    private String hasChild;
+    private Boolean hasChild;
 
     public String getId() {
         return id;
@@ -66,11 +66,11 @@ public class DepartmentVO {
         this.createTime = createTime;
     }
 
-    public String getHasChild() {
+    public Boolean getHasChild() {
         return hasChild;
     }
 
-    public void setHasChild(String hasChild) {
+    public void setHasChild(Boolean hasChild) {
         this.hasChild = hasChild;
     }
 }

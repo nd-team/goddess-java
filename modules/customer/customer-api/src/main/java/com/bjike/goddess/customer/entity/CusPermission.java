@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.customer.enums.CusPermissionType;
 
 import javax.persistence.*;
 
@@ -38,8 +39,8 @@ public class CusPermission extends BaseEntity {
     /**
      * 类型
      */
-    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '类型'")
-    private String type;
+    @Column(name = "type", nullable = false, columnDefinition = "INT(2)   COMMENT '类型'")
+    private CusPermissionType type;
 
     public String getIdFlag() {
         return idFlag;
@@ -65,11 +66,11 @@ public class CusPermission extends BaseEntity {
         this.operator = operator;
     }
 
-    public String getType() {
+    public CusPermissionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CusPermissionType type) {
         this.type = type;
     }
 }

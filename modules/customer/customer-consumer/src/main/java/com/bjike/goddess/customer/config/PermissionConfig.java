@@ -3,6 +3,7 @@ package com.bjike.goddess.customer.config;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.entity.CusPermission;
+import com.bjike.goddess.customer.enums.CusPermissionType;
 import com.bjike.goddess.customer.to.CusPermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,13 @@ public class PermissionConfig {
             CusPermissionTO to = new CusPermissionTO();
             to.setIdFlag( id);
             to.setDescription( desc );
-            to.setType( type);
+            if(CusPermissionType.LEVEL.name().equals(type.trim())){
+                to.setType( CusPermissionType.LEVEL);
+            }else if(CusPermissionType.MODULE.name().equals(type.trim())){
+                to.setType( CusPermissionType.MODULE);
+            }else if(CusPermissionType.POSITION.name().equals(type.trim())){
+                to.setType( CusPermissionType.POSITION);
+            }
             to.setOperator("");
             listTO.add( to );
 
@@ -131,8 +138,8 @@ public class PermissionConfig {
         for(String id: idStrList){
             idList.add(id.trim());
         }
-        for(String id: typeStrList){
-            typeList.add(id.trim());
+        for(String type: typeStrList){
+            typeList.add(type.trim());
         }
 
         System.out.println( descSb+"复活节客队："+describeStr);

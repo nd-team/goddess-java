@@ -79,5 +79,5 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
      * @param to 导出条件
      * @throws SerException
      */
-    void exportExcel(ExportExcelTO to) throws SerException;
+    byte[] exportExcel(ExportExcelTO to) throws SerException;
 }

@@ -47,11 +47,11 @@ public class YearPlanBO extends BaseBO {
      * 各业务科目年度占比
      */
     private Double courseAccounted;
-
-    /**
-     * 年任务量
-     */
-    private Double quota;
+//
+//    /**
+//     * 年任务量
+//     */
+//    private Double quota;
 
 
     public Integer getYear() {
@@ -109,12 +109,12 @@ public class YearPlanBO extends BaseBO {
     public void setCourseAccounted(Double courseAccounted) {
         this.courseAccounted = courseAccounted;
     }
-
-    public Double getQuota() {
-        return quota;
-    }
-
-    public void setQuota(Double quota) {
-        this.quota = quota;
-    }
+//
+//    public Double getQuota() {
+//        return quota;
+//    }
+//
+//    public void setQuota(Double quota) {
+//        this.quota = quota;
+//    }
 }

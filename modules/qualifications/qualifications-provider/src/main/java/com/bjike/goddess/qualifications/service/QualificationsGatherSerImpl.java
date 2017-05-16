@@ -50,8 +50,10 @@ public class QualificationsGatherSerImpl extends ServiceImpl<QualificationsGathe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QualificationsGatherBO update(QualificationsGatherTO to) throws SerException {
-        QualificationsGather entity = BeanTransform.copyProperties(to, QualificationsGather.class, true), gather = super.findById(entity.getId());
-        entity.setCreateTime(gather.getCreateTime());
+        QualificationsGather entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         if (null == handleSer.findByType(to.getType())) {
             QualificationsHandleTO handleTO = new QualificationsHandleTO();

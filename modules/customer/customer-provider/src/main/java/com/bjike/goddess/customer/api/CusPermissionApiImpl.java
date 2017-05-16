@@ -26,6 +26,11 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     private CusPermissionSer cusPermissionSer;
 
     @Override
+    public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return cusPermissionSer.countPermission(cusPermissionDTO);
+    }
+
+    @Override
     public List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
         return cusPermissionSer.list(cusPermissionDTO);
     }
@@ -33,6 +38,11 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     @Override
     public CusPermissionBO getOneById(String id) throws SerException {
         return cusPermissionSer.getOneById(id);
+    }
+
+    @Override
+    public List<String>  listOperateById(String id) throws SerException {
+        return cusPermissionSer.listOperateById(id);
     }
 
     @Override
@@ -46,7 +56,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public CusPermissionBO getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag) throws SerException {
         return cusPermissionSer.getCusPermission(idFlag);
     }
 }

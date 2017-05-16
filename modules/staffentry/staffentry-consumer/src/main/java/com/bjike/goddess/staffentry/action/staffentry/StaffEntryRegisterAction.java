@@ -38,7 +38,6 @@ public class StaffEntryRegisterAction {
      */
     @PostMapping("v1/add")
     public Result addUsers(UserVO userVO) throws ActException {
-
         //TODO:  tanghaixiang 2017-03-09 未做用户注册
         return ActResult.initialize(null);
     }

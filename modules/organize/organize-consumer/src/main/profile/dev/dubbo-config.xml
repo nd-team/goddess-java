@@ -41,4 +41,5 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
+
 </beans>

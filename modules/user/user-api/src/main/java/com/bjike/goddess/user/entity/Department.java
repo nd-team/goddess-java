@@ -31,7 +31,7 @@ public class Department extends BaseEntity {
     /**
      * 上级部门
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '上级部门' ")
     private Department parent;
 

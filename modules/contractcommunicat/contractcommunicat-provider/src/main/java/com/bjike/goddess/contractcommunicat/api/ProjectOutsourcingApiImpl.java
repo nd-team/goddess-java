@@ -78,7 +78,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     }
 
     @Override
-    public void exportExcel(ExportExcelTO to) throws SerException {
-        projectOutsourcingSer.exportExcel(to);
+    public byte[] exportExcel(ExportExcelTO to) throws SerException {
+        return projectOutsourcingSer.exportExcel(to);
     }
 }

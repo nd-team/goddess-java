@@ -66,7 +66,7 @@ public class FundRecordApiImpl implements FundRecordAPI {
     }
 
     @Override
-    public List<AnalyzeBO> analyze(CollectTO to) throws SerException {
+    public AnalyzeBO analyze(CollectTO to) throws SerException {
         return fundRecordSer.analyze(to);
     }
 

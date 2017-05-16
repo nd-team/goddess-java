@@ -12,7 +12,6 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.api.ProjectContractAPI;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
-import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
@@ -27,10 +26,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -165,26 +163,15 @@ public class ProjectContractAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<ProjectContractExcel> toList = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
-            List<ProjectContractTO> tos = BeanTransform.copyProperties(toList,ProjectContractTO.class);
-            projectContractAPI.leadExcel(tos);
+            List<ProjectContractExcel> tos = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
+            List<ProjectContractTO> toList = BeanTransform.copyProperties(tos,ProjectContractTO.class);
+            projectContractAPI.leadExcel(toList);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        ProjectContractExcel to = new ProjectContractExcel();
-        to.setProjectResult(CommunicateResult.ABANDON);
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(Arrays.asList(to), excel);
-        File out = new File("/home/ike/out.xlsx");
-        FileOutputStream fos = null;
-        fos = new FileOutputStream(out);
-        fos.write(bytes);
-
-    }
 
     /**
      * 导出Excel
@@ -193,12 +180,15 @@ public class ProjectContractAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/exportExcel")
-    public Result exportExcel(ExportExcelTO to) throws ActException {
+    public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
-            projectContractAPI.exportExcel(to);
+            String fileName = "项目承包洽谈.xlsx";
+            super.writeOutFile(response, projectContractAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1){
+            throw new ActException(e1.getMessage());
         }
     }
 

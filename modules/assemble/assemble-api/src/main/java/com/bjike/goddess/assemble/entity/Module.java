@@ -1,6 +1,5 @@
 package com.bjike.goddess.assemble.entity;
 
-import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;
@@ -9,6 +8,8 @@ import javax.persistence.Table;
 
 
 /**
+ * 模块
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
@@ -17,18 +18,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "module_table")
-public class Module extends BaseEntity{
+public class Module extends BaseEntity {
 
     /**
      * 模块名
      */
-     @Column(name = "name")
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(32) COMMENT '模块名'")
     private String name;
-    /**
-     * 选中状态
-     */
-    @Column(name = "checkType")
-    private CheckType checkType = CheckType.NONE;
 
     public String getName() {
         return name;
@@ -38,11 +34,4 @@ public class Module extends BaseEntity{
         this.name = name;
     }
 
-    public CheckType getCheckType() {
-        return checkType;
-    }
-
-    public void setCheckType(CheckType checkType) {
-        this.checkType = checkType;
-    }
 }

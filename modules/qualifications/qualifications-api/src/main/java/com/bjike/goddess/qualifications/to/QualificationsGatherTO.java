@@ -68,7 +68,7 @@ public class QualificationsGatherTO extends BaseTO {
     /**
      * 办理费用(元)
      */
-    @NotBlank(message = "办理费用不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "办理费用不能为空", groups = {ADD.class, EDIT.class})
     private Double cost;
 
     /**

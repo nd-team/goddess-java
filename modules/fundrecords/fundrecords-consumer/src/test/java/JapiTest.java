@@ -14,7 +14,7 @@ import com.dounine.japi.core.impl.ProjectImpl;
 public class JapiTest {
 
     public static void main(String[] args) {
-        //        JapiClient.delete(true);
+//                JapiClient.delete(true);
         JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
@@ -24,7 +24,7 @@ public class JapiTest {
                 "modules/fundrecords/fundrecords-api",
                 "common/common-api"
         });
-        //        JapiClient.saveHistory(false);
+//                JapiClient.saveHistory(false);
         JapiClient.setFlushServer(true);
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 

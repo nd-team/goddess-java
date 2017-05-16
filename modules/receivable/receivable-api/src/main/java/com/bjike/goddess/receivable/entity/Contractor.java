@@ -47,14 +47,9 @@ public class Contractor extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
-    /**
-     * 确认问题处理结果
-     */
-    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "contractor", fetch = FetchType.LAZY)
-    private ReceivableSubsidiary receivableSubsidiary;
 
     public String getName() {
         return name;
@@ -96,11 +91,4 @@ public class Contractor extends BaseEntity {
         this.status = status;
     }
 
-    public ReceivableSubsidiary getReceivableSubsidiary() {
-        return receivableSubsidiary;
-    }
-
-    public void setReceivableSubsidiary(ReceivableSubsidiary receivableSubsidiary) {
-        this.receivableSubsidiary = receivableSubsidiary;
-    }
 }

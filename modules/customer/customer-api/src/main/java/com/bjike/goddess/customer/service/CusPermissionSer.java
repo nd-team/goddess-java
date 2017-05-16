@@ -21,6 +21,13 @@ import java.util.List;
 public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
 
     /**
+     * 客户权限列表总条数
+     */
+    default Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 客户权限列表
      * @param cusPermissionDTO 客户权限数据
      * @return CusPermissionBO
@@ -35,6 +42,17 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @throws SerException
      */
     default CusPermissionBO getOneById(String id) throws SerException{return null;}
+
+
+    /**
+     * 客户权限操作者
+     *
+     * @param id 客户权限id
+     * @throws SerException
+     */
+    default List<String>  listOperateById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 添加客户权限
@@ -55,9 +73,8 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
     /**
      * 根据idFlag查询可以某种操作的客户权限
      * @param idFlag 客户权限idFlag
-     * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO getCusPermission(String idFlag) throws SerException{return null;}
+    default Boolean getCusPermission(String idFlag) throws SerException{return null;}
 
 }

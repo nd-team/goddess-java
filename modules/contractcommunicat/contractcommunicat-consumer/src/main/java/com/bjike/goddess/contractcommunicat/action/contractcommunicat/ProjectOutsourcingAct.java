@@ -27,6 +27,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -159,9 +161,9 @@ public class ProjectOutsourcingAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<ProjectOutsourcingExcel> toList = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
-            List<ProjectOutsourcingTO> tos = BeanTransform.copyProperties(toList,ProjectOutsourcingTO.class);
-            projectOutsourcingAPI.leadExcel(tos);
+            List<ProjectOutsourcingExcel> tos = ExcelUtil.excelToClazz(is, ProjectOutsourcingExcel.class, excel);
+            List<ProjectOutsourcingTO> toList = BeanTransform.copyProperties(tos,ProjectOutsourcingTO.class);
+            projectOutsourcingAPI.leadExcel(toList);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -175,12 +177,15 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/exportExcel")
-    public Result exportExcel(ExportExcelTO to) throws ActException {
+    public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
-            projectOutsourcingAPI.exportExcel(to);
+            String fileName = "项目外包洽谈.xlsx";
+            super.writeOutFile(response, projectOutsourcingAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 

@@ -33,15 +33,15 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
     @Override
     public void add(ModuleAssembleTO to) throws SerException {
         ModuleAssembleDTO dto = new ModuleAssembleDTO();
-        dto.getConditions().add(Restrict.eq("module.id", to.getModuleId()));
-        dto.getConditions().add(Restrict.eq("relation.id", to.getRelationId()));
+        dto.getConditions().add(Restrict.eq("module.name", to.getModuleName()));
+        dto.getConditions().add(Restrict.eq("relation.name", to.getRelationName()));
         if (null == super.findOne(dto)) {
             ModuleDTO moduleDTO = new ModuleDTO();
-            moduleDTO.getConditions().add(Restrict.eq("id", to.getModuleId()));
+            moduleDTO.getConditions().add(Restrict.eq("name", to.getModuleName()));
             Module module = moduleSer.findOne(moduleDTO);
             if (null != module) {
                 moduleDTO = new ModuleDTO();
-                moduleDTO.getConditions().add(Restrict.eq("id", to.getRelationId()));
+                moduleDTO.getConditions().add(Restrict.eq("name", to.getRelationName()));
                 Module relation = moduleSer.findOne(moduleDTO);
                 if (null != relation) {
                     ModuleAssemble moduleAssemble = new ModuleAssemble();

@@ -80,5 +80,5 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
      * @param to
      * @throws SerException
      */
-    void exportExcel(ExportExcelTO to) throws SerException;
+    byte[]  exportExcel(ExportExcelTO to) throws SerException;
 }

@@ -25,15 +25,7 @@ public interface BankRecordAPI {
      *
      * @version v1
      */
-    List<String> check(BankRecordTO to) throws SerException;
-/*
-    *//**
-     * 导入银行流水
-     *
-     * @param to 银行流水
-     * @return 银行流水
-     *//*
-    void upload(TransactionContext txContext, BankRecordTO to) throws SerException;*/
+    List<String> check(byte[] bytes) throws SerException;
 
     /**
      * 导入银行流水

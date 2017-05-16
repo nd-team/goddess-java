@@ -28,7 +28,7 @@ public enum CommunicateResult {
     /**
      * 项目丢弃
      */
-    @ExcelValue(name = "项目丢弃")
+    @ExcelValue(name = "项目跟进")
     ABANDON(2);
 
     private int code;
@@ -40,13 +40,14 @@ public enum CommunicateResult {
     public int getCode() {
         return this.code;
     }
-    public void  setCode(int code) {
+
+    public void setCode(int code) {
         this.code = code;
     }
 
-    public static CommunicateResult getCommunicateResult(int code){
-        for(CommunicateResult result : CommunicateResult.values()){
-            if(code == result.getCode()){
+    public static CommunicateResult getCommunicateResult(int code) {
+        for (CommunicateResult result : CommunicateResult.values()) {
+            if (code == result.getCode()) {
                 return result;
             }
         }

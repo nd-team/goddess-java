@@ -36,7 +36,7 @@ public class BusinessRegisterSerImpl extends ServiceImpl<BusinessRegister, Busin
     @Override
     public BusinessRegisterBO getOne(String id) throws SerException {
         BusinessRegister businessRegister = super.findById(id);
-        return BeanTransform.copyProperties(businessRegister,BusinessRegisterBO.class,true);
+        return BeanTransform.copyProperties(businessRegister,BusinessRegisterBO.class);
     }
     @Override
     public List<BusinessRegisterBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {

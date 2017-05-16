@@ -117,7 +117,6 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     @Override
     public PositionInstructionBO save(PositionInstructionTO to) throws SerException {
         PositionInstruction instruction = BeanTransform.copyProperties(to, PositionInstruction.class);
-        instruction.setCreateTime(LocalDateTime.now());
         super.save(this.setForeign(instruction, to));
         return this.transformToBO(instruction);
     }
@@ -132,13 +131,23 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
      */
     private PositionInstruction setForeign(PositionInstruction instruction, PositionInstructionTO to) throws SerException {
         instruction.setPosition(positionDetailSer.findById(to.getPositionId()));
+        if (null == instruction.getPosition())
+            throw new SerException("岗位不能为空");
         instruction.setAngle(angleSer.findById(to.getAngleId()));
+        if (null == instruction.getAngle())
+            throw new SerException("角度不能为空");
         instruction.setClassify(classifySer.findById(to.getClassifyId()));
+        if (null == instruction.getClassify())
+            throw new SerException("分类不能为空");
         instruction.setDimension(dimensionSer.findById(to.getDimensionId()));
-        for (String id : to.getReflectIds())
-            instruction.getReflects().add(reflectSer.findById(id));
-        for (String id : to.getOperateIds())
-            instruction.getOperates().add(operateSer.findById(id));
+        if (null == instruction.getDimension())
+            throw new SerException("维度不能为空");
+        if (null != to.getReflectIds())
+            for (String id : to.getReflectIds())
+                instruction.getReflects().add(reflectSer.findById(id));
+        if (null != to.getOperateIds())
+            for (String id : to.getOperateIds())
+                instruction.getOperates().add(operateSer.findById(id));
         return instruction;
     }
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -57,9 +58,13 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QualificationsHandleBO update(QualificationsHandleTO to) throws SerException {
-        QualificationsHandle entity = BeanTransform.copyProperties(to, QualificationsHandle.class), handle = super.findById(to.getId());
+        QualificationsHandle entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         if (null == entity.getCost())
             entity.setCost(0d);
+        entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(HandleStatus.NONE);
         super.update(entity);
         return BeanTransform.copyProperties(entity, QualificationsHandleBO.class);
@@ -76,7 +81,7 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     @Override
     public List<QualificationsHandleBO> findStatus() throws SerException {
         QualificationsHandleDTO dto = new QualificationsHandleDTO();
-        dto.getConditions().add(Restrict.ne(STATUS, HandleStatus.SUCCESS));
+        dto.getConditions().add(Restrict.ne("status", HandleStatus.SUCCESS));
         List<QualificationsHandle> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, QualificationsHandleBO.class);
     }
@@ -117,7 +122,13 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
 
     @Override
     public List<AuditMaterialBO> getAudit(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id).getMaterialSet(), AuditMaterialBO.class);
+        QualificationsHandle entity = new QualificationsHandle();
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getMaterialSet() != null)
+            return BeanTransform.copyProperties(entity.getMaterialSet(), AuditMaterialBO.class);
+        else
+            return new ArrayList<>(0);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -125,24 +136,24 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     public QualificationsHandleBO saveForeign(QualificationsHandleForeignTO to) throws SerException {
         QualificationsHandle entity = super.findById(to.getId());
         entity.setCompanySet(new HashSet<>(0));
-        if (null != to.getCompany_ids())
-            for (String id : to.getCompany_ids())
+        if (null != to.getCompanyIds())
+            for (String id : to.getCompanyIds())
                 entity.getCompanySet().add(companyInfoSer.findById(id));
         entity.setFacilitySet(new HashSet<>(0));
-        if (null != to.getFacility_ids())
-            for (String id : to.getFacility_ids())
+        if (null != to.getFacilityIds())
+            for (String id : to.getFacilityIds())
                 entity.getFacilitySet().add(facilityInformationSer.findById(id));
         entity.setFinanceSet(new HashSet<>(0));
-        if (null != to.getFinance_ids())
-            for (String id : to.getFinance_ids())
+        if (null != to.getFinanceIds())
+            for (String id : to.getFinanceIds())
                 entity.getFinanceSet().add(financeInfoSer.findById(id));
         entity.setMaterialSet(new HashSet<>(0));
-        if (null != to.getMaterial_ids())
-            for (String id : to.getMaterial_ids())
+        if (null != to.getMaterialIds())
+            for (String id : to.getMaterialIds())
                 entity.getMaterialSet().add(auditMaterialSer.findById(id));
         entity.setPersonnelSet(new HashSet<>(0));
-        if (null != to.getPersonnel_ids())
-            for (String id : to.getPersonnel_ids())
+        if (null != to.getPersonnelIds())
+            for (String id : to.getPersonnelIds())
                 entity.getPersonnelSet().add(personnelInformationSer.findById(id));
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

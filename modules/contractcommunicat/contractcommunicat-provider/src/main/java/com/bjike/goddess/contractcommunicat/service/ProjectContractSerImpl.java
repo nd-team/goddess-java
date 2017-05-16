@@ -16,7 +16,6 @@ import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.contractcommunicat.util.ExportExcelUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
+        isExist(to, null);
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
         to.setId(model.getId());
@@ -55,13 +55,74 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectContract model = super.findById(to.getId());
-            BeanTransform.copyProperties(to, model, true);
-            model.setModifyTime(LocalDateTime.now());
-            super.update(model);
+            if (model != null) {
+                isExist(to, null);
+                BeanTransform.copyProperties(to, model, true);
+                model.setModifyTime(LocalDateTime.now());
+                super.update(model);
+            }
         } else {
             throw new SerException("更新ID不能为空!");
         }
         return BeanTransform.copyProperties(to, ProjectContractBO.class);
+    }
+
+    //校验字段是否存在
+    public void isExist(ProjectContractTO to, Integer row) throws SerException {
+        ProjectContractDTO dto = null;
+        if (!StringUtils.isEmpty(to.getContractExtProject())) {
+            dto = new ProjectContractDTO();
+            dto.getConditions().add(Restrict.eq("contractExtProject", to.getContractExtProject()));
+            List<ProjectContract> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                String msg = "合同外部项目名称已经存在!";
+                if (row == null) {
+                    throw new SerException(msg);
+                } else {
+                    throw new SerException("第" + row + "行的" + msg);
+                }
+
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractExtCode())) {
+            dto = new ProjectContractDTO();
+            dto.getConditions().add(Restrict.eq("contractExtCode", to.getContractExtCode()));
+            List<ProjectContract> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                String msg = "合同外部编号已经存在!";
+                if (row == null) {
+                    throw new SerException(msg);
+                } else {
+                    throw new SerException("第" + row + "行的" + msg);
+                }
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractInProject())) {
+            dto = new ProjectContractDTO();
+            dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
+            List<ProjectContract> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                String msg = "内部项目名称已经存在!";
+                if (row == null) {
+                    throw new SerException(msg);
+                } else {
+                    throw new SerException("第" + row + "行的" + msg);
+                }
+            }
+        }
+        if (!StringUtils.isEmpty(to.getContractInCode())) {
+            dto = new ProjectContractDTO();
+            dto.getConditions().add(Restrict.eq("contractInCode", to.getContractInCode()));
+            List<ProjectContract> list = super.findByCis(dto);
+            if (list != null && !list.isEmpty()) {
+                String msg = "内部项目编号已经存在!";
+                if (row == null) {
+                    throw new SerException(msg);
+                } else {
+                    throw new SerException("第" + row + "行的" + msg);
+                }
+            }
+        }
     }
 
     @Override
@@ -110,12 +171,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void leadExcel(List<ProjectContractTO> toList) throws SerException {
+        for (int i = 1; i <= toList.size(); i++) {
+            isExist(toList.get(i - 1), i);
+        }
         List<ProjectContract> list = BeanTransform.copyProperties(toList, ProjectContract.class, true);
         super.save(list);
     }
 
     @Override
-    public void exportExcel(ExportExcelTO to) throws SerException {
+    public byte[] exportExcel(ExportExcelTO to) throws SerException {
         ProjectContractDTO dto = new ProjectContractDTO();
         if (!StringUtils.isEmpty(to.getContractInProject())) {
             dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
@@ -128,16 +192,14 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         }
         List<ProjectContract> list = super.findByCis(dto);
         List<ProjectContractExcel> toList = new ArrayList<ProjectContractExcel>();
-        for (ProjectContract model : list){
+        for (ProjectContract model : list) {
             ProjectContractExcel excel = new ProjectContractExcel();
             BeanUtils.copyProperties(model, excel);
             toList.add(excel);
         }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
-        String path = "/home/ike/out.xlsx";
-        ExportExcelUtil.export(path, bytes);
-
+        return bytes;
     }
 
     //设置汇总字段

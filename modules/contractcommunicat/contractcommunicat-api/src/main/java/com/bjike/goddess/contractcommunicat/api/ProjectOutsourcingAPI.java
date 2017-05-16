@@ -99,5 +99,5 @@ public interface ProjectOutsourcingAPI {
      * @param to 导出对象
      * @throws SerException
      */
-    void exportExcel(ExportExcelTO to) throws SerException;
+    byte[] exportExcel(ExportExcelTO to) throws SerException;
 }

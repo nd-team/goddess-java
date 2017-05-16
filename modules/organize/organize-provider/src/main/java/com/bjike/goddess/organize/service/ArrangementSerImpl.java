@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
@@ -160,5 +161,21 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
             default:
                 return ArrangementType.ET;
         }
+    }
+
+    @Override
+    public ArrangementBO getById(String id) throws SerException {
+        return this.transformBO(super.findById(id));
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        ArrangementDTO dto = new ArrangementDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<Arrangement> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for (Arrangement entity : list)
+            bos.add(new OpinionBO(entity.getId(), entity.getArrangement()));
+        return bos;
     }
 }
