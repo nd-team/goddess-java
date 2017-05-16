@@ -16,12 +16,14 @@ import com.bjike.goddess.fundrecords.to.FundRecordTO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,7 +138,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         List<FundRecordBO> boList = findAllBO(dto, generateDTO);
         //查询month月前的收入支出情况
         VoucherGenerateDTO lastGenerateDTO = new VoucherGenerateDTO();
-        lastGenerateDTO.getConditions().add(Restrict.lt("vDate", start));
+        lastGenerateDTO.getConditions().add(Restrict.lt("voucherDate", start));
 
         FundRecordDTO lastDTO = new FundRecordDTO();
         lastDTO.getConditions().add(Restrict.lt("recordDate", start));
@@ -163,6 +165,11 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
     @Override
     public List<ConditionCollectBO> condition(CollectTO to) throws SerException {
+        List<FundRecordBO> boList = getByMonth(to);
+        return BeanTransform.copyProperties(boList, ConditionCollectBO.class);
+    }
+
+    public List<FundRecordBO> getByMonth(CollectTO to) throws SerException {
         //查询month月的收入支出情况
         VoucherGenerateDTO generateDTO = new VoucherGenerateDTO();
         String start = DateUtil.dateToString(DateUtil.getStartDayOfMonth(to.getYear(), to.getMonth()));
@@ -174,28 +181,72 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
         FundRecordDTO dto = new FundRecordDTO();
         dto.getConditions().add(Restrict.between("recordDate", condition));
-        if(!StringUtils.isEmpty(to.getArea())){
-            generateDTO.getConditions().add(Restrict.eq("area",to.getArea()));
-            dto.getConditions().add(Restrict.eq("area",to.getArea()));
+        if (!StringUtils.isEmpty(to.getArea())) {
+            generateDTO.getConditions().add(Restrict.eq("area", to.getArea()));
+            dto.getConditions().add(Restrict.eq("area", to.getArea()));
         }
-        if(!StringUtils.isEmpty(to.getProjectGroup())){
-            generateDTO.getConditions().add(Restrict.eq("projectGroup",to.getProjectGroup()));
-            dto.getConditions().add(Restrict.eq("projectGroup",to.getProjectGroup()));
+        if (!StringUtils.isEmpty(to.getProjectGroup())) {
+            generateDTO.getConditions().add(Restrict.eq("projectGroup", to.getProjectGroup()));
+            dto.getConditions().add(Restrict.eq("projectGroup", to.getProjectGroup()));
 
         }
-        if(!StringUtils.isEmpty(to.getProject())){
-            generateDTO.getConditions().add(Restrict.eq("projectName",to.getProject()));
-            dto.getConditions().add(Restrict.eq("project",to.getProject()));
+        if (!StringUtils.isEmpty(to.getProject())) {
+            generateDTO.getConditions().add(Restrict.eq("projectName", to.getProject()));
+            dto.getConditions().add(Restrict.eq("project", to.getProject()));
         }
 
-        List<FundRecordBO> boList = findAllBO(dto, generateDTO);
-
-        return BeanTransform.copyProperties(boList ,ConditionCollectBO.class);
+        return findAllBO(dto, generateDTO);
     }
 
     @Override
-    public List<AnalyzeBO> analyze(CollectTO to) throws SerException {
-        return null;
+    public AnalyzeBO analyze(CollectTO to) throws SerException {
+        //查询本月记录
+        List<FundRecordBO> boList = getByMonth(to);
+        //查询上月记录
+        CollectTO lastTo = new CollectTO();
+        BeanUtils.copyProperties(to, lastTo);
+        lastTo.setMonth(to.getMonth() - 1);
+        List<FundRecordBO> lastBOList = getByMonth(lastTo);
+
+        //查询所有List
+        List<FundRecordBO> allList = findAllBO(new FundRecordDTO(), new VoucherGenerateDTO());
+
+        //month月份的收入
+        Double income = boList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //month月份的支出
+        Double expenditure = boList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        //month上月收入
+        Double lastIncome = lastBOList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //month上月支出
+        Double lastExpenditure = lastBOList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        //总收入
+        Double allIncome = allList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //总支出
+        Double allExpenditure = allList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        AnalyzeBO analyzeBO = new AnalyzeBO();
+        analyzeBO.setIncome(income);
+        analyzeBO.setExpenditure(expenditure);
+        analyzeBO.setLastIncome(lastIncome);
+        analyzeBO.setLastExpenditure(lastExpenditure);
+        analyzeBO.setIncomeSubtract(income - lastIncome);
+        analyzeBO.setExpenditureSubtract(expenditure - lastExpenditure);
+        if (allIncome != 0.0) {
+            analyzeBO.setIncomeRate(expenditure / allIncome);
+        }
+        if (allExpenditure != 0.0) {
+            analyzeBO.setExpenditureRate(expenditure / allExpenditure);
+        }
+        DecimalFormat df = new java.text.DecimalFormat("#.00");
+        if (lastIncome != 0.0) {
+            analyzeBO.setIncomeGrowRate(df.format((income - lastIncome) / lastIncome) + "%");
+        }
+        if (lastExpenditure != 0.0) {
+            analyzeBO.setExpenditureGrowRate(df.format((expenditure - lastExpenditure) / lastExpenditure) + "%");
+        }
+        return analyzeBO;
     }
 
     //排序并分页数据

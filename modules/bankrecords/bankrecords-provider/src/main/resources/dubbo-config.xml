@@ -24,11 +24,8 @@
     <!-- 银行流水API -->
     <dubbo:service interface="com.bjike.goddess.bankrecords.api.BankRecordAPI" ref="bankRecordApiImpl"/>
 
-
     <!--注册模块接口 -->
 
-    <!-- 存储用户API -->
-    <dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
     <!-- 存储API -->
     <dubbo:reference  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 

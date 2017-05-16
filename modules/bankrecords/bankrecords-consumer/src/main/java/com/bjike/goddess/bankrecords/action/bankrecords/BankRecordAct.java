@@ -10,18 +10,19 @@ import com.bjike.goddess.bankrecords.vo.BankRecordPageListVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.io.IOUtils;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ public class BankRecordAct extends BaseFileAction {
 
     @Autowired
     private BankRecordAPI bankRecordAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 检查导入的Excel标题
@@ -46,10 +49,9 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/check")
-    public Result check(BankRecordTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
+    public Result check(HttpServletRequest request) throws ActException {
         try {
-            setBytes(to, request);
-            List<String> list = bankRecordAPI.check(to);
+            List<String> list = bankRecordAPI.check(super.getBytes(request).get(0));
             return ActResult.initialize(list);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
@@ -65,24 +67,16 @@ public class BankRecordAct extends BaseFileAction {
     @PostMapping("v1/upload")
     public Result upload(TransactionContext txContext, @Validated({BankRecordTO.Upload.class}) BankRecordTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
-            setBytes(to, request);
+            String path = "/upload";
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
+            List<InputStream> streams =  super.getInputStreams(request, path);
+            to.setInputStreams(inputStreams);
             bankRecordAPI.upload(to);
-            return new ActResult();
+            //由于协议，必须在action处理上传到服务器
+            fileAPI.upload(streams);
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
-        }
-    }
-
-    public void setBytes(BankRecordTO to, HttpServletRequest request) throws SerException {
-        try {
-
-            List<MultipartFile> multipartFiles = getMultipartFile(request);
-            byte[] bytes = IOUtils.toByteArray(multipartFiles.get(0).getInputStream());
-            String fileName = multipartFiles.get(0).getOriginalFilename();
-            to.setBytes(bytes);
-            to.setFileName(fileName);
-        } catch (Exception e) {
-            throw new SerException(e.getMessage());
         }
     }
 
