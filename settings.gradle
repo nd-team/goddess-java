@@ -355,4 +355,7 @@ include ':modules:fundrecords:fundrecords-api'
 include ':modules:fundrecords:fundrecords-consumer'
 include ':modules:fundrecords:fundrecords-provider'
 
-
+//#bankrecords银行流水 jason
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'
