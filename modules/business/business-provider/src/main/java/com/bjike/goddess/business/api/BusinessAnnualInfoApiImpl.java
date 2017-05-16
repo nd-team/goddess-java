@@ -5,9 +5,11 @@ import com.bjike.goddess.business.dto.BusinessAnnualInfoDTO;
 import com.bjike.goddess.business.service.BusinessAnnualInfoSer;
 import com.bjike.goddess.business.to.BusinessAnnualInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -39,6 +41,7 @@ public class BusinessAnnualInfoApiImpl implements BusinessAnnualInfoAPI {
 
     @Override
     public BusinessAnnualInfoBO insertBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws SerException {
+        businessAnnualInfoTO.setSubmitDate(DateUtil.dateToString(LocalDate.now()));
         return businessAnnualInfoSer.insertBusinessAnnualInfo(businessAnnualInfoTO);
     }
 

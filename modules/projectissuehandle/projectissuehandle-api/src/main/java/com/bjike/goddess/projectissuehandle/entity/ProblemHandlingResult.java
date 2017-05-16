@@ -85,7 +85,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题相关部门
      */
-    @Column(name = "problemRelevantDepartment", columnDefinition = "INT(2)   COMMENT '问题相关部门'")
+    @Column(name = "problemRelevantDepartment", columnDefinition = "TINYINT(2)   COMMENT '问题相关部门'")
     private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
@@ -109,7 +109,7 @@ public class ProblemHandlingResult extends BaseEntity {
     /**
      * 问题处理结果
      */
-    @Column(name = "problemProcessingResult", columnDefinition = "INT(2)   COMMENT '问题处理结果'")
+    @Column(name = "problemProcessingResult", columnDefinition = "TINYINT(2)   COMMENT '问题处理结果'")
     private ProblemProcessingResult problemProcessingResult;
 
     /**
@@ -119,21 +119,6 @@ public class ProblemHandlingResult extends BaseEntity {
     private String problemConclusion;
 
 
-    /**
-     * 项目执行中的问题受理
-     *//*
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
-    @JoinColumn(name = "problemAccept_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目执行中的问题受理'")
-    private ProblemAccept problemAccept;
-*/
-    /*public ProblemAccept getProblemAccept() {
-        return problemAccept;
-    }
-
-    public void setProblemAccept(ProblemAccept problemAccept) {
-        this.problemAccept = problemAccept;
-    }
-*/
     public String getYear() {
         return year;
     }

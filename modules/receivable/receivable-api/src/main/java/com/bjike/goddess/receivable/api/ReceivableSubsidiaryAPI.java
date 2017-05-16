@@ -149,7 +149,7 @@ public interface ReceivableSubsidiaryAPI {
      *
      * @return class Contractor
      */
-    default List<Contractor> getContractor() throws SerException {
+    default List<String> getContractor() throws SerException {
         return null;
     }
     /**
