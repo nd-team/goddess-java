@@ -151,9 +151,9 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
             Integer actualInventoryNo = stockNo + receiveNo + repairNo + transferNo + scrapNo;
             Integer inventoryLossNo = accountNo - actualInventoryNo;
             inventoryLossNo = (inventoryLossNo > 0) ? inventoryLossNo : 0;//计算盘亏数
-            String turnoverRatio = (receiveNo==0 || stockNo == 0)?"0%":formatDouble(1.0*receiveNo/stockNo);//计算周转率
-            String vacancyRate = (stockNo == 0 || accountNo == 0)?"0%":formatDouble(1.0*stockNo/accountNo);//计算闲置率
-            String balanceRate = (inventoryLossNo == 0 || actualInventoryNo == 0)?"0%":formatDouble(1.0*inventoryLossNo/actualInventoryNo);//计算盈亏率
+            String turnoverRatio = (receiveNo == 0 || stockNo == 0) ? "0%" : formatDouble(1.0 * receiveNo / stockNo);//计算周转率
+            String vacancyRate = (stockNo == 0 || accountNo == 0) ? "0%" : formatDouble(1.0 * stockNo / accountNo);//计算闲置率
+            String balanceRate = (inventoryLossNo == 0 || actualInventoryNo == 0) ? "0%" : formatDouble(1.0 * inventoryLossNo / actualInventoryNo);//计算盈亏率
 
             MaterialAnalyzeBO analyzeBO = new MaterialAnalyzeBO();
             analyzeBO.setArea(area);
@@ -173,7 +173,7 @@ public class MaterialAnalyzeSerImpl extends ServiceImpl<MaterialAnalyze, Materia
 
     private String formatDouble(Double d) {
         DecimalFormat df = new DecimalFormat("#.00");
-        return df.format(d*100) + "%";
+        return df.format(d * 100) + "%";
     }
 
 }

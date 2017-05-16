@@ -8,8 +8,6 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
-import com.bjike.goddess.materialinstock.entity.MaterialInStock;
-import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
@@ -23,11 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,12 +70,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
-        if (to == null) {
-            return null;
-        }
         MaterialTransferBO bo = BeanTransform.copyProperties(to, MaterialTransferBO.class);
         bo = setAttributes(bo);//设置物资属性
-        MaterialTransfer entity = BeanTransform.copyProperties(bo, MaterialTransfer.class);
+        MaterialTransfer entity = BeanTransform.copyProperties(bo, MaterialTransfer.class, true);
         entity = super.save(entity);
         MaterialTransferBO transferBO = BeanTransform.copyProperties(entity, MaterialTransferBO.class);
         return transferBO;
@@ -92,7 +86,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      */
     private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
         MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
-        String curUsername = userAPI.currentUser().getUsername();
+        String curUsername = "userAPI.currentUser().getUsername()";
         updateInStock(bo, inStockBO, curUsername);  //更新物资入库信息
         return setTransferProperties(bo, inStockBO, curUsername);
     }
@@ -100,8 +94,8 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 更新物资入库信息
      *
-     * @param transferBO 物资调动信息bo
-     * @param inStockBO 物资入库bo
+     * @param transferBO  物资调动信息bo
+     * @param inStockBO   物资入库bo
      * @param curUsername 当前用户姓名
      * @throws SerException
      */
@@ -117,8 +111,8 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 设置物资调动信息
      *
-     * @param bo 物资调动
-     * @param inStockBO 物资入库bo
+     * @param bo          物资调动
+     * @param inStockBO   物资入库bo
      * @param curUsername 当前用户姓名
      * @return
      */
@@ -154,9 +148,10 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      */
     private MaterialInStockBO checkMaterialInStock(MaterialTransferBO bo) throws SerException {
         String stockEncoding = bo.getInstockCode();
-        MaterialInStockDTO dto = new MaterialInStockDTO();
-        dto.getConditions().add(Restrict.eq("stockEncoding", stockEncoding));
-        MaterialInStockBO model = materialInStockAPI.findOne(dto);
+        if (stockEncoding == null) {
+            throw new SerException("您好,入库编码不能为空.");
+        }
+        MaterialInStockBO model = materialInStockAPI.findByMaterialCoding(stockEncoding);
         if (model == null) {
             throw new SerException("该物资不存在,无法进行调动.");
         }
@@ -184,7 +179,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialTransferTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             MaterialTransfer model = super.findById(to.getId());
             if (model != null) {
                 updateMaterialTransfer(to, model);
@@ -212,7 +207,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 项目经理审核
      *
-     * @param id 物资调动唯一标识
+     * @param id           物资调动唯一标识
      * @param pmAuditState 项目经理审核状态
      * @throws SerException
      */
@@ -234,7 +229,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 福利模块负责人审核
      *
-     * @param id 物资调动唯一标识
+     * @param id           物资调动唯一标识
      * @param welfareState 物资调动to
      * @throws SerException
      */
@@ -255,7 +250,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 福利模块负责人确认调配成功
      *
-     * @param id 物资调动唯一标识
+     * @param id               物资调动唯一标识
      * @param recipient        领用人
      * @param confirmDeploy    福利模块负责人确认调配成功
      * @param finishDeployTime 调配成功

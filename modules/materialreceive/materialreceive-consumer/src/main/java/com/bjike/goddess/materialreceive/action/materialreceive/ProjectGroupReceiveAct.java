@@ -44,7 +44,7 @@ public class ProjectGroupReceiveAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/projectgroupreceive/{id}")
+    @GetMapping("v1/groupreceive/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             ProjectGroupReceiveBO bo = projectGroupReceiveAPI.findById(id);

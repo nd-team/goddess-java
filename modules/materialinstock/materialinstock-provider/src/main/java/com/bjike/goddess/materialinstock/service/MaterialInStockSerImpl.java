@@ -96,6 +96,10 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Transactional(rollbackFor = SerException.class)
     public void updateUseState(String[] materialNum, UseState useState) throws SerException {
         List<MaterialInStock> list = getMaterialInStocks(materialNum);
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
         for (MaterialInStock model : list) {
             model.setUseState(useState);
         }

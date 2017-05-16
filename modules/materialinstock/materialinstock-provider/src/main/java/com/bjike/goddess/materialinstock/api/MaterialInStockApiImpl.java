@@ -145,8 +145,8 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      */
     @Override
     public void updateSingleBO(MaterialInStockBO bo) throws SerException {
-        MaterialInStock model = BeanTransform.copyProperties(bo, MaterialInStock.class, true);
-        materialInStockSer.update(model);
+        MaterialInStockTO to = BeanTransform.copyProperties(bo, MaterialInStockTO.class);
+        materialInStockSer.update(to);
     }
 
     /**

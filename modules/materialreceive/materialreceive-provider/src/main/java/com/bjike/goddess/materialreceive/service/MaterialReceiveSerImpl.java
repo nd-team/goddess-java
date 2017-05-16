@@ -86,6 +86,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
 
     /**
      * 设置领用编号
+     *
      * @param to
      * @return
      * @throws SerException
@@ -100,15 +101,15 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 设置物资领用中的物资编号
      *
-     * @param to 物资领用to
+     * @param to          物资领用to
      * @param materialNum 物资编号
      * @return
      */
     private Integer setMaterialNo(MaterialReceiveTO to, String[] materialNum) {
         Integer quantity = to.getMaterialNum().length;//领用数量
         StringBuilder materialNo = new StringBuilder();
-        for (int i = 0; i < quantity; i ++) {
-            if (i < (quantity - 1)){
+        for (int i = 0; i < quantity; i++) {
+            if (i < (quantity - 1)) {
                 materialNo.append(materialNum[i]).append(",");
             } else {
                 materialNo.append(materialNum[i]);
@@ -172,7 +173,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 更新物资入库状态
      *
-     * @param model 物资入库
+     * @param model    物资入库
      * @param useState 使用状态
      * @throws SerException
      */
@@ -198,8 +199,8 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 审核
      *
-     * @param id 物资领用唯一标识
-     * @param auditState 审核状态
+     * @param id           物资领用唯一标识
+     * @param auditState   审核状态
      * @param auditOpinion 审核意见
      * @throws SerException
      */
@@ -253,8 +254,8 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void materialReturn(MaterialReceiveTO to) throws SerException {
-        update(to);
         setUseStateToInStock(to);//更新使用状态为在库
+        update(to);
     }
 
     /**

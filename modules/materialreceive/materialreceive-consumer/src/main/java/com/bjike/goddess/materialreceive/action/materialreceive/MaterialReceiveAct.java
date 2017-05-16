@@ -148,8 +148,8 @@ public class MaterialReceiveAct {
     /**
      * 审核
      *
-     * @param id 物资领用id
-     * @param auditState 审核状态
+     * @param id           物资领用id
+     * @param auditState   审核状态
      * @param auditOpinion 审核意见
      * @throws ActException
      */
