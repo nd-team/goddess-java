@@ -11,6 +11,7 @@ import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -85,8 +86,8 @@ public class EntryRegisterAction {
      * @des 编辑员工入职
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result editEntryRegister(@Valid EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
+    @PutMapping("v1/edit")
+    public Result editEntryRegister(@Validated EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                     WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws ActException {
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.editEntryRegister(entryRegisterTO,
@@ -122,8 +123,8 @@ public class EntryRegisterAction {
      * @des 根据id查找某个员工入职登记
      * @version v1
      */
-    @GetMapping("v1/getEntryRegister")
-    public Result findOneEntryRegister(@RequestParam String id) throws ActException {
+    @GetMapping("v1/getEntryRegister/{id}")
+    public Result findOneEntryRegister(@PathVariable String id) throws ActException {
         try {
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
                     entryRegisterAPI.getEntryRegister(id), EntryRegisterVO.class,true);

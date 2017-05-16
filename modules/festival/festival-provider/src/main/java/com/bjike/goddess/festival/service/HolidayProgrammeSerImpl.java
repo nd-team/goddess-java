@@ -51,10 +51,19 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
     }
 
     @Override
+    public HolidayProgrammeBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        HolidayProgramme holidayProgramme = super.findById(id);
+        return BeanTransform.copyProperties(holidayProgramme, HolidayProgrammeBO.class );
+    }
+
+    @Override
     public List<HolidayProgrammeBO> listHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
 
         holidayProgrammeDTO.getSorts().add("createTime=desc");
-        List<HolidayProgramme> list = super.findByCis(holidayProgrammeDTO);
+        List<HolidayProgramme> list = super.findByCis(holidayProgrammeDTO,true);
 
         return BeanTransform.copyProperties(list, HolidayProgrammeBO.class );
     }

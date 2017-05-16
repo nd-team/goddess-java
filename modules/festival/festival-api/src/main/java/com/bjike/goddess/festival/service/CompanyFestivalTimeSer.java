@@ -27,6 +27,14 @@ public interface CompanyFestivalTimeSer extends Ser<CompanyFestivalTime, Company
     default Long countCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据id获取时间安排
+     * @return class CompanyFestivalTimeBO
+     */
+    default CompanyFestivalTimeBO getOneById(String id) throws SerException {return null;}
+
     /**
      * 公司放假时间安排列表
      * @return class CompanyFestivalTimeBO

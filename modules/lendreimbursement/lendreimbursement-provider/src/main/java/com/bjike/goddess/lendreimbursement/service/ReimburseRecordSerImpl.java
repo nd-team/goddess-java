@@ -129,7 +129,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         //获取最小报销单号
         String runNum = finoddinforSer.getMinRunNum();
-        if (StringUtils.isEmpty(runNum)) {
+        if (StringUtils.isBlank(runNum)) {
             throw new SerException("不好意思报销单号已用完,请稍等,谢谢！");
         }
         String userName = userAPI.currentUser().getUsername();

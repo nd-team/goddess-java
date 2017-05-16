@@ -74,7 +74,7 @@ public class ReimburseRecordAction {
      * @des 获取所有申请报销信息
      * @version v1
      */
-    @GetMapping("v1/listReimburseRecord")
+    @GetMapping("v1/list")
     public Result findListReimburseRecord(ReimburseRecordDTO reimburseRecordDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ReimburseRecordVO> reimburseRecordVOList = BeanTransform.copyProperties(

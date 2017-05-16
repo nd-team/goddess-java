@@ -25,13 +25,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 报销单号数组
      */
-    @NotNull(groups = ReimburseRecordTO.TestPrePay.class, message = "报销单号数组不能为空")
+    @NotNull(groups = {ReimburseRecordTO.TestPrePay.class}, message = "报销单号数组不能为空")
     private String[] reimNumbers;
 
     /**
      * 报销发生日期
      */
-    @NotNull(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "报销发生日期不能为空")
+    @NotNull(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "报销发生日期不能为空")
     private String occureDate;
 
     /**
@@ -52,13 +52,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 地区
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "地区不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "项目组不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
@@ -79,13 +79,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 报销人
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "报销人不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "报销人不能为空")
     private String reimer;
 
     /**
      * 项目
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "项目名称不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "项目名称不能为空")
     private String project;
 
     /**
@@ -101,7 +101,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 报销总金额
      */
-    @NotNull(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "报销金额不能为空")
+    @NotNull(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "报销金额不能为空")
     private Double reimMoney;
 
     /**
@@ -112,7 +112,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 是否有发票(是/否)
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "是否有发票不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "是否有发票不能为空")
     private String ticketCondition;
 
     /**
@@ -143,7 +143,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 负责人
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "负责人不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "负责人不能为空")
     private String charger;
 
     /**
@@ -184,13 +184,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 三级科目
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "三级科目不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "三级科目不能为空")
     private String thirdSubject;
 
     /**
      * 说明
      */
-    @NotBlank(groups = ReimburseRecordTO.TestAddAndEdit.class, message = "说明不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "说明不能为空")
     private String plainInfo;
 
     /**

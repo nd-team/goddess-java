@@ -1,19 +1,18 @@
-模块名:projectmarketfee
-类名:ProjectMarketFee
-作者:chenjunhao
-描述:项目前期的市场活动费
+模块名:staffentry
+类名:StaffEntryRegister
+作者:tanghaixiang
+描述:员工入职注册
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String firstSubject 一级科目;
-String secondSubject 二级科目;
-String thirdSubject 三级科目;
-String area 地区;
+String department 所属部门;
+String role 角色列表;
+String position 职位;
 String projectGroup 项目组;
-String projectName 项目名称;
-LocalDate voucherDate 日期;
-Double borrowMoney 金额;
-String saleId 记账凭证销售费用id;
+String workEmail 工作邮箱;
+String createTime 创建时间;
+String modifyTime 修改时间;
+String userId 用户id;
 )

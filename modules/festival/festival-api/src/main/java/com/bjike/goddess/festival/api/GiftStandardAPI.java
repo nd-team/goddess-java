@@ -25,6 +25,14 @@ public interface GiftStandardAPI {
     default Long countGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据id获取礼品标准
+     * @return class GiftStandardBO
+     */
+    default GiftStandardBO getOneById(String id) throws SerException {return null;}
+
     /**
      * 节假日礼品标准列表
      * @return class GiftStandardBO

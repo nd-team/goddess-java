@@ -31,6 +31,11 @@ public class CompanyFestivalTimeApiImpl implements CompanyFestivalTimeAPI {
     }
 
     @Override
+    public CompanyFestivalTimeBO getOneById(String id) throws SerException {
+        return companyFestivalTimeSer.getOneById(id);
+    }
+
+    @Override
     public List<CompanyFestivalTimeBO> listCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
         return companyFestivalTimeSer.listCompanyFestivalTime(companyFestivalTimeDTO);
     }

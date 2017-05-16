@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -53,6 +54,25 @@ public class HolidayProgrammeAction {
     }
 
     /**
+     * 一个放假方案
+     *
+     * @param id 放假方案id
+     * @des 根据id获取一个放假方案
+     * @return  class HolidayProgrammeVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            HolidayProgrammeVO holidayProgrammeVO = BeanTransform.copyProperties(
+                    holidayProgrammeAPI.getOneById(id), HolidayProgrammeVO.class);
+            return ActResult.initialize(holidayProgrammeVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 法定节假日放假方案列表
      *
      * @param holidayProgrammeDTO 法定节假日放假方案信息dto
@@ -60,11 +80,11 @@ public class HolidayProgrammeAction {
      * @return  class HolidayProgrammeVO
      * @version v1
      */
-    @GetMapping("v1/listHolidayProgramme")
-    public Result findListHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<HolidayProgrammeVO> holidayProgrammeVOList = BeanTransform.copyProperties(
-                    holidayProgrammeAPI.listHolidayProgramme(holidayProgrammeDTO), HolidayProgrammeVO.class, true);
+                    holidayProgrammeAPI.listHolidayProgramme(holidayProgrammeDTO), HolidayProgrammeVO.class, request);
             return ActResult.initialize(holidayProgrammeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -84,7 +104,7 @@ public class HolidayProgrammeAction {
     public Result addHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO, BindingResult bindingResult) throws ActException {
         try {
             HolidayProgrammeBO holidayProgrammeBO1 = holidayProgrammeAPI.addHolidayProgramme(holidayProgrammeTO);
-            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,7 +124,7 @@ public class HolidayProgrammeAction {
     public Result editHolidayProgramme(@Validated({HolidayProgrammeTO.TESTAddAndEdit.class}) HolidayProgrammeTO holidayProgrammeTO) throws ActException {
         try {
             HolidayProgrammeBO holidayProgrammeBO1 = holidayProgrammeAPI.editHolidayProgramme(holidayProgrammeTO);
-            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(holidayProgrammeBO1,HolidayProgrammeVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

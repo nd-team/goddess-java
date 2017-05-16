@@ -1,6 +1,9 @@
-package com.bjike.goddess.staffentry.to;
+package com.bjike.goddess.staffentry.entity;
 
-import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+
+import javax.persistence.*;
+
 
 /**
  * 员工入职注册
@@ -11,71 +14,48 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class StaffEntryRegisterTO extends BaseTO {
+@Entity
+@Table(name = "staffentry_staffentryregister")
+public class StaffEntryRegister extends BaseEntity {
 
-    /**
-     * 员工编号
-     */
-    private String empNumber;
-    /**
-     * 用户名
-     */
-    private String userName;
     /**
      * 所属部门
      */
+    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '所属部门'")
     private String department;
 
     /**
      * 角色列表
      */
+    @Column(name = "role",  columnDefinition = "VARCHAR(255)   COMMENT '角色列表'")
     private String role;
 
     /**
      * 职位
      */
+    @Column(name = "position",  columnDefinition = "VARCHAR(255)   COMMENT '职位'")
     private String position;
 
     /**
      * 项目组
      */
+    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 工作邮箱
      */
+    @Column(name = "workEmail",  columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱'")
     private String workEmail;
 
-    /**
-     * 创建时间
-     */
-    private String createTime;
 
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
 
     /**
      * 用户id
      */
+    @Column(name = "userId", nullable = false,unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '用户id'")
     private String userId;
 
-    public String getEmpNumber() {
-        return empNumber;
-    }
-
-    public void setEmpNumber(String empNumber) {
-        this.empNumber = empNumber;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getDepartment() {
         return department;
@@ -115,22 +95,6 @@ public class StaffEntryRegisterTO extends BaseTO {
 
     public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 
     public String getUserId() {

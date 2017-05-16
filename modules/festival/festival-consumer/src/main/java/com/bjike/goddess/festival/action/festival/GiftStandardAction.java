@@ -1,5 +1,6 @@
 package com.bjike.goddess.festival.action.festival;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -16,7 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -53,6 +56,26 @@ public class GiftStandardAction {
     }
 
     /**
+     * 一个礼品标准
+     *
+     * @param id 放假方案id
+     * @des 根据id获取一个礼品标准
+     * @return  class GiftStandardVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            GiftStandardVO giftStandardVO = BeanTransform.copyProperties(
+                    giftStandardAPI.getOneById(id), GiftStandardVO.class);
+            return ActResult.initialize(giftStandardVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 节假日礼品标准列表
      *
      * @param giftStandardDTO 节假日礼品标准信息dto
@@ -60,11 +83,11 @@ public class GiftStandardAction {
      * @return  class GiftStandardVO
      * @version v1
      */
-    @GetMapping("v1/listGiftStandard")
-    public Result findListGiftStandard(GiftStandardDTO giftStandardDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListGiftStandard(GiftStandardDTO giftStandardDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<GiftStandardVO> giftStandardVOList = BeanTransform.copyProperties(
-                    giftStandardAPI.listGiftStandard(giftStandardDTO), GiftStandardVO.class, true);
+                    giftStandardAPI.listGiftStandard(giftStandardDTO), GiftStandardVO.class, request);
             return ActResult.initialize(giftStandardVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -84,7 +107,7 @@ public class GiftStandardAction {
     public Result addGiftStandard(@Validated({GiftStandardTO.TESTAddAndEdit.class}) GiftStandardTO giftStandardTO, BindingResult bindingResult) throws ActException {
         try {
             GiftStandardBO giftStandardBO1 = giftStandardAPI.addGiftStandard(giftStandardTO);
-            return ActResult.initialize(BeanTransform.copyProperties(giftStandardBO1,GiftStandardVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(giftStandardBO1,GiftStandardVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -104,7 +127,7 @@ public class GiftStandardAction {
     public Result editGiftStandard(@Validated({GiftStandardTO.TESTAddAndEdit.class}) GiftStandardTO giftStandardTO) throws ActException {
         try {
             GiftStandardBO giftStandardBO1 = giftStandardAPI.editGiftStandard(giftStandardTO);
-            return ActResult.initialize(BeanTransform.copyProperties(giftStandardBO1,GiftStandardVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(giftStandardBO1,GiftStandardVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -136,7 +159,7 @@ public class GiftStandardAction {
      * @version v1
      */
     @GetMapping("v1/getGift")
-    public Result getGift ( BindingResult bindingResult) throws ActException {
+    public Result getGift ( ) throws ActException {
         try {
             List<String> giftStandardVOList = giftStandardAPI.getGiftByFestivalName();
             return ActResult.initialize(giftStandardVOList);

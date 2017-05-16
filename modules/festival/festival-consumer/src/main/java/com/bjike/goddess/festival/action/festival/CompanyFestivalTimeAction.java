@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -53,6 +54,25 @@ public class CompanyFestivalTimeAction {
     }
 
     /**
+     * 一个放假时间安排
+     *
+     * @param id 放假方案id
+     * @des 根据id获取一个放假时间安排
+     * @return  class CompanyFestivalTimeVO
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            CompanyFestivalTimeVO companyFestivalTimeVO = BeanTransform.copyProperties(
+                    companyFestivalTimeAPI.getOneById(id), CompanyFestivalTimeVO.class);
+            return ActResult.initialize(companyFestivalTimeVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 公司放假时间安排列表
      *
      * @param companyFestivalTimeDTO 公司放假时间安排信息dto
@@ -60,11 +80,11 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
-    @GetMapping("v1/listCompanyFestivalTime")
-    public Result findListCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<CompanyFestivalTimeVO> companyFestivalTimeVOList = BeanTransform.copyProperties(
-                    companyFestivalTimeAPI.listCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, true);
+                    companyFestivalTimeAPI.listCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, request);
             return ActResult.initialize(companyFestivalTimeVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -137,11 +157,11 @@ public class CompanyFestivalTimeAction {
      * @return  class CompanyFestivalTimeVO
      * @version v1
      */
-    @GetMapping("v1/getCompanyFestivalTimeDetail")
-    public Result getCompanyFestivalTimeDetail (@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/getComDetail")
+    public Result getCompanyFestivalTimeDetail (@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<CompanyFestivalTimeVO> companyFestivalTimeVOS = BeanTransform.copyProperties(
-                    companyFestivalTimeAPI.getCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, true);
+            CompanyFestivalTimeVO companyFestivalTimeVOS = BeanTransform.copyProperties(
+                    companyFestivalTimeAPI.getCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, request);
             return ActResult.initialize(companyFestivalTimeVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
