@@ -52,16 +52,26 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     }
 
     @Override
-    public ModuleBO findByName(String name) throws SerException {
+    public ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
         Module module = moduleRep.findByName(name);
-        String sql ="select a.id,b.checkType,a.name from module_table a,("
-                +" select b.relation_id  ,b.checkType from module_table a ,"
-        +" module_assemble b where a.id = b.module_id and a.name='用户模块' and b.checkType=0)b where b.relation_id=a.id";
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.id,b.checkType,a.name from module_table a,(");
+        sb.append(" select b.relation_id  ,b.checkType from module_table a ,");
+        sb.append(" module_assemble b where a.id = b.module_id and a.name='");
+        sb.append(name);
+        sb.append("' ");
+        if(null!=checkType){
+            sb.append(" and b.checkType="+checkType.getCode());
+        }
+        sb.append(" )b where b.relation_id=a.id");
+        String sql =sb.toString();
         List<ModuleBO> relations = super.findBySql(sql, ModuleBO.class, new String[]{"id", "checkType", "name"});
         ModuleBO moduleBO = BeanTransform.copyProperties(module, ModuleBO.class);
         moduleBO.setRelations(relations);
         return moduleBO;
     }
+
+
 
     @Override
     public void delete(String id) throws SerException {

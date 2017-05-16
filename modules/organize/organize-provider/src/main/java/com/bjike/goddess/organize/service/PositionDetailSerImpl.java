@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
@@ -220,5 +221,16 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     public List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
         dto.getSorts().add("department_id=asc");
         return this.transformationToBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<PositionDetail> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for(PositionDetail entity :list)
+            bos.add(new OpinionBO(entity.getId(),entity.getPosition()));
+        return bos;
     }
 }

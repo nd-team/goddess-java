@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
@@ -95,6 +96,15 @@ public interface ModuleTypeSer extends Ser<ModuleType, ModuleTypeDTO> {
      * @throws SerException
      */
     default List<ModuleTypeBO> maps(ModuleTypeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询模块类型选项
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException{
         return null;
     }
 }

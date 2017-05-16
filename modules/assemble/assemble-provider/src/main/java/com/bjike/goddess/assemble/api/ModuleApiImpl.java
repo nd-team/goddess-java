@@ -29,8 +29,8 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
-    public ModuleBO findByName(String name) throws SerException {
-        return moduleSer.findByName(name);
+    public ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
+        return moduleSer.modulesByName(name,checkType);
     }
 
     @Override

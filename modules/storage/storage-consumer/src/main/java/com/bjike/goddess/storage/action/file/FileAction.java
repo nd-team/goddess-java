@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -40,6 +39,30 @@ public class FileAction extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 
+
+    /**
+     * 预览文件
+     *
+     * @param fileInfo
+     * @param result
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/preview")
+    public Result preview(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+        String url = null;
+        try {
+            byte[] bytes = fileAPI.download(fileInfo);
+            url = previewUrl(bytes, "kiss.xlsx");
+            return ActResult.initialize(url);
+        } catch (
+                SerException e)
+
+        {
+            throw new ActException(e.getMessage());
+        }
+
+    }
 
     /**
      * 文件列表
@@ -147,7 +170,7 @@ public class FileAction extends BaseFileAction {
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             filename = new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1");
             byte[] buffer = fileAPI.download(fileInfo);
-            writeOutFile(response,buffer,filename);
+            writeOutFile(response, buffer, filename);
             return new ActResult("download success");
         } catch (Exception e) {
             throw new ActException(e.getMessage());

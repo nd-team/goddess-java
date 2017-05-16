@@ -57,16 +57,17 @@ public class ModuleAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/module/{name}")
-    public Result findByName(@PathVariable String name) throws ActException {
+    @GetMapping("v1/list/{name}")
+    public Result modulesByName(@PathVariable String name,CheckType checkType) throws ActException {
         ActResult actResult = new ActResult();
         try {
-            actResult.setData(BeanTransform.copyProperties(moduleAPI.findByName(name), ModuleVO.class));
+            actResult.setData(BeanTransform.copyProperties(moduleAPI.modulesByName(name,checkType), ModuleVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }
         return actResult;
     }
+
 
     /**
      * 添加模块

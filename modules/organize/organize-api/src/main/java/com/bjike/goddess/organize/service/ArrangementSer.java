@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
 import com.bjike.goddess.organize.enums.ArrangementType;
@@ -103,6 +104,15 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
      * @throws SerException
      */
     default ArrangementBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取岗位层级选线
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
 
