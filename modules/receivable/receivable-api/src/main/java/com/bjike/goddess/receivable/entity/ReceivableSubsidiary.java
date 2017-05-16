@@ -5,7 +5,6 @@ import com.bjike.goddess.receivable.enums.AuditStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 /**
@@ -227,10 +226,12 @@ public class ReceivableSubsidiary extends BaseEntity {
     /**
      * 承包商
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "contractor_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '承包商'")
     private Contractor contractor;
-
+    /*@Column(name = "contractor", columnDefinition = "VARCHAR(255)   COMMENT '承包商'")
+    private String contractor;
+*/
     /**
      * 是否已支付
      */

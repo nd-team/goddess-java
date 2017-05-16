@@ -84,5 +84,5 @@ public interface FundRecordAPI {
      * @param to 分析条件
      * @return 分析结果集
      */
-    List<AnalyzeBO> analyze(CollectTO to) throws SerException;
+    AnalyzeBO analyze(CollectTO to) throws SerException;
 }

@@ -220,8 +220,8 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 承包商
      */
-    @NotNull(message = "承包商不能为空")
-    private Contractor contractor;
+    @NotBlank(message = "承包商不能为空")
+    private String contractorId;
 
     /**
      * 是否已支付
@@ -247,10 +247,10 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     @NotNull(message = "是否已走结算流程不能为空")
     private Boolean isflow;
 
-    //开始时间
+    /*//开始时间
     private String startTime;
     //结束时间
-    private String endTime;
+    private String endTime;*/
 
 
     public String getArea() {
@@ -525,12 +525,12 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.moreMoney = moreMoney;
     }
 
-    public Contractor getContractor() {
-        return contractor;
+    public String getContractorId() {
+        return contractorId;
     }
 
-    public void setContractor(Contractor contractor) {
-        this.contractor = contractor;
+    public void setContractorId(String contractorId) {
+        this.contractorId = contractorId;
     }
 
     public Boolean getIspay() {
@@ -565,7 +565,7 @@ public class ReceivableSubsidiaryTO extends BaseTO {
         this.isflow = isflow;
     }
 
-    public String getStartTime() {
+    /*public String getStartTime() {
         return startTime;
     }
 
@@ -579,5 +579,5 @@ public class ReceivableSubsidiaryTO extends BaseTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
+    }*/
 }

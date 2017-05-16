@@ -22,14 +22,14 @@ public class ModuleAssemble extends BaseEntity {
     /**
      * 模块
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "module_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '模块id' ")
     private Module module;
 
     /**
      * 关联模块
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "relation_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '关联模块id' ")
     private Module relation;
 

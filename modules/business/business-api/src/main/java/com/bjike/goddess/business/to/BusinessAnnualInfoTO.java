@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 工商年检信息
  *
@@ -37,7 +39,7 @@ public class BusinessAnnualInfoTO extends BaseTO {
     /**
      * 状态(是否公示)
      */
-    @NotBlank(message = "状态(是否公示)不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "状态(是否公示)不能为空",groups = {ADD.class, EDIT.class})
     private Boolean status;
 
     /**

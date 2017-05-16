@@ -55,8 +55,8 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     public ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
         Module module = moduleRep.findByName(name);
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.id,b.checkType,a.name from module_table a,(");
-        sb.append(" select b.relation_id  ,b.checkType from module_table a ,");
+        sb.append("select b.id,b.checkType,a.name from module_table a,(");
+        sb.append(" select b.id,b.relation_id  ,b.checkType from module_table a ,");
         sb.append(" module_assemble b where a.id = b.module_id and a.name='");
         sb.append(name);
         sb.append("' ");

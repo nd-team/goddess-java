@@ -44,7 +44,7 @@ public class UserLoginLog extends BaseEntity {
     /**
      * 用户关联
      */
-    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '所属用户' ")
     private User user;
 

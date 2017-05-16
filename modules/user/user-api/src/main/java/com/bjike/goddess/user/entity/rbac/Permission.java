@@ -43,7 +43,7 @@ public class Permission extends BaseEntity {
     /**
      * 父节点
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '资源上级' ")
     private Permission parent;
 

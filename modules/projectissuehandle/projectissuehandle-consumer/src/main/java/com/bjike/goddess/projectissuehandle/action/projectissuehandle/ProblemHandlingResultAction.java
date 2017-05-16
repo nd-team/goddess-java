@@ -124,6 +124,7 @@ public class ProblemHandlingResultAction extends BaseFileAction{
      * @des 编辑确认问题处理结果
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ProblemHandlingResultTO problemHandlingResultTO,BindingResult bindingResult) throws ActException {
         try {
