@@ -40,7 +40,7 @@ public class BusinessAnnualInfo extends BaseEntity {
     /**
      * 状态(是否公示)
      */
-    @Column(name = "is_status",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
+    @Column(name = "is_status",  columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '状态(是否公示)'", insertable = false)
     private Boolean status;
 
     /**

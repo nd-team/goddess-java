@@ -97,7 +97,7 @@ public class ContractorAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
         try {
             ContractorBO contractorBO = contractorAPI.insertContractor(contractorTO);
             return ActResult.initialize(contractorBO);

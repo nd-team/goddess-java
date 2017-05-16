@@ -163,7 +163,7 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
      *
      * @return class Contractor
      */
-    default List<Contractor> getContractor() throws SerException {
+    default List<String> getContractor() throws SerException {
         return null;
     }
 

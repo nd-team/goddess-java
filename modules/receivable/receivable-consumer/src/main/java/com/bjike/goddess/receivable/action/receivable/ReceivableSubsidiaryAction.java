@@ -154,7 +154,7 @@ public class ReceivableSubsidiaryAction {
      *
      * @version v1
      */
-    @PostMapping("v1/editTime")
+    @GetMapping("v1/editTime")
     public Result editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr) throws ActException {
         try {
             receivableSubsidiaryAPI.editTime(receivableSubsidiary, auditStatusStr, countStatusStr, billStatusStr, planStatusStr);
@@ -234,7 +234,7 @@ public class ReceivableSubsidiaryAction {
     @GetMapping("v1/contractor")
     public Result contractor() throws ActException {
         try {
-            List<Contractor> contractorList = receivableSubsidiaryAPI.getContractor();
+            List<String> contractorList = receivableSubsidiaryAPI.getContractor();
             return ActResult.initialize(contractorList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

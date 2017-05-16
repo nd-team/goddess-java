@@ -1,12 +1,7 @@
 package com.bjike.goddess.receivable.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.enums.AuditStatus;
-
-import javax.persistence.Column;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 回款明细业务传输对象
@@ -192,7 +187,7 @@ public class ReceivableSubsidiaryBO extends BaseBO {
     /**
      * 承包商
      */
-    private Contractor contractor;
+    private ContractorBO contractorBO;
 
     /**
      * 是否已支付
@@ -224,58 +219,6 @@ public class ReceivableSubsidiaryBO extends BaseBO {
     private Double increase;//增长率
     private Double percentage;//百分比
     private String percentageStr;//百分比%
-
-    /**
-     * 备注
-     */
-    private String remark;
-    /**
-     * 个数
-     */
-    private int counts;
-    /**
-     * 数据库枚举转换
-     */
-    private int enumConvert;
-
-    /**
-     * 地区汇总集合
-     */
-    private List<Map<String, String>> areaMap;
-
-
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
-    public int getEnumConvert() {
-        return enumConvert;
-    }
-
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
-    }
 
     public String getArea() {
         return area;
@@ -549,12 +492,12 @@ public class ReceivableSubsidiaryBO extends BaseBO {
         this.moreMoney = moreMoney;
     }
 
-    public Contractor getContractor() {
-        return contractor;
+    public ContractorBO getContractorBO() {
+        return contractorBO;
     }
 
-    public void setContractor(Contractor contractor) {
-        this.contractor = contractor;
+    public void setContractorBO(ContractorBO contractorBO) {
+        this.contractorBO = contractorBO;
     }
 
     public Boolean getIspay() {
