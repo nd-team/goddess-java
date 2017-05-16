@@ -27,7 +27,7 @@ public interface ModuleAssembleAPI {
      *
      * @param id
      */
-    default void delete(String id) throws SerException{
+    default void delete(String id) throws SerException {
 
     }
 

@@ -9,6 +9,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import java.util.List;
 
 /**
+ * 模块接口
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
