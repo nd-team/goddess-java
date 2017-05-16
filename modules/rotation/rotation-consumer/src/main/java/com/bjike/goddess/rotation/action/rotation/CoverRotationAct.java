@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.api.CoverRotationAPI;
@@ -13,6 +14,7 @@ import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
 import com.bjike.goddess.rotation.vo.CoverRotationOpinionVO;
 import com.bjike.goddess.rotation.vo.CoverRotationVO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,8 @@ public class CoverRotationAct {
 
     @Autowired
     private CoverRotationAPI coverRotationAPI;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 保存
@@ -43,9 +47,11 @@ public class CoverRotationAct {
      * @return class CoverRotationVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) CoverRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String token = userAPI.currentToken();
             return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.save(to), CoverRotationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

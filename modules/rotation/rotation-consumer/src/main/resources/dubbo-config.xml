@@ -28,6 +28,7 @@
                      id="rotationStatisticsApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.SubsidyStandardAPI"
                      id="subsidyStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 
 </beans>
