@@ -25,7 +25,7 @@ public class ModuleAssembleAction {
     private ModuleAssembleAPI moduleAssembleAPI;
 
     /**
-     * 添加模块
+     * 添加关联模块
      *
      * @throws ActException
      * @version v1
@@ -42,7 +42,7 @@ public class ModuleAssembleAction {
     }
 
     /**
-     * 删除模块
+     * 删除关联模块
      *
      * @throws ActException
      * @version v1

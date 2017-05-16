@@ -18,13 +18,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class ModuleAssembleTO extends BaseTO {
 
     /**
-     * 模块id
+     * 模块名
      */
     @NotBlank(message = "模块名不能为空", groups = {ADD.class, EDIT.class})
     private String moduleName;
 
     /**
-     * 关联模块id
+     * 关联模块名
      */
     @NotBlank(message = "关联模块名不能为空", groups = {ADD.class, EDIT.class})
     private String relationName;
