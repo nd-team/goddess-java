@@ -3,7 +3,6 @@ package com.bjike.goddess.assemble.bo;
 import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class ModuleBO extends BaseBO {
     /**
      * 选中状态
      */
-    private CheckType checkType ;
+    private CheckType checkType;
     /**
      * 包含的模块
      */

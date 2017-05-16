@@ -21,7 +21,7 @@ public interface ModuleAssembleSer extends Ser<ModuleAssemble, ModuleAssembleDTO
      *
      * @param moduleAssembleTO
      */
-    default void add(ModuleAssembleTO moduleAssembleTO)throws SerException {
+    default void add(ModuleAssembleTO moduleAssembleTO) throws SerException {
 
     }
 
@@ -30,7 +30,7 @@ public interface ModuleAssembleSer extends Ser<ModuleAssemble, ModuleAssembleDTO
      *
      * @param id
      */
-    default void delete(String id)throws SerException {
+    default void delete(String id) throws SerException {
 
     }
 }
