@@ -10,6 +10,7 @@ import com.bjike.goddess.rotation.entity.CoverRotationOpinion;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class CoverRotationOpinionSerImpl extends ServiceImpl<CoverRotationOpinio
     @Override
     public List<CoverRotationOpinionBO> findByCover(String id, CoverRotationOpinionDTO dto) throws SerException {
         dto.getConditions().add(Restrict.eq("cover.id", id));
-        return BeanTransform.copyProperties(super.findByPage(dto), CoverRotationOpinionBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override
@@ -36,5 +37,19 @@ public class CoverRotationOpinionSerImpl extends ServiceImpl<CoverRotationOpinio
         CoverRotationOpinionDTO dto = new CoverRotationOpinionDTO();
         dto.getConditions().add(Restrict.eq("cover.id", id));
         return super.count(dto);
+    }
+
+    @Override
+    public CoverRotationOpinionBO transformBO(CoverRotationOpinion entity) throws SerException {
+        CoverRotationOpinionBO bo = BeanTransform.copyProperties(entity,CoverRotationOpinion.class);
+        bo.setCoverId(entity.getCover().getId());
+        return bo;
+    }
+
+    private List<CoverRotationOpinionBO> transformBOList(List<CoverRotationOpinion> list) throws SerException{
+        List<CoverRotationOpinionBO> bos = new ArrayList<>(0);
+        for(CoverRotationOpinion entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
     }
 }

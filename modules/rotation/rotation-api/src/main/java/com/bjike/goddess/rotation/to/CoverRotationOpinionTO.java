@@ -1,6 +1,9 @@
 package com.bjike.goddess.rotation.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 岗位轮换自荐意见
@@ -21,6 +24,7 @@ public class CoverRotationOpinionTO extends BaseTO {
     /**
      * 意见
      */
+    @NotBlank(message = "意见不能为空", groups = {ADD.class, EDIT.class})
     private String opinion;
 
 

@@ -96,6 +96,14 @@ public interface RecommendRotationSer extends Ser<RecommendRotation, RecommendRo
         return null;
     }
 
+    /**
+     * 根据姓名和轮换层级id查询岗位轮换推荐信息
+     *
+     * @param username      姓名
+     * @param arrangementId 轮换层级数据id
+     * @return
+     * @throws SerException
+     */
     default List<RecommendRotationBO> findByUserArrangement(String username, String arrangementId) throws SerException {
         return null;
     }

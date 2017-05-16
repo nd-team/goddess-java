@@ -15,7 +15,7 @@ import javax.persistence.*;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "rotation_coverrotationopinion")
+@Table(name = "rotation_cover_opinion")
 public class CoverRotationOpinion extends BaseEntity {
 
     /**
