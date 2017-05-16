@@ -41,7 +41,6 @@ public class ContractorBO extends BaseBO {
      */
     private Status status;
 
-
     public String getName() {
         return name;
     }
@@ -81,4 +80,5 @@ public class ContractorBO extends BaseBO {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 }

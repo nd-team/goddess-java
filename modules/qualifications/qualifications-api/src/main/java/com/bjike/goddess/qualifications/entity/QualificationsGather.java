@@ -48,7 +48,7 @@ public class QualificationsGather extends BaseEntity {
     /**
      * 认证时间
      */
-    @Column(name = "authenticationTime", nullable = false, columnDefinition = "DATE   COMMENT '认证时间'")
+    @Column(name = "authenticationTime", columnDefinition = "DATE   COMMENT '认证时间'")
     private LocalDate authenticationTime;
 
     /**

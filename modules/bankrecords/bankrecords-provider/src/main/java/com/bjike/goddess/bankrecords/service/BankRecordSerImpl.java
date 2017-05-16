@@ -1,5 +1,6 @@
 package com.bjike.goddess.bankrecords.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.bankrecords.beanlist.Detail;
 import com.bjike.goddess.bankrecords.bo.BankRecordAnalyzeBO;
 import com.bjike.goddess.bankrecords.bo.BankRecordBO;
@@ -14,26 +15,20 @@ import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.storage.api.FileAPI;
-import com.bjike.goddess.storage.api.StorageUserAPI;
-import com.bjike.goddess.storage.bo.FileBO;
-import com.bjike.goddess.storage.constant.PathCommon;
+import com.bjike.goddess.storage.to.FileInfo;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -49,7 +44,7 @@ import java.util.List;
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-04-22 05:35 ]
- * @Description: [ 银行流水业务实现 ]
+ * @Description: [ 银行流水业务实现 ]12
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -58,22 +53,19 @@ import java.util.List;
 public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> implements BankRecordSer {
 
     @Autowired
-    private StorageUserAPI storageUserAPI;
-    @Autowired
-    private FileAPI fileAPI;
-    @Autowired
     private BankRecordDetailSer bankRecordDetailSer;
     @Autowired
     private BankAccountInfoSer bankAccountInfoSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<String> check(InputStream inputStream) throws SerException {
+    public List<String> check(byte[] bytes) throws SerException {
 
-        /*if(inputStream!=null){
+        if (bytes != null) {
             HSSFWorkbook wb = null;
             HSSFSheet sheet = null;
-            //上传成功后，不管后续业务是否成功都删除调文件
+            //根据字节数组获取Excel信息
+            InputStream inputStream = new ByteArrayInputStream(bytes);
             try {
                 wb = new HSSFWorkbook(inputStream);
                 sheet = wb.getSheetAt(0);
@@ -86,76 +78,48 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                 list.add(sheet.getRow(0).getCell(i).getStringCellValue());
             }
             return list;
-        }else {
-            throw new SerException("找不到上传的文件!");
-        }*/
-
-        /*if (to.getBytes() != null && to.getBytes().length > 0) {
-            String storageToken = RpcTransmit.getStorageToken();
-            String path = "/bankRecord";
-
-            File file = uploadExcel(to, path, storageToken);
-            HSSFWorkbook wb = null;
-            HSSFSheet sheet = null;
-            //上传成功后，不管后续业务是否成功都删除调文件
-            try {
-                wb = new HSSFWorkbook(new FileInputStream(file));
-                sheet = wb.getSheetAt(0);
-            } catch (IOException e) {
-                throw new SerException(e.getMessage());
-            } finally {
-                RpcTransmit.transmitStorageToken(storageToken);
-                fileAPI.delFile(path);
-            }
-            List<String> list = new ArrayList<String>();
-            int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
-            for (int i = 0; i < cellNum; i++) {
-                list.add(sheet.getRow(0).getCell(i).getStringCellValue());
-            }
-            return list;
-
         } else {
-            throw new SerException("请选择需要上传的附件!");
-        }*/
+            throw new SerException("文件内容不能为空!");
+        }
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void upload(BankRecordTO to) throws SerException {
-        /*String storageToken = RpcTransmit.getStorageToken();
-        String path = "/bankRecord";
+        try {
+            List<InputStream> inputStreams = to.getInputStreams();
+            if (inputStreams != null && !inputStreams.isEmpty()) {
 
-        File file = uploadExcel(to, path, storageToken);
-        HSSFWorkbook wb = null;
-        HSSFSheet sheet = null;
+                String fileName = getFileInfo(inputStreams.get(0));
+                String suffixName = fileName.substring(fileName.lastIndexOf("."));
+                //判断文件后缀名
+                if (suffixName.equals(".xls") || suffixName.equals(".XLS") ||
+                        suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
+                    //转换字节流
+                    Object obj = (Object) inputStreams.get(1);
+                    InputStream inputStream = new ByteArrayInputStream((byte[]) obj);
 
-        XSSFWorkbook xssfWorkbook = null;
-        XSSFSheet xssfSheet = null;
+                    //不同格式的Excel需要导入不同的包,(".xlsx"后缀为OFFICE2007以上的版本)
+                    if (suffixName.equals(".xls") || suffixName.equals(".XLS")) {
+                        HSSFWorkbook wb = new HSSFWorkbook(inputStream);
+                        HSSFSheet sheet = wb.getSheetAt(0);
+                        insertModels(sheet, to);
+                    } else if (suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
+                        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+                        XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+                        insertModels(xssfSheet, to);
+                    }
+                } else {
+                    throw new SerException("请上传'.xls'或者'.xlsx'格式的Excel文件!");
+                }
 
-        String suffixName = file.getName().substring(file.getName().lastIndexOf("."));
-        //不同格式的Excel需要导入不同的包
-        if (suffixName.equals(".xls") || suffixName.equals(".XLS")) {
-            try {
-                wb = new HSSFWorkbook(new FileInputStream(file));
-                sheet = wb.getSheetAt(0);
-                insertModels(sheet, to, path, storageToken);
-            } catch (Exception e) {
-                RpcTransmit.transmitStorageToken(storageToken);
-                fileAPI.delFile(path);
-                throw new SerException(e.getMessage());
+
+            } else {
+                throw new SerException("上传的Excel不能为空!");
             }
-        } else if (suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
-            try {
-                xssfWorkbook = new XSSFWorkbook(new FileInputStream(file));
-                xssfSheet = xssfWorkbook.getSheetAt(0);
-                insertModels(xssfSheet, to, path, storageToken);
-            } catch (Exception e) {
-                RpcTransmit.transmitStorageToken(storageToken);
-                fileAPI.delFile(path);
-                throw new SerException(e.getMessage());
-            }
-        }*/
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -310,7 +274,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
         String creditorRate = null;
         String debtorRate = null;
-        if(allDebtorCost!=null){
+        if (allDebtorCost != null) {
             creditorRate = format.format(creditorSubtract / allDebtorCost) + "%";
             debtorRate = format.format(debtorSubtract / allCreditorCost) + "%";
         }
@@ -322,71 +286,43 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         return bo;
     }
 
-    public File uploadExcel(BankRecordTO to, String path, String storageToken) throws SerException {
-
-        FileBO fileBO = fileAPI.uploadSingle(to.getBytes(), path, to.getFileName());
-        RpcTransmit.transmitStorageToken(storageToken);
-        String filePath = fileAPI.getRealPath(path);
-        File file = new File(filePath + PathCommon.SEPARATOR + fileBO.getName());
-
-        if (!file.exists()) {
-            throw new SerException("Excel导入失败，请联系研发人员!");
-        }
-        return file;
-    }
-
-
-    public void insertModels(HSSFSheet sheet, BankRecordTO to, String path, String storageToken) throws SerException {
+    public void insertModels(HSSFSheet sheet, BankRecordTO to) throws SerException {
         int rowNum = sheet.getLastRowNum();
         int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
-        try {
-            for (int i = 1; i <= rowNum; i++) {
+        for (int i = 1; i <= rowNum; i++) {
+            BankRecord model = new BankRecord();
+            //校验时间格式
+            judgeDate(model, to, sheet, i);
 
-                BankRecord model = new BankRecord();
-                //校验时间格式
-                judgeDate(model, to, sheet, i);
-
-                model.setAccountId(to.getAccountId());
-                model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
-                model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
-                model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
-                super.save(model);
-                for (int j = 0; j < cellNum; j++) {
-                    saveDetail(model, sheet, i, j);
-                }
+            model.setAccountId(to.getAccountId());
+            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
+            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
+            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+            super.save(model);
+            for (int j = 0; j < cellNum; j++) {
+                saveDetail(model, sheet, i, j);
             }
-        } catch (SerException e) {
-            //保存失败删除已经上传的附件
-            RpcTransmit.transmitStorageToken(storageToken);
-            fileAPI.delFile(path);
-            throw new SerException(e.getMessage());
         }
+
     }
 
-    public void insertModels(XSSFSheet sheet, BankRecordTO to, String path, String storageToken) throws SerException {
+    public void insertModels(XSSFSheet sheet, BankRecordTO to) throws SerException {
         int rowNum = sheet.getLastRowNum();
         int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
-        try {
-            for (int i = 1; i <= rowNum; i++) {
+        for (int i = 1; i <= rowNum; i++) {
 
-                BankRecord model = new BankRecord();
-                //校验时间格式
-                judgeDate(model, to, sheet, i);
+            BankRecord model = new BankRecord();
+            //校验时间格式
+            judgeDate(model, to, sheet, i);
 
-                model.setAccountId(to.getAccountId());
-                model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
-                model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
-                model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
-                super.save(model);
-                for (int j = 0; j < cellNum; j++) {
-                    saveDetail(model, sheet, i, j);
-                }
+            model.setAccountId(to.getAccountId());
+            model.setCreditorCost(sheet.getRow(i).getCell(to.getCreditorCostIndex()).getNumericCellValue());
+            model.setDebtorCost(sheet.getRow(i).getCell(to.getDebtorCostIndex()).getNumericCellValue());
+            model.setBalance(sheet.getRow(i).getCell(to.getBalanceIndex()).getNumericCellValue());
+            super.save(model);
+            for (int j = 0; j < cellNum; j++) {
+                saveDetail(model, sheet, i, j);
             }
-        } catch (SerException e) {
-            //保存失败删除已经上传的附件
-            RpcTransmit.transmitStorageToken(storageToken);
-            fileAPI.delFile(path);
-            throw new SerException(e.getMessage());
         }
     }
 
@@ -547,5 +483,22 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             bo.setName(info.getName());
             bo.setType(info.getType());
         }
+    }
+
+    /**
+     * 通过流获取文件信息
+     *
+     * @param obj
+     * @return
+     */
+    private String getFileInfo(Object obj) {
+        String json_info = new String((byte[]) obj);
+        if (!StringUtils.isEmpty(json_info)) {
+            json_info = json_info.replaceAll("\\\\", "");
+            json_info = json_info.substring(1, json_info.length() - 1);
+            FileInfo fileInfo = JSON.parseObject(json_info, FileInfo.class);
+            return fileInfo.getFileName();
+        }
+        return null;
     }
 }

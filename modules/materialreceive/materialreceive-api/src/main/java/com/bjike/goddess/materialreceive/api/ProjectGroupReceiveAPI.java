@@ -28,6 +28,14 @@ public interface ProjectGroupReceiveAPI {
     ProjectGroupReceiveBO findById(String id) throws SerException;
 
     /**
+     * 查询项目组领用归还记录条数
+     *
+     * @param dto 项目组领用归还dto
+     * @throws SerException
+     */
+    Long count(ProjectGroupReceiveDTO dto) throws SerException;
+
+    /**
      * 分页查询项目组领用归还
      *
      * @return class ProjectGroupReceiveBO

@@ -64,14 +64,9 @@ public class PositionDetailVO {
     private String moduleName;
 
     /**
-     * 岗位ID
+     * 岗位
      */
     private String position;
-
-    /**
-     * 岗位名称
-     */
-    private String positionName;
 
     /**
      * 人员编制数
@@ -173,14 +168,6 @@ public class PositionDetailVO {
 
     public void setArrangementName(String arrangementName) {
         this.arrangementName = arrangementName;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
     }
 
     public String getPool() {

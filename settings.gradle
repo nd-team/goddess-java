@@ -27,7 +27,7 @@ include ':modules:storage:storage-provider'
 include ':modules:quartz:quartz-api'
 include ':modules:quartz:quartz-consumer'
 include ':modules:quartz:quartz-provider'
-
+//#quartz 组装模块-liguiqin
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
@@ -325,11 +325,6 @@ include ':modules:outcarfare:outcarfare-api'
 include ':modules:outcarfare:outcarfare-consumer'
 include ':modules:outcarfare:outcarfare-provider'
 
-//#quartz 任务调度模块-liguiqin
-include ':modules:function:function-api'
-include ':modules:function:function-consumer'
-include ':modules:function:function-provider'
-
 //#projectmarketfee 项目前期的市场活动费
 include ':modules:projectmarketfee:projectmarketfee-api'
 include ':modules:projectmarketfee:projectmarketfee-consumer'
@@ -384,3 +379,31 @@ include ':modules:supplier:supplier-provider'
 include ':modules:equipmentprepared:equipmentprepared-api'
 include ':modules:equipmentprepared:equipmentprepared-consumer'
 include ':modules:equipmentprepared:equipmentprepared-provider'
+
+//#materialinstock 物资入库
+include ':modules:materialinstock:materialinstock-api'
+include ':modules:materialinstock:materialinstock-consumer'
+include ':modules:materialinstock:materialinstock-provider'
+//#materialreceive 物资领用
+include ':modules:materialreceive:materialreceive-api'
+include ':modules:materialreceive:materialreceive-consumer'
+include ':modules:materialreceive:materialreceive-provider'
+//#materialtransfer 物资调用
+include ':modules:materialtransfer:materialtransfer-api'
+include ':modules:materialtransfer:materialtransfer-consumer'
+include ':modules:materialtransfer:materialtransfer-provider'
+//#materialcheck 物资盘点
+include ':modules:materialcheck:materialcheck-api'
+include ':modules:materialcheck:materialcheck-consumer'
+include ':modules:materialcheck:materialcheck-provider'
+
+//#fundrecords资金流水 jason
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
+
+//#bankrecords银行流水 jason
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'
+

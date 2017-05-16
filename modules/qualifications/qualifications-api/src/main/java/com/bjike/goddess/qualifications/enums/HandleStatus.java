@@ -14,15 +14,15 @@ public enum HandleStatus {
     /**
      * 未办理
      */
-    NONE(0)
+    NONE(0),
     /**
      * 办理成功
      */
-    , SUCCESS(1)
+    SUCCESS(1),
     /**
      * 办理失败
      */
-    , FAIL(2);
+     FAIL(2);
 
 
     private int value;

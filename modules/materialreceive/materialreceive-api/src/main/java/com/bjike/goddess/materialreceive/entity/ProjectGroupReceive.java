@@ -34,6 +34,12 @@ public class ProjectGroupReceive extends BaseEntity {
     private String materialName;
 
     /**
+     * 物资领用编号
+     */
+    @Column(name = "materialNo", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资领用编号'")
+    private String materialNo;
+
+    /**
      * 数量
      */
     @Column(name = "quantity", nullable = false, columnDefinition = "INT(11) COMMENT '数量'")
@@ -78,6 +84,14 @@ public class ProjectGroupReceive extends BaseEntity {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    public String getMaterialNo() {
+        return materialNo;
+    }
+
+    public void setMaterialNo(String materialNo) {
+        this.materialNo = materialNo;
     }
 
     public Integer getQuantity() {

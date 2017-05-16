@@ -1,7 +1,10 @@
 package com.bjike.goddess.contractquotemanager.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 合同单价资料信息
@@ -17,26 +20,31 @@ public class ContractQuoteDataTO extends BaseTO {
     /**
      * 客户名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "客户名称不能为空")
     private String customerName;
 
     /**
      * 项目
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目不能为空")
     private String project;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 适用年度开始时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "适用年度开始时间不能为空")
     private String suitableDateStart;
 
     /**
      * 适用年度结束时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "适用年度结束时间不能为空")
     private String suitableDateEnd;
 
     /**
@@ -91,4 +99,5 @@ public class ContractQuoteDataTO extends BaseTO {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 }

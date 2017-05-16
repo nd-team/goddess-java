@@ -41,6 +41,17 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
+     * 查询物资领用记录条数
+     *
+     * @param dto 物资领用dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MaterialReceiveDTO dto) throws SerException {
+        return materialReceiveSer.count(dto);
+    }
+
+    /**
      * 分页查询物资领用
      *
      * @return class MaterialReceiveBO

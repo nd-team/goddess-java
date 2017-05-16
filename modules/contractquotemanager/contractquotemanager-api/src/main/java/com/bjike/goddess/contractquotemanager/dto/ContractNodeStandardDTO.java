@@ -2,8 +2,6 @@ package com.bjike.goddess.contractquotemanager.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
-import javax.persistence.Column;
-
 /**
  * 合同节点标准信息数据传输对象
  *

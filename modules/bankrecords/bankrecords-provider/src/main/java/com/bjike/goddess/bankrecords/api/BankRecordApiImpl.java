@@ -7,8 +7,6 @@ import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.service.BankRecordSer;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +27,6 @@ public class BankRecordApiImpl implements BankRecordAPI {
     @Autowired
     private BankRecordSer bankRecordSer;
 
-    /*@Override
-    public void upload(TransactionContext txContext,BankRecordTO to) throws SerException {
-        bankRecordSer.upload(txContext,to);
-    }*/
     @Override
     public void upload(BankRecordTO to) throws SerException {
         bankRecordSer.upload(to);
@@ -60,16 +54,16 @@ public class BankRecordApiImpl implements BankRecordAPI {
 
     @Override
     public List<BankRecordCollectBO> collect(Integer year, Integer month, String accountName) throws SerException {
-        return bankRecordSer.collect(year,month,accountName);
+        return bankRecordSer.collect(year, month, accountName);
     }
 
     @Override
     public BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException {
-        return bankRecordSer.analyze(year,month,accountName);
+        return bankRecordSer.analyze(year, month, accountName);
     }
 
     @Override
-    public List<String> check(BankRecordTO to) throws SerException {
+    public List<String> check(byte[] to) throws SerException {
         return bankRecordSer.check(to);
     }
 }

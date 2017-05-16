@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * 银行流水
@@ -17,12 +18,13 @@ import java.io.InputStream;
  */
 public class BankRecordTO extends BaseTO {
 
-    public interface Upload{}
+    public interface Upload {
+    }
 
     /**
      * 账号信息Id
      */
-    @NotBlank(message = "账户信息不能为空!",groups = {BankRecordTO.Upload.class})
+    @NotBlank(message = "账户信息不能为空!", groups = {BankRecordTO.Upload.class})
     private String accountId;
 
     /**
@@ -48,25 +50,25 @@ public class BankRecordTO extends BaseTO {
     /**
      * 借方金额下标
      */
-    @NotNull(message = "借方金额下标不能为空!",groups = {BankRecordTO.Upload.class})
+    @NotNull(message = "借方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer debtorCostIndex;
 
     /**
      * 贷方金额下标
      */
-    @NotNull(message = "贷方金额下标不能为空!",groups = {BankRecordTO.Upload.class})
+    @NotNull(message = "贷方金额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer creditorCostIndex;
 
     /**
      * 余额下标
      */
-    @NotNull(message = "余额下标不能为空!",groups = {BankRecordTO.Upload.class})
+    @NotNull(message = "余额下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer balanceIndex;
 
     /**
      * 流水日期下标
      */
-    @NotNull(message = "流水日期下标不能为空!",groups = {BankRecordTO.Upload.class})
+    @NotNull(message = "流水日期下标不能为空!", groups = {BankRecordTO.Upload.class})
     private Integer recordDateIndex;
 
     /**
@@ -79,15 +81,8 @@ public class BankRecordTO extends BaseTO {
      */
     private Integer month;
 
-    /**
-     * 文件转存
-     */
-    private InputStream inputStream;
-
-    /**
-     * 文件名称转存
-     */
-    private String fileName;
+    //request文件信息
+    private List<InputStream> inputStreams;
 
     public String getAccountId() {
         return accountId;
@@ -177,19 +172,12 @@ public class BankRecordTO extends BaseTO {
         this.month = month;
     }
 
-    public InputStream getInputStream() {
-        return inputStream;
+    public List<InputStream> getInputStreams() {
+        return inputStreams;
     }
 
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public void setInputStreams(List<InputStream> inputStreams) {
+        this.inputStreams = inputStreams;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 }

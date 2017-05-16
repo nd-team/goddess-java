@@ -21,4 +21,7 @@
 	<dubbo:service interface="com.bjike.goddess.subjectcollect.api.SubjectCollectAPI" ref="subjectCollectApiImpl"/>
 
 	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
+	<dubbo:reference validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
+	<dubbo:reference validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 </beans>

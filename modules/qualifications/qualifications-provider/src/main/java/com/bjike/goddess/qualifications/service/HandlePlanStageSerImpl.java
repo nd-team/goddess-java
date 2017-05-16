@@ -64,7 +64,7 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
 
     @Override
     public List<HandlePlanStageBO> findByPlanIds(String[] planIds) throws SerException {
-        if (planIds.length == 0)
+        if (planIds == null || planIds.length == 0)
             return null;
         HandlePlanStageDTO dto = new HandlePlanStageDTO();
         dto.getConditions().add(Restrict.in("plan.id", planIds));

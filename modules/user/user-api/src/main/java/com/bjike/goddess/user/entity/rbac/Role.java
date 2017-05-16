@@ -39,7 +39,7 @@ public class Role extends BaseEntity {
     /**
      * 父角色
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '角色上级' ")
     private Role parent;
 

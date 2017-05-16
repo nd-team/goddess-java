@@ -1,5 +1,6 @@
 package com.bjike.goddess.assemble.to;
 
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
@@ -17,30 +18,40 @@ import org.hibernate.validator.constraints.NotBlank;
 public class ModuleAssembleTO extends BaseTO {
 
     /**
-     * 模块id
+     * 模块名
      */
-    @NotBlank(message = "模块id不能为空", groups = {ADD.class, EDIT.class})
-    private String moduleId;
+    @NotBlank(message = "模块名不能为空", groups = {ADD.class, EDIT.class})
+    private String moduleName;
 
     /**
-     * 关联模块id
+     * 关联模块名
      */
-    @NotBlank(message = "关联模块id不能为空", groups = {ADD.class, EDIT.class})
-    private String relationId;
+    @NotBlank(message = "关联模块名不能为空", groups = {ADD.class, EDIT.class})
+    private String relationName;
 
-    public String getModuleId() {
-        return moduleId;
+    private CheckType checkType;
+
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    public String getRelationId() {
-        return relationId;
+    public String getRelationName() {
+        return relationName;
     }
 
-    public void setRelationId(String relationId) {
-        this.relationId = relationId;
+    public void setRelationName(String relationName) {
+        this.relationName = relationName;
+    }
+
+    public CheckType getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(CheckType checkType) {
+        this.checkType = checkType;
     }
 }

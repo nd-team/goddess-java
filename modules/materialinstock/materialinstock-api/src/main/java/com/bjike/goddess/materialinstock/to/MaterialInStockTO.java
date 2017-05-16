@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialinstock.type.InstockType;
 import com.bjike.goddess.materialinstock.type.MaterialState;
+import com.bjike.goddess.materialinstock.type.UseState;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,12 @@ import javax.validation.constraints.NotNull;
 public class MaterialInStockTO extends BaseTO {
 
     /**
+     * 项目组/部门
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组/部门不能为空")
+    private String projectGroup;
+
+    /**
      * 入库类型
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "入库类型不能为空")
@@ -34,7 +41,7 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 物资名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资名称呢过不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资名称不能为空")
     private String materialName;
 
     /**
@@ -62,7 +69,6 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 数量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "数量不能为空")
     private Integer quantity;
 
     /**
@@ -102,6 +108,7 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 存储地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "存储地区不能为空")
     private String storageArea;
 
     /**
@@ -113,6 +120,11 @@ public class MaterialInStockTO extends BaseTO {
      * 物资状态
      */
     private MaterialState materialState;
+
+    /**
+     * 使用状态
+     */
+    private UseState useState;
 
     /**
      * 外借人
@@ -179,6 +191,13 @@ public class MaterialInStockTO extends BaseTO {
      */
     private String comment;
 
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
 
     public InstockType getInstockType() {
         return instockType;
@@ -314,6 +333,14 @@ public class MaterialInStockTO extends BaseTO {
 
     public void setMaterialState(MaterialState materialState) {
         this.materialState = materialState;
+    }
+
+    public UseState getUseState() {
+        return useState;
+    }
+
+    public void setUseState(UseState useState) {
+        this.useState = useState;
     }
 
     public String getLender() {

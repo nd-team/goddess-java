@@ -5,6 +5,7 @@ import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.assemble.entity.ModuleAssemble;
 import com.bjike.goddess.assemble.to.ModuleAssembleTO;
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -32,20 +33,24 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
     @Override
     public void add(ModuleAssembleTO to) throws SerException {
         ModuleAssembleDTO dto = new ModuleAssembleDTO();
-        dto.getConditions().add(Restrict.eq("module.id", to.getModuleId()));
-        dto.getConditions().add(Restrict.eq("relation.id", to.getRelationId()));
+        dto.getConditions().add(Restrict.eq("module.name", to.getModuleName()));
+        dto.getConditions().add(Restrict.eq("relation.name", to.getRelationName()));
         if (null == super.findOne(dto)) {
             ModuleDTO moduleDTO = new ModuleDTO();
-            moduleDTO.getConditions().add(Restrict.eq("id", to.getModuleId()));
+            moduleDTO.getConditions().add(Restrict.eq("name", to.getModuleName()));
             Module module = moduleSer.findOne(moduleDTO);
             if (null != module) {
                 moduleDTO = new ModuleDTO();
-                moduleDTO.getConditions().add(Restrict.eq("id", to.getRelationId()));
+                moduleDTO.getConditions().add(Restrict.eq("name", to.getRelationName()));
                 Module relation = moduleSer.findOne(moduleDTO);
                 if (null != relation) {
                     ModuleAssemble moduleAssemble = new ModuleAssemble();
                     moduleAssemble.setModule(module);
                     moduleAssemble.setRelation(relation);
+                    moduleAssemble.setCheckType(to.getCheckType());
+                    if (null == to.getCheckType()) {
+                        moduleAssemble.setCheckType(CheckType.NONE);
+                    }
                     super.save(moduleAssemble);
                 } else {
                     throw new SerException("关联模块数据不存在");

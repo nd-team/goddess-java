@@ -12,4 +12,5 @@ import com.bjike.goddess.common.jpa.dao.JpaRep;
  * @Copy: [com.bjike]
  */
 public interface ModuleRep extends JpaRep<Module,ModuleDTO>{
+     Module findByName(String name);
 }

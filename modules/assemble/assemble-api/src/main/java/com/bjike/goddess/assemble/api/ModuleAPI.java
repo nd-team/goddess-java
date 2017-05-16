@@ -9,6 +9,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import java.util.List;
 
 /**
+ * 模块接口
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
@@ -25,6 +27,17 @@ public interface ModuleAPI {
      * @throws SerException
      */
     default List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 通过模块名查询模块
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
         return null;
     }
 
@@ -51,11 +64,12 @@ public interface ModuleAPI {
     /**
      * 勾选模块
      *
-     * @param id
+     * @param moduleId
+     * @param relationIds
      * @param checkType
      * @throws SerException
      */
-    default void check(String id,  CheckType checkType) throws SerException {
+    default void check(String moduleId, String[] relationIds, CheckType checkType) throws SerException {
 
     }
 

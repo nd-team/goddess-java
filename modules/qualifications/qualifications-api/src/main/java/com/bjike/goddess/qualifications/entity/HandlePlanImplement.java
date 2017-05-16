@@ -2,9 +2,7 @@ package com.bjike.goddess.qualifications.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -24,7 +22,8 @@ public class HandlePlanImplement extends BaseEntity {
     /**
      * 办理计划阶段
      */
-    @Column(name = "stage_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '办理计划阶段'")
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "stage_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '办理计划阶段'")
     private HandlePlanStage stage;
 
     /**

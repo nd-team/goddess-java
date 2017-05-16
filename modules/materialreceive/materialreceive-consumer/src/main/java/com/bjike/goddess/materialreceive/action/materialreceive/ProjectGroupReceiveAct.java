@@ -40,7 +40,6 @@ public class ProjectGroupReceiveAct {
      * 根据id查询项目组领用归还
      *
      * @param id      项目组领用归还唯一标识
-     * @param request Http请求
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -57,11 +56,26 @@ public class ProjectGroupReceiveAct {
     }
 
     /**
+     * 计算总数量
+     *
+     * @param dto 项目组领用归还dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ProjectGroupReceiveDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = projectGroupReceiveAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询项目组领用归还
      *
      * @param dto           项目组领用归还dto
-     * @param bindingResult 参数绑定
-     * @param request       Http请求
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -81,8 +95,6 @@ public class ProjectGroupReceiveAct {
      * 添加项目组领用归还
      *
      * @param to      项目组领用归还to
-     * @param result  绑定结果集
-     * @param request Http请求
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -119,7 +131,6 @@ public class ProjectGroupReceiveAct {
      * 编辑物资领用
      *
      * @param to     物资领用to
-     * @param result 绑定结果集
      * @throws ActException
      * @version v1
      */
@@ -136,8 +147,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 归还物资
      *
-     * @param to 物资领用to
-     * @param result 绑定结果集
+     * @param to     物资领用to
      * @throws ActException
      * @version v1
      */

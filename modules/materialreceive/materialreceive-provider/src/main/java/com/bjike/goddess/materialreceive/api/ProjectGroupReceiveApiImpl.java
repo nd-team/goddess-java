@@ -41,6 +41,17 @@ public class ProjectGroupReceiveApiImpl implements ProjectGroupReceiveAPI {
     }
 
     /**
+     * 查询项目组领用归还记录条数
+     *
+     * @param dto 项目组领用归还dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ProjectGroupReceiveDTO dto) throws SerException {
+        return projectGroupReceiveSer.count(dto);
+    }
+
+    /**
      * 分页查询项目组领用归还
      *
      * @return class ProjectGroupReceiveBO

@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 物资领用
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class MaterialReceiveTO extends BaseTO {
+
     public interface AUDIT{}//审核
     public interface RECEIVEOVER{}//领用完成
     public interface MATERIALRETURN{}//物资归还
@@ -40,12 +42,6 @@ public class MaterialReceiveTO extends BaseTO {
      */
     @NotEmpty(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
     private String materialName;
-
-    /**
-     * 数量
-     */
-    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "最小数量必须为1")
-    private Integer quantity;
 
     /**
      * 单位
@@ -148,6 +144,11 @@ public class MaterialReceiveTO extends BaseTO {
     @NotEmpty(groups = {MATERIALRETURN.class}, message = "物资状态不能为空")
     private String materialState;
 
+    /**
+     * 领用编号
+     */
+    @Size(groups = {ADD.class, EDIT.class}, message = "领用数量必修是大于0的整数")
+    private String[] materialNum;
 
     public String getArea() {
         return area;
@@ -171,14 +172,6 @@ public class MaterialReceiveTO extends BaseTO {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
     }
 
     public String getUnit() {
@@ -315,5 +308,13 @@ public class MaterialReceiveTO extends BaseTO {
 
     public void setMaterialState(String materialState) {
         this.materialState = materialState;
+    }
+
+    public String[] getMaterialNum() {
+        return materialNum;
+    }
+
+    public void setMaterialNum(String[] materialNum) {
+        this.materialNum = materialNum;
     }
 }

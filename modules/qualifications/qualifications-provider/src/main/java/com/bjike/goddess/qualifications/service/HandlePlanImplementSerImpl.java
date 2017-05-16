@@ -38,14 +38,13 @@ public class HandlePlanImplementSerImpl extends ServiceImpl<HandlePlanImplement,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HandlePlanImplementBO save(HandlePlanImplementTO to) throws SerException {
-        HandlePlanImplement entity = BeanTransform.copyProperties(to, HandlePlanImplement.class);
+        HandlePlanImplement entity = BeanTransform.copyProperties(to, HandlePlanImplement.class, true);
         HandlePlanStage stage = planStageSer.findById(to.getStageId());
         if (null == stage)
             throw new SerException("指定阶段不存在");
         if (entity.getFinishTime().isAfter(stage.getFinishTime()))
             throw new SerException("完成时间不能超过计划完成时间");
         entity.setStage(stage);
-
         super.save(entity);
         return BeanTransform.copyProperties(entity, HandlePlanImplementBO.class);
     }
@@ -53,8 +52,10 @@ public class HandlePlanImplementSerImpl extends ServiceImpl<HandlePlanImplement,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HandlePlanImplementBO update(HandlePlanImplementTO to) throws SerException {
-        HandlePlanImplement entity = BeanTransform.copyProperties(to, HandlePlanImplement.class), implement = super.findById(to.getId());
-        entity.setCreateTime(implement.getCreateTime());
+        HandlePlanImplement entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         HandlePlanStage stage = planStageSer.findById(to.getStageId());
         if (null == stage)
@@ -76,7 +77,7 @@ public class HandlePlanImplementSerImpl extends ServiceImpl<HandlePlanImplement,
 
     @Override
     public List<HandlePlanImplementBO> findByStageIds(String[] stageIds) throws SerException {
-        if (stageIds.length == 0)
+        if (null == stageIds || stageIds.length == 0)
             return null;
         HandlePlanImplementDTO dto = new HandlePlanImplementDTO();
         dto.getConditions().add(Restrict.in("stage.id", stageIds));

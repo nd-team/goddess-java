@@ -120,8 +120,15 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     public List<CheckIncomeBO> collectArea(CheckIncomeDTO checkIncomeDTO) throws SerException {
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
-        LocalDate start = LocalDate.parse(startTime);
-        LocalDate end = LocalDate.parse(endTime);
+
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if( StringUtils.isNotBlank(startTime) ){
+            start = LocalDate.parse(startTime);
+        }
+        if(  StringUtils.isNotBlank( endTime) ){
+            end = LocalDate.parse(endTime);
+        }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"area", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
         String sql = "";
@@ -147,7 +154,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + " order by area desc ";
+            sql = sql + " and area='"+checkIncomeDTO.getArea()+"' order by area desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -159,13 +166,20 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     public List<CheckIncomeBO> collectGroup(CheckIncomeDTO checkIncomeDTO) throws SerException {
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
-        LocalDate start = LocalDate.parse(startTime);
-        LocalDate end = LocalDate.parse(endTime);
+
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if( StringUtils.isNotBlank(startTime) ){
+            start = LocalDate.parse(startTime);
+        }
+        if(  StringUtils.isNotBlank( endTime) ){
+            end = LocalDate.parse(endTime);
+        }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"projectGroup", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
         String sql = "";
         List<CheckIncomeBO> list = new ArrayList<>();
-        if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
+        if (StringUtils.isBlank(checkIncomeDTO.getProjectGroup())) {
             sql = "select projectGroup ,  sum(planIncome) as planIncome , sum(actualIncome) as actualIncome ," +
                     "  (sum(actualIncome)/sum(planIncome)) as rate , (sum(actualIncome)-sum(planIncome)) as balance " +
                     " , sum(targetTask) as targetTask , sum(actualTask) as actualTask , (sum(actualTask)/sum(targetTask)) as completeRate from incomecheck_checkincome where 1= 1";
@@ -186,7 +200,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + " order by projectGroup desc ";
+            sql = sql + " and projectGroup='"+checkIncomeDTO.getProjectGroup()+"'  order by projectGroup desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -198,13 +212,20 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     public List<CheckIncomeBO> collectProject(CheckIncomeDTO checkIncomeDTO) throws SerException {
         String startTime = checkIncomeDTO.getStartTime();
         String endTime = checkIncomeDTO.getEndTime();
-        LocalDate start = LocalDate.parse(startTime);
-        LocalDate end = LocalDate.parse(endTime);
+
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if( StringUtils.isNotBlank(startTime) ){
+            start = LocalDate.parse(startTime);
+        }
+        if(  StringUtils.isNotBlank( endTime) ){
+            end = LocalDate.parse(endTime);
+        }
         //如果没有选地区，汇总表头：（地区/日期/目标管理费/实际管理费/比例/差额）
         String[] field = new String[]{"projectName", "planIncome", "actualIncome", "rate", "balance", "targetTask", "actualTask", "completeRate"};
         String sql = "";
         List<CheckIncomeBO> list = new ArrayList<>();
-        if (StringUtils.isBlank(checkIncomeDTO.getArea())) {
+        if (StringUtils.isBlank(checkIncomeDTO.getProjectName())) {
             sql = "select projectName ,  sum(planIncome) as planIncome , sum(actualIncome) as actualIncome ," +
                     "  (sum(actualIncome)/sum(planIncome)) as rate , (sum(actualIncome)-sum(planIncome)) as balance " +
                     " , sum(targetTask) as targetTask , sum(actualTask) as actualTask , (sum(actualTask)/sum(targetTask)) as completeRate from incomecheck_checkincome where 1= 1";
@@ -225,7 +246,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                 sql = sql + " and time between '" + start + "' and '" + end + "'  ";
             }
-            sql = sql + " order by projectName desc ";
+            sql = sql + "  and projectName='"+checkIncomeDTO.getProjectName()+"'  order by projectName desc ";
             list = super.findBySql(sql, CheckIncomeBO.class, field);
         }
 
@@ -462,7 +483,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Override
     public List<String> areaList() throws SerException {
         String[] field = new String[]{"area"};
-        String sql = "select area , 1 from incomecheck_checkincome group by area ";
+        String sql = "select area  from incomecheck_checkincome group by area ";
         List<CheckIncome> checkIncomeList = super.findBySql(sql, CheckIncome.class, field);
         List<String> list = checkIncomeList.stream().map(CheckIncome::getArea).collect(Collectors.toList());
         return list;
@@ -471,7 +492,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Override
     public List<String> groupList() throws SerException {
         String[] field = new String[]{"projectGroup"};
-        String sql = "select projectGroup , 1 from incomecheck_checkincome group by projectGroup ";
+        String sql = "select projectGroup  from incomecheck_checkincome group by projectGroup ";
         List<CheckIncome> checkIncomeList = super.findBySql(sql, CheckIncome.class, field);
         List<String> list = checkIncomeList.stream().map(CheckIncome::getProjectGroup).collect(Collectors.toList());
         return list;
@@ -480,7 +501,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
     @Override
     public List<String> projectList() throws SerException {
         String[] field = new String[]{"projectName"};
-        String sql = "select projectName , 1 from incomecheck_checkincome group by project ";
+        String sql = "select projectName  from incomecheck_checkincome group by projectName ";
         List<CheckIncome> checkIncomeList = super.findBySql(sql, CheckIncome.class, field);
         List<String> list = checkIncomeList.stream().map(CheckIncome::getProjectName).collect(Collectors.toList());
         return list;

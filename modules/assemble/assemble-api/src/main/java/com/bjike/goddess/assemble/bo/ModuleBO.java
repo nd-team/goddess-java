@@ -3,7 +3,6 @@ package com.bjike.goddess.assemble.bo;
 import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,11 +22,11 @@ public class ModuleBO extends BaseBO {
     /**
      * 选中状态
      */
-    private CheckType checkType = CheckType.NONE;
+    private CheckType checkType;
     /**
      * 包含的模块
      */
-    private List<ModuleBO> contains = new ArrayList<>();
+    private List<ModuleBO> relations;
 
     public String getName() {
         return name;
@@ -45,11 +44,11 @@ public class ModuleBO extends BaseBO {
         this.checkType = checkType;
     }
 
-    public List<ModuleBO> getContains() {
-        return contains;
+    public List<ModuleBO> getRelations() {
+        return relations;
     }
 
-    public void setContains(List<ModuleBO> contains) {
-        this.contains = contains;
+    public void setRelations(List<ModuleBO> relations) {
+        this.relations = relations;
     }
 }

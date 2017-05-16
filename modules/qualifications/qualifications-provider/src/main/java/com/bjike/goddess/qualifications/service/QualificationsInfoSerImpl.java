@@ -52,9 +52,11 @@ public class QualificationsInfoSerImpl extends ServiceImpl<QualificationsInfo, Q
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QualificationsInfoBO update(QualificationsInfoTO to) throws SerException {
-        QualificationsInfo entity = BeanTransform.copyProperties(to, QualificationsInfo.class, true), info = super.findById(to.getId());
+        QualificationsInfo entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setCreateTime(info.getCreateTime());
         QualificationsHandleBO handle = handleSer.findByType(entity.getType());
         if (null == handle) {
             QualificationsHandleTO handleTO = new QualificationsHandleTO();
@@ -104,6 +106,9 @@ public class QualificationsInfoSerImpl extends ServiceImpl<QualificationsInfo, Q
 
     @Override
     public QualificationsInfoBO getById(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id), QualificationsHandleBO.class);
+        QualificationsInfo entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, QualificationsInfoBO.class);
     }
 }
