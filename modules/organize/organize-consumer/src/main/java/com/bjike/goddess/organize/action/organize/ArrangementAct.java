@@ -12,6 +12,7 @@ import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import com.bjike.goddess.organize.vo.ArrangementVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -142,6 +143,21 @@ public class ArrangementAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findById(id), ArrangementVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询未冻结职位层级选项
+     *
+     * @return class OpinionVO
+     * @version v1
+     */
+    @GetMapping("v1/findThaw")
+    public Result findThaw(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(arrangementAPI.findThawOpinion(), OpinionVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

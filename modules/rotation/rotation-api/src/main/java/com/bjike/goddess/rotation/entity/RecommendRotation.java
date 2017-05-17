@@ -17,7 +17,7 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "rotation_recommendrotation")
+@Table(name = "rotation_recommend")
 public class RecommendRotation extends BaseEntity {
 
     /**

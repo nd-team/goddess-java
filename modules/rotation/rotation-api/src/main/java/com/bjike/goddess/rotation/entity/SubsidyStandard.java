@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "rotation_subsidystandard")
+@Table(name = "rotation_subsidy_standard")
 public class SubsidyStandard extends BaseEntity {
 
     /**

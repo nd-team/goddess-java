@@ -42,4 +42,15 @@ public interface CoverRotationOpinionSer extends Ser<CoverRotationOpinion, Cover
         return null;
     }
 
+    /**
+     * 岗位轮换自荐意见传输对象转换
+     *
+     * @param entity 岗位轮换自荐意见实体对象
+     * @return
+     * @throws SerException
+     */
+    default CoverRotationOpinionBO transformBO(CoverRotationOpinion entity) throws SerException {
+        return null;
+    }
+
 }

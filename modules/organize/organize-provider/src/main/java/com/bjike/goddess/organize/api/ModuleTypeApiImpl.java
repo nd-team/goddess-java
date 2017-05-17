@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.service.ModuleTypeSer;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
@@ -71,5 +72,10 @@ public class ModuleTypeApiImpl implements ModuleTypeAPI {
     @Override
     public ModuleTypeBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(moduleTypeSer.findById(id), ModuleTypeBO.class);
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        return moduleTypeSer.findThawOpinion();
     }
 }

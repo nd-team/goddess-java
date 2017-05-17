@@ -9,6 +9,7 @@ import com.bjike.goddess.rotation.bo.SubsidyStandardBO;
 import com.bjike.goddess.rotation.dto.SubsidyStandardDTO;
 import com.bjike.goddess.rotation.entity.SubsidyStandard;
 import com.bjike.goddess.rotation.to.SubsidyStandardTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +41,11 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
 
     @Override
     public SubsidyStandardBO update(SubsidyStandardTO to) throws SerException {
-        if (this.findByArrangement(to.getArrangement()) != null)
-            throw new SerException("该岗位层级已存在");
         SubsidyStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (!entity.getArrangement().equals(to.getArrangement()) && this.findByArrangement(to.getArrangement()) != null)
+            throw new SerException("该岗位层级已存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -102,6 +103,8 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
 
     @Override
     public SubsidyStandardBO findByArrangement(String arrangement) throws SerException {
+        if (StringUtils.isBlank(arrangement))
+            return new SubsidyStandardBO();
         SubsidyStandardDTO dto = new SubsidyStandardDTO();
         dto.getConditions().add(Restrict.eq("arrangement", arrangement));
         return BeanTransform.copyProperties(super.findOne(dto), SubsidyStandardBO.class);

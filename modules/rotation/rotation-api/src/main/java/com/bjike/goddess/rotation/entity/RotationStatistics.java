@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "rotation_rotationstatistics")
+@Table(name = "rotation_statistics")
 public class RotationStatistics extends BaseEntity {
 
     /**
