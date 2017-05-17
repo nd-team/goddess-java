@@ -38,8 +38,6 @@ public class CoverRotationAct {
 
     @Autowired
     private CoverRotationAPI coverRotationAPI;
-    @Autowired
-    private UserAPI userAPI;
 
     /**
      * 保存

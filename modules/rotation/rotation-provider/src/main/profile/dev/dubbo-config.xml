@@ -19,14 +19,22 @@
 
     <!--发布接口,供其他模块调用-->
     <!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-    <dubbo:service interface="com.bjike.goddess.projectcost.api.ArtificialCostAPI" ref="artificialCostApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.projectcost.api.CarCostAPI" ref="carCostApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.projectcost.api.CostControlAPI" ref="costControlApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.projectcost.api.OtherExpensesAPI" ref="projectOtherExpensesApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.CoverRotationAPI" ref="coverRotationApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.CoverRotationOpinionAPI"
+                   ref="coverRotationOpinionApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.RecommendRotationAPI" ref="recommendRotationApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.RotationConditionAPI" ref="rotationConditionApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.RotationStatisticsAPI" ref="rotationStatisticsApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rotation.api.SubsidyStandardAPI" ref="subsidyStandardApiImpl"/>
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
     否则不需要配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.otherexpenses.api.OtherExpensesAPI"
-                     id="otherExpensesApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.RegularizationAPI"
+                     id="regularizationApiImpl"/>
+    <dubbo:reference validation="true" id="entryBasicInfoApiImpl"
+                     interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI"/>
+
 
 </beans>

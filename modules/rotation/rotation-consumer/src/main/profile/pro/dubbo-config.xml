@@ -16,13 +16,19 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectcost.api.ArtificialCostAPI"
-                     id="artificialCostApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectcost.api.CarCostAPI" id="carCostApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectcost.api.CostControlAPI"
-                     id="costControlApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectcost.api.OtherExpensesAPI"
-                     id="projectOtherExpensesApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.CoverRotationAPI"
+                     id="coverRotationApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.CoverRotationOpinionAPI"
+                     id="coverRotationOpinionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.RecommendRotationAPI"
+                     id="recommendRotationApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.RotationConditionAPI"
+                     id="rotationConditionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.RotationStatisticsAPI"
+                     id="rotationStatisticsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rotation.api.SubsidyStandardAPI"
+                     id="subsidyStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 
 </beans>
