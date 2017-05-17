@@ -1,6 +1,7 @@
 package com.bjike.goddess.rotation.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;

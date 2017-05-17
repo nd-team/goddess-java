@@ -64,19 +64,19 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
     private CoverRotationOpinionSer coverRotationOpinionSer;
 
     private CoverRotationBO transformBO(CoverRotation entity) throws SerException {
-        CoverRotationBO bo = new CoverRotationBO();
+        CoverRotationBO bo = BeanTransform.copyProperties(entity, CoverRotationBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        dto.getConditions().add(Restrict.eq(USERNAME, entity.getUsername()));
+        dto.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
         RegularizationDTO regularizationDTO = new RegularizationDTO();
         regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
-        if (entryBasicInfoBOs.size() > 0) {
+        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
             EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
             bo.setEntryTime(entryBasicInfoBO.getEntryTime());
         }
-        if (regularizationBOs.size() > 0) {
+        if (null != regularizationBOs && regularizationBOs.size() > 0) {
             RegularizationBO regularizationBO = regularizationBOs.get(0);
             bo.setEntryTime(regularizationBO.getHiredate());
             bo.setRegularTime(regularizationBO.getPositiveDate());
@@ -101,8 +101,8 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO save(CoverRotationTO to) throws SerException {
-        CoverRotation entity = BeanTransform.copyProperties(to, CoverRotation.class, true);
         UserBO user = userAPI.currentUser();
+        CoverRotation entity = BeanTransform.copyProperties(to, CoverRotation.class, true);
         List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
                 .sorted(Comparator.comparing(PositionDetailBO::getArea)
                         .thenComparing(PositionDetailBO::getDepartmentId))
@@ -143,11 +143,11 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO update(CoverRotationTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         CoverRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
-        UserBO user = userAPI.currentUser();
-        if(user.getUsername().equals(entity.getUsername()))
+        if (!user.getUsername().equals(entity.getUsername()))
             throw new SerException("不能修改他人的轮换申请");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
@@ -177,11 +177,11 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationOpinionBO opinion(CoverRotationOpinionTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         CoverRotationOpinion entity = BeanTransform.copyProperties(to, CoverRotationOpinion.class);
         entity.setCover(super.findById(to.getCoverId()));
         if (null == entity.getCover())
             throw new SerException("岗位轮换自荐数据不存在");
-        UserBO user = userAPI.currentUser();
         List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
                 .sorted(Comparator.comparing(PositionDetailBO::getArea)
                         .thenComparing(PositionDetailBO::getDepartmentId))
@@ -210,12 +210,15 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO generalOpinion(CoverRotationTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         CoverRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (entity.getAudit() != AuditType.NONE)
+            throw new SerException("该数据已被评价");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setGeneral(userAPI.currentUser().getUsername());
+        entity.setGeneral(user.getUsername());
         entity.setAudit(to.getPass() ? AuditType.ALLOWED : AuditType.DENIED);
         entity.setRotationLevel(subsidyStandardSer.findById(to.getRotationLevelId()));
         if (to.getPass() && null == entity.getRotationLevel())

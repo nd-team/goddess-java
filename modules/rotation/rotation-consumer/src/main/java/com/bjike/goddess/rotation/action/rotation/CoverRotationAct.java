@@ -1,5 +1,6 @@
 package com.bjike.goddess.rotation.action.rotation;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -51,7 +52,6 @@ public class CoverRotationAct {
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) CoverRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            String token = userAPI.currentToken();
             return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.save(to), CoverRotationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -68,7 +68,7 @@ public class CoverRotationAct {
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(ADD.class) CoverRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.save(to), CoverRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(coverRotationAPI.update(to), CoverRotationVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

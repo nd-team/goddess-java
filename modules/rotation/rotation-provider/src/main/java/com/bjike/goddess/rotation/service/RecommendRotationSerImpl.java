@@ -60,19 +60,18 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
     private SubsidyStandardSer subsidyStandardSer;
 
     private RecommendRotationBO transformBO(RecommendRotation entity) throws SerException {
-        RecommendRotationBO bo = BeanTransform.copyProperties(entity, RecommendRotation.class);
-        UserBO user = userAPI.findByUsername(entity.getUsername());
+        RecommendRotationBO bo = BeanTransform.copyProperties(entity, RecommendRotationBO.class);
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        dto.getConditions().add(Restrict.eq(USERNAME, entity.getUsername()));
+        dto.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
         RegularizationDTO regularizationDTO = new RegularizationDTO();
         regularizationDTO.getConditions().add(Restrict.eq("name", entity.getUsername()));
         List<RegularizationBO> regularizationBOs = regularizationAPI.list(regularizationDTO);
-        if (entryBasicInfoBOs.size() > 0) {
+        if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
             EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
             bo.setEntryTime(entryBasicInfoBO.getEntryTime());
         }
-        if (regularizationBOs.size() > 0) {
+        if (null != regularizationBOs && regularizationBOs.size() > 0) {
             RegularizationBO regularizationBO = regularizationBOs.get(0);
             bo.setEntryTime(regularizationBO.getHiredate());
             bo.setRegularTime(regularizationBO.getPositiveDate());
@@ -97,8 +96,11 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO save(RecommendRotationTO to) throws SerException {
+        UserBO currentUser = userAPI.currentUser(), user = userAPI.findByUsername(to.getUsername());
         RecommendRotation entity = BeanTransform.copyProperties(to, RecommendRotation.class, true);
-        List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(userAPI.findByUsername(to.getUsername()).getId()).stream()
+        if (null == user)
+            throw new SerException("该用户不存在");
+        List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
                 .sorted(Comparator.comparing(PositionDetailBO::getArea)
                         .thenComparing(PositionDetailBO::getDepartmentId))
                 .collect(Collectors.toList());
@@ -122,8 +124,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
                 tempArrangement = s;
                 arrangement.append(s);
             }
-
-        entity.setRecommend(userAPI.currentUser().getUsername());
+        entity.setRecommend(currentUser.getUsername());
         entity.setRecommendTime(LocalDate.now());
         entity.setArea(area.toString());
         entity.setPosition(position.toString());
@@ -139,11 +140,11 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO update(RecommendRotationTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         RecommendRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
-        UserBO user = userAPI.currentUser();
-        if (user.getUsername().equals(entity.getRecommend()))
+        if (!user.getUsername().equals(entity.getRecommend()))
             throw new SerException("不能修改他人的轮换推荐");
         BeanTransform.copyProperties(to, entity, true);
         List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(userAPI.findByUsername(to.getUsername()).getId()).stream()
@@ -171,7 +172,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
                 arrangement.append(s);
             }
 
-        entity.setRecommend(userAPI.currentUser().getUsername());
+        entity.setRecommend(user.getUsername());
         entity.setRecommendTime(LocalDate.now());
         entity.setArea(area.toString());
         entity.setPosition(position.toString());
@@ -196,12 +197,15 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO opinion(RecommendRotationTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         RecommendRotation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (entity.getAudit() != AuditType.NONE)
+            throw new SerException("该数据已被评价");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setGeneral(userAPI.currentUser().getUsername());
+        entity.setGeneral(user.getUsername());
         entity.setAudit(to.getPass() ? AuditType.ALLOWED : AuditType.DENIED);
         entity.setRotationLevel(subsidyStandardSer.findById(to.getRotationLevelId()));
         if (to.getPass() && null == entity.getRotationLevel())

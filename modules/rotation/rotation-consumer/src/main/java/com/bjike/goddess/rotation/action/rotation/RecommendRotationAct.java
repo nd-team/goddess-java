@@ -90,7 +90,7 @@ public class RecommendRotationAct {
      * @version v1
      */
     @PutMapping("v1/opinion/{id}")
-    public Result opinion(@Validated(EDIT.class) RecommendRotationTO to, HttpServletRequest request) throws ActException {
+    public Result opinion(@Validated(EDIT.class) RecommendRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(recommendRotationAPI.opinion(to), RecommendRotationVO.class, request));
         } catch (SerException e) {

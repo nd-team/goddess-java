@@ -41,14 +41,14 @@ public class CoverRotationOpinionSerImpl extends ServiceImpl<CoverRotationOpinio
 
     @Override
     public CoverRotationOpinionBO transformBO(CoverRotationOpinion entity) throws SerException {
-        CoverRotationOpinionBO bo = BeanTransform.copyProperties(entity,CoverRotationOpinion.class);
+        CoverRotationOpinionBO bo = BeanTransform.copyProperties(entity, CoverRotationOpinionBO.class);
         bo.setCoverId(entity.getCover().getId());
         return bo;
     }
 
-    private List<CoverRotationOpinionBO> transformBOList(List<CoverRotationOpinion> list) throws SerException{
+    private List<CoverRotationOpinionBO> transformBOList(List<CoverRotationOpinion> list) throws SerException {
         List<CoverRotationOpinionBO> bos = new ArrayList<>(0);
-        for(CoverRotationOpinion entity : list)
+        for (CoverRotationOpinion entity : list)
             bos.add(this.transformBO(entity));
         return bos;
     }
