@@ -87,17 +87,6 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     }
 
     /**
-     * 文件上传
-     *
-     * @param maps  文件名，byte 文件字节
-     * @param path 上传路径
-     */
-    @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-        materialBuySer.upload(maps, path);
-    }
-
-    /**
      * 查看详情
      *
      * @param id 物资购买唯一标识
@@ -121,7 +110,6 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     }
 
     /**
-     * chenjunhao
      * 查找所有未付款的信息
      *
      * @return class MaterialBuyBO
@@ -130,5 +118,17 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     @Override
     public List<MaterialBuyBO> allWaits() throws SerException {
         return materialBuySer.allWaits();
+    }
+
+    /**
+     * 查询等待付款
+     *
+     * @param dto 物资购买dto
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.findWaitPay(dto);
     }
 }
