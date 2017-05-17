@@ -20,12 +20,18 @@ import java.util.List;
 public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO> {
 
     /**
+     * 薪资确认列表总条数
+     */
+    default Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        return null;
+    }
+    /**
      * 获取所有入职登记
      * @param entryBasicInfoDTO 入职登记dto
-     * @return class entryBasicInfo
+     * @return class EntryBasicInfoBO
      * @throws SerException
      */
-    default List<EntryBasicInfo> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+    default List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         return null;
     }
 
@@ -70,17 +76,17 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
      * 根据id查找某个员工入职基本信息
      *
      * @param id 员工入职基本信息id
-     * @return class entryBasicInfo
+     * @return class EntryBasicInfoBO
      * @throws SerException
      */
-    default EntryBasicInfo getEntryBasicInfo(String id) throws SerException {
+    default EntryBasicInfoBO getEntryBasicInfo(String id) throws SerException {
         return null;
     }
 
     /**
      * 根据id发送入职通告邮件
      * @param entryBasicInfoTO to
-     * @return class entryBasicInfoBO
+     * @return class EntryBasicInfoBO
      * @throws SerException
      */
     default EntryBasicInfoBO sendEntryBasicInfo( EntryBasicInfoTO entryBasicInfoTO) throws SerException {
@@ -90,7 +96,7 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     /**
      * 根据岗位(position)、时间段(entryTime) 汇总入职情况统计
      * @param  entryBasicInfoDTO 员工入职基本信息bo 主要position 和 entryTime
-     * @return class entryBasicInfoBO
+     * @return class EntryBasicInfoBO
      * @throws SerException
      */
     default List<EntryBasicInfoBO> collectEntryBasicInfo( EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
@@ -100,7 +106,7 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     /**
      * 根据名字查找信息
      * @param  name name
-     * @return class entryBasicInfoBO
+     * @return class EntryBasicInfoBO
      * @throws SerException
      */
     default EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {

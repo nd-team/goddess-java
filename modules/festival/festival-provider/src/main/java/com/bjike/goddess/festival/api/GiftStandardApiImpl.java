@@ -31,6 +31,11 @@ public class GiftStandardApiImpl implements GiftStandardAPI {
     }
 
     @Override
+    public GiftStandardBO getOneById(String id) throws SerException {
+        return giftStandardSer.getOneById(id);
+    }
+
+    @Override
     public List<GiftStandardBO> listGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
         return giftStandardSer.listGiftStandard(giftStandardDTO);
     }

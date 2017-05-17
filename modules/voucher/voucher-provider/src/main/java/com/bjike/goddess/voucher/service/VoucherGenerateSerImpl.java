@@ -58,7 +58,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
         VoucherGenerate vg = super.findById(id);
-        return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        VoucherGenerateBO bo = BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        bo.setFirstSubjects(Arrays.asList(bo.getFirstSubject()));
+        bo.setSecondSubjects(Arrays.asList(bo.getSecondSubject()));
+        bo.setThirdSubjects(Arrays.asList(bo.getThirdSubject()));
+        bo.setLoanMoneys( Arrays.asList(bo.getLoanMoney()));
+        bo.setBorrowMoneys(Arrays.asList(bo.getBorrowMoney()));
+        return  bo ;
 
     }
 
@@ -123,6 +129,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
             throw new SerException("一级科目不能为空");
         }
+        if(voucherGenerateTO.getFirstSubjects().size() == 1){
+            throw new SerException("一级科目条数必须为两条");
+        }
         //处理多个一级科目
         UserBO userBO = userAPI.currentUser();
         List<String> first = voucherGenerateTO.getFirstSubjects();
@@ -155,7 +164,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             temp.setCreateTime(LocalDateTime.now());
             temp.setFirstSubject(first.get(i));
             temp.setSecondSubject(second.get(i));
-            temp.setThirdSubject(third.get(i));
+            temp.setThirdSubject(third ==null ? "":third.get(i));
             temp.setBorrowMoney(borrow.get(i));
             temp.setLoanMoney(loan.get(i));
             temp.setTicketer( userName );
@@ -205,10 +214,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         voucherTotalSer.update(vt);
 
 
-        BeanTransform.copyProperties(voucherGenerate, temp,true);
+        BeanTransform.copyProperties(voucherGenerate, temp,"id","createTime","modifyTime","voucherDate");
+        temp.setVoucherDate( voucherGenerate.getVoucherDate() );
         temp.setFirstSubject(voucherGenerateTO.getFirstSubjects().get(0));
         temp.setSecondSubject(voucherGenerateTO.getSecondSubjects().get(0));
-        temp.setThirdSubject(voucherGenerateTO.getThirdSubjects().get(0));
+        temp.setThirdSubject(null ==voucherGenerateTO.getThirdSubjects()  ?"": voucherGenerateTO.getThirdSubjects().get(0));
+
         temp.setBorrowMoney(voucherGenerateTO.getBorrowMoneys().get(0));
         temp.setLoanMoney(voucherGenerateTO.getLoanMoneys().get(0));
         temp.setModifyTime(LocalDateTime.now());
@@ -259,6 +270,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<VoucherGenerateBO> listAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
         voucherGenerateDTO.getSorts().add("createTime=desc");
+        voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
 
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
@@ -272,6 +284,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     public VoucherGenerateBO split(VoucherGenerateTO voucherGenerateTO) throws SerException {
         if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
             throw new SerException("一级科目不能为空");
+        }
+        if (voucherGenerateTO.getFirstSubjects().size()==1 ) {
+            throw new SerException("还未写拆分数据");
         }
         Double borrowSum = voucherGenerateTO.getBorrowMoneys().stream().mapToDouble(Double::shortValue).sum();
         Double loanSum = voucherGenerateTO.getLoanMoneys().stream().mapToDouble(Double::shortValue).sum();
@@ -300,7 +315,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //                BeanUtils.copyProperties(voucherGenerate, temp);
                 temp.setFirstSubject(voucherGenerateTO.getFirstSubjects().get(i));
                 temp.setSecondSubject(voucherGenerateTO.getSecondSubjects().get(i));
-                temp.setThirdSubject(voucherGenerateTO.getThirdSubjects().get(i));
+                temp.setThirdSubject(null == voucherGenerateTO.getThirdSubjects()? "":voucherGenerateTO.getThirdSubjects().get(i));
                 temp.setBorrowMoney(voucherGenerateTO.getBorrowMoneys().get(i));
                 temp.setLoanMoney(voucherGenerateTO.getLoanMoneys().get(i));
                 temp.setModifyTime(LocalDateTime.now());
@@ -314,7 +329,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 BeanUtils.copyProperties(temp,temp1,"id");
                 temp1.setFirstSubject(voucherGenerateTO.getFirstSubjects().get(i));
                 temp1.setSecondSubject(voucherGenerateTO.getSecondSubjects().get(i));
-                temp1.setThirdSubject(voucherGenerateTO.getThirdSubjects().get(i));
+                temp1.setThirdSubject(null == voucherGenerateTO.getThirdSubjects()? "":voucherGenerateTO.getThirdSubjects().get(i));
                 temp1.setBorrowMoney(voucherGenerateTO.getBorrowMoneys().get(i));
                 temp1.setLoanMoney(voucherGenerateTO.getLoanMoneys().get(i));
                 temp1.setCreateTime(LocalDateTime.now());

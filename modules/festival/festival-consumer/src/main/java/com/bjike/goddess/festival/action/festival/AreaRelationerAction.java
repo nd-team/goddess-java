@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,6 +35,23 @@ public class AreaRelationerAction {
     private AreaRelationerAPI areaRelationerAPI;
 
     /**
+     *  各地区紧急联系人列表总条数
+     *
+     * @param areaRelationerDTO  各地区紧急联系人dto
+     * @des 获取所有各地区紧急联系人信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated(AreaRelationerDTO.TESTFindDetail.class) AreaRelationerDTO areaRelationerDTO) throws ActException {
+        try {
+            Long count = areaRelationerAPI.countAreaRelationer(areaRelationerDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 查看各地区紧急联系人
      *
      * @param areaRelationerDTO 各地区紧急联系人dto
@@ -42,10 +60,10 @@ public class AreaRelationerAction {
      * @version v1
      */
     @GetMapping("v1/getAreaRelationerDetail")
-    public Result getAreaRelationerDetail (@Validated(AreaRelationerDTO.TESTFindDetail.class) AreaRelationerDTO areaRelationerDTO, BindingResult bindingResult) throws ActException {
+    public Result getAreaRelationerDetail (@Validated(AreaRelationerDTO.TESTFindDetail.class) AreaRelationerDTO areaRelationerDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AreaRelationerVO> areaRelationerVOS = BeanTransform.copyProperties(
-                    areaRelationerAPI.getAreaRelationer(areaRelationerDTO.getHolidayProgrammeId()), AreaRelationerVO.class, true);
+                    areaRelationerAPI.listAreaRelationer(areaRelationerDTO), AreaRelationerVO.class,request);
             return ActResult.initialize(areaRelationerVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

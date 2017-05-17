@@ -2,6 +2,7 @@
 类名:CoverRotationOpinion
 作者:dengjunren
 描述:岗位轮换自荐意见
+
 #参数[变量类型  变量名 ]
 #parameter--------------
 

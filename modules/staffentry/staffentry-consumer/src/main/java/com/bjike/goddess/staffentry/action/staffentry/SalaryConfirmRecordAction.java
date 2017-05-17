@@ -11,6 +11,7 @@ import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.staffentry.vo.SalaryConfirmRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,14 +34,49 @@ public class SalaryConfirmRecordAction {
     private SalaryConfirmRecordAPI salaryConfirmRecordAPI;
 
     /**
-     * 入职基本信息列表
+     * 薪资确认列表总条数
      *
-     * @param salaryConfirmRecordDTO 入职基本信息dto
-     * @des 获取所有入职基本信息
+     * @param salaryConfirmRecordDTO 注册用户信息dto
+     * @des 获取所有薪资确认信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws ActException {
+        try {
+            Long count = salaryConfirmRecordAPI.countSalaryConfirmRecord(salaryConfirmRecordDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个薪资确认
+     *
+     * @param id 薪资确认信息id
+     * @return class SalaryConfirmRecordVO
+     * @des 根据id查询薪资确认
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            SalaryConfirmRecordVO salaryConfirmRecordVOList = BeanTransform.copyProperties(
+                    salaryConfirmRecordAPI.getOne(id), SalaryConfirmRecordVO.class);
+            return ActResult.initialize(salaryConfirmRecordVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 薪资确认列表
+     *
+     * @param salaryConfirmRecordDTO 薪资确认dto
+     * @des 获取所有薪资确认
      * @return class SalaryConfirmRecordVO
      * @version v1
      */
-    @GetMapping("v1/listSalaryConfirmRecord")
+    @GetMapping("v1/list")
     public Result findListSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws ActException {
         try {
             List<SalaryConfirmRecordVO> salaryConfirmRecordVOList = BeanTransform.copyProperties(
@@ -54,13 +90,13 @@ public class SalaryConfirmRecordAction {
     /**
      * 添加
      *
-     * @param salaryConfirmRecordTO 员工入职基本信息数据to
-     * @des 添加员工入职
+     * @param salaryConfirmRecordTO 员工薪资确认数据to
+     * @des 添加薪资确认
      * @return class SalaryConfirmRecordVO
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
+    public Result addSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.insertSalaryConfirmRecord(salaryConfirmRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
@@ -73,13 +109,13 @@ public class SalaryConfirmRecordAction {
     /**
      * 编辑
      *
-     * @param salaryConfirmRecordTO 员工入职基本信息数据to
-     * @des 编辑员工入职
+     * @param salaryConfirmRecordTO 员工薪资确认数据to
+     * @des 编辑薪资确认
      * @return class SalaryConfirmRecordVO
      * @version v1
      */
-    @PostMapping("v1/edit")
-    public Result editSalaryConfirmRecord(@Valid SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
+    @PutMapping("v1/edit")
+    public Result editSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
             SalaryConfirmRecordBO salaryConfirmRecordBO1 = salaryConfirmRecordAPI.editSalaryConfirmRecord(salaryConfirmRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(salaryConfirmRecordBO1,SalaryConfirmRecordVO.class,true));
@@ -90,10 +126,10 @@ public class SalaryConfirmRecordAction {
 
 
     /**
-     * 删除员工入职记录
+     * 删除薪资确认
      *
      * @param id 用户id
-     * @des 根据用户id删除员工入职基本信息记录
+     * @des 根据用户id删除员工薪资确认记录
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")

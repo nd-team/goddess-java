@@ -2,6 +2,8 @@ package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
+import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
+import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 
@@ -17,6 +19,21 @@ import java.util.List;
  */
 public interface SalaryConfirmRecordAPI  {
 
+    /**
+     * 薪资确认列表总条数
+     */
+    default Long countSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取薪资确认
+     *
+     * @return class SalaryConfirmRecordBO
+     */
+    default SalaryConfirmRecordBO getOne(String id ) throws SerException {
+        return null;
+    }
     /**
      * 获取所有薪资确认
      * @param salaryConfirmRecordDTO 薪资确认dto

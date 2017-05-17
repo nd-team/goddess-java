@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 入职基本信息业务传输对象
  *
@@ -15,34 +17,43 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class EntryBasicInfoTO extends BaseTO {
 
+    public interface TestAdd {
+    }
+
     /**
      * 地区
      */
-    @NotBlank(message = "xxx", groups = {ADD.class})
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "地区不能为空")
     private String area;
     /**
      * 部门
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "部门不能为空")
     private String department;
     /**
      * 项目组
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "项目组不能为空")
     private String projectGroup;
     /**
      * 岗位
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "岗位不能为空")
     private String position;
     /**
-     * 入职时间
+     * 入职时间，格式为日期2017-01-01
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "入职时间不能为空，格式为日期2017-01-01")
     private String entryTime;
     /**
      * 姓名
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "姓名不能为空")
     private String name;
     /**
      * 员工编号
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "员工编号不能为空")
     private String employeeID;
     /**
      * 邮箱账号
@@ -51,10 +62,12 @@ public class EntryBasicInfoTO extends BaseTO {
     /**
      * 联系电话
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "地区不能为空")
     private String phone;
     /**
      * 专业
      */
+    @NotBlank(groups = {EntryBasicInfoTO.TestAdd.class}, message = "专业不能为空")
     private String profession;
     /**
      * 银行卡账号
@@ -69,37 +82,43 @@ public class EntryBasicInfoTO extends BaseTO {
      */
     private String bankAccount;
     /**
-     * 薪资是否确认
+     * 薪资是否确认（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "薪资是否确认不能为空（true/false）")
     private Boolean salaryConfirm;
 
     /**
-     * 是否有身份件复印件
+     * 是否有身份件复印件（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "是否有身份件复印件不能为空（true/false）")
     private Boolean iDFile;
 
     /**
-     * 是否有学历学位证书复印件
+     * 是否有学历学位证书复印件（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "是否有学历学位证书复印件不能为空（true/false）")
     private Boolean educationFile;
 
     /**
-     * 是否有照片纸质版
+     * 是否有照片纸质版（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "是否有照片纸质版不能为空（true/false）")
     private Boolean photoFile;
 
     /**
-     * 是否有照片电子版
+     * 是否有照片电子版（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "是否有照片电子版不能为空（true/false）")
     private Boolean photoEletricFile;
 
     /**
-     * 是否有其本人银行卡、身份证、签名的复印件
+     * 是否有其本人银行卡、身份证、签名的复印件（true/false）
      */
+    @NotNull(groups = {EntryBasicInfoTO.TestAdd.class}, message = "是否有其本人银行卡、身份证、签名的复印件不能为空（true/false）")
     private Boolean bankAndOtherFile;
 
     /**
-     * 是否已邮件发送入职通告
+     * 是否已邮件发送入职通告（true/false）
      */
     private Boolean emailInfo;
 

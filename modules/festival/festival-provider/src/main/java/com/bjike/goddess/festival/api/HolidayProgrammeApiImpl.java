@@ -31,6 +31,11 @@ public class HolidayProgrammeApiImpl implements HolidayProgrammeAPI {
     }
 
     @Override
+    public HolidayProgrammeBO getOneById(String id) throws SerException {
+        return holidayProgrammeSer.getOneById(id);
+    }
+
+    @Override
     public List<HolidayProgrammeBO> listHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
         return holidayProgrammeSer.listHolidayProgramme(holidayProgrammeDTO);
     }
