@@ -2,7 +2,6 @@ package com.bjike.goddess.budget.service;
 
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
-import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
@@ -117,13 +116,23 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     @Override
     public List<ProjectWeekBO> list(ProjectWeekDTO dto) throws SerException {
         List<ProjectWeek> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, ProjectWeekBO.class);
+        List<ProjectWeekBO> boList = new ArrayList<ProjectWeekBO>();
+        for (ProjectWeek a : list) {
+            ProjectWeekBO bo = BeanTransform.copyProperties(a, ProjectWeekBO.class);
+            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
+            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            boList.add(bo);
+        }
+        return boList;
     }
 
     @Override
     public ProjectWeekBO findByID(String id) throws SerException {
         ProjectWeek projectWeek = super.findById(id);
-        return BeanTransform.copyProperties(projectWeek, ProjectWeekBO.class);
+        ProjectWeekBO bo = BeanTransform.copyProperties(projectWeek, ProjectWeekBO.class);
+        bo.setWorkDifferences(projectWeek.getActualWork() - projectWeek.getTargetWork());
+        bo.setIncomeDifferences(projectWeek.getPlanIncome() - projectWeek.getTargetIncome());
+        return bo;
     }
 
     @Override
@@ -150,12 +159,14 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                             for (ProjectWeek projectWeek : list) {
                                 boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
                                 if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month) && b) {
-                                    targetWorkSum += projectWeek.getTargetWork();
-                                    actualWorkSum += projectWeek.getActualWork();
-                                    workDifferencesSum += projectWeek.getWorkDifferences();
                                     targetIncomeSum += projectWeek.getTargetIncome();
                                     planIncomeSum += projectWeek.getPlanIncome();
-                                    incomeDifferencesSum += projectWeek.getIncomeDifferences();
+                                    double incomeDifference = projectWeek.getPlanIncome() - projectWeek.getTargetIncome();
+                                    incomeDifferencesSum += incomeDifference;
+                                    targetWorkSum += projectWeek.getTargetWork();
+                                    actualWorkSum += projectWeek.getActualWork();
+                                    int workDifference = projectWeek.getActualWork() - projectWeek.getTargetWork();
+                                    workDifferencesSum += workDifference;
                                 }
                             }
                             if (targetWorkSum != 0) {
@@ -212,12 +223,14 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                             for (ProjectWeek a : list) {
                                 boolean b = a.getPrice().compareTo(price) == 0 ? true : false;
                                 if (a.getArrival().equals(arrival) && a.getYear().equals(year) && a.getMonth().equals(month) && b) {
-                                    targetWorkSum += a.getTargetWork();
-                                    actualWorkSum += a.getActualWork();
-                                    workDifferencesSum += a.getWorkDifferences();
                                     targetIncomeSum += a.getTargetIncome();
                                     planIncomeSum += a.getPlanIncome();
-                                    incomeDifferencesSum += a.getIncomeDifferences();
+                                    double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
+                                    incomeDifferencesSum += incomeDifference;
+                                    targetWorkSum += a.getTargetWork();
+                                    actualWorkSum += a.getActualWork();
+                                    int workDifference = a.getActualWork() - a.getTargetWork();
+                                    workDifferencesSum += workDifference;
                                 }
                             }
                             if (targetWorkSum != 0) {
@@ -331,7 +344,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     }
 
     @Override
-    public Long countNum(ProjectWeekDTO dto) throws SerException{
+    public Long countNum(ProjectWeekDTO dto) throws SerException {
         return super.count(dto);
     }
 }

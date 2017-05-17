@@ -3,7 +3,6 @@ package com.bjike.goddess.budget.service;
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
-import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
@@ -60,13 +59,23 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
     @Override
     public List<ProjectMonthBO> list(ProjectMonthDTO dto) throws SerException {
         List<ProjectMonth> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, ProjectMonthBO.class);
+        List<ProjectMonthBO> boList = new ArrayList<ProjectMonthBO>();
+        for (ProjectMonth a : list) {
+            ProjectMonthBO bo = BeanTransform.copyProperties(a, ProjectMonthBO.class);
+            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
+            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            boList.add(bo);
+        }
+        return boList;
     }
 
     @Override
     public ProjectMonthBO findByID(String id) throws SerException {
         ProjectMonth projectMonth = super.findById(id);
-        return BeanTransform.copyProperties(projectMonth, ProjectMonthBO.class);
+        ProjectMonthBO bo = BeanTransform.copyProperties(projectMonth, ProjectMonthBO.class);
+        bo.setWorkDifferences(projectMonth.getActualWork() - projectMonth.getTargetWork());
+        bo.setIncomeDifferences(projectMonth.getPlanIncome() - projectMonth.getTargetIncome());
+        return bo;
     }
 
     /**
@@ -139,10 +148,12 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
                         if (projectMonth.getArrival().equals(arrival) && projectMonth.getProject().equals(project) && projectMonth.getYear().equals(year)) {
                             targetIncomeSum += projectMonth.getTargetIncome();
                             planIncomeSum += projectMonth.getPlanIncome();
-                            incomeDifferencesSum += projectMonth.getIncomeDifferences();
+                            double incomeDifference = projectMonth.getPlanIncome() - projectMonth.getTargetIncome();
+                            incomeDifferencesSum += incomeDifference;
                             targetWorkSum += projectMonth.getTargetWork();
                             actualWorkSum += projectMonth.getActualWork();
-                            workDifferencesSum += projectMonth.getWorkDifferences();
+                            int workDifference = projectMonth.getActualWork() - projectMonth.getTargetWork();
+                            workDifferencesSum += workDifference;
                         }
                     }
                     if (targetWorkSum != 0) {
@@ -191,10 +202,12 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
                         if (projectMonth.getArrival().equals(arrival) && projectMonth.getYear().equals(year)) {
                             targetIncomeSum += projectMonth.getTargetIncome();
                             planIncomeSum += projectMonth.getPlanIncome();
-                            incomeDifferencesSum += projectMonth.getIncomeDifferences();
+                            double incomeDifference = projectMonth.getPlanIncome() - projectMonth.getTargetIncome();
+                            incomeDifferencesSum += incomeDifference;
                             targetWorkSum += projectMonth.getTargetWork();
                             actualWorkSum += projectMonth.getActualWork();
-                            workDifferencesSum += projectMonth.getWorkDifferences();
+                            int workDifference = projectMonth.getActualWork() - projectMonth.getTargetWork();
+                            workDifferencesSum += workDifference;
                         }
                     }
                     if (targetWorkSum != 0) {
@@ -231,10 +244,10 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
         Integer[] months = new Integer[]{projectMonth.getMonth()};
         List<ProjectWeekBO> list = null;
         for (int i = 0; i < arrivals.length && i < projects.length && i < years.length && i < months.length; i++) {
-            String sql = "SELECT week,targetWork,actualWork,workDifferences,price,targetIncome,planIncome,incomeDifferences\n" +
+            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome\n" +
                     "from budget_projectweek\n" +
                     "where arrival='" + arrivals[i] + "' AND project='" + projects[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
-            String[] fields = new String[]{"week", "targetWork", "actualWork", "workDifferences", "price", "targetIncome", "planIncome", "incomeDifferences"};
+            String[] fields = new String[]{"week", "targetWork", "actualWork", "price", "targetIncome", "planIncome"};
             list = super.findBySql(sql, ProjectWeekBO.class, fields);
         }
         for (ProjectWeekBO bo : list) {
@@ -242,12 +255,14 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
             bo.setProject(projectMonth.getProject());
             bo.setYear(projectMonth.getYear());
             bo.setMonth(projectMonth.getMonth());
+            bo.setIncomeDifferences(bo.getPlanIncome() - bo.getTargetIncome());
+            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
         }
         return list;
     }
 
     @Override
-    public Long countNum(ProjectMonthDTO dto) throws SerException{
+    public Long countNum(ProjectMonthDTO dto) throws SerException {
         return super.count(dto);
     }
 }

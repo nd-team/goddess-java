@@ -2,7 +2,6 @@ package com.bjike.goddess.budget.service;
 
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
-import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
@@ -123,13 +122,23 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
     @Override
     public List<ArrivalWeekBO> list(ArrivalWeekDTO dto) throws SerException {
         List<ArrivalWeek> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, ArrivalWeekBO.class);
+        List<ArrivalWeekBO> boList = new ArrayList<ArrivalWeekBO>();
+        for (ArrivalWeek a : list) {
+            ArrivalWeekBO bo = BeanTransform.copyProperties(a, ArrivalWeekBO.class);
+            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
+            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            boList.add(bo);
+        }
+        return boList;
     }
 
     @Override
     public ArrivalWeekBO findByID(String id) throws SerException {
         ArrivalWeek arrivalWeek = super.findById(id);
-        return BeanTransform.copyProperties(arrivalWeek, ArrivalWeekBO.class);
+        ArrivalWeekBO bo = BeanTransform.copyProperties(arrivalWeek, ArrivalWeekBO.class);
+        bo.setWorkDifferences(arrivalWeek.getActualWork() - arrivalWeek.getTargetWork());
+        bo.setIncomeDifferences(arrivalWeek.getPlanIncome() - arrivalWeek.getTargetIncome());
+        return bo;
     }
 
     @Override
@@ -160,12 +169,14 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
                             int aa = price1.compareTo(price);
                             boolean b4 = aa == 0 ? true : false;
                             if (b1 && b2 && b3 && b4) {
-                                targetWorkSum += a.getTargetWork();
-                                actualWorkSum += a.getActualWork();
-                                workDifferencesSum += a.getWorkDifferences();
                                 targetIncomeSum += a.getTargetIncome();
                                 planIncomeSum += a.getPlanIncome();
-                                incomeDifferencesSum += a.getIncomeDifferences();
+                                double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += a.getTargetWork();
+                                actualWorkSum += a.getActualWork();
+                                int workDifference = a.getActualWork() - a.getTargetWork();
+                                workDifferencesSum += workDifference;
                             }
                         }
                         if (targetWorkSum != 0) {
@@ -220,12 +231,14 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
                             int aa = price1.compareTo(price);
                             boolean b = aa == 0 ? true : false;
                             if (b && a.getYear().equals(year) && a.getMonth().equals(month)) {
-                                targetWorkSum += a.getTargetWork();
-                                actualWorkSum += a.getActualWork();
-                                workDifferencesSum += a.getWorkDifferences();
                                 targetIncomeSum += a.getTargetIncome();
                                 planIncomeSum += a.getPlanIncome();
-                                incomeDifferencesSum += a.getIncomeDifferences();
+                                double incomeDifference = a.getPlanIncome() - a.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += a.getTargetWork();
+                                actualWorkSum += a.getActualWork();
+                                int workDifference = a.getActualWork() - a.getTargetWork();
+                                workDifferencesSum += workDifference;
                             }
                         }
                         if (targetWorkSum != 0) {
@@ -319,8 +332,9 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
         List<Double> l = new ArrayList<Double>(set);
         return l;
     }
+
     @Override
-    public Long countNum(ArrivalWeekDTO dto) throws SerException{
+    public Long countNum(ArrivalWeekDTO dto) throws SerException {
         return super.count(dto);
     }
 }

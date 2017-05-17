@@ -12,6 +12,7 @@ import com.bjike.goddess.equipmentprepared.entity.WaitPay;
 import com.bjike.goddess.equipmentprepared.to.WaitPayTO;
 import com.bjike.goddess.materialbuy.api.MaterialBuyAPI;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +137,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
-        List<MaterialBuyBO> list = materialBuyAPI.allWaits();
+        List<MaterialBuyBO> list = materialBuyAPI.findWaitPay(new MaterialBuyDTO());
         List<WaitPay> waitPays = super.findAll();
         if (list != null) {
             for (MaterialBuyBO v : list) {
