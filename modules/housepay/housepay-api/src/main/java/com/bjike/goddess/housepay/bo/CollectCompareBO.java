@@ -6,29 +6,29 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * Created by ike on 17-5-15.
  */
 public class CollectCompareBO extends BaseBO {
-    private String startMonth;
-    private String endMonth;
+    private String startTime;
+    private String endTime;
     private String time;
     private String projectGroup;
-    private Double monthReserves;
     private Double lastMonthReserves;
+    private Double reserves;
     private Double balance;
     private Double increase;
 
-    public String getStartMonth() {
-        return startMonth;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStartMonth(String startMonth) {
-        this.startMonth = startMonth;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEndMonth() {
-        return endMonth;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEndMonth(String endMonth) {
-        this.endMonth = endMonth;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getTime() {
@@ -47,12 +47,12 @@ public class CollectCompareBO extends BaseBO {
         this.projectGroup = projectGroup;
     }
 
-    public Double getMonthReserves() {
-        return monthReserves;
+    public Double getReserves() {
+        return reserves;
     }
 
-    public void setMonthReserves(Double monthReserves) {
-        this.monthReserves = monthReserves;
+    public void setReserves(Double reserves) {
+        this.reserves = reserves;
     }
 
     public Double getLastMonthReserves() {

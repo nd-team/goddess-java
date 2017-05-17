@@ -9,6 +9,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.housepay.api.WaitPayAPI;
+import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
@@ -141,6 +142,23 @@ public class WaitPayAction {
         try {
             waitPayAPI.removeWaitPay(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 付款
+     *
+     * @param waitPayTO 付款数据to
+     * @return class WaitPayVO
+     * @des 付款
+     * @version v1
+     */
+    @PostMapping("v1/payment")
+    public Result payment(@Validated WaitPayTO waitPayTO, BindingResult bindingResult) throws ActException {
+        try {
+            PayRecordBO payRecordBO = waitPayAPI.payment(waitPayTO);
+            return ActResult.initialize(payRecordBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

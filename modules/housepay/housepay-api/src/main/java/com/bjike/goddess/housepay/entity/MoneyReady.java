@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -24,8 +25,8 @@ public class MoneyReady extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "time", nullable = false, columnDefinition = "DATETIME   COMMENT '时间'")
-    private LocalDateTime time;
+    @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '时间'")
+    private LocalDate time;
 
     /**
      * 类别
@@ -64,11 +65,11 @@ public class MoneyReady extends BaseEntity {
     private Double reserves;
 
 
-    public LocalDateTime getTime() {
+    public LocalDate getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(LocalDate time) {
         this.time = time;
     }
 

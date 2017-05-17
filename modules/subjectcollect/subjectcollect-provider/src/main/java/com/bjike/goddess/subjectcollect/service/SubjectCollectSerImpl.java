@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCollectDTO> implements SubjectCollectSer {
 
-    @Autowired
-    private SubjectCollectSer subjectCollectSer;
+    /*@Autowired
+    private SubjectCollectSer subjectCollectSer;*/
     @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel() throws SerException {
@@ -47,7 +47,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         super.remove(id);
     }
 
-    @Transactional(rollbackFor = SerException.class)
+   /* @Transactional(rollbackFor = SerException.class)
     @Override
     public SubjectCollectBO collectSubjectCollect(String[] firstSubject) throws SerException {
         if (firstSubject == null || firstSubject.length <= 0) {
@@ -247,9 +247,9 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
 
         return proGroupList;
     }
-    /**
+    *//**
      * 数据库查询返回，然后添加map数组
-     */
+     *//*
     public List<Map<String, String>> sqlQueryString(List<String> obj, List<SubjectCollectBO> subjectCollectBOS, List<Map<String, String>> mapList) throws SerException {
 
         if (subjectCollectBOS != null && subjectCollectBOS.size() > 0) {
@@ -395,5 +395,5 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         }catch (SerException e){
             throw new SerException(e.getMessage());
         }
-    }
+    }*/
 }
