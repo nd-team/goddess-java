@@ -148,4 +148,39 @@ public interface UserSer extends Ser<User, UserDTO> {
     default List<UserBO> findAllUser() throws SerException{
         return null;
     }
+
+    /**
+     * 条件分页查询用户
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findUserByPage(UserDTO dto) throws SerException {
+        return null;
+
+    }
+
+    /**
+     * 员工入职注册修改用户
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default UserBO updateUser(UserTO userTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 员工入职注册删除用户
+     *
+     * @param id
+     * @return UserBO
+     * @throws SerException
+     */
+    default void deleteUser(String id) throws SerException {
+    }
+
+
 }

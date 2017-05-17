@@ -10,6 +10,7 @@ import com.bjike.goddess.housepay.entity.PayRecord;
 import com.bjike.goddess.housepay.entity.WaitPay;
 import com.bjike.goddess.housepay.enums.PayStatus;
 import com.bjike.goddess.housepay.to.WaitPayTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public WaitPayBO insertWaitPay(WaitPayTO waitPayTO) throws SerException {
         WaitPay waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
-        if (PayStatus.NO.equals(waitPay.getPay())) {
+        if (PayStatus.IS.equals(waitPay.getPay())) {
             throw new SerException("添加失败，未做付款操作都是否");
         }
         waitPay.setCreateTime(LocalDateTime.now());
@@ -84,12 +85,16 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public WaitPayBO payment(WaitPayTO waitPayTO) throws SerException {
-        WaitPay waitPay = BeanTransform.copyProperties(waitPayTO, WaitPay.class, true);
+    public PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
+        WaitPay waitPay = super.findById(waitPayTO.getId());
+        BeanTransform.copyProperties(waitPayTO, waitPay, true);
         if (PayStatus.NO.equals(waitPay.getPay())) {
             waitPay.setPay(PayStatus.IS);
+            super.update(waitPay);
         }
+
         PayRecord payRecord = new PayRecord();
+        BeanUtils.copyProperties(waitPay,payRecord);
         payRecordSer.save(payRecord);
         return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
     }

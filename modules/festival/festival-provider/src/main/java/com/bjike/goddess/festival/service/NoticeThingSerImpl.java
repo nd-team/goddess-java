@@ -10,6 +10,7 @@ import com.bjike.goddess.festival.dto.NoticeThingDTO;
 import com.bjike.goddess.festival.entity.NoticeThing;
 import com.bjike.goddess.festival.entity.HolidayProgramme;
 import com.bjike.goddess.festival.entity.NoticeThing;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,27 @@ import java.util.List;
 public class NoticeThingSerImpl extends ServiceImpl<NoticeThing, NoticeThingDTO> implements NoticeThingSer {
 
 
+    @Override
+    public Long countNoticeThing(NoticeThingDTO noticeThingDTO) throws SerException {
+        if(StringUtils.isBlank( noticeThingDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = noticeThingDTO.getHolidayProgrammeId();
+        noticeThingDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        Long count = super.count( noticeThingDTO );
+        return count;
+    }
+
+    @Override
+    public List<NoticeThingBO> listNoticeThing(NoticeThingDTO noticeThingDTO) throws SerException {
+        if(StringUtils.isBlank( noticeThingDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = noticeThingDTO.getHolidayProgrammeId();
+        noticeThingDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        List<NoticeThing> noticeThingList = super.findByCis( noticeThingDTO ,true);
+        return BeanTransform.copyProperties(noticeThingList,NoticeThingBO.class);
+    }
     @Override
     public List<NoticeThingBO> getNoticeThing(String holidayProgrammeId) throws SerException {
         NoticeThingDTO dto = new NoticeThingDTO();

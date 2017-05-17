@@ -25,6 +25,14 @@ public interface CompanyFestivalTimeAPI {
     default Long countCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取时间安排
+     * @return class CompanyFestivalTimeBO
+     */
+    default CompanyFestivalTimeBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 公司放假时间安排列表
      * @return class CompanyFestivalTimeBO
@@ -55,10 +63,17 @@ public interface CompanyFestivalTimeAPI {
      */
     default List<String> listFestivalName() throws SerException {return null;}
     /**
+     * 根据节日名称查询公司放假时间安排列表总条数
+     *
+     */
+    default Long countFestivalTimeByName(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+        return null;
+    }
+    /**
      * 根据节日名称查询单个时间安排
      * @return class CompanyFestivalTimeBO
      */
-    default CompanyFestivalTimeBO getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {return null;}
+    default List<CompanyFestivalTimeBO> getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {return null;}
 
 
 

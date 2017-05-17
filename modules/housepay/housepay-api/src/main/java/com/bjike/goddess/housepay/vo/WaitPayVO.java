@@ -35,7 +35,7 @@ public class WaitPayVO {
     /**
      * 房租地址
      */
-    private String address;
+    private String rentAddress;
 
     /**
      * 租金
@@ -125,12 +125,12 @@ public class WaitPayVO {
         this.project = project;
     }
 
-    public String getAddress() {
-        return address;
+    public void setRentAddress(String rentAddress) {
+        this.rentAddress = rentAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getRentAddress() {
+        return rentAddress;
     }
 
     public Double getRent() {

@@ -33,6 +33,24 @@ public class EntryBasicInfoAction {
     @Autowired
     private EntryBasicInfoAPI entryBasicInfoAPI;
 
+
+    /**
+     * 入职基本信息列表总条数
+     *
+     * @param entryBasicInfoDTO 入职基本信息dto
+     * @des 获取所有薪资确认信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(EntryBasicInfoDTO entryBasicInfoDTO) throws ActException {
+        try {
+            Long count = entryBasicInfoAPI.countEntryBasicInfo(entryBasicInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 入职基本信息列表
      *
@@ -61,7 +79,7 @@ public class EntryBasicInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result addEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.insertEntryBasicInfo(entryBasicInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
@@ -75,12 +93,12 @@ public class EntryBasicInfoAction {
      * 编辑员工入职
      *
      * @param entryBasicInfoTO 员工入职基本信息数据bo
-     * @des 添加员工入职
+     * @des 编辑员工入职
      * @return class EntryBasicInfoVO
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result editEntryBasicInfo(@Validated EntryBasicInfoTO entryBasicInfoTO) throws ActException {
+    public Result editEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
             EntryBasicInfoBO entryBasicInfoBO1 = entryBasicInfoAPI.editEntryBasicInfo(entryBasicInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBO1,EntryBasicInfoVO.class,true));
@@ -108,7 +126,7 @@ public class EntryBasicInfoAction {
     }
 
     /**
-     * 查找入职信息
+     * 一个入职信息
      *
      * @param id 员工入职基本信息id
      * @des 根据id查找某个员工入职基本信息

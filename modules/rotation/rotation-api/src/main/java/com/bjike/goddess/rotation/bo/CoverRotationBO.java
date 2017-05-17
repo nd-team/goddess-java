@@ -35,6 +35,16 @@ public class CoverRotationBO extends BaseBO {
     private String position;
 
     /**
+     * 入职时间
+     */
+    private String entryTime;
+
+    /**
+     * 转正时间
+     */
+    private String regularTime;
+
+    /**
      * 目前岗位层级
      */
     private String arrangement;
@@ -194,5 +204,21 @@ public class CoverRotationBO extends BaseBO {
 
     public void setRotationDate(String rotationDate) {
         this.rotationDate = rotationDate;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public String getRegularTime() {
+        return regularTime;
+    }
+
+    public void setRegularTime(String regularTime) {
+        this.regularTime = regularTime;
     }
 }

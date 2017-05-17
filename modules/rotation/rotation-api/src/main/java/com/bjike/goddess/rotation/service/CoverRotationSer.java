@@ -109,10 +109,16 @@ public interface CoverRotationSer extends Ser<CoverRotation, CoverRotationDTO> {
         return null;
     }
 
-    default List<CoverRotationBO> findByUserArrangement(String username,String arrangementId) throws SerException{
+    /**
+     * 根据姓名和轮岗职层级id查询岗位轮换自荐数据
+     *
+     * @param username      姓名
+     * @param arrangementId 轮岗层级id
+     * @return
+     * @throws SerException
+     */
+    default List<CoverRotationBO> findByUserArrangement(String username, String arrangementId) throws SerException {
         return null;
     }
-
-//    default List<CoverRotationBO> findBy
 
 }

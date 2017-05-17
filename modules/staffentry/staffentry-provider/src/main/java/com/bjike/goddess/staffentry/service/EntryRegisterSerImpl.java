@@ -1,13 +1,16 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
+import com.bjike.goddess.staffentry.entity.*;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
+import com.sun.org.apache.regexp.internal.RE;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,19 +39,33 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private FamilyMemberSer familyMemberAPI;
+    private FamilyMemberSer familyMemberSer;
     @Autowired
-    private StudyExperienceSer studyExperienceAPI;
+    private StudyExperienceSer studyExperienceSer;
     @Autowired
-    private WorkExperienceSer workExperienceAPI;
+    private WorkExperienceSer workExperienceSer;
 
     @Autowired
-    private CredentialSer credentialAPI;
+    private CredentialSer credentialSer;
 
-    
+
+    @Override
+    public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        Long count = super.count( entryRegisterDTO);
+        return count;
+    }
+
+    @Override
+    public EntryRegisterBO getOne(String id) throws SerException {
+        if (StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        EntryRegister temp = super.findById(id);
+        return BeanTransform.copyProperties(temp , EntryRegisterBO.class);
+    }
+
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
-        //TODO: tanghaixiang 2017-03-10 未做根据 entryRegisterdtO 分页查询所有
         List<EntryRegister> entryRegisters = super.findByPage( entryRegisterDTO );
         return entryRegisters;
     }
@@ -62,11 +79,31 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         /**
          *  根据入职登记查询子表
          */
-        //TODO: tanghaixiang 2017-03-10 未做根据 entryRegisterBO 查询下边的子表
         List<FamilyMemberBO> familyMemberList = new ArrayList<>(1);
         List<StudyExperienceBO> studyExperienceList = new ArrayList<>(2);
         List<WorkExperienceBO> workExperienceList = new ArrayList<>(3);
         List<CredentialBO> credentialList = new ArrayList<>(4);
+
+        //家庭
+        FamilyMemberDTO familyMemberDTO = new FamilyMemberDTO();
+        familyMemberDTO.getConditions().add(Restrict.eq("entryRegister.id",id));
+        List<FamilyMember> family = familyMemberSer.findByCis( familyMemberDTO );
+        familyMemberList = BeanTransform.copyProperties( family ,FamilyMemberBO.class);
+        //学习经历
+        StudyExperienceDTO studyExperienceDTO = new StudyExperienceDTO();
+        studyExperienceDTO.getConditions().add(Restrict.eq("entryRegister.id",id));
+        List<StudyExperience> study = studyExperienceSer.findByCis( studyExperienceDTO );
+        studyExperienceList = BeanTransform.copyProperties( study ,StudyExperienceBO.class);
+        //工作经历
+        WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();
+        workExperienceDTO.getConditions().add(Restrict.eq("entryRegister.id",id));
+        List<WorkExperience> work = workExperienceSer.findByCis( workExperienceDTO );
+        workExperienceList = BeanTransform.copyProperties( work ,WorkExperienceBO.class);
+        //证书情况
+        CredentialDTO credentialDTO = new CredentialDTO();
+        credentialDTO.getConditions().add(Restrict.eq("entryRegister.id",id));
+        List<Credential> credentials = credentialSer.findByCis( credentialDTO );
+        credentialList = BeanTransform.copyProperties( credentials ,CredentialBO.class);
 
         entryRegisterBO.setFamilyMemberBOList( familyMemberList );
         entryRegisterBO.setStudyExperienceBOList( studyExperienceList );
@@ -78,11 +115,14 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("Id不能为空哦");
+        }
         EntryRegister entryRegister = super.findById(id);
         /**
          * 删除子表中的数据
          */
-        deleteSubTableRecords(entryRegister);
+        deleteSubTableRecords(id);
 
         try {
             super.remove(id);
@@ -99,10 +139,15 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         /**
          * 编辑主表中的数据
          */
+        if(StringUtils.isBlank(entryRegisterTO.getId())){
+            throw new SerException("Id不能为空哦");
+        }
+        EntryRegister temp = super.findById(entryRegisterTO.getId());
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
+        BeanTransform.copyProperties(entryRegister , temp,"id","createTime");
         try {
-            entryRegister.setModifyTime(LocalDateTime.now() );
-            super.update(entryRegister);
+            temp.setModifyTime(LocalDateTime.now() );
+            super.update(temp);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
@@ -110,14 +155,14 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         /**
          * 删除子表中的数据
          */
-        deleteSubTableRecords(entryRegister);
+        deleteSubTableRecords(entryRegisterTO.getId());
 
         /**
          * 往子表中插入数据
          */
         insertSubTableRecords(entryRegister, familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
 
-        return BeanTransform.copyProperties(entryRegister , EntryRegisterBO.class );
+        return BeanTransform.copyProperties(temp , EntryRegisterBO.class );
     }
 
     private void insertSubTableRecords(EntryRegister entryRegister, FamilyMemberTO familyMemberTO,
@@ -129,31 +174,38 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         insertCredential(entryRegister, credentialTO);
     }
 
-    private void deleteSubTableRecords(EntryRegister entryRegister) {
+    private void deleteSubTableRecords(String entryId) throws SerException{
         /**
          * 删除家庭成员
          */
         FamilyMemberDTO familyMemberDTO = new FamilyMemberDTO();
-
-//        deleteFamily( familyMemberDTO );
+        familyMemberDTO.getConditions().add(Restrict.eq("entryRegister.id",entryId));
+        List<FamilyMember> family = familyMemberSer.findByCis( familyMemberDTO );
+        familyMemberSer.remove( family );
 
         /**
          * 删除学习经历
          */
         StudyExperienceDTO studyExperienceDTO = new StudyExperienceDTO();
-//        deleteStudy( studyExperienceDTO);
+        studyExperienceDTO.getConditions().add(Restrict.eq("entryRegister.id",entryId));
+        List<StudyExperience> study = studyExperienceSer.findByCis( studyExperienceDTO );
+        studyExperienceSer.remove( study);
 
         /**
          * 删除工作经历
          */
         WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();
-//        deleteWork( workExperienceDTO);
+        workExperienceDTO.getConditions().add(Restrict.eq("entryRegister.id",entryId));
+        List<WorkExperience> work = workExperienceSer.findByCis( workExperienceDTO );
+        workExperienceSer.remove(work);
 
         /**
          * 删除证书情况
          */
         CredentialDTO credentialDTO = new CredentialDTO();
-//        deleteCredential( credentialDTO);
+        credentialDTO.getConditions().add(Restrict.eq("entryRegister.id",entryId));
+        List<Credential> credentials = credentialSer.findByCis( credentialDTO );
+        credentialSer.remove( credentials );
     }
 
 
@@ -162,8 +214,10 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     public EntryRegisterBO insertEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                                WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
-        //TODO:tanghaixiang 2017-03-03 获取当前用户工号
-        entryRegister.setEmpNumber("IKE002530");
+        //TODO:tanghaixiang 2017-03-03 获取当前用户工号,不用了
+        if(StringUtils.isBlank(entryRegisterTO.getEmpNumber())){
+            throw new SerException("员工编号不能为空");
+        }
         try {
             entryRegister.setCreateTime( LocalDateTime.now());
             super.save(entryRegister);
@@ -209,7 +263,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
                 familyMembers.add(temp);
             }
-            familyMemberAPI.insertFamilys(familyMembers);
+            familyMemberSer.insertFamilys(familyMembers);
         }
 
     }
@@ -230,7 +284,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
                 studyExperienceTOS.add(temp);
             }
-            studyExperienceAPI.insertStudyExperiences(studyExperienceTOS);
+            studyExperienceSer.insertStudyExperiences(studyExperienceTOS);
         }
 
     }
@@ -250,7 +304,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
                 workExperienceTOS.add(temp);
             }
-            workExperienceAPI.insertWorkExperiences(workExperienceTOS);
+            workExperienceSer.insertWorkExperiences(workExperienceTOS);
         }
 
     }
@@ -268,7 +322,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
                 credentialTOS.add(temp);
             }
-            credentialAPI.insertCredentials(credentialTOS);
+            credentialSer.insertCredentials(credentialTOS);
         }
 
     }

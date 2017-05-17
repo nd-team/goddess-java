@@ -115,7 +115,10 @@ public class ReimburseRecordBO extends BaseBO {
      * 收到发票情况
      */
     private String receiveTicketCon;
-
+    /**
+     * 是否已收到单据(是/否)
+     */
+    private String receiveTicketCheck;
     /**
      * 预计付款时间
      */
@@ -353,6 +356,14 @@ public class ReimburseRecordBO extends BaseBO {
 
     public void setReceiveTicketer(String receiveTicketer) {
         this.receiveTicketer = receiveTicketer;
+    }
+
+    public String getReceiveTicketCheck() {
+        return receiveTicketCheck;
+    }
+
+    public void setReceiveTicketCheck(String receiveTicketCheck) {
+        this.receiveTicketCheck = receiveTicketCheck;
     }
 
     public String getReceiveTicketTime() {

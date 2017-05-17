@@ -81,7 +81,7 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     @Override
     public List<QualificationsHandleBO> findStatus() throws SerException {
         QualificationsHandleDTO dto = new QualificationsHandleDTO();
-        dto.getConditions().add(Restrict.ne("status", HandleStatus.SUCCESS));
+        dto.getConditions().add(Restrict.ne(STATUS, HandleStatus.SUCCESS.getValue()));
         List<QualificationsHandle> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, QualificationsHandleBO.class);
     }
@@ -102,27 +102,51 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
 
     @Override
     public List<PersonnelInformationBO> getPersonnel(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id).getPersonnelSet(), PersonnelInformationBO.class);
+        QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getPersonnelSet() != null)
+            return BeanTransform.copyProperties(entity.getPersonnelSet(), PersonnelInformationBO.class);
+        else
+            return new ArrayList<>(0);
     }
 
     @Override
     public List<FinanceInfoBO> getFinance(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id).getFinanceSet(), FinanceInfoBO.class);
+        QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getMaterialSet() != null)
+            return BeanTransform.copyProperties(entity.getFinanceSet(), FinanceInfoBO.class);
+        else
+            return new ArrayList<>(0);
     }
 
     @Override
     public List<FacilityInformationBO> getFacility(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id).getFacilitySet(), FacilityInformationBO.class);
+        QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getMaterialSet() != null)
+            return BeanTransform.copyProperties(entity.getFacilitySet(), FacilityInformationBO.class);
+        else
+            return new ArrayList<>(0);
     }
 
     @Override
     public List<CompanyInfoBO> getCompany(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id).getCompanySet(), CompanyInfoBO.class);
+        QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getMaterialSet() != null)
+            return BeanTransform.copyProperties(entity.getCompanySet(), CompanyInfoBO.class);
+        else
+            return new ArrayList<>(0);
     }
 
     @Override
     public List<AuditMaterialBO> getAudit(String id) throws SerException {
-        QualificationsHandle entity = new QualificationsHandle();
+        QualificationsHandle entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
         if (entity.getMaterialSet() != null)
@@ -135,6 +159,8 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     @Override
     public QualificationsHandleBO saveForeign(QualificationsHandleForeignTO to) throws SerException {
         QualificationsHandle entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setCompanySet(new HashSet<>(0));
         if (null != to.getCompanyIds())
             for (String id : to.getCompanyIds())
@@ -167,6 +193,9 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
 
     @Override
     public QualificationsHandleBO getById(String id) throws SerException {
-        return BeanTransform.copyProperties(super.findById(id), QualificationsHandleBO.class);
+        QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, QualificationsHandleBO.class);
     }
 }

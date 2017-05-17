@@ -35,6 +35,16 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
     }
 
     @Override
+    public GiftStandardBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        GiftStandard giftStandard = super.findById(id);
+        return BeanTransform.copyProperties(giftStandard, GiftStandardBO.class );
+
+    }
+
+    @Override
     public List<GiftStandardBO> listGiftStandard(GiftStandardDTO giftStandardDTO) throws SerException {
 
         giftStandardDTO.getSorts().add("createTime=desc");
@@ -42,6 +52,7 @@ public class GiftStandardSerImpl extends ServiceImpl<GiftStandard, GiftStandardD
 
         return BeanTransform.copyProperties(list, GiftStandardBO.class );
     }
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override

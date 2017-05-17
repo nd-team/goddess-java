@@ -6,6 +6,7 @@ import com.bjike.goddess.housepay.enums.PayStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -25,8 +26,8 @@ public class WaitPay extends BaseEntity {
     /**
      * 缴费时间
      */
-    @Column(name = "payTime", nullable = false, columnDefinition = "DATETIME   COMMENT '缴费时间'")
-    private LocalDateTime payTime;
+    @Column(name = "payTime", nullable = false, columnDefinition = "DATE   COMMENT '缴费时间'")
+    private LocalDate payTime;
 
     /**
      * 地区
@@ -43,8 +44,8 @@ public class WaitPay extends BaseEntity {
     /**
      * 房租地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '房租地址'")
-    private String address;
+    @Column(name = "rentAddress", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '房租地址'")
+    private String rentAddress;
 
     /**
      * 租金
@@ -114,11 +115,11 @@ public class WaitPay extends BaseEntity {
     private String remark;
 
 
-    public LocalDateTime getPayTime() {
+    public LocalDate getPayTime() {
         return payTime;
     }
 
-    public void setPayTime(LocalDateTime payTime) {
+    public void setPayTime(LocalDate payTime) {
         this.payTime = payTime;
     }
 
@@ -138,12 +139,12 @@ public class WaitPay extends BaseEntity {
         this.project = project;
     }
 
-    public String getAddress() {
-        return address;
+    public String getRentAddress() {
+        return rentAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setRentAddress(String rentAddress) {
+        this.rentAddress = rentAddress;
     }
 
     public Double getRent() {

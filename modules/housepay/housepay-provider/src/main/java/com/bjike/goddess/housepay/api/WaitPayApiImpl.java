@@ -2,6 +2,7 @@ package com.bjike.goddess.housepay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.entity.WaitPay;
@@ -59,6 +60,10 @@ public class WaitPayApiImpl implements WaitPayAPI {
     @Override
     public void removeWaitPay(String id) throws SerException {
         waitPaySer.removeWaitPay(id);
+    }
+    @Override
+    public PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
+        return waitPaySer.payment(waitPayTO);
     }
 
 }

@@ -36,21 +36,29 @@ import java.util.List;
 @Service
 public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
 
-    
     @Override
-    public List<EntryBasicInfo> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
-
-        //TODO: tanghaixiang 2017-03-10 未做根据 entryBasicInfodtO 分页查询所有
-        List<EntryBasicInfo> entryBasicInfos = super.findByPage(entryBasicInfoDTO);
-        return entryBasicInfos;
+    public Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        Long count = super.count(entryBasicInfoDTO);
+        return count;
     }
 
-    
     @Override
-    public EntryBasicInfo getEntryBasicInfo(String id) throws SerException {
-        EntryBasicInfo entryBasicInfo = super.findById(id);
+    public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
 
-        return entryBasicInfo;
+        List<EntryBasicInfo> entryBasicInfos = super.findByPage(entryBasicInfoDTO);
+        List<EntryBasicInfoBO> boList = BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);
+        return boList;
+    }
+
+
+    @Override
+    public EntryBasicInfoBO getEntryBasicInfo(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        EntryBasicInfo entryBasicInfo = super.findById(id);
+        EntryBasicInfoBO bo = BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class);
+        return bo;
     }
 
     @Override
@@ -69,13 +77,13 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EntryBasicInfoBO editEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
-        if( StringUtils.isBlank(entryBasicInfoTO.getId())){
+        if (StringUtils.isBlank(entryBasicInfoTO.getId())) {
             throw new SerException("id不能为空");
         }
-        EntryBasicInfo temp = super.findById( entryBasicInfoTO.getId());
+        EntryBasicInfo temp = super.findById(entryBasicInfoTO.getId());
         EntryBasicInfo entryBasicInfo = BeanTransform.copyProperties(entryBasicInfoTO, EntryBasicInfo.class, true);
         try {
-            BeanUtils.copyProperties(entryBasicInfo,temp,"createTime");
+            BeanUtils.copyProperties(entryBasicInfo, temp, "createTime");
             temp.setModifyTime(LocalDateTime.now());
             super.update(temp);
         } catch (SerException e) {
@@ -88,6 +96,9 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeEntryBasicInfo(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
         try {
             super.remove(id);
         } catch (SerException e) {
@@ -130,22 +141,23 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
                 /**
                  * 修改邮件发送对象
                  */
-               EntryBasicInfo entryBasicInfo1 =  super.findById( entryBasicInfoTO.getId() );
-               entryBasicInfo1.setModifyTime( LocalDateTime.now() );
-               entryBasicInfo1.setEmailInfo( true );
+                EntryBasicInfo entryBasicInfo1 = super.findById(entryBasicInfoTO.getId());
+                entryBasicInfo1.setModifyTime(LocalDateTime.now());
+                entryBasicInfo1.setEmailInfo(true);
                 try {
-                    super.update( entryBasicInfo1 );
+                    super.update(entryBasicInfo1);
                 } catch (SerException e) {
-                    throw   new SerException(e.getMessage());
+                    throw new SerException(e.getMessage());
                 }
             }
         }
         return BeanTransform.copyProperties(entryBasicInfo, EntryRegisterBO.class);
     }
 
-    
+
     @Override
-    public  List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+    public List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        //多选职位
         if (entryBasicInfoDTO == null) {
             throw new SerException("您好!查询条件为空,无法进行查询!");
         }
@@ -157,21 +169,26 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         String[] positions = entryBasicInfoDTO.getPostNames();              //职位列表
         String startDateString = entryBasicInfoDTO.getStartDate();          //开始日期字符串
         String endDateString = entryBasicInfoDTO.getEndDate();              //结束日期字符串
-        LocalDate startDate = LocalDate.parse(startDateString, formatter);
-        LocalDate endDate = LocalDate.parse(endDateString, formatter);
-        List<EntryBasicInfoBO> list = new ArrayList<>(0);
-
-        //TODO: tanghaixiang 2017-03-10 未做汇总
-        for (String position : positions) {
-            EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-//            dto.getCriterions().add(Restrictions.and(Restrictions.eq("position", position), Restrictions.between("entryTime", startDate, endDate)));
-//            int count = super.selectBySearch(dto).size();                  //获取入职人数
-            EntryBasicInfoBO entryBasicInfoBO = new EntryBasicInfoBO();
-            entryBasicInfoBO.setEntryTime(startDate + "~" + endDate);        //设置时间范围
-            entryBasicInfoBO.setPosition(position);                          //设置职位
-//            entryBasicInfoBO.setEntryCount(count);                           //设置入职人数
-            list.add(entryBasicInfoBO);
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now();
+        if (StringUtils.isNotBlank(startDateString)) {
+            startDate = LocalDate.parse(startDateString, formatter);
         }
+        if (StringUtils.isNotBlank(endDateString)) {
+            endDate = LocalDate.parse(endDateString, formatter);
+        }
+
+        String[] field = new String[]{"position", "entryCount"};
+        String sql = "select position ,  count(employeeID) as entryCount from staffentry_entrybasicinfo where 1=1 ";
+        if (positions != null && positions.length > 0) {
+            sql = sql + " and position in " + positions + "";
+        }
+        sql = sql + " group by position order by position desc ";
+        List<EntryBasicInfoBO> list = super.findBySql(sql, EntryBasicInfoBO.class, field);
+        for (EntryBasicInfoBO entryBasicInfoBO : list) {
+            entryBasicInfoBO.setEntryTime(startDate + "~" + endDate);
+        }
+
 
         return list;
     }
@@ -180,7 +197,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Override
     public EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        dto.getConditions().add(Restrict.eq("name",name));
+        dto.getConditions().add(Restrict.eq("name", name));
         EntryBasicInfo list = super.findOne(dto);
         return BeanTransform.copyProperties(list, EntryRegisterBO.class);
     }
