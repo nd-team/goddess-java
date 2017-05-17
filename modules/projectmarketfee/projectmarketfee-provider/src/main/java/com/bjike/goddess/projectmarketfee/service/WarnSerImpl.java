@@ -63,4 +63,11 @@ public class WarnSerImpl extends ServiceImpl<Warn, WarnDTO> implements WarnSer {
         Warn warn = super.findById(id);
         return BeanTransform.copyProperties(warn, WarnBO.class);
     }
+
+    @Override
+    public WarnBO countNum(WarnDTO dto) throws SerException {
+        WarnBO bo = new WarnBO();
+        bo.setNum(super.count(dto));
+        return bo;
+    }
 }

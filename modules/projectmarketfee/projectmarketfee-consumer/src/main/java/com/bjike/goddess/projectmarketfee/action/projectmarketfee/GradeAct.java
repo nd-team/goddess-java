@@ -125,4 +125,23 @@ public class GradeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto     dto
+     * @param request 请求对象
+     * @return class GradeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(GradeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            GradeBO bo = gradeAPI.countNum(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, GradeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

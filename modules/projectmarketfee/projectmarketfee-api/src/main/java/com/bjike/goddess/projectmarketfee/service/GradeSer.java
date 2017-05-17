@@ -69,4 +69,15 @@ public interface GradeSer extends Ser<Grade, GradeDTO> {
     default GradeBO findByID(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto 预警信息
+     * @return class GradeBO
+     * @throows SerException
+     */
+    default GradeBO countNum(GradeDTO dto) throws SerException {
+        return null;
+    }
 }

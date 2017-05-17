@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.service;
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
+import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
@@ -90,7 +91,8 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
      * @return class String
      * @throws SerException
      */
-    private List<String> findAllProjects() throws SerException {
+    @Override
+    public List<String> findAllProjects() throws SerException {
         List<ProjectMonth> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (ProjectMonth p : list) {
@@ -242,5 +244,10 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
             bo.setMonth(projectMonth.getMonth());
         }
         return list;
+    }
+
+    @Override
+    public Long countNum(ProjectMonthDTO dto) throws SerException{
+        return super.count(dto);
     }
 }
