@@ -1,7 +1,10 @@
 package com.bjike.goddess.materialcheck.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 物资盘点
@@ -17,26 +20,31 @@ public class MaterialInventoryTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组/地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组/地区不能为空")
     private String projectGroup;
 
     /**
      * 类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "类型不能为空")
     private String type;
 
     /**
      * 设备名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
      * 单位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "单位不能为空")
     private String unit;
 
     /**
@@ -97,6 +105,7 @@ public class MaterialInventoryTO extends BaseTO {
     /**
      * 经办人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "经办人不能为空")
     private String operator;
 
     /**
@@ -107,6 +116,7 @@ public class MaterialInventoryTO extends BaseTO {
     /**
      * 账务模块负责人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "账务模块负责人不能为空")
     private String accountModule;
 
     /**
@@ -117,6 +127,7 @@ public class MaterialInventoryTO extends BaseTO {
     /**
      * 总经办
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "总经办不能为空")
     private String zjb;
 
     /**

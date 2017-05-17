@@ -28,6 +28,11 @@ public class ModuleBO extends BaseBO {
      */
     private List<ModuleBO> relations;
 
+    /**
+     * 关联id
+     */
+    private String relationId;
+
     public String getName() {
         return name;
     }
@@ -50,5 +55,13 @@ public class ModuleBO extends BaseBO {
 
     public void setRelations(List<ModuleBO> relations) {
         this.relations = relations;
+    }
+
+    public String getRelationId() {
+        return relationId;
+    }
+
+    public void setRelationId(String relationId) {
+        this.relationId = relationId;
     }
 }

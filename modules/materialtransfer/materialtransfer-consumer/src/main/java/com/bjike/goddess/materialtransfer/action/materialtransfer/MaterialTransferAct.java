@@ -13,13 +13,11 @@ import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
 import com.bjike.goddess.materialtransfer.to.MaterialTransferTO;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 import com.bjike.goddess.materialtransfer.vo.MaterialTransferVO;
-import com.bjike.goddess.user.to.DepartmentTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.ManyToOne;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -48,7 +46,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/materialreceive/{id}")
+    @GetMapping("v1/materialtransfer/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialTransferBO bo = materialTransferAPI.findById(id);
@@ -151,7 +149,7 @@ public class MaterialTransferAct {
     /**
      * 项目经理审核
      *
-     * @param id 物资调动唯一标识
+     * @param id           物资调动唯一标识
      * @param pmAuditState 项目经理审核状态
      * @throws ActException
      * @version v1
@@ -169,7 +167,7 @@ public class MaterialTransferAct {
     /**
      * 福利模块负责人审核
      *
-     * @param id 物资调动唯一标识
+     * @param id           物资调动唯一标识
      * @param welfareState 福利模块负责人审核状态
      * @throws ActException
      * @version v1
@@ -187,15 +185,15 @@ public class MaterialTransferAct {
     /**
      * 福利模块负责人确认调配成功
      *
-     * @param id 物资调动唯一标识
-     * @param recipient 领用人
-     * @param confirmDeploy 福利模块负责人确认调配成功
+     * @param id               物资调动唯一标识
+     * @param recipient        领用人
+     * @param confirmDeploy    福利模块负责人确认调配成功
      * @param finishDeployTime 调配成功
      * @throws ActException
      * @version v1
      */
     @PatchMapping("v1/wealModConfirm/{id}")
-    public Result wealModConfirm(@PathVariable String id,
+    public Result wealModConfirm(@PathVariable(value = "id") String id,
                                  @RequestParam(value = "recipient") String recipient,
                                  @RequestParam(value = "confirmDeploy") Boolean confirmDeploy,
                                  @RequestParam(value = "finishDeployTime") String finishDeployTime) throws ActException {

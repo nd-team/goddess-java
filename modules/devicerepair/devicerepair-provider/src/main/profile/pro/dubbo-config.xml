@@ -19,8 +19,7 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.devicerepair.api.DeviceRepairAPI" ref="deviceRepairApiImpl"></dubbo:service>
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:service validation="true" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" ref="materialInStockApiImpl"></dubbo:service>
-	<dubbo:service validation="true" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI" ref="stockWarningApiImpl"></dubbo:service>
-
+	<dubbo:reference validation="true" id="materialInStockApiImpl" interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI"></dubbo:reference>
+	<dubbo:reference validation="true" id="stockWarningApiImpl" interface="com.bjike.goddess.materialinstock.api.StockWarningAPI"></dubbo:reference>
 
 </beans>

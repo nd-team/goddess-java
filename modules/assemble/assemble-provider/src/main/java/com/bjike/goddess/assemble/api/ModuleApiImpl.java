@@ -44,7 +44,7 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
-    public void check(String moduleId,String[] relationIds, CheckType checkType) throws SerException {
-        moduleSer.check(moduleId, relationIds,checkType);
+    public void check(String moduleId,String[] relationIds) throws SerException {
+        moduleSer.check(moduleId, relationIds);
     }
 }

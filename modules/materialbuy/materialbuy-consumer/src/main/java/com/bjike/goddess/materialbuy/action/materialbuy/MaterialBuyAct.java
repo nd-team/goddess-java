@@ -1,6 +1,5 @@
 package com.bjike.goddess.materialbuy.action.materialbuy;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -58,7 +57,6 @@ public class MaterialBuyAct {
      * 分页查询物资购买
      *
      * @param dto 物资购买dto
-     * @param bindingResult
      * @return class MaterialBuyVO
      * @throws ActException
      * @version v1
@@ -78,7 +76,6 @@ public class MaterialBuyAct {
      * 添加物资购买
      *
      * @param to 物资购买to
-     * @param result
      * @return class MaterialBuyVO
      * @throws ActException
      * @version v1
@@ -115,7 +112,6 @@ public class MaterialBuyAct {
      * 编辑物资购买
      *
      * @param to 物资购买to
-     * @param result
      * @throws ActException
      * @version v1
      */
@@ -151,8 +147,8 @@ public class MaterialBuyAct {
     /**
      * 上传文件
      *
-     * @param request
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
@@ -163,7 +159,6 @@ public class MaterialBuyAct {
      * 地区负责人审核
      *
      * @param to 物资购买to
-     * @param result
      * @throws ActException
      * @version v1
      */
