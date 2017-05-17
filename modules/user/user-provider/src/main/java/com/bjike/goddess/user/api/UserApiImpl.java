@@ -99,4 +99,20 @@ public class UserApiImpl implements UserAPI {
     public List<UserBO> findAllUser() throws SerException {
         return userSer.findAllUser();
     }
+
+    @Override
+    public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
+        return userSer.findUserByPage(dto);
+    }
+
+    @Override
+    public UserBO updateUser(UserTO userTO) throws SerException {
+        return userSer.updateUser(userTO);
+    }
+
+    @Override
+    public void deleteUser(String id) throws SerException {
+        userSer.deleteUser(id);
+    }
+
 }

@@ -12,6 +12,7 @@ import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.dto.ModuleTypeDTO;
 import com.bjike.goddess.organize.to.ModuleTypeTO;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -188,6 +189,22 @@ public class ModuleTypeAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findById(id), ModuleTypeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 查询未冻结模块选项
+     *
+     * @return class OpinionVO
+     * @version v1
+     */
+    @GetMapping("v1/findThawOpinion")
+    public Result findThawOpinion(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.findThawOpinion(), OpinionVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

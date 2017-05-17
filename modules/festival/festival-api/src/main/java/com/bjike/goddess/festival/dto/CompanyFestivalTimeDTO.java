@@ -21,7 +21,7 @@ public class CompanyFestivalTimeDTO extends BaseDTO {
     /**
      * 节假日名称
      */
-    @NotBlank(groups = CompanyFestivalTimeDTO.TESTGetOne.class, message = "节假日名称不能为空")
+    @NotBlank(groups = {CompanyFestivalTimeDTO.TESTGetOne.class}, message = "节假日名称不能为空")
     private String name;
 
     public String getName() {

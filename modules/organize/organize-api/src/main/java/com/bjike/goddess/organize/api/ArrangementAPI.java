@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.to.ArrangementTO;
 
@@ -99,6 +100,17 @@ public interface ArrangementAPI {
      * @throws SerException
      */
     default ArrangementBO findById(String id) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 查询未冻结职位层级选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
 

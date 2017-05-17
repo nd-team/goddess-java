@@ -138,7 +138,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (null != entity)
             return positionDetailSer.transformationToBOList(entity.getPositionSet());
         else
-            return null;
+            return new ArrayList<>(0);
     }
 
     @Override

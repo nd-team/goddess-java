@@ -48,7 +48,7 @@ public class QualificationsHandle extends BaseEntity {
     /**
      * 人员信息资料
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "qualifications_handle_personnel", joinColumns = {@JoinColumn(name = "handle_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "personnel_id", nullable = false)})
     private Set<PersonnelInformation> personnelSet = new HashSet<>(0);
@@ -56,7 +56,7 @@ public class QualificationsHandle extends BaseEntity {
     /**
      * 设备信息资料
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "qualifications_handle_facility", joinColumns = {@JoinColumn(name = "handle_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "facility_id", nullable = false)})
     private Set<FacilityInformation> facilitySet = new HashSet<>(0);
@@ -64,7 +64,7 @@ public class QualificationsHandle extends BaseEntity {
     /**
      * 公司基本信息
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "qualifications_handle_company", joinColumns = {@JoinColumn(name = "handle_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "company_id", nullable = false)})
     private Set<CompanyInfo> companySet = new HashSet<>(0);
@@ -72,7 +72,7 @@ public class QualificationsHandle extends BaseEntity {
     /**
      * 财务资料
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "qualifications_handle_finance", joinColumns = {@JoinColumn(name = "handle_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "finance_id", nullable = false)})
     private Set<FinanceInfo> financeSet = new HashSet<>(0);
@@ -80,7 +80,7 @@ public class QualificationsHandle extends BaseEntity {
     /**
      * 审核资料
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "qualifications_handle_material", joinColumns = {@JoinColumn(name = "handle_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "material_id", nullable = false)})
     private Set<AuditMaterial> materialSet = new HashSet<>(0);

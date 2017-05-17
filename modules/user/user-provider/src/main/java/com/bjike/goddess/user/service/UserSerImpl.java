@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -260,6 +262,34 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         } else {
             throw new SerException("登录未登录");
         }
+    }
+
+    @Override
+    public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
+        List<User> list =  super.findByPage(dto );
+        List<UserBO> boList = BeanTransform.copyProperties(list,UserBO.class);
+        return boList;
+    }
+
+    @Override
+    public UserBO updateUser(UserTO userTO) throws SerException {
+        if(StringUtils.isBlank(userTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        User user = super.findById(userTO.getId());
+        user.setUsername(userTO.getUsername());
+        user.setPassword(userTO.getPassword());
+
+        UserBO userBO = BeanTransform.copyProperties(user,UserBO.class);
+        return userBO;
+    }
+
+    @Override
+    public void deleteUser(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        super.remove( id );
     }
 
 

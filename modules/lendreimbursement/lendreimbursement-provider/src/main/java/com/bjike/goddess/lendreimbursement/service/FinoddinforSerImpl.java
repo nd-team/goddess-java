@@ -143,10 +143,11 @@ public class FinoddinforSerImpl extends ServiceImpl<Finoddinfor, FinoddinforDTO>
                 super.findBySql("select min(runNum)  from lendreimbursement_finoddinfor where status=0 ",
                         Finoddinfor.class, fields);
 
-        List<String> strs = finoddinforList.stream().map(Finoddinfor::getRunNum)
-                .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
+        String minNum = null;
+        if( finoddinforList!= null && finoddinforList.size()>0 ){
+            minNum = finoddinforList.get(0).getRunNum();
+        }
 
-        String minNum = strs!=null && strs.size()>0 ? strs.get(0):null;
         return minNum;
     }
 }

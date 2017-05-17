@@ -74,7 +74,7 @@ public class ReimburseRecordAction {
      * @des 获取所有申请报销信息
      * @version v1
      */
-    @GetMapping("v1/listReimburseRecord")
+    @GetMapping("v1/list")
     public Result findListReimburseRecord(ReimburseRecordDTO reimburseRecordDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ReimburseRecordVO> reimburseRecordVOList = BeanTransform.copyProperties(
@@ -178,7 +178,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 申请报销有误列表总条数
+     * 申请报销列误列表总条数
      *
      * @param reimburseRecordDTO 申请报销信息dto
      * @des 获取所有申请报销信息总条数
@@ -252,7 +252,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待审核有表
+     * 等待审核列表
      *
      * @param reimburseRecordDTO 申请报销信息dto
      * @return class ReimburseRecordVO
@@ -272,7 +272,7 @@ public class ReimburseRecordAction {
 
 
     /**
-     * 审核等待审核
+     * 负责人审核等待审核
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -361,7 +361,7 @@ public class ReimburseRecordAction {
 
 
     /**
-     * 分析已经审核
+     * 分析已经审核(运营部分析)
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -565,7 +565,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待付款付款
+     * 付款等待付款
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO

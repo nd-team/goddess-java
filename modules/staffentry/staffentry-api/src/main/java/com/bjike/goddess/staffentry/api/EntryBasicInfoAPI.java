@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 
 import java.util.List;
@@ -17,6 +18,12 @@ import java.util.List;
  */
 public interface EntryBasicInfoAPI {
 
+    /**
+     * 薪资确认列表总条数
+     */
+    default Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        return null;
+    }
     /**
      * 获取所有入职登记
      * @param entryBasicInfoDTO 入职登记dto

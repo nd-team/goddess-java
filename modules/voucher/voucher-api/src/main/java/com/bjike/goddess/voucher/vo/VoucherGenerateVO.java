@@ -5,6 +5,7 @@ import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 记账凭证生成表现层对象
@@ -135,6 +136,32 @@ public class VoucherGenerateVO {
      * 修改时间
      */
     private String modifyTime;
+
+
+    /**
+     * 一级科目
+     */
+    private List<String> firstSubjects;
+
+    /**
+     * 二级科目
+     */
+    private List<String> secondSubjects;
+
+    /**
+     * 三级科目
+     */
+    private List<String> thirdSubjects;
+
+    /**
+     * 借方金额且数据与贷方金额相反填如1-10
+     */
+    private List<Double> borrowMoneys;
+
+    /**
+     * 贷方金额且数据与借方金额相反填如0-1
+     */
+    private List<Double> loanMoneys;
 
 
     public String getId() {
@@ -327,5 +354,45 @@ public class VoucherGenerateVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public List<String> getFirstSubjects() {
+        return firstSubjects;
+    }
+
+    public void setFirstSubjects(List<String> firstSubjects) {
+        this.firstSubjects = firstSubjects;
+    }
+
+    public List<String> getSecondSubjects() {
+        return secondSubjects;
+    }
+
+    public void setSecondSubjects(List<String> secondSubjects) {
+        this.secondSubjects = secondSubjects;
+    }
+
+    public List<String> getThirdSubjects() {
+        return thirdSubjects;
+    }
+
+    public void setThirdSubjects(List<String> thirdSubjects) {
+        this.thirdSubjects = thirdSubjects;
+    }
+
+    public List<Double> getBorrowMoneys() {
+        return borrowMoneys;
+    }
+
+    public void setBorrowMoneys(List<Double> borrowMoneys) {
+        this.borrowMoneys = borrowMoneys;
+    }
+
+    public List<Double> getLoanMoneys() {
+        return loanMoneys;
+    }
+
+    public void setLoanMoneys(List<Double> loanMoneys) {
+        this.loanMoneys = loanMoneys;
     }
 }

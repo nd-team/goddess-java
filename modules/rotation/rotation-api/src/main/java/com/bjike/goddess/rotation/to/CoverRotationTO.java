@@ -1,6 +1,11 @@
 package com.bjike.goddess.rotation.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 岗位轮换自荐
@@ -16,16 +21,19 @@ public class CoverRotationTO extends BaseTO {
     /**
      * 申请轮换等级
      */
+    @NotBlank(message = "申请轮换等级不能为空", groups = {ADD.class})
     private String applyLevelId;
 
     /**
      * 申请轮换原因
      */
+    @NotBlank(message = "申请轮换原因不能为空", groups = {ADD.class})
     private String reason;
 
     /**
      * 轮换后岗位等级
      */
+    @NotBlank(message = "轮换后岗位等级不能为空", groups = {EDIT.class})
     private String rotationLevelId;
 
     /**
@@ -36,16 +44,19 @@ public class CoverRotationTO extends BaseTO {
     /**
      * 总经办意见
      */
+    @NotBlank(message = "总经办意见不能为空", groups = {EDIT.class})
     private String opinion;
 
     /**
      * 是否通过
      */
+    @NotNull(message = "是否通过不能为空", groups = {EDIT.class})
     private Boolean pass;
 
     /**
      * 轮换时间
      */
+    @NotBlank(message = "轮换时间不能为空", groups = {EDIT.class})
     private String rotationDate;
 
     public String getApplyLevelId() {

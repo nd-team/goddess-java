@@ -141,6 +141,12 @@ public class ReimburseRecord extends BaseEntity {
     private String receiveTicketCon;
 
     /**
+     * 是否已收到单据(是/否)
+     */
+    @Column(name = "receiveTicketCheck",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收到单据(是/否)'")
+    private String receiveTicketCheck;
+
+    /**
      * 预计付款时间
      */
     @Column(name = "budgetPayTime",  columnDefinition = "DATE   COMMENT '预计付款时间'")
@@ -227,7 +233,7 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "reimStatus",  columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "reimStatus",  columnDefinition = "INT(2)   COMMENT '状态'")
     private ReimStatus reimStatus;
 
     /**
@@ -368,6 +374,14 @@ public class ReimburseRecord extends BaseEntity {
 
     public void setTicketCondition(String ticketCondition) {
         this.ticketCondition = ticketCondition;
+    }
+
+    public String getReceiveTicketCheck() {
+        return receiveTicketCheck;
+    }
+
+    public void setReceiveTicketCheck(String receiveTicketCheck) {
+        this.receiveTicketCheck = receiveTicketCheck;
     }
 
     public String getNoTicketRemark() {

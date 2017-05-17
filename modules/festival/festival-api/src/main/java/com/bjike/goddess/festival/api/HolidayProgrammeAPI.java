@@ -25,6 +25,14 @@ public interface HolidayProgrammeAPI {
     default Long countHolidayProgramme(HolidayProgrammeDTO holidayProgrammeDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取
+     * @return class HolidayProgrammeBO
+     */
+    default HolidayProgrammeBO getOneById(String id) throws SerException {return null;}
+
+
     /**
      * 法定节假日放假方案列表
      * @return class HolidayProgrammeBO

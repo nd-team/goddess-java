@@ -45,7 +45,7 @@ public class QualificationsHandleAct {
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) QualificationsHandleTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.save(to), QualificationsHandleVO.class,request));
+            return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.save(to), QualificationsHandleVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -217,7 +217,7 @@ public class QualificationsHandleAct {
      * @return class QualificationsHandleVO
      * @version v1
      */
-    @GetMapping("v1/saveForeign")
+    @GetMapping("v1/saveForeign/{id}")
     public Result saveForeign(@Validated(EDIT.class) QualificationsHandleForeignTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(qualificationsHandleAPI.saveForeign(to), QualificationsHandleVO.class));
