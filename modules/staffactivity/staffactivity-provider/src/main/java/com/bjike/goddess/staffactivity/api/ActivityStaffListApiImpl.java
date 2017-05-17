@@ -1,8 +1,10 @@
 package com.bjike.goddess.staffactivity.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.bo.ActivityStaffListBO;
 import com.bjike.goddess.staffactivity.dto.ActivityStaffListDTO;
+import com.bjike.goddess.staffactivity.entity.ActivityStaffList;
 import com.bjike.goddess.staffactivity.service.ActivityStaffListSer;
 import com.bjike.goddess.staffactivity.to.ActivityStaffListTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class ActivityStaffListApiImpl implements ActivityStaffListAPI {
 
     @Autowired
     private ActivityStaffListSer activityStaffListSer;
+
+    /**
+     * 根据id查询活动人员名单
+     *
+     * @param id 活动人员名单唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public ActivityStaffListBO findById(String id) throws SerException {
+        ActivityStaffList model = activityStaffListSer.findById(id);
+        return BeanTransform.copyProperties(model, ActivityStaffListBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动人员名单dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ActivityStaffListDTO dto) throws SerException {
+        return activityStaffListSer.count(dto);
+    }
 
     /**
      * 分页查询活动人员名单
