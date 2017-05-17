@@ -58,7 +58,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
         VoucherGenerate vg = super.findById(id);
-        return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        VoucherGenerateBO bo = BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        bo.setFirstSubjects(Arrays.asList(bo.getFirstSubject()));
+        bo.setSecondSubjects(Arrays.asList(bo.getSecondSubject()));
+        bo.setThirdSubjects(Arrays.asList(bo.getThirdSubject()));
+        bo.setLoanMoneys( Arrays.asList(bo.getLoanMoney()));
+        bo.setBorrowMoneys(Arrays.asList(bo.getBorrowMoney()));
+        return  bo ;
 
     }
 
