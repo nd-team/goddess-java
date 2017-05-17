@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 费用效益分析
@@ -172,19 +173,87 @@ public class CostAnalysisAct {
     /**
      * 查找汇总信息对应的明细
      *
-     * @param arrival      地区
-     * @param projectGroup 项目组
-     * @param projectName  项目名称
-     * @param request      请求对象
+     * @param id      费用效益分析汇总信息
+     * @param request 请求对象
      * @return class CostAnalysisVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findDetail/{arrival}/{projectGroup}/{projectName}")
-    public Result findDetail(@PathVariable String arrival, @PathVariable String projectGroup, @PathVariable String projectName, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findDetail/{id}")
+    public Result findDetail(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<CostAnalysisBO> list = costAnalysisAPI.findDetail(arrival, projectGroup, projectName);
+            List<CostAnalysisBO> list = costAnalysisAPI.findDetail(id);
             return ActResult.initialize(BeanTransform.copyProperties(list, CostAnalysisVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto     费用效益分析
+     * @param request 请求对象
+     * @return class CostAnalysisVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(CostAnalysisDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            CostAnalysisBO bo = costAnalysisAPI.countNum(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, CostAnalysisVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查找
+     *
+     * @param id      id
+     * @param request 请求对象
+     * @return class CostAnalysisVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/costanalysis/{id}")
+    public Result costanalysis(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            CostAnalysisBO bo = costAnalysisAPI.findByID(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, CostAnalysisVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查所有年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allYears")
+    public Result allYears() throws ActException {
+        try {
+            Set<Integer> set = costAnalysisAPI.allYears();
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查所有月份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allMonths")
+    public Result allMonths() throws ActException {
+        try {
+            Set<Integer> set = costAnalysisAPI.allMonths();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

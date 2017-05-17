@@ -47,7 +47,7 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 设备名称
      */
-    @NotBlank(groups = {EDIT.class}, message = "设备名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
@@ -82,7 +82,7 @@ public class DeviceRepairTO extends BaseTO {
     /**
      * 物资状态
      */
-    @NotNull(groups = {EDIT.class}, message = "物资状态不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "物资状态不能为空")
     private MaterialState materialState;
 
     /**

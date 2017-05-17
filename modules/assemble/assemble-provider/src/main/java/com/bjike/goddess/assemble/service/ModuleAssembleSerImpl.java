@@ -9,7 +9,6 @@ import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -36,8 +35,7 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
         ModuleAssembleDTO dto = new ModuleAssembleDTO();
         dto.getConditions().add(Restrict.eq("module.name", to.getModuleName()));
         dto.getConditions().add(Restrict.eq("relation.name", to.getRelationName()));
-        ModuleAssemble assemble =  super.findOne(dto);
-        if (null == assemble) {
+        if (null == super.findOne(dto)) {
             ModuleDTO moduleDTO = new ModuleDTO();
             moduleDTO.getConditions().add(Restrict.eq("name", to.getModuleName()));
             Module module = moduleSer.findOne(moduleDTO);
@@ -60,22 +58,13 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
             } else {
                 throw new SerException("模块数据不存在");
             }
-        }else {
-            assemble.setCheckType(CheckType.NONE);
-            super.update(assemble);
+
+
         }
     }
 
     @Override
-    public void delete(String[] ids) throws SerException {
-        if (null != ids && ids.length > 0) {
-            String[] tmp = new String[ids.length];
-            for(int i=0;i<ids.length;i++){
-                tmp[i]="'"+ids[i]+"'";
-            }
-            String relations = StringUtils.join(tmp,",");
-            String sql ="update module_assemble set checkType=2 where id  in("+relations+")";
-            super.executeSql(sql);
-        }
+    public void delete(String id) throws SerException {
+        super.remove(id);
     }
 }

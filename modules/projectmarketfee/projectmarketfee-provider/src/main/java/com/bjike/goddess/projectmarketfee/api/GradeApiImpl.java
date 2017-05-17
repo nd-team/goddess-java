@@ -48,4 +48,10 @@ public class GradeApiImpl implements GradeAPI {
     public GradeBO findByID(String id) throws SerException {
         return gradeSer.findByID(id);
     }
+
+    @Override
+    public GradeBO countNum(GradeDTO dto) throws SerException {
+        return gradeSer.countNum(dto);
+    }
+
 }

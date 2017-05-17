@@ -8,9 +8,9 @@ import com.bjike.goddess.materialcheck.dto.MaterialInventoryDTO;
 import com.bjike.goddess.materialcheck.entity.MaterialInventory;
 import com.bjike.goddess.materialcheck.to.MaterialInventoryTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
-import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +38,7 @@ import java.util.List;
 public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, MaterialInventoryDTO> implements MaterialInventorySer {
 
     @Autowired
-    private MaterialInStockAPI materialInStockAPI;
+    private MaterialInStockSer materialInStockSer;
 
     /**
      * 分页查询物资盘点
@@ -175,13 +175,13 @@ public class MaterialInventorySerImpl extends ServiceImpl<MaterialInventory, Mat
     public List<MaterialInventoryBO> materialInventory(InventoryType inventoryType) throws SerException {
         List<MaterialInventoryBO> inventoryBOList = new ArrayList<>(0);
         //查询到所有类型的存储地区,项目组,物品类型,物资名称
-        List<AttributeBO> attributeBOList = materialInStockAPI.findAllKindsType();
+        List<AttributeBO> attributeBOList = materialInStockSer.findAllKindsType();
         if (attributeBOList.isEmpty()) {
             return Collections.emptyList();
         }
         //依次遍历计算每条记录
         for (AttributeBO bo : attributeBOList) {
-            List<MaterialInStockBO> boList = materialInStockAPI.findByAttribute(bo);
+            List<MaterialInStockBO> boList = materialInStockSer.findByAttribute(bo);
             String area = bo.getStorageArea();//地区
             String projectGroup = bo.getProjectGroup();//项目组
             String type = bo.getMaterialType();        //物资类型

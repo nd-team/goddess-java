@@ -14,14 +14,9 @@ public enum AuditState {
      */
     UNAUDITED(0),
     /**
-     * 通过
+     * 已审核
      */
-    AUDITED(1),
-
-    /**
-     * 拒绝
-     */
-    REJECT(2);
+    AUDITED(1);
 
     private int code;
 

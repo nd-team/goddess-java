@@ -65,4 +65,9 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     public List<ProjectWeekBO> findDetail(String id) throws SerException {
         return projectMonthSer.findDetail(id);
     }
+
+    @Override
+    public Long countNum(ProjectMonthDTO dto) throws SerException {
+        return projectMonthSer.countNum(dto);
+    }
 }

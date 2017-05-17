@@ -92,4 +92,15 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
     default List<ArrivalWeekCountBO> conditionsCount(String[] arrivals) throws SerException {
         return null;
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
 }

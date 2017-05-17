@@ -333,6 +333,53 @@ include ':modules:projectmarketfee:projectmarketfee-provider'
 include ':modules:contractcommunicat:contractcommunicat-api'
 include ':modules:contractcommunicat:contractcommunicat-consumer'
 include ':modules:contractcommunicat:contractcommunicat-provider'
+
+
+//#oilcardprepared 油卡充值准备与支付
+include ':modules:oilcardprepared:oilcardprepared-api'
+include ':modules:oilcardprepared:oilcardprepared-consumer'
+include ':modules:oilcardprepared:oilcardprepared-provider'
+
+//#archive 员工档案 dengjunren
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
+
+//#attainment 人员综合素养调研 dengjunren
+include ':modules:attainment:attainment-api'
+include ':modules:attainment:attainment-consumer'
+include ':modules:attainment:attainment-provider'
+
+//#bonus 项目奖金包 dengjunren
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
+
+//#employee-contract 员工合同管理 dengjunren
+include ':modules:employee-contract:employee-contract-api'
+include ':modules:employee-contract:employee-contract-consumer'
+include ':modules:employee-contract:employee-contract-provider'
+
+//#projectcost 项目上费用 dengjunren
+include ':modules:projectcost:projectcost-api'
+include ':modules:projectcost:projectcost-consumer'
+include ':modules:projectcost:projectcost-provider'
+
+//#qualifications 公司资质管理 dengjunren
+include ':modules:qualifications:qualifications-api'
+include ':modules:qualifications:qualifications-consumer'
+include ':modules:qualifications:qualifications-provider'
+
+//#supplier 供应商管理 dengjunren
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
+
+//#equipmentprepared 设备购买资金准备与支付 chenjunhao
+include ':modules:equipmentprepared:equipmentprepared-api'
+include ':modules:equipmentprepared:equipmentprepared-consumer'
+include ':modules:equipmentprepared:equipmentprepared-provider'
+
 //#materialinstock 物资入库
 include ':modules:materialinstock:materialinstock-api'
 include ':modules:materialinstock:materialinstock-consumer'
@@ -359,3 +406,4 @@ include ':modules:fundrecords:fundrecords-provider'
 include ':modules:bankrecords:bankrecords-api'
 include ':modules:bankrecords:bankrecords-consumer'
 include ':modules:bankrecords:bankrecords-provider'
+

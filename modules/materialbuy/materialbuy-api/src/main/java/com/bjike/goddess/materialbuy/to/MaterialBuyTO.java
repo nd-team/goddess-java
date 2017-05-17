@@ -27,79 +27,79 @@ public class MaterialBuyTO extends BaseTO {
     /**
      * 地区
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "地区不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "项目组不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "项目组不能为空")
     private String projectTeam;
 
     /**
      * 申购人
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "申购人不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购人不能为空")
     private String requisitioner;
 
     /**
      * 申购日期
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "申购日期不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购日期不能为空")
     private String subscribeDate;
 
     /**
      * 设备类型
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "申购日期不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "申购日期不能为空")
     private String deviceType;
 
     /**
      * 设备名称
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "设备名称不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "设备名称不能为空")
     private String deviceName;
 
     /**
      * 型号
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "型号不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "型号不能为空")
     private String model;
 
     /**
      * 数量
      */
-    @Min(value = 1, groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "数量必须大于0")
+    @Min(value = 1, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "数量必须大于0")
     private Integer quantity;
 
     /**
      * 单位
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "单位不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "单位不能为空")
     private String unit;
 
     /**
      * 购买原因
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "购买原因不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "购买原因不能为空")
     private String buyReason;
 
     /**
      * 单价
      */
-    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "单价必须大于0")
+    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "单价必须大于0")
     private Double unitPrice;
 
     /**
      * 总额
      */
-    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "总额必须大于0")
+    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "总额必须大于0")
     private Double totalSum;
 
     /**
      * 途径
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "途径不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "途径不能为空")
     private String approach;
 
     /**
@@ -160,19 +160,19 @@ public class MaterialBuyTO extends BaseTO {
     /**
      * 地区审核人
      */
-    @NotBlank(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "地区审核人不能为空")
+    @NotBlank(groups = {MaterialBuyAdd.class, MaterialBuyEdit.class}, message = "地区审核人不能为空")
     private String areaAuditor;
 
     /**
      * 审核状态
      */
-    @NotNull(groups = {MaterialBuyTO.PrincipalAudit.class}, message = "审核状态不能为空")
+    @NotNull(groups = {PrincipalAudit.class}, message = "审核状态不能为空")
     private AuditState auditState;
 
     /**
      * 审核意见
      */
-    @NotNull(groups = {MaterialBuyTO.PrincipalAudit.class}, message = "审核意见不能为空")
+    @NotNull(groups = {PrincipalAudit.class}, message = "审核意见不能为空")
     private String auditOpinion;
 
     public String getArea() {

@@ -62,14 +62,6 @@ public interface MaterialBuyAPI {
     void update(MaterialBuyTO to) throws SerException;
 
     /**
-     * 文件上传
-     *
-     * @param maps  文件名，byte 文件字节
-     * @param path 上传路径
-     */
-    void upload(Map<String, byte[]> maps, String path) throws SerException;
-
-    /**
      * 查看详情
      *
      * @param id 物资购买唯一标识
@@ -85,6 +77,16 @@ public interface MaterialBuyAPI {
      * @throws SerException
      */
     void areaPrincipalAudit(MaterialBuyTO to) throws SerException;
+
+    /**
+     * 查找所有未付款的信息
+     *
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    default List<MaterialBuyBO> allWaits() throws SerException{
+        return null;
+    }
 
     /**
      * 查询等待付款

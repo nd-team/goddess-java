@@ -66,9 +66,10 @@ public interface ModuleAPI {
      *
      * @param moduleId
      * @param relationIds
+     * @param checkType
      * @throws SerException
      */
-    default void check(String moduleId, String[] relationIds) throws SerException {
+    default void check(String moduleId, String[] relationIds, CheckType checkType) throws SerException {
 
     }
 

@@ -11,7 +11,6 @@ import com.bjike.goddess.materialreceive.api.MaterialReceiveAPI;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
-import com.bjike.goddess.materialreceive.type.AuditState;
 import com.bjike.goddess.materialreceive.vo.MaterialReceiveVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -40,7 +39,7 @@ public class MaterialReceiveAct {
     /**
      * 根据id查询物资领用
      *
-     * @param id 物资领用唯一标识
+     * @param id      物资领用唯一标识
      * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
@@ -76,7 +75,7 @@ public class MaterialReceiveAct {
     /**
      * 分页查询物资领用
      *
-     * @param dto 物资领用dto
+     * @param dto           物资领用dto
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -95,7 +94,7 @@ public class MaterialReceiveAct {
     /**
      * 添加物资领用
      *
-     * @param to 物资领用to
+     * @param to      物资领用to
      * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
@@ -131,7 +130,7 @@ public class MaterialReceiveAct {
     /**
      * 编辑物资领用
      *
-     * @param to 物资领用to
+     * @param to     物资领用to
      * @throws ActException
      * @version v1
      */
@@ -148,15 +147,14 @@ public class MaterialReceiveAct {
     /**
      * 审核
      *
-     * @param id           物资领用id
-     * @param auditState   审核状态
-     * @param auditOpinion 审核意见
+     * @param to     物资领用to
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/audit")
-    public Result audit(@RequestParam(value = "id") String id, @RequestParam(value = "auditState") AuditState auditState, @RequestParam(value = "auditOpinion") String auditOpinion) throws ActException {
+    public Result audit(@Validated(MaterialReceiveTO.AUDIT.class) MaterialReceiveTO to, BindingResult result) throws ActException {
         try {
-            materialReceiveAPI.audit(id, auditState, auditOpinion);
+            materialReceiveAPI.audit(to);
             return new ActResult("audit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -166,7 +164,7 @@ public class MaterialReceiveAct {
     /**
      * 领用完成
      *
-     * @param to 物资领用to
+     * @param to     物资领用to
      * @throws ActException
      */
     @PutMapping("v1/receiveover")
@@ -182,7 +180,7 @@ public class MaterialReceiveAct {
     /**
      * 物资领用后归还
      *
-     * @param to 物资领用to
+     * @param to     物资领用to
      * @throws ActException
      */
     @PutMapping("v1/materialreturn")

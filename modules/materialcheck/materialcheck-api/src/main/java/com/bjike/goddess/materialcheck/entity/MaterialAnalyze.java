@@ -48,25 +48,25 @@ public class MaterialAnalyze extends BaseEntity {
     /**
      * 周转率
      */
-    @Column(name = "turnoverRatio", columnDefinition = "VARCHAR(255) COMMENT '周转率'")
+    @Column(name = "turnoverRatio", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '周转率'")
     private String turnoverRatio;
 
     /**
      * 闲置率
      */
-    @Column(name = "vacancyRate", columnDefinition = "VARCHAR(255) COMMENT '闲置率'")
+    @Column(name = "vacancyRate", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '闲置率'")
     private String vacancyRate;
 
     /**
      * 库存差
      */
-    @Column(name = "stockSubtract", columnDefinition = "INT(11) COMMENT '库存差'")
+    @Column(name = "stockSubtract", nullable = false, columnDefinition = "INT(11) COMMENT '库存差'")
     private Integer stockSubtract;
 
     /**
      * 盈亏率
      */
-    @Column(name = "balanceRate", columnDefinition = "VARCHAR(255) COMMENT '盈亏率'")
+    @Column(name = "balanceRate", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '盈亏率'")
     private String balanceRate;
 
     /**

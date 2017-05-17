@@ -25,9 +25,9 @@ public interface ModuleAssembleAPI {
     /**
      * 删除模块关联
      *
-     * @param ids
+     * @param id
      */
-    default void delete(String[] ids) throws SerException {
+    default void delete(String id) throws SerException {
 
     }
 

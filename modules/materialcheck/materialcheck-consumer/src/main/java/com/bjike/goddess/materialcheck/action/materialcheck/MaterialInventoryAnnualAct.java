@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialinventory_annual")
+@RequestMapping("materialinventory")
 public class MaterialInventoryAnnualAct {
 
     @Autowired

@@ -48,10 +48,10 @@ public class ModuleAssembleAction {
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delete( String[] ids) throws ActException {
+    public Result delete( String id) throws ActException {
         ActResult actResult = new ActResult();
         try {
-            moduleAssembleAPI.delete(ids);
+            moduleAssembleAPI.delete(id);
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }

@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialanalyze_weekly")
+@RequestMapping("materialanalyze")
 public class MaterialAnalyzeWeeklyAct {
     
     @Autowired

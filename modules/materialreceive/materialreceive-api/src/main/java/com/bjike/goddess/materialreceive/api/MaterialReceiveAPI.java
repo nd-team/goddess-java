@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
-import com.bjike.goddess.materialreceive.type.AuditState;
 
 import java.util.List;
 
@@ -72,12 +71,10 @@ public interface MaterialReceiveAPI {
     /**
      * 审核
      *
-     * @param id 物资领用唯一标识
-     * @param auditState 审核状态
-     * @param auditOpinion 审核意见
+     * @param to 物资领用to
      * @throws SerException
      */
-    void audit(String id, AuditState auditState, String auditOpinion) throws SerException;
+    void audit(MaterialReceiveTO to) throws SerException;
 
     /**
      * 领用完成

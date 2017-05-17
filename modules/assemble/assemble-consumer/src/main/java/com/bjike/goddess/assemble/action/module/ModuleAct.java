@@ -107,10 +107,10 @@ public class ModuleAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/check")
-    public Result check(String moduleId, String[] relationIds) throws ActException {
+    @PutMapping("v1/check/{checkType}")
+    public Result check(String moduleId, String[] relationIds, @PathVariable CheckType checkType) throws ActException {
         try {
-            moduleAPI.check(moduleId, relationIds);
+            moduleAPI.check(moduleId, relationIds, checkType);
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }

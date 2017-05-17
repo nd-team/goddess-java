@@ -42,6 +42,8 @@ public class ProjectGroupReceiveTO extends BaseTO {
     /**
      * 数量
      */
+    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "数量必须是大于等于1的整数")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "数量不能为空")
     private Integer quantity;
 
     /**
@@ -59,19 +61,19 @@ public class ProjectGroupReceiveTO extends BaseTO {
     /**
      * 归还时间
      */
-    @NotEmpty(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还时间不能为空")
+    @NotEmpty(groups = {RETURNMATERIAL.class}, message = "归还时间不能为空")
     private String returnTime;
 
     /**
      * 归还人
      */
-    @NotEmpty(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还人不能为空")
+    @NotEmpty(groups = {RETURNMATERIAL.class}, message = "归还人不能为空")
     private String returnPerson;
 
     /**
      * 领用编号
      */
-    @Size(groups = {ADD.class, EDIT.class, ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "领用数量必修是大于0的整数")
+    @Size(groups = {ADD.class, EDIT.class}, message = "领用数量必修是大于0的整数")
     private String[] materialNum;
 
 

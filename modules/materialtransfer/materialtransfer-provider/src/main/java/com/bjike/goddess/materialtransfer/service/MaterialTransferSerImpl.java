@@ -5,9 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
-import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
+import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
@@ -22,9 +22,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     private UserAPI userAPI;
 
     @Autowired
-    private MaterialInStockAPI materialInStockAPI;
+    private MaterialInStockSer materialInStockSer;
 
     /**
      * 分页查询物资调动
@@ -70,88 +70,86 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MaterialTransferBO save(MaterialTransferTO to) throws SerException {
-        MaterialTransferBO bo = BeanTransform.copyProperties(to, MaterialTransferBO.class);
-        bo = setAttributes(bo);//设置物资属性
-        MaterialTransfer entity = BeanTransform.copyProperties(bo, MaterialTransfer.class, true);
+        MaterialTransfer entity = BeanTransform.copyProperties(to, MaterialTransfer.class, true);
+        entity = setAttributes(entity);//设置物资属性
         entity = super.save(entity);
-        MaterialTransferBO transferBO = BeanTransform.copyProperties(entity, MaterialTransferBO.class);
-        return transferBO;
+        MaterialTransferBO bo = BeanTransform.copyProperties(entity, MaterialTransferBO.class);
+        return bo;
     }
 
     /**
      * 设置属性
      *
-     * @param bo 物资调动
+     * @param entity 物资调动
      * @return
      */
-    private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
-        MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
-        String curUsername = "userAPI.currentUser().getUsername()";
-        updateInStock(bo, inStockBO, curUsername);  //更新物资入库信息
-        return setTransferProperties(bo, inStockBO, curUsername);
+    private MaterialTransfer setAttributes(MaterialTransfer entity) throws SerException {
+        MaterialInStock model = checkMaterialInStock(entity);//检验是否为空
+        String curUsername = userAPI.currentUser().getUsername();
+        updateInStock(entity, model, curUsername);  //更新物资入库信息
+        return setTransferProperties(entity, model, curUsername);
     }
 
     /**
      * 更新物资入库信息
      *
-     * @param transferBO  物资调动信息bo
-     * @param inStockBO   物资入库bo
+     * @param entity 物资调动信息
+     * @param model 物资入库
      * @param curUsername 当前用户姓名
      * @throws SerException
      */
-    private MaterialInStockBO updateInStock(MaterialTransferBO transferBO, MaterialInStockBO inStockBO, String curUsername) throws SerException {
-        String lendArea = transferBO.getTransferredArea(); //调入地区
-        inStockBO.setLender(curUsername);            //设置外借人
-        inStockBO.setLendArea(lendArea);             //设置外借地区
-        inStockBO.setUseState(UseState.TRANSFER);    //设置使用状态为外借
-        materialInStockAPI.updateSingleBO(inStockBO);//更新物资入库
-        return inStockBO;
+    private MaterialInStock updateInStock(MaterialTransfer entity, MaterialInStock model, String curUsername) throws SerException {
+        String lendArea = entity.getTransferredArea(); //调入地区
+        model.setLender(curUsername);           //设置外借人
+        model.setLendArea(lendArea);            //设置外借地区
+        model.setUseState(UseState.TRANSFER);   //设置使用状态为外借
+        materialInStockSer.update(model);       //更新物资入库
+        return model;
     }
 
     /**
      * 设置物资调动信息
      *
-     * @param bo          物资调动
-     * @param inStockBO   物资入库bo
+     * @param entity 物资调动
+     * @param model 物资入库
      * @param curUsername 当前用户姓名
      * @return
      */
-    private MaterialTransferBO setTransferProperties(MaterialTransferBO bo, MaterialInStockBO inStockBO, String curUsername) {
-        String materialType = inStockBO.getMaterialType();//物资类型
-        String materialName = inStockBO.getMaterialName();//物资名称
-        String materialModel = inStockBO.getMaterialModel();//物资型号
-        Integer quantity = inStockBO.getQuantity();         //数量
-        String unit = inStockBO.getUnit();                  //单位
-        String storageArea = inStockBO.getStorageArea();    //存储地区
-        bo.setMaterialType(materialType);           //设置物资状态
-        bo.setMaterialName(materialName);           //设置物资名称
-        bo.setModel(materialModel);                 //设置型号
-        bo.setQuantity(quantity);                   //设置数量
-        bo.setUnit(unit);                           //设置单位
-        bo.setArchSaveArea(storageArea);            //设置原存储地区
-        bo.setMaterialState(MaterialState.INTACT);  //设置物资状态为完好
-        bo.setApplyDate(LocalDate.now().toString());//设置申请日期
-        bo.setHandler(curUsername);//经手人
-        bo.setPmAuditState(AuditState.NONE);//项目经历审核位未审核
-        bo.setWelfareState(AuditState.NONE);//福利模块负责人审核状态为未审核
-        bo.setConfirmDeploy(Boolean.FALSE); //设置福利模块负责人确认调配成功为未确认
+    private MaterialTransfer setTransferProperties(MaterialTransfer entity, MaterialInStock model, String curUsername) {
+        String materialType = model.getMaterialType();//物资类型
+        String materialName = model.getMaterialName();//物资名称
+        String materialModel = model.getMaterialModel();//物资型号
+        Integer quantity = model.getQuantity();         //数量
+        String unit = model.getUnit();                  //单位
+        String storageArea = model.getStorageArea();    //存储地区
+        entity.setMaterialType(materialType);           //设置物资状态
+        entity.setMaterialName(materialName);           //设置物资名称
+        entity.setModel(materialModel);                 //设置型号
+        entity.setQuantity(quantity);                   //设置数量
+        entity.setUnit(unit);                           //设置单位
+        entity.setArchSaveArea(storageArea);            //设置原存储地区
+        entity.setMaterialState(MaterialState.INTACT);  //设置物资状态为完好
+        entity.setApplyDate(LocalDate.now());//设置申请日期
+        entity.setHandler(curUsername);//经手人
+        entity.setPmAuditState(AuditState.NONE);//项目经历审核位未审核
+        entity.setWelfareState(AuditState.NONE);//福利模块负责人审核状态为未审核
+        entity.setConfirmDeploy(Boolean.FALSE); //设置福利模块负责人确认调配成功为未确认
 
-        return bo;
+        return entity;
     }
 
     /**
      * 检查物资入库
      *
-     * @param bo 物资入库实体
-     * @return class MaterialInStockBO
+     * @param entity 物资入库实体
+     * @return
      * @throws SerException
      */
-    private MaterialInStockBO checkMaterialInStock(MaterialTransferBO bo) throws SerException {
-        String stockEncoding = bo.getInstockCode();
-        if (stockEncoding == null) {
-            throw new SerException("您好,入库编码不能为空.");
-        }
-        MaterialInStockBO model = materialInStockAPI.findByMaterialCoding(stockEncoding);
+    private MaterialInStock checkMaterialInStock(MaterialTransfer entity) throws SerException {
+        String stockEncoding = entity.getInstockCode();
+        MaterialInStockDTO dto = new MaterialInStockDTO();
+        dto.getConditions().add(Restrict.eq("stockEncoding", stockEncoding));
+        MaterialInStock model = materialInStockSer.findOne(dto);
         if (model == null) {
             throw new SerException("该物资不存在,无法进行调动.");
         }
@@ -179,7 +177,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialTransferTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())) {
+        if (StringUtils.isNotEmpty(to.getId())){
             MaterialTransfer model = super.findById(to.getId());
             if (model != null) {
                 updateMaterialTransfer(to, model);
@@ -207,7 +205,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 项目经理审核
      *
-     * @param id           物资调动唯一标识
+     * @param id 物资调动唯一标识
      * @param pmAuditState 项目经理审核状态
      * @throws SerException
      */
@@ -229,7 +227,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 福利模块负责人审核
      *
-     * @param id           物资调动唯一标识
+     * @param id 物资调动唯一标识
      * @param welfareState 物资调动to
      * @throws SerException
      */
@@ -250,7 +248,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     /**
      * 福利模块负责人确认调配成功
      *
-     * @param id               物资调动唯一标识
+     * @param id 物资调动唯一标识
      * @param recipient        领用人
      * @param confirmDeploy    福利模块负责人确认调配成功
      * @param finishDeployTime 调配成功

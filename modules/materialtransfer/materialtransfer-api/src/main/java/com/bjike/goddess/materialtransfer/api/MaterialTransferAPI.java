@@ -72,7 +72,7 @@ public interface MaterialTransferAPI {
     /**
      * 项目经理审核
      *
-     * @param id           物资调动唯一标识
+     * @param id 物资调动唯一标识
      * @param pmAuditState 项目经理审核状态
      * @throws SerException
      */
@@ -81,7 +81,7 @@ public interface MaterialTransferAPI {
     /**
      * 福利模块负责人审核
      *
-     * @param id           物资调动唯一标识
+     * @param id 物资调动唯一标识
      * @param welfareState 福利模块负责人审核状态
      * @throws SerException
      */
@@ -90,9 +90,9 @@ public interface MaterialTransferAPI {
     /**
      * 福利模块负责人确认调配成功
      *
-     * @param id               物资调动唯一标识
-     * @param recipient        领用人
-     * @param confirmDeploy    福利模块负责人确认调配成功
+     * @param id 物资调动唯一标识
+     * @param recipient 领用人
+     * @param confirmDeploy 福利模块负责人确认调配成功
      * @param finishDeployTime 调配成功
      * @throws SerException
      */

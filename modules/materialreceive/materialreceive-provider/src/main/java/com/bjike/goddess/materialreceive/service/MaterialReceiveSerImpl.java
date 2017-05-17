@@ -1,9 +1,14 @@
 package com.bjike.goddess.materialreceive.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.api.StockWarningAPI;
+import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
+import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
@@ -38,6 +43,12 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
 
     @Autowired
     private MaterialInStockAPI materialInStockAPI;
+
+    @Autowired
+    private StockWarningAPI stockWarningAPI;
+
+    @Autowired
+    private MaterialInStockSer materialInStockSer;
 
 
     /**
@@ -86,7 +97,6 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
 
     /**
      * 设置领用编号
-     *
      * @param to
      * @return
      * @throws SerException
@@ -94,22 +104,22 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     private Integer setReceive(MaterialReceiveTO to) throws SerException {
         String[] materialNum = checkMaterialNum(to);//校验领用物资编号是否为空
         Integer quantity = setMaterialNo(to, materialNum);//设置领用编号
-        materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);    //更新物资使用状态
+        materialInStockSer.updateUseState(materialNum, UseState.RECEIVE);    //更新物资使用状态
         return quantity;
     }
 
     /**
      * 设置物资领用中的物资编号
      *
-     * @param to          物资领用to
+     * @param to 物资领用to
      * @param materialNum 物资编号
      * @return
      */
     private Integer setMaterialNo(MaterialReceiveTO to, String[] materialNum) {
         Integer quantity = to.getMaterialNum().length;//领用数量
         StringBuilder materialNo = new StringBuilder();
-        for (int i = 0; i < quantity; i++) {
-            if (i < (quantity - 1)) {
+        for (int i = 0; i < quantity; i ++) {
+            if (i < (quantity - 1)){
                 materialNo.append(materialNum[i]).append(",");
             } else {
                 materialNo.append(materialNum[i]);
@@ -159,8 +169,6 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialReceive model = super.findById(to.getId());
             if (model != null) {
-                updateUseState(model, UseState.INSTOCK);//更新物资使用装填
-                setReceive(to);
                 updateMaterialReceive(to, model);
             } else {
                 throw new SerException("更新对象不能为空");
@@ -168,19 +176,6 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
         } else {
             throw new SerException("更新ID不能为空!");
         }
-    }
-
-    /**
-     * 更新物资入库状态
-     *
-     * @param model    物资入库
-     * @param useState 使用状态
-     * @throws SerException
-     */
-    private void updateUseState(MaterialReceive model, UseState useState) throws SerException {
-        String materialNo = model.getMaterialNo();
-        String[] materialNum = materialNo.split(",");
-        materialInStockAPI.updateUseState(materialNum, useState);
     }
 
     /**
@@ -199,22 +194,18 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 审核
      *
-     * @param id           物资领用唯一标识
-     * @param auditState   审核状态
-     * @param auditOpinion 审核意见
+     * @param to 物资领用to
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void audit(String id, AuditState auditState, String auditOpinion) throws SerException {
+    public void audit(MaterialReceiveTO to) throws SerException {
         String curUsername = userAPI.currentUser().getUsername();
-        if (StringUtils.isNotBlank(id)) {
-            MaterialReceive model = super.findById(id);
+        if (StringUtils.isNotBlank(to.getId())) {
+            MaterialReceive model = super.findById(to.getId());
             boolean auditorIsNotEmpty = (model != null) && (StringUtils.isNotEmpty(model.getAuditor()));
             if (auditorIsNotEmpty && (model.getAuditor().equals(curUsername))) {
-                model.setAuditState(auditState);
-                model.setAuditOpinion(auditOpinion);
-                super.update(model);
+                update(to);
             } else {
                 throw new SerException("审核人与当前用户不符,无法进行审核.");
             }
@@ -232,17 +223,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void receiveOver(MaterialReceiveTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            MaterialReceive model = super.findById(to.getId());
-            model.setModel(to.getModel());
-            model.setOldStorageArea(to.getOldStorageArea());
-            model.setOldPrincipal(to.getOldPrincipal());
-            model.setHandler(to.getHandler());
-            super.update(model);
-        } else {
-            throw new SerException("更新id不能为空");
-        }
-
+        update(to);
     }
 
     /**
@@ -254,8 +235,8 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void materialReturn(MaterialReceiveTO to) throws SerException {
-        setUseStateToInStock(to);//更新使用状态为在库
         update(to);
+        setUseStateToInStock(to);//更新使用状态为在库
     }
 
     /**
@@ -265,8 +246,11 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
      * @throws SerException
      */
     private void setUseStateToInStock(MaterialReceiveTO to) throws SerException {
-        String[] materialNum = to.getMaterialNum();//获取归还的物资编号
-        materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
+        String id = to.getId();//物资领用id
+        MaterialReceive model = super.findById(id);
+        String materialNo = model.getMaterialNo();
+        String[] materialNum = materialNo.split(",");
+        materialInStockSer.updateUseState(materialNum, UseState.INSTOCK);  //将物资状态设置为在库
     }
 
 }

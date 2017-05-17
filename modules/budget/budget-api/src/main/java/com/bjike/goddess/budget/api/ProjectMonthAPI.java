@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.ProjectMonthBO;
 import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
+import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -99,6 +100,17 @@ public interface ProjectMonthAPI {
      * @throws SerException
      */
     default List<ProjectWeekBO> findDetail(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ProjectMonthDTO dto) throws SerException {
         return null;
     }
 }

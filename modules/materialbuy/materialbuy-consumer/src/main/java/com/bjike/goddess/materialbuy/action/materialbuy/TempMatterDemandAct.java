@@ -1,5 +1,6 @@
 package com.bjike.goddess.materialbuy.action.materialbuy;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -56,6 +57,7 @@ public class TempMatterDemandAct {
      * 分页查询临时物资需求
      *
      * @param dto           临时物资需求dto
+     * @param bindingResult
      * @return class TempMatterDemandVO
      * @throws ActException
      * @version v1
@@ -75,6 +77,7 @@ public class TempMatterDemandAct {
      * 添加临时物资需求
      *
      * @param to     临时物资需求to
+     * @param result
      * @return class TempMatterDemandVO
      * @throws ActException
      * @version v1
@@ -111,6 +114,7 @@ public class TempMatterDemandAct {
      * 编辑临时物资需求
      *
      * @param to     临时物资需求to
+     * @param result
      * @throws ActException
      * @version v1
      */
@@ -128,6 +132,7 @@ public class TempMatterDemandAct {
      * 审核
      *
      * @param to     临时物资需求to
+     * @param result
      * @throws ActException
      * @version v1
      */
@@ -147,7 +152,6 @@ public class TempMatterDemandAct {
      * @param id 临时物资需求唯一标识
      * @return class TempMatterDemandVO
      * @throws ActException
-     * @version v1
      */
     @GetMapping("v1/checkdetail/{id}")
     public Result checkDetail(@PathVariable String id) throws ActException {

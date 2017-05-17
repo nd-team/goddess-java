@@ -6,10 +6,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
-import com.bjike.goddess.materialbuy.entity.DeviceType;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
-import com.bjike.goddess.materialbuy.vo.MaterialBuyVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -17,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * 物资购买业务实现
@@ -85,7 +84,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialBuyTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        if (StringUtils.isNotEmpty(to.getId())) {
             MaterialBuy model = super.findById(to.getId());
             if (model != null) {
                 updateMaterialBuy(to, model);
@@ -100,7 +99,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     /**
      * 更新物资购买
      *
-     * @param to 物资购买to
+     * @param to    物资购买to
      * @param model 物资购买
      * @throws SerException
      */
@@ -108,17 +107,6 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
-    }
-
-    /**
-     * 文件上传
-     *
-     * @param maps 文件名，byte 文件字节
-     * @param path 上传路径
-     */
-    @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-        // TODO: 17-4-20
     }
 
     /**
@@ -147,13 +135,30 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     }
 
     /**
+     * 查找所有未付款的信息
+     *
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuyBO> allWaits() throws SerException {
+        List<MaterialBuy> list = super.findAll();
+        List<MaterialBuy> l = new ArrayList<MaterialBuy>();
+        for (MaterialBuy m : list) {
+            if (!m.getIfPayment()) {
+                l.add(m);
+            }
+        }
+        return BeanTransform.copyProperties(l, MaterialBuyBO.class);
+    }
+
+    /**
      * 查询等待付款
      *
      * @param dto 物资购买dto
      * @return class MaterialBuyBO
      * @throws SerException
      */
-    @Override
     public List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException {
         dto.getConditions().add(Restrict.eq("ifPayment", Boolean.FALSE));
         List<MaterialBuy> list = super.findByCis(dto);

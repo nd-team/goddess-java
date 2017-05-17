@@ -26,7 +26,7 @@ public class ModuleAssembleApiImpl implements ModuleAssembleAPI {
     }
 
     @Override
-    public void delete(String[] ids) throws SerException {
-        moduleAssembleSer.delete(ids);
+    public void delete(String id) throws SerException {
+        moduleAssembleSer.delete(id);
     }
 }

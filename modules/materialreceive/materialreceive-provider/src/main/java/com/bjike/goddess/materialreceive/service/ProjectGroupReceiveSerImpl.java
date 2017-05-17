@@ -1,9 +1,12 @@
 package com.bjike.goddess.materialreceive.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
+import com.bjike.goddess.materialinstock.entity.MaterialInStock;
+import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.ProjectGroupReceiveBO;
 import com.bjike.goddess.materialreceive.dto.ProjectGroupReceiveDTO;
@@ -32,7 +35,7 @@ import java.util.List;
 public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive, ProjectGroupReceiveDTO> implements ProjectGroupReceiveSer {
 
     @Autowired
-    private MaterialInStockAPI materialInStockAPI;
+    private MaterialInStockSer materialInStockSer;
 
     /**
      * 分页查询项目组领用归还
@@ -58,7 +61,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Transactional(rollbackFor = SerException.class)
     public ProjectGroupReceiveBO save(ProjectGroupReceiveTO to) throws SerException {
         String[] materialNum = checkMaterialNum(to);//检查待领用的物资编号不能为空
-        materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
+        materialInStockSer.updateUseState(materialNum, UseState.RECEIVE);//设置物资领用情况为已领用
         Integer quantity = materialNum.length;
         StringBuilder materialNoSb = getMaterialNoSb(materialNum);
         ProjectGroupReceiveBO bo = saveModel(to, quantity, materialNoSb);
@@ -80,6 +83,24 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
         return materialNum;
     }
 
+
+    /**
+     * 更新物资使用状态
+     *
+     * @param materialNum 物资编号
+     */
+    private void updateUseState(String[] materialNum) throws SerException {
+        MaterialInStockDTO dto = new MaterialInStockDTO();
+        dto.getConditions().add(Restrict.in("stockEncoding", materialNum));
+        List<MaterialInStock> list = materialInStockSer.findByCis(dto);
+        for (MaterialInStock model : list) {
+            model.setUseState(UseState.RECEIVE);
+        }
+
+        materialInStockSer.update(list);
+    }
+
+
     /**
      * 保存对象
      *
@@ -91,9 +112,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
      */
     private ProjectGroupReceiveBO saveModel(ProjectGroupReceiveTO to, Integer quantity, StringBuilder materialNoSb) throws SerException {
         ProjectGroupReceive entity = BeanTransform.copyProperties(to, ProjectGroupReceive.class, true);
+        entity = super.save(entity);
         entity.setQuantity(quantity);
         entity.setMaterialNo(materialNoSb.toString());
-        entity = super.save(entity);
         return BeanTransform.copyProperties(entity, ProjectGroupReceiveBO.class);
     }
 
@@ -136,13 +157,8 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void returnMaterial(ProjectGroupReceiveTO to) throws SerException {
-        String[] materialNum = to.getMaterialNum();
-        Boolean materialNumEmpty = (materialNum == null) || (materialNum.length == 0);
-        if (materialNumEmpty)
-            throw new SerException("要归还的物资编号为空,无法归还物资.");
-        materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
-
-        update(to);//更新项目组领用归还
+        ProjectGroupReceive model = update(to);//更新项目组领用归还
+        instockMaterials(model);               //归还物资
     }
 
     /**
@@ -154,7 +170,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     private void instockMaterials(ProjectGroupReceive model) throws SerException {
         String materialNo = model.getMaterialNo();//获取物资编号
         String[] materialNum = materialNo.split(",");
-        materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
+        materialInStockSer.updateUseState(materialNum, UseState.INSTOCK);
     }
 
     /**
@@ -169,8 +185,6 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectGroupReceive model = super.findById(to.getId());
             if (model != null) {
-                updateUseState(model, UseState.INSTOCK);
-                setReceive(to);
                 updateProjectGroupReceive(to, model);
             } else {
                 throw new SerException("更新对象不能为空");
@@ -179,53 +193,6 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
         } else {
             throw new SerException("更新ID不能为空!");
         }
-    }
-
-    /**
-     * 设置领用编号
-     *
-     * @param to
-     * @return
-     * @throws SerException
-     */
-    private Integer setReceive(ProjectGroupReceiveTO to) throws SerException {
-        String[] materialNum = checkMaterialNum(to);
-        Integer quantity = setMaterialNo(to, materialNum);
-        materialInStockAPI.updateUseState(materialNum, UseState.RECEIVE);
-        return quantity;
-    }
-
-    /**
-     * 设置项目组领用中的物资编号
-     *
-     * @param to          项目组领用to
-     * @param materialNum 物资编号
-     * @return
-     */
-    private Integer setMaterialNo(ProjectGroupReceiveTO to, String[] materialNum) {
-        Integer quantity = to.getMaterialNum().length;//领用数量
-        StringBuilder materialNo = new StringBuilder();
-        for (int i = 0; i < quantity; i++) {
-            if (i < (quantity - 1)) {
-                materialNo.append(materialNum[i]).append(",");
-            } else {
-                materialNo.append(materialNum[i]);
-            }
-        }
-        to.setMaterialNo(materialNo.toString());
-        return quantity;
-    }
-
-    /**
-     * 更新项目组领用
-     *
-     * @param model    项目组领用
-     * @param useState 物资使用状态
-     */
-    private void updateUseState(ProjectGroupReceive model, UseState useState) throws SerException {
-        String materialNo = model.getMaterialNo();
-        String[] materialNum = materialNo.split(",");
-        materialInStockAPI.updateUseState(materialNum, useState);
     }
 
     /**
