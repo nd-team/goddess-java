@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialanalyze")
+@RequestMapping("materialanalyze_daily")
 public class MaterialAnalyzeDailyAct {
     
     @Autowired
@@ -46,7 +46,7 @@ public class MaterialAnalyzeDailyAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/devicerepair/{id}")
+    @GetMapping("v1/materialanalyze/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialAnalyzeBO bo = materialAnalyzeAPI.findById(id);
@@ -105,7 +105,6 @@ public class MaterialAnalyzeDailyAct {
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) MaterialAnalyzeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            to.setInventoryType(InventoryType.DAILY_INVENTORY);
             MaterialAnalyzeBO bo = materialAnalyzeAPI.save(to);
             MaterialAnalyzeVO vo = BeanTransform.copyProperties(bo, MaterialAnalyzeVO.class, request);
             return ActResult.initialize(vo);

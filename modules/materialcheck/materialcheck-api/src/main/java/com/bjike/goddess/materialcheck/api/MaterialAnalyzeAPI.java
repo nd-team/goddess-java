@@ -3,7 +3,6 @@ package com.bjike.goddess.materialcheck.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialcheck.bo.MaterialAnalyzeBO;
 import com.bjike.goddess.materialcheck.dto.MaterialAnalyzeDTO;
-import com.bjike.goddess.materialcheck.entity.MaterialAnalyze;
 import com.bjike.goddess.materialcheck.to.MaterialAnalyzeTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 
