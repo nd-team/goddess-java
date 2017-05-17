@@ -3,6 +3,7 @@ package com.bjike.goddess.materialtransfer.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.materialtransfer.entity.MaterialTransfer;
 import com.bjike.goddess.materialtransfer.type.AuditState;
 import com.bjike.goddess.materialtransfer.type.MaterialSource;
 import com.bjike.goddess.materialtransfer.type.MaterialState;
@@ -31,19 +32,19 @@ public class MaterialTransferTO extends BaseTO {
     /**
      * 设备类型
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备类型不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "设备类型不能为空")
     private String materialType;
 
     /**
      * 物资名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "设备名称不能为空")
     private String materialName;
 
     /**
      * 型号
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "型号不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "型号不能为空")
     private String model;
 
     /**
@@ -54,19 +55,18 @@ public class MaterialTransferTO extends BaseTO {
     /**
      * 入库编码
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "入库编码不能为空")
+    @NotBlank(groups = {ADD.class}, message = "入库编码不能为空")
     private String instockCode;
 
     /**
      * 数量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "数量必须是大于0的整数")
     private Integer quantity;
 
     /**
      * 单位
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "单位不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "单位不能为空")
     private String unit;
 
     /**
@@ -151,11 +151,13 @@ public class MaterialTransferTO extends BaseTO {
     /**
      * 调动时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "调动时间不能为空")
     private String transferTime;
 
     /**
      * 物资负责人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资负责人为空")
     private String materialPrincipal;
 
     /**

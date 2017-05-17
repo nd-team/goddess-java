@@ -38,7 +38,6 @@ public class DeviceTypeAct {
      * 根据id查询设备类型
      *
      * @param id 设备类型唯一标识
-     * @param request 请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -58,8 +57,6 @@ public class DeviceTypeAct {
      * 分页查询设备类型
      *
      * @param dto           设备类型dto
-     * @param bindingResult 参数绑定
-     * @param request 请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -79,8 +76,6 @@ public class DeviceTypeAct {
      * 添加设备类型
      *
      * @param to     设备类型to
-     * @param result 数据绑定
-     * @param request Http请求
      * @return class DeviceTypeVO
      * @throws ActException
      * @version v1
@@ -117,7 +112,6 @@ public class DeviceTypeAct {
      * 编辑设备类型
      *
      * @param to     设备类型to
-     * @param result 参数绑定
      * @throws ActException
      * @version v1
      */

@@ -20,7 +20,7 @@ public class DeviceTypeTO extends BaseTO {
     /**
      * 类型
      */
-    @NotBlank(groups = {DeviceTypeAdd.class, DeviceTypeEdit.class}, message = "设备类型不能为空")
+    @NotBlank(groups = {DeviceTypeTO.DeviceTypeAdd.class, DeviceTypeTO.DeviceTypeEdit.class}, message = "设备类型不能为空")
     private String type;
 
     /**

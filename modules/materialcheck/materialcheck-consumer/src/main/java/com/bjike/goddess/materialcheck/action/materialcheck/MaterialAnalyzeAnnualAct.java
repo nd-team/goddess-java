@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialanalyze")
+@RequestMapping("materialanalyze_annual")
 public class MaterialAnalyzeAnnualAct {
     
     @Autowired
@@ -46,7 +46,7 @@ public class MaterialAnalyzeAnnualAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/devicerepair/{id}")
+    @GetMapping("v1/materialanalyze/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialAnalyzeBO bo = materialAnalyzeAPI.findById(id);

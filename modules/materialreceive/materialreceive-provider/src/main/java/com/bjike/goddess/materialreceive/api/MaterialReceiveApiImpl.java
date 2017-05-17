@@ -7,6 +7,7 @@ import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
 import com.bjike.goddess.materialreceive.service.MaterialReceiveSer;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
+import com.bjike.goddess.materialreceive.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,12 +100,14 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     /**
      * 审核
      *
-     * @param to 物资领用to
+     * @param id 物资领用唯一标识
+     * @param auditState 审核状态
+     * @param auditOpinion 审核意见
      * @throws SerException
      */
     @Override
-    public void audit(MaterialReceiveTO to) throws SerException {
-        materialReceiveSer.audit(to);
+    public void audit(String id, AuditState auditState, String auditOpinion) throws SerException {
+        materialReceiveSer.audit(id, auditState, auditOpinion);
     }
 
     /**

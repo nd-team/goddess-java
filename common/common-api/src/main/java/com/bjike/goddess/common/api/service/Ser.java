@@ -218,6 +218,15 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
     }
 
     /**
+     * 执行sql语句
+     *
+     * @param sql
+     * @throws SerException
+     */
+    default void executeSql(String sql) throws SerException {
+    }
+
+    /**
      * 获取
      *
      * @param clazz

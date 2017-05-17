@@ -1,6 +1,5 @@
 package com.bjike.goddess.devicerepair.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -12,10 +11,9 @@ import com.bjike.goddess.devicerepair.to.FetchDeviceTO;
 import com.bjike.goddess.devicerepair.to.WelfareAuditTO;
 import com.bjike.goddess.devicerepair.type.AuditState;
 import com.bjike.goddess.devicerepair.type.MaterialState;
+import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
-import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
-import com.bjike.goddess.materialinstock.entity.MaterialInStock;
-import com.bjike.goddess.materialinstock.service.MaterialInStockSer;
+import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.bjike.goddess.materialinstock.type.MaterialState.INTACT;
+import static com.bjike.goddess.materialinstock.type.MaterialState.REPAIRING;
 
 /**
  * 设备维修业务实现
@@ -43,7 +44,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     private UserAPI userAPI;
 
     @Autowired
-    private MaterialInStockSer materialInStockSer;
+    private MaterialInStockAPI materialInStockAPI;
 
     /**
      * 分页查询设备维修
@@ -70,17 +71,33 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DeviceRepairBO save(DeviceRepairTO to) throws SerException {
-        String materialCoding = to.getMaterialCoding();//获取物资编号
-        MaterialInStockBO inStockBO = materialInStockSer.findByMaterialCoding(materialCoding);
+        MaterialInStockBO inStockBO = updateMaterialInStockBO(to);
         String materialName = inStockBO.getMaterialName();   //获取设备名称
         DeviceRepair entity = BeanTransform.copyProperties(to, DeviceRepair.class, true);
         entity.setDeviceName(materialName);               //设置设备名称
         entity.setWelfareAuditState(AuditState.UNAUDITED);//福利模块未审核
         entity.setPmAuditState(AuditState.UNAUDITED);     //项目经理未审核
         entity.setWhetherPayment(Boolean.FALSE);
+        entity.setMaterialState(MaterialState.WAITING_REPAIR);//设置物资状态为待维修
         entity = super.save(entity);
         DeviceRepairBO bo = BeanTransform.copyProperties(entity, DeviceRepairBO.class);
         return bo;
+    }
+
+    /**
+     * 更新物资入库
+     *
+     * @param to 物资入库to
+     * @return class MaterialInStockBO
+     * @throws SerException
+     */
+    private MaterialInStockBO updateMaterialInStockBO(DeviceRepairTO to) throws SerException {
+        String materialCoding = to.getMaterialCoding();//获取物资编号
+        MaterialInStockBO inStockBO = materialInStockAPI.findByMaterialCoding(materialCoding);
+        MaterialInStockTO inStockTO = BeanTransform.copyProperties(inStockBO, MaterialInStockTO.class);
+        inStockTO.setMaterialState(REPAIRING);//设置物资状态
+        materialInStockAPI.update(inStockTO);
+        return inStockBO;
     }
 
     /**
@@ -113,6 +130,21 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
             }
         } else {
             throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新物资入库
+     *
+     * @param to 物资入库to
+     * @throws SerException
+     */
+    private void updateInStock(DeviceRepairTO to) throws SerException {
+        if (MaterialState.WAITING_REPAIR != to.getMaterialState()) {
+            MaterialInStockBO inStockBO = materialInStockAPI.findByMaterialCoding(to.getMaterialCoding());
+            MaterialInStockTO inStockTO = BeanTransform.copyProperties(inStockBO, MaterialInStockTO.class);
+            inStockBO.setMaterialState(INTACT);
+            materialInStockAPI.update(inStockTO);
         }
     }
 
@@ -195,7 +227,7 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
      */
     private void checkWelfareModule(DeviceRepair model) throws SerException {
         String welfareModule = model.getWelfareModule();
-        String curUsername = userAPI.currentUser().getUsername();
+        String curUsername = "托尼贾"/*userAPI.currentUser().getUsername()*/;
         if (!curUsername.equals(welfareModule)) {
             throw new SerException("福利模块负责人为空或者当前用户不是福利模块负责人,无法执行审核");
         }

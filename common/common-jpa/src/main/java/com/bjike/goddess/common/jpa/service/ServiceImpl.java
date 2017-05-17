@@ -257,6 +257,12 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
     }
 
     @Override
+    public void executeSql(String sql) throws SerException {
+        Query query = entityManager.createNativeQuery(sql);
+        query.executeUpdate();
+    }
+
+    @Override
     public String getTableName(Class clazz) throws SerException {
         try {
             if (clazz.isAnnotationPresent(Table.class)) {

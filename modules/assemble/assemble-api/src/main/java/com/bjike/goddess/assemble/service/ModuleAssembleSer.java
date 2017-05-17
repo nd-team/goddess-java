@@ -28,9 +28,9 @@ public interface ModuleAssembleSer extends Ser<ModuleAssemble, ModuleAssembleDTO
     /**
      * 删除模块关联
      *
-     * @param id
+     * @param ids
      */
-    default void delete(String id) throws SerException {
+    default void delete(String[] ids) throws SerException {
 
     }
 }
