@@ -158,6 +158,100 @@ public class SubjectCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取所有一级科目
+     *
+     * @des 获取所有一级科目
+     * @version v1
+     */
+    @GetMapping("v1/listFirstSubject")
+    public Result listFirstSubject() throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listFirstSubject();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有二级科目
+     *
+     * @des 根据一级科目获取所有二级科目
+     * @version v1
+     */
+    @GetMapping("v1/listSubByFirst")
+    public Result listSubByFirst(@RequestParam String firstSub) throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listSubByFirst(firstSub);
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有三级科目
+     *
+     * @des 根据一级二级科目获取所有一级科目
+     * @version v1
+     */
+    @GetMapping("v1/listTubByFirst")
+    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub) throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @des 获取所有地区
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea() throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listArea();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目名称
+     *
+     * @des 获取所有项目名称
+     * @version v1
+     */
+    @GetMapping("v1/listProject")
+    public Result listProject() throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listProject();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目组
+     *
+     * @des 获取所有项目组
+     * @version v1
+     */
+    @GetMapping("v1/listGroup")
+    public Result listGroup() throws ActException {
+        try {
+            List<String> userList = voucherGenerateAPI.listGroup();
+            return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 

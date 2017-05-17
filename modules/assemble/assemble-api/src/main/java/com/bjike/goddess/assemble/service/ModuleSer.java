@@ -11,13 +11,15 @@ import com.bjike.goddess.common.api.service.Ser;
 import java.util.List;
 
 /**
+ * 模块业务接口
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public interface ModuleSer extends Ser<Module,ModuleDTO> {
+public interface ModuleSer extends Ser<Module, ModuleDTO> {
 
     /**
      * 模块列表
@@ -38,7 +40,7 @@ public interface ModuleSer extends Ser<Module,ModuleDTO> {
      * @return
      * @throws SerException
      */
-    default ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
+    default ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
         return null;
     }
 
@@ -67,10 +69,9 @@ public interface ModuleSer extends Ser<Module,ModuleDTO> {
      *
      * @param moduleId
      * @param relationIds
-     * @param checkType
      * @throws SerException
      */
-    default void check(String moduleId,String[] relationIds, CheckType checkType) throws SerException {
+    default void check(String moduleId, String[] relationIds) throws SerException {
 
     }
 

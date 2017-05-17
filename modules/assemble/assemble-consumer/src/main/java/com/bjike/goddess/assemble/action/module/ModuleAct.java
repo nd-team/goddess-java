@@ -35,7 +35,7 @@ public class ModuleAct {
     private ModuleAPI moduleAPI;
 
     /**
-     * 获取列表
+     * 模块获取列表
      *
      * @throws ActException
      * @version v1
@@ -58,10 +58,10 @@ public class ModuleAct {
      * @version v1
      */
     @GetMapping("v1/list/{name}")
-    public Result modulesByName(@PathVariable String name,CheckType checkType) throws ActException {
+    public Result modulesByName(@PathVariable String name, CheckType checkType) throws ActException {
         ActResult actResult = new ActResult();
         try {
-            actResult.setData(BeanTransform.copyProperties(moduleAPI.modulesByName(name,checkType), ModuleVO.class));
+            actResult.setData(BeanTransform.copyProperties(moduleAPI.modulesByName(name, checkType), ModuleVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }
@@ -76,7 +76,7 @@ public class ModuleAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result list(@Validated(ADD.class) ModuleTO to, BindingResult result) throws ActException {
+    public Result add(@Validated(ADD.class) ModuleTO to, BindingResult result) throws ActException {
         try {
             moduleAPI.add(to);
         } catch (SerException e) {
@@ -92,7 +92,7 @@ public class ModuleAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result check(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             moduleAPI.delete(id);
         } catch (SerException e) {
@@ -107,10 +107,10 @@ public class ModuleAct {
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/check/{checkType}")
-    public Result check( String moduleId,String[] relationIds, @PathVariable CheckType checkType) throws ActException {
+    @PutMapping("v1/check")
+    public Result check(String moduleId, String[] relationIds) throws ActException {
         try {
-            moduleAPI.check(moduleId,relationIds, checkType);
+            moduleAPI.check(moduleId, relationIds);
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }

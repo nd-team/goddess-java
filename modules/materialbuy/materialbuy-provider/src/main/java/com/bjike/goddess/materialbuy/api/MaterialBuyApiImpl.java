@@ -119,4 +119,16 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     public void areaPrincipalAudit(MaterialBuyTO to) throws SerException {
         materialBuySer.areaPrincipalAudit(to);
     }
+
+    /**
+     * 查询等待付款
+     *
+     * @param dto 物资购买dto
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.findWaitPay(dto);
+    }
 }

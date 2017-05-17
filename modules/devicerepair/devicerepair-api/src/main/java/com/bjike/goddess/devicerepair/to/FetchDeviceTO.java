@@ -1,6 +1,5 @@
 package com.bjike.goddess.devicerepair.to;
 
-import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;

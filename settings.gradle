@@ -350,3 +350,12 @@ include ':modules:materialcheck:materialcheck-api'
 include ':modules:materialcheck:materialcheck-consumer'
 include ':modules:materialcheck:materialcheck-provider'
 
+//#fundrecords资金流水 jason
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
+
+//#bankrecords银行流水 jason
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'

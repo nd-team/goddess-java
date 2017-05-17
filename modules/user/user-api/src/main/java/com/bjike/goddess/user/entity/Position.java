@@ -40,7 +40,7 @@ public class Position extends BaseEntity {
     /**
      * 父节点
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '父职位' ")
     private Position parent;
 

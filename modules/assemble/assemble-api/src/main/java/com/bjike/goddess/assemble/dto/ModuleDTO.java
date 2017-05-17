@@ -3,6 +3,8 @@ package com.bjike.goddess.assemble.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
+ * 模块传输对象
+ *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]
  * @Description: [ ]

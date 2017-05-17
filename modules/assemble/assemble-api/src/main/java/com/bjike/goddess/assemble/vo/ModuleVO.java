@@ -3,11 +3,10 @@ package com.bjike.goddess.assemble.vo;
 import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.type.CheckType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 演示demo功能信息
+ * 模块
  *
  * @Author: [liguiqin]
  * @Date: [2017-03-03 10:20]

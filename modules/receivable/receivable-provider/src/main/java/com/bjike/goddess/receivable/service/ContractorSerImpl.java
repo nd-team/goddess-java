@@ -43,8 +43,9 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
     }
     @Override
     public List<ContractorBO> findListContractor(ContractorDTO contractorDTO) throws SerException {
-        List<Contractor> contractors = super.findByCis(contractorDTO, true);
-        return BeanTransform.copyProperties(contractors, ContractorBO.class);
+        List<Contractor> contractors = super.findByPage(contractorDTO);
+        List<ContractorBO> contractorBOS = BeanTransform.copyProperties(contractors, ContractorBO.class);
+        return contractorBOS;
     }
 
     @Override

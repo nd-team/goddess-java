@@ -79,4 +79,13 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      */
     void areaPrincipalAudit(MaterialBuyTO to) throws SerException;
 
+    /**
+     * 查询等待付款
+     *
+     * @param dto 物资购买dto
+     * @return class MaterialBuyBO
+     * @throws SerException
+     */
+    List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException;
+
 }

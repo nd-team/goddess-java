@@ -21,16 +21,16 @@ public interface ModuleAssembleSer extends Ser<ModuleAssemble, ModuleAssembleDTO
      *
      * @param moduleAssembleTO
      */
-    default void add(ModuleAssembleTO moduleAssembleTO)throws SerException {
+    default void add(ModuleAssembleTO moduleAssembleTO) throws SerException {
 
     }
 
     /**
      * 删除模块关联
      *
-     * @param id
+     * @param ids
      */
-    default void delete(String id)throws SerException {
+    default void delete(String[] ids) throws SerException {
 
     }
 }

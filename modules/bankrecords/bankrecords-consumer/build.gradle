@@ -36,8 +36,9 @@ dependencies {
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
-    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile project(":modules:bankrecords:bankrecords-api")
+    compile project(":modules:storage:storage-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile group: 'commons-io', name: 'commons-io', version: "$commons_io_version"
     compile("org.springframework.boot:spring-boot-starter-web")
 }
