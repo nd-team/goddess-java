@@ -45,10 +45,12 @@ public class ModuleAssembleAction {
      * 删除关联模块
      *
      * @throws ActException
+     * @des  @DeleteMapping只能接收表单,多个id url超出长度
      * @version v1
      */
-    @DeleteMapping("v1/delete")
-    public Result delete( String[] ids) throws ActException {
+
+    @PutMapping("v1/delete")
+    public Result delete(String[] ids) throws ActException {
         ActResult actResult = new ActResult();
         try {
             moduleAssembleAPI.delete(ids);

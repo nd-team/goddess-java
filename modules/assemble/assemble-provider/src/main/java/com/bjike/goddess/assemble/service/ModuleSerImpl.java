@@ -86,7 +86,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     @Transactional
     @Override
     public void check(String moduleId, String[] relationIds) throws SerException {
-        String sql = "update module_assemble set checkType=1 where module_id='"+moduleId+"'";
+        String sql = "update module_assemble set checkType=1 where checkType<>2 and module_id='"+moduleId+"'";
         super.executeSql(sql);
         if (null != relationIds && relationIds.length > 0) {
             String[] tmp = new String[relationIds.length];
@@ -94,11 +94,8 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
                 tmp[i]="'"+relationIds[i]+"'";
             }
             String relations = StringUtils.join(tmp,",");
-            sql ="update module_assemble set checkType=0 where module_id='"+moduleId+"' and relation_id in("+relations+")";
+            sql ="update module_assemble set checkType=0 where checkType<>2 and module_id='"+moduleId+"' and relation_id in("+relations+")";
             super.executeSql(sql);
-        } else {
-            throw new SerException("关联数据不存在!");
         }
-
     }
 }

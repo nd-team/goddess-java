@@ -66,6 +66,7 @@ public class ModuleAssembleSerImpl extends ServiceImpl<ModuleAssemble, ModuleAss
         }
     }
 
+    @Transactional
     @Override
     public void delete(String[] ids) throws SerException {
         if (null != ids && ids.length > 0) {
