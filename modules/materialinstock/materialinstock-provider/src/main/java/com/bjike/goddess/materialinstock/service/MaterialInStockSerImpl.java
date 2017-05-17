@@ -46,6 +46,11 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
         return listBO;
     }
 
+    @Override
+    public List<MaterialInStock> findByCis(MaterialInStockDTO dto) throws SerException {
+        return super.findByCis(dto);
+    }
+
     /**
      * 根据物资状态和物资使用状态查询物资入库
      *
@@ -91,6 +96,10 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Transactional(rollbackFor = SerException.class)
     public void updateUseState(String[] materialNum, UseState useState) throws SerException {
         List<MaterialInStock> list = getMaterialInStocks(materialNum);
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
         for (MaterialInStock model : list) {
             model.setUseState(useState);
         }

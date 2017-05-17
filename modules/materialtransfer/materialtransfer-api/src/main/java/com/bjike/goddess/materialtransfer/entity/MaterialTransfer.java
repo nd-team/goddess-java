@@ -6,7 +6,9 @@ import com.bjike.goddess.materialtransfer.type.MaterialSource;
 import com.bjike.goddess.materialtransfer.type.MaterialState;
 import com.bjike.goddess.materialtransfer.type.TransferWay;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -33,19 +35,19 @@ public class MaterialTransfer extends BaseEntity {
     /**
      * 设备类型
      */
-    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '设备类型'")
+    @Column(name = "materialType", columnDefinition = "VARCHAR(255) COMMENT '设备类型'")
     private String materialType;
 
     /**
      * 物资名称
      */
-    @Column(name = "materialName", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资名称'")
+    @Column(name = "materialName", columnDefinition = "VARCHAR(255) COMMENT '物资名称'")
     private String materialName;
 
     /**
      * 型号
      */
-    @Column(name = "model", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '型号'")
+    @Column(name = "model", columnDefinition = "VARCHAR(255) COMMENT '型号'")
     private String model;
 
     /**
@@ -63,13 +65,13 @@ public class MaterialTransfer extends BaseEntity {
     /**
      * 数量
      */
-    @Column(name = "quantity", nullable = false, columnDefinition = "INT(11) COMMENT '数量'")
+    @Column(name = "quantity", columnDefinition = "INT(11) COMMENT '数量'")
     private Integer quantity;
 
     /**
      * 单位
      */
-    @Column(name = "unit", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '单位'")
+    @Column(name = "unit", columnDefinition = "VARCHAR(255) COMMENT '单位'")
     private String unit;
 
     /**
@@ -129,7 +131,7 @@ public class MaterialTransfer extends BaseEntity {
     /**
      * 原存储地区
      */
-    @Column(name = "archSaveArea", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '原存储地区'")
+    @Column(name = "archSaveArea", columnDefinition = "VARCHAR(255) COMMENT '原存储地区'")
     private String archSaveArea;
 
     /**
@@ -159,13 +161,13 @@ public class MaterialTransfer extends BaseEntity {
     /**
      * 调动时间
      */
-    @Column(name = "transferTime", columnDefinition = "DATETIME COMMENT '调动时间'")
+    @Column(name = "transferTime", nullable = false, columnDefinition = "DATETIME COMMENT '调动时间'")
     private LocalDateTime transferTime;
 
     /**
      * 物资负责人
      */
-    @Column(name = "materialPrincipal", columnDefinition = "VARCHAR(255) COMMENT '物资负责人'")
+    @Column(name = "materialPrincipal", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资负责人'")
     private String materialPrincipal;
 
     /**
