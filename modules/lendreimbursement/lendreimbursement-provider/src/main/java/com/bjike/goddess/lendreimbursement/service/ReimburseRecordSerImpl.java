@@ -509,10 +509,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
         }
+        if(StringUtils.isBlank(reimburseRecordTO.getSureCongel())){
+            throw new SerException("是否确认冻结不能为空");
+        }
+        if( !"是".equals(reimburseRecordTO.getSureCongel()) && !"否".equals(reimburseRecordTO.getSureCongel()) ){
+            throw new SerException("是否确认冻结只能填写是或否");
+        }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
-        temp.setChargerAuditStatus("不通过");
-        temp.setChargerAuditTime(LocalDate.now());
-        temp.setReimStatus(ReimStatus.CHARGECONGEL);
+        if( "是".equals(reimburseRecordTO.getSureCongel())  ){
+            temp.setChargerAuditStatus("通过");
+            temp.setChargerAuditTime(LocalDate.now());
+            temp.setReimStatus(ReimStatus.CHARGEPASS);
+        }else if("否".equals(reimburseRecordTO.getSureCongel())){
+            temp.setChargerAuditStatus("不通过");
+            temp.setChargerAuditTime(LocalDate.now());
+            temp.setReimStatus(ReimStatus.CHARGECONGEL);
+        }
+
         temp.setModifyTime(LocalDateTime.now());
 
         super.update(temp);
@@ -760,12 +773,18 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     public ReimburseRecordBO recieveTicketCondition(ReimburseRecordTO reimburseRecordTO) throws SerException {
         if (StringUtils.isBlank(reimburseRecordTO.getId())) {
             throw new SerException("id不能为空");
+        } if (StringUtils.isBlank(reimburseRecordTO.getReceiveTicketCheck())) {
+            throw new SerException("是否收到单据不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
         temp.setReceiveTicketer(reimburseRecordTO.getReceiveTicketer());
         temp.setReceiveTicketCon(reimburseRecordTO.getReceiveTicketCon());
         temp.setReceiveTicketTime(LocalDate.parse(reimburseRecordTO.getReceiveTicketTime()));
-        temp.setReceiveTicketCheck("是");
+        if( "是".equals(reimburseRecordTO.getReceiveTicketCheck())){
+            temp.setReceiveTicketCheck("是");
+        }else if("否".equals(reimburseRecordTO.getReceiveTicketCheck()) ){
+            temp.setReceiveTicketCheck("否");
+        }
         temp.setModifyTime(LocalDateTime.now());
 
         super.update(temp);

@@ -19,7 +19,18 @@ public class ReimburseRecordTO extends BaseTO {
     public interface TestAddAndEdit {
     }
 
+    public interface TestChargeAudit {
+    }
+    public interface TestChargeCongel {
+    }
+    public interface TestAnalysis {
+    }
+    public interface TestRecieveTicketCheck {
+    }
+
     public interface TestPrePay {
+    }
+    public interface TestPay {
     }
 
     /**
@@ -29,9 +40,9 @@ public class ReimburseRecordTO extends BaseTO {
     private String[] reimNumbers;
 
     /**
-     * 报销发生日期
+     * 报销发生日期(年月日)
      */
-    @NotNull(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "报销发生日期不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "报销发生日期不能为空(年月日)")
     private String occureDate;
 
     /**
@@ -69,6 +80,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 补充内容
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "补充内容不能为空")
     private String addContent;
 
     /**
@@ -112,7 +124,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 是否有发票(是/否)
      */
-    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "是否有发票不能为空")
+    @NotBlank(groups = {ReimburseRecordTO.TestChargeAudit.class}, message = "是否有发票不能为空(是/否)")
     private String ticketCondition;
 
     /**
@@ -123,11 +135,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 收票人
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestRecieveTicketCheck.class}, message = "收票人不能为空")
     private String receiveTicketer;
 
     /**
      * 收票时间
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestRecieveTicketCheck.class}, message = "收票时间不能为空")
     private String receiveTicketTime;
 
     /**
@@ -138,11 +152,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 是否已收到单据(是/否)
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestRecieveTicketCheck.class}, message = "是否已收到单据(是/否)不能为空")
     private String receiveTicketCheck;
 
     /**
      * 预计付款时间
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestPrePay.class}, message = "预计付款时间不能为空")
     private String budgetPayTime;
 
     /**
@@ -152,9 +168,15 @@ public class ReimburseRecordTO extends BaseTO {
     private String charger;
 
     /**
-     * 负责人审核状态(通过/不通过)
+     * 审核情况(通过/不通过)
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestChargeAudit.class , ReimburseRecordTO.TestAnalysis.class}, message = "审核情况不能为空(是/否)")
     private String chargerAuditStatus;
+    /**
+     * 是否确认冻结(是/否)
+     */
+    @NotBlank(groups = {ReimburseRecordTO.TestChargeCongel.class}, message = "是否确认冻结不能为空(是/否)")
+    private String sureCongel;
 
     /**
      * 审核时间
@@ -164,6 +186,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 审核意见
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestAnalysis.class}, message = "是否确认冻结不能为空(是/否)")
     private String auditAdvice;
 
     /**
@@ -179,11 +202,13 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 一级科目
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "一级科目不能为空")
     private String firstSubject;
 
     /**
      * 二级科目
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "二级科目不能为空")
     private String secondSubject;
 
     /**
@@ -201,16 +226,19 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 摘要
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestAddAndEdit.class}, message = "摘要不能为空")
     private String summary;
 
     /**
      * 支付计划
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestPrePay.class}, message = "支付计划不能为空")
     private String payPlan;
 
     /**
      * 支付时间
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestPay.class}, message = "支付时间不能为空")
     private String payTime;
 
     /**
@@ -226,6 +254,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 付款来源
      */
+    @NotBlank(groups = {ReimburseRecordTO.TestPay.class}, message = "付款来源不能为空")
     private String payOrigin;
 
     /**
@@ -453,6 +482,14 @@ public class ReimburseRecordTO extends BaseTO {
 
     public void setAuditAdvice(String auditAdvice) {
         this.auditAdvice = auditAdvice;
+    }
+
+    public String getSureCongel() {
+        return sureCongel;
+    }
+
+    public void setSureCongel(String sureCongel) {
+        this.sureCongel = sureCongel;
     }
 
     public String getPayCondition() {

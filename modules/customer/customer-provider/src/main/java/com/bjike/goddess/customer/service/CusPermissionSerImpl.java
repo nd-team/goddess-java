@@ -7,6 +7,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusPermissionBO;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
 import com.bjike.goddess.customer.entity.CusPermission;
+import com.bjike.goddess.customer.enums.CusPermissionType;
+import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.customer.to.CusPermissionTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
@@ -79,6 +81,14 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             throw new SerException("id不能为空");
         }
         CusPermission cusPermission = super.findById(id);
+        CusPermissionType  type = cusPermission.getType();
+        if( type.equals( CusPermissionType.LEVEL )){
+
+        }else if( type.equals( CusPermissionType.MODULE )){
+
+        }else if( type.equals( CusPermissionType.POSITION )){
+
+        }
         //提供接口
 //        positionDetailUserAPI
 
