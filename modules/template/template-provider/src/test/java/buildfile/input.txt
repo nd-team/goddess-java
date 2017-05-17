@@ -1,18 +1,16 @@
-模块名:staffentry
-类名:StaffEntryRegister
-作者:tanghaixiang
-描述:员工入职注册
+模块名:rotation
+类名:CoverRotationOpinion
+作者:dengjunren
+描述:岗位轮换自荐意见
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String department 所属部门;
-String role 角色列表;
-String position 职位;
-String projectGroup 项目组;
-String workEmail 工作邮箱;
-String createTime 创建时间;
-String modifyTime 修改时间;
-String userId 用户id;
+CoverRotation cover 岗位轮换自荐;
+String username 姓名;
+String area 地区;
+String department 项目组部门;
+String position 岗位;
+String opinion 意见;
 )

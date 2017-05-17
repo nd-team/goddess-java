@@ -14,7 +14,7 @@ public class OpinionBO extends BaseBO {
     /**
      * 字段
      */
-    String value;
+    private String value;
 
     public OpinionBO(String id, String value) {
         this.id = id;

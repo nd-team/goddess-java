@@ -42,6 +42,17 @@ public class RecommendRotationVO {
      */
     private String arrangement;
 
+
+    /**
+     * 入职时间
+     */
+    private String entryTime;
+
+    /**
+     * 转正时间
+     */
+    private String regularTime;
+
     /**
      * 举荐轮换等级数据id
      */
@@ -232,5 +243,21 @@ public class RecommendRotationVO {
 
     public void setRotationDate(String rotationDate) {
         this.rotationDate = rotationDate;
+    }
+
+    public String getRegularTime() {
+        return regularTime;
+    }
+
+    public void setRegularTime(String regularTime) {
+        this.regularTime = regularTime;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
     }
 }

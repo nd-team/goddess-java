@@ -39,7 +39,7 @@ public class PayRecordTO extends BaseTO {
      * 房租地址
      */
     @NotBlank(message = "房租地址不能为空")
-    private String address;
+    private String rentAddress;
 
     /**
      * 租金
@@ -131,12 +131,12 @@ public class PayRecordTO extends BaseTO {
         this.project = project;
     }
 
-    public String getAddress() {
-        return address;
+    public String getRentAddress() {
+        return rentAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setRentAddress(String rentAddress) {
+        this.rentAddress = rentAddress;
     }
 
     public Double getRent() {

@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @Copy: [ com.bjike ]
  */
 @Entity
-@Table(name = "rotation_rotationcondition")
+@Table(name = "rotation_condition")
 public class RotationCondition extends BaseEntity {
 
     /**
@@ -29,7 +29,7 @@ public class RotationCondition extends BaseEntity {
     /**
      * 条件
      */
-    @Column(name = "condition", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '条件'")
+    @Column(name = "requirement", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '条件'")
     private String condition;
 
 

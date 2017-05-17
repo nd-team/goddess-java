@@ -68,22 +68,6 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 对比汇总
-     *
-     * @param subjectCollectTO 对比汇总数据to
-     * @return class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collectCompare")
-    public Result collectCompare(SubjectCollectTO subjectCollectTO) throws ActException {
-        try {
-            List<SubjectCollectBO> subjectCollectBOS = subjectCollectAPI.collectCompare(subjectCollectTO);
-            return ActResult.initialize(subjectCollectBOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
      * 已审核科目汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto

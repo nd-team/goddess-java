@@ -25,11 +25,11 @@ public class CollectCompareVO extends BaseBO {
     /**
      * 上月准备金
      */
-    private Double monthReserves;
+    private Double lastMonthReserves;
     /**
      * 本月准备金
      */
-    private Double lastMonthReserves;
+    private Double reserves;
     /**
      * 差额
      */
@@ -71,20 +71,20 @@ public class CollectCompareVO extends BaseBO {
         this.projectGroup = projectGroup;
     }
 
-    public Double getMonthReserves() {
-        return monthReserves;
-    }
-
-    public void setMonthReserves(Double monthReserves) {
-        this.monthReserves = monthReserves;
-    }
-
     public Double getLastMonthReserves() {
         return lastMonthReserves;
     }
 
     public void setLastMonthReserves(Double lastMonthReserves) {
         this.lastMonthReserves = lastMonthReserves;
+    }
+
+    public Double getReserves() {
+        return reserves;
+    }
+
+    public void setReserves(Double reserves) {
+        this.reserves = reserves;
     }
 
     public Double getBalance() {
