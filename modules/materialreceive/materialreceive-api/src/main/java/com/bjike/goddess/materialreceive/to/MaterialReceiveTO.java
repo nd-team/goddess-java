@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -21,9 +20,14 @@ import javax.validation.constraints.Size;
  */
 public class MaterialReceiveTO extends BaseTO {
 
-    public interface AUDIT{}//审核
-    public interface RECEIVEOVER{}//领用完成
-    public interface MATERIALRETURN{}//物资归还
+    public interface AUDIT {
+    }//审核
+
+    public interface RECEIVEOVER {
+    }//领用完成
+
+    public interface MATERIALRETURN {
+    }//物资归还
 
     /**
      * 地区
@@ -76,13 +80,13 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 审核状态
      */
-    @NotNull(groups = {AUDIT.class}, message = "审核状态不能为空")
+    @NotNull(groups = {MaterialReceiveTO.AUDIT.class}, message = "审核状态不能为空")
     private AuditState auditState;
 
     /**
      * 审核意见
      */
-    @NotEmpty(groups = {AUDIT.class}, message = "审核意见不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.AUDIT.class}, message = "审核意见不能为空")
     private String auditOpinion;
 
     /**
@@ -98,55 +102,55 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 型号
      */
-    @NotEmpty(groups = {RECEIVEOVER.class}, message = "型号不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "型号不能为空")
     private String model;
 
     /**
      * 原存储地区
      */
-    @NotEmpty(groups = {RECEIVEOVER.class}, message = "原存储地区不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "原存储地区不能为空")
     private String oldStorageArea;
 
     /**
      * 物资原负责人
      */
-    @NotEmpty(groups = {RECEIVEOVER.class}, message = "物资原负责人不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "物资原负责人不能为空")
     private String oldPrincipal;
 
     /**
      * 经手人
      */
-    @NotEmpty(groups = {RECEIVEOVER.class}, message = "经手人不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "经手人不能为空")
     private String handler;
 
     /**
      * 是否归还
      */
-    @NotNull(groups = {MATERIALRETURN.class}, message = "是否归还不能为空")
+    @NotNull(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "是否归还不能为空")
     private Boolean ifReturn;
 
     /**
      * 审核情况
      */
-    @NotEmpty(groups = {MATERIALRETURN.class}, message = "审核情况不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "审核情况不能为空")
     private String auditCase;
 
     /**
      * 归还时间
      */
-    @NotEmpty(groups = {MATERIALRETURN.class}, message = "归还时间不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "归还时间不能为空")
     private String returnTime;
 
     /**
      * 物资状态
      */
-    @NotEmpty(groups = {MATERIALRETURN.class}, message = "物资状态不能为空")
+    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "物资状态不能为空")
     private String materialState;
 
     /**
      * 领用编号
      */
-    @Size(groups = {ADD.class, EDIT.class, MATERIALRETURN.class}, message = "领用数量必修是大于0的整数")
+    @Size(groups = {ADD.class, EDIT.class, MaterialReceiveTO.MATERIALRETURN.class}, message = "领用数量必修是大于0的整数")
     private String[] materialNum;
 
     public String getArea() {
