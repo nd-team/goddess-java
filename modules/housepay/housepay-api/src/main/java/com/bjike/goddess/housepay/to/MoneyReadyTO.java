@@ -15,12 +15,17 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class MoneyReadyTO extends BaseTO {
+    /**
+     * 年份
+     */
+    @NotNull(message = "年份不能为空")
+    private Integer year;
 
     /**
-     * 时间
+     * 月份
      */
-    @NotBlank(message = "时间不能为空")
-    private String time;
+    @NotNull(message = "月份不能为空")
+    private Integer month;
 
     /**
      * 类别
@@ -59,12 +64,20 @@ public class MoneyReadyTO extends BaseTO {
     private Double reserves;
 
 
-    public String getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getCategory() {
