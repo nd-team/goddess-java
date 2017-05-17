@@ -63,10 +63,17 @@ public interface CompanyFestivalTimeAPI {
      */
     default List<String> listFestivalName() throws SerException {return null;}
     /**
+     * 根据节日名称查询公司放假时间安排列表总条数
+     *
+     */
+    default Long countFestivalTimeByName(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+        return null;
+    }
+    /**
      * 根据节日名称查询单个时间安排
      * @return class CompanyFestivalTimeBO
      */
-    default CompanyFestivalTimeBO getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {return null;}
+    default List<CompanyFestivalTimeBO> getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {return null;}
 
 
 

@@ -27,6 +27,16 @@ public class SalaryConfirmRecordApiImpl implements SalaryConfirmRecordAPI{
     private SalaryConfirmRecordSer salaryConfirmRecordSer;
 
     @Override
+    public Long countSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
+        return salaryConfirmRecordSer.countSalaryConfirmRecord(salaryConfirmRecordDTO);
+    }
+
+    @Override
+    public SalaryConfirmRecordBO getOne(String id) throws SerException {
+        return salaryConfirmRecordSer.getOne(id);
+    }
+
+    @Override
     public List<SalaryConfirmRecordBO> listSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
         List<SalaryConfirmRecord> salaryConfirmRecords = salaryConfirmRecordSer.listSalaryConfirmRecord(salaryConfirmRecordDTO);
         return BeanTransform.copyProperties( salaryConfirmRecords ,SalaryConfirmRecordBO.class );

@@ -61,7 +61,12 @@ public class CompanyFestivalTimeApiImpl implements CompanyFestivalTimeAPI {
     }
 
     @Override
-    public CompanyFestivalTimeBO getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+    public Long countFestivalTimeByName(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+        return companyFestivalTimeSer.countFestivalTimeByName(companyFestivalTimeDTO);
+    }
+
+    @Override
+    public List<CompanyFestivalTimeBO> getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
         return companyFestivalTimeSer.getCompanyFestivalTime(companyFestivalTimeDTO);
     }
 }

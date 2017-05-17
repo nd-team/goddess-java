@@ -148,6 +148,22 @@ public class CompanyFestivalTimeAction {
         }
     }
 
+    /**
+     *  查看公司放假时间安排总条数
+     *
+     * @param companyFestivalTimeDTO  公司放假时间安排信息dto
+     * @des 获取所有公司放假时间安排信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/countByName")
+    public Result countByName(@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO) throws ActException {
+        try {
+            Long count = companyFestivalTimeAPI.countFestivalTimeByName(companyFestivalTimeDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 查看公司放假时间安排
@@ -160,11 +176,29 @@ public class CompanyFestivalTimeAction {
     @GetMapping("v1/getComDetail")
     public Result getCompanyFestivalTimeDetail (@Validated(CompanyFestivalTimeDTO.TESTGetOne.class) CompanyFestivalTimeDTO companyFestivalTimeDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            CompanyFestivalTimeVO companyFestivalTimeVOS = BeanTransform.copyProperties(
+            List<CompanyFestivalTimeVO> companyFestivalTimeVOS = BeanTransform.copyProperties(
                     companyFestivalTimeAPI.getCompanyFestivalTime(companyFestivalTimeDTO), CompanyFestivalTimeVO.class, request);
             return ActResult.initialize(companyFestivalTimeVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+     /**
+     * 获取所有节日名称
+     *
+     * @des 查看公司放假时间安排获取所有节日名称
+     * @version v1
+     */
+    @GetMapping("v1/listName")
+    public Result listName ( ) throws ActException {
+        try {
+            List<String> list = companyFestivalTimeAPI.listFestivalName(  );
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

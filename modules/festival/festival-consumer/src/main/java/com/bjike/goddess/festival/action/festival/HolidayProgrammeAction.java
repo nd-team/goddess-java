@@ -10,7 +10,7 @@ import com.bjike.goddess.festival.api.HolidayProgrammeAPI;
 import com.bjike.goddess.festival.bo.HolidayProgrammeBO;
 import com.bjike.goddess.festival.dto.HolidayProgrammeDTO;
 import com.bjike.goddess.festival.to.HolidayProgrammeTO;
-import com.bjike.goddess.festival.vo.HolidayProgrammeVO;
+import com.bjike.goddess.festival.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -64,8 +64,22 @@ public class HolidayProgrammeAction {
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
+            HolidayProgrammeBO holidayProgrammeBO = holidayProgrammeAPI.getOneById(id);
             HolidayProgrammeVO holidayProgrammeVO = BeanTransform.copyProperties(
-                    holidayProgrammeAPI.getOneById(id), HolidayProgrammeVO.class);
+                    holidayProgrammeBO, HolidayProgrammeVO.class);
+            //节假日工作安排数组
+            List<HolidayWorkPlanVO> holidayListBO = BeanTransform.copyProperties(holidayProgrammeBO.getHolidayWorkPlanBOList(),HolidayWorkPlanVO.class);
+            //各地区紧急联系人数
+            List<AreaRelationerVO> areaListBO = BeanTransform.copyProperties(holidayProgrammeBO.getAreaRelationerBOList(),AreaRelationerVO.class);
+            //节假日福利数组
+            List<WelfareVO> welfareListBO = BeanTransform.copyProperties(holidayProgrammeBO.getWelfareBOList(),WelfareVO.class);
+            //注意事项数组
+            List<NoticeThingVO> noticeListBO = BeanTransform.copyProperties(holidayProgrammeBO.getNoticeThingBOList(), NoticeThingVO.class);
+
+            holidayProgrammeVO.setHolidayWorkPlanVOList( holidayListBO );
+            holidayProgrammeVO.setAreaRelationerVOList( areaListBO );
+            holidayProgrammeVO.setWelfareVOList( welfareListBO );
+            holidayProgrammeVO.setNoticeThingVOList( noticeListBO);
             return ActResult.initialize(holidayProgrammeVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

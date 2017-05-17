@@ -34,6 +34,23 @@ public class HolidayWorkPlanAction {
     private HolidayWorkPlanAPI holidayWorkPlanAPI;
 
     /**
+     *  节假日工作安排列表总条数
+     *
+     * @param holidayWorkPlanDTO  节假日工作安排dto
+     * @des 获取所有节假日工作安排信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated(HolidayWorkPlanDTO.TESTFindDetail.class) HolidayWorkPlanDTO holidayWorkPlanDTO) throws ActException {
+        try {
+            Long count = holidayWorkPlanAPI.countHolidayWorkPlan(holidayWorkPlanDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    
+    /**
      * 查看节假日工作安排
      *
      * @param holidayWorkPlanDTO 节假日工作安排dto
@@ -45,7 +62,7 @@ public class HolidayWorkPlanAction {
     public Result getHolidayWorkPlanDetail (@Validated(HolidayWorkPlanDTO.TESTFindDetail.class) HolidayWorkPlanDTO holidayWorkPlanDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<HolidayWorkPlanVO> holidayWorkPlanVOS = BeanTransform.copyProperties(
-                    holidayWorkPlanAPI.getHolidayWorkPlan(holidayWorkPlanDTO.getHolidayProgrammeId()), HolidayWorkPlanVO.class, request);
+                    holidayWorkPlanAPI.listHolidayWorkPlan(holidayWorkPlanDTO), HolidayWorkPlanVO.class, request);
             return ActResult.initialize(holidayWorkPlanVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

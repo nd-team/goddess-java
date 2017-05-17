@@ -4,8 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.festival.bo.CompanyFestivalTimeBO;
-import com.bjike.goddess.festival.bo.HolidayProgrammeBO;
+import com.bjike.goddess.festival.bo.*;
 import com.bjike.goddess.festival.dto.*;
 import com.bjike.goddess.festival.dto.HolidayProgrammeDTO;
 import com.bjike.goddess.festival.entity.*;
@@ -56,7 +55,33 @@ public class HolidayProgrammeSerImpl extends ServiceImpl<HolidayProgramme, Holid
             throw new SerException("id不能为空");
         }
         HolidayProgramme holidayProgramme = super.findById(id);
-        return BeanTransform.copyProperties(holidayProgramme, HolidayProgrammeBO.class );
+        //节假日工作安排数组
+        HolidayWorkPlanDTO holidayWorkPlanDTO = new HolidayWorkPlanDTO();
+        holidayWorkPlanDTO.getConditions().add(Restrict.eq("holidayProgramme.id",id));
+        List<HolidayWorkPlan> holidayList = holidayWorkPlanSer.findByCis( holidayWorkPlanDTO );
+        List<HolidayWorkPlanBO> holidayListBO = BeanTransform.copyProperties(holidayList,HolidayWorkPlanBO.class);
+        //各地区紧急联系人数组
+        AreaRelationerDTO areaRelationerDTO = new AreaRelationerDTO();
+        areaRelationerDTO.getConditions().add(Restrict.eq("holidayProgramme.id",id));
+        List<AreaRelationer> areaList = areaRelationerSer.findByCis( areaRelationerDTO );
+        List<AreaRelationerBO> areaListBO = BeanTransform.copyProperties(areaList,AreaRelationerBO.class);
+        //节假日福利数组
+        WelfareDTO welfareDTO = new WelfareDTO();
+        welfareDTO.getConditions().add(Restrict.eq("holidayProgramme.id",id));
+        List<Welfare> welfareList = welfareSer.findByCis( welfareDTO );
+        List<WelfareBO> welfareListBO = BeanTransform.copyProperties(welfareList,WelfareBO.class);
+        //注意事项数组
+        NoticeThingDTO noticeThingDTO = new NoticeThingDTO();
+        noticeThingDTO.getConditions().add(Restrict.eq("holidayProgramme.id", id));
+        List<NoticeThing> noticeList = noticeThingSer.findByCis(noticeThingDTO);
+        List<NoticeThingBO> noticeListBO = BeanTransform.copyProperties(noticeList, NoticeThingBO.class);
+
+        HolidayProgrammeBO bo = BeanTransform.copyProperties(holidayProgramme, HolidayProgrammeBO.class );
+        bo.setHolidayWorkPlanBOList( holidayListBO);
+        bo.setAreaRelationerBOList( areaListBO );
+        bo.setWelfareBOList( welfareListBO );
+        bo.setNoticeThingBOList( noticeListBO );
+        return bo;
     }
 
     @Override

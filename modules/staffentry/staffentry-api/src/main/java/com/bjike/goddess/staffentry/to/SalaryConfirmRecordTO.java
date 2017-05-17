@@ -1,6 +1,9 @@
 package com.bjike.goddess.staffentry.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 薪资确认业务传输数据
@@ -13,57 +16,72 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class SalaryConfirmRecordTO extends BaseTO {
 
+    public interface TestAdd{}
+
     /**
      * 姓名
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "姓名不能为空")
     private String name;
     /**
      * 员工编号
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "员工编号不能为空")
     private String employeeID;
     /**
      * 籍贯
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "籍贯不能为空")
     private String nativePlace;
     /**
-     * 办理入职时间
+     * 办理入职时间，格式是日期
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "办理入职时间不能为空,格式日期2017-01-01")
     private String entryTime;
     /**
      * 入职前居住地
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "入职前居住地不能为空")
     private String beforeResidence;
     /**
      * 是否对工作地有要求
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否对工作地有要求不能为空")
     private String workPlaceRequest;
     /**
      * 试用期是多长时间
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "试用期是多长时间不能为空")
     private String probationDuration;
     /**
      * 期望薪资
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "期望薪资不能为空")
     private String expectSalary;
     /**
      * 试用期薪资
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "试用期薪资不能为空")
     private String probationSalary;
     /**
      * 转正后薪资
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "转正后薪资不能为空")
     private String officialSalary;
     /**
-     * 是否同意征税
+     * 是否同意征税(true/false)
      */
+    @NotNull(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否同意征税不能为空(true/false)")
     private Boolean whetherTax;
     /**
-     * 是否需要公司安排住宿
+     * 是否需要公司安排住宿(true/false)
      */
+    @NotNull(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否需要公司安排住宿不能为空(true/false)")
     private Boolean whetherArrangeResidence;
     /**
-     * 是否购买社保
+     * 是否购买社保(true/false)
      */
+    @NotNull(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否购买社保不能为空(true/false)")
     private Boolean whetherSocialSecurity;
     /**
      * 紧急联络人
@@ -90,20 +108,24 @@ public class SalaryConfirmRecordTO extends BaseTO {
      */
     private String assistant;
     /**
-     * 是否有面谈确认单原件
+     * 是否有面谈确认单原件(true/false)
      */
+    @NotNull(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否有面谈确认单原件不能为空(true/false)")
     private Boolean whetherVoucher;
     /**
-     * 是否有住宿
+     * 是否有住宿(true/false)
      */
+    @NotNull(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "是否有住宿不能为空(true/false)")
     private Boolean whetherAccommodation;
     /**
      * 确认人
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "确认人不能为空")
     private String confirmPerson;
     /**
      * 存档人
      */
+    @NotBlank(groups = {SalaryConfirmRecordTO.TestAdd.class}, message = "存档人不能为空")
     private String archivePerson;
 
 

@@ -20,6 +20,21 @@ import java.util.List;
 public interface SalaryConfirmRecordSer extends Ser<SalaryConfirmRecord,SalaryConfirmRecordDTO> {
 
     /**
+     * 薪资确认列表总条数
+     */
+    default Long countSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取薪资确认
+     *
+     * @return class SalaryConfirmRecordBO
+     */
+    default SalaryConfirmRecordBO getOne(String id ) throws SerException {
+        return null;
+    }
+    /**
      * 获取所有薪资确认
      * @param salaryConfirmRecordDTO 薪资确认dto
      * @return class SalaryConfirmRecordBO

@@ -49,4 +49,9 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     public StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
         return staffEntryRegisterSer.editStaffEntryRegister(staffEntryRegisterTO);
     }
+
+    @Override
+    public void delete(String id) throws SerException {
+        staffEntryRegisterSer.delete(id);
+    }
 }

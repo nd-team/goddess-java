@@ -64,4 +64,12 @@ public interface StaffEntryRegisterSer extends Ser<StaffEntryRegister, StaffEntr
         return null;
     }
 
+    /**
+     * 删除
+     *
+     * @param id 员工入职注册信息id
+     */
+    default void delete(String id) throws SerException {
+    }
+
 }

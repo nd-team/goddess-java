@@ -11,6 +11,7 @@ import com.bjike.goddess.festival.dto.WelfareDTO;
 import com.bjike.goddess.festival.entity.Welfare;
 import com.bjike.goddess.festival.entity.HolidayProgramme;
 import com.bjike.goddess.festival.entity.Welfare;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,27 @@ import java.util.stream.Collectors;
 public class WelfareSerImpl extends ServiceImpl<Welfare, WelfareDTO> implements WelfareSer {
 
 
+    @Override
+    public Long countWelfare(WelfareDTO welfareDTO) throws SerException {
+        if(StringUtils.isBlank( welfareDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = welfareDTO.getHolidayProgrammeId();
+        welfareDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        Long count = super.count( welfareDTO );
+        return count;
+    }
 
+    @Override
+    public List<WelfareBO> listWelfare(WelfareDTO welfareDTO) throws SerException {
+        if(StringUtils.isBlank( welfareDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = welfareDTO.getHolidayProgrammeId();
+        welfareDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        List<Welfare> welfareList = super.findByCis( welfareDTO ,true);
+        return BeanTransform.copyProperties(welfareList,WelfareBO.class);
+    }
     @Override
     public List<WelfareBO> getWelfare(String holidayProgrammeId) throws SerException {
         WelfareDTO dto = new WelfareDTO();

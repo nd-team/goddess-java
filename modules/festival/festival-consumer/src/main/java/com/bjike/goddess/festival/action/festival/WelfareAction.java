@@ -34,6 +34,24 @@ public class WelfareAction {
     private WelfareAPI welfareAPI;
 
     /**
+     *  节假日礼品福利列表总条数
+     *
+     * @param welfareDTO  节假日礼品福利dto
+     * @des 获取所有节假日礼品福利信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated(WelfareDTO.TESTFindDetail.class) WelfareDTO welfareDTO) throws ActException {
+        try {
+            Long count = welfareAPI.countWelfare(welfareDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    
+    /**
      * 查看节假日礼品福利
      *
      * @param welfareDTO 节假日礼品福利dto
@@ -45,7 +63,7 @@ public class WelfareAction {
     public Result getWelfareDetail (@Validated(WelfareDTO.TESTFindDetail.class) WelfareDTO welfareDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<WelfareVO> welfareVOS = BeanTransform.copyProperties(
-                    welfareAPI.getWelfare(welfareDTO.getHolidayProgrammeId()), WelfareVO.class, request);
+                    welfareAPI.listWelfare(welfareDTO), WelfareVO.class, request);
             return ActResult.initialize(welfareVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

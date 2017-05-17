@@ -6,16 +6,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
+import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
+import com.bjike.goddess.staffentry.vo.StaffEntryRegisterVO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.to.UserTO;
-import com.bjike.goddess.user.vo.UserVO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,22 +33,60 @@ public class StaffEntryRegisterAction {
 
     @Autowired
     private UserAPI userAPI;
-
+    @Autowired
+    private StaffEntryRegisterAPI staffEntryRegisterAPI;
 
     /**
-     * 获取所有用户
+     * 注册用户列表总条数
      *
-     * @des 获取所有用户
+     * @param staffEntryRegisterDTO 注册用户信息dto
+     * @des 获取所有注册用户信息总条数
      * @version v1
      */
-    @GetMapping(value = "v1/userInfo")
-    public Result getAllUser() throws ActException {
+    @GetMapping("v1/count")
+    public Result count(StaffEntryRegisterDTO staffEntryRegisterDTO) throws ActException {
+        try {
+            Long count = staffEntryRegisterAPI.countStaffEntryRegister(staffEntryRegisterDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个注册用户
+     *
+     * @param id 注册用户信息id
+     * @des 根据id查询注册用户
+     * @return class StaffEntryRegisterVO
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result getOne(@PathVariable String id) throws ActException {
+        try {
+            StaffEntryRegisterVO staffEntryRegisterVOList = BeanTransform.copyProperties(
+                    staffEntryRegisterAPI.getOne(id), StaffEntryRegisterVO.class);
+            return ActResult.initialize(staffEntryRegisterVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有用户列表
+     *
+     * @param staffEntryRegisterDTO 入职注册dto数据
+     * @des 获取所有用户
+     * @return class StaffEntryRegisterVO
+     * @version v1
+     */
+    @GetMapping(value = "v1/list")
+    public Result getAllUser(StaffEntryRegisterDTO staffEntryRegisterDTO) throws ActException {
 
         try {
-            UserDTO userDTO = new UserDTO();
-            List<UserBO> user = userAPI.findUserByPage(userDTO);
-            List<UserVO> userVOS = BeanTransform.copyProperties(user, UserVO.class);
-            return ActResult.initialize(userVOS);
+            List<StaffEntryRegisterBO> listBO = staffEntryRegisterAPI.listStaffEntryRegister(staffEntryRegisterDTO);
+            List<StaffEntryRegisterVO> list = BeanTransform.copyProperties(listBO, StaffEntryRegisterVO.class);
+            return ActResult.initialize(list);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
@@ -56,47 +94,43 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 添加用户
+     * 添加注册用户
      *
-     * @param userTO 用户数据
+     * @param staffEntryRegisterTO 用户数据
      * @des 添加用户和用户相关的信息
+     * @return class StaffEntryRegisterVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addUsers(UserTO userTO) throws ActException {
+    public Result addUsers(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
         try {
-            UserBO userBO = userAPI.add(null, userTO);
-            UserVO userVO = BeanTransform.copyProperties(userBO, UserVO.class);
-            return ActResult.initialize(userVO);
+            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.addStaffEntryRegister( staffEntryRegisterTO);
+            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO,StaffEntryRegisterVO.class));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-        //TODO:  tanghaixiang 2017-03-09 未做用户注册
     }
 
 
     /**
      * 修改用户
      *
-     * @param id 用户id
-     * @des 根据用户id修改用户
+     * @param staffEntryRegisterTO 用户数据
+     * @des 添加用户和用户相关的信息
+     * @return class StaffEntryRegisterVO
      * @version v1
      */
-    @PutMapping("v1/edit/{id}")
-    public Result edit(@PathVariable String id) throws ActException {
-        //TODO: tanghaixiang 2017-03-09 未做修改用户 记得抛异常
-        if (StringUtils.isBlank(id)) {
-            throw new ActException("id不能为空");
+    @PutMapping("v1/edit")
+    public Result edit(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
+        try {
+            StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.editStaffEntryRegister( staffEntryRegisterTO);
+            return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO,StaffEntryRegisterVO.class));
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
-//        try {
-//            UserBO userBO = userAPI.updateUser(id);
-//            UserVO userVO = BeanTransform.copyProperties(userBO, UserVO.class);
-            UserVO userVO = null;
-            return ActResult.initialize(userVO);
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
     }
 
 
@@ -110,7 +144,7 @@ public class StaffEntryRegisterAction {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            userAPI.deleteUser(id);
+            staffEntryRegisterAPI.delete(id);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -118,41 +152,8 @@ public class StaffEntryRegisterAction {
     }
 
 
-    /**
-     * 解冻用户
-     *
-     * @param id 用户id
-     * @des 根据用户id解冻用户
-     * @version v1
-     */
-    @PutMapping("v1/thow")
-    public Result thow(@RequestParam String id) throws ActException {
-        //TODO: tanghaixiang 2017-03-09 未做解冻用户 记得抛异常
-        try {
-            userAPI.thowUser(id);
-            return new ActResult("thow success!");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
-    /**
-     * 冻结用户
-     *
-     * @param id 用户id
-     * @des 根据用户id冻结用户
-     * @version v1
-     */
-    @PutMapping("v1/concle")
-    public Result concle(@RequestParam String id) throws ActException {
-        //TODO: tanghaixiang 2017-03-09 未做冻结用户 记得抛异常
-        try {
-            userAPI.congelUser(id);
-            return new ActResult("concle success!");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
     /**

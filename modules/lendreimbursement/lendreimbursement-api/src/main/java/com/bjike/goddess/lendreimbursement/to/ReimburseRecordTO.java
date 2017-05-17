@@ -136,6 +136,11 @@ public class ReimburseRecordTO extends BaseTO {
     private String receiveTicketCon;
 
     /**
+     * 是否已收到单据(是/否)
+     */
+    private String receiveTicketCheck;
+
+    /**
      * 预计付款时间
      */
     private String budgetPayTime;
@@ -368,6 +373,14 @@ public class ReimburseRecordTO extends BaseTO {
 
     public void setTicketCondition(String ticketCondition) {
         this.ticketCondition = ticketCondition;
+    }
+
+    public String getReceiveTicketCheck() {
+        return receiveTicketCheck;
+    }
+
+    public void setReceiveTicketCheck(String receiveTicketCheck) {
+        this.receiveTicketCheck = receiveTicketCheck;
     }
 
     public String getNoTicketRemark() {

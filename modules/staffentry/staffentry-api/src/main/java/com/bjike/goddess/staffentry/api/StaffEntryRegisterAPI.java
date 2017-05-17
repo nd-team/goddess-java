@@ -61,4 +61,13 @@ public interface StaffEntryRegisterAPI {
     default StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
         return null;
     }
+    /**
+     * 删除
+     *
+     * @param id 员工入职注册信息id
+     */
+    default void delete(String id) throws SerException {
+    }
+
+
 }

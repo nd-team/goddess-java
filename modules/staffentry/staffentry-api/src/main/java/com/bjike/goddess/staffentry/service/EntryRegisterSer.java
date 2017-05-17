@@ -21,6 +21,21 @@ import java.util.List;
 public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
 
     /**
+     * 入职登记列表总条数
+     */
+    default Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取入职登记
+     *
+     * @return class EntryRegisterBO
+     */
+    default EntryRegisterBO getOne(String id ) throws SerException {
+        return null;
+    }
+    /**
      * 获取所有入职登记
      * @param entryRegisterDTO 入职登记dto
      * @return class entryRegisterBO
