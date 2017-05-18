@@ -1,7 +1,9 @@
 package com.bjike.goddess.assemble.api;
 
+import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.service.ModuleAssembleSer;
 import com.bjike.goddess.assemble.to.ModuleAssembleTO;
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +30,16 @@ public class ModuleAssembleApiImpl implements ModuleAssembleAPI {
     @Override
     public void delete(String[] ids) throws SerException {
         moduleAssembleSer.delete(ids);
+    }
+
+    @Override
+    public void relation(String moduleId,String[] relationIds) throws SerException {
+        moduleAssembleSer.relation(moduleId, relationIds);
+    }
+
+
+    @Override
+    public ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
+        return moduleAssembleSer.modulesByName(name,checkType);
     }
 }

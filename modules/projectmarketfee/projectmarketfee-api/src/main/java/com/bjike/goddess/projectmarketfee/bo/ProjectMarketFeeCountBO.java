@@ -3,15 +3,16 @@ package com.bjike.goddess.projectmarketfee.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 项目前期的市场活动费汇总
+ * 项目前期的市场活动费汇总业务传输对象
  *
- * @Author: [chenjunhao]
- * @Date: [2017-05-10 11:09]
- * @Description: [项目前期的市场活动费汇总 ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-05-15 01:50 ]
+ * @Description: [ 项目前期的市场活动费汇总业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 public class ProjectMarketFeeCountBO extends BaseBO {
+
     /**
      * 一级科目
      */
@@ -51,6 +52,7 @@ public class ProjectMarketFeeCountBO extends BaseBO {
      * 金额
      */
     private Double borrowMoney;
+
 
     public String getFirstSubject() {
         return firstSubject;

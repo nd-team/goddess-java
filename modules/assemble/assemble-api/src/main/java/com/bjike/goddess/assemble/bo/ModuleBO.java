@@ -22,7 +22,7 @@ public class ModuleBO extends BaseBO {
     /**
      * 选中状态
      */
-    private CheckType checkType;
+    private CheckType checkType=CheckType.NONE;
     /**
      * 包含的模块
      */

@@ -69,4 +69,15 @@ public interface WarnSer extends Ser<Warn, WarnDTO> {
     default WarnBO findByID(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto 预警信息
+     * @return class WarnBO
+     * @throows SerException
+     */
+    default WarnBO countNum(WarnDTO dto) throws SerException {
+        return null;
+    }
 }

@@ -4,7 +4,6 @@ import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.entity.Module;
 import com.bjike.goddess.assemble.to.ModuleTO;
-import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -34,17 +33,6 @@ public interface ModuleSer extends Ser<Module, ModuleDTO> {
 
 
     /**
-     * 通过name查询模块
-     *
-     * @param name
-     * @return
-     * @throws SerException
-     */
-    default ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
-        return null;
-    }
-
-    /**
      * 添加模块
      *
      * @param moduleTO
@@ -67,12 +55,20 @@ public interface ModuleSer extends Ser<Module, ModuleDTO> {
     /**
      * 勾选模块
      *
-     * @param moduleId
-     * @param relationIds
+     * @param ids
      * @throws SerException
      */
-    default void check(String moduleId, String[] relationIds) throws SerException {
+    default void check(String[] ids) throws SerException {
 
+    }
+    /**
+     * 模块是否选中
+     *
+     * @param name
+     * @throws SerException
+     */
+    default Boolean isCheck(String name) throws SerException {
+        return null;
     }
 
 }
