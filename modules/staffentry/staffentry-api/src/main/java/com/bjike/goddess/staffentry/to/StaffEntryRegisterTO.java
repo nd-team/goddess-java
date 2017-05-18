@@ -60,6 +60,11 @@ public class StaffEntryRegisterTO extends BaseTO {
     private String workEmail;
 
     /**
+     * 工作邮箱密码
+     */
+    private String workEmailPassword;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -136,6 +141,14 @@ public class StaffEntryRegisterTO extends BaseTO {
 
     public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
+    }
+
+    public String getWorkEmailPassword() {
+        return workEmailPassword;
+    }
+
+    public void setWorkEmailPassword(String workEmailPassword) {
+        this.workEmailPassword = workEmailPassword;
     }
 
     public String getCreateTime() {

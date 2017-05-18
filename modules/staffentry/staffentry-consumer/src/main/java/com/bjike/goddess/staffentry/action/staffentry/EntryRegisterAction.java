@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
@@ -97,6 +98,7 @@ public class EntryRegisterAction {
      * @return class EntryRegisterVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addEntryRegister(@Validated(EntryRegisterUtilTO.TestBaseInfo.class) EntryRegisterUtilTO entryRegisterUtilTO ) throws ActException {
 
@@ -153,6 +155,7 @@ public class EntryRegisterAction {
      * @return class EntryRegisterVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editEntryRegister(@Validated(EntryRegisterUtilTO.TestBaseInfo.class) EntryRegisterUtilTO entryRegisterUtilTO) throws ActException {
         //组装数据
@@ -181,6 +184,7 @@ public class EntryRegisterAction {
      * @des 根据用户id删除员工入职登记记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryRegister(@PathVariable String id) throws ActException {
         try {

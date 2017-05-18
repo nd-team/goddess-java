@@ -86,9 +86,9 @@ public class Build {
         ServiceCreate.createModel(CUS, models,createOrDelete);
 
         //创建api build.gradle 配置文件
-//        ApiBuildCreate.createConfig(CUS,createOrDelete);
+        ApiBuildCreate.createConfig(CUS,createOrDelete);
         //创建api setting.gradle 配置文件
-//        ApiSettingCreate.createConfig(CUS,createOrDelete);
+        ApiSettingCreate.createConfig(CUS,createOrDelete);
 
         if( createOrDelete.equals("create")){
             System.out.println(CUS.get("模块名") + "-api src创建成功----------");
@@ -97,14 +97,14 @@ public class Build {
         }
 
         //创建consumer action Java 文件
-//        ActionCreate.createModel(CUS, models,createOrDelete);
+        ActionCreate.createModel(CUS, models,createOrDelete);
 
         //创建package-info.java
-//        PackageInfoCreate.createModel(CUS,models,createOrDelete);
+        PackageInfoCreate.createModel(CUS,models,createOrDelete);
         //创建consumer build.gradle 文件
-//        ConsumerBuildCreate.createConfig(CUS,createOrDelete);
+        ConsumerBuildCreate.createConfig(CUS,createOrDelete);
         //创建consumer settings.gradle 文件
-//        ConsumerSettingCreate.createConfig(CUS,createOrDelete);
+        ConsumerSettingCreate.createConfig(CUS,createOrDelete);
 
         if( createOrDelete.equals("create")){
             System.out.println(CUS.get("模块名") + "-consumer src创建成功----------");
@@ -121,9 +121,9 @@ public class Build {
         ProviderServiceCreate.createModel(CUS, models,createOrDelete);
 
         //创建provider build.gradle 文件
-//        ProviderBuildCreate.createConfig(CUS,createOrDelete);
+        ProviderBuildCreate.createConfig(CUS,createOrDelete);
         //创建provider settings.gradle 文件
-//        ProviderSettingCreate.createConfig(CUS,createOrDelete);
+        ProviderSettingCreate.createConfig(CUS,createOrDelete);
 
         if( createOrDelete.equals("create")){
             System.out.println(CUS.get("模块名") + "-provider src创建成功----------");

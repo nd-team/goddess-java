@@ -24,6 +24,7 @@
 	<dubbo:reference validation="true" id="salaryConfirmRecordApiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
 	<dubbo:reference validation="true" id="studyExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
 	<dubbo:reference validation="true" id="workExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
+	<dubbo:reference validation="true" id="staffEntryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI" />
 
 
 

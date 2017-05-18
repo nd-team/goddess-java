@@ -244,6 +244,7 @@ public class ReimburseRecordTO extends BaseTO {
     /**
      * 状态
      */
+    @NotNull(groups = {ReimburseRecordTO.TestAnalysis.class} , message = "状态不能为空")
     private ReimStatus reimStatus;
 
     /**

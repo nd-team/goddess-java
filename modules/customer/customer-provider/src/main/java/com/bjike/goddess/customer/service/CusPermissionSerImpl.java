@@ -10,7 +10,11 @@ import com.bjike.goddess.customer.entity.CusPermission;
 import com.bjike.goddess.customer.enums.CusPermissionType;
 import com.bjike.goddess.customer.enums.CustomerType;
 import com.bjike.goddess.customer.to.CusPermissionTO;
+import com.bjike.goddess.organize.api.ArrangementAPI;
+import com.bjike.goddess.organize.api.ModuleTypeAPI;
+import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +45,12 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ArrangementAPI arrangementAPI;
+    @Autowired
+    private ModuleTypeAPI moduleTypeAPI;
+    @Autowired
+    private PositionDetailAPI positionDetailAPI;
 
     @Override
     public Long countPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
@@ -76,23 +86,22 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public List<String> listOperateById(String id) throws SerException {
+    public List<OpinionBO> listOperateById(String id) throws SerException {
+        List<OpinionBO> list = new ArrayList<>();
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType  type = cusPermission.getType();
         if( type.equals( CusPermissionType.LEVEL )){
-
+            list = arrangementAPI.findThawOpinion();
         }else if( type.equals( CusPermissionType.MODULE )){
-
+            list = moduleTypeAPI.findThawOpinion();
         }else if( type.equals( CusPermissionType.POSITION )){
-
+            list = positionDetailAPI.findThawOpinion();
         }
-        //提供接口
-//        positionDetailUserAPI
 
-        return null;
+        return list;
     }
 
     @Override

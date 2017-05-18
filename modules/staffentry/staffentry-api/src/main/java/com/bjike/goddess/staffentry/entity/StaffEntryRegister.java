@@ -47,7 +47,11 @@ public class StaffEntryRegister extends BaseEntity {
      */
     @Column(name = "workEmail",  columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱'")
     private String workEmail;
-
+    /**
+     * 工作邮箱密码
+     */
+    @Column(name = "workEmailPassword",  columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱密码'")
+    private String workEmailPassword;
 
 
     /**
@@ -95,6 +99,14 @@ public class StaffEntryRegister extends BaseEntity {
 
     public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
+    }
+
+    public String getWorkEmailPassword() {
+        return workEmailPassword;
+    }
+
+    public void setWorkEmailPassword(String workEmailPassword) {
+        this.workEmailPassword = workEmailPassword;
     }
 
     public String getUserId() {

@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI;
@@ -95,6 +96,7 @@ public class SalaryConfirmRecordAction {
      * @return class SalaryConfirmRecordVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
@@ -114,6 +116,7 @@ public class SalaryConfirmRecordAction {
      * @return class SalaryConfirmRecordVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editSalaryConfirmRecord(@Validated(SalaryConfirmRecordTO.TestAdd.class) SalaryConfirmRecordTO salaryConfirmRecordTO) throws ActException {
         try {
@@ -132,6 +135,7 @@ public class SalaryConfirmRecordAction {
      * @des 根据用户id删除员工薪资确认记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteSalaryConfirmRecord(@PathVariable String id) throws ActException {
         try {

@@ -645,10 +645,10 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listAccountVoucher/{id}")
-    public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result listAccountVoucher(@PathVariable String id) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
+                    reimburseRecordAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -844,7 +844,7 @@ public class ReimburseRecordAction {
         try {
             CategoryDTO categoryDTO = new CategoryDTO();
             if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )){
-                throw new SerException("三级科目不能为空");
+                throw new SerException("三级科目(thirdSubject)不能为空");
             }
             categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
             List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
@@ -866,7 +866,7 @@ public class ReimburseRecordAction {
             CategoryDTO categoryDTO = new CategoryDTO();
             if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )
                     && StringUtils.isBlank(reimburseRecordTO.getPlainInfo() ) ){
-                throw new SerException("三级科目或说明不能为空");
+                throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
             }
             categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
             categoryDTO.setRemark( reimburseRecordTO.getPlainInfo());

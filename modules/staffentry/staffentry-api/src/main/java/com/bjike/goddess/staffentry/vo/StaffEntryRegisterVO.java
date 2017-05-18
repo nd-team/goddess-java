@@ -47,7 +47,10 @@ public class StaffEntryRegisterVO {
      * 工作邮箱
      */
     private String workEmail;
-
+    /**
+     * 工作邮箱密码
+     */
+    private String workEmailPassword;
     /**
      * 创建时间
      */
@@ -126,6 +129,14 @@ public class StaffEntryRegisterVO {
 
     public void setWorkEmail(String workEmail) {
         this.workEmail = workEmail;
+    }
+
+    public String getWorkEmailPassword() {
+        return workEmailPassword;
+    }
+
+    public void setWorkEmailPassword(String workEmailPassword) {
+        this.workEmailPassword = workEmailPassword;
     }
 
     public String getCreateTime() {

@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.action.staffentry;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
@@ -78,6 +79,7 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result addEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
@@ -97,6 +99,7 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result editEntryBasicInfo(@Validated(EntryBasicInfoTO.TestAdd.class) EntryBasicInfoTO entryBasicInfoTO) throws ActException {
         try {
@@ -115,6 +118,7 @@ public class EntryBasicInfoAction {
      * @des 根据用户id删除员工入职基本信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
@@ -209,6 +213,7 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/uploadFile")
     public Result uploadFile( ) throws ActException {
         //TODO: tanghaixiang 2017-03-10 上传附件
@@ -222,6 +227,7 @@ public class EntryBasicInfoAction {
      * @return class EntryBasicInfoVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/getFile")
     public Result getFile( ) throws ActException {
         //TODO: tanghaixiang 2017-03-10 查看附件
