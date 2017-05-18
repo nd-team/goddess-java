@@ -19,7 +19,18 @@ public class WarnVO {
      * 预警的值
      */
     private Double warnValue;
+    /**
+     * 总记录数
+     */
+    private Long num;
 
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
 
     public String getId() {
         return id;

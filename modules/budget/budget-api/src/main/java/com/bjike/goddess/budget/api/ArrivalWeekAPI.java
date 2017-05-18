@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
+import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -88,6 +89,26 @@ public interface ArrivalWeekAPI {
      * @throws SerException
      */
     default List<ArrivalWeekCountBO> conditionsCount(String[] arrivals) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找所有地区
+     *
+     * @throws SerException
+     */
+    default List<String> findAllArrivals() throws SerException {
         return null;
     }
 }

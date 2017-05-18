@@ -48,4 +48,9 @@ public class WarnApiImpl implements WarnAPI {
     public WarnBO findByID(String id) throws SerException {
         return warnSer.findByID(id);
     }
+
+    @Override
+    public WarnBO countNum(WarnDTO dto) throws SerException {
+        return warnSer.countNum(dto);
+    }
 }

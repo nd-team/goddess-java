@@ -23,6 +23,18 @@ public class GradeBO extends BaseBO {
      */
     private String grade;
 
+    /**
+     * 总记录数
+     */
+    private Long num;
+
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
 
     public String getNote() {
         return note;

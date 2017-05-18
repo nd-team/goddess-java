@@ -2,7 +2,9 @@ package com.bjike.goddess.projectmarketfee.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectmarketfee.bo.GradeBO;
+import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.dto.GradeDTO;
+import com.bjike.goddess.projectmarketfee.entity.Grade;
 import com.bjike.goddess.projectmarketfee.to.GradeTO;
 
 import java.util.List;
@@ -65,6 +67,17 @@ public interface GradeAPI {
      * @throws SerException
      */
     default GradeBO findByID(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto 预警信息
+     * @return class GradeBO
+     * @throows SerException
+     */
+    default GradeBO countNum(GradeDTO dto) throws SerException {
         return null;
     }
 }
