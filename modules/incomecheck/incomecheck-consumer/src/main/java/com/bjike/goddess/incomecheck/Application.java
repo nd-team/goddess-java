@@ -1,4 +1,4 @@
-package com.bjike.goddess.customer;
+package com.bjike.goddess.incomecheck;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.customer.action", "com.bjike.goddess.customer.config","com.bjike.goddess.common.consumer"})
+@ComponentScan(basePackages = {"com.bjike.goddess.incomecheck.action", "com.bjike.goddess.incomecheck.config","com.bjike.goddess.common.consumer"})
 @ImportResource("classpath:app.xml")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {

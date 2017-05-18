@@ -21,20 +21,20 @@ public class SeqUtil {
     /**
      * 生成下一个编号
      *
-     * @param systemNO 最大员工编号
+     * @param employeeNumber 最大员工编号
      */
-    public static synchronized String generate(String systemNO) throws SerException {
-        if (StringUtils.isNotBlank(systemNO)) {
-            Integer number = Integer.parseInt(StringUtils.substringAfter(systemNO, EMP_NUMBER)) + 1;
+    public static synchronized String generate(String employeeNumber) throws SerException {
+        if (StringUtils.isNotBlank(employeeNumber)) {
+            Integer number = Integer.parseInt(StringUtils.substringAfter(employeeNumber, EMP_NUMBER)) + 1;
             Integer length = SYS_NUMBER_LENGTH - (String.valueOf(number).length());
             if (length > 0) {
-                systemNO = EMP_NUMBER + ZERO_NUMBER.substring(0, length - EMP_NUMBER.length());
+                employeeNumber = EMP_NUMBER + ZERO_NUMBER.substring(0, length - EMP_NUMBER.length());
             } else if (0 == length) {
-                systemNO = EMP_NUMBER + number;
+                employeeNumber = EMP_NUMBER + number;
             } else {
-                throw new SerException("系统编号超出长度:" + length);
+                throw new SerException("员工编号超出长度:" + length);
             }
-            return systemNO + number;
+            return employeeNumber + number;
         } else {
             return generate(EMP_NUMBER + ZERO_NUMBER); //假如为空,则从第一个开始SYS.NO000001
         }

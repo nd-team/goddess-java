@@ -379,6 +379,11 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 
     @Override
     public List<CategoryBO> listAllCategory(CategoryDTO categoryDTO) throws SerException {
+        if(StringUtils.isNotBlank(categoryDTO.getThirdSubject())){
+            categoryDTO.getConditions().add(Restrict.eq("thirdSubject",categoryDTO.getThirdSubject()));
+        }if(StringUtils.isNotBlank(categoryDTO.getRemark())){
+            categoryDTO.getConditions().add(Restrict.eq("remark",categoryDTO.getRemark()));
+        }
         List<Category> list = super.findByCis(categoryDTO);
         List<CategoryBO> categoryBOList = new ArrayList<>();
         list.stream().forEach(str -> {

@@ -43,10 +43,10 @@ public interface ModuleAPI {
     /**
      * 删除模块
      *
-     * @param id
+     * @param name
      * @throws SerException
      */
-    default void delete(String id) throws SerException {
+    default void delete(String name) throws SerException {
 
     }
 
@@ -58,6 +58,16 @@ public interface ModuleAPI {
      */
     default void check(String[] ids) throws SerException {
 
+    }
+
+    /**
+     * 模块是否选中
+     *
+     * @param id
+     * @throws SerException
+     */
+    default Boolean isCheck(String id) throws SerException {
+        return null;
     }
 
 

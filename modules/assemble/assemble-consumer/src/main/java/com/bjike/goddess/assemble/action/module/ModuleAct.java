@@ -3,7 +3,6 @@ package com.bjike.goddess.assemble.action.module;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.to.ModuleTO;
-import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.assemble.vo.ModuleVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -87,12 +86,12 @@ public class ModuleAct {
     /**
      * 勾选模块
      *
+     * @param ids 模块id
      * @throws ActException
-     * @param  ids 模块id
      * @version v1
      */
     @PutMapping("v1/check")
-    public Result check( String[] ids) throws ActException {
+    public Result check(String[] ids) throws ActException {
         try {
             moduleAPI.check(ids);
         } catch (SerException e) {
@@ -101,5 +100,20 @@ public class ModuleAct {
         return new ActResult("check success");
     }
 
+    /**
+     * 是否勾选模块
+     *
+     * @param name 模块名
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/isCheck/{name}")
+    public Result check(@PathVariable String name) throws ActException {
+        try {
+            return ActResult.initialize(moduleAPI.isCheck(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage(), e.getCause());
+        }
+    }
 
 }
