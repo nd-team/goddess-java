@@ -232,7 +232,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         if (field.getName().equals(fields[j])) {
                             field.setAccessible(true);
                             if (!field.getType().isEnum()) { //忽略枚举类型
-                                field.set(obj, convertDataType( field.getType().getTypeName() ,arr_obj[j]));
+                                field.set(obj, convertDataType( field.getType().getSimpleName() ,arr_obj[j]));
                             } else {
                                 Field[] enumFields = field.getType().getFields();
                                 for (int k = 0; k < enumFields.length; k++) {
