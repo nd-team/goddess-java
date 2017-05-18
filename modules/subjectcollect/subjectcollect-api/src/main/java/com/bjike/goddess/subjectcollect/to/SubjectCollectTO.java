@@ -17,7 +17,10 @@ public class SubjectCollectTO extends BaseTO {
      * 代码
      */
     private String code;
-
+    /**
+     * 月份
+     */
+    private Integer  months;
     /**
      * 一级科目
      */
@@ -68,18 +71,20 @@ public class SubjectCollectTO extends BaseTO {
      */
     private Double endCreditAmount;
 
-    //开始时间
-    private String startTime;
-    //结束时间
-    private String endTime;
-
-
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public String getFirstSubject() {
@@ -162,19 +167,4 @@ public class SubjectCollectTO extends BaseTO {
         this.endCreditAmount = endCreditAmount;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 }

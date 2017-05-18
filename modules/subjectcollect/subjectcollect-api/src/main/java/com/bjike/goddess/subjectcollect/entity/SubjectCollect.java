@@ -23,6 +23,12 @@ public class SubjectCollect extends BaseEntity {
      */
     @Column(name = "code", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '代码'")
     private String code;
+    /**
+     * 月份
+     */
+    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '月份'"  )
+    private Integer  months;
+
 
     /**
      * 一级科目
@@ -84,6 +90,13 @@ public class SubjectCollect extends BaseEntity {
     @Column(name = "endCreditAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '期末贷方余额'")
     private Double endCreditAmount;
 
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
+    }
 
     public String getCode() {
         return code;
