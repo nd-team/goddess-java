@@ -43,10 +43,10 @@ public interface ModuleAPI {
     /**
      * 删除模块
      *
-     * @param id
+     * @param name
      * @throws SerException
      */
-    default void delete(String id) throws SerException {
+    default void delete(String name) throws SerException {
 
     }
 

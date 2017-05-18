@@ -44,7 +44,7 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
-    public Boolean isCheck(String id) throws SerException {
-        return moduleSer.isCheck(id);
+    public Boolean isCheck(String name) throws SerException {
+        return moduleSer.isCheck(name);
     }
 }

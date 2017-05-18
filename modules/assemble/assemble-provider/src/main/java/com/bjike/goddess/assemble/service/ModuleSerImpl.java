@@ -95,10 +95,10 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     }
 
     @Override
-    public Boolean isCheck(String id) throws SerException {
+    public Boolean isCheck(String name) throws SerException {
         ModuleApplyDTO dto = new ModuleApplyDTO();
         dto.getConditions().add(Restrict.eq("company", "北京艾佳"));
-        dto.getConditions().add(Restrict.eq("module.id", id));
+        dto.getConditions().add(Restrict.eq("module.name", name));
         return null != moduleApplySer.findOne(dto);
     }
 }

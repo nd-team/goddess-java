@@ -101,16 +101,16 @@ public class ModuleAct {
     }
 
     /**
-     * 勾选模块
+     * 是否勾选模块
      *
-     * @param id 模块id
+     * @param name 模块名
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/isCheck/{id}")
-    public Result check(@PathVariable String id) throws ActException {
+    @GetMapping("v1/isCheck/{name}")
+    public Result check(@PathVariable String name) throws ActException {
         try {
-            return ActResult.initialize(moduleAPI.isCheck(id));
+            return ActResult.initialize(moduleAPI.isCheck(name));
         } catch (SerException e) {
             throw new ActException(e.getMessage(), e.getCause());
         }
