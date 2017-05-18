@@ -26,6 +26,7 @@ public abstract class BaseEntity implements Serializable{
     @Column(name = "id", nullable = false,length = 36,updatable = false,insertable = false)
     protected String id;
 
+
     /**
      * 数据创建时间
      */
