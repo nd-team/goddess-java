@@ -61,4 +61,14 @@ public class ArrivalWeekApiImpl implements ArrivalWeekAPI {
     public List<ArrivalWeekCountBO> conditionsCount(String[] arrivals) throws SerException {
         return arrivalWeekSer.conditionsCount(arrivals);
     }
+
+    @Override
+    public Long countNum(ArrivalWeekDTO dto) throws SerException {
+        return arrivalWeekSer.countNum(dto);
+    }
+
+    @Override
+    public List<String> findAllArrivals() throws SerException {
+        return arrivalWeekSer.findAllArrivals();
+    }
 }

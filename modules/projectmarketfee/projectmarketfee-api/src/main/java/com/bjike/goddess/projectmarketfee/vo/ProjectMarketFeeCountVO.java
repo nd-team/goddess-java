@@ -1,15 +1,20 @@
 package com.bjike.goddess.projectmarketfee.vo;
 
 /**
- * 项目前期的市场活动费汇总
+ * 项目前期的市场活动费汇总表现层对象
  *
- * @Author: [chenjunhao]
- * @Date: [2017-05-10 11:12]
- * @Description: [项目前期的市场活动费汇总 ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-05-15 01:50 ]
+ * @Description: [ 项目前期的市场活动费汇总表现层对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 public class ProjectMarketFeeCountVO {
+
+    /**
+     * id
+     */
+    private String id;
     /**
      * 一级科目
      */
@@ -49,6 +54,15 @@ public class ProjectMarketFeeCountVO {
      * 金额
      */
     private Double borrowMoney;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFirstSubject() {
         return firstSubject;

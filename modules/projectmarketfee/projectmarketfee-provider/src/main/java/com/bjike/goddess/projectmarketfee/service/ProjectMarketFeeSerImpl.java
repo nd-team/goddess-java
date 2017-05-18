@@ -5,10 +5,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.projectmarketfee.api.ProjectMarketFeeCountAPI;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFee;
+import com.bjike.goddess.projectmarketfee.entity.ProjectMarketFeeCount;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeCountTO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -16,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,8 +42,11 @@ import java.util.Set;
 public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, ProjectMarketFeeDTO> implements ProjectMarketFeeSer {
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
+    @Autowired
+    private ProjectMarketFeeCountAPI projectMarketFeeCountAPI;
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public List<ProjectMarketFeeBO> list(ProjectMarketFeeDTO dto) throws SerException {
         List<VoucherGenerateBO> list = voucherGenerateAPI.allSales();
         List<ProjectMarketFee> projectMarketFees = super.findAll();
@@ -131,11 +138,12 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                     }
                 }
                 if (oneSum != 0) {
-                    ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                    bo.setFirstSubject(firstSubject);
-                    bo.setProjectGroup(projectGroup);
-                    bo.setVoucherDate(times);
-                    bo.setBorrowMoney(oneSum);
+                    ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                    to.setFirstSubject(firstSubject);
+                    to.setProjectGroup(projectGroup);
+                    to.setVoucherDate(times);
+                    to.setBorrowMoney(oneSum);
+                    ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                     oneBos.add(bo);
                     oneSum = 0.00;   //置为0
                 }
@@ -176,12 +184,13 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                         }
                     }
                     if (twoSum != 0) {
-                        ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                        bo.setFirstSubject(firstSubject);
-                        bo.setSecondSubject(secondSubject);
-                        bo.setProjectGroup(projectGroup);
-                        bo.setVoucherDate(times);
-                        bo.setBorrowMoney(twoSum);
+                        ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                        to.setFirstSubject(firstSubject);
+                        to.setSecondSubject(secondSubject);
+                        to.setProjectGroup(projectGroup);
+                        to.setVoucherDate(times);
+                        to.setBorrowMoney(twoSum);
+                        ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                         twoBos.add(bo);
                         twoSum = 0.00;   //置为0
                     }
@@ -224,13 +233,14 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                             }
                         }
                         if (threeSum != 0) {
-                            ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                            bo.setFirstSubject(firstSubject);
-                            bo.setSecondSubject(secondSubject);
-                            bo.setThirdSubject(thirdSubject);
-                            bo.setProjectGroup(projectGroup);
-                            bo.setVoucherDate(times);
-                            bo.setBorrowMoney(threeSum);
+                            ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                            to.setFirstSubject(firstSubject);
+                            to.setSecondSubject(secondSubject);
+                            to.setThirdSubject(thirdSubject);
+                            to.setProjectGroup(projectGroup);
+                            to.setVoucherDate(times);
+                            to.setBorrowMoney(threeSum);
+                            ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                             threeBos.add(bo);
                             threeSum = 0.00;   //置为0
                         }
@@ -270,13 +280,14 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                             }
                         }
                         if (sum != 0) {
-                            ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                            bo.setFirstSubject(firstSubject);
-                            bo.setSecondSubject(secondSubject);
-                            bo.setThirdSubject(thirdSubject);
-                            bo.setArea(area);
-                            bo.setVoucherDate(times);
-                            bo.setBorrowMoney(sum);
+                            ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                            to.setFirstSubject(firstSubject);
+                            to.setSecondSubject(secondSubject);
+                            to.setThirdSubject(thirdSubject);
+                            to.setArea(area);
+                            to.setVoucherDate(times);
+                            to.setBorrowMoney(sum);
+                            ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                             boList.add(bo);
                             sum = 0.00;   //置为0
                         }
@@ -318,14 +329,15 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                                 }
                             }
                             if (sum != 0) {
-                                ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                                bo.setFirstSubject(firstSubject);
-                                bo.setSecondSubject(secondSubject);
-                                bo.setThirdSubject(thirdSubject);
-                                bo.setProjectGroup(projectGroup);
-                                bo.setArea(area);
-                                bo.setVoucherDate(times);
-                                bo.setBorrowMoney(sum);
+                                ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                                to.setFirstSubject(firstSubject);
+                                to.setSecondSubject(secondSubject);
+                                to.setThirdSubject(thirdSubject);
+                                to.setProjectGroup(projectGroup);
+                                to.setArea(area);
+                                to.setVoucherDate(times);
+                                to.setBorrowMoney(sum);
+                                ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                                 boList.add(bo);
                                 sum = 0.00;   //置为0
                             }
@@ -370,15 +382,16 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                                     }
                                 }
                                 if (sum != 0) {
-                                    ProjectMarketFeeCountBO bo = new ProjectMarketFeeCountBO();
-                                    bo.setFirstSubject(firstSubject);
-                                    bo.setSecondSubject(secondSubject);
-                                    bo.setThirdSubject(thirdSubject);
-                                    bo.setProjectGroup(projectGroup);
-                                    bo.setArea(area);
-                                    bo.setProjectName(projectName);
-                                    bo.setVoucherDate(times);
-                                    bo.setBorrowMoney(sum);
+                                    ProjectMarketFeeCountTO to = new ProjectMarketFeeCountTO();
+                                    to.setFirstSubject(firstSubject);
+                                    to.setSecondSubject(secondSubject);
+                                    to.setThirdSubject(thirdSubject);
+                                    to.setProjectGroup(projectGroup);
+                                    to.setArea(area);
+                                    to.setProjectName(projectName);
+                                    to.setVoucherDate(times);
+                                    to.setBorrowMoney(sum);
+                                    ProjectMarketFeeCountBO bo = projectMarketFeeCountAPI.save(to);
                                     boList.add(bo);
                                     sum = 0.00;   //置为0
                                 }
@@ -411,19 +424,21 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
     }
 
     @Override
-    public List<ProjectMarketFeeBO> findDetail(String firstSubject, String secondSubject, String thirdSubject, String area, String projectGroup, String projectName) throws SerException {
+    public List<ProjectMarketFeeBO> findDetail(String id) throws SerException {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT id,firstSubject,secondSubject,thirdSubject,projectGroup,area,projectName,borrowMoney\n" +
                 "from projectmarketfee_projectmarketfee");
         String[] fields = new String[]{"id", "firstSubject", "secondSubject", "thirdSubject", "projectGroup", "area", "projectName", "borrowMoney"};
         List<ProjectMarketFee> list = null;
-        if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area)) && (!"null".equals(projectGroup)) && (!"null".equals(projectName))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
-            String[] projectNames = new String[]{projectName};
-            String[] projectGroups = new String[]{projectGroup};
+        ProjectMarketFeeCountBO to = projectMarketFeeCountAPI.findByID(id);
+        System.out.println(to.getProjectName());
+        if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null) && (to.getProjectGroup() != null) && (to.getProjectName() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
+            String[] projectNames = new String[]{to.getProjectName()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "' AND area='" + areas[i] + "' AND projectName='" + projectNames[i] + "'");
@@ -435,12 +450,12 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "' AND area='" + areas[i] + "'");
@@ -452,11 +467,11 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(area))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] areas = new String[]{area};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getArea() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] areas = new String[]{to.getArea()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND area='" + areas[i] + "'");
@@ -468,11 +483,11 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(thirdSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] thirdSubjects = new String[]{thirdSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getThirdSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] thirdSubjects = new String[]{to.getThirdSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "' AND thirdSubject='" + thirdSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "'");
@@ -484,10 +499,10 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(secondSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] secondSubjects = new String[]{secondSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getSecondSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] secondSubjects = new String[]{to.getSecondSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND secondSubject='" + secondSubjects[i] + "'\n" +
                         "AND projectGroup='" + projectGroups[i] + "'");
@@ -499,9 +514,9 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
                 p.setVoucherDate(p1.getVoucherDate());
             }
             return BeanTransform.copyProperties(list, ProjectMarketFeeBO.class);
-        } else if ((!"null".equals(firstSubject)) && (!"null".equals(projectGroup))) {
-            String[] firstSubjects = new String[]{firstSubject};
-            String[] projectGroups = new String[]{projectGroup};
+        } else if ((to.getFirstSubject() != null) && (to.getProjectGroup() != null)) {
+            String[] firstSubjects = new String[]{to.getFirstSubject()};
+            String[] projectGroups = new String[]{to.getProjectGroup()};
             for (int i = 0; i < firstSubjects.length && i < projectGroups.length; i++) {
                 sb.append(" where firstSubject='" + firstSubjects[i] + "' AND projectGroup='" + projectGroups[i] + "'");
                 String sql = sb.toString();
@@ -606,35 +621,37 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
         return set;
     }
 
-//    /**
-//     * 查找所有年份
-//     *
-//     * @return class Integer
-//     * @throws SerException
-//     */
-//    private Set<Integer> allYears() throws SerException {
-//        List<ProjectMarketFee> list = super.findAll();
-//        Set<Integer> set = new HashSet<Integer>();
-//        for (ProjectMarketFee p : list) {
-//            set.add(p.getYear());
-//        }
-//        return set;
-//    }
-//
-//    /**
-//     * 查找所有月份
-//     *
-//     * @return class Integer
-//     * @throws SerException
-//     */
-//    private Set<Integer> allMonths() throws SerException {
-//        List<ProjectMarketFee> list = super.findAll();
-//        Set<Integer> set = new HashSet<Integer>();
-//        for (ProjectMarketFee p : list) {
-//            set.add(p.getMonth());
-//        }
-//        return set;
-//    }
+    /**
+     * 查找所有年份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    @Override
+    public Set<Integer> allYears() throws SerException {
+        List<ProjectMarketFee> list = super.findAll();
+        Set<Integer> set = new HashSet<Integer>();
+        for (ProjectMarketFee p : list) {
+            set.add(p.getYear());
+        }
+        return set;
+    }
+
+    /**
+     * 查找所有月份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    @Override
+    public Set<Integer> allMonths() throws SerException {
+        List<ProjectMarketFee> list = super.findAll();
+        Set<Integer> set = new HashSet<Integer>();
+        for (ProjectMarketFee p : list) {
+            set.add(p.getMonth());
+        }
+        return set;
+    }
 
     /**
      * 通过销售费用id查找记账凭证信息
@@ -657,5 +674,18 @@ public class ProjectMarketFeeSerImpl extends ServiceImpl<ProjectMarketFee, Proje
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public ProjectMarketFeeBO countNum(ProjectMarketFeeDTO dto) throws SerException {
+        list(new ProjectMarketFeeDTO());
+        ProjectMarketFeeBO bo = new ProjectMarketFeeBO();
+        bo.setNum(super.count(dto));
+        return bo;
+    }
+
+    @Override
+    public ProjectMarketFeeBO findByID(String id) throws SerException {
+        return BeanTransform.copyProperties(super.findById(id), ProjectMarketFeeBO.class);
     }
 }

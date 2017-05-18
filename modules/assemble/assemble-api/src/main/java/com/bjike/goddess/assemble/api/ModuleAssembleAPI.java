@@ -1,6 +1,8 @@
 package com.bjike.goddess.assemble.api;
 
+import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.to.ModuleAssembleTO;
+import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.exception.SerException;
 
 /**
@@ -30,5 +32,27 @@ public interface ModuleAssembleAPI {
     default void delete(String[] ids) throws SerException {
 
     }
+
+    /**
+     * 勾选模块
+     *
+     * @param moduleId
+     * @param relationIds
+     * @throws SerException
+     */
+    default void relation(String moduleId, String[] relationIds) throws SerException {
+
+    }
+    /**
+     * 通过模块名查询模块
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
+        return null;
+    }
+
 
 }

@@ -5,10 +5,12 @@ import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeBO;
 import com.bjike.goddess.projectmarketfee.bo.ProjectMarketFeeCountBO;
 import com.bjike.goddess.projectmarketfee.dto.ProjectMarketFeeDTO;
 import com.bjike.goddess.projectmarketfee.service.ProjectMarketFeeSer;
+import com.bjike.goddess.projectmarketfee.to.ProjectMarketFeeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目前期的市场活动费业务接口实现
@@ -60,12 +62,32 @@ public class ProjectMarketFeeApiImpl implements ProjectMarketFeeAPI {
     }
 
     @Override
-    public List<ProjectMarketFeeBO> findDetail(String firstSubject, String secondSubject, String thirdSubject, String area, String projectGroup, String projectName) throws SerException {
-        return projectMarketFeeSer.findDetail(firstSubject, secondSubject, thirdSubject, area, projectGroup, projectName);
+    public List<ProjectMarketFeeBO> findDetail(String id) throws SerException {
+        return projectMarketFeeSer.findDetail(id);
     }
 
     @Override
     public ProjectMarketFeeCountBO count(String projectGroup, String area, Integer year, Integer month, String projectName) throws SerException {
         return projectMarketFeeSer.count(projectGroup, area, year, month, projectName);
+    }
+
+    @Override
+    public ProjectMarketFeeBO countNum(ProjectMarketFeeDTO dto) throws SerException {
+        return projectMarketFeeSer.countNum(dto);
+    }
+
+    @Override
+    public ProjectMarketFeeBO findByID(String id) throws SerException {
+        return projectMarketFeeSer.findByID(id);
+    }
+
+    @Override
+    public Set<Integer> allYears() throws SerException {
+        return projectMarketFeeSer.allYears();
+    }
+
+    @Override
+    public Set<Integer> allMonths() throws SerException {
+        return projectMarketFeeSer.allMonths();
     }
 }

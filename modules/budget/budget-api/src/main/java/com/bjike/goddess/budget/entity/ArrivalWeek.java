@@ -54,11 +54,6 @@ public class ArrivalWeek extends BaseEntity {
     @Column(name = "actualWork", nullable = false, columnDefinition = "INT(11)   COMMENT '实际完工量'")
     private Integer actualWork;
 
-    /**
-     * 任务量差异
-     */
-    @Column(name = "workDifferences", nullable = false, columnDefinition = "INT(11)   COMMENT '任务量差异'")
-    private Integer workDifferences;
 
     /**
      * 单价
@@ -78,11 +73,6 @@ public class ArrivalWeek extends BaseEntity {
     @Column(name = "planIncome", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '计划收入'")
     private Double planIncome;
 
-    /**
-     * 收入差异
-     */
-    @Column(name = "incomeDifferences", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收入差异'")
-    private Double incomeDifferences;
 
 //    /**
 //     * 地区收入月
@@ -139,13 +129,6 @@ public class ArrivalWeek extends BaseEntity {
         this.actualWork = actualWork;
     }
 
-    public Integer getWorkDifferences() {
-        return workDifferences;
-    }
-
-    public void setWorkDifferences(Integer workDifferences) {
-        this.workDifferences = workDifferences;
-    }
 
     public Double getPrice() {
         return price;
@@ -171,13 +154,6 @@ public class ArrivalWeek extends BaseEntity {
         this.planIncome = planIncome;
     }
 
-    public Double getIncomeDifferences() {
-        return incomeDifferences;
-    }
-
-    public void setIncomeDifferences(Double incomeDifferences) {
-        this.incomeDifferences = incomeDifferences;
-    }
 
 //    public ArrivalMonth getArrivalMonth() {
 //        return arrivalMonth;

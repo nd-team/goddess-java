@@ -3,8 +3,11 @@ package com.bjike.goddess.projectmarketfee.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
 import com.bjike.goddess.projectmarketfee.bo.GradeBO;
+import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.dto.GradeDTO;
+import com.bjike.goddess.projectmarketfee.dto.WarnDTO;
 import com.bjike.goddess.projectmarketfee.entity.Grade;
 import com.bjike.goddess.projectmarketfee.to.GradeTO;
 import org.springframework.cache.annotation.CacheConfig;
@@ -62,5 +65,12 @@ public class GradeSerImpl extends ServiceImpl<Grade, GradeDTO> implements GradeS
     public GradeBO findByID(String id) throws SerException {
         Grade grade = super.findById(id);
         return BeanTransform.copyProperties(grade, GradeBO.class);
+    }
+
+    @Override
+    public GradeBO countNum(GradeDTO dto) throws SerException {
+        GradeBO bo = new GradeBO();
+        bo.setNum(super.count(dto));
+        return bo;
     }
 }

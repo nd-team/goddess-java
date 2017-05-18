@@ -1,16 +1,12 @@
-模块名:rotation
-类名:CoverRotationOpinion
-作者:dengjunren
-描述:岗位轮换自荐意见
+模块名:assemble
+类名:ModuleApply
+作者:liguiqin
+描述:模块应用
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-CoverRotation cover 岗位轮换自荐;
-String username 姓名;
-String area 地区;
-String department 项目组部门;
-String position 岗位;
-String opinion 意见;
+Module module 模块;
+String company 公司;
 )

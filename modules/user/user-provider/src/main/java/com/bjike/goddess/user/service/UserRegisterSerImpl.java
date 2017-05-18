@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.to.UserRegisterTO;
+import com.bjike.goddess.user.utils.SeqUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -81,13 +82,14 @@ public class UserRegisterSerImpl implements UserRegisterSer {
      */
     private void saveUserByDTO(UserRegisterTO registerTO) throws SerException {
         try {
+            String no = userSer.findByMaxField("employeeNumber",User.class);
             User user = new User();
             user.setUsername(registerTO.getUsername());
             user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
             user.setUserType(UserType.CUSTOMER);
             user.setCreateTime(LocalDateTime.now());
             user.setStatus(Status.THAW);
-            user.setEmployeeNumber("IKE" + new Random().nextInt(999999));
+            user.setEmployeeNumber(SeqUtil.generate(no));
             userSer.save(user);
         } catch (Exception e) {
             throw new SerException(e.getMessage());

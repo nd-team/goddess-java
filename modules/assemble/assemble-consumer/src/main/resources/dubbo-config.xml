@@ -17,4 +17,5 @@
 
     <dubbo:reference id="moduleAPI" interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
     <dubbo:reference id="moduleAssembleAPI" interface="com.bjike.goddess.assemble.api.ModuleAssembleAPI"/>
+    <dubbo:reference id="moduleApplyAPI" interface="com.bjike.goddess.assemble.api.ModuleApplyAPI"/>
 </beans>

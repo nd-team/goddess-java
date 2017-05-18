@@ -61,12 +61,6 @@ public class ProjectMonth extends BaseEntity {
     private Double planIncome;
 
     /**
-     * 收入差异
-     */
-    @Column(name = "incomeDifferences", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收入差异'")
-    private Double incomeDifferences;
-
-    /**
      * 目标任务量
      */
     @Column(name = "targetWork", nullable = false, columnDefinition = "INT(11)   COMMENT '目标任务量'")
@@ -78,11 +72,6 @@ public class ProjectMonth extends BaseEntity {
     @Column(name = "actualWork", nullable = false, columnDefinition = "INT(11)   COMMENT '实际任务量'")
     private Integer actualWork;
 
-    /**
-     * 任务量差异
-     */
-    @Column(name = "workDifferences", nullable = false, columnDefinition = "INT(11)   COMMENT '任务量差异'")
-    private Integer workDifferences;
 
     public Integer getYear() {
         return year;
@@ -140,14 +129,6 @@ public class ProjectMonth extends BaseEntity {
         this.planIncome = planIncome;
     }
 
-    public Double getIncomeDifferences() {
-        return incomeDifferences;
-    }
-
-    public void setIncomeDifferences(Double incomeDifferences) {
-        this.incomeDifferences = incomeDifferences;
-    }
-
     public Integer getTargetWork() {
         return targetWork;
     }
@@ -162,13 +143,5 @@ public class ProjectMonth extends BaseEntity {
 
     public void setActualWork(Integer actualWork) {
         this.actualWork = actualWork;
-    }
-
-    public Integer getWorkDifferences() {
-        return workDifferences;
-    }
-
-    public void setWorkDifferences(Integer workDifferences) {
-        this.workDifferences = workDifferences;
     }
 }

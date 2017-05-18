@@ -1,23 +1,22 @@
 package com.bjike.goddess.assemble.service;
 
 import com.bjike.goddess.assemble.bo.ModuleBO;
-import com.bjike.goddess.assemble.dao.ModuleRep;
-import com.bjike.goddess.assemble.dto.ModuleAssembleDTO;
+import com.bjike.goddess.assemble.dto.ModuleApplyDTO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.entity.Module;
-import com.bjike.goddess.assemble.entity.ModuleAssemble;
+import com.bjike.goddess.assemble.entity.ModuleApply;
 import com.bjike.goddess.assemble.to.ModuleTO;
 import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,16 +32,27 @@ import java.util.List;
 public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements ModuleSer {
 
     @Autowired
-    private ModuleRep moduleRep;
-    @Autowired
-    private ModuleAssembleSer moduleAssembleSer;
+    private ModuleApplySer moduleApplySer;
 
     @Override
     public List<ModuleBO> list(ModuleDTO moduleDTO) throws SerException {
         moduleDTO.setSorts(Arrays.asList("createTime=asc"));
-        return BeanTransform.copyProperties(super.findByCis(moduleDTO), ModuleBO.class);
+        List<ModuleBO> modules = BeanTransform.copyProperties(super.findByCis(moduleDTO), ModuleBO.class);
+        ModuleApplyDTO applyDTO = new ModuleApplyDTO();
+        applyDTO.getConditions().add(Restrict.eq("company", "北京艾佳"));
+        List<ModuleApply> moduleApplies = moduleApplySer.findByCis(applyDTO);
+        for (ModuleApply apply : moduleApplies) {
+            for (ModuleBO module : modules) {
+                if (apply.getModule().getName().equals(module.getName())) {
+                    module.setCheckType(CheckType.CHECK);
+                    break;
+                }
+            }
+        }
+        return modules;
     }
 
+    @Transactional
     @Override
     public void add(ModuleTO moduleTO) throws SerException {
         Module module = BeanTransform.copyProperties(moduleTO, Module.class, true);
@@ -55,29 +65,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
         }
     }
 
-    @Override
-    public ModuleBO modulesByName(String name, CheckType checkType) throws SerException {
-        Module module = moduleRep.findByName(name);
-        StringBuilder sb = new StringBuilder();
-        sb.append("select b.id,b.relation_id as relationId, b.checkType,a.name from module_table a,(");
-        sb.append(" select b.id,b.relation_id  ,b.checkType from module_table a ,");
-        sb.append(" module_assemble b where a.id = b.module_id and a.name='");
-        sb.append(name);
-        sb.append("' ");
-        if (null != checkType) {
-            sb.append(" and b.checkType=" + checkType.getCode());
-        }else {
-            sb.append(" and b.checkType in(0,1)");
-        }
-        sb.append(" )b where b.relation_id=a.id order by a.createTime asc");
-        String sql = sb.toString();
-        List<ModuleBO> relations = super.findBySql(sql, ModuleBO.class, new String[]{"id","relationId", "checkType", "name"});
-        ModuleBO moduleBO = BeanTransform.copyProperties(module, ModuleBO.class);
-        moduleBO.setRelations(relations);
-        return moduleBO;
-    }
-
-
+    @Transactional
     @Override
     public void delete(String id) throws SerException {
         super.remove(id);
@@ -85,17 +73,32 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
 
     @Transactional
     @Override
-    public void check(String moduleId, String[] relationIds) throws SerException {
-        String sql = "update module_assemble set checkType=1 where checkType<>2 and module_id='"+moduleId+"'";
-        super.executeSql(sql);
-        if (null != relationIds && relationIds.length > 0) {
-            String[] tmp = new String[relationIds.length];
-            for(int i=0;i<relationIds.length;i++){
-                tmp[i]="'"+relationIds[i]+"'";
-            }
-            String relations = StringUtils.join(tmp,",");
-            sql ="update module_assemble set checkType=0 where checkType<>2 and module_id='"+moduleId+"' and relation_id in("+relations+")";
-            super.executeSql(sql);
+    public void check(String[] ids) throws SerException {
+        List<Module> modules = new ArrayList<>();
+        if (null != ids && ids.length > 0) {
+            ModuleDTO dto = new ModuleDTO();
+            dto.getConditions().add(Restrict.in(ID, ids));
+            modules = super.findByCis(dto);
         }
+        List<ModuleApply> moduleApplies = new ArrayList<>();
+        String sql = "delete from module_apply where company=" + "'北京艾佳'";
+        super.executeSql(sql);
+        for (Module module : modules) {
+            ModuleApply apply = new ModuleApply();
+            apply.setModule(module);
+            apply.setCompany("北京艾佳");
+            moduleApplies.add(apply);
+        }
+        if (moduleApplies.size() > 0) {
+            moduleApplySer.save(moduleApplies);
+        }
+    }
+
+    @Override
+    public Boolean isCheck(String name) throws SerException {
+        ModuleApplyDTO dto = new ModuleApplyDTO();
+        dto.getConditions().add(Restrict.eq("company", "北京艾佳"));
+        dto.getConditions().add(Restrict.eq("module.name", name));
+        return null != moduleApplySer.findOne(dto);
     }
 }

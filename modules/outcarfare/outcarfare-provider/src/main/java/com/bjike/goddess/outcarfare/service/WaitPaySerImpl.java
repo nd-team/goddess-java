@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public List<WaitPayBO> list(WaitPayDTO dto) throws SerException {
         List<DispatchCarInfoBO> list = dispatchCarInfoAPI.allWaitPay();
         List<WaitPay> waitPays = super.findAll();
@@ -73,7 +75,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                     waitPay.setOvertimeHour((double) v.getOverWorkTime());
                     waitPay.setOvertimeFee(v.getOverWorkCost());
                     waitPay.setAllowance(v.getMealCost());
-                    waitPay.setOvertimePrice(v.getCarRentalCost()/8);
+                    waitPay.setOvertimePrice(v.getCarRentalCost() / 8);
                     waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
                     waitPay.setAmount(v.getCost());
                     waitPay.setDispatchCarInfoId(v.getId());
@@ -100,7 +102,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                             p.setAllowance(v.getMealCost());
                             p.setParkFee(v.getParkCost() + v.getRoadCost());
                             p.setAmount(v.getCost());
-                            p.setOvertimePrice(v.getCarRentalCost()/8);
+                            p.setOvertimePrice(v.getCarRentalCost() / 8);
                             p.setDispatchCarInfoId(v.getId());
                             p.setDispatchCarInfoId(v.getId());
                             super.update(p);
@@ -122,7 +124,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                         waitPay.setAllowance(v.getMealCost());
                         waitPay.setParkFee(v.getParkCost() + v.getRoadCost());
                         waitPay.setAmount(v.getCost());
-                        waitPay.setOvertimePrice(v.getCarRentalCost()/8);
+                        waitPay.setOvertimePrice(v.getCarRentalCost() / 8);
                         waitPay.setDispatchCarInfoId(v.getId());
                         super.save(waitPay);
                     }
@@ -131,7 +133,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
         for (WaitPay p : super.findAll()) {
             DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getDispatchCarInfoId());
-            if (v == null||v.getPay()) {
+            if (v == null || v.getPay()) {
                 super.remove(p.getId());
             }
         }
@@ -148,6 +150,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<DriverCountBO> driverCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
+        list(dto);
         List<PayBO> list = findAlreadyPays();
         Set<String> drivers = findAllDrivers();
         Set<Double> prices = findAllPrices();
@@ -188,6 +191,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<ArrivalCountBO> arrivalCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
+        list(dto);
         List<PayBO> list = findAlreadyPays();
         Set<String> arrivals = findAllArrivals();
         Set<Double> prices = findAllPrices();
@@ -228,6 +232,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<CarUserCountBO> carUserCount() throws SerException {
         WaitPayDTO dto = new WaitPayDTO();
+        list(dto);
         List<PayBO> list = findAlreadyPays();
         Set<String> carUsers = findAllCarUsers();
         Set<Double> prices = findAllPrices();
@@ -267,6 +272,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public List<PayBO> findAlreadyPays() throws SerException {
+        list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         List<PayBO> boList = new ArrayList<PayBO>();
         for (WaitPay w : list) {
@@ -287,6 +293,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @throws SerException
      */
     private Set<String> findAllDrivers() throws SerException {
+        list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (WaitPay w : list) {
@@ -302,6 +309,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @throws SerException
      */
     private Set<String> findAllArrivals() throws SerException {
+        list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (WaitPay w : list) {
@@ -317,6 +325,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @throws SerException
      */
     private Set<String> findAllCarUsers() throws SerException {
+        list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (WaitPay w : list) {
@@ -332,6 +341,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
      * @throws SerException
      */
     private Set<Double> findAllPrices() throws SerException {
+        list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         Set<Double> set = new HashSet<Double>();
         for (WaitPay w : list) {
