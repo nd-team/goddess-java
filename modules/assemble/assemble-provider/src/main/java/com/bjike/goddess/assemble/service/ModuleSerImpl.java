@@ -1,7 +1,6 @@
 package com.bjike.goddess.assemble.service;
 
 import com.bjike.goddess.assemble.bo.ModuleBO;
-import com.bjike.goddess.assemble.dao.ModuleRep;
 import com.bjike.goddess.assemble.dto.ModuleApplyDTO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.entity.Module;
@@ -76,7 +75,7 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
     @Override
     public void check(String[] ids) throws SerException {
         List<Module> modules = new ArrayList<>();
-        if(null!=ids && ids.length>0){
+        if (null != ids && ids.length > 0) {
             ModuleDTO dto = new ModuleDTO();
             dto.getConditions().add(Restrict.in(ID, ids));
             modules = super.findByCis(dto);
@@ -90,8 +89,16 @@ public class ModuleSerImpl extends ServiceImpl<Module, ModuleDTO> implements Mod
             apply.setCompany("北京艾佳");
             moduleApplies.add(apply);
         }
-        if(moduleApplies.size()>0){
+        if (moduleApplies.size() > 0) {
             moduleApplySer.save(moduleApplies);
         }
+    }
+
+    @Override
+    public Boolean isCheck(String id) throws SerException {
+        ModuleApplyDTO dto = new ModuleApplyDTO();
+        dto.getConditions().add(Restrict.eq("company", "北京艾佳"));
+        dto.getConditions().add(Restrict.eq("module.id", id));
+        return null != moduleApplySer.findOne(dto);
     }
 }

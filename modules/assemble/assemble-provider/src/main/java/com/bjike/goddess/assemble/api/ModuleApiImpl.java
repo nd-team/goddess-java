@@ -42,4 +42,9 @@ public class ModuleApiImpl implements ModuleAPI {
     public void check(String[] ids) throws SerException {
         moduleSer.check(ids);
     }
+
+    @Override
+    public Boolean isCheck(String id) throws SerException {
+        return moduleSer.isCheck(id);
+    }
 }

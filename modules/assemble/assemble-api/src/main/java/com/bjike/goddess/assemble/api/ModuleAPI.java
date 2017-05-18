@@ -60,5 +60,15 @@ public interface ModuleAPI {
 
     }
 
+    /**
+     * 模块是否选中
+     *
+     * @param id
+     * @throws SerException
+     */
+    default Boolean isCheck(String id) throws SerException {
+        return null;
+    }
+
 
 }
