@@ -9,6 +9,10 @@ package com.bjike.goddess.projectmarketfee.vo;
  */
 public class CostAnalysisCoutnVO {
     /**
+     * id
+     */
+    private String id;
+    /**
      * 项目组
      */
     private String project;
@@ -60,6 +64,14 @@ public class CostAnalysisCoutnVO {
      * 等级评定
      */
     private String grade;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getProject() {
         return project;

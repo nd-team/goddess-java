@@ -125,4 +125,23 @@ public class WarnAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto     dto
+     * @param request 请求对象
+     * @return class WarnVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(WarnDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            WarnBO bo = warnAPI.countNum(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, WarnVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

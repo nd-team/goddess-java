@@ -101,4 +101,24 @@ public interface ProjectMonthAPI {
     default List<ProjectWeekBO> findDetail(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @return class Long
+     * @throws SerException
+     */
+    default Long countNum(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找所有项目
+     *
+     * @throws SerException
+     */
+    default List<String> findAllProjects() throws SerException {
+        return null;
+    }
 }

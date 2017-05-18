@@ -3,11 +3,15 @@ package com.bjike.goddess.projectmarketfee.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmarketfee.api.CostAnalysisCountAPI;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisBO;
 import com.bjike.goddess.projectmarketfee.bo.CostAnalysisCountBO;
+import com.bjike.goddess.projectmarketfee.dto.CostAnalysisCountDTO;
 import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.entity.CostAnalysis;
+import com.bjike.goddess.projectmarketfee.entity.CostAnalysisCount;
 import com.bjike.goddess.projectmarketfee.entity.Warn;
+import com.bjike.goddess.projectmarketfee.to.CostAnalysisCountTO;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,6 +40,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
     private WarnSer warnSer;
     @Autowired
     private ProjectMarketFeeSer projectMarketFeeSer;
+    @Autowired
+    private CostAnalysisCountAPI costAnalysisCountAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -109,11 +115,11 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                     expectedIncomeSum += bo.getExpectedIncome();
                     expectedMarketCostSum += bo.getExpectedMarketCost();
                     actualMarketCostSum += bo.getActualMarketCost();
-                    differences+=bo.getDifferences();
+                    differences += bo.getDifferences();
                 }
             }
             if (expectedIncomeSum != 0) {
-                CostAnalysisCountBO bo = new CostAnalysisCountBO();
+                CostAnalysisCountTO bo = new CostAnalysisCountTO();
                 bo.setArrival(arrival);
                 bo.setYear(year);
                 bo.setMonth(month);
@@ -129,7 +135,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                         bo.setWarn("超出");
                     }
                 }
-                boList.add(bo);
+                boList.add(costAnalysisCountAPI.save(bo));
                 expectedIncomeSum = 0.00;
                 expectedMarketCostSum = 0.00;
                 actualMarketCostSum = 0.00;
@@ -157,11 +163,11 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                         expectedIncomeSum += bo.getExpectedIncome();
                         expectedMarketCostSum += bo.getExpectedMarketCost();
                         actualMarketCostSum += bo.getActualMarketCost();
-                        differences+=bo.getDifferences();
+                        differences += bo.getDifferences();
                     }
                 }
                 if (expectedIncomeSum != 0) {
-                    CostAnalysisCountBO bo = new CostAnalysisCountBO();
+                    CostAnalysisCountTO bo = new CostAnalysisCountTO();
                     bo.setArrival(arrival);
                     bo.setProject(projectGroup);
                     bo.setYear(year);
@@ -178,7 +184,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                             bo.setWarn("超出");
                         }
                     }
-                    boList.add(bo);
+                    boList.add(costAnalysisCountAPI.save(bo));
                     expectedIncomeSum = 0.00;
                     expectedMarketCostSum = 0.00;
                     actualMarketCostSum = 0.00;
@@ -209,11 +215,11 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                             expectedIncomeSum += bo.getExpectedIncome();
                             expectedMarketCostSum += bo.getExpectedMarketCost();
                             actualMarketCostSum += bo.getActualMarketCost();
-                            differences+=bo.getDifferences();
+                            differences += bo.getDifferences();
                         }
                     }
                     if (expectedIncomeSum != 0) {
-                        CostAnalysisCountBO bo = new CostAnalysisCountBO();
+                        CostAnalysisCountTO bo = new CostAnalysisCountTO();
                         bo.setArrival(arrival);
                         bo.setProject(projectGroup);
                         bo.setProjectName(projectName);
@@ -231,7 +237,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                                 bo.setWarn("超出");
                             }
                         }
-                        boList.add(bo);
+                        CostAnalysisCountBO aa=costAnalysisCountAPI.save(bo);
+                        boList.add(aa);
                         expectedIncomeSum = 0.00;
                         expectedMarketCostSum = 0.00;
                         actualMarketCostSum = 0.00;
@@ -244,10 +251,11 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
     }
 
     @Override
-    public List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
-        String[] arrivals = new String[]{arrival};
-        String[] projectGroups = new String[]{projectGroup};
-        String[] projectNames = new String[]{projectName};
+    public List<CostAnalysisBO> findDetail(String id) throws SerException {
+        CostAnalysisCountBO to=costAnalysisCountAPI.findByID(id);
+        String[] arrivals = new String[]{to.getArrival()};
+        String[] projectGroups = new String[]{to.getProject()};
+        String[] projectNames = new String[]{to.getProjectName()};
         List<Warn> warns = warnSer.findAll();
         List<CostAnalysis> list = null;
         List<CostAnalysisBO> boList = new ArrayList<CostAnalysisBO>();
@@ -255,7 +263,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
         sb.append("SELECT project,arrival,year,month,projectName,expectedIncome,expectedMarketCost,grade\n" +
                 "from projectmarketfee_costanalysis");
         String[] fields = new String[]{"project", "arrival", "year", "month", "projectName", "expectedIncome", "expectedMarketCost", "grade"};
-        if ((!"null".equals(arrival)) && (!"null".equals(projectGroup)) && (!"null".equals(projectName))) {
+        if ((to.getArrival() != null) && (to.getProject() != null) && (to.getProjectName() != null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE project='" + projectGroups[i] + "' AND arrival='" + arrivals[i] + "' AND projectName='" + projectNames[i] + "'");
                 String sql = sb.toString();
@@ -278,7 +286,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 boList.add(costAnalysisBO);
             }
             return boList;
-        } else if ((!"null".equals(arrival)) && (!"null".equals(projectGroup))) {
+        } else if ((to.getArrival() != null) && (to.getProject() != null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE project='" + projectGroups[i] + "' AND arrival='" + arrivals[i] + "'");
                 String sql = sb.toString();
@@ -301,7 +309,7 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
                 boList.add(costAnalysisBO);
             }
             return boList;
-        } else if ((!"null".equals(arrival))) {
+        } else if ((to.getArrival() != null)) {
             for (int i = 0; i < arrivals.length; i++) {
                 sb.append(" WHERE arrival='" + arrivals[i] + "'");
                 String sql = sb.toString();
@@ -379,7 +387,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
      * @return class Integer
      * @throws SerException
      */
-    private Set<Integer> allYears() throws SerException {
+    @Override
+    public Set<Integer> allYears() throws SerException {
         List<CostAnalysis> list = super.findAll();
         Set<Integer> set = new HashSet<Integer>();
         for (CostAnalysis costAnalysis : list) {
@@ -394,7 +403,8 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
      * @return class Integer
      * @throws SerException
      */
-    private Set<Integer> allMonths() throws SerException {
+    @Override
+    public Set<Integer> allMonths() throws SerException {
         List<CostAnalysis> list = super.findAll();
         Set<Integer> set = new HashSet<Integer>();
         for (CostAnalysis costAnalysis : list) {
@@ -432,5 +442,12 @@ public class CostAnalysisSerImpl extends ServiceImpl<CostAnalysis, CostAnalysisD
             boList.add(costAnalysisBO);
         }
         return boList;
+    }
+
+    @Override
+    public CostAnalysisBO countNum(CostAnalysisDTO dto) throws SerException {
+        CostAnalysisBO bo = new CostAnalysisBO();
+        bo.setNum(super.count(dto));
+        return bo;
     }
 }

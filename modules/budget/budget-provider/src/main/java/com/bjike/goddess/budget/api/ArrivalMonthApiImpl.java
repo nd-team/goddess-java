@@ -65,4 +65,14 @@ public class ArrivalMonthApiImpl implements ArrivalMonthAPI {
     public List<ArrivalWeekBO> findDetail(String id) throws SerException {
         return arrivalMonthSer.findDetail(id);
     }
+
+    @Override
+    public Long countNum(ArrivalMonthDTO dto) throws SerException {
+        return arrivalMonthSer.countNum(dto);
+    }
+
+    @Override
+    public List<String> findAllArrivals() throws SerException {
+        return arrivalMonthSer.findAllArrivals();
+    }
 }

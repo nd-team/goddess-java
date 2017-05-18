@@ -7,6 +7,7 @@ import com.bjike.goddess.projectmarketfee.dto.CostAnalysisDTO;
 import com.bjike.goddess.projectmarketfee.to.CostAnalysisTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 费用效益分析业务接口
@@ -109,13 +110,42 @@ public interface CostAnalysisAPI {
     /**
      * 查找明细
      *
-     * @param arrival      地区
-     * @param projectGroup 项目组
-     * @param projectName  项目名称
+     * @param id 费用效益汇总信息
      * @return class CostAnalysisBO
      * @throws SerException
      */
-    default List<CostAnalysisBO> findDetail(String arrival, String projectGroup, String projectName) throws SerException {
+    default List<CostAnalysisBO> findDetail(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto 预警信息
+     * @return class CostAnalysisBO
+     * @throows SerException
+     */
+    default CostAnalysisBO countNum(CostAnalysisDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查所有年份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    default Set<Integer> allYears() throws SerException {
+        return null;
+    }
+
+    /**
+     * 查所有月份
+     *
+     * @return class Integer
+     * @throws SerException
+     */
+    default Set<Integer> allMonths() throws SerException {
         return null;
     }
 }

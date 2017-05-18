@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.action.budget;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.budget.vo.ProjectWeekCountVO;
@@ -160,6 +161,39 @@ public class ProjectWeekAct {
         try {
             List<ProjectWeekCountBO> list = projectWeekAPI.conditionsCount(projects);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(ProjectWeekDTO dto) throws ActException {
+        try {
+            Long num = projectWeekAPI.countNum(dto);
+            return ActResult.initialize(num);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有项目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllProjects")
+    public Result findAllProjects() throws ActException {
+        try {
+            List<String> list = projectWeekAPI.findAllProjects();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
