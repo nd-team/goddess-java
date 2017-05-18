@@ -28,15 +28,40 @@ public class CustomIntercept implements Interceptor {
     @Autowired
     private StorageUserAPI storageUserAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private PermissionAPI permissionAPI;
 
     @Override
     public List<HIInfo> customerInterceptors() {
+        /**
+         * 添加限流器
+         */
+        SmoothBurstyInterceptor smoothInterceptor = new SmoothBurstyInterceptor(100, SmoothBurstyInterceptor.LimitType.DROP);
+        HIInfo smoothInfo = new HIInfo(smoothInterceptor, "/**");
 
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
+        /**
+         * 登录拦截器
+         */
+        HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
+
+        /**
+         * 权限拦截器
+         */
+        String[] excludes = new String[]{
+                "*/login",
+                "*/register",
+                "/user/version/verifyPhone/*",
+                "/user/version/register/*",
+                "public/version/key"
+        };
+        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
          * 暂时不加权限
          */
-        return Arrays.asList(storageInfo);
+        return Arrays.asList(smoothInfo, loginInfo);
     }
+
 }

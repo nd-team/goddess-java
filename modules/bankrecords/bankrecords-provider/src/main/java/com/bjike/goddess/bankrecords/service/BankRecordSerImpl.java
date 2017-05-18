@@ -59,10 +59,47 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public List<String> check(byte[] bytes) throws SerException {
+    public List<String> check(List<InputStream> inputStreams) throws SerException {
 
-        if (bytes != null) {
-            HSSFWorkbook wb = null;
+        if (inputStreams != null && !inputStreams.isEmpty()) {
+
+            String fileName = getFileInfo(inputStreams.get(0));
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+
+            //判断文件后缀名
+            if (suffixName.equals(".xls") || suffixName.equals(".XLS") ||
+                    suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
+                //转换字节流
+                Object obj = (Object) inputStreams.get(1);
+                InputStream inputStream = new ByteArrayInputStream((byte[]) obj);
+                List<String> list = new ArrayList<String>();
+                try {
+                    //不同格式的Excel需要导入不同的包,(".xlsx"后缀为OFFICE2007以上的版本)
+                    if (suffixName.equals(".xls") || suffixName.equals(".XLS")) {
+                        HSSFWorkbook wb = new HSSFWorkbook(inputStream);
+                        HSSFSheet sheet = wb.getSheetAt(0);
+                        int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
+                        for (int i = 0; i < cellNum; i++) {
+                            list.add(sheet.getRow(0).getCell(i).getStringCellValue());
+                        }
+                    } else if (suffixName.equals(".xlsx") || suffixName.equals(".XLSX")) {
+                        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+                        XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+                        int cellNum = xssfSheet.getRow(0).getPhysicalNumberOfCells();
+                        for (int i = 0; i < cellNum; i++) {
+                            list.add(xssfSheet.getRow(0).getCell(i).getStringCellValue());
+                        }
+                    }
+                    return list;
+                }catch (IOException e){
+                    throw new SerException("Excel读取失败，请检查文件是否损坏或联系管理员!");
+                }
+            } else {
+                throw new SerException("请上传'.xls'或者'.xlsx'格式的Excel文件!");
+            }
+
+
+           /* HSSFWorkbook wb = null;
             HSSFSheet sheet = null;
             //根据字节数组获取Excel信息
             InputStream inputStream = new ByteArrayInputStream(bytes);
@@ -76,8 +113,8 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
             int cellNum = sheet.getRow(0).getPhysicalNumberOfCells();
             for (int i = 0; i < cellNum; i++) {
                 list.add(sheet.getRow(0).getCell(i).getStringCellValue());
-            }
-            return list;
+            }*/
+//            return list;
         } else {
             throw new SerException("文件内容不能为空!");
         }

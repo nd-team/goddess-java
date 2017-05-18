@@ -7,6 +7,7 @@ import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public interface BankRecordAPI {
      *
      * @version v1
      */
-    List<String> check(byte[] bytes) throws SerException;
+    List<String> check(List<InputStream> inputStreams) throws SerException;
 
     /**
      * 导入银行流水

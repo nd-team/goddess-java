@@ -390,3 +390,15 @@ include ':modules:rotation:rotation-api'
 include ':modules:rotation:rotation-consumer'
 include ':modules:rotation:rotation-provider'
 
+
+//#fundrecords 资金流水 Jason
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
+
+//#bankrecords 银行流水 Jason
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'
+
+
