@@ -4,7 +4,8 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,49 +33,49 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 地区
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 物品名称
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
     private String materialName;
 
     /**
      * 单位
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "单位不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "单位不能为空")
     private String unit;
 
     /**
      * 领用人
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "领用人不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "领用人不能为空")
     private String recipient;
 
     /**
      * 领用日期
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "领用日期不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "领用日期不能为空")
     private String receiveDate;
 
     /**
      * 用途
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "用途不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "用途不能为空")
     private String purpose;
 
     /**
      * 审核人
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "审核人不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "审核人不能为空")
     private String auditor;
 
     /**
@@ -86,7 +87,7 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 审核意见
      */
-    @NotEmpty(groups = {MaterialReceiveTO.AUDIT.class}, message = "审核意见不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.AUDIT.class}, message = "审核意见不能为空")
     private String auditOpinion;
 
     /**
@@ -102,25 +103,25 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 型号
      */
-    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "型号不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "型号不能为空")
     private String model;
 
     /**
      * 原存储地区
      */
-    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "原存储地区不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "原存储地区不能为空")
     private String oldStorageArea;
 
     /**
      * 物资原负责人
      */
-    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "物资原负责人不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "物资原负责人不能为空")
     private String oldPrincipal;
 
     /**
      * 经手人
      */
-    @NotEmpty(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "经手人不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.RECEIVEOVER.class}, message = "经手人不能为空")
     private String handler;
 
     /**
@@ -132,19 +133,19 @@ public class MaterialReceiveTO extends BaseTO {
     /**
      * 审核情况
      */
-    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "审核情况不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "审核情况不能为空")
     private String auditCase;
 
     /**
      * 归还时间
      */
-    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "归还时间不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "归还时间不能为空")
     private String returnTime;
 
     /**
      * 物资状态
      */
-    @NotEmpty(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "物资状态不能为空")
+    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "物资状态不能为空")
     private String materialState;
 
     /**
