@@ -186,25 +186,4 @@ public class SubjectCollect extends BaseEntity {
         this.endCreditAmount = endCreditAmount;
     }
 
-    public SubjectCollect(String firstSubject, Double beginningDebitAmount, Double beginningCreditAmount, Double issueDebitAmount, Double issueCreditAmount, Double endDebitAmount, Double endCreditAmount) {
-        this.firstSubject = firstSubject;
-        this.beginningDebitAmount = beginningDebitAmount;
-        this.beginningCreditAmount = beginningCreditAmount;
-        this.issueDebitAmount = issueDebitAmount;
-        this.issueCreditAmount = issueCreditAmount;
-        this.endDebitAmount = endDebitAmount;
-        this.endCreditAmount = endCreditAmount;
-    }
-    public SubjectCollect(String area,String projectName,String projectGroup, Double beginningDebitAmount, Double beginningCreditAmount, Double issueDebitAmount, Double issueCreditAmount, Double endDebitAmount, Double endCreditAmount) {
-        this.area = area;
-        this.projectName = projectName;
-        this.projectGroup = projectGroup;
-        this.beginningDebitAmount = beginningDebitAmount;
-        this.beginningCreditAmount = beginningCreditAmount;
-        this.issueDebitAmount = issueDebitAmount;
-        this.issueCreditAmount = issueCreditAmount;
-        this.endDebitAmount = endDebitAmount;
-        this.endCreditAmount = endCreditAmount;
-    }
-
 }

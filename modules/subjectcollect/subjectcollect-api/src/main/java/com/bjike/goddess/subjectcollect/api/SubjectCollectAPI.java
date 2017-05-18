@@ -1,6 +1,7 @@
 package com.bjike.goddess.subjectcollect.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
@@ -87,11 +88,10 @@ public interface SubjectCollectAPI {
     /**
      * 汇总对比
      *
-     * @return class SubjectCollectBO
+     * @return class CompareCollectBO
      * @throws SerException
      */
-    default List<SubjectCollectBO> collectCompare(Integer [] months) throws SerException {
+    default List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
         return null;
     }
-
 }

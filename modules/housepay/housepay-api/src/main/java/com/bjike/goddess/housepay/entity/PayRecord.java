@@ -26,85 +26,85 @@ public class PayRecord extends BaseEntity {
     /**
      * 缴费时间
      */
-    @Column(name = "payTime", nullable = false, columnDefinition = "DATE   COMMENT '缴费时间'")
+    @Column(name = "payTime", columnDefinition = "DATE   COMMENT '缴费时间'")
     private LocalDate payTime;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目
      */
-    @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目'")
+    @Column(name = "project", columnDefinition = "VARCHAR(255)   COMMENT '项目'")
     private String project;
 
     /**
      * 房租地址
      */
-    @Column(name = "rentAddress", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '房租地址'")
+    @Column(name = "rentAddress",  columnDefinition = "VARCHAR(255)   COMMENT '房租地址'")
     private String rentAddress;
 
     /**
      * 租金
      */
-    @Column(name = "rent", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '租金'")
+    @Column(name = "rent", columnDefinition = "DECIMAL(10,2)   COMMENT '租金'")
     private Double rent;
 
     /**
      * 水费
      */
-    @Column(name = "water", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '水费'")
+    @Column(name = "water",  columnDefinition = "DECIMAL(10,2)   COMMENT '水费'")
     private Double water;
 
     /**
      * 电费
      */
-    @Column(name = "energy", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '电费'")
+    @Column(name = "energy",  columnDefinition = "DECIMAL(10,2)   COMMENT '电费'")
     private Double energy;
 
     /**
      * 管理费
      */
-    @Column(name = "fee", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '管理费'")
+    @Column(name = "fee",  columnDefinition = "DECIMAL(10,2)   COMMENT '管理费'")
     private Double fee;
 
     /**
      * 其他费用
      */
-    @Column(name = "otherFee", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '其他费用'")
+    @Column(name = "otherFee",  columnDefinition = "DECIMAL(10,2)   COMMENT '其他费用'")
     private Double otherFee;
 
     /**
      * 合计（租金+水费+电费+管理费+其他费用）
      */
-    @Column(name = "total", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '合计（租金+水费+电费+管理费+其他费用）'")
+    @Column(name = "total",  columnDefinition = "DECIMAL(10,2)   COMMENT '合计（租金+水费+电费+管理费+其他费用）'")
     private Double total;
 
     /**
      * 房东姓名
      */
-    @Column(name = "landlord", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '房东姓名'")
+    @Column(name = "landlord", columnDefinition = "VARCHAR(255)   COMMENT '房东姓名'")
     private String landlord;
 
     /**
      * 联系电话
      */
-    @Column(name = "contact", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    @Column(name = "contact",  columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
     private String contact;
 
     /**
      * 交租确认
      */
-    @Column(name = "taxesConfirm", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '交租确认'")
+    @Column(name = "taxesConfirm", columnDefinition = "VARCHAR(255)   COMMENT '交租确认'")
     private String taxesConfirm;
 
     /**
      * 是否付款(是/否)
      */
-    @Column(name = "pay", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否付款(是/否)'")
+    @Column(name = "pay",  columnDefinition = "TINYINT(2)   COMMENT '是否付款(是/否)'")
     private PayStatus pay;
 
 

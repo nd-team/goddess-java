@@ -52,10 +52,6 @@ public class SubjectCollectVO {
      * 期初贷方余额
      */
     private Double beginningCreditAmount;
-    /**
-     * 期初差额
-     */
-    private Double beginMinusMoney;
 
     /**
      * 本期借方发生额
@@ -66,10 +62,6 @@ public class SubjectCollectVO {
      * 本期贷方发生额
      */
     private Double issueCreditAmount;
-    /**
-     * 本期差额
-     */
-    private Double issueMinusMoney;
 
     /**
      * 期末借方余额
@@ -81,10 +73,6 @@ public class SubjectCollectVO {
      */
     private Double endCreditAmount;
 
-    /**
-     * 期末差额
-     */
-    private Double endMinusMoney;
 
     public String getId() {
         return id;
@@ -190,27 +178,4 @@ public class SubjectCollectVO {
         this.months = months;
     }
 
-    public Double getBeginMinusMoney() {
-        return beginMinusMoney;
-    }
-
-    public void setBeginMinusMoney(Double beginMinusMoney) {
-        this.beginMinusMoney = beginMinusMoney;
-    }
-
-    public Double getIssueMinusMoney() {
-        return issueMinusMoney;
-    }
-
-    public void setIssueMinusMoney(Double issueMinusMoney) {
-        this.issueMinusMoney = issueMinusMoney;
-    }
-
-    public Double getEndMinusMoney() {
-        return endMinusMoney;
-    }
-
-    public void setEndMinusMoney(Double endMinusMoney) {
-        this.endMinusMoney = endMinusMoney;
-    }
 }

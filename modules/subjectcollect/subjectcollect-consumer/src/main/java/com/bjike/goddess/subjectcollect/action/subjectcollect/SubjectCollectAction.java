@@ -12,6 +12,7 @@ import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
+import com.bjike.goddess.subjectcollect.vo.CompareCollectVO;
 import com.bjike.goddess.subjectcollect.vo.SubjectCollectVO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -338,15 +339,16 @@ public class SubjectCollectAction {
      * 汇总对比
      *
      * @param months 月份
-     * @return class SubjectCollectVO
+     * @return class CompareCollectVO
+     * @des 根据月份
      * @version v1
      */
     @GetMapping("v1/collectCompare")
     public Result collectCompare(@RequestParam Integer [] months) throws ActException {
         try {
-            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
-                    subjectCollectAPI.collectCompare(months),SubjectCollectVO.class);
-            return ActResult.initialize(subjectCollectVOS);
+            List<CompareCollectVO> compareCollectVOS = BeanTransform.copyProperties(
+                    subjectCollectAPI.collectCompare(months),CompareCollectVO.class);
+            return ActResult.initialize(compareCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

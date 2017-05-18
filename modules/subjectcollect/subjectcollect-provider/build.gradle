@@ -29,8 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:subjectcollect:subjectcollect-api")
-    compile project(":modules:voucher:voucher-api")
-    compile project(":modules:financeinit:financeinit-api")
     compile project(":common:common-utils")
+
 }
 

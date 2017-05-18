@@ -3,6 +3,7 @@ package com.bjike.goddess.subjectcollect.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
@@ -55,7 +56,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
-        SubjectCollect subjectCollect = BeanTransform.copyProperties(subjectCollectTO,SubjectCollect.class,true);
+        SubjectCollect subjectCollect = BeanTransform.copyProperties(subjectCollectTO,SubjectCollect.class);
         subjectCollect.setCreateTime(LocalDateTime.now());
         super.save(subjectCollect);
         return BeanTransform.copyProperties(subjectCollect,SubjectCollectBO.class);
@@ -83,7 +84,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         super.remove(id);
     }
     @Override
-    public List<SubjectCollectBO> collectCompare(Integer [] months) throws SerException {
+    public List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
         String[] monthsTemp = new String[months.length];
         for(int i = 0;i<months.length;i++){
             monthsTemp[i] = "'"+months[i]+"'";
@@ -105,8 +106,8 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         String [] fields = new String[]{"months","firstSubject","area","projectName","projectGroup",
                 "beginningDebitAmount","beginningCreditAmount","beginMinusMoney","issueDebitAmount","issueCreditAmount",
                 "issueMinusMoney","endDebitAmount","endCreditAmount","endMinusMoney"};
-        List<SubjectCollectBO> subjectCollectBOS = super.findBySql(sql,SubjectCollectBO.class,fields);
-        return subjectCollectBOS;
+        List<CompareCollectBO> compareCollectBOS = super.findBySql(sql,CompareCollectBO.class,fields);
+        return compareCollectBOS;
     }
 
    /* @Transactional(rollbackFor = SerException.class)
