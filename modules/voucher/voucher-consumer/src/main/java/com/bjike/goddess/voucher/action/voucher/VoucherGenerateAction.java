@@ -38,14 +38,14 @@ public class VoucherGenerateAction {
     /**
      * 记账凭证列表总条数
      *
-     * @param customerBaseInfoDTO 记账凭证信息dto
+     * @param voucherGenerateDTO 记账凭证信息dto
      * @des 获取所有记账凭证信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
+    public Result count(VoucherGenerateDTO voucherGenerateDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countVoucherGenerate(customerBaseInfoDTO);
+            Long count = voucherGenerateAPI.countVoucherGenerate(voucherGenerateDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

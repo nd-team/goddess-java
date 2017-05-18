@@ -122,6 +122,7 @@ public class StaffEntryRegisterAction {
      * @return class StaffEntryRegisterVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
         try {
@@ -141,6 +142,7 @@ public class StaffEntryRegisterAction {
      * @des 根据用户id删除用户
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -164,6 +166,7 @@ public class StaffEntryRegisterAction {
      * @des 发送邮件
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/sendAccountToEmplore")
     public Result sendAccountToEmp(@RequestParam String id, @RequestParam String emailAccount) throws ActException {
         //TODO: tanghaixiang 2017-03-09 未做邮件告知员工账号密码 记得抛异常

@@ -11,6 +11,7 @@ import com.bjike.goddess.customer.bo.CusPermissionBO;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
 import com.bjike.goddess.customer.to.CusPermissionTO;
 import com.bjike.goddess.customer.vo.CusPermissionVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -82,7 +83,7 @@ public class CusPermissionAction {
     @GetMapping("v1/listOperateById/{id}")
     public Result listOperateById(@PathVariable String id) throws ActException {
         try {
-            List<String> list = cusPermissionAPI.listOperateById(id);
+            List<OpinionVO> list = BeanTransform.copyProperties(cusPermissionAPI.listOperateById(id),OpinionVO.class);
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -25,6 +25,8 @@
 	<dubbo:service  ref="salaryConfirmRecordApiImpl" interface="com.bjike.goddess.staffentry.api.SalaryConfirmRecordAPI" />
 	<dubbo:service  ref="studyExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.StudyExperienceAPI" />
 	<dubbo:service  ref="workExperienceApiImpl" interface="com.bjike.goddess.staffentry.api.WorkExperienceAPI" />
+	<dubbo:service  ref="staffEntryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI" />
+
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
