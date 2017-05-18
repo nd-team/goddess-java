@@ -383,20 +383,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
             throw new SerException("id数组不能为空,至少要有一个");
         }
-        StringBuffer sb = new StringBuffer("");
-        for (String str : voucherGenerateTO.getIds()) {
-            sb.append( str.trim() + ",");
-        }
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.in("id", StringUtils.substringBeforeLast(sb.toString(), ",")));
+        dto.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
         List<VoucherGenerate> vgList = super.findByCis(dto);
-        List<VoucherGenerate> list = new ArrayList<>();
         vgList.stream().forEach(obj -> {
             obj.setTransferStatus(TransferStatus.CHECK);
             obj.setModifyTime(LocalDateTime.now());
-            list.add(obj);
         });
-        super.update(list);
+        super.update(vgList);
         return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);
     }
 

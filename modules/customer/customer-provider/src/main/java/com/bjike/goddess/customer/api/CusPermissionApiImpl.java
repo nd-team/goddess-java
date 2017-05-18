@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CusPermissionBO;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
 import com.bjike.goddess.customer.service.CusPermissionSer;
 import com.bjike.goddess.customer.to.CusPermissionTO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public List<String>  listOperateById(String id) throws SerException {
+    public List<OpinionBO>  listOperateById(String id) throws SerException {
         return cusPermissionSer.listOperateById(id);
     }
 

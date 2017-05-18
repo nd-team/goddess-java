@@ -33,7 +33,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        return voucherGenerateSer.count(voucherGenerateDTO);
+        return voucherGenerateSer.countVoucherGenerate(voucherGenerateDTO);
     }
 
     @Override
