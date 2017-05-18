@@ -106,6 +106,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -124,6 +125,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -141,6 +143,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
@@ -158,6 +161,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/fundModuleOpinion")
     public Result fundModuleOpinion(@Validated(MarketServeApplyTO.FUNDMODULE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
@@ -175,6 +179,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/executiveOpinion")
     public Result executiveOpinion(@Validated(MarketServeApplyTO.EXECUTIVE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
@@ -193,6 +198,7 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/addcustomerinfo")
     public Result add(@Validated({ADD.class}) CustomerInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {

@@ -64,6 +64,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -82,6 +83,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -99,6 +101,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -116,6 +119,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw")
     public Result thaw(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -133,6 +137,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal")
     public Result congeal(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -150,6 +155,7 @@ public class ProjectMeasureSummaryAction {
      * @return class ProjectMeasureVO
      * @throws ActException
      */
+    @LoginAuth
     @GetMapping("v1/summarize")
     public Result summarize(ProjectMeasureSummaryTO to) throws ActException {
         try {

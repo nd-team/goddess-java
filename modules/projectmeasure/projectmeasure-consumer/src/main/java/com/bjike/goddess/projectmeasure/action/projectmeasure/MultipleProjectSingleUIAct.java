@@ -66,6 +66,7 @@ public class MultipleProjectSingleUIAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) MultipleProjectSingleUITO to) throws ActException {
         try {
@@ -84,6 +85,7 @@ public class MultipleProjectSingleUIAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -101,6 +103,7 @@ public class MultipleProjectSingleUIAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) MultipleProjectSingleUITO to) throws ActException {
         try {
