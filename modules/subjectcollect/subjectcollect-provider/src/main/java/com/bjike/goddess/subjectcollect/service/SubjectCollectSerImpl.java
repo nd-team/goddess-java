@@ -93,7 +93,7 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         sb.append(" SELECT months AS months,firstSubject AS firstSubject,area AS area, ");
         sb.append(" projectName AS projectName,projectGroup AS projectGroup, ");
         sb.append(" sum(beginningDebitAmount) AS beginningDebitAmount,sum(beginningCreditAmount) AS beginningCreditAmount, ");
-        sb.append(" (sum(beginningDebitAmount)-sum(beginningCreditAmount)) AS beginMinusMoney,  ");
+        sb.append(" (sum(beginningDebitAmount)-sum(beginningCreditAmount)) AS beginMinusMoney, ");
         sb.append(" sum(issueDebitAmount) AS issueDebitAmount,sum(issueCreditAmount) AS issueCreditAmount, ");
         sb.append(" (sum(issueDebitAmount)-sum(issueCreditAmount)) AS issueMinusMoney, ");
         sb.append(" sum(endDebitAmount) AS endDebitAmount,sum(endCreditAmount) AS endCreditAmount, ");
@@ -102,8 +102,8 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
         sb.append(" months ORDER BY months ");
         String sql = sb.toString();
         sql = String.format(sql, monthsStr);
-        String [] fields = new String[]{"months","firstSubject","area","projectName","projectGroup," +
-                "beginningDebitAmount","beginningCreditAmount","beginMinusMoney","issueDebitAmount","issueDebitAmount",
+        String [] fields = new String[]{"months","firstSubject","area","projectName","projectGroup",
+                "beginningDebitAmount","beginningCreditAmount","beginMinusMoney","issueDebitAmount","issueCreditAmount",
                 "issueMinusMoney","endDebitAmount","endCreditAmount","endMinusMoney"};
         List<SubjectCollectBO> subjectCollectBOS = super.findBySql(sql,SubjectCollectBO.class,fields);
         return subjectCollectBOS;
