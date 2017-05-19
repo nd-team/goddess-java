@@ -12,9 +12,11 @@ import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
 import com.bjike.goddess.staffactivity.vo.ActivityEvaluateVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,6 +34,42 @@ public class ActivityEvaluateAct {
 
     @Autowired
     private ActivityEvaluateAPI activityEvaluateAPI;
+
+    /**
+     * 根据id查询活动评价
+     *
+     * @param id 活动评价唯一标识
+     * @return class ActivityEvaluateVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/activityevaluate/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ActivityEvaluateBO bo = activityEvaluateAPI.findById(id);
+            ActivityEvaluateVO vo = BeanTransform.copyProperties(bo, ActivityEvaluateVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 活动评价dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ActivityEvaluateDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = activityEvaluateAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表

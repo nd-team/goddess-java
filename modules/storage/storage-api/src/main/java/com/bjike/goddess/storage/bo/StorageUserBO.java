@@ -13,6 +13,10 @@ import com.bjike.goddess.common.api.type.Status;
  * @Copy: [ com.bjike ]
  */
 public class StorageUserBO extends BaseBO {
+    /**
+     * 系统编号
+     */
+    private String systemNO;
 
     /**
      * 模块名
@@ -34,6 +38,13 @@ public class StorageUserBO extends BaseBO {
      */
     private Status status;
 
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getModuleName() {
         return moduleName;

@@ -19,6 +19,23 @@ import java.util.List;
 public interface ActivityStaffListAPI {
 
     /**
+     * 根据id查询活动人员名单
+     *
+     * @param id 活动人员名单唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivityStaffListBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动人员名单dto
+     * @throws SerException
+     */
+    Long count(ActivityStaffListDTO dto) throws SerException;
+
+    /**
      * 分页查询活动人员名单
      *
      * @param dto 活动人员名单dto

@@ -20,6 +20,23 @@ import java.util.List;
 public interface ActivityApplyInforAPI {
 
     /**
+     * 根据id查询活动申请信息
+     *
+     * @param id 活动申请信息唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivityApplyInforBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动申请信息dto
+     * @throws SerException
+     */
+    Long count(ActivityApplyInforDTO dto) throws SerException;
+
+    /**
      * 分页查询活动申请信息
      *
      * @param dto 活动申请信息dto

@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.bo.ActivityApplyInforBO;
 import com.bjike.goddess.staffactivity.bo.ActivityStaffListBO;
 import com.bjike.goddess.staffactivity.dto.ActivityApplyInforDTO;
+import com.bjike.goddess.staffactivity.entity.ActivityApplyInfor;
 import com.bjike.goddess.staffactivity.service.ActivityApplyInforSer;
 import com.bjike.goddess.staffactivity.to.ActivityApplyInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,30 @@ public class ActivityApplyInforApiImpl implements ActivityApplyInforAPI {
 
     @Autowired
     private ActivityApplyInforSer activityApplyInforSer;
+
+    /**
+     * 根据id查询活动申请信息
+     *
+     * @param id 活动申请信息唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public ActivityApplyInforBO findById(String id) throws SerException {
+        ActivityApplyInfor model = activityApplyInforSer.findById(id);
+        return BeanTransform.copyProperties(model, ActivityApplyInforBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动申请信息dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ActivityApplyInforDTO dto) throws SerException {
+        return activityApplyInforSer.count(dto);
+    }
 
     /**
      * 分页查询活动申请信息

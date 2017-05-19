@@ -1,8 +1,12 @@
 package com.bjike.goddess.housepay.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,12 +19,20 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class MoneyReadyTO extends BaseTO {
+    /**
+     * 年份
+     */
+    @NotNull(message = "年份不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "年份必须大于0")
+    private Integer year;
 
     /**
-     * 时间
+     * 月份
      */
-    @NotBlank(message = "时间不能为空")
-    private String time;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "月份不能为空")
+    @Min(value = 1, groups = {ADD.class, EDIT.class}, message = "月份必须大于等于1")
+    @Max(value = 12, groups = {ADD.class, EDIT.class}, message = "月份必须小于等于12")
+    private Integer month;
 
     /**
      * 类别
@@ -59,12 +71,20 @@ public class MoneyReadyTO extends BaseTO {
     private Double reserves;
 
 
-    public String getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getCategory() {

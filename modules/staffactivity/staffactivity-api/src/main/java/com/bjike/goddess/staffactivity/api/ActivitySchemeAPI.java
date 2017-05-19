@@ -21,6 +21,23 @@ import java.util.Map;
 public interface ActivitySchemeAPI {
 
     /**
+     * 根据id查询活动方案
+     *
+     * @param id 活动方案唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivitySchemeBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动方案dto
+     * @throws SerException
+     */
+    Long count(ActivitySchemeDTO dto) throws SerException;
+
+    /**
      * 分页查询活动方案
      *
      * @param dto 活动方案dto

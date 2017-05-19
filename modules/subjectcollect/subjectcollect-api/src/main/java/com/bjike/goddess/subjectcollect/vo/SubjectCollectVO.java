@@ -19,7 +19,10 @@ public class SubjectCollectVO {
      * 代码
      */
     private String code;
-
+    /**
+     * 月份
+     */
+    private Integer  months;
     /**
      * 一级科目
      */
@@ -166,4 +169,13 @@ public class SubjectCollectVO {
     public void setEndCreditAmount(Double endCreditAmount) {
         this.endCreditAmount = endCreditAmount;
     }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
+    }
+
 }

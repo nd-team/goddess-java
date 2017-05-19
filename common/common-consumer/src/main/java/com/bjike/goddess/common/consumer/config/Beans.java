@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 public class Beans {
 
-//    @Bean
+//   @Bean
     public IdempotencyInterceptor idempotencyInterceptor(){
         return new IdempotencyInterceptor();
     }

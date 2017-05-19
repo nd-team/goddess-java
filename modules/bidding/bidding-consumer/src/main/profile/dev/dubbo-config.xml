@@ -26,6 +26,9 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserRegisterAPI" id="userRegisterApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAuthCodeAPI" id="userAuthCodeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginLogAPI" id="userLoginLogApiImpl"/>-->
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingInfoAPI" id="biddingInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingWebInfoAPI" id="biddingWebInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BidOpeningInfoAPI" id="bidOpeningInfoApiImpl"/>

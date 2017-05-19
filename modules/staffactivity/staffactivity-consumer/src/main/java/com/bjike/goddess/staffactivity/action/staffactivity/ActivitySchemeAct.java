@@ -12,9 +12,11 @@ import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
 import com.bjike.goddess.staffactivity.vo.ActivitySchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,42 @@ public class ActivitySchemeAct {
 
     @Autowired
     private ActivitySchemeAPI activitySchemeAPI;
+
+    /**
+     * 根据id查询合同节点标准信息
+     *
+     * @param id 合同节点标准信息唯一标识
+     * @return class ActivitySchemeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/activityscheme/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ActivitySchemeBO bo = activitySchemeAPI.findById(id);
+            ActivitySchemeVO vo = BeanTransform.copyProperties(bo, ActivitySchemeVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 合同节点标准信息dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ActivitySchemeDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = activitySchemeAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表

@@ -21,5 +21,6 @@
     <!--发布接口,供其他模块调用-->
     <dubbo:service  protocol="hessian"  interface="com.bjike.goddess.storage.api.FileAPI" ref="fileApiImpl" />
     <dubbo:service  interface="com.bjike.goddess.storage.api.StorageUserAPI" ref="storageUserApiImpl"/>
+    <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

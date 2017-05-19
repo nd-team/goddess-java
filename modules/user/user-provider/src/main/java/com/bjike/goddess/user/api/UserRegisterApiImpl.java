@@ -17,12 +17,6 @@ import org.springframework.stereotype.Service;
 public class UserRegisterApiImpl implements UserRegisterAPI {
     @Autowired
     private UserRegisterSer userRegisterSer;
-
-    @Override
-    public Boolean existUsername(String username) throws SerException {
-        return userRegisterSer.existUsername(username);
-    }
-
     @Override
     public void verifyCodeAndReg(UserRegisterTO registerTO) throws SerException {
         userRegisterSer.verifyCodeAndReg(registerTO);

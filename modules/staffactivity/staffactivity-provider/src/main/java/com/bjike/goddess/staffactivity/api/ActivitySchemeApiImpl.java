@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.bo.ActivityFundSummaryBO;
 import com.bjike.goddess.staffactivity.bo.ActivitySchemeBO;
 import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
+import com.bjike.goddess.staffactivity.entity.ActivityScheme;
 import com.bjike.goddess.staffactivity.service.ActivitySchemeSer;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,30 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
 
     @Autowired
     private ActivitySchemeSer activitySchemeSer;
+
+    /**
+     * 根据id查询活动方案
+     *
+     * @param id 活动方案唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public ActivitySchemeBO findById(String id) throws SerException {
+        ActivityScheme model = activitySchemeSer.findById(id);
+        return BeanTransform.copyProperties(model, ActivitySchemeBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动方案dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ActivitySchemeDTO dto) throws SerException {
+        return activitySchemeSer.count(dto);
+    }
 
     /**
      * 分页查询活动方案

@@ -1,6 +1,8 @@
 package com.bjike.goddess.materialtransfer.type;
 
 /**
+ * 调动情况
+ *
  * @Author: [sunfengtao]
  * @Date: [2017-04-28 11:03]
  * @Description: [ ]

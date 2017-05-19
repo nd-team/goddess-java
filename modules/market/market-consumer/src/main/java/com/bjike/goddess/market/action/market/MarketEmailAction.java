@@ -96,6 +96,7 @@ public class MarketEmailAction {
      * @return  class MarketEmailVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated MarketEmailTO marketEmailTO,BindingResult bindingResult) throws ActException {
         try {
@@ -115,6 +116,7 @@ public class MarketEmailAction {
      * @return  class MarketEmailVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated  MarketEmailTO marketEmailTO, BindingResult bindingResult) throws ActException {
         try {
@@ -132,6 +134,7 @@ public class MarketEmailAction {
      * @des 根据id删除市场信息管理邮件汇总信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

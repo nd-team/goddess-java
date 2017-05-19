@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -18,6 +16,7 @@ import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.dto.UserDetailDTO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.entity.UserDetail;
+import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
@@ -105,7 +104,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public UserBO currentUser() throws SerException {
-       //获取当前用户直接给无需登录
+        //获取当前用户直接给无需登录
         String token = RpcTransmit.getUserToken();
         LoginUser loginUser = currentLoginUser(token);
         return BeanTransform.copyProperties(loginUser, UserBO.class);
@@ -133,6 +132,25 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return new ArrayList<>(0);
     }
 
+    @Override
+    public String currentSysNO(String userToken) throws SerException {
+        String sysNO = currentUser(userToken).getSystemNO();
+        if (StringUtils.isNotBlank(sysNO)) {
+            return sysNO;
+        } else {
+            throw new SerException("当前用户系统号为空!");
+        }
+    }
+
+    @Override
+    public String currentSysNO() throws SerException {
+        String sysNO = currentUser().getSystemNO();
+        if (StringUtils.isNotBlank(sysNO)) {
+            return sysNO;
+        } else {
+            throw new SerException("当前用户系统号为空!");
+        }
+    }
 
     @Cacheable
     @Override
@@ -147,6 +165,9 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
     public UserBO add(TransactionContext txContext, UserTO userTO) throws SerException {
         User user = BeanTransform.copyProperties(userTO, User.class);
+        user.setUserType(UserType.EMPLOYEE);
+        String employeeNumber = super.findByMaxField("employeeNumber", User.class);
+        user.setEmployeeNumber(employeeNumber);
         return BeanTransform.copyProperties(super.save(user), UserBO.class);
     }
 
@@ -212,6 +233,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return userBO;
     }
 
+    @Transactional
     @Override
     public void update(UserTO userTO) throws SerException {
         String token = RpcTransmit.getUserToken();
@@ -260,36 +282,36 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             }
             throw new SerException("expire");
         } else {
-            throw new SerException("登录未登录");
+            throw new SerException("用户未登录");
         }
     }
 
     @Override
     public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
-        List<User> list =  super.findByPage(dto );
-        List<UserBO> boList = BeanTransform.copyProperties(list,UserBO.class);
+        List<User> list = super.findByPage(dto);
+        List<UserBO> boList = BeanTransform.copyProperties(list, UserBO.class);
         return boList;
     }
 
     @Override
     public UserBO updateUser(UserTO userTO) throws SerException {
-        if(StringUtils.isBlank(userTO.getId())){
+        if (StringUtils.isBlank(userTO.getId())) {
             throw new SerException("id不能为空");
         }
         User user = super.findById(userTO.getId());
         user.setUsername(userTO.getUsername());
         user.setPassword(userTO.getPassword());
 
-        UserBO userBO = BeanTransform.copyProperties(user,UserBO.class);
+        UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
         return userBO;
     }
 
     @Override
     public void deleteUser(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        super.remove( id );
+        super.remove(id);
     }
 
 

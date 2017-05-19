@@ -34,5 +34,5 @@
 	<dubbo:service interface="com.bjike.goddess.bidding.api.BiddingAnswerQuestionsAPI" ref="biddingAnswerQuestionsApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.bidding.api.TenderInfoAPI" ref="tenderInfoApiImpl"/>
 
-
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 </beans>

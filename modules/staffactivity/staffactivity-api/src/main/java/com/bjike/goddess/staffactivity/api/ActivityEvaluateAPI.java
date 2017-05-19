@@ -21,6 +21,23 @@ import java.util.List;
 public interface ActivityEvaluateAPI {
 
     /**
+     * 根据id查询活动评价
+     *
+     * @param id 活动评价唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivityEvaluateBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动评价dto
+     * @throws SerException
+     */
+    Long count(ActivityEvaluateDTO dto) throws SerException;
+
+    /**
      * 分页查询活动评价
      *
      * @param dto 活动评价dto

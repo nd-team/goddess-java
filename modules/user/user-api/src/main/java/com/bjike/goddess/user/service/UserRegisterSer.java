@@ -14,14 +14,6 @@ import com.bjike.goddess.user.to.UserRegisterTO;
  */
 public interface UserRegisterSer {
 
-    /**
-     * 用户名是否已经注册
-     *
-     * @param username
-     * @throws SerException
-     */
-    Boolean existUsername(String username) throws SerException;
-
 
     /**
      * 验证并注册

@@ -9,8 +9,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.RoleBO;
 import com.bjike.goddess.user.dto.rbac.RoleDTO;
 import com.bjike.goddess.user.entity.rbac.Role;
+import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.rbac.RoleTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
+    @Autowired
+    private UserSer userSer;
     @Override
     public List<RoleBO> treeData(String id) throws SerException {
         RoleDTO dto = new RoleDTO();
@@ -40,6 +44,7 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Role> roles = super.findByCis(dto);
 
@@ -67,6 +72,7 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
     @Override
     public RoleBO save(RoleTO roleTO) throws SerException {
         Role role = BeanTransform.copyProperties(roleTO, Role.class, true);
+        role.setSystemNO(userSer.currentSysNO());
         if (StringUtils.isNotBlank(roleTO.getParentId())) {
             RoleDTO dto = new RoleDTO();
             dto.getConditions().add(Restrict.eq("id", roleTO.getParentId()));

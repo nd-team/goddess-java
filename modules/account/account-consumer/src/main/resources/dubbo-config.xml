@@ -18,5 +18,5 @@
 
 	<dubbo:reference  validation="true" id="accountInfoApiImpl" interface="com.bjike.goddess.account.api.AccountInfoAPI" />
 
-
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 </beans>

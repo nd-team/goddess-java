@@ -20,6 +20,12 @@ import java.time.LocalDateTime;
 @Table(name = "rbac_role")
 public class Role extends BaseEntity {
     /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
+
+    /**
      * 角色名
      */
     @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '角色名' ")
@@ -48,6 +54,14 @@ public class Role extends BaseEntity {
      */
     @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
     private Boolean hasChild;
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getName() {
         return name;
@@ -96,4 +110,5 @@ public class Role extends BaseEntity {
     public void setHasChild(Boolean hasChild) {
         this.hasChild = hasChild;
     }
+
 }
