@@ -131,8 +131,8 @@ public class SalaryConfirmRecordAction {
     /**
      * 删除薪资确认
      *
-     * @param id 用户id
-     * @des 根据用户id删除员工薪资确认记录
+     * @param id 列表id
+     * @des 根据列表id删除员工薪资确认记录
      * @version v1
      */
     @LoginAuth
