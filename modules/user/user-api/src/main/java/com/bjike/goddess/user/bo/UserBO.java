@@ -14,6 +14,10 @@ import com.bjike.goddess.common.api.type.Status;
  */
 public class UserBO extends BaseBO {
     /**
+     * 系统号
+     */
+    private String systemNO;
+    /**
      * 用户名
      */
     private String username;
@@ -50,6 +54,14 @@ public class UserBO extends BaseBO {
     private Status status;
 
     private String createTime;
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getUsername() {
         return username;

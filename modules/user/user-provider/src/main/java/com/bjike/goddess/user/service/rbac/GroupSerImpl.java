@@ -5,12 +5,15 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
 import com.bjike.goddess.user.entity.rbac.Group;
+import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.rbac.GroupTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupSer {
+    @Autowired
+    private UserSer userSer;
+
     @Override
     public List<GroupBO> treeData(String id) throws SerException {
         GroupDTO dto = new GroupDTO();
@@ -40,6 +46,7 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.sysNO()));
 
         List<Group> groups = super.findByCis(dto);
 
@@ -67,7 +74,10 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
     @Transactional
     @Override
     public GroupBO save(GroupTO groupTO) throws SerException {
+        String sysNO= userSer.sysNO();
         Group group = BeanTransform.copyProperties(groupTO, Group.class, true);
+        group.setSystemNO(sysNO);
+
         if (StringUtils.isNotBlank(groupTO.getParentId())) {
             GroupDTO dto = new GroupDTO();
             dto.getConditions().add(Restrict.eq("id", groupTO.getParentId()));

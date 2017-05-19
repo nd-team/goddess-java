@@ -1,6 +1,7 @@
 package com.bjike.goddess.common.consumer.interceptor.login;
 
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -73,13 +74,13 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
 
     private boolean validateLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Object obj = request.getParameter("storageToken");
+        Object obj = request.getParameter(RpcCommon.STORAGE_TOKEN);
 
         String token = null;
         if (null != obj) {
             token = obj.toString();
         } else {
-            obj = request.getAttribute("storageToken");
+            obj = request.getAttribute(RpcCommon.STORAGE_TOKEN);
             token = (obj != null ? obj.toString() : null);
         }
         try {

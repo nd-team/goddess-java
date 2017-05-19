@@ -2,6 +2,7 @@ package com.bjike.goddess.common.consumer.interceptor.login;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +36,7 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object obj = request.getHeader("userToken");
+        Object obj = request.getHeader(RpcCommon.USER_TOKEN);
         String token = null;
         if (null != obj) {
             token = obj.toString();
@@ -89,7 +90,7 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
      */
     private void handlerUserToken(String token) {
         if (StringUtils.isNotBlank(token)) {
-            RpcContext.getContext().setAttachment("userToken", token);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
 
         }
     }

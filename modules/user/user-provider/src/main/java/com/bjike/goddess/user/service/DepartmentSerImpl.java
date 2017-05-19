@@ -11,6 +11,7 @@ import com.bjike.goddess.user.dto.DepartmentDTO;
 import com.bjike.goddess.user.entity.Department;
 import com.bjike.goddess.user.to.DepartmentTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ import java.util.List;
 @Service
 public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> implements DepartmentSer {
 
+    @Autowired
+   private UserSer userSer;
 
     @Cacheable
     @Override
@@ -44,7 +47,7 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-
+        dto.getConditions().add(Restrict.eq(SYS_NO,userSer.sysNO()));
         List<Department> departments = super.findByCis(dto);
 
         return BeanTransform.copyProperties(departments, DepartmentBO.class);
@@ -85,6 +88,8 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
             }
         }
         department.setHasChild(false);
+        department.setSystemNO(userSer.sysNO());
+
         super.save(department);
         return BeanTransform.copyProperties(department, DepartmentBO.class);
     }

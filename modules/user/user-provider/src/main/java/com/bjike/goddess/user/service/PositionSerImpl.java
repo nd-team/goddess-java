@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.dto.PositionDTO;
 import com.bjike.goddess.user.entity.Position;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "userSerCache")
 @Service
 public class PositionSerImpl extends ServiceImpl<Position, PositionDTO> implements PositionSer {
+
 
     @Override
     public PositionBO findBOById(String id) throws SerException {

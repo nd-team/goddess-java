@@ -12,6 +12,7 @@ import com.bjike.goddess.user.entity.rbac.GroupRole;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import com.bjike.goddess.user.entity.rbac.Role;
 import com.bjike.goddess.user.entity.rbac.RolePermission;
+import com.bjike.goddess.user.service.UserSer;
 import com.bjike.goddess.user.to.rbac.PermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
 
     @Autowired
     private RolePermissionSer rolePermissionSer;
-
+    @Autowired
+    private UserSer userSer;
     @Override
     public List<PermissionBO> findByUserId(String userId) throws SerException {
         String table_permission = super.getTableName(Permission.class);
@@ -93,6 +95,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.sysNO()));
 
         List<Permission> permissions = super.findByCis(dto);
 
@@ -124,6 +127,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
     @Override
     public PermissionBO save(PermissionTO permissionTO) throws SerException {
         Permission permission = BeanTransform.copyProperties(permissionTO, Permission.class, true);
+        permission.setSystemNO(userSer.sysNO());
         if (StringUtils.isNotBlank(permissionTO.getParentId())) {
             PermissionDTO dto = new PermissionDTO();
             dto.getConditions().add(Restrict.eq("id", permissionTO.getParentId()));

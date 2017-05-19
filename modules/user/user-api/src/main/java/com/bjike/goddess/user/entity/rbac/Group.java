@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 组
@@ -18,6 +17,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "rbac_group")
 public class Group extends BaseEntity {
+    /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
 
     /**
      * 组名
@@ -49,7 +53,13 @@ public class Group extends BaseEntity {
     @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
     private Boolean hasChild;
 
+    public String getSystemNO() {
+        return systemNO;
+    }
 
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getName() {
         return name;

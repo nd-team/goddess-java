@@ -16,6 +16,10 @@ import java.util.List;
  */
 public class LoginUser implements Serializable {
     /**
+     * 系统号
+     */
+    private String systemNO;
+    /**
      * 用户id
      */
     private String id;
@@ -50,6 +54,13 @@ public class LoginUser implements Serializable {
      */
     private String employeeNumber;
 
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     private List<PermissionBO> permissions;
 
