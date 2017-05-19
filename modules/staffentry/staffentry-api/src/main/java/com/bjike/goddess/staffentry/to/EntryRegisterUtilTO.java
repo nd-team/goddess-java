@@ -36,7 +36,7 @@ public class EntryRegisterUtilTO implements Serializable  {
     /**
      * 性别0男1女
      */
-    @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "性别不能为空,0男1女")
+    @NotNull(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "性别不能为空,0男1女")
     private Integer gender;
 
     /**
@@ -170,7 +170,7 @@ public class EntryRegisterUtilTO implements Serializable  {
     private List<String> names;
 
     /**
-     * 家庭成员年龄集合
+     * 家庭成员年龄集合年龄在1-200之间
      */
     private List<Integer> ages;
 

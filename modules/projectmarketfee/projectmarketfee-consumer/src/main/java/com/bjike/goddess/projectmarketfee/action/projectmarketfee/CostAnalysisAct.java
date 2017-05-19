@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmarketfee.api.CostAnalysisAPI;
@@ -66,6 +67,7 @@ public class CostAnalysisAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) CostAnalysisTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -83,6 +85,7 @@ public class CostAnalysisAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) CostAnalysisTO to, BindingResult result) throws ActException {
         try {
@@ -100,6 +103,7 @@ public class CostAnalysisAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

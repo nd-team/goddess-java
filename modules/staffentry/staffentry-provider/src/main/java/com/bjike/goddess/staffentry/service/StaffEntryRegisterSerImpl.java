@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -9,7 +10,6 @@ import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -43,17 +41,17 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public Long countStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
-       Long count =  super.count(staffEntryRegisterDTO);
+        Long count = super.count(staffEntryRegisterDTO);
         return count;
     }
 
     @Override
     public StaffEntryRegisterBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         StaffEntryRegister staffEntryRegister = super.findById(id);
-        StaffEntryRegisterBO bo = BeanTransform.copyProperties(staffEntryRegister , StaffEntryRegisterBO.class);
+        StaffEntryRegisterBO bo = BeanTransform.copyProperties(staffEntryRegister, StaffEntryRegisterBO.class);
         return bo;
     }
 
@@ -62,18 +60,18 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
         String token = RpcTransmit.getUserToken();
 
-        List<StaffEntryRegister> list =  super.findByCis(staffEntryRegisterDTO,true);
-        List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list,StaffEntryRegisterBO.class);
-        if( list != null && list.size()>0 ){
-            for(StaffEntryRegisterBO temp : boList){
+        List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
+        List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
+        if (list != null && list.size() > 0) {
+            for (StaffEntryRegisterBO temp : boList) {
                 UserDTO userDTO = new UserDTO();
-                userDTO.getConditions().add(Restrict.eq("id",temp.getUserId()));
-                userAPI.currentUser( token );
-                List<UserBO> userBOList = userAPI.findByCis( userDTO );
-                if( userBOList != null && userBOList.size()>0 ){
+                userDTO.getConditions().add(Restrict.eq("id", temp.getUserId()));
+                RpcTransmit.transmitUserToken(token);
+                List<UserBO> userBOList = userAPI.findByCis(userDTO);
+                if (userBOList != null && userBOList.size() > 0) {
                     UserBO userBO = userBOList.get(0);
-                    temp.setEmpNumber( userBO.getEmployeeNumber());
-                    temp.setUserName( userBO.getUsername() );
+                    temp.setEmpNumber(userBO.getEmployeeNumber());
+                    temp.setUserName(userBO.getUsername());
                 }
             }
         }
@@ -83,85 +81,87 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     @Override
     public StaffEntryRegisterBO addStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
         //TODO 获取一个员工编号
-        if(StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())){
+        if (StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())) {
             throw new SerException("员工编号不能为空");
         }
-        if(StringUtils.isBlank(staffEntryRegisterTO.getUserName())){
-           throw new SerException("员工名不能为空");
+        if (StringUtils.isBlank(staffEntryRegisterTO.getUserName())) {
+            throw new SerException("员工名不能为空");
         }
         //填用户表
         UserTO userTO = new UserTO();
-        userTO.setEmployeeNumber( staffEntryRegisterTO.getEmpNumber() );
-        userTO.setUsername( staffEntryRegisterTO.getUserName());
-        userTO.setPassword( staffEntryRegisterTO.getPassword());
+        userTO.setEmployeeNumber(staffEntryRegisterTO.getEmpNumber());
+        userTO.setUsername(staffEntryRegisterTO.getUserName());
+        userTO.setPassword(staffEntryRegisterTO.getPassword());
         userTO.setStatus(Status.THAW);
         userTO.setUserType(UserType.CUSTOMER);
-        UserBO userBO = userAPI.add( null,userTO );
+        UserBO userBO = userAPI.add(null, userTO);
 
         //填自己的表
         StaffEntryRegister staffEntryRegister = new StaffEntryRegister();
-        staffEntryRegister.setDepartment( staffEntryRegisterTO.getDepartment());
-        staffEntryRegister.setPosition( staffEntryRegisterTO.getPosition());
-        staffEntryRegister.setProjectGroup( staffEntryRegisterTO.getProjectGroup());
-        staffEntryRegister.setRole( staffEntryRegisterTO.getRole());
-        staffEntryRegister.setWorkEmail( staffEntryRegisterTO.getWorkEmail() );
-        staffEntryRegister.setWorkEmailPassword( staffEntryRegisterTO.getWorkEmailPassword());
+        staffEntryRegister.setDepartment(staffEntryRegisterTO.getDepartment());
+        staffEntryRegister.setPosition(staffEntryRegisterTO.getPosition());
+        staffEntryRegister.setProjectGroup(staffEntryRegisterTO.getProjectGroup());
+        staffEntryRegister.setRole(staffEntryRegisterTO.getRole());
+        staffEntryRegister.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
+        staffEntryRegister.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         staffEntryRegister.setCreateTime(LocalDateTime.now());
         staffEntryRegister.setModifyTime(LocalDateTime.now());
-        staffEntryRegister.setUserId( userBO.getId());
-        super.save( staffEntryRegister);
-        return BeanTransform.copyProperties(staffEntryRegister,StaffEntryRegisterBO.class);
+        staffEntryRegister.setUserId(userBO.getId());
+        super.save(staffEntryRegister);
+        return BeanTransform.copyProperties(staffEntryRegister, StaffEntryRegisterBO.class);
     }
 
     @Override
     public StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
-        if(StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())){
+        String token = RpcTransmit.getUserToken();
+
+        if (StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())) {
             throw new SerException("员工编号不能为空");
         }
-        if(StringUtils.isBlank(staffEntryRegisterTO.getUserName())){
+        if (StringUtils.isBlank(staffEntryRegisterTO.getUserName())) {
             throw new SerException("员工名不能为空");
         }
-        if(StringUtils.isBlank(staffEntryRegisterTO.getId())){
+        if (StringUtils.isBlank(staffEntryRegisterTO.getId())) {
             throw new SerException("id不能为空");
         }
 
 
         StaffEntryRegister temp = super.findById(staffEntryRegisterTO.getId());
-        temp.setDepartment( staffEntryRegisterTO.getDepartment());
-        temp.setPosition( staffEntryRegisterTO.getPosition());
-        temp.setProjectGroup( staffEntryRegisterTO.getProjectGroup());
-        temp.setRole( staffEntryRegisterTO.getRole());
-        temp.setWorkEmail( staffEntryRegisterTO.getWorkEmail() );
-        temp.setWorkEmailPassword( staffEntryRegisterTO.getWorkEmailPassword());
+        temp.setDepartment(staffEntryRegisterTO.getDepartment());
+        temp.setPosition(staffEntryRegisterTO.getPosition());
+        temp.setProjectGroup(staffEntryRegisterTO.getProjectGroup());
+        temp.setRole(staffEntryRegisterTO.getRole());
+        temp.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
+        temp.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         temp.setModifyTime(LocalDateTime.now());
 
         super.update(temp);
 
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq("id",temp.getUserId()));
-        String tocken =  RpcTransmit.getUserToken();
-        List<UserBO> userBOList = userAPI.findByCis( userDTO );
-        userAPI.currentUser(tocken);
-        if( userBOList != null && userBOList.size()>0 ){
-            UserTO userTO = BeanTransform.copyProperties(userBOList.get(0),UserTO.class);
-            userTO.setUsername( staffEntryRegisterTO.getUserName() );
-            userAPI.update( userTO );
+        userDTO.getConditions().add(Restrict.eq("id", temp.getUserId()));
+        List<UserBO> userBOList = userAPI.findByCis(userDTO);
+
+        if (userBOList != null && userBOList.size() > 0) {
+            RpcTransmit.transmitUserToken(token);
+            UserTO userTO = BeanTransform.copyProperties(userBOList.get(0), UserTO.class);
+            userTO.setUsername(staffEntryRegisterTO.getUserName());
+            userAPI.update(userTO);
         }
-        return BeanTransform.copyProperties(temp,UserBO.class);
+        return BeanTransform.copyProperties(temp, StaffEntryRegisterBO.class);
     }
 
     @Override
     public void delete(String id) throws SerException {
-        if(StringUtils.isBlank(id )){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        StaffEntryRegister staffEntryRegister = super.findById( id );
+        StaffEntryRegister staffEntryRegister = super.findById(id);
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq("id",staffEntryRegister.getUserId()));
-        String tocken = RpcTransmit.getUserToken();
-        List<UserBO> userBOList = userAPI.findByCis( userDTO );
-        userAPI.currentUser(tocken);
-        if( userBOList != null && userBOList.size()>0 ){
+        userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
+        String token = RpcTransmit.getUserToken();
+        List<UserBO> userBOList = userAPI.findByCis(userDTO);
+        RpcTransmit.transmitUserToken(token);
+        if (userBOList != null && userBOList.size() > 0) {
             userAPI.deleteUser(id);
         }
         super.remove(id);

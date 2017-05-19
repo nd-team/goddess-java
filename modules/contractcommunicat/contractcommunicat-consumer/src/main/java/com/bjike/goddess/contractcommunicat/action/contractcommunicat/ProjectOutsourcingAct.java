@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -90,6 +91,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @return class ProjectOutsourcingVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProjectOutsourcingTO to, BindingResult bindingResult) throws ActException {
         try {
@@ -107,6 +109,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @return class ProjectOutsourcingVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectOutsourcingTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -123,6 +126,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @param id 项目承包洽谈ID
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -138,6 +142,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      *
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
         try {
@@ -155,6 +160,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      *
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/leadExcel")
     public Result leadExcel(HttpServletRequest request) throws ActException {
         try {
@@ -176,6 +182,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @param to 导出条件
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/exportExcel")
     public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
@@ -231,6 +238,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @param cycleType 周期类型
      * @version v1
      */
+    @LoginAuth
     @GetMapping("cycle")
     public Result setCollectSend(QuartzCycleType cycleType) throws ActException {
 

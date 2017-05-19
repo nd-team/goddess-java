@@ -222,12 +222,15 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     @Override
     public List<ArrivalWeekBO> findDetail(String id) throws SerException {
         ArrivalMonth arrivalMonth = super.findById(id);
+        if (arrivalMonth == null) {
+            throw new SerException("该对象不存在");
+        }
         String[] arrivals = new String[]{arrivalMonth.getArrival()};
         Integer[] years = new Integer[]{arrivalMonth.getYear()};
         Integer[] months = new Integer[]{arrivalMonth.getMonth()};
         List<ArrivalWeekBO> list = null;
         for (int i = 0; i < arrivals.length && i < years.length && i < months.length; i++) {
-            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome," +
+            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome " +
                     "from budget_arrivalweek where arrival='" + arrivals[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
             String[] fields = new String[]{"week", "targetWork", "actualWork", "price", "targetIncome", "planIncome"};
             list = super.findBySql(sql, ArrivalWeekBO.class, fields);

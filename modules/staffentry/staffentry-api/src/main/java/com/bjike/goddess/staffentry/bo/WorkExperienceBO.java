@@ -36,10 +36,6 @@ public class WorkExperienceBO extends BaseBO {
      */
     private String jobDescription;
 
-    /**
-     * 员工入职外键
-     */
-    private EntryRegister entryRegister;
 
     /**
      * 开始时间集合
@@ -92,13 +88,6 @@ public class WorkExperienceBO extends BaseBO {
         this.jobDescription = jobDescription;
     }
 
-    public EntryRegister getEntryRegister() {
-        return entryRegister;
-    }
-
-    public void setEntryRegister(EntryRegister entryRegister) {
-        this.entryRegister = entryRegister;
-    }
 
     public List<String> getWorkStartTimes() {
         return workStartTimes;

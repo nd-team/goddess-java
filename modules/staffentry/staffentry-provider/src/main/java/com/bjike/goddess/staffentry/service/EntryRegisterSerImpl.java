@@ -12,13 +12,16 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,9 +75,10 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     
     @Override
-    public EntryRegisterBO getEntryRegister(String id) throws SerException {
+    public EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
 
-        EntryRegisterBO entryRegisterBO = BeanTransform.copyProperties(super.findById(id), EntryRegisterBO.class );
+        EntryRegister temp = super.findById(id);
+
 
         /**
          *  根据入职登记查询子表
@@ -105,11 +109,12 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         List<Credential> credentials = credentialSer.findByCis( credentialDTO );
         credentialList = BeanTransform.copyProperties( credentials ,CredentialBO.class);
 
-        entryRegisterBO.setFamilyMemberBOList( familyMemberList );
-        entryRegisterBO.setStudyExperienceBOList( studyExperienceList );
-        entryRegisterBO.setWorkExperienceBOList( workExperienceList );
-        entryRegisterBO.setCredentialBOList( credentialList ) ;
-        return entryRegisterBO;
+        EntryRegisterBO bo = BeanTransform.copyProperties( temp, EntryRegisterBO.class );
+        bo.setFamilyMemberBOList( familyMemberList );
+        bo.setStudyExperienceBOList( studyExperienceList );
+        bo.setWorkExperienceBOList( workExperienceList );
+        bo.setCredentialBOList( credentialList ) ;
+        return bo;
     }
 
     @Override
@@ -144,7 +149,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         EntryRegister temp = super.findById(entryRegisterTO.getId());
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
-        BeanTransform.copyProperties(entryRegister , temp,"id","createTime");
+        BeanTransform.copyProperties(entryRegister , temp,"id","createTime","birthday","graduationDate");
+        temp.setBirthday( entryRegister.getBirthday());
+        temp.setGraduationDate(entryRegister.getGraduationDate());
         try {
             temp.setModifyTime(LocalDateTime.now() );
             super.update(temp);
@@ -160,6 +167,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         /**
          * 往子表中插入数据
          */
+        entryRegister =  super.findById(entryRegister.getId());
         insertSubTableRecords(entryRegister, familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
 
         return BeanTransform.copyProperties(temp , EntryRegisterBO.class );
@@ -219,7 +227,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             throw new SerException("员工编号不能为空");
         }
         try {
-            entryRegister.setCreateTime( LocalDateTime.now());
             super.save(entryRegister);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
@@ -243,16 +250,18 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
          */
         insertCredential(entryRegister, credentialTO);
 
-        return BeanTransform.copyProperties(entryRegister , EntryRegisterBO.class );
+        EntryRegisterBO bo = new EntryRegisterBO();
+                BeanUtils.copyProperties(entryRegister , bo );
+        return bo;
     }
 
     private void insertFamilyMember(EntryRegister entryRegister, FamilyMemberTO familyMemberTO) throws SerException {
 
-        List<FamilyMemberTO> familyMembers = new ArrayList<>(0);
-        if (familyMemberTO != null) {
+        List<FamilyMember> familyMembers = new ArrayList<>(0);
+        if ( null != familyMemberTO && null != familyMemberTO.getTitles()) {
             int countTitle = familyMemberTO.getTitles().size();
             for (int i = 0; i < countTitle; i++) {
-                FamilyMemberTO temp = new FamilyMemberTO();
+                FamilyMember temp = new FamilyMember();
                 temp.setTitle(familyMemberTO.getTitles().get(i));
                 temp.setName(familyMemberTO.getNames().get(i));
                 temp.setAge(familyMemberTO.getAges().get(i));
@@ -263,7 +272,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
                 familyMembers.add(temp);
             }
-            familyMemberSer.insertFamilys(familyMembers);
+            familyMemberSer.save(familyMembers);
         }
 
     }
@@ -271,58 +280,59 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     private void insertStudyExperience(EntryRegister entryRegister, StudyExperienceTO studyExperienceTO) throws SerException {
 
-        List<StudyExperienceTO> studyExperienceTOS = new ArrayList<>(0);
-        if (studyExperienceTO != null) {
+        List<StudyExperience> studyExperienceTOS = new ArrayList<>(0);
+        if ( null != studyExperienceTO && null != studyExperienceTO.getStudyStartTimes()) {
             int countStartTime = studyExperienceTO.getStudyStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
-                StudyExperienceTO temp = new StudyExperienceTO();
-                temp.setStartTime(studyExperienceTO.getStudyStartTimes().get(i));
-                temp.setEndTime(studyExperienceTO.getStudyEndTimes().get(i));
-                temp.setSchool(studyExperienceTO.getSchools().get(i));
-                temp.setCertificate(studyExperienceTO.getCertificates().get(i));
+                StudyExperience temp = new StudyExperience();
+                temp.setStartTime(LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                temp.setEndTime(null == studyExperienceTO.getStudyEndTimes() ? null:LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                temp.setSchool(null == studyExperienceTO.getSchools()? "":studyExperienceTO.getSchools().get(i));
+                temp.setCertificate(null == studyExperienceTO.getCertificates()? "":studyExperienceTO.getCertificates().get(i));
                 temp.setEntryRegister(entryRegister);
 
                 studyExperienceTOS.add(temp);
             }
-            studyExperienceSer.insertStudyExperiences(studyExperienceTOS);
+            studyExperienceSer.save(studyExperienceTOS);
         }
 
     }
 
     private void insertWorkExperience(EntryRegister entryRegister, WorkExperienceTO workExperienceTO) throws SerException {
 
-        List<WorkExperienceTO> workExperienceTOS = new ArrayList<>(0);
-        if (workExperienceTO != null) {
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<WorkExperience> workExperienceTOS = new ArrayList<>(0);
+        if ( null!=workExperienceTO  && null != workExperienceTO.getWorkStartTimes()) {
             int countStartTime = workExperienceTO.getWorkStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
-                WorkExperienceTO temp = new WorkExperienceTO();
-                temp.setStartTime(workExperienceTO.getWorkStartTimes().get(i));
-                temp.setEndTime(workExperienceTO.getWorkEndTimes().get(i));
-                temp.setFirm(workExperienceTO.getFirms().get(i));
-                temp.setJobDescription(workExperienceTO.getJobDescriptions().get(i));
+                WorkExperience temp = new WorkExperience();
+                temp.setStartTime(LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i),formater));
+                temp.setEndTime(null == workExperienceTO.getWorkEndTimes()?null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i),formater));
+                temp.setFirm(null == workExperienceTO.getFirms()?"":workExperienceTO.getFirms().get(i));
+                temp.setJobDescription(null == workExperienceTO.getJobDescriptions()?"":workExperienceTO.getJobDescriptions().get(i));
                 temp.setEntryRegister(entryRegister);
 
                 workExperienceTOS.add(temp);
             }
-            workExperienceSer.insertWorkExperiences(workExperienceTOS);
+            workExperienceSer.save(workExperienceTOS);
         }
 
     }
 
     private void insertCredential(EntryRegister entryRegister, CredentialTO credentialTO) throws SerException {
-
-        List<CredentialTO> credentialTOS = new ArrayList<>(0);
-        if (credentialTO != null) {
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Credential> credentialTOS = new ArrayList<>(0);
+        if ( null!=credentialTO && null!= credentialTO.getNameses() ) {
             int countName = credentialTO.getNameses().size();
             for (int i = 0; i < countName; i++) {
-                CredentialTO temp = new CredentialTO();
+                Credential temp = new Credential();
                 temp.setName(credentialTO.getNameses().get(i));
-                temp.setObtainTime(credentialTO.getObtainTimes().get(i));
+                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater));
                 temp.setEntryRegister(entryRegister);
 
                 credentialTOS.add(temp);
             }
-            credentialSer.insertCredentials(credentialTOS);
+            credentialSer.save(credentialTOS);
         }
 
     }

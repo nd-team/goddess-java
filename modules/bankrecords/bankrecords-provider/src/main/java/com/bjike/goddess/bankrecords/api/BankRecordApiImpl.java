@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -26,6 +27,11 @@ public class BankRecordApiImpl implements BankRecordAPI {
 
     @Autowired
     private BankRecordSer bankRecordSer;
+
+    @Override
+    public List<String> check(List<InputStream> inputStreams) throws SerException {
+        return bankRecordSer.check(inputStreams);
+    }
 
     @Override
     public void upload(BankRecordTO to) throws SerException {
@@ -62,8 +68,5 @@ public class BankRecordApiImpl implements BankRecordAPI {
         return bankRecordSer.analyze(year, month, accountName);
     }
 
-    @Override
-    public List<String> check(byte[] to) throws SerException {
-        return bankRecordSer.check(to);
-    }
+
 }
