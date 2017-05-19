@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialinstock.bo.AttributeBO;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
 import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
+import com.bjike.goddess.materialinstock.entity.MaterialInStock;
 import com.bjike.goddess.materialinstock.to.MaterialInStockTO;
 import com.bjike.goddess.materialinstock.type.UseState;
 
@@ -138,5 +139,13 @@ public interface MaterialInStockAPI {
      * @throws SerException
      */
     List<MaterialInStockBO> findByAttribute(AttributeBO bo) throws SerException;
+
+    /**
+     * 查询所有的物资入库
+     *
+     * @return class MaterialInStockBO
+     * @throws SerException
+     */
+    List<MaterialInStockBO> findAll() throws SerException;
 
 }
