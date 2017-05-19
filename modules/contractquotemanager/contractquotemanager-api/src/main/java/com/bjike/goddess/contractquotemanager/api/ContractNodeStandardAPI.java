@@ -1,7 +1,9 @@
 package com.bjike.goddess.contractquotemanager.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.bo.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 
@@ -37,7 +39,7 @@ public interface ContractNodeStandardAPI {
 
     /**
      * 添加合同节点标准信息
-     * 
+     *
      * @param to 合同节点标准信息to
      * @return class ContractNodeStandardBO
      * @throws SerException
@@ -96,6 +98,37 @@ public interface ContractNodeStandardAPI {
      * @throws SerException
      */
     default List<ContractNodeStandardBO> searchContractNodeStandard(ContractNodeStandardTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取类别
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<ColationBO> findType() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取节点
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<ColationBO> findNode() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据查询条件获取合同节点标准数据
+     *
+     * @param to 查询数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<ContractNodeStandardBO> findByTo(FilterTO to) throws SerException {
         return null;
     }
 
