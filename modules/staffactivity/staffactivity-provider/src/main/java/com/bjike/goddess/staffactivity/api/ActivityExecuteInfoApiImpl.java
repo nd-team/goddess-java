@@ -1,8 +1,10 @@
 package com.bjike.goddess.staffactivity.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.bo.ActivityExecuteInfoBO;
 import com.bjike.goddess.staffactivity.dto.ActivityExecuteInfoDTO;
+import com.bjike.goddess.staffactivity.entity.ActivityExecuteInfo;
 import com.bjike.goddess.staffactivity.service.ActivityExecuteInfoSer;
 import com.bjike.goddess.staffactivity.to.ActivityExecuteInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class ActivityExecuteInfoApiImpl implements ActivityExecuteInfoAPI {
 
     @Autowired
     private ActivityExecuteInfoSer activityExecuteInfoSer;
+
+    /**
+     * 根据id查询活动执行信息
+     *
+     * @param id 活动执行信息唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public ActivityExecuteInfoBO findById(String id) throws SerException {
+        ActivityExecuteInfo model = activityExecuteInfoSer.findById(id);
+        return BeanTransform.copyProperties(model, ActivityExecuteInfoBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动执行信息dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ActivityExecuteInfoDTO dto) throws SerException {
+        return activityExecuteInfoSer.count(dto);
+    }
 
     /**
      * 分页查询活动执行信息

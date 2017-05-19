@@ -19,6 +19,23 @@ import java.util.List;
 public interface ActivityDivisionAPI {
 
     /**
+     * 根据id查询活动分工
+     *
+     * @param id 活动分工唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivityDivisionBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动分工dto
+     * @throws SerException
+     */
+    Long count(ActivityDivisionDTO dto) throws SerException;
+
+    /**
      * 分页查询活动分工
      *
      * @param dto 活动分工dto

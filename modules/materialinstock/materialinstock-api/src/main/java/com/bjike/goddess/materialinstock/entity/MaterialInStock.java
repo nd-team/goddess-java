@@ -37,9 +37,9 @@ public class MaterialInStock extends BaseEntity {
     private String projectGroup;
 
     /**
-     * 物品类型
+     * 物资类型
      */
-    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物品类型'")
+    @Column(name = "materialType", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '物资类型'")
     private String materialType;
 
     /**
