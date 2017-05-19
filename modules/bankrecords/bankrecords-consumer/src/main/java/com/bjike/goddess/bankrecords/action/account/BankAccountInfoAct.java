@@ -37,6 +37,39 @@ public class BankAccountInfoAct {
 
 
     /**
+     * 查询列表总条数
+     *
+     * @param dto 查询条件或分页条件
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(BankAccountInfoDTO dto) throws ActException {
+        try {
+            Long count = bankAccountInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询银行流水
+     *
+     * @param id 竞争对手Id
+     * @return class BankAccountInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            BankAccountInfoVO vo = BeanTransform.copyProperties(bankAccountInfoAPI.findById(id), BankAccountInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 新增账号信息
      *
      * @param to 账号信息信息

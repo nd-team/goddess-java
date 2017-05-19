@@ -2,18 +2,16 @@ package com.bjike.goddess.staffentry.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +69,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
-        return BeanTransform.copyProperties(entryBasicInfo, EntryRegisterBO.class);
+        return BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -90,7 +88,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
             throw new SerException(e.getMessage());
         }
 
-        return BeanTransform.copyProperties(temp, EntryRegisterBO.class);
+        return BeanTransform.copyProperties(temp, EntryBasicInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -151,7 +149,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
                 }
             }
         }
-        return BeanTransform.copyProperties(entryBasicInfo, EntryRegisterBO.class);
+        return BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class);
     }
 
 
@@ -195,10 +193,10 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
 
     @Override
-    public EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+    public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("name", name));
-        EntryBasicInfo list = super.findOne(dto);
-        return BeanTransform.copyProperties(list, EntryRegisterBO.class);
+        List<EntryBasicInfo> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, EntryBasicInfoBO.class);
     }
 }

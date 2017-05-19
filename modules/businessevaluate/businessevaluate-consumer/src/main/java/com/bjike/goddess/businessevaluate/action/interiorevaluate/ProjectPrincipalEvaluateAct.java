@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,7 @@ public class ProjectPrincipalEvaluateAct {
      * @return class ProjectPrincipalEvaluateVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProjectPrincipalEvaluateTO to, BindingResult bindingResult) throws ActException {
         try {
@@ -116,6 +118,7 @@ public class ProjectPrincipalEvaluateAct {
      * @return class ProjectPrincipalEvaluateVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectPrincipalEvaluateTO to, BindingResult bindingResult) throws ActException {
         try {
@@ -132,6 +135,7 @@ public class ProjectPrincipalEvaluateAct {
      * @param id 项目负责人评价ID
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

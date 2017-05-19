@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,7 @@ public class ProjectAmountAct {
      * @return class ProjectAmountVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProjectAmountTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -130,7 +132,8 @@ public class ProjectAmountAct {
      * @return class ProjectAmountVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @LoginAuth
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectAmountTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             ProjectAmountVO vo = BeanTransform.copyProperties(projectAmountAPI.editModel(to), ProjectAmountVO.class, request);
@@ -146,7 +149,8 @@ public class ProjectAmountAct {
      * @param id 项目金额ID
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             projectAmountAPI.delete(id);

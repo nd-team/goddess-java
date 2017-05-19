@@ -47,8 +47,6 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Override
     public List<SalaryConfirmRecord> listSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
 
-        //TODO :tanghaixiang 2017-03-11 未做薪资确认分页查询
-//        salaryConfirmRecordDTO
         List<SalaryConfirmRecord> salaryConfirmRecords = super.findByPage( salaryConfirmRecordDTO );
         return salaryConfirmRecords;
     }
@@ -74,11 +72,12 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         }
         SalaryConfirmRecord temp = super.findById(salaryConfirmRecordTO.getId());
         SalaryConfirmRecord salaryConfirmRecord = BeanTransform.copyProperties( salaryConfirmRecordTO , SalaryConfirmRecord.class ,true);
-        BeanTransform.copyProperties( salaryConfirmRecord ,temp,"id","createTime");
+        BeanTransform.copyProperties( salaryConfirmRecord ,temp,"id","createTime","entryTime");
+        temp.setEntryTime(salaryConfirmRecord.getEntryTime());
         temp.setModifyTime( LocalDateTime.now() );
-        super.update( salaryConfirmRecord );
+        super.update( temp );
 
-        return BeanTransform.copyProperties( salaryConfirmRecord ,SalaryConfirmRecordBO.class );
+        return BeanTransform.copyProperties( temp ,SalaryConfirmRecordBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)

@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.DepartmentAPI;
@@ -122,6 +123,7 @@ public class ProblemDisposeAct {
      * @return class ProblemDisposeVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProblemDisposeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -139,7 +141,8 @@ public class ProblemDisposeAct {
      * @return class ProblemDisposeVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @LoginAuth
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProblemDisposeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             ProblemDisposeVO vo = BeanTransform.copyProperties(problemDisposeAPI.editModel(to), ProblemDisposeVO.class, request);
@@ -156,6 +159,7 @@ public class ProblemDisposeAct {
      * @return class ProblemDisposeVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/qualitative")
     public Result qualitativeKPI(@Validated({ProblemDisposeTO.Qualitative.class}) ProblemDisposeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -173,7 +177,8 @@ public class ProblemDisposeAct {
      * @return class ProblemDisposeVO
      * @version v1
      */
-    @PostMapping("v1/ration")
+    @LoginAuth
+    @PutMapping("v1/ration")
     public Result rationKPI(@Validated({ProblemDisposeTO.Ration.class}) ProblemDisposeTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             ProblemDisposeVO vo = BeanTransform.copyProperties(problemDisposeAPI.editModel(to), ProblemDisposeVO.class, request);
@@ -189,7 +194,8 @@ public class ProblemDisposeAct {
      * @param id 项目问题受理和处理ID
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             problemDisposeAPI.delete(id);

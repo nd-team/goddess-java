@@ -109,7 +109,9 @@ public class EntryRegisterAction {
         WorkExperienceTO workExperienceTO = new WorkExperienceTO();
         CredentialTO credentialTO = new CredentialTO ();
 
-        assembleData(entryRegisterUtilTO, entryRegisterTO,  familyMemberTO,  studyExperienceTO,
+        //基本信息
+        entryRegisterTO = BeanTransform.copyProperties( entryRegisterUtilTO, EntryRegisterTO.class);
+        assembleData(entryRegisterUtilTO,  familyMemberTO,  studyExperienceTO,
                  workExperienceTO,  credentialTO);
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.insertEntryRegister(entryRegisterTO,
@@ -120,10 +122,9 @@ public class EntryRegisterAction {
         }
     }
 
-    private void assembleData(EntryRegisterUtilTO entryRegisterUtilTO,EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
+    private void assembleData(EntryRegisterUtilTO entryRegisterUtilTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
         WorkExperienceTO workExperienceTO, CredentialTO credentialTO){
-        //基本信息
-        entryRegisterTO = BeanTransform.copyProperties( entryRegisterUtilTO, EntryRegisterTO.class);
+
         //家庭成员
         familyMemberTO.setTitles( entryRegisterUtilTO.getTitles());
         familyMemberTO.setNames( entryRegisterUtilTO.getNames());
@@ -164,8 +165,9 @@ public class EntryRegisterAction {
         StudyExperienceTO studyExperienceTO = new StudyExperienceTO ();
         WorkExperienceTO workExperienceTO = new WorkExperienceTO();
         CredentialTO credentialTO = new CredentialTO ();
-
-        assembleData(entryRegisterUtilTO, entryRegisterTO,  familyMemberTO,  studyExperienceTO,
+        //基本信息
+        entryRegisterTO = BeanTransform.copyProperties( entryRegisterUtilTO, EntryRegisterTO.class);
+        assembleData(entryRegisterUtilTO,  familyMemberTO,  studyExperienceTO,
                 workExperienceTO,  credentialTO);
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.editEntryRegister(entryRegisterTO,
@@ -206,8 +208,9 @@ public class EntryRegisterAction {
     @GetMapping("v1/getEntryRegister/{id}")
     public Result findOneEntryRegister(@PathVariable String id) throws ActException {
         try {
+            EntryRegisterBO bo = entryRegisterAPI.getEntryRegisterDetail(id);
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
-                    entryRegisterAPI.getEntryRegister(id), EntryRegisterVO.class,true);
+                    bo, EntryRegisterVO.class);
             return ActResult.initialize(entryRegisterVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
