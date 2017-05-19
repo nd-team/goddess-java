@@ -8,6 +8,7 @@
 **/.sass-cache/
 **/.idea/
 **/*.iml
+setting.gradle
 **/*.ipr
 **/*.iws
 **/gradlew
