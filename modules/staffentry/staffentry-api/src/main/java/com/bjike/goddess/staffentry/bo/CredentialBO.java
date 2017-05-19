@@ -27,10 +27,6 @@ public class CredentialBO extends BaseBO {
     private String obtainTime;
 
 
-    /**
-     * 员工入职外键
-     */
-    private EntryRegister entryRegister;
 
     /**
      * 证书名称集合
@@ -57,13 +53,6 @@ public class CredentialBO extends BaseBO {
         this.obtainTime = obtainTime;
     }
 
-    public EntryRegister getEntryRegister() {
-        return entryRegister;
-    }
-
-    public void setEntryRegister(EntryRegister entryRegister) {
-        this.entryRegister = entryRegister;
-    }
 
     public List<String> getNameses() {
         return nameses;

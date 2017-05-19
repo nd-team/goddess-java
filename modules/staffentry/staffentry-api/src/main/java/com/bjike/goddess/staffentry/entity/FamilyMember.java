@@ -32,7 +32,7 @@ public class FamilyMember extends BaseEntity {
 	/**
 	 *年龄
 	 */
-	@Range(min = 0 , max = 20 )
+	@Range(min = 0 , max = 200 )
 	@Column(nullable = false,columnDefinition = "TINYINT COMMENT '年龄'")
 	private Integer age;
 
