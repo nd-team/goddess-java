@@ -63,7 +63,7 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     }
 
     @Override
-    public EntryRegisterBO getEntryRegister(String id) throws SerException {
-        return entryRegisterSer.getEntryRegister(id);
+    public EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
+        return entryRegisterSer.getEntryRegisterDetail(id);
     }
 }

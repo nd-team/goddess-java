@@ -46,10 +46,6 @@ public class FamilyMemberBO extends BaseBO {
      */
     private String phone;
 
-    /**
-     * 入职登记外键
-     */
-    private EntryRegister entryRegister;
 
 
     /**
@@ -129,14 +125,6 @@ public class FamilyMemberBO extends BaseBO {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public EntryRegister getEntryRegister() {
-        return entryRegister;
-    }
-
-    public void setEntryRegister(EntryRegister entryRegister) {
-        this.entryRegister = entryRegister;
     }
 
     public List<String> getTitles() {

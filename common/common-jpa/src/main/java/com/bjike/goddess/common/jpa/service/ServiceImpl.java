@@ -42,7 +42,9 @@ import java.util.stream.Stream;
 public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements Ser<BE, BD>, Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
-    public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired(required = false)
     protected JpaRep<BE, BD> rep;
@@ -301,22 +303,21 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 case "Double":
                     obj = Double.parseDouble(val);
                     break;
-                case "BigInteger":
-                    obj = Integer.parseInt(val);
-                    break;
+
                 case "BigDecimal":
                     obj = Double.parseDouble(val);
                     break;
                 case "Integer":
                     obj = Integer.parseInt(val);
                     break;
-                case "Timestamp":
-                    val = val.substring(0, val.length() - 2);
-                    obj = LocalDateTime.parse(val, FORMAT);
+                case "LocalDateTime":
+                    obj = LocalDateTime.parse(val,DATE_TIME);
                     break;
-                case "Date":
-                    val = val.substring(0, val.length());
-                    obj = LocalDate.parse(val, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    case "LocalTime":
+                    obj = LocalDateTime.parse(val,TIME);
+                    break;
+                case "LocalDate":
+                    obj = LocalDate.parse(val, DATE);
                     break;
 
             }

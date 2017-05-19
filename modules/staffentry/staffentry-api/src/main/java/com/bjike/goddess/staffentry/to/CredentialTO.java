@@ -28,10 +28,6 @@ public class CredentialTO extends BaseTO {
     private String obtainTime;
 
 
-    /**
-     * 员工入职外键
-     */
-    private EntryRegister entryRegister;
 
     /**
      * 证书名称集合
@@ -59,13 +55,6 @@ public class CredentialTO extends BaseTO {
         this.obtainTime = obtainTime;
     }
 
-    public EntryRegister getEntryRegister() {
-        return entryRegister;
-    }
-
-    public void setEntryRegister(EntryRegister entryRegister) {
-        this.entryRegister = entryRegister;
-    }
 
     public List<String> getNameses() {
         return nameses;

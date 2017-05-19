@@ -7,6 +7,7 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.service.EntryBasicInfoSer;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,7 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     }
 
     @Override
-    public EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+    public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         return entryBasicInfoSer.getEntryBasicInfoByName(name);
     }
 }

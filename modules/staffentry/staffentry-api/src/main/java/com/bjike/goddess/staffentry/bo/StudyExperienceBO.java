@@ -36,10 +36,6 @@ public class StudyExperienceBO extends BaseBO {
      */
     private String certificate;
 
-    /**
-     * 员工入职外键
-     */
-    private EntryRegister entryRegister;
 
     /**
      * 开始时间集合
@@ -90,13 +86,6 @@ public class StudyExperienceBO extends BaseBO {
         this.certificate = certificate;
     }
 
-    public EntryRegister getEntryRegister() {
-        return entryRegister;
-    }
-
-    public void setEntryRegister(EntryRegister entryRegister) {
-        this.entryRegister = entryRegister;
-    }
 
     public List<String> getStudyStartTimes() {
         return studyStartTimes;
