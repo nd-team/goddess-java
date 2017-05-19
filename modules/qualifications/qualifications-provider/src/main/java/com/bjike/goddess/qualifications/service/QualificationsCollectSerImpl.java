@@ -10,6 +10,7 @@ import com.bjike.goddess.qualifications.entity.QualificationsCollect;
 import com.bjike.goddess.qualifications.to.QualificationsCollectFilterTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,8 +37,9 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
 
     @Override
     public QualificationsCollectBO save(QualificationsCollectTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         QualificationsCollect entity = BeanTransform.copyProperties(to, QualificationsCollect.class, true);
-        entity.setWriter(userAPI.currentUser().getUsername());
+        entity.setWriter(user.getUsername());
         entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
         return BeanTransform.copyProperties(entity, QualificationsCollectBO.class);

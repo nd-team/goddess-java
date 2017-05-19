@@ -2,12 +2,14 @@ package com.bjike.goddess.qualifications.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginIntercept;
 import com.bjike.goddess.common.consumer.interceptor.login.StorageIntercept;
 import com.bjike.goddess.storage.api.StorageUserAPI;
+import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,8 +25,14 @@ public class CustomIntercept implements Interceptor {
     @Autowired
     private StorageUserAPI storageUserAPI;
 
+    @Autowired
+    private UserAPI userAPI;
+
     @Override
     public List<HIInfo> customerInterceptors() {
-        return Arrays.asList(new HIInfo(new StorageIntercept(storageUserAPI), "/**"));
+        List<HIInfo> hiInfos = new ArrayList<>(0);
+        hiInfos.add(new HIInfo(new LoginIntercept(userAPI), "/**"));
+        hiInfos.add(new HIInfo(new StorageIntercept(storageUserAPI), "/**"));
+        return hiInfos;
     }
 }
