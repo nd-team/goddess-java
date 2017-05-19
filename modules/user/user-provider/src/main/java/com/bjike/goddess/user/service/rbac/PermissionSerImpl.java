@@ -95,7 +95,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.sysNO()));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Permission> permissions = super.findByCis(dto);
 
@@ -127,7 +127,7 @@ public class PermissionSerImpl extends ServiceImpl<Permission, PermissionDTO> im
     @Override
     public PermissionBO save(PermissionTO permissionTO) throws SerException {
         Permission permission = BeanTransform.copyProperties(permissionTO, Permission.class, true);
-        permission.setSystemNO(userSer.sysNO());
+        permission.setSystemNO(userSer.currentSysNO());
         if (StringUtils.isNotBlank(permissionTO.getParentId())) {
             PermissionDTO dto = new PermissionDTO();
             dto.getConditions().add(Restrict.eq("id", permissionTO.getParentId()));

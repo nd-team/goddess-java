@@ -67,7 +67,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default String sysNO(String userToken) throws SerException {
+    default String currentSysNO(String userToken) throws SerException {
         return null;
     }
 
@@ -77,7 +77,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default String sysNO() throws SerException {
+    default String currentSysNO() throws SerException {
         return null;
     }
 

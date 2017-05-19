@@ -50,13 +50,13 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
-    public String sysNO(String userToken) throws SerException {
-        return userSer.sysNO(userToken);
+    public String currentSysNO(String userToken) throws SerException {
+        return userSer.currentSysNO(userToken);
     }
 
     @Override
-    public String sysNO() throws SerException {
-        return userSer.sysNO();
+    public String currentSysNO() throws SerException {
+        return userSer.currentSysNO();
     }
 
     @Override

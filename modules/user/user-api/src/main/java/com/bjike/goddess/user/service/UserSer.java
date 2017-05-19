@@ -81,7 +81,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default String sysNO(String userToken) throws SerException {
+    default String currentSysNO(String userToken) throws SerException {
         return null;
     }
 
@@ -91,7 +91,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default String sysNO() throws SerException {
+    default String currentSysNO() throws SerException {
         return null;
     }
 

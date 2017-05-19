@@ -46,7 +46,7 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.sysNO()));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Group> groups = super.findByCis(dto);
 
@@ -74,7 +74,7 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
     @Transactional
     @Override
     public GroupBO save(GroupTO groupTO) throws SerException {
-        String sysNO= userSer.sysNO();
+        String sysNO= userSer.currentSysNO();
         Group group = BeanTransform.copyProperties(groupTO, Group.class, true);
         group.setSystemNO(sysNO);
 

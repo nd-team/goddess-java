@@ -133,22 +133,22 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
-    public String sysNO(String userToken) throws SerException {
+    public String currentSysNO(String userToken) throws SerException {
         String sysNO = currentUser(userToken).getSystemNO();
         if (StringUtils.isNotBlank(sysNO)) {
             return sysNO;
         } else {
-            throw new SerException("当前用户systemNO为空!");
+            throw new SerException("当前用户系统号为空!");
         }
     }
 
     @Override
-    public String sysNO() throws SerException {
+    public String currentSysNO() throws SerException {
         String sysNO = currentUser().getSystemNO();
         if (StringUtils.isNotBlank(sysNO)) {
             return sysNO;
         } else {
-            throw new SerException("当前用户systemNO为空!");
+            throw new SerException("当前用户系统号为空!");
         }
     }
 
