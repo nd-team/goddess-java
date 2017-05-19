@@ -17,6 +17,10 @@
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
 	<dubbo:reference  validation="true" id="cusEmailApiImpl" interface="com.bjike.goddess.customer.api.CusEmailAPI" />
 	<dubbo:reference  validation="true" id="cusFamilyMemberApiImpl" interface="com.bjike.goddess.customer.api.CusFamilyMemberAPI" />
 	<dubbo:reference  validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />

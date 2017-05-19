@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.CusPermissionBO;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
 import com.bjike.goddess.customer.to.CusPermissionTO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<String>  listOperateById(String id) throws SerException {
+    default List<OpinionBO>  listOperateById(String id) throws SerException {
         return null;
     }
 

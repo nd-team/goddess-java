@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
@@ -12,6 +13,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,19 +59,22 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public List<StaffEntryRegisterBO> listStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
-        String tocken = userAPI.currentToken();
+
+        String token = RpcTransmit.getUserToken();
 
         List<StaffEntryRegister> list =  super.findByCis(staffEntryRegisterDTO,true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list,StaffEntryRegisterBO.class);
-        for(StaffEntryRegisterBO temp : boList){
-            UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.eq("id",temp.getUserId()));
-            userAPI.currentUser( tocken );
-            List<UserBO> userBOList = userAPI.findOne( userDTO );
-            if( userBOList != null && userBOList.size()>0 ){
-                UserBO userBO = userBOList.get(0);
-                temp.setEmpNumber( userBO.getEmployeeNumber());
-                temp.setUserName( userBO.getUsername() );
+        if( list != null && list.size()>0 ){
+            for(StaffEntryRegisterBO temp : boList){
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("id",temp.getUserId()));
+                userAPI.currentUser( token );
+                List<UserBO> userBOList = userAPI.findByCis( userDTO );
+                if( userBOList != null && userBOList.size()>0 ){
+                    UserBO userBO = userBOList.get(0);
+                    temp.setEmpNumber( userBO.getEmployeeNumber());
+                    temp.setUserName( userBO.getUsername() );
+                }
             }
         }
         return boList;
@@ -90,6 +95,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         userTO.setUsername( staffEntryRegisterTO.getUserName());
         userTO.setPassword( staffEntryRegisterTO.getPassword());
         userTO.setStatus(Status.THAW);
+        userTO.setUserType(UserType.CUSTOMER);
         UserBO userBO = userAPI.add( null,userTO );
 
         //填自己的表
@@ -99,6 +105,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         staffEntryRegister.setProjectGroup( staffEntryRegisterTO.getProjectGroup());
         staffEntryRegister.setRole( staffEntryRegisterTO.getRole());
         staffEntryRegister.setWorkEmail( staffEntryRegisterTO.getWorkEmail() );
+        staffEntryRegister.setWorkEmailPassword( staffEntryRegisterTO.getWorkEmailPassword());
         staffEntryRegister.setCreateTime(LocalDateTime.now());
         staffEntryRegister.setModifyTime(LocalDateTime.now());
         staffEntryRegister.setUserId( userBO.getId());
@@ -125,13 +132,14 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         temp.setProjectGroup( staffEntryRegisterTO.getProjectGroup());
         temp.setRole( staffEntryRegisterTO.getRole());
         temp.setWorkEmail( staffEntryRegisterTO.getWorkEmail() );
+        temp.setWorkEmailPassword( staffEntryRegisterTO.getWorkEmailPassword());
         temp.setModifyTime(LocalDateTime.now());
 
         super.update(temp);
 
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq("id",temp.getUserId()));
-        String tocken = userAPI.currentToken();
+        String tocken =  RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis( userDTO );
         userAPI.currentUser(tocken);
         if( userBOList != null && userBOList.size()>0 ){
@@ -150,7 +158,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         StaffEntryRegister staffEntryRegister = super.findById( id );
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq("id",staffEntryRegister.getUserId()));
-        String tocken = userAPI.currentToken();
+        String tocken = RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis( userDTO );
         userAPI.currentUser(tocken);
         if( userBOList != null && userBOList.size()>0 ){

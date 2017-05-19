@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,7 @@ public class LabourCostAct {
      * @return class LabourCostVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) LabourCostTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -111,6 +113,7 @@ public class LabourCostAct {
      * @return class LabourCostVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({ADD.class}) LabourCostTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -127,6 +130,7 @@ public class LabourCostAct {
      * @param id 劳动成本id
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

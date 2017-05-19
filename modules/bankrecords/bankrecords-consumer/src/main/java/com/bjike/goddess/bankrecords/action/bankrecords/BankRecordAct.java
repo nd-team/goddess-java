@@ -1,5 +1,6 @@
 package com.bjike.goddess.bankrecords.action.bankrecords;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
@@ -14,8 +15,10 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +54,7 @@ public class BankRecordAct extends BaseFileAction {
     @PostMapping("v1/check")
     public Result check(HttpServletRequest request) throws ActException {
         try {
-            List<String> list = bankRecordAPI.check(super.getBytes(request).get(0));
+            List<String> list = bankRecordAPI.check(super.getInputStreams(request));
             return ActResult.initialize(list);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
@@ -65,7 +68,7 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(TransactionContext txContext, @Validated({BankRecordTO.Upload.class}) BankRecordTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
+    public Result upload(@Validated({BankRecordTO.Upload.class}) BankRecordTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
             String path = "/upload";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
@@ -99,7 +102,7 @@ public class BankRecordAct extends BaseFileAction {
     /**
      * 根据id查询银行流水
      *
-     * @param id 竞争对手Id
+     * @param id 银行流水Id
      * @return class BankRecordInfoVO
      * @version v1
      */
@@ -117,7 +120,7 @@ public class BankRecordAct extends BaseFileAction {
      * 列表
      *
      * @param dto 查询条件或分页条件
-     * @return class BankRecordVO
+     * @return class BankRecordPageListVO
      * @version v1
      */
     @GetMapping("v1/list")
@@ -136,8 +139,8 @@ public class BankRecordAct extends BaseFileAction {
      * @param year        年份
      * @param month       月份
      * @param accountName 账户名称
-     * @return class BankRecordVO
-     * @throws ActException
+     * @return class BankRecordCollectVO
+     * @version v1
      */
     @GetMapping("v1/collect")
     public Result collect(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
@@ -155,8 +158,8 @@ public class BankRecordAct extends BaseFileAction {
      * @param year        年份
      * @param month       月份
      * @param accountName 账户名称
-     * @return class BankRecordVO
-     * @throws ActException
+     * @return class BankRecordAnalyzeVO
+     * @version v1
      */
     @GetMapping("v1/analyze")
     public Result analyze(@RequestParam Integer year, @RequestParam Integer month, String accountName, HttpServletRequest request) throws ActException {
@@ -182,5 +185,22 @@ public class BankRecordAct extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    /**
+     * 通过流获取文件信息
+     *
+     * @param obj
+     * @return
+     */
+    private String getFileInfo(Object obj) {
+        String json_info = new String((byte[]) obj);
+        if (!StringUtils.isEmpty(json_info)) {
+            json_info = json_info.replaceAll("\\\\", "");
+            json_info = json_info.substring(1, json_info.length() - 1);
+            FileInfo fileInfo = JSON.parseObject(json_info, FileInfo.class);
+            return fileInfo.getFileName();
+        }
+        return null;
     }
 }

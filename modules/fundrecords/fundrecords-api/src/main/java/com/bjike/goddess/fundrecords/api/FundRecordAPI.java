@@ -85,4 +85,12 @@ public interface FundRecordAPI {
      * @return 分析结果集
      */
     AnalyzeBO analyze(CollectTO to) throws SerException;
+
+    /**
+     * 根据id查询资金流水
+     *
+     * @param id 资金流水id
+     * @return 资金流水
+     */
+    FundRecordBO findById(String id) throws SerException;
 }

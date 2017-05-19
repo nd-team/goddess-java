@@ -238,6 +238,9 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
     @Override
     public List<ProjectWeekBO> findDetail(String id) throws SerException {
         ProjectMonth projectMonth = super.findById(id);
+        if (projectMonth == null) {
+            throw new SerException("该对象不存在");
+        }
         String[] arrivals = new String[]{projectMonth.getArrival()};
         String[] projects = new String[]{projectMonth.getProject()};
         Integer[] years = new Integer[]{projectMonth.getYear()};
