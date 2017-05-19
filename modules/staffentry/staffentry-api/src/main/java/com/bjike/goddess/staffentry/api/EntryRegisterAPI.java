@@ -99,7 +99,7 @@ public interface EntryRegisterAPI  {
      * @return class entryRegisterBO
      * @throws SerException
      */
-    default EntryRegisterBO getEntryRegister(String id) throws SerException {
+    default EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
         return null;
     }
 

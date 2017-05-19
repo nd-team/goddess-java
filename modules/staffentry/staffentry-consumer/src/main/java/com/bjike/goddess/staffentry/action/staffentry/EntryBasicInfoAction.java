@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffentry.action.staffentry;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -197,7 +198,7 @@ public class EntryBasicInfoAction {
     @GetMapping("v1/getInfoByName/{name}")
     public Result getInfoByName(@PathVariable String name) throws ActException {
         try {
-            EntryBasicInfoVO entryBasicInfoVO = BeanTransform.copyProperties(
+            List<EntryBasicInfoVO> entryBasicInfoVO = BeanTransform.copyProperties(
                     entryBasicInfoAPI.getEntryBasicInfoByName(name), EntryBasicInfoVO.class, true);
             return ActResult.initialize(entryBasicInfoVO);
         } catch (SerException e) {

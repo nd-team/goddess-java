@@ -433,7 +433,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and auditStatus = 1 ");
 
@@ -447,7 +447,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -462,7 +462,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -502,7 +502,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where area = '" + area + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -538,7 +538,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -575,7 +575,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and auditStatus = 1 ");
 
@@ -670,7 +670,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and transferStatus = 1 ");
 
@@ -684,7 +684,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -699,7 +699,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney , loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -741,7 +741,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where area = '" + area + "' and transferStatus = 1 ");
 
@@ -782,7 +782,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney , loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and transferStatus = 1 ");
 
@@ -822,7 +822,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney , loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and transferStatus = 1 ");
 
@@ -881,7 +881,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and checkStatus = 1 ");
 
@@ -895,7 +895,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -910,7 +910,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney , loanMoney ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -992,7 +992,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and checkStatus = 1 ");
 
@@ -1033,7 +1033,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and checkStatus = 1 ");
 

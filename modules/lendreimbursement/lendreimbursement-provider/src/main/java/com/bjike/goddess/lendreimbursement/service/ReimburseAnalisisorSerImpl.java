@@ -69,7 +69,7 @@ public class ReimburseAnalisisorSerImpl extends ServiceImpl<ReimburseAnalisisor,
 
         BeanUtils.copyProperties(reimburseAnalisisor,temp,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());
-        super.update(reimburseAnalisisor);
+        super.update(temp);
         return BeanTransform.copyProperties(reimburseAnalisisor,ReimburseAnalisisorBO.class);
     }
 

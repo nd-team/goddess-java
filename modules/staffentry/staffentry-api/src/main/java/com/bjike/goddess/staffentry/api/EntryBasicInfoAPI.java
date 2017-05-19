@@ -5,6 +5,7 @@ import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 
 import java.util.List;
 
@@ -108,7 +109,7 @@ public interface EntryBasicInfoAPI {
      * @return class entryBasicInfoBO
      * @throws SerException
      */
-    default EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+    default List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         return null;
     }
 }
