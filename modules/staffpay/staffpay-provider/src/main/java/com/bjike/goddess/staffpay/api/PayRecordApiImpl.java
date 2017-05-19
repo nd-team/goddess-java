@@ -1,6 +1,19 @@
 package com.bjike.goddess.staffpay.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.staffpay.bo.AreaCollectBO;
+import com.bjike.goddess.staffpay.bo.DepartmentCollectBO;
+import com.bjike.goddess.staffpay.bo.NameCollectBO;
+import com.bjike.goddess.staffpay.bo.PayRecordBO;
+import com.bjike.goddess.staffpay.dto.PayRecordDTO;
+import com.bjike.goddess.staffpay.entity.PayRecord;
+import com.bjike.goddess.staffpay.service.PayRecordSer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 已付款记录业务接口实现
@@ -13,5 +26,50 @@ import org.springframework.stereotype.Service;
  */
 @Service("payRecordApiImpl")
 public class PayRecordApiImpl implements PayRecordAPI {
+    @Autowired
+    private PayRecordSer payRecordSer;
 
+    @Override
+    public Long countPayRecord(PayRecordDTO payRecordDTO) throws SerException {
+        return payRecordSer.countPayRecord(payRecordDTO);
+    }
+
+    @Override
+    public PayRecordBO getOne(String id) throws SerException {
+        return payRecordSer.getOne(id);
+    }
+
+    @Override
+    public List<PayRecordBO> findListPayRecord(PayRecordDTO payRecordDTO) throws SerException {
+        return payRecordSer.findListPayRecord(payRecordDTO);
+    }
+    @Override
+    public void removePayRecord(String id) throws SerException {
+        payRecordSer.removePayRecord(id);
+    }
+    @Override
+    public List<AreaCollectBO> collectArea(String[] areas) throws SerException {
+        return payRecordSer.collectArea(areas);
+    }
+    @Override
+    public List<String> getAreas() throws SerException {
+        return payRecordSer.getAreas();
+    }
+    @Override
+    public List<DepartmentCollectBO> collectDepartment(String[] departments) throws SerException {
+        return payRecordSer.collectDepartment(departments);
+    }
+    @Override
+    public List<String> getDepartments() throws SerException {
+        return payRecordSer.getDepartments();
+    }
+    @Override
+    public List<NameCollectBO> collectName(String[] names) throws SerException {
+        return payRecordSer.collectName(names);
+    }
+
+    @Override
+    public List<String> getNames() throws SerException {
+        return payRecordSer.getNames();
+    }
 }

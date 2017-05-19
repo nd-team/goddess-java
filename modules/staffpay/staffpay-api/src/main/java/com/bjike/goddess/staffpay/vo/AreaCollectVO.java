@@ -1,59 +1,17 @@
-package com.bjike.goddess.staffpay.to;
-
-import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.staffpay.enums.ConfirmStatus;
+package com.bjike.goddess.staffpay.vo;
 
 /**
- * 已付款记录
- *
- * @Author: [ xiazhili ]
- * @Date: [ 2017-05-18 02:00 ]
- * @Description: [ 已付款记录 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * Created by ike on 17-5-19.
  */
-public class PayRecordTO extends BaseTO {
-
+public class AreaCollectVO {
     /**
      * 月份
      */
     private Integer months;
-
-    /**
-     * 计薪周期（开始）
-     */
-    private String startPaidCycle;
-
-    /**
-     * 计薪周期（结束）
-     */
-    private String endPaidCycle;
-
     /**
      * 地区
      */
     private String area;
-
-    /**
-     * 姓名
-     */
-    private String name;
-
-    /**
-     * 部门
-     */
-    private String department;
-
-    /**
-     * 岗位
-     */
-    private String jobs;
-
-    /**
-     * 出勤天数
-     */
-    private Double attendanceDay;
-
     /**
      * 员工工资
      */
@@ -139,52 +97,6 @@ public class PayRecordTO extends BaseTO {
      */
     private Double realWages;
 
-    /**
-     * 是否缴纳个人所得税
-     */
-    private Boolean incomeTax;
-
-    /**
-     * 本月第一次发工资
-     */
-    private Double firstSalary;
-
-    /**
-     * 本月第二次发工资
-     */
-    private Double secondSalary;
-
-    /**
-     * 本月需缴发票金额
-     */
-    private Double invoiceValue;
-
-    /**
-     * 累计已缴发票金额
-     */
-    private Double paidInvoiceAmount;
-
-    /**
-     * 是否确认第一次工资发放记录
-     */
-    private ConfirmStatus confirmFirstSalary;
-
-    /**
-     * 是否确认工资
-     */
-    private ConfirmStatus confirmSalary;
-
-    /**
-     * 第一次付款时间
-     */
-    private String firstPayTime;
-
-    /**
-     * 第二次付款时间
-     */
-    private String secondPayTime;
-
-
     public Integer getMonths() {
         return months;
     }
@@ -193,60 +105,12 @@ public class PayRecordTO extends BaseTO {
         this.months = months;
     }
 
-    public String getStartPaidCycle() {
-        return startPaidCycle;
-    }
-
-    public void setStartPaidCycle(String startPaidCycle) {
-        this.startPaidCycle = startPaidCycle;
-    }
-
-    public String getEndPaidCycle() {
-        return endPaidCycle;
-    }
-
-    public void setEndPaidCycle(String endPaidCycle) {
-        this.endPaidCycle = endPaidCycle;
-    }
-
     public String getArea() {
         return area;
     }
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getJobs() {
-        return jobs;
-    }
-
-    public void setJobs(String jobs) {
-        this.jobs = jobs;
-    }
-
-    public Double getAttendanceDay() {
-        return attendanceDay;
-    }
-
-    public void setAttendanceDay(Double attendanceDay) {
-        this.attendanceDay = attendanceDay;
     }
 
     public Double getStaffWage() {
@@ -383,77 +247,5 @@ public class PayRecordTO extends BaseTO {
 
     public void setRealWages(Double realWages) {
         this.realWages = realWages;
-    }
-
-    public Boolean getIncomeTax() {
-        return incomeTax;
-    }
-
-    public void setIncomeTax(Boolean incomeTax) {
-        this.incomeTax = incomeTax;
-    }
-
-    public Double getFirstSalary() {
-        return firstSalary;
-    }
-
-    public void setFirstSalary(Double firstSalary) {
-        this.firstSalary = firstSalary;
-    }
-
-    public Double getSecondSalary() {
-        return secondSalary;
-    }
-
-    public void setSecondSalary(Double secondSalary) {
-        this.secondSalary = secondSalary;
-    }
-
-    public Double getInvoiceValue() {
-        return invoiceValue;
-    }
-
-    public void setInvoiceValue(Double invoiceValue) {
-        this.invoiceValue = invoiceValue;
-    }
-
-    public Double getPaidInvoiceAmount() {
-        return paidInvoiceAmount;
-    }
-
-    public void setPaidInvoiceAmount(Double paidInvoiceAmount) {
-        this.paidInvoiceAmount = paidInvoiceAmount;
-    }
-
-    public ConfirmStatus getConfirmFirstSalary() {
-        return confirmFirstSalary;
-    }
-
-    public void setConfirmFirstSalary(ConfirmStatus confirmFirstSalary) {
-        this.confirmFirstSalary = confirmFirstSalary;
-    }
-
-    public ConfirmStatus getConfirmSalary() {
-        return confirmSalary;
-    }
-
-    public void setConfirmSalary(ConfirmStatus confirmSalary) {
-        this.confirmSalary = confirmSalary;
-    }
-
-    public String getFirstPayTime() {
-        return firstPayTime;
-    }
-
-    public void setFirstPayTime(String firstPayTime) {
-        this.firstPayTime = firstPayTime;
-    }
-
-    public String getSecondPayTime() {
-        return secondPayTime;
-    }
-
-    public void setSecondPayTime(String secondPayTime) {
-        this.secondPayTime = secondPayTime;
     }
 }
