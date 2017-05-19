@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,7 @@ public class BiddingInfoAction {
      * @des 添加招标信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -116,6 +118,7 @@ public class BiddingInfoAction {
      * @des 编辑招标信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) BiddingInfoTO biddingInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -133,6 +136,7 @@ public class BiddingInfoAction {
      * @des 根据用户id删除招标信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

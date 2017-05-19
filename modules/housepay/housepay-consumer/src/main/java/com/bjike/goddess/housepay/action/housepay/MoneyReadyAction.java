@@ -9,9 +9,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.housepay.api.MoneyReadyAPI;
+import com.bjike.goddess.housepay.bo.CollectCompareBO;
 import com.bjike.goddess.housepay.bo.MoneyReadyBO;
 import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
 import com.bjike.goddess.housepay.to.MoneyReadyTO;
+import com.bjike.goddess.housepay.vo.CollectCompareVO;
 import com.bjike.goddess.housepay.vo.MoneyReadyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -141,6 +143,23 @@ public class MoneyReadyAction {
         try {
             moneyReadyAPI.removeMoneyReady(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 对比汇总
+     *
+     * @param month 月份
+     * @return class CollectCompareVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(@RequestParam Integer month) throws ActException {
+        try {
+            List<CollectCompareBO> collectCompareBOS = moneyReadyAPI.collectCompare(month);
+            return ActResult.initialize(BeanTransform.copyProperties(collectCompareBOS, CollectCompareVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

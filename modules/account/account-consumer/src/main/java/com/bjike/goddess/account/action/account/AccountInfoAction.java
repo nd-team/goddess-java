@@ -100,6 +100,7 @@ public class AccountInfoAction {
      * @des 添加明细账信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) AccountInfoTO accountInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -118,6 +119,7 @@ public class AccountInfoAction {
      * @des 编辑明细账信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) AccountInfoTO accountInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -135,6 +137,7 @@ public class AccountInfoAction {
      * @des 根据用户id删除明细账信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

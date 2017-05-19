@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,7 @@ public class BidOpeningInfoAction {
      * @des 添加开标信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) BidOpeningInfoTO bidOpeningInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -120,6 +122,7 @@ public class BidOpeningInfoAction {
      * @des 编辑开标信息
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) BidOpeningInfoTO bidOpeningInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -137,6 +140,7 @@ public class BidOpeningInfoAction {
      * @des 根据用户id删除开标信息记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

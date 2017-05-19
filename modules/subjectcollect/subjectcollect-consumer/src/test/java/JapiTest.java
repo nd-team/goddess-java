@@ -16,6 +16,9 @@ public class JapiTest {
 		JapiClient.setActionReletivePath("com/bjike/goddess/subjectcollect/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/subjectcollect/subjectcollect-api",
+				"modules/voucher/voucher-api",
+				"modules/user/user-api",
+				"modules/financeinit/financeinit-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
@@ -23,6 +26,7 @@ public class JapiTest {
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
 		japiClientStorage.setProject(project);
 		japiClientStorage.autoSaveToDisk();
+//		JapiClient.delete(true);
 		new JapiClientTransfer().autoTransfer(japiClientStorage);
 	}
 

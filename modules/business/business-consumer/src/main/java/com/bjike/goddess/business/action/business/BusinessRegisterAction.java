@@ -133,6 +133,7 @@ public class BusinessRegisterAction {
      * @des 根据用户id删除工商注册记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

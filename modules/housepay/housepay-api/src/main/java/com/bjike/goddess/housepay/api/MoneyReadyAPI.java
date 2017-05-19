@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.housepay.bo.CollectCompareBO;
 import com.bjike.goddess.housepay.bo.MoneyReadyBO;
 import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
-import com.bjike.goddess.housepay.to.CollectCompareTO;
 import com.bjike.goddess.housepay.to.MoneyReadyTO;
 
 import java.util.List;
@@ -83,7 +82,7 @@ public interface MoneyReadyAPI {
      * @return class CollectCompareBO
      * @throws SerException
      */
-    default List<CollectCompareBO> collectCompare(MoneyReadyDTO dto) throws SerException {
+    default List<CollectCompareBO> collectCompare(Integer month) throws SerException {
         return null;
     }
 }

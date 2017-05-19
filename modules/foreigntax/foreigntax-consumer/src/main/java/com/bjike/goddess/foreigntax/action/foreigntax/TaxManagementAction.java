@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.api.TaxManagementAPI;
@@ -100,6 +101,7 @@ public class TaxManagementAction {
      * @des 添加税金管理
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) TaxManagementTO taxManagementTO, BindingResult bindingResult) throws ActException {
         try {
@@ -118,6 +120,7 @@ public class TaxManagementAction {
      * @des 编辑税金管理
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) TaxManagementTO taxManagementTO,BindingResult bindingResult) throws ActException {
         try {
@@ -135,6 +138,7 @@ public class TaxManagementAction {
      * @des 根据用户id删除税金管理记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result removeTaxManagement(@PathVariable String id) throws ActException {
         try {

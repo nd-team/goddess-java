@@ -2,6 +2,7 @@ package com.bjike.goddess.subjectcollect.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
@@ -19,13 +20,52 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO> {
+    /**
+     * 科目汇总表列表总条数
+     */
+    default Long countSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
 
     /**
-     * 导出
+     * 一个科目汇总表
      *
+     * @return class SubjectCollectBO
+     */
+    default SubjectCollectBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总表
+     *
+     * @param subjectCollectDTO 科目汇总表dto
+     * @return class SubjectCollectBO
      * @throws SerException
      */
-    default String exportExcel() throws SerException {
+    default List<SubjectCollectBO> findListSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 添加科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表数据to
+     * @return class SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表数据to
+     * @return class SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO editSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         return null;
     }
     /**
@@ -37,5 +77,24 @@ public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO
     default void removeSubjectCollect(String id) throws SerException {
 
     }
+
+    /**
+     * 导出
+     *
+     * @throws SerException
+     */
+    default String exportExcel() throws SerException {
+        return null;
+    }
+    /**
+     * 汇总对比
+     *
+     * @return class CompareCollectBO
+     * @throws SerException
+     */
+    default List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
+        return null;
+    }
+
 
 }

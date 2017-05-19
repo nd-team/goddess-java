@@ -16,9 +16,14 @@ public class MoneyReadyVO {
      */
     private String id;
     /**
-     * 时间
+     * 年份
      */
-    private String time;
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    private Integer month;
 
     /**
      * 类别
@@ -59,12 +64,20 @@ public class MoneyReadyVO {
         this.id = id;
     }
 
-    public String getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getCategory() {

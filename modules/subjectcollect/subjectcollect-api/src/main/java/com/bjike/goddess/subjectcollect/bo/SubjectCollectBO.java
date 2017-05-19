@@ -21,7 +21,10 @@ public class SubjectCollectBO extends BaseBO {
      * 代码
      */
     private String code;
-
+    /**
+     * 月份
+     */
+    private Integer  months;
     /**
      * 一级科目
      */
@@ -72,22 +75,6 @@ public class SubjectCollectBO extends BaseBO {
      */
     private Double endCreditAmount;
 
-    /**
-     * 备注
-     */
-    private String remark;
-    private int counts;//个数
-    private int enumConvert;//数据库枚举转换
-    private List<Map<String, String>> firstSubjectMap;//一级科目汇总集合
-
-    private List<Map<String, String>> areaMap;//地区汇总集合
-    private List<Map<String, String>> projectNameMap;//项目名称汇总集合
-    private List<Map<String, String>> projectGroupMap;//项目组汇总集合
-
-    private Double beginMinusMoney;//差额
-    private Double issueMinusMoney;//差额
-    private Double endMinusMoney;//差额
-
 
     public String getCode() {
         return code;
@@ -95,6 +82,14 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public String getFirstSubject() {
@@ -175,98 +170,5 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setEndCreditAmount(Double endCreditAmount) {
         this.endCreditAmount = endCreditAmount;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
-    public int getEnumConvert() {
-        return enumConvert;
-    }
-
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
-    }
-
-    public List<Map<String, String>> getFirstSubjectMap() {
-        return firstSubjectMap;
-    }
-
-    public void setFirstSubjectMap(List<Map<String, String>> firstSubjectMap) {
-        this.firstSubjectMap = firstSubjectMap;
-    }
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
-
-    public List<Map<String, String>> getProjectNameMap() {
-        return projectNameMap;
-    }
-
-    public void setProjectNameMap(List<Map<String, String>> projectNameMap) {
-        this.projectNameMap = projectNameMap;
-    }
-
-    public List<Map<String, String>> getProjectGroupMap() {
-        return projectGroupMap;
-    }
-
-    public void setProjectGroupMap(List<Map<String, String>> projectGroupMap) {
-        this.projectGroupMap = projectGroupMap;
-    }
-
-    public Double getBeginMinusMoney() {
-        return beginMinusMoney;
-    }
-
-    public void setBeginMinusMoney(Double beginMinusMoney) {
-        this.beginMinusMoney = beginMinusMoney;
-    }
-
-    public Double getIssueMinusMoney() {
-        return issueMinusMoney;
-    }
-
-    public void setIssueMinusMoney(Double issueMinusMoney) {
-        this.issueMinusMoney = issueMinusMoney;
-    }
-
-    public Double getEndMinusMoney() {
-        return endMinusMoney;
-    }
-
-    public void setEndMinusMoney(Double endMinusMoney) {
-        this.endMinusMoney = endMinusMoney;
-    }
-    public SubjectCollectBO(String area, Double beginningDebitAmount, Double beginningCreditAmount, Double beginMinusMoney, Double issueDebitAmount, Double issueCreditAmount, Double issueMinusMoney, Double endDebitAmount, Double endCreditAmount, Double endMinusMoney) {
-        super();
-        this.area  = area;
-        this.beginningDebitAmount = beginningDebitAmount;
-        this.beginningCreditAmount = beginningCreditAmount;
-        this.beginMinusMoney = beginMinusMoney;
-        this.issueDebitAmount = issueDebitAmount;
-        this.issueCreditAmount = issueCreditAmount;
-        this.issueMinusMoney = issueMinusMoney;
-        this.endDebitAmount = endDebitAmount;
-        this.endCreditAmount = endCreditAmount;
-        this.endMinusMoney = endMinusMoney;
     }
 }

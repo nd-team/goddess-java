@@ -1,23 +1,13 @@
 package com.bjike.goddess.housepay.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * Created by ike on 17-5-15.
  */
-public class CollectCompareVO extends BaseBO {
+public class CollectCompareVO {
     /**
-     * 开始月份
+     * 月份
      */
-    private String startMonth;
-    /**
-     * 结束月份
-     */
-    private String endMonth;
-    /**
-     * 时间
-     */
-    private String time;
+    private Integer month;
     /**
      * 项目组
      */
@@ -25,11 +15,11 @@ public class CollectCompareVO extends BaseBO {
     /**
      * 上月准备金
      */
-    private Double lastMonthReserves;
+    private Double lastReserveSum;
     /**
      * 本月准备金
      */
-    private Double reserves;
+    private Double reserveSum;
     /**
      * 差额
      */
@@ -39,28 +29,28 @@ public class CollectCompareVO extends BaseBO {
      */
     private Double increase;
 
-    public String getStartMonth() {
-        return startMonth;
+    public Integer getMonth() {
+        return month;
     }
 
-    public void setStartMonth(String startMonth) {
-        this.startMonth = startMonth;
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
-    public String getEndMonth() {
-        return endMonth;
+    public Double getLastReserveSum() {
+        return lastReserveSum;
     }
 
-    public void setEndMonth(String endMonth) {
-        this.endMonth = endMonth;
+    public void setLastReserveSum(Double lastReserveSum) {
+        this.lastReserveSum = lastReserveSum;
     }
 
-    public String getTime() {
-        return time;
+    public Double getReserveSum() {
+        return reserveSum;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setReserveSum(Double reserveSum) {
+        this.reserveSum = reserveSum;
     }
 
     public String getProjectGroup() {
@@ -69,22 +59,6 @@ public class CollectCompareVO extends BaseBO {
 
     public void setProjectGroup(String projectGroup) {
         this.projectGroup = projectGroup;
-    }
-
-    public Double getLastMonthReserves() {
-        return lastMonthReserves;
-    }
-
-    public void setLastMonthReserves(Double lastMonthReserves) {
-        this.lastMonthReserves = lastMonthReserves;
-    }
-
-    public Double getReserves() {
-        return reserves;
-    }
-
-    public void setReserves(Double reserves) {
-        this.reserves = reserves;
     }
 
     public Double getBalance() {
