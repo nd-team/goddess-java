@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements Ser<BE, BD>, Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
-    public static final DateTimeFormatter DATE_TIME= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -234,7 +234,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                         if (field.getName().equals(fields[j])) {
                             field.setAccessible(true);
                             if (!field.getType().isEnum()) { //忽略枚举类型
-                                field.set(obj, convertDataType( field.getType().getSimpleName() ,arr_obj[j]));
+                                field.set(obj, convertDataType(field.getType().getSimpleName(), arr_obj[j]));
                             } else {
                                 Field[] enumFields = field.getType().getFields();
                                 for (int k = 0; k < enumFields.length; k++) {
@@ -293,7 +293,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
      * @param obj
      * @return
      */
-    private Object convertDataType(String type,Object obj) {
+    private Object convertDataType(String type, Object obj) {
         if (null != obj) {
             String val = obj.toString();
             switch (type) {
@@ -303,6 +303,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 case "Double":
                     obj = Double.parseDouble(val);
                     break;
+                case "Long":
+                    obj = Long.parseLong(val);
+                    break;
 
                 case "BigDecimal":
                     obj = Double.parseDouble(val);
@@ -311,10 +314,10 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                     obj = Integer.parseInt(val);
                     break;
                 case "LocalDateTime":
-                    obj = LocalDateTime.parse(val,DATE_TIME);
+                    obj = LocalDateTime.parse(val, DATE_TIME);
                     break;
-                    case "LocalTime":
-                    obj = LocalDateTime.parse(val,TIME);
+                case "LocalTime":
+                    obj = LocalDateTime.parse(val, TIME);
                     break;
                 case "LocalDate":
                     obj = LocalDate.parse(val, DATE);
