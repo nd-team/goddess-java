@@ -60,7 +60,7 @@ public class InventorySerImpl extends ServiceImpl<Inventory, InventoryDTO> imple
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<InventoryBO> list(InventoryDTO dto) throws SerException {
-        List<MaterialInStockBO> list = materialInStockAPI.list(new MaterialInStockDTO());
+        List<MaterialInStockBO> list = materialInStockAPI.findBOByCis(new MaterialInStockDTO());
         List<Inventory> inventorys = super.findAll();
         if (list != null) {
             for (MaterialInStockBO v : list) {
