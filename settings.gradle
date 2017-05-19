@@ -390,3 +390,27 @@ include ':modules:rotation:rotation-api'
 include ':modules:rotation:rotation-consumer'
 include ':modules:rotation:rotation-provider'
 
+//#rotation 岗位轮换 dengjunren
+include ':modules:rotation:rotation-api'
+include ':modules:rotation:rotation-consumer'
+include ':modules:rotation:rotation-provider'
+
+//#marketactivitymanage 市场活动管理 sunfengtao
+include ':modules:marketactivitymanage:marketactivitymanage-api'
+include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+include ':modules:marketactivitymanage:marketactivitymanage-provider'
+
+//#projectmeasure 项目测算 sunfengtao
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
+
+//#projectmeasure 项目测算 sunfengtao
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
+
+
+
+
+
