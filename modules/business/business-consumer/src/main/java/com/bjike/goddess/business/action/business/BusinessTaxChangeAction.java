@@ -135,6 +135,7 @@ public class BusinessTaxChangeAction {
      * @des 根据用户id删除工商税务变更记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

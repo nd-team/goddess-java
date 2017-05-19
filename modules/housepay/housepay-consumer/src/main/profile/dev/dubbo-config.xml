@@ -29,4 +29,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.housepay.api.MoneyReadyAPI" id="moneyReadyApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.housepay.api.WaitPayAPI" id="waitPayApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.housepay.api.PayRecordAPI" id="payRecordApiImpl"/>
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

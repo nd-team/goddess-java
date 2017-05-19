@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,7 @@ public class TenderInfoAction {
      * @des 添加标书资料
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -116,6 +118,7 @@ public class TenderInfoAction {
      * @des 编辑标书资料
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) TenderInfoTO tenderInfoTO, BindingResult bindingResult) throws ActException {
         try {
@@ -133,6 +136,7 @@ public class TenderInfoAction {
      * @des 根据用户id删除标书资料记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result deleteTenderInfo(@PathVariable String id) throws ActException {
         try {

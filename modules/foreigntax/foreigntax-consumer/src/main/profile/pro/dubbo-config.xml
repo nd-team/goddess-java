@@ -20,4 +20,6 @@
 	<dubbo:reference  validation="true" id="taxManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" />
 	<dubbo:reference  validation="true" id="accountInfoManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

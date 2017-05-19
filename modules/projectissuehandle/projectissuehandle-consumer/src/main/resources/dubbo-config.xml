@@ -20,6 +20,9 @@
 	<dubbo:reference  validation="true" id="problemHandlingResultApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" />
 	<dubbo:reference  validation="true" id="involvedProcessingTaskApiImpl" interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" />
 
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
 </beans>

@@ -22,4 +22,6 @@
 	<dubbo:service interface="com.bjike.goddess.business.api.BusinessAnnualInfoAPI" ref="businessAnnualInfoApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.business.api.BusinessTaxChangeAPI" ref="businessTaxChangeApiImpl" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

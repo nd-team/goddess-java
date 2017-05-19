@@ -175,13 +175,13 @@ public class WaitPayTO extends BaseTO {
     /**
      * 是否确认第一次工资发放记录
      */
-    @NotNull(message = "是否确认第一次工资发放记录不能为空")
+    @NotNull(message = "是否确认第一次工资发放记录不能为空",groups = {ADD.class, EDIT.class})
     private Boolean confirmFirstSalary;
 
     /**
      * 是否确认工资
      */
-    @NotNull(message = "是否确认工资不能为空")
+    @NotNull(message = "是否确认工资不能为空",groups = {ADD.class, EDIT.class})
     private Boolean confirmSalary;
 
     /**
