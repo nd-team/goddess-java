@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,7 @@ public class BusinessEvaluateCollectAct {
      * @return class BusinessEvaluateCollectVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) BusinessEvaluateCollectTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -144,6 +146,7 @@ public class BusinessEvaluateCollectAct {
      * @return class BusinessEvaluateCollectVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) BusinessEvaluateCollectTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -160,6 +163,7 @@ public class BusinessEvaluateCollectAct {
      * @param id 商务评估汇总ID
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/freeze/{id}")
     public Result freeze(@PathVariable String id) throws ActException {
         try {
@@ -176,6 +180,7 @@ public class BusinessEvaluateCollectAct {
      * @param id 商务评估汇总ID
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/unfreeze/{id}")
     public Result breakFreeze(@PathVariable String id) throws ActException {
         try {
@@ -192,6 +197,7 @@ public class BusinessEvaluateCollectAct {
      * @param id 竞争对手ID
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

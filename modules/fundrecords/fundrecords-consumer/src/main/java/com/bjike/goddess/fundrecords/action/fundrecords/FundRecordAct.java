@@ -63,7 +63,7 @@ public class FundRecordAct {
      * @return class FundRecordVO
      * @version v1
      */
-    @PostMapping("v1/edit")
+    @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) FundRecordTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             FundRecordVO vo = BeanTransform.copyProperties(fundRecordAPI.edit(to), FundRecordVO.class, request);
@@ -79,7 +79,7 @@ public class FundRecordAct {
      * @param id 资金流水ID
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             fundRecordAPI.delete(id);
@@ -117,6 +117,23 @@ public class FundRecordAct {
         try {
             Long count = fundRecordAPI.count(dto);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询资金流水
+     *
+     * @param id 资金流水id
+     * @return class FundRecordVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            FundRecordVO vo = BeanTransform.copyProperties(fundRecordAPI.findById(id), FundRecordVO.class, request);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

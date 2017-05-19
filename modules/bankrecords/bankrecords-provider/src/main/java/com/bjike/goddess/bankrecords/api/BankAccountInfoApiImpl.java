@@ -5,6 +5,7 @@ import com.bjike.goddess.bankrecords.dto.BankAccountInfoDTO;
 import com.bjike.goddess.bankrecords.service.BankAccountInfoSer;
 import com.bjike.goddess.bankrecords.to.BankAccountInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,15 @@ public class BankAccountInfoApiImpl implements BankAccountInfoAPI {
     @Override
     public List<BankAccountInfoBO> pageList(BankAccountInfoDTO dto) throws SerException {
         return bankAccountInfoSer.pageList(dto);
+    }
+
+    @Override
+    public Long count(BankAccountInfoDTO dto) throws SerException {
+        return bankAccountInfoSer.count(dto);
+    }
+
+    @Override
+    public BankAccountInfoBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(bankAccountInfoSer.findById(id),BankAccountInfoBO.class);
     }
 }
