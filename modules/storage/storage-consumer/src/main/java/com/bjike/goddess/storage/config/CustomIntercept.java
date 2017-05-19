@@ -33,7 +33,7 @@ public class CustomIntercept implements Interceptor {
     public List<HIInfo> customerInterceptors() {
 
         HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "**/");
-        HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "*/register");
+        HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**/register/**");
 
         /**
          * 暂时不加权限
