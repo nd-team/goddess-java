@@ -19,6 +19,11 @@ import javax.persistence.*;
 @Table(name = "rbac_permission")
 public class Permission extends BaseEntity {
     /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
+    /**
      * 认证名
      */
     @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '认证名' ")
@@ -52,6 +57,14 @@ public class Permission extends BaseEntity {
      */
     @Column(name = "is_hasChild",columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
     private Boolean hasChild;
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getName() {
         return name;

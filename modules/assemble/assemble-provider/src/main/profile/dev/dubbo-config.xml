@@ -19,5 +19,6 @@
 	<!--发布接口,供其他模块调用-->
 	<dubbo:service  ref="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:service  ref="moduleAssembleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAssembleAPI" />
+	<dubbo:service  ref="moduleApplyApiImpl" interface="com.bjike.goddess.assemble.api.ModuleApplyAPI" />
 
 </beans>

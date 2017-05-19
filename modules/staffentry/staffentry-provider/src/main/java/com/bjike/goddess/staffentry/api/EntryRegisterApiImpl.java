@@ -28,6 +28,16 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     private EntryRegisterSer entryRegisterSer;
 
     @Override
+    public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        return entryRegisterSer.countEntryRegister(entryRegisterDTO);
+    }
+
+    @Override
+    public EntryRegisterBO getOne(String id) throws SerException {
+        return entryRegisterSer.getOne(id);
+    }
+
+    @Override
     public List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         List<EntryRegister> entryRegisters = entryRegisterSer.listEntryRegister(entryRegisterDTO);
         List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties( entryRegisters , EntryRegisterBO.class  );
@@ -53,7 +63,7 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     }
 
     @Override
-    public EntryRegisterBO getEntryRegister(String id) throws SerException {
-        return entryRegisterSer.getEntryRegister(id);
+    public EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
+        return entryRegisterSer.getEntryRegisterDetail(id);
     }
 }

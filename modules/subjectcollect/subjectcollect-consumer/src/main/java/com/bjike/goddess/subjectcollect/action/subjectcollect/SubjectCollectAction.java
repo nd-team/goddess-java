@@ -1,13 +1,19 @@
 package com.bjike.goddess.subjectcollect.action.subjectcollect;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.to.SubjectCollectTO;
+import com.bjike.goddess.subjectcollect.vo.CompareCollectVO;
+import com.bjike.goddess.subjectcollect.vo.SubjectCollectVO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
@@ -16,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -35,6 +42,98 @@ public class SubjectCollectAction {
     private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
+    /**
+     * 科目汇总表列表总条数
+     *
+     * @param subjectCollectDTO 科目汇总表记录dto
+     * @des 获取所有科目汇总表
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(SubjectCollectDTO subjectCollectDTO) throws ActException {
+        try {
+            Long count = subjectCollectAPI.countSubjectCollect(subjectCollectDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个科目汇总表
+     *
+     * @param id
+     * @return class SubjectCollectVO
+     * @des 获取一个科目汇总表
+     * @version v1
+     */
+    @GetMapping("v1/subject/{id}")
+    public Result subject(@PathVariable String id) throws ActException {
+        try {
+            SubjectCollectBO subjectCollectBO = subjectCollectAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(subjectCollectBO, SubjectCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 科目汇总表列表
+     *
+     * @param subjectCollectDTO 科目汇总表记录dto
+     * @return class SubjectCollectVO
+     * @des 获取所有科目汇总表
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(SubjectCollectDTO subjectCollectDTO, HttpServletRequest request) throws ActException {
+        try {
+            List<SubjectCollectVO> subjectCollectVOS = BeanTransform.copyProperties(
+                    subjectCollectAPI.findListSubjectCollect(subjectCollectDTO),SubjectCollectVO.class, request);
+            return ActResult.initialize(subjectCollectVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表to
+     * @return class SubjectCollectVO
+     * @des 添加科目汇总表
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) SubjectCollectTO subjectCollectTO, BindingResult bindingResult) throws ActException {
+        try {
+            SubjectCollectBO subjectCollectBO = subjectCollectAPI.insertSubjectCollect(subjectCollectTO);
+            return ActResult.initialize(subjectCollectBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表数据to
+     * @return class SubjectCollectVO
+     * @des 添加科目汇总表
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/edit")
+    public Result edit(@Validated(EDIT.class) SubjectCollectTO subjectCollectTO, BindingResult bindingResult) throws ActException {
+        try {
+            SubjectCollectBO subjectCollectBO = subjectCollectAPI.editSubjectCollect(subjectCollectTO);
+            return ActResult.initialize(subjectCollectBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 导出
      *
@@ -58,7 +157,7 @@ public class SubjectCollectAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeSubjectCollect(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             subjectCollectAPI.removeSubjectCollect(id);
             return new ActResult("delete success");
@@ -67,22 +166,6 @@ public class SubjectCollectAction {
         }
     }
 
-    /**
-     * 对比汇总
-     *
-     * @param subjectCollectTO 对比汇总数据to
-     * @return class SubjectCollectVO
-     * @version v1
-     */
-    @GetMapping("v1/collectCompare")
-    public Result collectCompare(SubjectCollectTO subjectCollectTO) throws ActException {
-        try {
-            List<SubjectCollectBO> subjectCollectBOS = subjectCollectAPI.collectCompare(subjectCollectTO);
-            return ActResult.initialize(subjectCollectBOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
     /**
      * 已审核科目汇总
      *
@@ -248,6 +331,24 @@ public class SubjectCollectAction {
         try {
             List<String> userList = voucherGenerateAPI.listGroup();
             return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 汇总对比
+     *
+     * @param months 月份
+     * @return class CompareCollectVO
+     * @des 根据月份
+     * @version v1
+     */
+    @GetMapping("v1/collectCompare")
+    public Result collectCompare(@RequestParam Integer [] months) throws ActException {
+        try {
+            List<CompareCollectVO> compareCollectVOS = BeanTransform.copyProperties(
+                    subjectCollectAPI.collectCompare(months),CompareCollectVO.class);
+            return ActResult.initialize(compareCollectVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

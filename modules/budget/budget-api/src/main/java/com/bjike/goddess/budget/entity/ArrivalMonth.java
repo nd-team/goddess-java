@@ -2,7 +2,9 @@ package com.bjike.goddess.budget.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -54,11 +56,6 @@ public class ArrivalMonth extends BaseEntity {
     @Column(name = "scale", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '比例'")
     private Double scale;
 
-    /**
-     * 收入差异
-     */
-    @Column(name = "incomeDifferences", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收入差异'")
-    private Double incomeDifferences;
 
     /**
      * 目标任务量
@@ -71,12 +68,6 @@ public class ArrivalMonth extends BaseEntity {
      */
     @Column(name = "actualWork", nullable = false, columnDefinition = "INT(11)   COMMENT '实际完工量'")
     private Integer actualWork;
-
-    /**
-     * 任务量差异
-     */
-    @Column(name = "workDifferences", nullable = false, columnDefinition = "INT(11)   COMMENT '任务量差异'")
-    private Integer workDifferences;
 
 
     public String getArrival() {
@@ -127,13 +118,6 @@ public class ArrivalMonth extends BaseEntity {
         this.scale = scale;
     }
 
-    public Double getIncomeDifferences() {
-        return incomeDifferences;
-    }
-
-    public void setIncomeDifferences(Double incomeDifferences) {
-        this.incomeDifferences = incomeDifferences;
-    }
 
     public Integer getTargetWork() {
         return targetWork;
@@ -151,11 +135,4 @@ public class ArrivalMonth extends BaseEntity {
         this.actualWork = actualWork;
     }
 
-    public Integer getWorkDifferences() {
-        return workDifferences;
-    }
-
-    public void setWorkDifferences(Integer workDifferences) {
-        this.workDifferences = workDifferences;
-    }
 }

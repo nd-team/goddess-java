@@ -6,37 +6,19 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * Created by ike on 17-5-15.
  */
 public class CollectCompareBO extends BaseBO {
-    private String startMonth;
-    private String endMonth;
-    private String time;
+    private Integer month;
     private String projectGroup;
-    private Double monthReserves;
-    private Double lastMonthReserves;
+    private Double lastReserveSum;
+    private Double reserveSum;
     private Double balance;
     private Double increase;
 
-    public String getStartMonth() {
-        return startMonth;
+    public Integer getMonth() {
+        return month;
     }
 
-    public void setStartMonth(String startMonth) {
-        this.startMonth = startMonth;
-    }
-
-    public String getEndMonth() {
-        return endMonth;
-    }
-
-    public void setEndMonth(String endMonth) {
-        this.endMonth = endMonth;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getProjectGroup() {
@@ -47,20 +29,20 @@ public class CollectCompareBO extends BaseBO {
         this.projectGroup = projectGroup;
     }
 
-    public Double getMonthReserves() {
-        return monthReserves;
+    public Double getLastReserveSum() {
+        return lastReserveSum;
     }
 
-    public void setMonthReserves(Double monthReserves) {
-        this.monthReserves = monthReserves;
+    public void setLastReserveSum(Double lastReserveSum) {
+        this.lastReserveSum = lastReserveSum;
     }
 
-    public Double getLastMonthReserves() {
-        return lastMonthReserves;
+    public Double getReserveSum() {
+        return reserveSum;
     }
 
-    public void setLastMonthReserves(Double lastMonthReserves) {
-        this.lastMonthReserves = lastMonthReserves;
+    public void setReserveSum(Double reserveSum) {
+        this.reserveSum = reserveSum;
     }
 
     public Double getBalance() {

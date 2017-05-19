@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -22,10 +23,16 @@ import java.time.LocalDateTime;
 public class MoneyReady extends BaseEntity {
 
     /**
-     * 时间
+     * 年份
      */
-    @Column(name = "time", nullable = false, columnDefinition = "DATETIME   COMMENT '时间'")
-    private LocalDateTime time;
+    @Column(name = "year", nullable = false, columnDefinition = "INT(11)   COMMENT '年份'")
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
+    private Integer month;
 
     /**
      * 类别
@@ -64,12 +71,20 @@ public class MoneyReady extends BaseEntity {
     private Double reserves;
 
 
-    public LocalDateTime getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public String getCategory() {

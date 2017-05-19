@@ -7,6 +7,7 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.service.EntryBasicInfoSer;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,14 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     private EntryBasicInfoSer entryBasicInfoSer;
 
     @Override
+    public Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        return entryBasicInfoSer.countEntryBasicInfo(entryBasicInfoDTO);
+    }
+
+    @Override
     public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
-        List<EntryBasicInfo> entryBasicInfos = entryBasicInfoSer.listEntryBasicInfo(entryBasicInfoDTO);
-        return BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);
+        List<EntryBasicInfoBO> entryBasicInfos = entryBasicInfoSer.listEntryBasicInfo(entryBasicInfoDTO);
+        return entryBasicInfos;
     }
 
     @Override
@@ -49,9 +55,9 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
 
     @Override
     public EntryBasicInfoBO getEntryBasicInfo(String id) throws SerException {
-        EntryBasicInfo entryBasicInfo = entryBasicInfoSer.getEntryBasicInfo(id);
+        EntryBasicInfoBO entryBasicInfo = entryBasicInfoSer.getEntryBasicInfo(id);
 
-        return BeanTransform.copyProperties(entryBasicInfo, EntryBasicInfoBO.class );
+        return entryBasicInfo ;
     }
 
     @Override
@@ -65,7 +71,7 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     }
 
     @Override
-    public EntryBasicInfoBO getEntryBasicInfoByName(String name) throws SerException {
+    public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         return entryBasicInfoSer.getEntryBasicInfoByName(name);
     }
 }

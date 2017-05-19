@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.action.budget;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.budget.vo.ProjectWeekCountVO;
@@ -12,6 +13,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ public class ProjectWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) ProjectWeekTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -63,6 +66,7 @@ public class ProjectWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectWeekTO to, BindingResult result) throws ActException {
         try {
@@ -80,6 +84,7 @@ public class ProjectWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -160,6 +165,39 @@ public class ProjectWeekAct {
         try {
             List<ProjectWeekCountBO> list = projectWeekAPI.conditionsCount(projects);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(ProjectWeekDTO dto) throws ActException {
+        try {
+            Long num = projectWeekAPI.countNum(dto);
+            return ActResult.initialize(num);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有项目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllProjects")
+    public Result findAllProjects() throws ActException {
+        try {
+            List<String> list = projectWeekAPI.findAllProjects();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,7 @@ public class MarketSesponseAct {
      * @return class MarketSesponseVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) MarketSesponseTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -113,6 +115,7 @@ public class MarketSesponseAct {
      * @return class MarketSesponseVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) MarketSesponseTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -129,7 +132,8 @@ public class MarketSesponseAct {
      * @param id 市场反应和创新能力ID
      * @version v1
      */
-    @GetMapping("v1/delete/{id}")
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             marketSesponseAPI.delete(id);

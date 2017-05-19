@@ -24,7 +24,10 @@ public class ProjectWeekVO {
      * 项目
      */
     private String project;
-
+    /**
+     * 年份
+     */
+    private Integer year;
     /**
      * 月份
      */
@@ -70,6 +73,13 @@ public class ProjectWeekVO {
      */
     private Double incomeDifferences;
 
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
     public String getId() {
         return id;

@@ -1,30 +1,19 @@
 package com.bjike.goddess.housepay.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.housepay.bo.CollectCompareBO;
 import com.bjike.goddess.housepay.bo.MoneyReadyBO;
 import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
 import com.bjike.goddess.housepay.entity.MoneyReady;
-import com.bjike.goddess.housepay.to.CollectCompareTO;
 import com.bjike.goddess.housepay.to.MoneyReadyTO;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 资金准备审核表业务实现
@@ -93,10 +82,82 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
 //        return super.findByCis(dto);
 //    }
     @Override
-    public List<CollectCompareBO> collectCompare(String startMonth, String endMonth) throws SerException {
-        CollectCompareBO collectCompareBO = new CollectCompareBO();
-        List<CollectCompareBO> collectCompareBOList = new ArrayList<>();
-
+    public List<CollectCompareBO> collectCompare(Integer month) throws SerException {
+        Integer year = LocalDateTime.now().getYear();
+        Set<String> projectGroups = findAllProjectGroup();
+        MoneyReadyDTO dto = new MoneyReadyDTO();
+        List<MoneyReady> list = super.findByCis(dto);
+        List<CollectCompareBO> boList = new ArrayList<>();
+        Double reserveSum = 0.0;
+        Double lastReserveSum = 0.0;
+        if (month != 1) {
+            for (String projectGroup : projectGroups) {
+                for (MoneyReady m : list) {
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                        reserveSum += m.getReserves();
+                    }
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month - 1)) {
+                        lastReserveSum += m.getReserves();
+                    }
+                }
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                    CollectCompareBO bo = new CollectCompareBO();
+                    bo.setProjectGroup(projectGroup);
+                    bo.setMonth(month);
+                    bo.setReserveSum(reserveSum);
+                    bo.setLastReserveSum(lastReserveSum);
+                    bo.setBalance(reserveSum-lastReserveSum);
+                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                    boList.add(bo);
+                    reserveSum = 0.00;
+                    lastReserveSum = 0.00;    //置为0
+                }
+            }
+            return boList;
+        } else {
+            for (String projectGroup : projectGroups) {
+                for (MoneyReady m : list) {
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year) && m.getMonth().equals(month)) {
+                        reserveSum += m.getReserves();
+                    }
+                    if (m.getProjectGroup().equals(projectGroup) && m.getYear().equals(year - 1) && m.getMonth().equals(12)) {
+                        lastReserveSum += m.getReserves();
+                    }
+                }
+                if ((reserveSum != 0) || (lastReserveSum != 0)) {
+                    CollectCompareBO bo = new CollectCompareBO();
+                    bo.setProjectGroup(projectGroup);
+                    bo.setMonth(month);
+                    bo.setReserveSum(reserveSum);
+                    bo.setLastReserveSum(lastReserveSum);
+                    bo.setBalance(reserveSum-lastReserveSum);
+                    bo.setIncrease((reserveSum-lastReserveSum)/lastReserveSum*100);
+                    /*if (lastReserveSum != 0) {
+                        bo.setIncrease((reserveSum - lastReserveSum) / lastReserveSum);
+                    } else {
+                        bo.setIncrease(1.00);
+                    }*/
+                    boList.add(bo);
+                    reserveSum = 0.00;
+                    lastReserveSum = 0.00;    //置为0
+                }
+            }
+            return boList;
+        }
+    }
+    private Set<String> findAllProjectGroup() throws SerException {
+        List<MoneyReady> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (MoneyReady m : list) {
+            set.add(m.getProjectGroup());
+        }
+        return set;
+    }
         /*DateFormat format = new SimpleDateFormat("yyyy-MM");
         try {
             Date startDate =  format.parse(startMonth);
@@ -110,30 +171,105 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
            e.printStackTrace();
        }      */
 
-
+        /*List<CollectCompareBO> returnList = new ArrayList<>();
+        MoneyReadyDTO moneyReadyDTO = new MoneyReadyDTO();
+        if(StringUtils.isBlank(dto.getStartTime()) || StringUtils.isBlank(dto.getEndTime())){
+            return returnList;
+        }
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startDate = (LocalDate) format.parse(startMonth);
-        //startDate.minusMonths(1);
-//        String last = String.valueOf(startDate);
-//        last = last.substring(0,7);
-        String month = startMonth.substring(startMonth.indexOf("-"))+1;
-        if(month.lastIndexOf("0") == 0){
-            month = month.substring(1);
+        LocalDate start = LocalDate.parse(dto.getStartTime()+"-01",format);
+        LocalDate end = LocalDate.parse(dto.getEndTime()+"-01",format);
+        int flag = 0 ;
+        while (start.getYear() != end.getYear() || start.getMonthValue() != end.getMonthValue()){
+            if(flag == 0){
+                returnList = caculateActual(dto,returnList,start);
+            }
+            start = start.plusMonths(1);
+            System.out.println(start);
+            flag = 0;
+            if(start.getMonthValue()  == 12){
+                returnList = caculateActual(dto,returnList,start);
+                flag = 1;
+                if(start.plusYears(1).getYear() < end.getYear()){
+                    start = start.plusYears(1);
+                    start = LocalDate.parse(start.getYear() + "-01-01",DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                    System.out.println(start);
+                    returnList = caculateActual(dto,returnList,start);
+                    flag = 2;
+                }
+            }
         }
-        int thisMonth = Integer.parseInt(month);
-        if(thisMonth == 1){
-            month = String.valueOf(startDate.minusMonths(1));
+        return returnList;*/
+        /*DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(startTime.toString(),format);
+        MoneyReadyDTO dto = new MoneyReadyDTO();
+        dto.getConditions().add(Restrict.between("time",new String[]{startTime.toString(),endTime.toString()}));
+        List<CollectCompareBO> boList =
+                BeanTransform.copyProperties(super.findByCis(dto), CollectCompareBO.class);
+        date.minusMonths(1);
+
+        if(boList != null && !boList.isEmpty()){
+            Double balance = 0.0;//差额
+            Double increase = 0.0;//增长率
+
+            for(CollectCompareBO bo : boList){
+
+                Double sum = 0.0;
+                sum += bo.getLastMonthReserves();
+
+                if(bo.getBalance() != null){
+                    balance = bo.getReserves()-bo.getLastMonthReserves();
+                }
+                if(bo.getIncrease() != null){
+                    increase = balance/bo.getLastMonthReserves() * 0.1 ;
+                }
+             }
         }
 
-        //for(CollectCompareBO compareBO : collectCompareBO){}
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT dates ,projectGroup ,sum(reserves) as reserves FROM ");
         sb.append(" (SELECT date_format(time,'%Y-%m') as dates ,projectGroup,reserves from ");
-        sb.append(" housepay_moneyready where time BETWEEN '"+ startMonth +"' AND '"+ endMonth +"')A GROUP BY dates,projectGroup ");
-        return null;
-    }
+        sb.append(" housepay_moneyready where time BETWEEN '"+ startTime +"' AND '"+ endTime +"')A GROUP BY dates,projectGroup ");
+        String sql = sb.toString();
+        String [] fields = new String[]{"dates","projectGroup","reserves"};
+        List<CollectCompareBO> collectCompareBOS = super.findBySql(sql,CollectCompareBO.class,fields);
+        return collectCompareBOS;*/
 
-    public static void main(String[] args) {
+    /*public List<CollectCompareBO> caculateActual(MoneyReadyDTO dto,List<CollectCompareBO> returnList, LocalDate time) {
+        int year = time.getYear();
+        int month = time.getMonthValue();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate begin = LocalDate.parse(year + "-" + (month < 10 ? "0" + month : month) + "-01", formatter);
+        LocalDate end = LocalDate.parse(year + "-" + (month < 10 ? "0" + month : month) + "-31", formatter);
+        dto = new MoneyReadyDTO();
+        dto.getConditions().add(Restrict.between("time",new String[]{begin.toString(),end.toString()}));
+        List<CollectCompareBO> boList = null;
+        try {
+            boList = BeanTransform.copyProperties(super.findByCis(dto), CollectCompareBO.class);
+        } catch (SerException e) {
+            e.printStackTrace();
+        }
+
+        if(boList != null && !boList.isEmpty()){
+            Double balance = 0.0;//差额
+            Double increase = 0.0;//增长率
+
+            for(CollectCompareBO bo : boList){
+
+                Double sum = 0.0;
+                sum += bo.getLastMonthReserves();
+
+                if(bo.getBalance() != null){
+                    balance = bo.getReserves()-bo.getLastMonthReserves();
+                }
+                if(bo.getIncrease() != null){
+                    increase = balance/bo.getLastMonthReserves() * 100;
+                }
+            }
+        }
+        return null;
+    }*/
         //DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         /*LocalDate startDate = LocalDate.parse("2017-11-11",DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         LocalDate startDate1 = startDate.minusMonths(1);
@@ -141,9 +277,10 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         date = date.substring(0,7);
         System.out.println(date);*/
 
+       /* System.out.println(DateUtil.dateToString(LocalDate.now()));
         LocalDate now = LocalDate.now().withYear(2017).withMonth(11).withDayOfMonth(1);
+        System.out.println(now.plusMonths(1));
         System.out.println(now.minusMonths(1));
-        System.out.println(now.getMonthValue()-1);
+        System.out.println(now.getMonthValue()-1);*/
 
-    }
 }

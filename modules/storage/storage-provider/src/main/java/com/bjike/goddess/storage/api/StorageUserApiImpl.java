@@ -50,4 +50,8 @@ public class StorageUserApiImpl implements StorageUserAPI {
           return storageUserSer.getCurrentModule(storageToken);
     }
 
+    @Override
+    public String getCurrentSysNO(String storageToken) throws SerException {
+        return storageUserSer.getCurrentSysNO(storageToken);
+    }
 }

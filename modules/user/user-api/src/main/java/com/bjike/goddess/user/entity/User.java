@@ -22,6 +22,12 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User extends BaseEntity {
     /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
+
+    /**
      * 用户名
      */
     @Column(unique = true, length = 16, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户名' ")
@@ -30,7 +36,7 @@ public class User extends BaseEntity {
     /**
      * 登录手机(注册验证手机)
      */
-    @Column(unique = true, length = 11,  columnDefinition = "VARCHAR(11) COMMENT '手机号码' ")
+    @Column(unique = true, length = 11, columnDefinition = "VARCHAR(11) COMMENT '手机号码' ")
     private String phone;
     /**
      * 登录邮箱
@@ -71,6 +77,14 @@ public class User extends BaseEntity {
      */
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户类型' ", nullable = false)
     private UserType userType;
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getUsername() {
         return username;

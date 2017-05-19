@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.api.ProjectMeasureSummaryAPI;
@@ -64,6 +65,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -82,6 +84,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -99,6 +102,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -116,6 +120,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/thaw")
     public Result thaw(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -133,6 +138,7 @@ public class ProjectMeasureSummaryAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/congeal")
     public Result congeal(@Validated({EDIT.class}) ProjectMeasureSummaryTO to) throws ActException {
         try {
@@ -150,6 +156,7 @@ public class ProjectMeasureSummaryAction {
      * @return class ProjectMeasureVO
      * @throws ActException
      */
+    @LoginAuth
     @GetMapping("v1/summarize")
     public Result summarize(ProjectMeasureSummaryTO to) throws ActException {
         try {

@@ -2,10 +2,10 @@ package com.bjike.goddess.user.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
-import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -24,18 +24,21 @@ public interface UserSer extends Ser<User, UserDTO> {
 
     /**
      * 获取公钥
+     *
      * @return
      * @throws SerException
      */
-    default String publicKey() throws SerException{
+    default String publicKey() throws SerException {
         return null;
     }
+
     /**
      * 获取私钥
+     *
      * @return
      * @throws SerException
      */
-    default String privateKey() throws SerException{
+    default String privateKey() throws SerException {
         return null;
     }
 
@@ -72,7 +75,29 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
+     * 获取当前用户系统号
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    default String currentSysNO(String userToken) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户系统号
+     *
+     * @return
+     * @throws SerException
+     */
+    default String currentSysNO() throws SerException {
+        return null;
+    }
+
+    /**
      * 添加用户
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -126,26 +151,63 @@ public interface UserSer extends Ser<User, UserDTO> {
         return null;
     }
 
-    default void update(UserTO userTO) throws SerException{
+    default void update(UserTO userTO) throws SerException {
 
     }
 
     /**
      * 通过组查寻用户
+     *
      * @param groups
      * @return
      * @throws SerException
      */
-    default List<UserBO> findByGroup(String ...  groups) throws SerException{
+    default List<UserBO> findByGroup(String... groups) throws SerException {
         return null;
     }
 
     /**
      * 查询所有用户
+     *
      * @return
      * @throws SerException
      */
-    default List<UserBO> findAllUser() throws SerException{
+    default List<UserBO> findAllUser() throws SerException {
         return null;
     }
+
+    /**
+     * 条件分页查询用户
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<UserBO> findUserByPage(UserDTO dto) throws SerException {
+        return null;
+
+    }
+
+    /**
+     * 员工入职注册修改用户
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default UserBO updateUser(UserTO userTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 员工入职注册删除用户
+     *
+     * @param id
+     * @return UserBO
+     * @throws SerException
+     */
+    default void deleteUser(String id) throws SerException {
+    }
+
+
 }

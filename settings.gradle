@@ -171,13 +171,13 @@ include ':modules:interiorrecommend:interiorrecommend-consumer'
 include ':modules:interiorrecommend:interiorrecommend-provider'
 
 //#dispatchcar 出车管理
-include ':modules:dispatchcar:dispatchcar-api'
-include ':modules:dispatchcar:dispatchcar-consumer'
-include ':modules:dispatchcar:dispatchcar-provider'
+//include ':modules:dispatchcar:dispatchcar-api'
+//include ':modules:dispatchcar:dispatchcar-consumer'
+//include ':modules:dispatchcar:dispatchcar-provider'
 
-include ':modules:staffwelfare:staffwelfaremanage-api'
-include ':modules:staffwelfare:staffwelfaremanage-consumer'
-include ':modules:staffwelfare:staffwelfaremanage-provider'
+//include ':modules:staffwelfare:staffwelfaremanage-api'
+//include ':modules:staffwelfare:staffwelfaremanage-consumer'
+//include ':modules:staffwelfare:staffwelfaremanage-provider'
 
 //#materialbuy 物资购买
 include ':modules:materialbuy:materialbuy-api'
@@ -220,9 +220,9 @@ include ':modules:organize:organize-api'
 include ':modules:organize:organize-consumer'
 include ':modules:organize:organize-provider'
 //#driverinfo
-include ':modules:driverinfo:driverinfo-api'
-include ':modules:driverinfo:driverinfo-consumer'
-include ':modules:driverinfo:driverinfo-provider'
+//include ':modules:driverinfo:driverinfo-api'
+//include ':modules:driverinfo:driverinfo-consumer'
+//include ':modules:driverinfo:driverinfo-provider'
 
 //#account 明细账
 include ':modules:account:account-api'
@@ -230,9 +230,9 @@ include ':modules:account:account-consumer'
 include ':modules:account:account-provider'
 
 //#subjectcollect 科目汇总
-include ':modules:subjectcollect:subjectcollect-api'
-include ':modules:subjectcollect:subjectcollect-consumer'
-include ':modules:subjectcollect:subjectcollect-provider'
+//include ':modules:subjectcollect:subjectcollect-api'
+//include ':modules:subjectcollect:subjectcollect-consumer'
+//include ':modules:subjectcollect:subjectcollect-provider'
 
 //#checkhost 入住，离宿登记
 include ':modules:checkhost:checkhost-api'
@@ -288,9 +288,9 @@ include ':modules:secure:secure-consumer'
 include ':modules:secure:secure-provider'
 
 //#courier 快递管理
-include ':modules:courier:courier-api'
-include ':modules:courier:courier-consumer'
-include ':modules:courier:courier-provider'
+//include ':modules:courier:courier-api'
+//include ':modules:courier:courier-consumer'
+//include ':modules:courier:courier-provider'
 
 //#budget 收入预算-往来账务情况
 include ':modules:budget:budget-api'
@@ -303,9 +303,9 @@ include ':modules:devicerepair:devicerepair-consumer'
 include ':modules:devicerepair:devicerepair-provider'
 
 //#contractquotemanager 合同单价
-include ':modules:contractquotemanager:contractquotemanager-api'
-include ':modules:contractquotemanager:contractquotemanager-consumer'
-include ':modules:contractquotemanager:contractquotemanager-provider'
+//include ':modules:contractquotemanager:contractquotemanager-api'
+//include ':modules:contractquotemanager:contractquotemanager-consumer'
+//include ':modules:contractquotemanager:contractquotemanager-provider'
 
 //#incomecheck 收入核算资金回笼 tanghaixiang
 include ':modules:incomecheck:incomecheck-api'
@@ -321,9 +321,9 @@ include ':modules:lendreimbursement:lendreimbursement-consumer'
 include ':modules:lendreimbursement:lendreimbursement-provider'
 
 //#outcarfare 出车费资金准备与支付业务流程
-include ':modules:outcarfare:outcarfare-api'
-include ':modules:outcarfare:outcarfare-consumer'
-include ':modules:outcarfare:outcarfare-provider'
+//include ':modules:outcarfare:outcarfare-api'
+//include ':modules:outcarfare:outcarfare-consumer'
+//include ':modules:outcarfare:outcarfare-provider'
 
 //#projectmarketfee 项目前期的市场活动费
 include ':modules:projectmarketfee:projectmarketfee-api'
@@ -371,9 +371,9 @@ include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
 
 //#projectcost 项目上费用 dengjunren
-include ':modules:projectcost:projectcost-api'
-include ':modules:projectcost:projectcost-consumer'
-include ':modules:projectcost:projectcost-provider'
+//include ':modules:projectcost:projectcost-api'
+//include ':modules:projectcost:projectcost-consumer'
+//include ':modules:projectcost:projectcost-provider'
 
 //#qualifications 公司资质管理 dengjunren
 include ':modules:qualifications:qualifications-api'
@@ -389,4 +389,35 @@ include ':modules:supplier:supplier-provider'
 include ':modules:rotation:rotation-api'
 include ':modules:rotation:rotation-consumer'
 include ':modules:rotation:rotation-provider'
+
+//#rotation 岗位轮换 dengjunren
+include ':modules:rotation:rotation-api'
+include ':modules:rotation:rotation-consumer'
+include ':modules:rotation:rotation-provider'
+
+//#marketactivitymanage 市场活动管理 sunfengtao
+include ':modules:marketactivitymanage:marketactivitymanage-api'
+include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+include ':modules:marketactivitymanage:marketactivitymanage-provider'
+
+//#projectmeasure 项目测算 sunfengtao
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
+
+//#projectmeasure 项目测算 sunfengtao
+include ':modules:projectmeasure:projectmeasure-api'
+include ':modules:projectmeasure:projectmeasure-consumer'
+include ':modules:projectmeasure:projectmeasure-provider'
+
+//#fundrecords 资金流水 Jason
+include ':modules:fundrecords:fundrecords-api'
+include ':modules:fundrecords:fundrecords-consumer'
+include ':modules:fundrecords:fundrecords-provider'
+
+//#bankrecords 银行流水 Jason
+include ':modules:bankrecords:bankrecords-api'
+include ':modules:bankrecords:bankrecords-consumer'
+include ':modules:bankrecords:bankrecords-provider'
+
 

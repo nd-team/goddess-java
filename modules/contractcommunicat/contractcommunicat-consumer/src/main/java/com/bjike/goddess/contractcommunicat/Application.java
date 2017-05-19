@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ImportResource;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.contractcommunicat.action","com.bjike.goddess.common.consumer"},
+@ComponentScan(basePackages = {"com.bjike.goddess.contractcommunicat.action","com.bjike.goddess.contractcommunicat.config","com.bjike.goddess.common.consumer"},
 		excludeFilters = {@ComponentScan.Filter(
 				type = FilterType.ANNOTATION,
 				value = {Configuration.class})})

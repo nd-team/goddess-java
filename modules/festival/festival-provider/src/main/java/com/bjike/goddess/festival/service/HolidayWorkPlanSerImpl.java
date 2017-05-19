@@ -10,6 +10,7 @@ import com.bjike.goddess.festival.dto.HolidayWorkPlanDTO;
 import com.bjike.goddess.festival.entity.HolidayWorkPlan;
 import com.bjike.goddess.festival.entity.HolidayProgramme;
 import com.bjike.goddess.festival.entity.HolidayWorkPlan;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,27 @@ import java.util.List;
 @Service
 public class HolidayWorkPlanSerImpl extends ServiceImpl<HolidayWorkPlan, HolidayWorkPlanDTO> implements HolidayWorkPlanSer {
 
+    @Override
+    public Long countHolidayWorkPlan(HolidayWorkPlanDTO holidayWorkPlanDTO) throws SerException {
+        if(StringUtils.isBlank( holidayWorkPlanDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = holidayWorkPlanDTO.getHolidayProgrammeId();
+        holidayWorkPlanDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        Long count = super.count( holidayWorkPlanDTO );
+        return count;
+    }
+
+    @Override
+    public List<HolidayWorkPlanBO> listHolidayWorkPlan(HolidayWorkPlanDTO holidayWorkPlanDTO) throws SerException {
+        if(StringUtils.isBlank( holidayWorkPlanDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = holidayWorkPlanDTO.getHolidayProgrammeId();
+        holidayWorkPlanDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        List<HolidayWorkPlan> holidayWorkPlanList = super.findByCis( holidayWorkPlanDTO ,true);
+        return BeanTransform.copyProperties(holidayWorkPlanList,HolidayWorkPlanBO.class);
+    }
 
     @Override
     public List<HolidayWorkPlanBO> getHolidayWorkPlan(String holidayProgrammeId) throws SerException {

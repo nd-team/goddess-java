@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmarketfee.api.GradeAPI;
@@ -44,6 +45,7 @@ public class GradeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) GradeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -61,6 +63,7 @@ public class GradeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) GradeTO to, BindingResult result) throws ActException {
         try {
@@ -78,6 +81,7 @@ public class GradeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -120,6 +124,25 @@ public class GradeAct {
     public Result moneyready(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             GradeBO bo = gradeAPI.findByID(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, GradeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto     dto
+     * @param request 请求对象
+     * @return class GradeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(GradeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            GradeBO bo = gradeAPI.countNum(dto);
             return ActResult.initialize(BeanTransform.copyProperties(bo, GradeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -111,4 +111,37 @@ public class ArrivalMonthAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(ArrivalMonthDTO dto) throws ActException {
+        try {
+            Long num = arrivalMonthAPI.countNum(dto);
+            return ActResult.initialize(num);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllArrivals")
+    public Result findAllArrivals() throws ActException {
+        try {
+            List<String> list = arrivalMonthAPI.findAllArrivals();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

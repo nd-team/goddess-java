@@ -50,10 +50,11 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     @Override
     public List<FileBO> list(String path, String storageToken) throws SerException {
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+        String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         String realPath = getRealPath(path, storageToken);
         java.io.File dir = new java.io.File(realPath);
         java.io.File[] files = dir.listFiles();
-        return getFileBo(files, module, PathCommon.ROOT_PATH);
+        return getFileBo(files, module, sysNO, PathCommon.ROOT_PATH);
     }
 
 
@@ -252,9 +253,10 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     @Override
     public void restore(String path, String storageToken) throws SerException {
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+        String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         String realPath = null;
         if (!"admin".equals(module)) {//回收站目录
-            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + path;
+            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + PathCommon.SEPARATOR + sysNO + path;
         } else {
             realPath = PathCommon.RECYCLE_PATH + path;
         }
@@ -280,10 +282,11 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     @Override
     public List<FileBO> recycleList(String path, String storageToken) throws SerException {
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+        String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         String recycleRealPath = getRecycleRealPath(path, storageToken);
         java.io.File dir = new java.io.File(recycleRealPath);
         java.io.File[] files = dir.listFiles();
-        return getFileBo(files, module, PathCommon.RECYCLE_PATH);
+        return getFileBo(files, module, sysNO, PathCommon.RECYCLE_PATH);
     }
 
 
@@ -312,10 +315,10 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
      * @param files
      * @return
      */
-    private List<FileBO> getFileBo(java.io.File[] files, String module, String root) throws SerException {
+    private List<FileBO> getFileBo(java.io.File[] files, String module, String sysNO, String root) throws SerException {
         String rootPath = root;
         if (null != module) {
-            rootPath += (PathCommon.SEPARATOR + module);
+            rootPath += (PathCommon.SEPARATOR + module + PathCommon.SEPARATOR + sysNO);
         }
         if (null != files) {
             List<FileBO> fileBOS = new ArrayList<>(files.length);
@@ -352,12 +355,19 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     public String getRealPath(String path, String storageToken) throws SerException {
         String realPath = null;
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+        String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         if (path.equals("/")) {
             path = "";
         }
         if (!"admin".equals(module)) {
-
-            realPath = PathCommon.ROOT_PATH + PathCommon.SEPARATOR + module + path;
+            StringBuilder sb = new StringBuilder();
+            sb.append(PathCommon.ROOT_PATH);
+            sb.append(PathCommon.SEPARATOR);
+            sb.append(sysNO);
+            sb.append(PathCommon.SEPARATOR);
+            sb.append(module);
+            sb.append(path);
+            realPath = sb.toString();
         } else {
             realPath = PathCommon.ROOT_PATH + path;
         }
@@ -367,7 +377,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
 
 
     /**
-     * 获取回收战真实路径
+     * 获取回收站真实路径
      *
      * @param path
      * @return
@@ -376,8 +386,16 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     private String getRecycleRealPath(String path, String storageToken) throws SerException {
         String realPath = null;
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+        String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         if (!"admin".equals(module)) {
-            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + path;
+            StringBuilder sb = new StringBuilder();
+            sb.append(PathCommon.RECYCLE_PATH);
+            sb.append(PathCommon.SEPARATOR);
+            sb.append(sysNO);
+            sb.append(PathCommon.SEPARATOR);
+            sb.append(module);
+            sb.append(path);
+            realPath = sb.toString();
         } else {
             realPath = PathCommon.RECYCLE_PATH + path;
         }

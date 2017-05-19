@@ -3,65 +3,81 @@ package com.bjike.goddess.projectmarketfee.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * @Author: [yewenbo]
- * @Date: [2017-05-09 17:34]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * 费用效益分析业务汇总业务传输对象
+ *
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-05-15 03:13 ]
+ * @Description: [ 费用效益分析业务汇总业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 public class CostAnalysisCountBO extends BaseBO {
+
     /**
      * 项目组
      */
     private String project;
+
     /**
      * 地区
      */
     private String arrival;
+
     /**
      * 年份
      */
     private Integer year;
+
     /**
      * 月份
      */
     private Integer month;
+
     /**
      * 项目名称
      */
     private String projectName;
+
     /**
      * 预计收入
      */
     private Double expectedIncomeSum;
+
     /**
      * 预计市场费
      */
     private Double expectedMarketCostSum;
+
     /**
      * 实际市场费
      */
     private Double actualMarketCostSum;
+
     /**
      * 差额
      */
     private Double differences;
+
     /**
      * 预计占比
      */
     private Double expectedScale;
+
     /**
      * 实际占比
      */
     private Double actualScale;
+
     /**
      * 预警
      */
     private String warn;
+
     /**
      * 等级评定
      */
     private String grade;
+
 
     public String getProject() {
         return project;

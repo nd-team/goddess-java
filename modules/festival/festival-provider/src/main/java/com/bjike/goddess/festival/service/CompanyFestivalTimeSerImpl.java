@@ -39,6 +39,16 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     }
 
     @Override
+    public CompanyFestivalTimeBO getOneById(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        CompanyFestivalTime companyFestivalTime = super.findById(id);
+        return BeanTransform.copyProperties(companyFestivalTime, CompanyFestivalTimeBO.class );
+
+    }
+
+    @Override
     public List<CompanyFestivalTimeBO> listCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
 
         companyFestivalTimeDTO.getSorts().add("createTime=desc");
@@ -68,12 +78,13 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
         CompanyFestivalTimeDTO dto = new CompanyFestivalTimeDTO();
         dto.getConditions().add(Restrict.eq("name",companyFestivalTimeTO.getName()));
         Long count = super.count( dto );
-        if( count >0 ){
+
+
+        CompanyFestivalTime temp = super.findById( companyFestivalTimeTO.getId() );
+        if( !companyFestivalTimeTO.getName().equals(temp.getName()) &&  count >0 ){
             throw new SerException("已存在一条该节日名称，节日名称不能相同,编辑失败");
         }
-
         CompanyFestivalTime companyFestivalTime = BeanTransform.copyProperties(companyFestivalTimeTO,CompanyFestivalTime.class,true);
-        CompanyFestivalTime temp = super.findById( companyFestivalTimeTO.getId() );
 
         BeanUtils.copyProperties(companyFestivalTime,temp,"id","createTime");
         temp.setModifyTime(LocalDateTime.now());
@@ -94,7 +105,7 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     public List<String> listFestivalName() throws SerException {
         String[] fields = new String[]{"name"};
         List<CompanyFestivalTimeBO> companyFestivalTimeBOS = super.findBySql(
-                "select name  from festival_companyfestivaltime  order by createTime desc ", CompanyFestivalTimeBO.class, fields);
+                "select name  from festival_companyfestivaltime group by name  order by name desc ,createTime desc ", CompanyFestivalTimeBO.class, fields);
 
         List<String> list = companyFestivalTimeBOS.stream().map(CompanyFestivalTimeBO::getName)
                 .filter(name -> (name != null || !"".equals(name.trim()))).distinct().collect(Collectors.toList());
@@ -104,13 +115,23 @@ public class CompanyFestivalTimeSerImpl extends ServiceImpl<CompanyFestivalTime,
     }
 
     @Override
-    public CompanyFestivalTimeBO getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+    public Long countFestivalTimeByName(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
         if( StringUtils.isBlank(companyFestivalTimeDTO.getName() )){
             throw  new SerException("节日名不能为空");
         }
         companyFestivalTimeDTO.getConditions().add(Restrict.eq("name",companyFestivalTimeDTO.getName()));
-        CompanyFestivalTime companyFestivalTime = super.findOne( companyFestivalTimeDTO );
-        CompanyFestivalTimeBO cb = BeanTransform.copyProperties(companyFestivalTime,CompanyFestivalTimeBO.class);
+        Long count = super.count( companyFestivalTimeDTO);
+        return count;
+    }
+
+    @Override
+    public List<CompanyFestivalTimeBO> getCompanyFestivalTime(CompanyFestivalTimeDTO companyFestivalTimeDTO) throws SerException {
+        if( StringUtils.isBlank(companyFestivalTimeDTO.getName() )){
+            throw  new SerException("节日名不能为空");
+        }
+        companyFestivalTimeDTO.getConditions().add(Restrict.eq("name",companyFestivalTimeDTO.getName()));
+        List<CompanyFestivalTime> companyFestivalTime = super.findByCis( companyFestivalTimeDTO ,true);
+        List<CompanyFestivalTimeBO> cb = BeanTransform.copyProperties(companyFestivalTime,CompanyFestivalTimeBO.class);
         return cb;
     }
 }

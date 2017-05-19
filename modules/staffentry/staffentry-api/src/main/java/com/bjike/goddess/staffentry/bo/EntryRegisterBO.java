@@ -131,6 +131,15 @@ public class EntryRegisterBO extends BaseBO {
     private String hobbies;
 
     /**
+     * 创建时间
+     */
+    private String createTime;
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    /**
      * 家庭成员集合
      */
     private List<FamilyMemberBO> familyMemberBOList;
@@ -333,6 +342,22 @@ public class EntryRegisterBO extends BaseBO {
 
     public void setHobbies(String hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 
     public List<FamilyMemberBO> getFamilyMemberBOList() {

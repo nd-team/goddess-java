@@ -77,7 +77,7 @@ public class MaterialReceiveAct {
      * 分页查询物资领用
      *
      * @param dto 物资领用dto
-     * @return class MaterialInStockVO
+     * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
      */
@@ -96,7 +96,7 @@ public class MaterialReceiveAct {
      * 添加物资领用
      *
      * @param to 物资领用to
-     * @return class MaterialInStockVO
+     * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
      */
@@ -152,6 +152,7 @@ public class MaterialReceiveAct {
      * @param auditState   审核状态
      * @param auditOpinion 审核意见
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/audit")
     public Result audit(@RequestParam(value = "id") String id, @RequestParam(value = "auditState") AuditState auditState, @RequestParam(value = "auditOpinion") String auditOpinion) throws ActException {
@@ -168,6 +169,7 @@ public class MaterialReceiveAct {
      *
      * @param to 物资领用to
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/receiveover")
     public Result receiveOver(@Validated(MaterialReceiveTO.RECEIVEOVER.class) MaterialReceiveTO to, BindingResult result) throws ActException {
@@ -184,6 +186,7 @@ public class MaterialReceiveAct {
      *
      * @param to 物资领用to
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/materialreturn")
     public Result materialReturn(@Validated(MaterialReceiveTO.MATERIALRETURN.class) MaterialReceiveTO to, BindingResult result) throws ActException {

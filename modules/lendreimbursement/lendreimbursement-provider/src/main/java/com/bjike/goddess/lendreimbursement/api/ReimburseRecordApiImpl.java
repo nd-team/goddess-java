@@ -166,7 +166,7 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
 
     @Override
     public List<ReimburseRecordBO> listHasPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
-        return reimburseRecordSer.listWaitPay(reimburseRecordDTO);
+        return reimburseRecordSer.listHasPay(reimburseRecordDTO);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.bjike.goddess.festival.bo.AreaRelationerBO;
 import com.bjike.goddess.festival.dto.AreaRelationerDTO;
 import com.bjike.goddess.festival.entity.AreaRelationer;
 import com.bjike.goddess.festival.entity.HolidayProgramme;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,28 @@ import java.util.List;
 @Service
 public class AreaRelationerSerImpl extends ServiceImpl<AreaRelationer, AreaRelationerDTO> implements AreaRelationerSer {
 
+
+    @Override
+    public Long countAreaRelationer(AreaRelationerDTO areaRelationerDTO) throws SerException {
+        if(StringUtils.isBlank( areaRelationerDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = areaRelationerDTO.getHolidayProgrammeId();
+        areaRelationerDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        Long count = super.count( areaRelationerDTO );
+        return count;
+    }
+
+    @Override
+    public List<AreaRelationerBO> listAreaRelationer(AreaRelationerDTO areaRelationerDTO) throws SerException {
+        if(StringUtils.isBlank( areaRelationerDTO.getHolidayProgrammeId())){
+            throw new SerException("节假日方案id不能为空");
+        }
+        String holidayId = areaRelationerDTO.getHolidayProgrammeId();
+        areaRelationerDTO.getConditions().add(Restrict.eq("holidayProgramme.id",holidayId));
+        List<AreaRelationer> areaRelationerList = super.findByCis( areaRelationerDTO ,true);
+        return BeanTransform.copyProperties(areaRelationerList,AreaRelationerBO.class);
+    }
 
     @Override
     public List<AreaRelationerBO> getAreaRelationer(String holidayProgrammeId) throws SerException {

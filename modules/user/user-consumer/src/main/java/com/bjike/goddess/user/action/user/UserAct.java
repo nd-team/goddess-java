@@ -6,12 +6,10 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.to.UserTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户操作
@@ -60,6 +58,20 @@ public class UserAct {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 添加用户
+     *
+     * @param userTO 用户
+     * @version v1
+     */
+    @PostMapping("v1/add")
+    public Result add(UserTO userTO) throws ActException {
+        try {
+            Boolean result = (null != userAPI.add(null,userTO));
+            return ActResult.initialize(result);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

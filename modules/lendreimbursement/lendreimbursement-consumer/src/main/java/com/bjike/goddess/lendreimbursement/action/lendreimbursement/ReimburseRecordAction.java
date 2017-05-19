@@ -74,7 +74,7 @@ public class ReimburseRecordAction {
      * @des 获取所有申请报销信息
      * @version v1
      */
-    @GetMapping("v1/listReimburseRecord")
+    @GetMapping("v1/list")
     public Result findListReimburseRecord(ReimburseRecordDTO reimburseRecordDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ReimburseRecordVO> reimburseRecordVOList = BeanTransform.copyProperties(
@@ -178,7 +178,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 申请报销有误列表总条数
+     * 申请报销列误列表总条数
      *
      * @param reimburseRecordDTO 申请报销信息dto
      * @des 获取所有申请报销信息总条数
@@ -252,7 +252,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待审核有表
+     * 等待审核列表
      *
      * @param reimburseRecordDTO 申请报销信息dto
      * @return class ReimburseRecordVO
@@ -272,7 +272,7 @@ public class ReimburseRecordAction {
 
 
     /**
-     * 审核等待审核
+     * 负责人审核等待审核
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -281,7 +281,7 @@ public class ReimburseRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/auditRecord")
-    public Result auditRecord(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result auditRecord(@Validated(ReimburseRecordTO.TestChargeAudit.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.auditRecord(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -304,7 +304,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待审核确认冻结
+     * 确认冻结等待审核
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -313,7 +313,7 @@ public class ReimburseRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/congelAuditRecord")
-    public Result congelAuditRecord(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result congelAuditRecord(@Validated(ReimburseRecordTO.TestChargeCongel.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.congelAuditRecord(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -361,7 +361,7 @@ public class ReimburseRecordAction {
 
 
     /**
-     * 分析已经审核
+     * 分析已经审核(运营部分析)
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -370,7 +370,7 @@ public class ReimburseRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/analisysRecord")
-    public Result analisysRecord(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result analisysRecord(@Validated(ReimburseRecordTO.TestAnalysis.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.analisysRecord(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -483,7 +483,7 @@ public class ReimburseRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/recieveTicket")
-    public Result recieveTicket(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result recieveTicket(@Validated(ReimburseRecordTO.TestRecieveTicketCheck.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.recieveTicketCondition(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -546,7 +546,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待付款预计付款
+     * 预计付款等待付款
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -565,7 +565,7 @@ public class ReimburseRecordAction {
     }
 
     /**
-     * 等待付款付款
+     * 付款等待付款
      *
      * @param reimburseRecordTO 申请报销基本信息数据bo
      * @return class ReimburseRecordVO
@@ -574,7 +574,7 @@ public class ReimburseRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/waitPay")
-    public Result waitPay(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    public Result waitPay(@Validated(ReimburseRecordTO.TestPay.class) ReimburseRecordTO reimburseRecordTO) throws ActException {
         try {
             ReimburseRecordBO reimburseRecordBO1 = reimburseRecordAPI.waitPay(reimburseRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(reimburseRecordBO1, ReimburseRecordVO.class, true));
@@ -645,10 +645,10 @@ public class ReimburseRecordAction {
      * @version v1
      */
     @GetMapping("v1/listAccountVoucher/{id}")
-    public Result listAccountVoucher(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result listAccountVoucher(@PathVariable String id) throws ActException {
         try {
             List<AccountVoucherVO> applyLendVOList = BeanTransform.copyProperties(
-                    reimburseRecordAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class, true);
+                    reimburseRecordAPI.listAccountVoucherByRecord(id), AccountVoucherVO.class);
             return ActResult.initialize(applyLendVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -839,13 +839,14 @@ public class ReimburseRecordAction {
      * @des 根据三级科目获取所有说明
      * @version v1
      */
-    @GetMapping("v1/listPlain")
+    @GetMapping("v1/listPlains")
     public Result listPlain(ReimburseRecordTO reimburseRecordTO ) throws ActException {
         try {
             CategoryDTO categoryDTO = new CategoryDTO();
             if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )){
-                throw new SerException("三级科目不能为空");
+                throw new SerException("三级科目(thirdSubject)不能为空");
             }
+            categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
             List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
             return ActResult.initialize(categories);
         } catch (SerException e) {
@@ -865,8 +866,10 @@ public class ReimburseRecordAction {
             CategoryDTO categoryDTO = new CategoryDTO();
             if(StringUtils.isBlank(reimburseRecordTO.getThirdSubject() )
                     && StringUtils.isBlank(reimburseRecordTO.getPlainInfo() ) ){
-                throw new SerException("三级科目或说明不能为空");
+                throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
             }
+            categoryDTO.setThirdSubject( reimburseRecordTO.getThirdSubject());
+            categoryDTO.setRemark( reimburseRecordTO.getPlainInfo());
             List<CategoryBO> categories = categoryAPI.listAllCategory( categoryDTO );
             return ActResult.initialize(categories);
         } catch (SerException e) {

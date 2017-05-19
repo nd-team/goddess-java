@@ -63,13 +63,23 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     @Override
     public List<ArrivalMonthBO> list(ArrivalMonthDTO dto) throws SerException {
         List<ArrivalMonth> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, ArrivalMonthBO.class);
+        List<ArrivalMonthBO> boList = new ArrayList<ArrivalMonthBO>();
+        for (ArrivalMonth a : list) {
+            ArrivalMonthBO bo = BeanTransform.copyProperties(a, ArrivalMonthBO.class);
+            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
+            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            boList.add(bo);
+        }
+        return boList;
     }
 
     @Override
     public ArrivalMonthBO findByID(String id) throws SerException {
         ArrivalMonth arrivalMonth = super.findById(id);
-        return BeanTransform.copyProperties(arrivalMonth, ArrivalMonthBO.class);
+        ArrivalMonthBO bo = BeanTransform.copyProperties(arrivalMonth, ArrivalMonthBO.class);
+        bo.setWorkDifferences(arrivalMonth.getActualWork() - arrivalMonth.getTargetWork());
+        bo.setIncomeDifferences(arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome());
+        return bo;
     }
 
     /**
@@ -78,7 +88,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
      * @return class String
      * @throws SerException
      */
-    private List<String> findAllArrivals() throws SerException {
+    @Override
+    public List<String> findAllArrivals() throws SerException {
         List<ArrivalMonth> list = super.findAll();
         Set<String> set = new HashSet<String>();
         for (ArrivalMonth a : list) {
@@ -123,10 +134,12 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     if (arrivalMonth.getArrival().equals(arrival) && arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
-                        incomeDifferencesSum += arrivalMonth.getIncomeDifferences();
+                        double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                        incomeDifferencesSum += incomeDifference;
                         targetWorkSum += arrivalMonth.getTargetWork();
                         actualWorkSum += arrivalMonth.getActualWork();
-                        workDifferencesSum += arrivalMonth.getWorkDifferences();
+                        int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                        workDifferencesSum += workDifference;
                     }
                 }
                 if (targetWorkSum != 0) {
@@ -173,10 +186,12 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     if (arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
-                        incomeDifferencesSum += arrivalMonth.getIncomeDifferences();
+                        double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                        incomeDifferencesSum += incomeDifference;
                         targetWorkSum += arrivalMonth.getTargetWork();
                         actualWorkSum += arrivalMonth.getActualWork();
-                        workDifferencesSum += arrivalMonth.getWorkDifferences();
+                        int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                        workDifferencesSum += workDifference;
                     }
                 }
                 if (targetWorkSum != 0) {
@@ -207,21 +222,31 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     @Override
     public List<ArrivalWeekBO> findDetail(String id) throws SerException {
         ArrivalMonth arrivalMonth = super.findById(id);
+        if (arrivalMonth == null) {
+            throw new SerException("该对象不存在");
+        }
         String[] arrivals = new String[]{arrivalMonth.getArrival()};
         Integer[] years = new Integer[]{arrivalMonth.getYear()};
         Integer[] months = new Integer[]{arrivalMonth.getMonth()};
         List<ArrivalWeekBO> list = null;
         for (int i = 0; i < arrivals.length && i < years.length && i < months.length; i++) {
-            String sql = "SELECT week,targetWork,actualWork,workDifferences,price,targetIncome,planIncome,incomeDifferences\n" +
+            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome " +
                     "from budget_arrivalweek where arrival='" + arrivals[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
-            String[] fields = new String[]{"week", "targetWork", "actualWork", "workDifferences", "price", "targetIncome", "planIncome", "incomeDifferences"};
+            String[] fields = new String[]{"week", "targetWork", "actualWork", "price", "targetIncome", "planIncome"};
             list = super.findBySql(sql, ArrivalWeekBO.class, fields);
         }
         for (ArrivalWeekBO bo : list) {
             bo.setArrival(arrivalMonth.getArrival());
             bo.setYear(arrivalMonth.getYear());
             bo.setMonth(arrivalMonth.getMonth());
+            bo.setIncomeDifferences(bo.getPlanIncome() - bo.getTargetIncome());
+            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
         }
         return list;
+    }
+
+    @Override
+    public Long countNum(ArrivalMonthDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

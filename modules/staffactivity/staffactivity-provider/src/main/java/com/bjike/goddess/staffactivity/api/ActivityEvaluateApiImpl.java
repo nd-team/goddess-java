@@ -1,10 +1,12 @@
 package com.bjike.goddess.staffactivity.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateBO;
 import com.bjike.goddess.staffactivity.bo.ActivityEvaluateSummaryBO;
 import com.bjike.goddess.staffactivity.bo.EvaluateScoreSummaryBO;
 import com.bjike.goddess.staffactivity.dto.ActivityEvaluateDTO;
+import com.bjike.goddess.staffactivity.entity.ActivityEvaluate;
 import com.bjike.goddess.staffactivity.service.ActivityEvaluateSer;
 import com.bjike.goddess.staffactivity.to.ActivityEvaluateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,30 @@ public class ActivityEvaluateApiImpl implements ActivityEvaluateAPI {
 
     @Autowired
     private ActivityEvaluateSer activityEvaluateSer;
+
+    /**
+     * 根据id查询活动评价
+     *
+     * @param id 活动评价唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public ActivityEvaluateBO findById(String id) throws SerException {
+        ActivityEvaluate model = activityEvaluateSer.findById(id);
+        return BeanTransform.copyProperties(model, ActivityEvaluateBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动评价dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ActivityEvaluateDTO dto) throws SerException {
+        return activityEvaluateSer.count(dto);
+    }
 
     /**
      * 分页查询活动评价

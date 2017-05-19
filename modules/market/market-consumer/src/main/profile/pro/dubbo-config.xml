@@ -21,5 +21,7 @@
 	<dubbo:reference  validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
 	<dubbo:reference  validation="true" id="marketEmailApiImpl" interface="com.bjike.goddess.market.api.MarketEmailAPI" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 
 </beans>

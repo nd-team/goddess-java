@@ -1,13 +1,19 @@
 apply from: '../../../config.gradle'
+
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
+        classpath("org.springframework:springloaded:1.2.7.RELEASE")
     }
 }
 apply plugin: 'org.springframework.boot'
+bootRun{
+    addResources = true
+}
 jar {
     String buildDir = project.buildDir
     manifest {
@@ -34,6 +40,9 @@ sourceSets {
     }
 }
 dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+//    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.3.RELEASE'
+
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }

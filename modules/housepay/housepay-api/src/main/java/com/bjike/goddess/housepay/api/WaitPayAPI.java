@@ -1,6 +1,7 @@
 package com.bjike.goddess.housepay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.housepay.bo.PayRecordBO;
 import com.bjike.goddess.housepay.bo.WaitPayBO;
 import com.bjike.goddess.housepay.dto.WaitPayDTO;
 import com.bjike.goddess.housepay.to.WaitPayTO;
@@ -82,7 +83,7 @@ public interface WaitPayAPI {
      * @return class WaitPayBO
      * @throws SerException
      */
-    default WaitPayBO payment(WaitPayTO waitPayTO) throws SerException {
+    default PayRecordBO payment(WaitPayTO waitPayTO) throws SerException {
         return null;
     }
 

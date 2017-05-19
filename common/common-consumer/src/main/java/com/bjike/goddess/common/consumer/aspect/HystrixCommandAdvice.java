@@ -1,5 +1,7 @@
 package com.bjike.goddess.common.consumer.aspect;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.netflix.hystrix.HystrixCommand;
@@ -17,6 +19,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -27,7 +30,6 @@ import java.util.Optional;
 /**
  * Created by lake on 17-4-15.
  */
-
 public class HystrixCommandAdvice {
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)" +
@@ -47,11 +49,12 @@ public class HystrixCommandAdvice {
     }
 
     private HystrixCommand<Object> wrapWithHystrixCommnad(final ProceedingJoinPoint pjp) {
-
+        String userToken = RpcContext.getContext().getAttachment(RpcCommon.USER_TOKEN);
         return new HystrixCommand<Object>(setter(pjp)) {
             @Override
             protected Object run() throws Exception {
                 try {
+                    RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,userToken);
                     return pjp.proceed();
                 } catch (Throwable throwable) {
                     if(throwable instanceof ActException){

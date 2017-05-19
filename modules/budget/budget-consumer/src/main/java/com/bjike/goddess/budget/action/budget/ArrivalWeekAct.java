@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.action.budget;
 import com.bjike.goddess.budget.api.ArrivalWeekAPI;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.vo.ArrivalWeekCountVO;
@@ -12,6 +13,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ public class ArrivalWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) ArrivalWeekTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -63,6 +66,7 @@ public class ArrivalWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) ArrivalWeekTO to, BindingResult result) throws ActException {
         try {
@@ -80,6 +84,7 @@ public class ArrivalWeekAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -160,6 +165,39 @@ public class ArrivalWeekAct {
         try {
             List<ArrivalWeekCountBO> list = arrivalWeekAPI.conditionsCount(arrivals);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countNum")
+    public Result countNum(ArrivalWeekDTO dto) throws ActException {
+        try {
+            Long num = arrivalWeekAPI.countNum(dto);
+            return ActResult.initialize(num);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllArrivals")
+    public Result findAllArrivals() throws ActException {
+        try {
+            List<String> list = arrivalWeekAPI.findAllArrivals();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

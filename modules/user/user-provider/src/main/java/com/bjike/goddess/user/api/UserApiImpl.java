@@ -49,6 +49,15 @@ public class UserApiImpl implements UserAPI {
         return userSer.currentUser(userToken);
     }
 
+    @Override
+    public String currentSysNO(String userToken) throws SerException {
+        return userSer.currentSysNO(userToken);
+    }
+
+    @Override
+    public String currentSysNO() throws SerException {
+        return userSer.currentSysNO();
+    }
 
     @Override
     public UserBO add(TransactionContext context,UserTO userTO) throws SerException {
@@ -99,4 +108,20 @@ public class UserApiImpl implements UserAPI {
     public List<UserBO> findAllUser() throws SerException {
         return userSer.findAllUser();
     }
+
+    @Override
+    public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
+        return userSer.findUserByPage(dto);
+    }
+
+    @Override
+    public UserBO updateUser(UserTO userTO) throws SerException {
+        return userSer.updateUser(userTO);
+    }
+
+    @Override
+    public void deleteUser(String id) throws SerException {
+        userSer.deleteUser(id);
+    }
+
 }

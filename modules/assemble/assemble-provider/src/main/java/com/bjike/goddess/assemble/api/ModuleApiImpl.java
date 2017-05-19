@@ -4,7 +4,6 @@ import com.bjike.goddess.assemble.bo.ModuleBO;
 import com.bjike.goddess.assemble.dto.ModuleDTO;
 import com.bjike.goddess.assemble.service.ModuleSer;
 import com.bjike.goddess.assemble.to.ModuleTO;
-import com.bjike.goddess.assemble.type.CheckType;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +27,6 @@ public class ModuleApiImpl implements ModuleAPI {
         return moduleSer.list(moduleDTO);
     }
 
-    @Override
-    public ModuleBO modulesByName(String name,CheckType checkType) throws SerException {
-        return moduleSer.modulesByName(name,checkType);
-    }
 
     @Override
     public void add(ModuleTO moduleTO) throws SerException {
@@ -44,7 +39,12 @@ public class ModuleApiImpl implements ModuleAPI {
     }
 
     @Override
-    public void check(String moduleId,String[] relationIds) throws SerException {
-        moduleSer.check(moduleId, relationIds);
+    public void check(String[] ids) throws SerException {
+        moduleSer.check(ids);
+    }
+
+    @Override
+    public Boolean isCheck(String name) throws SerException {
+        return moduleSer.isCheck(name);
     }
 }

@@ -2,6 +2,7 @@ package com.bjike.goddess.housepay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.housepay.bo.CollectCompareBO;
 import com.bjike.goddess.housepay.bo.MoneyReadyBO;
 import com.bjike.goddess.housepay.dto.MoneyReadyDTO;
 import com.bjike.goddess.housepay.entity.MoneyReady;
@@ -54,6 +55,10 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     @Override
     public void removeMoneyReady(String id) throws SerException {
         moneyReadySer.removeMoneyReady(id);
+    }
+    @Override
+    public List<CollectCompareBO> collectCompare(Integer month) throws SerException {
+        return moneyReadySer.collectCompare(month);
     }
 
 }

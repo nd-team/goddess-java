@@ -2,6 +2,7 @@ package com.bjike.goddess.subjectcollect.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
@@ -19,13 +20,52 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO> {
+    /**
+     * 科目汇总表列表总条数
+     */
+    default Long countSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
 
     /**
-     * 导出
+     * 一个科目汇总表
      *
+     * @return class SubjectCollectBO
+     */
+    default SubjectCollectBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总表
+     *
+     * @param subjectCollectDTO 科目汇总表dto
+     * @return class SubjectCollectBO
      * @throws SerException
      */
-    default String exportExcel() throws SerException {
+    default List<SubjectCollectBO> findListSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 添加科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表数据to
+     * @return class SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑科目汇总表
+     *
+     * @param subjectCollectTO 科目汇总表数据to
+     * @return class SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO editSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
         return null;
     }
     /**
@@ -39,100 +79,20 @@ public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO
     }
 
     /**
-     * 汇总
+     * 导出
      *
-     * @param firstSubject firstSubject
-     * @return class marketInfoBO
      * @throws SerException
      */
-    default SubjectCollectBO collectSubjectCollect(String[] firstSubject) throws SerException {
+    default String exportExcel() throws SerException {
         return null;
     }
-
     /**
-     * 获取一级科目
+     * 汇总对比
      *
-     * @return class String
-     */
-    default List<String> getSubjectCollectFirstSubject() throws SerException {
-        return null;
-    }
-
-
-    /**
-     * 地区汇总
-     *
-     * @param area area
-     * @return class marketInfoBO
+     * @return class CompareCollectBO
      * @throws SerException
      */
-    default SubjectCollectBO collectArea(String[] area) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取地区
-     *
-     * @return class String
-     */
-    default List<String> getSubjectCollectArea() throws SerException {
-        return null;
-    }
-    /**
-     * 项目名称汇总
-     *
-     * @param projectName projectName
-     * @return class marketInfoBO
-     * @throws SerException
-     */
-    default SubjectCollectBO collectProjectName(String[] projectName) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取项目名称
-     *
-     * @return class String
-     */
-    default List<String> getSubjectCollectProjectName() throws SerException {
-        return null;
-    }
-    /**
-     * 项目组汇总
-     *
-     * @param projectGroup projectGroup
-     * @return class marketInfoBO
-     * @throws SerException
-     */
-    default SubjectCollectBO collectProjectGroup(String[] projectGroup) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取项目组
-     *
-     * @return class String
-     */
-    default List<String> getSubjectCollectProjectGroup() throws SerException {
-        return null;
-    }
-    /**
-     * 对比汇总
-     *
-     * @param subjectCollectTO 对比汇总数据to
-     * @return class subjectCollectBO
-     * @throws SerException
-     */
-    default List<SubjectCollectBO> collectCompare(SubjectCollectTO subjectCollectTO) throws SerException {
-        return null;
-    }
-    default List<String> getAreas() throws SerException{
-        return null;
-    }
-    default List<String> getProjectName() throws SerException{
-        return null;
-    }
-    default List<String> getProjectGroup() throws SerException{
+    default List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
         return null;
     }
 

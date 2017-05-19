@@ -135,9 +135,9 @@ public class MaterialTransfer extends BaseEntity {
     private String archSaveArea;
 
     /**
-     * 调动途径
+     * 调用途径
      */
-    @Column(name = "transferWay", nullable = false, columnDefinition = "TINYINT(2) COMMENT '调动途径'")
+    @Column(name = "transferWay", nullable = false, columnDefinition = "TINYINT(2) COMMENT '调用途径'")
     private TransferWay transferWay;
 
     /**

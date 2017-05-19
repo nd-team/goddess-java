@@ -2,6 +2,7 @@ package com.bjike.goddess.user.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.user.enums.UserType;
 
 /**
  * 用户业务传送对象
@@ -48,6 +49,11 @@ public class UserTO extends BaseTO {
      * 用户状态
      */
     private Status status;
+
+    /**
+     * 用户类型
+     */
+    private UserType userType;
 
     public String getUsername() {
         return username;
@@ -113,4 +119,11 @@ public class UserTO extends BaseTO {
         this.status = status;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 }

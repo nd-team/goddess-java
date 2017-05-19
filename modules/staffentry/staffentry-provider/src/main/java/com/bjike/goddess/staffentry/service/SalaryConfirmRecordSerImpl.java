@@ -7,6 +7,7 @@ import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,26 @@ import java.util.List;
 @Service
 public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord, SalaryConfirmRecordDTO> implements SalaryConfirmRecordSer {
 
-    
+
+    @Override
+    public Long countSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
+        Long count = super.count( salaryConfirmRecordDTO);
+        return count;
+    }
+
+    @Override
+    public SalaryConfirmRecordBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        SalaryConfirmRecord  salaryConfirmRecord = super.findById(id);
+        SalaryConfirmRecordBO bo = BeanTransform.copyProperties( salaryConfirmRecord , SalaryConfirmRecordBO.class,"entryTime");
+        return bo;
+    }
+
     @Override
     public List<SalaryConfirmRecord> listSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
 
-        //TODO :tanghaixiang 2017-03-11 未做薪资确认分页查询
-//        salaryConfirmRecordDTO
         List<SalaryConfirmRecord> salaryConfirmRecords = super.findByPage( salaryConfirmRecordDTO );
         return salaryConfirmRecords;
     }
@@ -53,16 +68,25 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SalaryConfirmRecordBO editSalaryConfirmRecord(SalaryConfirmRecordTO salaryConfirmRecordTO) throws SerException {
+        if(StringUtils.isBlank(salaryConfirmRecordTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        SalaryConfirmRecord temp = super.findById(salaryConfirmRecordTO.getId());
         SalaryConfirmRecord salaryConfirmRecord = BeanTransform.copyProperties( salaryConfirmRecordTO , SalaryConfirmRecord.class ,true);
-        salaryConfirmRecord.setModifyTime( LocalDateTime.now() );
-        super.update( salaryConfirmRecord );
+        BeanTransform.copyProperties( salaryConfirmRecord ,temp,"id","createTime","entryTime");
+        temp.setEntryTime(salaryConfirmRecord.getEntryTime());
+        temp.setModifyTime( LocalDateTime.now() );
+        super.update( temp );
 
-        return BeanTransform.copyProperties( salaryConfirmRecord ,SalaryConfirmRecordBO.class );
+        return BeanTransform.copyProperties( temp ,SalaryConfirmRecordBO.class );
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeSalaryConfirmRecord(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         try {
             super.remove( id );
         } catch (SerException e) {

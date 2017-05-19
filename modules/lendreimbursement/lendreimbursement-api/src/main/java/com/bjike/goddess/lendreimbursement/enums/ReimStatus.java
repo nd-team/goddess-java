@@ -15,21 +15,29 @@ public enum ReimStatus {
      */
     NONE(0),
     /**
+     * 负责人审核：审核通过
+     */
+    CHARGEPASS(1),
+    /**
+     * 负责人审核：审核不通过
+     */
+    CHARGENOTPASS(2),
+    /**
      * 分析：审核通过
      */
-    PASS(1),
+    PASS(3),
     /**
      * 分析：审核不通过
      */
-    NOTPASS(2),
+    NOTPASS(4),
     /**
      * 分析：申请冻结
      */
-    CONGEL(3),
+    CONGEL(5),
     /**
      * 负责人确认冻结
      */
-    CHARGECONGEL(4)
+    CHARGECONGEL(6)
     ;
 
     private int code;

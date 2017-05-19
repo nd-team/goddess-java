@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractQuoteDataAPI;
@@ -105,6 +106,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ContractQuoteDataTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -123,6 +125,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -140,6 +143,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ContractQuoteDataTO to, BindingResult result) throws ActException {
         try {
@@ -157,6 +161,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
@@ -174,6 +179,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @des 根据id标识为正常状态
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
@@ -192,6 +198,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/collects")
     public Result collect(@Validated(ContractQuoteDataDTO.Collect.class) ContractQuoteDataDTO dto, BindingResult result) throws ActException {
         try {
@@ -213,6 +220,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/searchs")
     public Result searchs(String area, String project) throws ActException {
         try {
@@ -233,6 +241,7 @@ public class ContractQuoteDataAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/upload")
     public Result upload(HttpServletRequest request) throws ActException {
         try {
