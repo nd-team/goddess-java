@@ -1,6 +1,7 @@
 package com.bjike.goddess.fundrecords.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.fundrecords.bo.AnalyzeBO;
 import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
 import com.bjike.goddess.fundrecords.bo.FundRecordBO;
@@ -68,6 +69,11 @@ public class FundRecordApiImpl implements FundRecordAPI {
     @Override
     public AnalyzeBO analyze(CollectTO to) throws SerException {
         return fundRecordSer.analyze(to);
+    }
+
+    @Override
+    public FundRecordBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(fundRecordSer.findById(id),FundRecordBO.class);
     }
 
 }
