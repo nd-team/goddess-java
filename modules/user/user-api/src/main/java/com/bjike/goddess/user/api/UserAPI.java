@@ -59,13 +59,25 @@ public interface UserAPI {
         return null;
     }
 
+
     /**
-     * 获取当前用户Token
+     * 获取当前用户系统号
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    default String sysNO(String userToken) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户系统号
      *
      * @return
      * @throws SerException
      */
-    default String currentToken() throws SerException {
+    default String sysNO() throws SerException {
         return null;
     }
 

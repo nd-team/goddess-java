@@ -3,6 +3,7 @@ package com.bjike.goddess.storage.action.storage;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.storage.bo.StorageUserBO;
@@ -36,6 +37,7 @@ public class StorageUserAction {
      * @param storageUserTO 存储用户传输对象
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/register")
     public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result) throws ActException {
         try {

@@ -64,4 +64,13 @@ public interface StorageUserSer extends Ser<StorageUser, StorageUserDTO> {
         return null;
     }
 
+    /**
+     * 获取当前登录模块名
+     * @return
+     * @throws SerException
+     */
+    default String getCurrentSysNO(String storageToken) throws SerException{
+        return null;
+    }
+
 }

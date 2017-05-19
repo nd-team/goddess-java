@@ -21,6 +21,12 @@ public class StorageUserTO extends BaseTO {
     public interface REGISTER {
     }
 
+    /**
+     * 用户名
+     */
+    @NotBlank(message = "用户名", groups = StorageUserTO.REGISTER.class)
+
+    private String username;
 
     /**
      * 模块名
@@ -45,6 +51,13 @@ public class StorageUserTO extends BaseTO {
      */
     private Status status;
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getModuleName() {
         return moduleName;

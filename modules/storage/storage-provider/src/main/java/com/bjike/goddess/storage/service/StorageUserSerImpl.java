@@ -17,6 +17,7 @@ import com.bjike.goddess.storage.entity.StorageUser;
 import com.bjike.goddess.storage.session.LoginUser;
 import com.bjike.goddess.storage.session.StorageSession;
 import com.bjike.goddess.storage.to.StorageUserTO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -37,9 +38,12 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
 
     @Autowired
     private RedisClient redis;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     public StorageUserBO register(StorageUserTO storageUserTO) throws SerException {
+        String sysNO = userAPI.sysNO();
         StorageUserDTO dto = new StorageUserDTO();
         dto.getConditions().add(Restrict.or("moduleName", storageUserTO.getModuleName()));
         dto.getConditions().add(Restrict.or("account", storageUserTO.getAccount()));
@@ -47,6 +51,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
         if (null == super.findOne(dto)) {
             storageUser = BeanTransform.copyProperties(storageUserTO, StorageUser.class);
             storageUser.setStatus(Status.THAW);
+            storageUser.setSystemNO(sysNO);
             try {
                 storageUser.setPassword(PasswordHash.createHash(storageUser.getPassword()));
             } catch (Exception e) {
@@ -120,5 +125,10 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     @Override
     public String getCurrentModule(String storageToken) throws SerException {
         return this.getCurrentUser(storageToken).getModuleName();
+    }
+
+    @Override
+    public String getCurrentSysNO(String storageToken) throws SerException {
+        return this.getCurrentUser(storageToken).getSystemNO();
     }
 }

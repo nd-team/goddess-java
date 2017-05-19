@@ -13,6 +13,10 @@ import java.io.Serializable;
  */
 public class LoginUser implements Serializable {
     /**
+     * 系统编号
+     */
+    private String systemNO;
+    /**
      * 模块名
      */
     private String moduleName;
@@ -62,5 +66,13 @@ public class LoginUser implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
     }
 }
