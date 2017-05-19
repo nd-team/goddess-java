@@ -32,4 +32,6 @@
 	<dubbo:service interface="com.bjike.goddess.housepay.api.WaitPayAPI" ref="waitPayApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.housepay.api.PayRecordAPI" ref="payRecordApiImpl"/>
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

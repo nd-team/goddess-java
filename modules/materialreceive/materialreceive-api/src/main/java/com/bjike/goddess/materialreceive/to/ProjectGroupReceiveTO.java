@@ -3,7 +3,7 @@ package com.bjike.goddess.materialreceive.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -25,13 +25,13 @@ public class ProjectGroupReceiveTO extends BaseTO {
     /**
      * 领用时间
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "领用时间不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "领用时间不能为空")
     private String receiveTime;
 
     /**
      * 物品名称
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物品名称不能为空")
     private String materialName;
 
     /**
@@ -47,25 +47,25 @@ public class ProjectGroupReceiveTO extends BaseTO {
     /**
      * 领用人
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "领用人不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "领用人不能为空")
     private String recipient;
 
     /**
      * 发放人
      */
-    @NotEmpty(groups = {ADD.class, EDIT.class}, message = "发放人不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发放人不能为空")
     private String issuer;
 
     /**
      * 归还时间
      */
-    @NotEmpty(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还时间不能为空")
+    @NotBlank(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还时间不能为空")
     private String returnTime;
 
     /**
      * 归还人
      */
-    @NotEmpty(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还人不能为空")
+    @NotBlank(groups = {ProjectGroupReceiveTO.RETURNMATERIAL.class}, message = "归还人不能为空")
     private String returnPerson;
 
     /**

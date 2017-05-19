@@ -3,6 +3,7 @@ package com.bjike.goddess.subjectcollect.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.subjectcollect.bo.CompareCollectBO;
 import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +34,43 @@ import java.util.stream.Collectors;
 @Service
 public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCollectDTO> implements SubjectCollectSer {
 
-    /*@Autowired
-    private SubjectCollectSer subjectCollectSer;*/
+    @Override
+    public Long countSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        Long count = super.count(subjectCollectDTO);
+        return count;
+    }
+
+    @Override
+    public SubjectCollectBO getOne(String id) throws SerException {
+        SubjectCollect subjectCollect = super.findById(id);
+        return BeanTransform.copyProperties(subjectCollect,SubjectCollectBO.class);
+    }
+
+    @Override
+    public List<SubjectCollectBO> findListSubjectCollect(SubjectCollectDTO subjectCollectDTO) throws SerException {
+        List<SubjectCollect> subjectCollects = super.findByPage(subjectCollectDTO);
+        List<SubjectCollectBO> subjectCollectBOS = BeanTransform.copyProperties(subjectCollects,SubjectCollectBO.class);
+        return subjectCollectBOS;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public SubjectCollectBO insertSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
+        SubjectCollect subjectCollect = BeanTransform.copyProperties(subjectCollectTO,SubjectCollect.class);
+        subjectCollect.setCreateTime(LocalDateTime.now());
+        super.save(subjectCollect);
+        return BeanTransform.copyProperties(subjectCollect,SubjectCollectBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public SubjectCollectBO editSubjectCollect(SubjectCollectTO subjectCollectTO) throws SerException {
+        SubjectCollect subjectCollect = super.findById(subjectCollectTO.getId());
+        BeanTransform.copyProperties(subjectCollectTO,subjectCollect,true);
+        subjectCollect.setModifyTime(LocalDateTime.now());
+        super.update(subjectCollect);
+        return BeanTransform.copyProperties(subjectCollect,SubjectCollectBO.class);
+    }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel() throws SerException {
@@ -45,6 +82,32 @@ public class SubjectCollectSerImpl extends ServiceImpl<SubjectCollect, SubjectCo
     @Override
     public void removeSubjectCollect(String id) throws SerException {
         super.remove(id);
+    }
+    @Override
+    public List<CompareCollectBO> collectCompare(Integer [] months) throws SerException {
+        String[] monthsTemp = new String[months.length];
+        for(int i = 0;i<months.length;i++){
+            monthsTemp[i] = "'"+months[i]+"'";
+        }
+        String monthsStr = StringUtils.join(monthsTemp, ",");
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT months AS months,firstSubject AS firstSubject,area AS area, ");
+        sb.append(" projectName AS projectName,projectGroup AS projectGroup, ");
+        sb.append(" sum(beginningDebitAmount) AS beginningDebitAmount,sum(beginningCreditAmount) AS beginningCreditAmount, ");
+        sb.append(" (sum(beginningDebitAmount)-sum(beginningCreditAmount)) AS beginMinusMoney, ");
+        sb.append(" sum(issueDebitAmount) AS issueDebitAmount,sum(issueCreditAmount) AS issueCreditAmount, ");
+        sb.append(" (sum(issueDebitAmount)-sum(issueCreditAmount)) AS issueMinusMoney, ");
+        sb.append(" sum(endDebitAmount) AS endDebitAmount,sum(endCreditAmount) AS endCreditAmount, ");
+        sb.append(" (sum(endDebitAmount)-sum(endCreditAmount)) AS endMinusMoney FROM subjectcollect_subjectcollect a ");
+        sb.append(" WHERE months IN (%s) GROUP BY firstSubject,area,projectName,projectGroup, ");
+        sb.append(" months ORDER BY months ");
+        String sql = sb.toString();
+        sql = String.format(sql, monthsStr);
+        String [] fields = new String[]{"months","firstSubject","area","projectName","projectGroup",
+                "beginningDebitAmount","beginningCreditAmount","beginMinusMoney","issueDebitAmount","issueCreditAmount",
+                "issueMinusMoney","endDebitAmount","endCreditAmount","endMinusMoney"};
+        List<CompareCollectBO> compareCollectBOS = super.findBySql(sql,CompareCollectBO.class,fields);
+        return compareCollectBOS;
     }
 
    /* @Transactional(rollbackFor = SerException.class)

@@ -19,6 +19,23 @@ import java.util.List;
 public interface ActivityExecuteInfoAPI {
 
     /**
+     * 根据id查询活动执行信息
+     *
+     * @param id 活动执行信息唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    ActivityExecuteInfoBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 活动执行信息dto
+     * @throws SerException
+     */
+    Long count(ActivityExecuteInfoDTO dto) throws SerException;
+
+    /**
      * 分页查询活动执行信息
      *
      * @param dto 活动执行信息dto

@@ -1,6 +1,11 @@
 package com.bjike.goddess.subjectcollect.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 科目汇总表
@@ -16,63 +21,72 @@ public class SubjectCollectTO extends BaseTO {
     /**
      * 代码
      */
+    @NotBlank(message = "代码不能为空",groups = {ADD.class, EDIT.class})
     private String code;
-
+    /**
+     * 月份
+     */
+    @NotNull(message = "代码不能为空",groups = {ADD.class, EDIT.class})
+    private Integer  months;
     /**
      * 一级科目
      */
+    @NotBlank(message = "一级科目不能为空",groups = {ADD.class, EDIT.class})
     private String firstSubject;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
      * 项目组/部门
      */
+    @NotBlank(message = "项目组/部门不能为空",groups = {ADD.class, EDIT.class})
     private String projectGroup;
 
     /**
      * 期初借方余额
      */
+    @NotNull(message = "期初借方余额不能为空",groups = {ADD.class, EDIT.class})
     private Double beginningDebitAmount;
 
     /**
      * 期初贷方余额
      */
+    @NotNull(message = "期初贷方余额不能为空",groups = {ADD.class, EDIT.class})
     private Double beginningCreditAmount;
 
     /**
      * 本期借方发生额
      */
+    @NotNull(message = "本期借方发生额不能为空",groups = {ADD.class, EDIT.class})
     private Double issueDebitAmount;
 
     /**
      * 本期贷方发生额
      */
+    @NotNull(message = "本期贷方发生额不能为空",groups = {ADD.class, EDIT.class})
     private Double issueCreditAmount;
 
     /**
      * 期末借方余额
      */
+    @NotNull(message = "期末借方余额不能为空",groups = {ADD.class, EDIT.class})
     private Double endDebitAmount;
 
     /**
      * 期末贷方余额
      */
+    @NotNull(message = "期末贷方余额不能为空",groups = {ADD.class, EDIT.class})
     private Double endCreditAmount;
-
-    //开始时间
-    private String startTime;
-    //结束时间
-    private String endTime;
-
 
     public String getCode() {
         return code;
@@ -80,6 +94,14 @@ public class SubjectCollectTO extends BaseTO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public String getFirstSubject() {
@@ -162,19 +184,4 @@ public class SubjectCollectTO extends BaseTO {
         this.endCreditAmount = endCreditAmount;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 }

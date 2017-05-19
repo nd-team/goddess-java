@@ -23,6 +23,12 @@ public class SubjectCollect extends BaseEntity {
      */
     @Column(name = "code", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '代码'")
     private String code;
+    /**
+     * 月份
+     */
+    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '月份'"  )
+    private Integer  months;
+
 
     /**
      * 一级科目
@@ -84,6 +90,13 @@ public class SubjectCollect extends BaseEntity {
     @Column(name = "endCreditAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '期末贷方余额'")
     private Double endCreditAmount;
 
+    public Integer getMonths() {
+        return months;
+    }
+
+    public void setMonths(Integer months) {
+        this.months = months;
+    }
 
     public String getCode() {
         return code;
@@ -170,27 +183,6 @@ public class SubjectCollect extends BaseEntity {
     }
 
     public void setEndCreditAmount(Double endCreditAmount) {
-        this.endCreditAmount = endCreditAmount;
-    }
-
-    public SubjectCollect(String firstSubject, Double beginningDebitAmount, Double beginningCreditAmount, Double issueDebitAmount, Double issueCreditAmount, Double endDebitAmount, Double endCreditAmount) {
-        this.firstSubject = firstSubject;
-        this.beginningDebitAmount = beginningDebitAmount;
-        this.beginningCreditAmount = beginningCreditAmount;
-        this.issueDebitAmount = issueDebitAmount;
-        this.issueCreditAmount = issueCreditAmount;
-        this.endDebitAmount = endDebitAmount;
-        this.endCreditAmount = endCreditAmount;
-    }
-    public SubjectCollect(String area,String projectName,String projectGroup, Double beginningDebitAmount, Double beginningCreditAmount, Double issueDebitAmount, Double issueCreditAmount, Double endDebitAmount, Double endCreditAmount) {
-        this.area = area;
-        this.projectName = projectName;
-        this.projectGroup = projectGroup;
-        this.beginningDebitAmount = beginningDebitAmount;
-        this.beginningCreditAmount = beginningCreditAmount;
-        this.issueDebitAmount = issueDebitAmount;
-        this.issueCreditAmount = issueCreditAmount;
-        this.endDebitAmount = endDebitAmount;
         this.endCreditAmount = endCreditAmount;
     }
 

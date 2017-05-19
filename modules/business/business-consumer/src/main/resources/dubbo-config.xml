@@ -20,4 +20,6 @@
 	<dubbo:reference  validation="true" id="businessAnnualInfoApiImpl" interface="com.bjike.goddess.business.api.BusinessAnnualInfoAPI" />
 	<dubbo:reference  validation="true" id="businessTaxChangeApiImpl" interface="com.bjike.goddess.business.api.BusinessTaxChangeAPI" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

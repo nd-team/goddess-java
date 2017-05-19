@@ -84,7 +84,7 @@ public interface MoneyReadySer extends Ser<MoneyReady, MoneyReadyDTO> {
      * @return class CollectCompareBO
      * @throws SerException
      */
-    default List<CollectCompareBO> collectCompare(MoneyReadyDTO dto) throws SerException {
+    default List<CollectCompareBO> collectCompare(Integer month) throws SerException {
         return null;
     }
 }

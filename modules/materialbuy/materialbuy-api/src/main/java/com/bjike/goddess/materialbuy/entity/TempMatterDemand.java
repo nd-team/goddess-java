@@ -41,7 +41,7 @@ public class TempMatterDemand extends BaseEntity {
     /**
      * 需求日期
      */
-    @Column(name = "requiredDate", nullable = false, columnDefinition = "DATE COMMENT '需求日期'")
+    @Column(name = "requiredDate", nullable = false, columnDefinition = "DATETIME COMMENT '需求日期'")
     private LocalDateTime requiredDate;
 
     /**

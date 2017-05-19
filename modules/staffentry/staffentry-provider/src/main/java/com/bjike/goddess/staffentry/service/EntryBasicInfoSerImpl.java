@@ -165,6 +165,10 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String[] positions = entryBasicInfoDTO.getPostNames();              //职位列表
+        StringBuffer sb = new StringBuffer("");
+        for( String str : positions){
+            sb.append("'"+str+"',");
+        }
         String startDateString = entryBasicInfoDTO.getStartDate();          //开始日期字符串
         String endDateString = entryBasicInfoDTO.getEndDate();              //结束日期字符串
         LocalDate startDate = LocalDate.now();
@@ -179,7 +183,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         String[] field = new String[]{"position", "entryCount"};
         String sql = "select position ,  count(employeeID) as entryCount from staffentry_entrybasicinfo where 1=1 ";
         if (positions != null && positions.length > 0) {
-            sql = sql + " and position in " + positions + "";
+            sql = sql + " and position in (" + StringUtils.substringBeforeLast(sb.toString(),",") + ")";
         }
         sql = sql + " group by position order by position desc ";
         List<EntryBasicInfoBO> list = super.findBySql(sql, EntryBasicInfoBO.class, field);

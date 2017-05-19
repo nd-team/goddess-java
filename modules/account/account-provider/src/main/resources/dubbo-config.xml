@@ -19,4 +19,6 @@
 	<!--发布接口,供其他模块调用-->
 
 	<dubbo:service interface="com.bjike.goddess.account.api.AccountInfoAPI" ref="accountInfoApiImpl"/>
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 </beans>

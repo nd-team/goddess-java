@@ -45,7 +45,7 @@ public class MaterialInStockTO extends BaseTO {
     private String materialName;
 
     /**
-     * 物品类型
+     * 物资类型
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "物品类型不能为空")
     private String materialType;
@@ -119,11 +119,13 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 物资状态
      */
+    @NotNull(groups = {EDIT.class}, message = "物资状态不能为空")
     private MaterialState materialState;
 
     /**
      * 使用状态
      */
+    @NotNull(groups = {EDIT.class}, message = "使用状态不能为空")
     private UseState useState;
 
     /**
@@ -144,11 +146,13 @@ public class MaterialInStockTO extends BaseTO {
     /**
      * 购买人
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "购买人不能为空")
     private String purchaser;
 
     /**
      * 购买日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "购买日期不能为空")
     private String purchaseDate;
 
     /**

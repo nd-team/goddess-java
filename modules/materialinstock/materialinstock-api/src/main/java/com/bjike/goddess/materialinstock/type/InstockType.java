@@ -18,7 +18,12 @@ public enum InstockType {
     /**
      * 外借入库
      */
-    LEND(1);
+    LEND(1),
+
+    /**
+     * 调动入库
+     */
+    TRANSFER(2);
 
     private int code;
 

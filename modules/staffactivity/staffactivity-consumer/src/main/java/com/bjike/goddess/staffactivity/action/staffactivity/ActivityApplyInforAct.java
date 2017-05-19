@@ -14,9 +14,11 @@ import com.bjike.goddess.staffactivity.to.ActivityApplyInforTO;
 import com.bjike.goddess.staffactivity.vo.ActivityApplyInforVO;
 import com.bjike.goddess.staffactivity.vo.ActivityStaffListVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,6 +37,42 @@ public class ActivityApplyInforAct {
     @Autowired
     private ActivityApplyInforAPI activityApplyInforAPI;
 
+    /**
+     * 根据id查询活动申请信息
+     *
+     * @param id 活动申请信息唯一标识
+     * @return class ActivityApplyInforVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/activityapplyinfor/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ActivityApplyInforBO bo = activityApplyInforAPI.findById(id);
+            ActivityApplyInforVO vo = BeanTransform.copyProperties(bo, ActivityApplyInforVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 活动申请信息dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ActivityApplyInforDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = activityApplyInforAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    
     /**
      * 分页查询活动申请信息
      *
