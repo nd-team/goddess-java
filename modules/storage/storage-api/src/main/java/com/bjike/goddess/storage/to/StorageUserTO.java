@@ -22,11 +22,10 @@ public class StorageUserTO extends BaseTO {
     }
 
     /**
-     * 用户名
+     * 用户Token
+     * 从header 获取
      */
-    @NotBlank(message = "用户名", groups = StorageUserTO.REGISTER.class)
-
-    private String username;
+    private String userToken;
 
     /**
      * 模块名
@@ -51,12 +50,12 @@ public class StorageUserTO extends BaseTO {
      */
     private Status status;
 
-    public String getUsername() {
-        return username;
+    public String getUserToken() {
+        return userToken;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
     public String getModuleName() {
