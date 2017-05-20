@@ -5,10 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.fundrecords.bo.AnalyzeBO;
-import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
-import com.bjike.goddess.fundrecords.bo.FundRecordBO;
-import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
+import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.entity.FundRecord;
 import com.bjike.goddess.fundrecords.to.CollectTO;
@@ -199,7 +196,325 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
-    public AnalyzeBO analyze(CollectTO to) throws SerException {
+    public List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException {
+
+        //查询month月数据
+        StringBuilder sql = new StringBuilder();
+        //查询本表数据sql
+        String currentTabSql = "select area,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                + year + " and month(recordDate) = " + month;
+        //查询记账凭证数据sql
+        String voucherTabSql = "select area,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+
+        sql.append(" select records.area,sum(records.income) as income , sum(records.expenditure) as expenditure from ");
+        sql.append(" ( " + currentTabSql);
+        sql.append(" UNION ALL ");
+        sql.append(voucherTabSql + " ) ");
+        sql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(area)) {
+            sql.append(" and records.area = '" + area + "'");
+        }
+        sql.append(" GROUP BY records.area ");
+
+        String[] fileds = new String[]{"area", "income", "expenditure"};
+
+        List<AreaAnalyzeBO> boList = super.findBySql(sql.toString(), AreaAnalyzeBO.class, fileds);
+
+
+        //查询month-1月数据
+        StringBuilder lastSql = new StringBuilder();
+        //查询本表数据sql
+        String lastCurrentTabSql = "";
+        //查询记账凭证数据sql
+        String lastVoucherTabSql = "";
+
+        if (month == 12) {
+            lastCurrentTabSql = "select area,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + (year - 1) + " and month(recordDate) =  1 ";
+
+            lastVoucherTabSql = "select area,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + (year - 1) + " and month(voucherDate) = 1 ";
+        } else {
+            lastCurrentTabSql = "select area,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + year + " and month(recordDate) = " + (month - 1);
+
+            lastVoucherTabSql = "select area,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + year + " and month(voucherDate) = " + (month - 1);
+        }
+
+
+        lastSql.append(" select records.area,sum(records.income),sum(records.expenditure) from ");
+        lastSql.append(" ( " + lastCurrentTabSql);
+        lastSql.append(" UNION ALL ");
+        lastSql.append(lastVoucherTabSql + " ) ");
+        lastSql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(area)) {
+            lastSql.append(" and records.area = '" + area + "'");
+        }
+        lastSql.append(" GROUP BY records.area ");
+
+        //查询所有List
+        List<FundRecordBO> allList = findAllBO(new FundRecordDTO(), new VoucherGenerateDTO());
+
+        List<AreaAnalyzeBO> lastBOList = super.findBySql(lastSql.toString(), AreaAnalyzeBO.class, fileds);
+
+        //总收入
+        Double allIncome = allList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //总支出
+        Double allExpenditure = allList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        for (AreaAnalyzeBO bo : boList) {
+            for (AreaAnalyzeBO lastBO : lastBOList) {
+
+                if (bo.getArea().equals(lastBO.getArea())) {
+
+                    bo.setLastIncome(lastBO.getIncome());
+                    bo.setLastExpenditure(lastBO.getExpenditure());
+                    bo.setIncomeSubtract(bo.getIncome() - lastBO.getIncome());
+                    bo.setExpenditureSubtract(bo.getExpenditure() - lastBO.getExpenditure());
+                    if (allIncome != 0.0) {
+                        bo.setIncomeRate(bo.getIncome() / allIncome);
+                    }
+                    if (allExpenditure != 0.0) {
+                        bo.setExpenditureRate(bo.getExpenditure() / allExpenditure);
+                    }
+                    DecimalFormat df = new java.text.DecimalFormat("#.00");
+                    if (bo.getLastIncome() != 0.0) {
+                        if (bo.getIncome() - bo.getLastIncome() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setIncomeGrowRate(df.format((bo.getIncome() - bo.getLastIncome()) / bo.getLastIncome() * 100) + "%");
+                        }
+                    }
+                    if (bo.getLastExpenditure() != 0.0) {
+                        if (bo.getExpenditure() - bo.getLastExpenditure() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setExpenditureGrowRate(df.format((bo.getExpenditure() - bo.getLastExpenditure()) / bo.getLastExpenditure() * 100) + "%");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String group) throws SerException {
+
+        //查询month月数据
+        StringBuilder sql = new StringBuilder();
+        //查询本表数据sql
+        String currentTabSql = "select projectGroup,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                + year + " and month(recordDate) = " + month;
+        //查询记账凭证数据sql
+        String voucherTabSql = "select projectGroup,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+
+        sql.append(" select records.projectGroup,sum(records.income) as income , sum(records.expenditure) as expenditure from ");
+        sql.append(" ( " + currentTabSql);
+        sql.append(" UNION ALL ");
+        sql.append(voucherTabSql + " ) ");
+        sql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(group)) {
+            sql.append(" and records.projectGroup = '" + group + "'");
+        }
+        sql.append(" GROUP BY records.projectGroup ");
+
+        String[] fileds = new String[]{"projectGroup", "income", "expenditure"};
+
+        List<GroupAnalyzeBO> boList = super.findBySql(sql.toString(), GroupAnalyzeBO.class, fileds);
+
+
+        //查询month-1月数据
+        StringBuilder lastSql = new StringBuilder();
+
+        //查询本表数据sql
+        String lastCurrentTabSql = "";
+        //查询记账凭证数据sql
+        String lastVoucherTabSql = "";
+
+        if (month == 12) {
+            lastCurrentTabSql = "select projectGroup,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + (year - 1) + " and month(recordDate) = 1 ";
+
+            lastVoucherTabSql = "select projectGroup,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + (year - 1) + " and month(voucherDate) = 1 ";
+        } else {
+            lastCurrentTabSql = "select projectGroup,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + year + " and month(recordDate) = " + (month - 1);
+
+            lastVoucherTabSql = "select projectGroup,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + year + " and month(voucherDate) = " + (month - 1);
+        }
+
+
+        lastSql.append(" select records.projectGroup,sum(records.income),sum(records.expenditure) from ");
+        lastSql.append(" ( " + lastCurrentTabSql);
+        lastSql.append(" UNION ALL ");
+        lastSql.append(lastVoucherTabSql + " ) ");
+        lastSql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(group)) {
+            lastSql.append(" and records.projectGroup = '" + group + "'");
+        }
+        lastSql.append(" GROUP BY records.projectGroup ");
+
+        //查询所有List
+        List<FundRecordBO> allList = findAllBO(new FundRecordDTO(), new VoucherGenerateDTO());
+
+        List<GroupAnalyzeBO> lastBOList = super.findBySql(lastSql.toString(), GroupAnalyzeBO.class, fileds);
+
+        //总收入
+        Double allIncome = allList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //总支出
+        Double allExpenditure = allList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        for (GroupAnalyzeBO bo : boList) {
+            for (GroupAnalyzeBO lastBO : lastBOList) {
+
+                if (bo.getProjectGroup().equals(lastBO.getProjectGroup())) {
+
+                    bo.setLastIncome(lastBO.getIncome());
+                    bo.setLastExpenditure(lastBO.getExpenditure());
+                    bo.setIncomeSubtract(bo.getIncome() - lastBO.getIncome());
+                    bo.setExpenditureSubtract(bo.getExpenditure() - lastBO.getExpenditure());
+                    if (allIncome != 0.0) {
+                        bo.setIncomeRate(bo.getIncome() / allIncome);
+                    }
+                    if (allExpenditure != 0.0) {
+                        bo.setExpenditureRate(bo.getExpenditure() / allExpenditure);
+                    }
+                    DecimalFormat df = new java.text.DecimalFormat("#.00");
+                    if (bo.getLastIncome() != 0.0) {
+                        if (bo.getIncome() - bo.getLastIncome() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setIncomeGrowRate(df.format((bo.getIncome() - bo.getLastIncome()) / bo.getLastIncome() * 100) + "%");
+                        }
+                    }
+                    if (bo.getLastExpenditure() != 0.0) {
+                        if (bo.getExpenditure() - bo.getLastExpenditure() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setExpenditureGrowRate(df.format((bo.getExpenditure() - bo.getLastExpenditure()) / bo.getLastExpenditure() * 100) + "%");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException {
+
+        //查询month月数据
+        StringBuilder sql = new StringBuilder();
+        //查询本表数据sql
+        String currentTabSql = "select project,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                + year + " and month(recordDate) = " + month;
+        //查询记账凭证数据sql
+        String voucherTabSql = "select projectName,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+
+        sql.append(" select records.project,sum(records.income) as income , sum(records.expenditure) as expenditure from ");
+        sql.append(" ( " + currentTabSql);
+        sql.append(" UNION ALL ");
+        sql.append(voucherTabSql + " ) ");
+        sql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(project)) {
+            sql.append(" and records.project = '" + project + "'");
+        }
+        sql.append(" GROUP BY records.project ");
+
+        String[] fileds = new String[]{"project", "income", "expenditure"};
+
+        List<ProjectAnalyzeBO> boList = super.findBySql(sql.toString(), ProjectAnalyzeBO.class, fileds);
+
+
+        //查询month-1月数据
+        StringBuilder lastSql = new StringBuilder();
+        //查询本表数据sql
+        String lastCurrentTabSql = "";
+        //查询记账凭证数据sql
+        String lastVoucherTabSql = "";
+        if (month == 12) {
+            lastCurrentTabSql = "select project,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + (year - 1) + " and month(recordDate) = 1 ";
+
+            lastVoucherTabSql = "select projectName,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + (year - 1) + " and month(voucherDate) = 1 ";
+        } else {
+            lastCurrentTabSql = "select project,income,expenditure from fundrecords_fundrecord where year(recordDate) = "
+                    + year + " and month(recordDate) = " + (month - 1);
+            lastVoucherTabSql = "select projectName,borrowmoney,loanmoney from voucher_vouchergenerate where year(voucherDate) = "
+                    + year + " and month(voucherDate) = " + (month - 1);
+        }
+
+
+        lastSql.append(" select records.project,sum(records.income),sum(records.expenditure) from ");
+        lastSql.append(" ( " + lastCurrentTabSql);
+        lastSql.append(" UNION ALL ");
+        lastSql.append(lastVoucherTabSql + " ) ");
+        lastSql.append(" as records where 0 = 0");
+        if (!StringUtils.isEmpty(project)) {
+            lastSql.append(" and records.project = '" + project + "'");
+        }
+        lastSql.append(" GROUP BY records.project ");
+
+        //查询所有List
+        List<FundRecordBO> allList = findAllBO(new FundRecordDTO(), new VoucherGenerateDTO());
+
+        List<ProjectAnalyzeBO> lastBOList = super.findBySql(lastSql.toString(), ProjectAnalyzeBO.class, fileds);
+
+        //总收入
+        Double allIncome = allList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
+        //总支出
+        Double allExpenditure = allList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
+
+        for (ProjectAnalyzeBO bo : boList) {
+            for (ProjectAnalyzeBO lastBO : lastBOList) {
+
+                if (bo.getProject().equals(lastBO.getProject())) {
+
+                    bo.setLastIncome(lastBO.getIncome());
+                    bo.setLastExpenditure(lastBO.getExpenditure());
+                    bo.setIncomeSubtract(bo.getIncome() - lastBO.getIncome());
+                    bo.setExpenditureSubtract(bo.getExpenditure() - lastBO.getExpenditure());
+                    if (allIncome != 0.0) {
+                        bo.setIncomeRate(bo.getIncome() / allIncome);
+                    }
+                    if (allExpenditure != 0.0) {
+                        bo.setExpenditureRate(bo.getExpenditure() / allExpenditure);
+                    }
+                    DecimalFormat df = new java.text.DecimalFormat("#.00");
+                    if (bo.getLastIncome() != 0.0) {
+                        if (bo.getIncome() - bo.getLastIncome() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setIncomeGrowRate(df.format((bo.getIncome() - bo.getLastIncome()) / bo.getLastIncome() * 100) + "%");
+                        }
+                    }
+                    if (bo.getLastExpenditure() != 0.0) {
+                        if (bo.getExpenditure() - bo.getLastExpenditure() == 0) {
+                            bo.setIncomeGrowRate("0.00%");
+                        } else {
+                            bo.setExpenditureGrowRate(df.format((bo.getExpenditure() - bo.getLastExpenditure()) / bo.getLastExpenditure() * 100) + "%");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<AnalyzeBO> analyze(CollectTO to) throws SerException {
+
         //查询本月记录
         List<FundRecordBO> boList = getByMonth(to);
         //查询上月记录
@@ -246,7 +561,8 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         if (lastExpenditure != 0.0) {
             analyzeBO.setExpenditureGrowRate(df.format((expenditure - lastExpenditure) / lastExpenditure) + "%");
         }
-        return analyzeBO;
+        return null;
+//        return analyzeBO;
     }
 
     //排序并分页数据

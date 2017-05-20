@@ -2,10 +2,7 @@ package com.bjike.goddess.fundrecords.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.fundrecords.bo.AnalyzeBO;
-import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
-import com.bjike.goddess.fundrecords.bo.FundRecordBO;
-import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
+import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.entity.FundRecord;
 import com.bjike.goddess.fundrecords.to.CollectTO;
@@ -87,5 +84,35 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
      * @param to 分析条件
      * @return 分析结果集
      */
-    AnalyzeBO analyze(CollectTO to) throws SerException;
+    List<AnalyzeBO> analyze(CollectTO to) throws SerException;
+
+    /**
+     * 地区分析
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param area  地区
+     * @return 地区分析结果集
+     */
+    List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
+
+    /**
+     * 项目组分析
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param group 项目组
+     * @return 项目组分析结果集
+     */
+    List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String group) throws SerException;
+
+    /**
+     * 项目分析
+     *
+     * @param year    年份
+     * @param month   月份
+     * @param project 项目
+     * @return 项目分析结果集
+     */
+    List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
 }

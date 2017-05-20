@@ -23,4 +23,8 @@
 
 	<dubbo:reference interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
+
 </beans>
