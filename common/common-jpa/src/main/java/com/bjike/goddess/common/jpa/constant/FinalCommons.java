@@ -14,6 +14,7 @@ public class FinalCommons {
     public static final String ID = "id";
     public static final String USERNAME = "username";
     public static final String STATUS = "status";
+    public static final String SYS_NO = "systemNO";
 
     public static final String DATETIME = "dateTime";
     public static final String TIME = "time";

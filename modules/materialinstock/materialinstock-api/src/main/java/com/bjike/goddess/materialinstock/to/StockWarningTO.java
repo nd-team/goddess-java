@@ -31,6 +31,12 @@ public class StockWarningTO extends BaseTO {
     private String projectGroup;
 
     /**
+     * 物资类型
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资类型不能为空")
+    private String materialType;
+
+    /**
      * 设备名称
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "设备名称不能为空")
@@ -47,13 +53,6 @@ public class StockWarningTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "上限值不能为空")
     private Double upperValue;
-
-    /**
-     * 物资类型
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "物资类型不能为空")
-    private String materialType;
-
 
     public String getArea() {
         return area;

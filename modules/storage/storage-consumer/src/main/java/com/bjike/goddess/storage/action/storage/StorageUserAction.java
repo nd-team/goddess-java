@@ -1,12 +1,16 @@
 package com.bjike.goddess.storage.action.storage;
 
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import com.bjike.goddess.storage.bo.StorageUserBO;
 import com.bjike.goddess.storage.to.StorageUserTO;
+import com.bjike.goddess.storage.vo.StorageUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 存储模块用户
@@ -36,11 +42,14 @@ public class StorageUserAction {
      * @param storageUserTO 存储用户传输对象
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/register")
-    public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result) throws ActException {
+    public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+            storageUserTO.setUserToken(userToken);
             StorageUserBO storageUserBO = storageUserAPI.register(storageUserTO);
-            return ActResult.initialize(storageUserBO);
+            return ActResult.initialize(BeanTransform.copyProperties(storageUserBO, StorageUserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

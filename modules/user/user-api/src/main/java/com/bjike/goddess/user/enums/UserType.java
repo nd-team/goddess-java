@@ -14,7 +14,7 @@ public enum UserType {
     /**
      * 用户
      */
-    CUSTOMER(0),
+    EMPLOYEE(0),
     /**
      * 管理员
      */

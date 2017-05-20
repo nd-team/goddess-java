@@ -20,6 +20,12 @@ import javax.persistence.*;
 @Table(name = "user_position")
 public class Position extends BaseEntity {
     /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
+
+    /**
      * 职位名
      */
     @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '职位名' ")
@@ -44,6 +50,14 @@ public class Position extends BaseEntity {
     @JoinColumn(name = "parent_id", columnDefinition = "VARCHAR(36) COMMENT '父职位' ")
     private Position parent;
 
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getName() {
         return name;

@@ -24,7 +24,7 @@ public class UserDetailVO   {
     /**
      * 用户类型
      */
-    private UserType userType = UserType.CUSTOMER;
+    private UserType userType = UserType.EMPLOYEE;
     /**
      * 所在地址
      */

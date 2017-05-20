@@ -36,13 +36,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     private UserSer userSer;
 
 
-    @Cacheable
-    @Override
-    public Boolean existUsername(String username) throws SerException {
-        UserBO bo = userSer.findByUsername(username);
-        return null != bo;
-
-    }
 
     @Override
     public void verifyAndSendCode(String phone) throws SerException {
@@ -82,15 +75,20 @@ public class UserRegisterSerImpl implements UserRegisterSer {
      */
     private void saveUserByDTO(UserRegisterTO registerTO) throws SerException {
         try {
-            String no = userSer.findByMaxField("employeeNumber",User.class);
-            User user = new User();
-            user.setUsername(registerTO.getUsername());
-            user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
-            user.setUserType(UserType.CUSTOMER);
-            user.setCreateTime(LocalDateTime.now());
-            user.setStatus(Status.THAW);
-            user.setEmployeeNumber(SeqUtil.generate(no));
-            userSer.save(user);
+            if(null!=userSer.findByUsername(registerTO.getUsername())){
+                String employeeNumber = userSer.findByMaxField("employeeNumber",User.class);
+                User user = new User();
+                user.setUsername(registerTO.getUsername());
+                user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
+                user.setUserType(UserType.ADMIN);
+                user.setCreateTime(LocalDateTime.now());
+                user.setStatus(Status.THAW);
+                user.setEmployeeNumber(SeqUtil.generateEmp(employeeNumber));
+                userSer.save(user);
+            }else {
+                throw  new SerException(registerTO.getUsername()+"已被注册!");
+            }
+
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }

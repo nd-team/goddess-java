@@ -21,6 +21,11 @@ public class StorageUserTO extends BaseTO {
     public interface REGISTER {
     }
 
+    /**
+     * 用户Token
+     * 从header 获取
+     */
+    private String userToken;
 
     /**
      * 模块名
@@ -45,6 +50,13 @@ public class StorageUserTO extends BaseTO {
      */
     private Status status;
 
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 
     public String getModuleName() {
         return moduleName;

@@ -26,9 +26,6 @@ import java.util.List;
 public class CustomIntercept implements Interceptor {
 
     @Autowired
-    private StorageUserAPI storageUserAPI;
-
-    @Autowired
     private UserAPI userAPI;
     @Autowired
     private PermissionAPI permissionAPI;

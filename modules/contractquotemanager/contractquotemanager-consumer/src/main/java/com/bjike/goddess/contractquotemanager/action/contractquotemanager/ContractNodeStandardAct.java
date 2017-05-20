@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
@@ -99,6 +100,7 @@ public class ContractNodeStandardAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ContractNodeStandardTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -117,6 +119,7 @@ public class ContractNodeStandardAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -134,6 +137,7 @@ public class ContractNodeStandardAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ContractNodeStandardTO to, BindingResult result) throws ActException {
         try {
@@ -152,6 +156,7 @@ public class ContractNodeStandardAct {
      * @des class ContractNodeStandardVO 根据日期(date)、地区(area)、项目组(project)和节点(node)汇总
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/collect")
     public Result collect(ContractNodeStandardTO to, HttpServletRequest request) throws ActException {
         try {
@@ -173,6 +178,7 @@ public class ContractNodeStandardAct {
      * @des 根据地区(area)、项目组(project)搜索
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/search")
     public Result search(ContractNodeStandardTO to, HttpServletRequest request) throws ActException {
         try {

@@ -18,6 +18,11 @@ import javax.persistence.*;
 @Table(name = "user_department")
 public class Department extends BaseEntity {
     /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
+    /**
      * 部门名
      */
     @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) comment '部门名' ")
@@ -47,6 +52,14 @@ public class Department extends BaseEntity {
      */
     @Column(name = "is_hasChild", columnDefinition = "TINYINT(1) COMMENT '是否有子节点'", nullable = false)
     private Boolean hasChild;
+
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getName() {
         return name;

@@ -41,7 +41,8 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
             throw new SerException("id不能为空");
         }
         SalaryConfirmRecord  salaryConfirmRecord = super.findById(id);
-        return BeanTransform.copyProperties( salaryConfirmRecord , SalaryConfirmRecordBO.class);
+        SalaryConfirmRecordBO bo = BeanTransform.copyProperties( salaryConfirmRecord , SalaryConfirmRecordBO.class,"entryTime");
+        return bo;
     }
 
     @Override

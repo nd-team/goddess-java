@@ -4,8 +4,6 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialbuy.type.AuditState;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.MessageInterpolator;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -20,9 +18,14 @@ import javax.validation.constraints.NotNull;
  */
 public class MaterialBuyTO extends BaseTO {
 
-    public interface MaterialBuyAdd{}
-    public interface MaterialBuyEdit{}
-    public interface PrincipalAudit{}
+    public interface MaterialBuyAdd {
+    }
+
+    public interface MaterialBuyEdit {
+    }
+
+    public interface PrincipalAudit {
+    }
 
     /**
      * 地区
@@ -87,13 +90,13 @@ public class MaterialBuyTO extends BaseTO {
     /**
      * 单价
      */
-    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "单价必须大于0")
+    @NotNull(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "单价不能为空")
     private Double unitPrice;
 
     /**
      * 总额
      */
-    @DecimalMin(value = "0.00", inclusive = false, groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "总额必须大于0")
+    @NotNull(groups = {MaterialBuyTO.MaterialBuyAdd.class, MaterialBuyTO.MaterialBuyEdit.class}, message = "总额不能为空")
     private Double totalSum;
 
     /**
