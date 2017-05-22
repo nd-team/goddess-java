@@ -13,14 +13,17 @@ import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.to.UserTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -160,9 +163,12 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
         String token = RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
-        RpcTransmit.transmitUserToken(token);
+
         if (userBOList != null && userBOList.size() > 0) {
-            userAPI.deleteUser(id);
+            for(UserBO userbo : userBOList){
+                RpcTransmit.transmitUserToken(token);
+                userAPI.deleteUser(userbo.getId());
+            }
         }
         super.remove(id);
     }
