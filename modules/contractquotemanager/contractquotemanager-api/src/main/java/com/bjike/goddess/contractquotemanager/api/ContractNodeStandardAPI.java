@@ -3,7 +3,7 @@ package com.bjike.goddess.contractquotemanager.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
-import com.bjike.goddess.contractquotemanager.bo.FilterTO;
+import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
 

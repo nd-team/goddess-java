@@ -1,4 +1,4 @@
-package com.bjike.goddess.contractquotemanager.bo;
+package com.bjike.goddess.contractquotemanager.to;
 
 import java.io.Serializable;
 

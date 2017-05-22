@@ -188,7 +188,10 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
 
     @Override
     public RecommendRotationBO delete(String id) throws SerException {
+        UserBO user = userAPI.currentUser();
         RecommendRotation entity = super.findById(id);
+        if (!user.getUsername().equals(entity.getRecommend()))
+            throw new SerException("不能删除他人的轮换推荐");
         if (null == entity)
             throw new SerException("该数据不存在");
         super.remove(entity);

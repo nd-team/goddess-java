@@ -5,7 +5,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
-import com.bjike.goddess.contractquotemanager.bo.FilterTO;
+import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.regionalprogresscollect.bo.DayTargetBO;
 import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
 import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
