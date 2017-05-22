@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffpay.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.staffpay.enums.ConfirmStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,42 +26,42 @@ public class WaitPay extends BaseEntity {
      * 月份
      */
     @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
-    private Integer month;
+    private Integer months;
 
     /**
      * 计薪周期（开始）
      */
-    @Column(name = "startPaidCycle", nullable = false, columnDefinition = "DATE   COMMENT '计薪周期（开始）'")
+    @Column(name = "startPaidCycle",  columnDefinition = "DATE   COMMENT '计薪周期（开始）'")
     private LocalDate startPaidCycle;
 
     /**
      * 计薪周期（结束）
      */
-    @Column(name = "endPaidCycle", nullable = false, columnDefinition = "DATE   COMMENT '计薪周期（结束）'")
+    @Column(name = "endPaidCycle",  columnDefinition = "DATE   COMMENT '计薪周期（结束）'")
     private LocalDate endPaidCycle;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "name",  columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
      * 部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String department;
 
     /**
      * 岗位
      */
-    @Column(name = "jobs", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "jobs", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String jobs;
 
     /**
@@ -175,64 +176,64 @@ public class WaitPay extends BaseEntity {
     /**
      * 是否缴纳个人所得税
      */
-    @Column(name = "is_incomeTax", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否缴纳个人所得税'", insertable = false)
+    @Column(name = "is_incomeTax", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否缴纳个人所得税'", insertable = false)
     private Boolean incomeTax;
 
     /**
      * 本月第一次发工资
      */
-    @Column(name = "firstSalary", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本月第一次发工资'")
+    @Column(name = "firstSalary", columnDefinition = "DECIMAL(10,2)   COMMENT '本月第一次发工资'")
     private Double firstSalary;
 
     /**
      * 本月第二次发工资
      */
-    @Column(name = "secondSalary", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本月第二次发工资'")
+    @Column(name = "secondSalary", columnDefinition = "DECIMAL(10,2)   COMMENT '本月第二次发工资'")
     private Double secondSalary;
 
     /**
      * 本月需缴发票金额
      */
-    @Column(name = "invoiceValue", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本月需缴发票金额'")
+    @Column(name = "invoiceValue", columnDefinition = "DECIMAL(10,2)   COMMENT '本月需缴发票金额'")
     private Double invoiceValue;
 
     /**
      * 累计已缴发票金额
      */
-    @Column(name = "paidInvoiceAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '累计已缴发票金额'")
+    @Column(name = "paidInvoiceAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '累计已缴发票金额'")
     private Double paidInvoiceAmount;
 
     /**
      * 是否确认第一次工资发放记录
      */
-    @Column(name = "is_confirmFirstSalary", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否确认第一次工资发放记录'", insertable = false)
-    private Boolean confirmFirstSalary;
+    @Column(name = "confirmFirstSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认第一次工资发放记录(是/否)'")
+    private ConfirmStatus confirmFirstSalary;
 
     /**
      * 是否确认工资
      */
-    @Column(name = "is_confirmSalary", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否确认工资'", insertable = false)
-    private Boolean confirmSalary;
+    @Column(name = "confirmSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认工资(是/否)'")
+    private ConfirmStatus confirmSalary;
 
     /**
      * 第一次付款时间
      */
-    @Column(name = "firstPayTime", nullable = false, columnDefinition = "DATE   COMMENT '第一次付款时间'")
+    @Column(name = "firstPayTime",  columnDefinition = "DATE   COMMENT '第一次付款时间'")
     private LocalDate firstPayTime;
 
     /**
      * 第二次付款时间
      */
-    @Column(name = "secondPayTime", nullable = false, columnDefinition = "DATE   COMMENT '第二次付款时间'")
+    @Column(name = "secondPayTime", columnDefinition = "DATE   COMMENT '第二次付款时间'")
     private LocalDate secondPayTime;
 
 
-    public Integer getMonth() {
-        return month;
+    public Integer getMonths() {
+        return months;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public LocalDate getStartPaidCycle() {
@@ -467,19 +468,19 @@ public class WaitPay extends BaseEntity {
         this.paidInvoiceAmount = paidInvoiceAmount;
     }
 
-    public Boolean getConfirmFirstSalary() {
+    public ConfirmStatus getConfirmFirstSalary() {
         return confirmFirstSalary;
     }
 
-    public void setConfirmFirstSalary(Boolean confirmFirstSalary) {
+    public void setConfirmFirstSalary(ConfirmStatus confirmFirstSalary) {
         this.confirmFirstSalary = confirmFirstSalary;
     }
 
-    public Boolean getConfirmSalary() {
+    public ConfirmStatus getConfirmSalary() {
         return confirmSalary;
     }
 
-    public void setConfirmSalary(Boolean confirmSalary) {
+    public void setConfirmSalary(ConfirmStatus confirmSalary) {
         this.confirmSalary = confirmSalary;
     }
 

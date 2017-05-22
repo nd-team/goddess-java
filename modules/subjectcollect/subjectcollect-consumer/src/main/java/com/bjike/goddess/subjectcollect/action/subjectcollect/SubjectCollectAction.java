@@ -156,6 +156,7 @@ public class SubjectCollectAction {
      * @des 根据id删除科目汇总表
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

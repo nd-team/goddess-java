@@ -106,11 +106,11 @@ public class PayRecordAction {
         }
     }
     /**
-     * 汇总已付款记录
+     * 地区汇总
      *
      * @param areas 地区
      * @return class AreaCollectVO
-     * @des 汇总已付款记录
+     * @des 地区汇总已付款记录
      * @version v1
      */
     @GetMapping("v1/collectArea")
@@ -140,11 +140,11 @@ public class PayRecordAction {
         }
     }
     /**
-     * 汇总已付款记录
+     * 项目汇总
      *
      * @param projects 项目
      * @return class ProjectCollectVO
-     * @des 汇总已付款记录
+     * @des 项目汇总已付款记录
      * @version v1
      */
     @GetMapping("v1/collectProject")

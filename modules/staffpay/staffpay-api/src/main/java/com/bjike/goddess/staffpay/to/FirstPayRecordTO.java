@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffpay.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.staffpay.enums.ConfirmStatus;
 
 /**
  * 第一次已付款记录
@@ -16,7 +17,7 @@ public class FirstPayRecordTO extends BaseTO {
     /**
      * 月份
      */
-    private Integer month;
+    private Integer months;
 
     /**
      * 计薪周期（开始）
@@ -166,12 +167,12 @@ public class FirstPayRecordTO extends BaseTO {
     /**
      * 是否确认第一次工资发放记录
      */
-    private Boolean confirmFirstSalary;
+    private ConfirmStatus confirmFirstSalary;
 
     /**
      * 是否确认工资
      */
-    private Boolean confirmSalary;
+    private ConfirmStatus confirmSalary;
 
     /**
      * 第一次付款时间
@@ -184,12 +185,12 @@ public class FirstPayRecordTO extends BaseTO {
     private String secondPayTime;
 
 
-    public Integer getMonth() {
-        return month;
+    public Integer getMonths() {
+        return months;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public String getStartPaidCycle() {
@@ -424,19 +425,19 @@ public class FirstPayRecordTO extends BaseTO {
         this.paidInvoiceAmount = paidInvoiceAmount;
     }
 
-    public Boolean getConfirmFirstSalary() {
+    public ConfirmStatus getConfirmFirstSalary() {
         return confirmFirstSalary;
     }
 
-    public void setConfirmFirstSalary(Boolean confirmFirstSalary) {
+    public void setConfirmFirstSalary(ConfirmStatus confirmFirstSalary) {
         this.confirmFirstSalary = confirmFirstSalary;
     }
 
-    public Boolean getConfirmSalary() {
+    public ConfirmStatus getConfirmSalary() {
         return confirmSalary;
     }
 
-    public void setConfirmSalary(Boolean confirmSalary) {
+    public void setConfirmSalary(ConfirmStatus confirmSalary) {
         this.confirmSalary = confirmSalary;
     }
 

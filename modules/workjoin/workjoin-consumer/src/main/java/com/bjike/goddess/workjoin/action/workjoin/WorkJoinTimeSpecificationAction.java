@@ -139,6 +139,7 @@ public class WorkJoinTimeSpecificationAction {
      * @des 根据用户id删除工作交接时间规范记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

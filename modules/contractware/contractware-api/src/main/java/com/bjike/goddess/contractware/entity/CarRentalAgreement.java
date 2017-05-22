@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -24,8 +25,8 @@ public class CarRentalAgreement extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "time", columnDefinition = "DATETIME   COMMENT '时间'")
-    private LocalDateTime time;
+    @Column(name = "times", columnDefinition = "DATE   COMMENT '时间'")
+    private LocalDate times;
 
     /**
      * 合同名称
@@ -54,8 +55,8 @@ public class CarRentalAgreement extends BaseEntity {
     /**
      * 交接时间
      */
-    @Column(name = "heirTime", columnDefinition = "VARCHAR(255)   COMMENT '交接时间'")
-    private String heirTime;
+    @Column(name = "time", columnDefinition = "DATE   COMMENT '交接时间'")
+    private LocalDate heirTime;
 
     /**
      * 交接人
@@ -88,12 +89,12 @@ public class CarRentalAgreement extends BaseEntity {
     private String remark;
 
 
-    public LocalDateTime getTime() {
-        return time;
+    public LocalDate getTimes() {
+        return times;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    public void setTimes(LocalDate times) {
+        this.times = times;
     }
 
     public String getContractName() {
@@ -128,11 +129,11 @@ public class CarRentalAgreement extends BaseEntity {
         this.principal = principal;
     }
 
-    public String getHeirTime() {
+    public LocalDate getHeirTime() {
         return heirTime;
     }
 
-    public void setHeirTime(String heirTime) {
+    public void setHeirTime(LocalDate heirTime) {
         this.heirTime = heirTime;
     }
 

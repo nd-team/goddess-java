@@ -77,15 +77,5 @@ public interface ContractorSer extends Ser<Contractor, ContractorDTO> {
     default void removeContractor(String id) throws SerException {
 
     }
-    /**
-     * 根据名字查询
-     *
-     * @param contractorTO
-     * @throws SerException
-     */
-    default ContractorBO findByName(ContractorTO contractorTO) throws SerException{
-        return null;
-    }
-
 
 }
