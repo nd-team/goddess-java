@@ -84,7 +84,7 @@ public class CollectAreaDetailVO implements Serializable{
     /**
      * 详细情况
      */
-    private String detailInfo;
+    private String remark;
 
     public String getArea() {
         return area;
@@ -222,11 +222,12 @@ public class CollectAreaDetailVO implements Serializable{
         this.is_flow = is_flow;
     }
 
-    public String getDetailInfo() {
-        return detailInfo;
+
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDetailInfo(String detailInfo) {
-        this.detailInfo = detailInfo;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

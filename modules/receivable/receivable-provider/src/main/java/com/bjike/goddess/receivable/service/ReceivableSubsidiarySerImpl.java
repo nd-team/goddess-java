@@ -494,29 +494,29 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         StringBuilder sb = new StringBuilder();
 
 
-        sb.append(" select b.name, a.area,a.innerName,a.taskPrice,a.pactSize,a.finishTime, ");
+        sb.append(" select a.area,a.innerName,a.taskPrice,a.pactSize,a.finishTime, ");
         sb.append(" a.checkTime ,a.auditTime,a.countTime,a.billTime,a.planTime,a.accountTime, ");
-        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,a.is_flow, ");
+        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,b.name,a.is_flow, ");
         sb.append(" a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
         sb.append(" where a.contractor_id = b.id and a.area=%s ");
         sb.append(" union ");
-        sb.append(" select '合计' as name,null as area,null as innerName, ");
+        sb.append(" select '合计' as area,null as innerName, ");
         sb.append(" sum(taskPrice) as taskPrice,sum(pactSize) as pactSize, ");
         sb.append(" null as finishTime,null as checkTime, null as auditTime, ");
         sb.append(" null as countTime,null as billTime,null as planTime, ");
         sb.append(" null as accountTime,sum(accountMoney)as accountMoney, ");
         sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes , ");
-        sb.append(" sum(afterTax) as afterTax,null as is_flow,null as remark ");
-        sb.append(" from (select b.name, a.area,a.innerName,a.taskPrice,a.pactSize, ");
+        sb.append(" sum(afterTax) as afterTax,null as name,null as is_flow,null as remark ");
+        sb.append(" from (select a.area,a.innerName,a.taskPrice,a.pactSize, ");
         sb.append(" a.finishTime,a.checkTime ,a.auditTime,a.countTime,a.billTime, ");
         sb.append(" a.planTime,a.accountTime,a.accountMoney,a.managementFee, ");
-        sb.append(" a.taxes,a.afterTax,a.is_flow,a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
+        sb.append(" a.taxes,a.afterTax,b.name,a.is_flow,a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
         sb.append(" where a.contractor_id = b.id and a.area=%s )c ");
         String sql = sb.toString();
         sql = String.format(sql, areaStr,areaStr);
-        String[] fields = new String[]{"name","area", "innerName", "taskPrice", "pactSize", "finishTime", "checkTime",
+        String[] fields = new String[]{"area", "innerName", "taskPrice", "pactSize", "finishTime", "checkTime",
                 "auditTime", "countTime", "billTime", "planTime", "accountTime", "managementFee", "accountMoney", "taxes", "afterTax",
-                 "is_flow", "remark"};
+                "name", "is_flow", "remark"};
         List<CollectAreaDetailBO> collectAreaDetailBOS = super.findBySql(sql, CollectAreaDetailBO.class, fields);
 
         /*ReceivableSubsidiaryTO to = new ReceivableSubsidiaryTO();
@@ -530,23 +530,23 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         String areaStr = StringUtils.join(area, ",");
 
         StringBuilder sb = new StringBuilder();
-        sb.append(" select b.name, a.area,a.innerName,a.taskPrice,a.pactSize,a.finishTime, ");
+        sb.append(" select a.area,a.innerName,a.taskPrice,a.pactSize,a.finishTime, ");
         sb.append(" a.checkTime ,a.auditTime,a.countTime,a.billTime,a.planTime,a.accountTime, ");
-        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,a.is_flow, ");
+        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,b.name,a.is_flow, ");
         sb.append(" a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
         sb.append(" where a.contractor_id = b.id and a.area=%s ");
         sb.append(" union ");
-        sb.append(" select '合计' as name,null as area,null as innerName, ");
+        sb.append(" select '合计' as area,null as innerName, ");
         sb.append(" sum(taskPrice) as taskPrice,sum(pactSize) as pactSize, ");
         sb.append(" null as finishTime,null as checkTime, null as auditTime, ");
         sb.append(" null as countTime,null as billTime,null as planTime, ");
         sb.append(" null as accountTime,sum(accountMoney)as accountMoney, ");
         sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes , ");
-        sb.append(" sum(afterTax) as afterTax,null as is_flow,null as remark ");
-        sb.append(" from (select b.name, a.area,a.innerName,a.taskPrice,a.pactSize, ");
+        sb.append(" sum(afterTax) as afterTax,null as name,null as is_flow,null as remark ");
+        sb.append(" from (select a.area,a.innerName,a.taskPrice,a.pactSize, ");
         sb.append(" a.finishTime,a.checkTime ,a.auditTime,a.countTime,a.billTime, ");
         sb.append(" a.planTime,a.accountTime,a.accountMoney,a.managementFee, ");
-        sb.append(" a.taxes,a.afterTax,a.is_flow,a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
+        sb.append(" a.taxes,a.afterTax,b.name,a.is_flow,a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
         sb.append(" where a.contractor_id = b.id and a.area=%s )c ");
         String sql = sb.toString();
         sql = String.format(sql, areaStr);
@@ -555,7 +555,39 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     @Override
     public List<CollectProjectNameDetailBO> collectInnerNameDetail(String[] innerNames) throws SerException {
-        return null;
+        String[] innerNamesTemp = new String[innerNames.length];
+        for (int i = 0; i < innerNames.length; i++) {
+            innerNamesTemp[i] = "'" + innerNames[i] + "'";
+        }
+        String innerNamesStr = StringUtils.join(innerNamesTemp, ",");
+        StringBuilder sb = new StringBuilder();
+
+
+        sb.append(" select a.innerName,a.area,a.taskPrice,a.pactSize,a.finishTime, ");
+        sb.append(" a.checkTime ,a.auditTime,a.countTime,a.billTime,a.planTime,a.accountTime, ");
+        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,b.name,a.is_flow, ");
+        sb.append(" a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
+        sb.append(" where a.contractor_id = b.id and a.innerName=%s ");
+        sb.append(" union ");
+        sb.append(" select '合计' as innerName,null as area, ");
+        sb.append(" sum(taskPrice) as taskPrice,sum(pactSize) as pactSize, ");
+        sb.append(" null as finishTime,null as checkTime, null as auditTime, ");
+        sb.append(" null as countTime,null as billTime,null as planTime, ");
+        sb.append(" null as accountTime,sum(accountMoney)as accountMoney, ");
+        sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes , ");
+        sb.append(" sum(afterTax) as afterTax,null as name,null as is_flow,null as remark ");
+        sb.append(" from (select a.innerName,a.area,a.taskPrice,a.pactSize, ");
+        sb.append(" a.finishTime,a.checkTime ,a.auditTime,a.countTime,a.billTime, ");
+        sb.append(" a.planTime,a.accountTime,a.accountMoney,a.managementFee, ");
+        sb.append(" a.taxes,a.afterTax,b.name,a.is_flow,a.id as remark from receivable_receivablesubsidiary a ,receivable_contractor b ");
+        sb.append(" where a.contractor_id = b.id and a.innerName=%s )c ");
+        String sql = sb.toString();
+        sql = String.format(sql, innerNamesStr,innerNamesStr);
+        String[] fields = new String[]{"innerName","area", "taskPrice", "pactSize", "finishTime", "checkTime",
+                "auditTime", "countTime", "billTime", "planTime", "accountTime", "managementFee", "accountMoney", "taxes", "afterTax",
+                "name","is_flow", "remark"};
+        List<CollectProjectNameDetailBO> collectProjectNameDetailBOS = super.findBySql(sql, CollectProjectNameDetailBO.class, fields);
+        return collectProjectNameDetailBOS;
     }
 
     @Override
