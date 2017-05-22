@@ -87,8 +87,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
-        entity.setUsername(userAPI.currentUser().getUsername());
+        entity.setUsername(user.getUsername());
         entity.setType(DimissionType.NORMAL);
         entity.setApplyDate(LocalDate.now());
         entity.setDimission(DimissionStatus.APPLY);
@@ -147,13 +148,14 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public DimissionInfoBO interview(DimissionInterviewTo to) throws SerException {
+        UserBO user = userAPI.currentUser();
         DimissionInfo entity = super.findById(to.getId());
         if (to.getAuthority()) {//是否为负责人面谈
-            entity.setLiable(userAPI.currentUser().getUsername());
+            entity.setLiable(user.getUsername());
             entity.setLiableOpinion(to.getOpinion());
             entity.setContent(to.getContent());
         } else {
-            entity.setManage(userAPI.currentUser().getUsername());
+            entity.setManage(user.getUsername());
             entity.setManageOpinion(to.getOpinion());
         }
         super.update(entity);

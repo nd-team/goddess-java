@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.api.RecommendRotationAPI;
@@ -41,6 +42,7 @@ public class RecommendRotationAct {
      * @return class RecommendRotationVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) RecommendRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -57,6 +59,7 @@ public class RecommendRotationAct {
      * @return class RecommendRotationVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(ADD.class) RecommendRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -73,6 +76,7 @@ public class RecommendRotationAct {
      * @return class RecommendRotationVO
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -89,6 +93,7 @@ public class RecommendRotationAct {
      * @return class RecommendRotationVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/opinion/{id}")
     public Result opinion(@Validated(EDIT.class) RecommendRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
