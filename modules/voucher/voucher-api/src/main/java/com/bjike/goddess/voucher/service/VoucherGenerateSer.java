@@ -341,6 +341,42 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
+     * 记账凭证记录科目汇总
+     *
+     * @return class VoucherGenerateBO
+     */
+    default List<VoucherGenerateBO> ctReSub(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录地区列表
+     *
+     * @return class VoucherGenerateBO
+     */
+    default List<VoucherGenerateBO> ctReArea(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录项目组汇总
+     *
+     * @return class VoucherGenerateBO
+     */
+    default List<VoucherGenerateBO> ctReGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录项目名称
+     *
+     * @return class VoucherGenerateBO
+     */
+    default List<VoucherGenerateBO> ctRePname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 查询所有汇总一级科目
      *
      * @return

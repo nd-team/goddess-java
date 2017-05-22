@@ -182,8 +182,8 @@ public class EntryRegisterAction {
     /**
      * 删除
      *
-     * @param id 用户id
-     * @des 根据用户id删除员工入职登记记录
+     * @param id 列表id
+     * @des 根据列表id删除员工入职登记记录
      * @version v1
      */
     @LoginAuth

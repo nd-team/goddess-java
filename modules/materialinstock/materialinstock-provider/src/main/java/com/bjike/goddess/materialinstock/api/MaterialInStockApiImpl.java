@@ -71,7 +71,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @param useState 使用状态
      * @throws SerException
      */
-    @Override
     public void updateUseState(String[] materialNum, UseState useState) throws SerException {
         materialInStockSer.updateUseState(materialNum, useState);
     }
@@ -117,7 +116,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @return class MaterialInStockBO
      * @throws SerException
      */
-    @Override
     public List<MaterialInStockBO> findBOByCis(MaterialInStockDTO dto) throws SerException {
         List<MaterialInStock> list = materialInStockSer.findByCis(dto);
         return BeanTransform.copyProperties(list, MaterialInStockBO.class);
@@ -129,7 +127,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @param listBO 物资入库bo集合
      * @throws SerException
      */
-    @Override
     public void updateBO(List<MaterialInStockBO> listBO) throws SerException {
         if (!CollectionUtils.isEmpty(listBO)) {
             List<MaterialInStock> list = BeanTransform.copyProperties(listBO, MaterialInStock.class, true);
@@ -143,7 +140,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @param bo 物资入库bo
      * @throws SerException
      */
-    @Override
     public void updateSingleBO(MaterialInStockBO bo) throws SerException {
         MaterialInStockTO to = BeanTransform.copyProperties(bo, MaterialInStockTO.class);
         materialInStockSer.update(to);
@@ -156,7 +152,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @return class MaterialInStockBO
      * @throws SerException
      */
-    @Override
     public MaterialInStockBO findOne(MaterialInStockDTO dto) throws SerException {
         MaterialInStock model = materialInStockSer.findOne(dto);
         if (model == null) {
@@ -173,7 +168,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @return class MaterialInStockBO
      * @throws SerException
      */
-    @Override
     public MaterialInStockBO findByMaterialCoding(String materialCoding) throws SerException {
         return materialInStockSer.findByMaterialCoding(materialCoding);
     }
@@ -184,7 +178,6 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @return
      * @throws SerException
      */
-    @Override
     public List<AttributeBO> findAllKindsType() throws SerException {
         return materialInStockSer.findAllKindsType();
     }
@@ -196,9 +189,20 @@ public class MaterialInStockApiImpl implements MaterialInStockAPI {
      * @return class MaterialInStock
      * @throws SerException
      */
-    @Override
     public List<MaterialInStockBO> findByAttribute(AttributeBO bo) throws SerException {
         return materialInStockSer.findByAttribute(bo);
+    }
+
+    /**
+     * 查询所有物资入库
+     *
+     * @return class MaterialInStockBO
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialInStockBO> findAll() throws SerException {
+        List<MaterialInStock> list = materialInStockSer.findAll();
+        return BeanTransform.copyProperties(list, MaterialInStockBO.class);
     }
 
 }

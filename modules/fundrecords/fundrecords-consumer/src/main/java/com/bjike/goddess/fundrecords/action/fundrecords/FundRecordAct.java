@@ -11,10 +11,7 @@ import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
-import com.bjike.goddess.fundrecords.vo.AnalyzeVO;
-import com.bjike.goddess.fundrecords.vo.ConditionCollectVO;
-import com.bjike.goddess.fundrecords.vo.FundRecordVO;
-import com.bjike.goddess.fundrecords.vo.MonthCollectVO;
+import com.bjike.goddess.fundrecords.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -175,17 +172,57 @@ public class FundRecordAct {
     }
 
     /**
-     * 分析
+     * 地区分析
      *
-     * @param to 分析
-     * @return class AnalyzeVO
+     * @param year  年份
+     * @param month 月份
+     * @param area  地区
+     * @return class AreaAnalyzeVO
      * @version v1
      */
-    @GetMapping("v1/analyze")
-    public Result analyze(@Validated({CollectTO.Collect.class}) CollectTO to, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/area")
+    public Result areaAnalyze(Integer year, Integer month, String area, HttpServletRequest request) throws ActException {
         try {
-            AnalyzeVO vo = BeanTransform.copyProperties(fundRecordAPI.analyze(to), AnalyzeVO.class);
-            return ActResult.initialize(vo);
+            List<AreaAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.areaAnalyze(year, month, area), AreaAnalyzeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目组分析
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param group 地区
+     * @return class GroupAnalyzeVO
+     * @version v1
+     */
+    @GetMapping("v1/group")
+    public Result groupAnalyze(Integer year, Integer month, String group, HttpServletRequest request) throws ActException {
+        try {
+            List<GroupAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.groupAnalyze(year, month, group), GroupAnalyzeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目分析
+     *
+     * @param year    年份
+     * @param month   月份
+     * @param project 地区
+     * @return class ProjectAnalyzeVO
+     * @version v1
+     */
+    @GetMapping("v1/project")
+    public Result projectAnalyze(Integer year, Integer month, String project, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.projectAnalyze(year, month, project), ProjectAnalyzeVO.class, request);
+            return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

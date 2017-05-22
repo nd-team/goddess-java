@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.constant.FinalCommons;
 import com.bjike.goddess.common.jpa.dao.JpaRep;
 import com.bjike.goddess.common.jpa.dao.JpaSpecification;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,9 @@ import java.util.stream.Stream;
 public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends FinalCommons implements Ser<BE, BD>, Serializable {
 
     private static final Logger CONSOLE = LoggerFactory.getLogger(ServiceImpl.class);
-    public static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired(required = false)
     protected JpaRep<BE, BD> rep;
@@ -314,13 +315,16 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                     obj = Integer.parseInt(val);
                     break;
                 case "LocalDateTime":
-                    obj = LocalDateTime.parse(val, DATE_TIME);
+                    obj = LocalDateTime.parse(StringUtils.substring(val, 0, val.length() - 2), DATE_TIME);
                     break;
                 case "LocalTime":
                     obj = LocalDateTime.parse(val, TIME);
                     break;
                 case "LocalDate":
                     obj = LocalDate.parse(val, DATE);
+                    break;
+                default:
+                    obj = String.valueOf(obj);
                     break;
 
             }
