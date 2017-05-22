@@ -160,7 +160,10 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
 
     @Override
     public CoverRotationBO delete(String id) throws SerException {
+        UserBO user = userAPI.currentUser();
         CoverRotation entity = super.findById(id);
+        if (!user.getUsername().equals(entity.getUsername()))
+            throw new SerException("不能删除他人的轮换申请");
         if (null == entity)
             throw new SerException("该数据不存在");
         super.remove(entity);

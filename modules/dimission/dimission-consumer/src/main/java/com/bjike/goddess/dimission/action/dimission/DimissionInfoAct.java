@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
@@ -49,6 +50,7 @@ public class DimissionInfoAct extends BaseFileAction {
      * @return class DimissionInfoVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/apply")
     public Result apply(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
         try {
@@ -130,6 +132,7 @@ public class DimissionInfoAct extends BaseFileAction {
      * @return class DimissionInfoVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/interview/{id}")
     public Result interview(@Validated(EDIT.class) DimissionInterviewTo to, BindingResult result) throws ActException {
         try {

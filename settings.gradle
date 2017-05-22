@@ -420,4 +420,9 @@ include ':modules:bankrecords:bankrecords-api'
 include ':modules:bankrecords:bankrecords-consumer'
 include ':modules:bankrecords:bankrecords-provider'
 
+//#regionalprogress-collect 各地区工作进度汇总 dengjunren
+include ':modules:regionalprogress-collect:regionalprogress-collect-api'
+include ':modules:regionalprogress-collect:regionalprogress-collect-consumer'
+include ':modules:regionalprogress-collect:regionalprogress-collect-provider'
+
 

@@ -151,8 +151,13 @@ public class SubsidyStandardAct {
      *
      * @version v1
      */
+    @GetMapping("v1/getTotal")
     public Result getTotal() throws ActException {
-        return null;
+        try {
+            return ActResult.initialize(subsidyStandardAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**

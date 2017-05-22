@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contractquotemanager.bo.ColationBO;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
+import com.bjike.goddess.contractquotemanager.to.FilterTO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.entity.ContractNodeStandard;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 合同节点标准信息业务实现
@@ -140,4 +144,55 @@ public class ContractNodeStandardSerImpl extends ServiceImpl<ContractNodeStandar
         return BeanTransform.copyProperties(super.findByCis(dto), ContractNodeStandardBO.class);
     }
 
+    @Override
+    public List<ColationBO> findType() throws SerException {
+        ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
+        dto.getSorts().add("type=desc");
+        List<ContractNodeStandard> list = super.findByCis(dto);
+        List<ColationBO> bos = new ArrayList<>(0);
+        String type = "";
+        for (ContractNodeStandard entity : list) {
+            if (!type.equals(entity.getType())) {
+                type = entity.getType();
+                bos.add(new ColationBO(entity.getId(), type));
+            }
+        }
+        return bos;
+    }
+
+    @Override
+    public List<ColationBO> findNode() throws SerException {
+        ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
+        dto.getSorts().add("node=desc");
+        List<ContractNodeStandard> list = super.findByCis(dto);
+        List<ColationBO> bos = new ArrayList<>(0);
+        String node = "";
+        for (ContractNodeStandard entity : list) {
+            if (!node.equals(entity.getNode())) {
+                node = entity.getNode();
+                bos.add(new ColationBO(entity.getId(), node));
+            }
+        }
+        return bos;
+    }
+
+    @Override
+    public List<ContractNodeStandardBO> findByTo(FilterTO to) throws SerException {
+        ContractNodeStandardDTO dto = new ContractNodeStandardDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        if (StringUtils.isNotBlank(to.getArea()))
+            dto.getConditions().add(Restrict.eq("area", to.getArea()));
+        if (StringUtils.isNotBlank(to.getNode()))
+            dto.getConditions().add(Restrict.eq("node", to.getNode()));
+        List<ContractNodeStandard> list = super.findByCis(dto);
+        if (null != to.getYear() && null != to.getMonth() && list != null) {
+            list = list.stream()
+                    .filter(c -> c.getDate().getYear() == to.getYear() && c.getDate().getMonthValue() == to.getMonth())
+                    .collect(Collectors.toList());
+        }
+        if (null == list || list.size() == 0)
+            return new ArrayList<>(0);
+        return BeanTransform.copyProperties(list, ContractNodeStandardBO.class);
+    }
 }
