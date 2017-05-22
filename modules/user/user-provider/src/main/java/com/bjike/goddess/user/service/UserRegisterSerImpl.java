@@ -3,21 +3,19 @@ package com.bjike.goddess.user.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
-import com.bjike.goddess.user.enums.UserType;
-import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.enums.UserType;
+import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 /**
  * 用户注册业务实现
@@ -34,7 +32,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
 
     @Autowired
     private UserSer userSer;
-
 
 
     @Override
@@ -75,8 +72,10 @@ public class UserRegisterSerImpl implements UserRegisterSer {
      */
     private void saveUserByDTO(UserRegisterTO registerTO) throws SerException {
         try {
-            if(null!=userSer.findByUsername(registerTO.getUsername())){
-                String employeeNumber = userSer.findByMaxField("employeeNumber",User.class);
+            UserBO bo = userSer.findByUsername(registerTO.getUsername());
+            if (null == bo) {
+                String employeeNumber = userSer.findByMaxField("employeeNumber", User.class);
+                String sysNO = userSer.findByMaxField("systemNO", User.class);
                 User user = new User();
                 user.setUsername(registerTO.getUsername());
                 user.setPassword(PasswordHash.createHash(registerTO.getPassword()));
@@ -84,9 +83,10 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 user.setCreateTime(LocalDateTime.now());
                 user.setStatus(Status.THAW);
                 user.setEmployeeNumber(SeqUtil.generateEmp(employeeNumber));
+                user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
-            }else {
-                throw  new SerException(registerTO.getUsername()+"已被注册!");
+            } else {
+                throw new SerException(registerTO.getUsername() + "已被注册!");
             }
 
         } catch (Exception e) {
