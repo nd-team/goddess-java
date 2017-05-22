@@ -50,4 +50,14 @@ public class WorkHandoverApiImpl implements WorkHandoverAPI {
     public List<WorkHandoverBO> maps(WorkHandoverDTO dto) throws SerException {
         return workHandoverSer.maps(dto);
     }
+
+    @Override
+    public WorkHandoverBO getById(String id) throws SerException {
+        return workHandoverSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return workHandoverSer.getTotal();
+    }
 }

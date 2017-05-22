@@ -28,7 +28,7 @@ public class RotationStatisticsVO {
     /**
      * 岗位层级
      */
-    private String arrangement;
+    private String arrangementName;
 
     /**
      * 补助周期开始时间
@@ -85,12 +85,12 @@ public class RotationStatisticsVO {
         this.arrangementId = arrangementId;
     }
 
-    public String getArrangement() {
-        return arrangement;
+    public String getArrangementName() {
+        return arrangementName;
     }
 
-    public void setArrangement(String arrangement) {
-        this.arrangement = arrangement;
+    public void setArrangementName(String arrangementName) {
+        this.arrangementName = arrangementName;
     }
 
     public String getSubsidyStart() {

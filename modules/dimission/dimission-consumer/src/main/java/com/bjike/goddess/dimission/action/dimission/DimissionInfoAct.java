@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
@@ -49,6 +50,7 @@ public class DimissionInfoAct extends BaseFileAction {
      * @return class DimissionInfoVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/apply")
     public Result apply(@Validated(ADD.class) DimissionInfoTO to, BindingResult result) throws ActException {
         try {
@@ -130,6 +132,7 @@ public class DimissionInfoAct extends BaseFileAction {
      * @return class DimissionInfoVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/interview/{id}")
     public Result interview(@Validated(EDIT.class) DimissionInterviewTo to, BindingResult result) throws ActException {
         try {
@@ -212,9 +215,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findByType")
-    public Result findByType(DimissionType type) throws ActException {
+    public Result findByType(DimissionType type, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.findByType(type), DimissionInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.findByType(type), DimissionInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -261,9 +264,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findByDate")
-    public Result findByDimissionDate(String start, String end) throws ActException {
+    public Result findByDimissionDate(String start, String end, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.findByDimissionDate(start, end), DimissionInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.findByDimissionDate(start, end), DimissionInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -276,9 +279,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/all")
-    public Result all() throws ActException {
+    public Result all(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.all(), DimissionInfoVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.all(), DimissionInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -292,9 +295,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/departmentCollect")
-    public Result departmentCollect(DimissionCollectTO to) throws ActException {
+    public Result departmentCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.departmentCollect(to), DimissionInfoCollectVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.departmentCollect(to), DimissionInfoCollectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -308,9 +311,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/positionCollect")
-    public Result positionCollect(DimissionCollectTO to) throws ActException {
+    public Result positionCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.positionCollect(to), DimissionInfoCollectVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.positionCollect(to), DimissionInfoCollectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -324,9 +327,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/entryCollect")
-    public Result entryCollect(DimissionCollectTO to) throws ActException {
+    public Result entryCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.entryCollect(to), DimissionInfoCollectVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.entryCollect(to), DimissionInfoCollectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -340,9 +343,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/seniorityCollect")
-    public Result seniorityCollect(DimissionCollectTO to) throws ActException {
+    public Result seniorityCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.seniorityCollect(to), DimissionInfoCollectVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.seniorityCollect(to), DimissionInfoCollectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -356,9 +359,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/educationCollect")
-    public Result educationCollect(DimissionCollectTO to) throws ActException {
+    public Result educationCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.educationCollect(to), DimissionInfoCollectVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.educationCollect(to), DimissionInfoCollectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -372,9 +375,9 @@ public class DimissionInfoAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/reasonCollect")
-    public Result reasonCollect(DimissionCollectTO to) throws ActException {
+    public Result reasonCollect(DimissionCollectTO to, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.reasonCollect(to), DimissionReasonVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.reasonCollect(to), DimissionReasonVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -385,18 +388,46 @@ public class DimissionInfoAct extends BaseFileAction {
      *
      * @param request  上传请求
      * @param username 员工姓名(创建对应文件夹使用)
-     * @return class Result
      * @version v1
      */
     @PostMapping("v1/uploadEnclosure")
     public Result uploadEnclosure(HttpServletRequest request, String username) throws ActException {
         try {
-
             String path = "/" + username;
-
             fileAPI.upload(this.getInputStreams(request, path));
             return new ActResult("上传成功");
         } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id获取离职信息数据
+     *
+     * @param id 离职信息数据id
+     * @return class DimissionReasonVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.getById(id), DimissionInfoVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getTotal());
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
