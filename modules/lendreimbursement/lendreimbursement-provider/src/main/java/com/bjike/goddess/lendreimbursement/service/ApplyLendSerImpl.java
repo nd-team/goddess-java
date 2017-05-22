@@ -77,7 +77,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
         }
-        if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
+        if (StringUtils.isNotBlank(applyLendDTO.getEstimateLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("estimateLendDate", LocalDate.parse(applyLendDTO.getEstimateLendDate(), formatter)));
         }
         Long count = super.count(applyLendDTO);
@@ -109,7 +109,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
         }
-        if (StringUtils.isNotBlank(applyLendDTO.getLender())) {
+        if (StringUtils.isNotBlank(applyLendDTO.getEstimateLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("estimateLendDate", LocalDate.parse(applyLendDTO.getEstimateLendDate(), formatter)));
         }
         List<ApplyLend> list = super.findByCis(applyLendDTO, true);
