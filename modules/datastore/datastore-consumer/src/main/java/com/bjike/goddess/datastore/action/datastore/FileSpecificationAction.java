@@ -3,6 +3,7 @@ package com.bjike.goddess.datastore.action.datastore;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.datastore.api.AccountPwdSpecificationAPI;
@@ -99,6 +100,7 @@ public class FileSpecificationAction {
      * @des 添加数据存储文件规范
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(FileSpecificationTO fileSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
@@ -117,6 +119,7 @@ public class FileSpecificationAction {
      * @des 编辑数据存储文件规范
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(FileSpecificationTO fileSpecificationTO, BindingResult bindingResult) throws ActException {
         try {
@@ -134,6 +137,7 @@ public class FileSpecificationAction {
      * @des 根据用户id删除数据存储文件规范记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

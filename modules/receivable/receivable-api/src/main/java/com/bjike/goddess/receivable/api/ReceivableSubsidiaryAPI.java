@@ -209,10 +209,10 @@ public interface ReceivableSubsidiaryAPI {
      * 总包单位汇总详情
      *
      * @param contractors 总包单位
-     * @return class CollectContractorBO
+     * @return class CollectContractorDetailBO
      * @throws SerException
      */
-    default List<CollectContractorBO> collectContractorDetail(String[] contractors) throws SerException {
+    default List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return null;
     }
 

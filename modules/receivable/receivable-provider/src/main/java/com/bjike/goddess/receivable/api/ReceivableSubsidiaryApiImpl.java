@@ -118,7 +118,7 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     }
 
     @Override
-    public List<CollectContractorBO> collectContractorDetail(String[] contractors) throws SerException {
+    public List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return receivableSubsidiarySer.collectContractorDetail(contractors);
     }
 
