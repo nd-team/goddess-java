@@ -21,6 +21,7 @@ import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
 import com.bjike.goddess.user.to.UserTO;
+import com.bjike.goddess.user.utils.SeqUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -164,10 +165,11 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
     public UserBO add(TransactionContext txContext, UserTO userTO) throws SerException {
+        String sysNO =this.currentSysNO();
         User user = BeanTransform.copyProperties(userTO, User.class);
         user.setUserType(UserType.EMPLOYEE);
-        String employeeNumber = super.findByMaxField("employeeNumber", User.class);
-        user.setEmployeeNumber(employeeNumber);
+        user.setSystemNO(sysNO);
+        user.setEmployeeNumber(userTO.getEmployeeNumber());
         return BeanTransform.copyProperties(super.save(user), UserBO.class);
     }
 
@@ -314,5 +316,10 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         super.remove(id);
     }
 
-
+    @Override
+    public String maxUserEmpNumber() throws SerException {
+        String max  = super.findByMaxField("employeeNumber",User.class);
+        String empNumber =  SeqUtil.generateEmp( max );
+        return empNumber;
+    }
 }
