@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.action.staffactivity;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityDivisionAPI;
@@ -80,10 +82,10 @@ public class ActivityDivisionAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ActivityDivisionDTO dto) throws ActException {
+    public Result list(ActivityDivisionDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ActivityDivisionBO> boList = activityDivisionAPI.list(dto);
-            List<ActivityDivisionVO> voList = BeanTransform.copyProperties(boList, ActivityDivisionVO.class);
+            List<ActivityDivisionVO> voList = BeanTransform.copyProperties(boList, ActivityDivisionVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,11 +100,12 @@ public class ActivityDivisionAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ActivityDivisionTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ActivityDivisionTO to, HttpServletRequest request) throws ActException {
         try {
             ActivityDivisionBO bo = activityDivisionAPI.save(to);
-            ActivityDivisionVO vo = BeanTransform.copyProperties(bo, ActivityDivisionVO.class);
+            ActivityDivisionVO vo = BeanTransform.copyProperties(bo, ActivityDivisionVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -116,6 +119,7 @@ public class ActivityDivisionAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -133,8 +137,9 @@ public class ActivityDivisionAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(ActivityDivisionTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ActivityDivisionTO to) throws ActException {
         try {
             activityDivisionAPI.update(to);
             return new ActResult("edit success!");

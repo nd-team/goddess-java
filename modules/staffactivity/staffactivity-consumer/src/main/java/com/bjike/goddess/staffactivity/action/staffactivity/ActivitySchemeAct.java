@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivitySchemeAPI;
@@ -81,10 +82,10 @@ public class ActivitySchemeAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ActivitySchemeDTO dto) throws ActException {
+    public Result list(ActivitySchemeDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ActivitySchemeBO> boList = activitySchemeAPI.list(dto);
-            List<ActivitySchemeVO> voList = BeanTransform.copyProperties(boList, ActivitySchemeVO.class);
+            List<ActivitySchemeVO> voList = BeanTransform.copyProperties(boList, ActivitySchemeVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -99,11 +100,12 @@ public class ActivitySchemeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ActivitySchemeTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) ActivitySchemeTO to, HttpServletRequest request) throws ActException {
         try {
             ActivitySchemeBO bo = activitySchemeAPI.save(to);
-            ActivitySchemeVO vo = BeanTransform.copyProperties(bo, ActivitySchemeVO.class);
+            ActivitySchemeVO vo = BeanTransform.copyProperties(bo, ActivitySchemeVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -117,6 +119,7 @@ public class ActivitySchemeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -134,6 +137,7 @@ public class ActivitySchemeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(ActivitySchemeTO to) throws ActException {
         try {
@@ -152,27 +156,25 @@ public class ActivitySchemeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/upload")
     public Result upload(Map<String, byte[]> maps, String path) throws ActException {
-        try {
-            activitySchemeAPI.upload(maps, path);
-            return new ActResult("upload success!");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
+        return new ActResult("upload success!");
     }
 
     /**
      * 运营商务部意见
      *
-     * @param to 活动方案to
+     * @param id        活动方案id
+     * @param yYOpinion 运营商务部意见
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/yYOpinion")
-    public Result yYOpinion(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/yYOpinion/{id}")
+    public Result yYOpinion(@PathVariable(value = "id") String id, @RequestParam(value = "yYOpinion") String yYOpinion) throws ActException {
         try {
-            activitySchemeAPI.yYOpinion(to);
+            activitySchemeAPI.yYOpinion(id, yYOpinion);
             return new ActResult("yYOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -182,14 +184,19 @@ public class ActivitySchemeAct {
     /**
      * 总经办意见
      *
-     * @param to 活动方案to
+     * @param id           活动方案id
+     * @param ifSchemePass 方案是否通过
+     * @param zjbOpinion   总经办意见
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/zjbOpinion")
-    public Result zjbOpinion(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/zjbOpinion/{id}")
+    public Result zjbOpinion(@PathVariable(value = "id") String id,
+                             @RequestParam(value = "ifSchemePass") Boolean ifSchemePass,
+                             @RequestParam(value = "zjbOpinion") String zjbOpinion) throws ActException {
         try {
-            activitySchemeAPI.zjbOpinion(to);
+            activitySchemeAPI.zjbOpinion(id, ifSchemePass, zjbOpinion);
             return new ActResult("zjbOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -199,14 +206,19 @@ public class ActivitySchemeAct {
     /**
      * 是否持续开展
      *
-     * @param to 活动方案to
+     * @param id               活动方案唯一标识
+     * @param ifNeedContinue   是否有必要持续开展
+     * @param reasonAndOpinion 原因及意见
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/ifContinueLaunch")
-    public Result ifContinueLaunch(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/ifContinueLaunch/{id}")
+    public Result ifContinueLaunch(@PathVariable(value = "id") String id,
+                                   @RequestParam(value = "ifNeedContinue") Boolean ifNeedContinue,
+                                   @RequestParam(value = "reasonAndOpinion") String reasonAndOpinion) throws ActException {
         try {
-            activitySchemeAPI.ifContinueLaunch(to);
+            activitySchemeAPI.ifContinueLaunch(id, ifNeedContinue, reasonAndOpinion);
             return new ActResult("ifContinueLaunch success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -216,14 +228,19 @@ public class ActivitySchemeAct {
     /**
      * 运营资金评价
      *
-     * @param to 活动方案to
+     * @param id                    活动方案唯一标识
+     * @param ifTotalOutlayRational 活动总支出是否合理
+     * @param fundProposal          经费建议
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/yYFundEvaluate")
-    public Result yYFundEvaluate(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/yYFundEvaluate/{id}")
+    public Result yYFundEvaluate(@PathVariable(value = "id") String id,
+                                 @RequestParam(value = "ifTotalOutlayRational") Boolean ifTotalOutlayRational,
+                                 @RequestParam(value = "fundProposal") String fundProposal) throws ActException {
         try {
-            activitySchemeAPI.yYFundEvaluate(to);
+            activitySchemeAPI.yYFundEvaluate(id, ifTotalOutlayRational, fundProposal);
             return new ActResult("yYFundEvaluate success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -233,14 +250,18 @@ public class ActivitySchemeAct {
     /**
      * 监督者评价
      *
-     * @param to 活动方案to
+     * @param id           活动方案id
+     * @param ifFlowDefect 活动流程是否存在缺陷
+     * @param flowProposal 流程建议
      * @throws ActException
-     * @version v1
      */
-    @PutMapping("v1/supervisorEvaluate")
-    public Result supervisorEvaluate(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/supervisorEvaluate/{id}")
+    public Result supervisorEvaluate(@PathVariable(value = "id") String id,
+                                     @RequestParam(value = "ifFlowDefect") Boolean ifFlowDefect,
+                                     @RequestParam(value = "flowProposal") String flowProposal) throws ActException {
         try {
-            activitySchemeAPI.supervisorEvaluate(to);
+            activitySchemeAPI.supervisorEvaluate(id, ifFlowDefect, flowProposal);
             return new ActResult("supervisorEvaluate success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -250,14 +271,18 @@ public class ActivitySchemeAct {
     /**
      * 总经办评价
      *
-     * @param to 活动方案to
+     * @param id             活动方案唯一标识
+     * @param activityEffect 活动效应
+     * @param zjbEvaluate    总经办评价及建议
      * @throws ActException
-     * @version v1
      */
-    @PutMapping("v1/zjbEvaluate")
-    public Result zjbEvaluate(ActivitySchemeTO to) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/zjbEvaluate/{id}")
+    public Result zjbEvaluate(@PathVariable(value = "id") String id,
+                              @RequestParam(value = "activityEffect") String activityEffect,
+                              @RequestParam(value = "zjbEvaluate") String zjbEvaluate) throws ActException {
         try {
-            activitySchemeAPI.zjbEvaluate(to);
+            activitySchemeAPI.zjbEvaluate(id, activityEffect, zjbEvaluate);
             return new ActResult("zjbEvaluate success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -272,6 +297,7 @@ public class ActivitySchemeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/activityFundSummary")
     public Result activityFundSummary(String startDate, String endDate) throws ActException {
         try {

@@ -21,7 +21,8 @@ public class JapiTest {
 		JapiClient.setActionReletivePath("com/bjike/goddess/staffactivity/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/staffactivity/staffactivity-api",
-				"common/common-api"
+				"common/common-api",
+				"user/user-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 		IProject project = ProjectImpl.init();

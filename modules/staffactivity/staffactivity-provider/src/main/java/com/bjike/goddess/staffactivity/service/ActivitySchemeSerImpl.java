@@ -53,7 +53,7 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivitySchemeBO save(ActivitySchemeTO to) throws SerException {
         ActivityScheme entity = BeanTransform.copyProperties(to, ActivityScheme.class, true);
         entity = super.save(entity);
@@ -68,7 +68,7 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -80,7 +80,7 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivitySchemeTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             ActivityScheme model = super.findById(to.getId());
@@ -108,40 +108,37 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
     }
 
     /**
-     * 上传文件
-     *
-     * @param maps 文件名，文件字节
-     * @param path 上传路径
-     * @throws SerException
-     */
-    @Override
-    @Transactional
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-
-    }
-
-    /**
      * 运营商务部意见
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param yYOpinion 运营商务部意见
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void yYOpinion(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void yYOpinion(String id, String yYOpinion) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setYYOpinion(yYOpinion);
+        super.update(model);
     }
 
     /**
      * 总经办意见
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifSchemePass 方案是否通过
+     * @param zjbOpinion 总经办意见
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void zjbOpinion(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void zjbOpinion(String id, Boolean ifSchemePass, String zjbOpinion) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setIfSchemePass(ifSchemePass);
+        model.setZjbOpinion(zjbOpinion);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
@@ -150,46 +147,76 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
      * @param to 活动方案to
      * @throws SerException
      */
+    /**
+     * 是否持续开展
+     *
+     * @param id 活动方案唯一标识
+     * @param ifNeedContinue 是否有必要持续开展
+     * @param reasonAndOpinion 原因及意见
+     * @throws SerException
+     */
     @Override
-    @Transactional
-    public void ifContinueLaunch(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void ifContinueLaunch(String id, Boolean ifNeedContinue, String reasonAndOpinion) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setIfNeedContinue(ifNeedContinue);
+        model.setReasonAndOpinion(reasonAndOpinion);
+        super.update(model);
     }
 
     /**
      * 运营资金评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifTotalOutlayRational 活动总支出是否合理
+     * @param fundProposal 经费建议
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void yYFundEvaluate(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void yYFundEvaluate(String id, Boolean ifTotalOutlayRational, String fundProposal) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setIfTotalOutlayRational(ifTotalOutlayRational);
+        model.setFundProposal(fundProposal);
+        super.update(model);
     }
 
     /**
      * 监督者评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param ifFlowDefect 活动流程是否存在缺陷
+     * @param flowProposal 活动流程建议
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void supervisorEvaluate(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void supervisorEvaluate(String id, Boolean ifFlowDefect, String flowProposal) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setIfFlowDefect(ifFlowDefect);
+        model.setFlowProposal(flowProposal);
+        super.update(model);
     }
 
     /**
      * 总经办评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param activityEffect 活动效应
+     * @param zjbEvaluate 总经办评价及建议
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void zjbEvaluate(ActivitySchemeTO to) throws SerException {
-        update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void zjbEvaluate(String id, String activityEffect, String zjbEvaluate) throws SerException {
+        ActivityScheme model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setActivityEffect(activityEffect);
+        model.setZjbEvaluate(zjbEvaluate);
+        super.update(model);
     }
 
     /**
@@ -201,6 +228,7 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ActivityFundSummaryBO> activityFundSummary(String startTime, String endTime) throws SerException {
         LocalDateTime beginTime = DateUtil.parseDateTime(startTime);
         LocalDateTime finishTime = DateUtil.parseDateTime(endTime);

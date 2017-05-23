@@ -68,7 +68,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivityApplyInforBO save(ActivityApplyInforTO to) throws SerException {
         ActivityApplyInfor entity = BeanTransform.copyProperties(to, ActivityApplyInfor.class, true);
         entity = super.save(entity);
@@ -83,7 +83,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         List<ActivityStaffList> staffList = getStaffListByApplyId(id);
         activityStaffListSer.remove(staffList);//删除子类对象
@@ -110,7 +110,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivityApplyInforTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             ActivityApplyInfor model = super.findById(to.getId());
@@ -139,20 +139,21 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     /**
      * 参与该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param area 地区
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void joinActivity(ActivityApplyInforTO to) throws SerException {
+    @Transactional(rollbackFor = SerException.class)
+    public void joinActivity(String id, String area) throws SerException {
         String currentUsername = userAPI.currentUser().getUsername();
-        String area = to.getArea();
-        String applyInforId = to.getId();
+        if (StringUtils.isBlank(area) || StringUtils.isBlank(id))
+            throw new SerException("地区或者活动信息id为空,无法参与该活动.");
         ActivityStaffList staff = new ActivityStaffList();
         staff.setStaffName(currentUsername);
         staff.setArea(area);
         staff.setIfAttend(Boolean.TRUE);
-        staff.setApplyInforId(applyInforId);//设置逻辑外键关联
+        staff.setApplyInforId(id);//设置逻辑外键关联
         ActivityStaffListTO staffTo  = BeanTransform.copyProperties(staff, ActivityStaffListTO.class);
         activityStaffListAPI.save(staffTo);
     }
@@ -160,16 +161,15 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     /**
      * 退出该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param abandonReason 放弃参与活动原因
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void exitActivity(ActivityApplyInforTO to) throws SerException {
-        String abandonReason = to.getAbandonReason();
-        String applyInforId = to.getId();
+    @Transactional(rollbackFor = SerException.class)
+    public void exitActivity(String id, String abandonReason) throws SerException {
         ActivityStaffListDTO staffDTO = new ActivityStaffListDTO();
-        staffDTO.getConditions().add(Restrict.eq("applyInforId", applyInforId));
+        staffDTO.getConditions().add(Restrict.eq("applyInforId", id));
         ActivityStaffList staff = activityStaffListSer.findOne(staffDTO);
         staff.setAbandonReason(abandonReason);
         staff.setIfAttend(Boolean.FALSE);//设置参与状态为FALSE
@@ -184,7 +184,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public List<ActivityStaffListBO> checkStaffList(String id) throws SerException {
         List<ActivityStaffList> staffList = getStaffListByApplyId(id);//根据活动申请信息id查询活动人员列表
         List<ActivityStaffListBO> staffBOList = BeanTransform.copyProperties(staffList, ActivityStaffListBO.class);
@@ -199,6 +199,7 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ActivityStaffListBO> checkAttendList(String id) throws SerException {
         ActivityStaffListDTO dto = new ActivityStaffListDTO();
         dto.getConditions().add(Restrict.eq("applyInforId", id));

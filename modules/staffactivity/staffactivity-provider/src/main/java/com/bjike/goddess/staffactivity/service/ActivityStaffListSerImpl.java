@@ -50,7 +50,7 @@ public class ActivityStaffListSerImpl extends ServiceImpl<ActivityStaffList, Act
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivityStaffListBO save(ActivityStaffListTO to) throws SerException {
         ActivityStaffList entity = BeanTransform.copyProperties(to, ActivityStaffList.class, true);
         entity = super.save(entity);
@@ -65,7 +65,7 @@ public class ActivityStaffListSerImpl extends ServiceImpl<ActivityStaffList, Act
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -77,7 +77,7 @@ public class ActivityStaffListSerImpl extends ServiceImpl<ActivityStaffList, Act
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivityStaffListTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             ActivityStaffList model = super.findById(to.getId());

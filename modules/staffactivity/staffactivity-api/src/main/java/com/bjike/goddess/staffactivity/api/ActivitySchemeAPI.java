@@ -24,7 +24,7 @@ public interface ActivitySchemeAPI {
      * 根据id查询活动方案
      *
      * @param id 活动方案唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivitySchemeBO
      * @throws SerException
      */
     ActivitySchemeBO findById(String id) throws SerException;
@@ -72,21 +72,13 @@ public interface ActivitySchemeAPI {
     void update(ActivitySchemeTO to) throws SerException;
 
     /**
-     * 上传文件
-     *
-     * @param maps 文件名，文件字节
-     * @param path 上传路径
-     * @throws SerException
-     */
-    void upload(Map<String, byte[]> maps, String path) throws SerException;
-
-    /**
      * 运营商务部意见
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param yYOpinion 运营商务部意见
      * @throws SerException
      */
-    void yYOpinion(ActivitySchemeTO to) throws SerException;
+    void yYOpinion(String id, String yYOpinion) throws SerException;
 
     /**
      * 总经办意见
@@ -94,39 +86,55 @@ public interface ActivitySchemeAPI {
      * @param to 活动方案to
      * @throws SerException
      */
-    void zjbOpinion(ActivitySchemeTO to) throws SerException;
+    /**
+     * 总经办意见
+     *
+     * @param id 活动方案唯一标识
+     * @param ifSchemePass 方案是否通过
+     * @param zjbOpinion 总经办意见
+     * @throws SerException
+     */
+    void zjbOpinion(String id, Boolean ifSchemePass, String zjbOpinion) throws SerException;
 
     /**
      * 是否持续开展
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifNeedContinue 是否有必要持续开展
+     * @param reasonAndOpinion 原因及意见
      * @throws SerException
      */
-    void ifContinueLaunch(ActivitySchemeTO to) throws SerException;
+    void ifContinueLaunch(String id, Boolean ifNeedContinue, String reasonAndOpinion) throws SerException;
 
     /**
      * 运营资金评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifTotalOutlayRational 活动总支出是否合理
+     * @param fundProposal 经费建议
      * @throws SerException
      */
-    void yYFundEvaluate(ActivitySchemeTO to) throws SerException;
+    void yYFundEvaluate(String id, Boolean ifTotalOutlayRational, String fundProposal) throws SerException;
 
     /**
      * 监督者评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param ifFlowDefect 活动流程是否存在缺陷
+     * @param flowProposal 活动流程建议
      * @throws SerException
      */
-    void supervisorEvaluate(ActivitySchemeTO to) throws SerException;
+    void supervisorEvaluate(String id, Boolean ifFlowDefect, String flowProposal) throws SerException;
 
     /**
      * 总经办评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param activityEffect 活动效应
+     * @param zjbEvaluate 总经办评价及建议
      * @throws SerException
      */
-    void zjbEvaluate(ActivitySchemeTO to) throws SerException;
+    void zjbEvaluate(String id, String activityEffect, String zjbEvaluate) throws SerException;
 
     /**
      * 公司各地区活动经费汇总

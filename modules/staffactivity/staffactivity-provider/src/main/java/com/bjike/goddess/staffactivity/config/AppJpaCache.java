@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Author: [liguiqin]
+ * @Author: [sunfengtao]
  * @Date: [2016-11-23 15:47]
  * @Description: [自定义缓存添加]
  * @Version: [1.0.0]
@@ -19,16 +19,4 @@ import java.util.List;
 @Component
 public class AppJpaCache implements JpaCache {
 
-    @Override
-    public List<Cache> initCaches() {
-        ConcurrentMapCache serCache = new ConcurrentMapCache("userSerCache");
-        serCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
-        serCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
-
-        ConcurrentMapCache daoCache = new ConcurrentMapCache("userDaoCache");
-        daoCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
-        daoCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
-
-        return Arrays.asList(serCache, daoCache);
-    }
 }
