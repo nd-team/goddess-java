@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
@@ -105,6 +106,7 @@ public class ReceivableSubsidiaryAction {
      * @des 添加回款明细
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
@@ -123,6 +125,7 @@ public class ReceivableSubsidiaryAction {
      * @des 编辑回款明细
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ReceivableSubsidiaryTO receivableSubsidiaryTO,BindingResult bindingResult) throws ActException {
         try {
@@ -140,6 +143,7 @@ public class ReceivableSubsidiaryAction {
      * @des 根据用户id删除回款明细记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

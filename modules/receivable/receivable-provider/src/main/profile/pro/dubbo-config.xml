@@ -20,5 +20,6 @@
 	<dubbo:service interface="com.bjike.goddess.receivable.api.ContractorAPI" ref="contractorApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" ref="receivableSubsidiaryApiImpl"/>
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

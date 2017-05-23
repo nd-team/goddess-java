@@ -19,5 +19,7 @@
 	<dubbo:reference  validation="true" id="contractorApiImpl" interface="com.bjike.goddess.receivable.api.ContractorAPI" />
 	<dubbo:reference  validation="true" id="receivableSubsidiaryApiImpl" interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" />
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 
 </beans>

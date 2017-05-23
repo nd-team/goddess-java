@@ -46,7 +46,7 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         List<MarketInfo> marketInfos = super.findByCis(marketInfoDTO, true);
-        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos, MarketInfoBO.class, true);
+        List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos, MarketInfoBO.class);
         return marketInfoBOS;
     }
 
