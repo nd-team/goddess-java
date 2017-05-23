@@ -32,6 +32,30 @@ public class MainBusinessIntroApiImpl implements MainBusinessIntroAPI {
     private MainBusinessIntroSer mainBusinessIntroSer;
 
     /**
+     * 根据id查询主业介绍
+     *
+     * @param id 主业介绍唯一标识
+     * @return class MainBusinessIntroBO
+     * @throws SerException
+     */
+    @Override
+    public MainBusinessIntroBO findById(String id) throws SerException {
+        MainBusinessIntro model = mainBusinessIntroSer.findById(id);
+        return BeanTransform.copyProperties(model, MainBusinessIntroBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 主业介绍dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(MainBusinessIntroDTO dto) throws SerException {
+        return mainBusinessIntroSer.count(dto);
+    }
+
+    /**
      * 分页查询主业业务
      *
      * @return class MainBusinessIntroBO

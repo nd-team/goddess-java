@@ -20,6 +20,23 @@ import java.util.List;
 public interface IndividualResumeAPI {
 
     /**
+     * 根据id查询个人简介
+     *
+     * @param id 个人简介唯一标识
+     * @return class IndividualResumeBO
+     * @throws SerException
+     */
+    IndividualResumeBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 个人简介dto
+     * @throws SerException
+     */
+    Long count(IndividualResumeDTO dto) throws SerException;
+
+    /**
      * 分页查询个人简介
      *
      * @return class IndividualResumeBO

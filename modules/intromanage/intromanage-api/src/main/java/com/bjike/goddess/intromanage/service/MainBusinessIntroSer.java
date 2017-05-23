@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.MainBusinessIntroBO;
-import com.bjike.goddess.intromanage.entity.MainBusinessIntro;
 import com.bjike.goddess.intromanage.dto.MainBusinessIntroDTO;
+import com.bjike.goddess.intromanage.entity.MainBusinessIntro;
 import com.bjike.goddess.intromanage.to.MainBusinessIntroTO;
 
 import java.util.List;

@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.CredentialSituationBO;
-import com.bjike.goddess.intromanage.entity.CredentialSituation;
 import com.bjike.goddess.intromanage.dto.CredentialSituationDTO;
+import com.bjike.goddess.intromanage.entity.CredentialSituation;
 import com.bjike.goddess.intromanage.to.CredentialSituationTO;
 
 import java.util.List;

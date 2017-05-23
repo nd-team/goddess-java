@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
+import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.service.IndividualResumeSer;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
@@ -25,6 +27,30 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
 
     @Autowired
     private IndividualResumeSer individualResumeSer;
+
+    /**
+     * 根据id查询个人简介
+     *
+     * @param id 个人简介唯一标识
+     * @return class IndividualResumeBO
+     * @throws SerException
+     */
+    @Override
+    public IndividualResumeBO findById(String id) throws SerException {
+        IndividualResume model = individualResumeSer.findById(id);
+        return BeanTransform.copyProperties(model, IndividualResumeBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 个人简介dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(IndividualResumeDTO dto) throws SerException {
+        return individualResumeSer.count(dto);
+    }
 
     /**
      * 分页查询个人简介

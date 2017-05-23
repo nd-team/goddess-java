@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.HonorAndQualityBO;
 import com.bjike.goddess.intromanage.dto.HonorAndQualityDTO;
+import com.bjike.goddess.intromanage.entity.HonorAndQuality;
 import com.bjike.goddess.intromanage.service.HonorAndQualitySer;
 import com.bjike.goddess.intromanage.to.HonorAndQualityTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class HonorAndQualityApiImpl implements HonorAndQualityAPI {
 
     @Autowired
     private HonorAndQualitySer honorAndQualitySer;
+
+    /**
+     * 根据id查询荣誉与资质
+     *
+     * @param id 荣誉与资质唯一标识
+     * @return class HonorAndQualityBO
+     * @throws SerException
+     */
+    @Override
+    public HonorAndQualityBO findById(String id) throws SerException {
+        HonorAndQuality model = honorAndQualitySer.findById(id);
+        return BeanTransform.copyProperties(model, HonorAndQualityBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 荣誉与资质dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(HonorAndQualityDTO dto) throws SerException {
+        return honorAndQualitySer.count(dto);
+    }
 
     /**
      * 分页查询荣誉与资质

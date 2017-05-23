@@ -19,6 +19,23 @@ import java.util.List;
 public interface MainBusinessIntroAPI {
 
     /**
+     * 根据id查询主业介绍
+     *
+     * @param id 主业介绍唯一标识
+     * @return class MainBusinessIntroBO
+     * @throws SerException
+     */
+    MainBusinessIntroBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 主业介绍dto
+     * @throws SerException
+     */
+    Long count(MainBusinessIntroDTO dto) throws SerException;
+
+    /**
      * 分页查询主业业务
      *
      * @return class MainBusinessIntroBO

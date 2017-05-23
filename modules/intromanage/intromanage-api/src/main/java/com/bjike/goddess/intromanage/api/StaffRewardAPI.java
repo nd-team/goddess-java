@@ -19,6 +19,23 @@ import java.util.List;
 public interface StaffRewardAPI {
 
     /**
+     * 根据id查询员工奖励
+     *
+     * @param id 员工奖励唯一标识
+     * @return class StaffRewardBO
+     * @throws SerException
+     */
+    StaffRewardBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 员工奖励dto
+     * @throws SerException
+     */
+    Long count(StaffRewardDTO dto) throws SerException;
+
+    /**
      * 分页查询员工奖励
      *
      * @return class StaffRewardBO

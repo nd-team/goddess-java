@@ -1,8 +1,8 @@
 package com.bjike.goddess.intromanage.service;
 
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.intromanage.entity.FirmDisplayUser;
 import com.bjike.goddess.intromanage.dto.FirmDisplayUserDTO;
+import com.bjike.goddess.intromanage.entity.FirmDisplayUser;
 
 /**
  * 公司简介显示用户名称集合业务接口
