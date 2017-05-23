@@ -1,7 +1,5 @@
 package com.bjike.goddess.recruit.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * 未入职原因
  *

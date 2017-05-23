@@ -19,6 +19,23 @@ import java.util.List;
 public interface ReportAddressInforAPI {
 
     /**
+     * 根据id查询报道地址信息
+     *
+     * @param id 报道地址信息唯一标识
+     * @return class ReportAddressInforBO
+     * @throws SerException
+     */
+    ReportAddressInforBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 报道地址信息dto
+     * @throws SerException
+     */
+    Long count(ReportAddressInforDTO dto) throws SerException;
+
+    /**
      * 分页查询报道地址信息
      *
      * @param dto

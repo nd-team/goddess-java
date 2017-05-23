@@ -19,6 +19,23 @@ import java.util.List;
 public interface RecruitDemandAPI {
 
     /**
+     * 根据id查询招聘需求
+     *
+     * @param id 招聘需求唯一标识
+     * @return class RecruitDemandBO
+     * @throws SerException
+     */
+    RecruitDemandBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 招聘需求dto
+     * @throws SerException
+     */
+    Long count(RecruitDemandDTO dto) throws SerException;
+
+    /**
      * 分页查询招聘需求
      *
      * @param dto

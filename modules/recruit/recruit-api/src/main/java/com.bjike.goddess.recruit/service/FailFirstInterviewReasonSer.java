@@ -19,6 +19,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface FailFirstInterviewReasonSer extends Ser<FailFirstInterviewReason, FailFirstInterviewReasonDTO> {
+
     /**
      * 分页查询所有未应约初试原因
      *
@@ -51,4 +52,5 @@ public interface FailFirstInterviewReasonSer extends Ser<FailFirstInterviewReaso
      * @throws SerException
      */
     void update(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException;
+
 }

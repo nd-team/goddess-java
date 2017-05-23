@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
 import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
+import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
 import com.bjike.goddess.recruit.service.FirstPhoneRecordSer;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,30 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
 
     @Autowired
     private FirstPhoneRecordSer firstPhoneRecordSer;
+
+    /**
+     * 根据id查询第一次电访记录
+     *
+     * @param id 第一次电访记录唯一标识
+     * @return class FirstPhoneRecordBO
+     * @throws SerException
+     */
+    @Override
+    public FirstPhoneRecordBO findById(String id) throws SerException {
+        FirstPhoneRecord model = firstPhoneRecordSer.findById(id);
+        return BeanTransform.copyProperties(model, FirstPhoneRecordBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 第一次电访记录dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(FirstPhoneRecordDTO dto) throws SerException {
+        return firstPhoneRecordSer.count(dto);
+    }
 
     /**
      * 分页查询第一次电访记录

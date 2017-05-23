@@ -3,8 +3,6 @@ package com.bjike.goddess.recruit.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.TemplateStatus;
 
-import javax.persistence.Column;
-
 /**
  * 模板管理
  *

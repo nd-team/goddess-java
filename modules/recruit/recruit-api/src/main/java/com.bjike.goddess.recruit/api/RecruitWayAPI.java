@@ -19,6 +19,23 @@ import java.util.List;
 public interface RecruitWayAPI {
 
     /**
+     * 根据id查询招聘渠道
+     *
+     * @param id 招聘渠道唯一标识
+     * @return class RecruitWayBO
+     * @throws SerException
+     */
+    RecruitWayBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 招聘渠道dto
+     * @throws SerException
+     */
+    Long count(RecruitWayDTO dto) throws SerException;
+
+    /**
      * 分页查询招聘渠道
      *
      * @param dto

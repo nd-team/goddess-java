@@ -1,7 +1,5 @@
 package com.bjike.goddess.recruit.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * 未应约初试原因
  *

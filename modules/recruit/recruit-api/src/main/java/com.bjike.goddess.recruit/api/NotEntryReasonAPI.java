@@ -19,6 +19,23 @@ import java.util.List;
 public interface NotEntryReasonAPI {
 
     /**
+     * 根据id查询未入职原因
+     *
+     * @param id 未入职原因唯一标识
+     * @return class NotEntryReasonBO
+     * @throws SerException
+     */
+    NotEntryReasonBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未入职原因dto
+     * @throws SerException
+     */
+    Long count(NotEntryReasonDTO dto) throws SerException;
+
+    /**
      * 分页查询未入职原因
      *
      * @param dto

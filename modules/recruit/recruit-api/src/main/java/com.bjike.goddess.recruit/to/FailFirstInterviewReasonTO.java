@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class FailFirstInterviewReasonTO extends BaseTO{
+public class FailFirstInterviewReasonTO extends BaseTO {
     /**
      * 未应约初试原因类型
      */

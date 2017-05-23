@@ -19,6 +19,23 @@ import java.util.List;
 public interface FailFirstInterviewReasonAPI {
 
     /**
+     * 根据id查询未应约初试原因
+     *
+     * @param id 未应约初试原因唯一标识
+     * @return class FailFirstInterviewReasonBO
+     * @throws SerException
+     */
+    FailFirstInterviewReasonBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未应约初试原因dto
+     * @throws SerException
+     */
+    Long count(FailFirstInterviewReasonDTO dto) throws SerException;
+
+    /**
      * 分页查询所有未应约初试原因
      *
      * @return

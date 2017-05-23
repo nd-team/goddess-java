@@ -2,8 +2,6 @@ package com.bjike.goddess.recruit.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
-import javax.persistence.Column;
-
 /**
  * 报道地址信息
  *

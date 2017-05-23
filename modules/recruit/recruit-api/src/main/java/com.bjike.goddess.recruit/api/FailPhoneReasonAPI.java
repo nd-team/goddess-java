@@ -19,6 +19,23 @@ import java.util.List;
 public interface FailPhoneReasonAPI {
 
     /**
+     * 根据id查询未成功通话原因
+     *
+     * @param id 未成功通话原因唯一标识
+     * @return class FailPhoneReasonBO
+     * @throws SerException
+     */
+    FailPhoneReasonBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未成功通话原因dto
+     * @throws SerException
+     */
+    Long count(FailPhoneReasonDTO dto) throws SerException;
+
+    /**
      * 分页查询未成功通话原因
      *
      * @param dto

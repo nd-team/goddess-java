@@ -7,8 +7,11 @@ import com.bjike.goddess.recruit.bo.FailFirstInterviewReasonBO;
 import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
 import com.bjike.goddess.recruit.entity.FailFirstInterviewReason;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,28 +43,50 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     /**
      * 保存未应约初试原因
      *
-     * @param failFirstInterviewReasonTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public FailFirstInterviewReasonBO save(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException {
-        FailFirstInterviewReason failFirstInterviewReason = BeanTransform.copyProperties(failFirstInterviewReasonTO, FailFirstInterviewReason.class, true);
-        failFirstInterviewReason = super.save(failFirstInterviewReason);
-        FailFirstInterviewReasonBO bo = BeanTransform.copyProperties(failFirstInterviewReason, FailFirstInterviewReasonBO.class);
+    @Transactional(rollbackFor = SerException.class)
+    public FailFirstInterviewReasonBO save(FailFirstInterviewReasonTO to) throws SerException {
+        FailFirstInterviewReason model = BeanTransform.copyProperties(to, FailFirstInterviewReason.class, true);
+        model = super.save(model);
+        FailFirstInterviewReasonBO bo = BeanTransform.copyProperties(model, FailFirstInterviewReasonBO.class);
         return bo;
     }
 
     /**
      * 更新未应约初试原因
      *
-     * @param failFirstInterviewReasonTO
+     * @param to 未应约初试原因to
      * @throws SerException
      */
     @Override
-    public void update(FailFirstInterviewReasonTO failFirstInterviewReasonTO) throws SerException {
-        FailFirstInterviewReason entity = BeanTransform.copyProperties(failFirstInterviewReasonTO, FailFirstInterviewReason.class, true);
-        super.update(entity);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(FailFirstInterviewReasonTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            FailFirstInterviewReason model = super.findById(to.getId());
+            if (model != null) {
+                updateFailFirstInterviewReason(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新未应约初试原因
+     *
+     * @param to 未应约初试原因to
+     * @param model 未应约初试原因实体
+     */
+    private void updateFailFirstInterviewReason(FailFirstInterviewReasonTO to, FailFirstInterviewReason model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
@@ -71,6 +96,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(FailFirstInterviewReason entity) throws SerException {
         super.remove(entity);
     }

@@ -19,6 +19,23 @@ import java.util.List;
 public interface InterviewInforAPI {
 
     /**
+     * 根据id查询面试信息
+     *
+     * @param id 面试信息唯一标识
+     * @return class InterviewInforBO
+     * @throws SerException
+     */
+    InterviewInforBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 面试信息dto
+     * @throws SerException
+     */
+    Long count(InterviewInforDTO dto) throws SerException;
+
+    /**
      * 分页查询面试信息
      *
      * @param dto

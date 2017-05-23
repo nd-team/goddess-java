@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.RecruitDemandBO;
 import com.bjike.goddess.recruit.dto.RecruitDemandDTO;
+import com.bjike.goddess.recruit.entity.RecruitDemand;
 import com.bjike.goddess.recruit.service.RecruitDemandSer;
 import com.bjike.goddess.recruit.to.RecruitDemandTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class RecruitDemandApiImpl implements RecruitDemandAPI {
 
     @Autowired
     private RecruitDemandSer recruitDemandSer;
+
+    /**
+     * 根据id查询招聘需求
+     *
+     * @param id 招聘需求唯一标识
+     * @return class RecruitDemandBO
+     * @throws SerException
+     */
+    @Override
+    public RecruitDemandBO findById(String id) throws SerException {
+        RecruitDemand model = recruitDemandSer.findById(id);
+        return BeanTransform.copyProperties(model, RecruitDemandBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 招聘需求dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(RecruitDemandDTO dto) throws SerException {
+        return recruitDemandSer.count(dto);
+    }
 
     /**
      * 分页查询招聘需求

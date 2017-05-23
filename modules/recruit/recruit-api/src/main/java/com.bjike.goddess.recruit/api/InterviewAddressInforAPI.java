@@ -19,6 +19,23 @@ import java.util.List;
 public interface InterviewAddressInforAPI {
 
     /**
+     * 根据id查询面试地址信息
+     *
+     * @param id 面试地址信息唯一标识
+     * @return class InterviewAddressInforBO
+     * @throws SerException
+     */
+    InterviewAddressInforBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 面试地址信息dto
+     * @throws SerException
+     */
+    Long count(InterviewAddressInforDTO dto) throws SerException;
+
+    /**
      * 分页查询面试信息地址
      *
      * @param dto

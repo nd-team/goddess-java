@@ -19,6 +19,23 @@ import java.util.List;
 public interface FailInviteReasonAPI {
 
     /**
+     * 根据id查询未邀约成功原因
+     *
+     * @param id 未邀约成功原因唯一标识
+     * @return class FailInviteReasonBO
+     * @throws SerException
+     */
+    FailInviteReasonBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未邀约成功原因dto
+     * @throws SerException
+     */
+    Long count(FailInviteReasonDTO dto) throws SerException;
+
+    /**
      * 分页查询所有未成功邀约原因
      *
      * @param failInviteReasonDTO

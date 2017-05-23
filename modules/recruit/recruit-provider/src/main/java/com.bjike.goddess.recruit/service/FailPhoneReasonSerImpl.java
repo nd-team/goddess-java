@@ -7,8 +7,11 @@ import com.bjike.goddess.recruit.bo.FailPhoneReasonBO;
 import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
 import com.bjike.goddess.recruit.entity.FailPhoneReason;
 import com.bjike.goddess.recruit.to.FailPhoneReasonTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,38 +36,59 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
      */
     @Override
     public List<FailPhoneReasonBO> list(FailPhoneReasonDTO dto) throws SerException {
-        List<FailPhoneReason> failPhoneReasonList = super.findByPage(dto);
-        List<FailPhoneReasonBO> failPhoneReasonBOList = BeanTransform.copyProperties(failPhoneReasonList, FailPhoneReasonBO.class);
-        return failPhoneReasonBOList;
+        List<FailPhoneReason> list = super.findByPage(dto);
+        List<FailPhoneReasonBO> listBO = BeanTransform.copyProperties(list, FailPhoneReasonBO.class);
+        return listBO;
     }
 
     /**
      * 保存未成功通话原因
      *
-     * @param failPhoneReasonTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public FailPhoneReasonBO save(FailPhoneReasonTO failPhoneReasonTO) throws SerException {
-        FailPhoneReason failPhoneReason = BeanTransform.copyProperties(failPhoneReasonTO, FailPhoneReason.class, true);
+    @Transactional(rollbackFor = SerException.class)
+    public FailPhoneReasonBO save(FailPhoneReasonTO to) throws SerException {
+        FailPhoneReason failPhoneReason = BeanTransform.copyProperties(to, FailPhoneReason.class, true);
         failPhoneReason = super.save(failPhoneReason);
-        FailPhoneReasonBO failPhoneReasonBO = BeanTransform.copyProperties(failPhoneReason, FailPhoneReasonBO.class);
-        return failPhoneReasonBO;
+        FailPhoneReasonBO bo = BeanTransform.copyProperties(failPhoneReason, FailPhoneReasonBO.class);
+        return bo;
     }
 
     /**
      * 更新未成功通话原因
      *
-     * @param failPhoneReasonTO
+     * @param to 未成功通话原因to
      * @throws SerException
      */
     @Override
-    public void update(FailPhoneReasonTO failPhoneReasonTO) throws SerException {
-        FailPhoneReason failPhoneReason = BeanTransform.copyProperties(failPhoneReasonTO, FailPhoneReason.class, true);
-        super.update(failPhoneReason);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(FailPhoneReasonTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            FailPhoneReason model = super.findById(to.getId());
+            if (model != null) {
+                updateFailPhoneReason(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
     }
 
+    /**
+     * 更新未成功通话原因
+     *
+     * @param to 未成功通话原因
+     * @param model 未成功通话原因实体
+     */
+    private void updateFailPhoneReason(FailPhoneReasonTO to, FailPhoneReason model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
     /**
      * 根据id删除未成功通话原因
      *
@@ -72,6 +96,7 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }

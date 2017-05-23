@@ -19,6 +19,23 @@ import java.util.List;
 public interface RecruitPlanAPI {
 
     /**
+     * 根据id查询招聘计划
+     *
+     * @param id 招聘计划唯一标识
+     * @return class RecruitPlanBO
+     * @throws SerException
+     */
+    RecruitPlanBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 招聘计划dto
+     * @throws SerException
+     */
+    Long count(RecruitPlanDTO dto) throws SerException;
+
+    /**
      * 分页查询招聘计划
      *
      * @param dto

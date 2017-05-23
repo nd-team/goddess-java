@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
 import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
+import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.service.FailInviteReasonSer;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,30 @@ public class FailInviteReasonApiImpl implements FailInviteReasonAPI {
 
     @Autowired
     private FailInviteReasonSer failInviteReasonSer;
+
+    /**
+     * 根据id查询未邀约成功原因
+     *
+     * @param id 未邀约成功原因唯一标识
+     * @return class FailInviteReasonBO
+     * @throws SerException
+     */
+    @Override
+    public FailInviteReasonBO findById(String id) throws SerException {
+        FailInviteReason model = failInviteReasonSer.findById(id);
+        return BeanTransform.copyProperties(model, FailInviteReasonBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未邀约成功原因dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(FailInviteReasonDTO dto) throws SerException {
+        return failInviteReasonSer.count(dto);
+    }
 
     /**
      * 分页查询未邀约成功原因

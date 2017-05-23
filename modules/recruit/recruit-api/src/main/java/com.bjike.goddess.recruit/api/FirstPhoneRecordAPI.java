@@ -19,6 +19,23 @@ import java.util.List;
 public interface FirstPhoneRecordAPI {
 
     /**
+     * 根据id查询第一次电访记录
+     *
+     * @param id 第一次电访记录唯一标识
+     * @return class FirstPhoneRecordBO
+     * @throws SerException
+     */
+    FirstPhoneRecordBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 第一次电访记录dto
+     * @throws SerException
+     */
+    Long count(FirstPhoneRecordDTO dto) throws SerException;
+
+    /**
      * 分页查询第一次电访记录
      *
      * @param dto

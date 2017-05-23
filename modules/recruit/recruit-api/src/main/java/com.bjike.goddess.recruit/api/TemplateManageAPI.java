@@ -19,6 +19,23 @@ import java.util.List;
 public interface TemplateManageAPI {
 
     /**
+     * 根据id查询模板管理
+     *
+     * @param id 模板管理唯一标识
+     * @return class TemplateManageBO
+     * @throws SerException
+     */
+    TemplateManageBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 模板管理dto
+     * @throws SerException
+     */
+    Long count(TemplateManageDTO dto) throws SerException;
+
+    /**
      * 分页查询模板管理
      *
      * @param templateManageDTO

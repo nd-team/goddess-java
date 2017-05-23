@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
+import com.bjike.goddess.recruit.entity.RecruitWay;
 import com.bjike.goddess.recruit.service.RecruitWaySer;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
 
     @Autowired
     private RecruitWaySer recruitWaySer;
+
+    /**
+     * 根据id查询招聘渠道
+     *
+     * @param id 招聘渠道唯一标识
+     * @return class RecruitWayBO
+     * @throws SerException
+     */
+    @Override
+    public RecruitWayBO findById(String id) throws SerException {
+        RecruitWay model = recruitWaySer.findById(id);
+        return BeanTransform.copyProperties(model, RecruitWayBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 招聘渠道dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(RecruitWayDTO dto) throws SerException {
+        return recruitWaySer.count(dto);
+    }
 
     /**
      * 分页查询招聘渠道

@@ -7,8 +7,11 @@ import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
 import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
 import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,35 +35,69 @@ public class FailInviteReasonSerImpl extends ServiceImpl<FailInviteReason, FailI
      */
     @Override
     public List<FailInviteReasonBO> list(FailInviteReasonDTO dto) throws SerException {
-        List<FailInviteReason> failInviteReasonList = super.findByPage(dto);
-        List<FailInviteReasonBO> failInviteReasonBOList = BeanTransform.copyProperties(failInviteReasonList, FailInviteReasonBO.class);
-        return failInviteReasonBOList;
+        List<FailInviteReason> list = super.findByPage(dto);
+        List<FailInviteReasonBO> listBO = BeanTransform.copyProperties(list, FailInviteReasonBO.class);
+        return listBO;
     }
 
     /**
      * 保存未邀约成功原因
      *
-     * @param failInviteReasonTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public FailInviteReasonBO save(FailInviteReasonTO failInviteReasonTO) throws SerException {
-        FailInviteReason failInviteReason = BeanTransform.copyProperties(failInviteReasonTO, FailInviteReason.class, true);
-        failInviteReason = super.save(failInviteReason);
-        FailInviteReasonBO failInviteReasonBO = BeanTransform.copyProperties(failInviteReason, FailInviteReasonBO.class);
-        return failInviteReasonBO;
+    @Transactional(rollbackFor = SerException.class)
+    public FailInviteReasonBO save(FailInviteReasonTO to) throws SerException {
+        FailInviteReason model = BeanTransform.copyProperties(to, FailInviteReason.class, true);
+        model = super.save(model);
+        FailInviteReasonBO bo = BeanTransform.copyProperties(model, FailInviteReasonBO.class);
+        return bo;
     }
 
     /**
      * 更新未邀约成功原因
      *
-     * @param failInviteReasonTO
+     * @param to 未邀约成功原因to
      * @throws SerException
      */
     @Override
-    public void update(FailInviteReasonTO failInviteReasonTO) throws SerException {
-        FailInviteReason failInviteReason = BeanTransform.copyProperties(failInviteReasonTO, FailInviteReason.class, true);
-        super.update(failInviteReason);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(FailInviteReasonTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            FailInviteReason model = super.findById(to.getId());
+            if (model != null) {
+                updateFailInviteReason(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新未邀约成功原因
+     *
+     * @param to 未邀约成功原因to
+     * @param model 未邀约成功原因实体
+     */
+    private void updateFailInviteReason(FailInviteReasonTO to, FailInviteReason model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 删除未邀约成功原因
+     * 
+     * @param id
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void remove(String id) throws SerException {
+        super.remove(id);
     }
 }

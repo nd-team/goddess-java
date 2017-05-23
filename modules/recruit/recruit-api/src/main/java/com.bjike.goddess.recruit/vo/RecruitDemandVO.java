@@ -88,7 +88,8 @@ public class RecruitDemandVO {
      */
     private String comment;
 
-    public RecruitDemandVO(){}
+    public RecruitDemandVO() {
+    }
 
     public String getRecruitArea() {
         return recruitArea;

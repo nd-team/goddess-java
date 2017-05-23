@@ -8,8 +8,11 @@ import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewAddressInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewAddressInfor;
 import com.bjike.goddess.recruit.to.InterviewAddressInforTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,35 +36,69 @@ public class InterviewAddressInforSerImpl extends ServiceImpl<InterviewAddressIn
      */
     @Override
     public List<InterviewAddressInforBO> list(InterviewAddressInforDTO dto) throws SerException {
-        List<InterviewAddressInfor> interviewAddressInforList = super.findByPage(dto);
-        List<InterviewAddressInforBO> interviewAddressInforBOList = BeanTransform.copyProperties(interviewAddressInforList, InterviewAddressInforBO.class);
-        return interviewAddressInforBOList;
+        List<InterviewAddressInfor> list = super.findByPage(dto);
+        List<InterviewAddressInforBO> listBO = BeanTransform.copyProperties(list, InterviewAddressInforBO.class);
+        return listBO;
     }
 
     /**
      * 保存面试信息地址
      *
-     * @param interviewAddressInforTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public InterviewAddressInforBO save(InterviewAddressInforTO interviewAddressInforTO) throws SerException {
-        InterviewAddressInfor interviewAddressInfor = BeanTransform.copyProperties(interviewAddressInforTO, InterviewAddressInfor.class, true);
+    @Transactional(rollbackFor = SerException.class)
+    public InterviewAddressInforBO save(InterviewAddressInforTO to) throws SerException {
+        InterviewAddressInfor interviewAddressInfor = BeanTransform.copyProperties(to, InterviewAddressInfor.class, true);
         interviewAddressInfor = super.save(interviewAddressInfor);
-        InterviewAddressInforBO interviewAddressInforBO = BeanTransform.copyProperties(interviewAddressInfor, InterviewAddressInforBO.class);
-        return interviewAddressInforBO;
+        InterviewAddressInforBO bo = BeanTransform.copyProperties(interviewAddressInfor, InterviewAddressInforBO.class);
+        return bo;
     }
 
     /**
      * 更新面试信息地址
      *
-     * @param interviewAddressInforTO
+     * @param to 面试信息地址to
      * @throws SerException
      */
     @Override
-    public void update(InterviewAddressInforTO interviewAddressInforTO) throws SerException {
-        InterviewAddressInfor interviewAddressInfor = BeanTransform.copyProperties(interviewAddressInforTO, InterviewAddressInfor.class, true);
-        super.update(interviewAddressInfor);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(InterviewAddressInforTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            InterviewAddressInfor model = super.findById(to.getId());
+            if (model != null) {
+                updateInterviewAddressInfor(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新面试信息地址
+     *
+     * @param to 面试信息地址to
+     * @param model 面试信息地址实体
+     */
+    private void updateInterviewAddressInfor(InterviewAddressInforTO to, InterviewAddressInfor model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 删除面试信息地址
+     *
+     * @param id 面试信息地址唯一标识
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void remove(String id) throws SerException {
+        super.remove(id);
     }
 }

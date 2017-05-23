@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.InterviewAddressInforBO;
 import com.bjike.goddess.recruit.dto.InterviewAddressInforDTO;
+import com.bjike.goddess.recruit.entity.InterviewAddressInfor;
 import com.bjike.goddess.recruit.service.InterviewAddressInforSer;
 import com.bjike.goddess.recruit.to.InterviewAddressInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class InterviewAddressInforApiImpl implements InterviewAddressInforAPI {
 
     @Autowired
     private InterviewAddressInforSer interviewAddressInforSer;
+
+    /**
+     * 根据id查询面试地址信息
+     *
+     * @param id 面试地址信息唯一标识
+     * @return class InterviewAddressInforBO
+     * @throws SerException
+     */
+    @Override
+    public InterviewAddressInforBO findById(String id) throws SerException {
+        InterviewAddressInfor model = interviewAddressInforSer.findById(id);
+        return BeanTransform.copyProperties(model, InterviewAddressInforBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 面试地址信息dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(InterviewAddressInforDTO dto) throws SerException {
+        return interviewAddressInforSer.count(dto);
+    }
 
     /**
      * 分页查询面试地址信息

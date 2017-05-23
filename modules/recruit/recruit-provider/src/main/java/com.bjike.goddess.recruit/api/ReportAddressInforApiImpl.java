@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
 import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
+import com.bjike.goddess.recruit.entity.ReportAddressInfor;
 import com.bjike.goddess.recruit.service.ReportAddressInforSer;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class ReportAddressInforApiImpl implements ReportAddressInforAPI {
 
     @Autowired
     private ReportAddressInforSer reportAddressInforSer;
+
+    /**
+     * 根据id查询报道地址信息
+     *
+     * @param id 报道地址信息唯一标识
+     * @return class ReportAddressInforBO
+     * @throws SerException
+     */
+    @Override
+    public ReportAddressInforBO findById(String id) throws SerException {
+        ReportAddressInfor model = reportAddressInforSer.findById(id);
+        return BeanTransform.copyProperties(model, ReportAddressInforBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 报道地址信息dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ReportAddressInforDTO dto) throws SerException {
+        return reportAddressInforSer.count(dto);
+    }
 
     /**
      * 分页查询报道地址信息

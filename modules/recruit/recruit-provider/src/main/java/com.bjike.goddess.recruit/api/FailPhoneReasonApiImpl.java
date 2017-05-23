@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FailPhoneReasonBO;
 import com.bjike.goddess.recruit.dto.FailPhoneReasonDTO;
 import com.bjike.goddess.recruit.entity.FailPhoneReason;
@@ -25,6 +26,30 @@ public class FailPhoneReasonApiImpl implements FailPhoneReasonAPI {
 
     @Autowired
     private FailPhoneReasonSer failPhoneReasonSer;
+
+    /**
+     * 根据id查询未成功通话原因
+     *
+     * @param id 未成功通话原因唯一标识
+     * @return class FailPhoneReasonBO
+     * @throws SerException
+     */
+    @Override
+    public FailPhoneReasonBO findById(String id) throws SerException {
+        FailPhoneReason model = failPhoneReasonSer.findById(id);
+        return BeanTransform.copyProperties(model, FailPhoneReasonBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未成功通话原因dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(FailPhoneReasonDTO dto) throws SerException {
+        return failPhoneReasonSer.count(dto);
+    }
 
     /**
      * 分页查询未成功通话原因

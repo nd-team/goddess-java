@@ -61,7 +61,7 @@ public interface RecruitProSer extends Ser<RecruitPro, RecruitProDTO> {
      * @param pass
      * @throws SerException
      */
-    void yyEdit (RecruitProTO recruitProTO,Boolean pass) throws SerException;
+    void yyEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException;
 
     /**
      * 总经办审核
@@ -70,5 +70,5 @@ public interface RecruitProSer extends Ser<RecruitPro, RecruitProDTO> {
      * @param pass
      * @throws SerException
      */
-    void managerEdit (RecruitProTO recruitProTO, Boolean pass) throws SerException;
+    void managerEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException;
 }

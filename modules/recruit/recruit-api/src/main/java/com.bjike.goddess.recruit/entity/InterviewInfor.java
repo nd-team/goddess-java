@@ -62,7 +62,7 @@ public class InterviewInfor extends BaseEntity {
     /**
      * 性别
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1) COMMENT '性别' ")
+    @Column(nullable = false, columnDefinition = "TINYINT(2) COMMENT '性别' ")
     private Gender gender;
 
     /**

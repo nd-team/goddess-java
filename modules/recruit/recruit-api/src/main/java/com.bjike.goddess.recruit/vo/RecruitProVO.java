@@ -1,11 +1,6 @@
 package com.bjike.goddess.recruit.vo;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * 招聘方案

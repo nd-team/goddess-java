@@ -1,8 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.FailFirstInterviewReasonBO;
 import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
+import com.bjike.goddess.recruit.entity.FailFirstInterviewReason;
 import com.bjike.goddess.recruit.service.FailFirstInterviewReasonSer;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class FailFirstInterviewReasonApiImpl implements FailFirstInterviewReason
 
     @Autowired
     private FailFirstInterviewReasonSer failFirstInterviewReasonSer;
+
+    /**
+     * 根据id查询未应约初试原因
+     *
+     * @param id 未应约初试原因唯一标识
+     * @return class FailFirstInterviewReasonBO
+     * @throws SerException
+     */
+    @Override
+    public FailFirstInterviewReasonBO findById(String id) throws SerException {
+        FailFirstInterviewReason model = failFirstInterviewReasonSer.findById(id);
+        return BeanTransform.copyProperties(model, FailFirstInterviewReasonBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 未应约初试原因dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(FailFirstInterviewReasonDTO dto) throws SerException {
+        return failFirstInterviewReasonSer.count(dto);
+    }
 
     /**
      * 分页查询未应约初试原因
