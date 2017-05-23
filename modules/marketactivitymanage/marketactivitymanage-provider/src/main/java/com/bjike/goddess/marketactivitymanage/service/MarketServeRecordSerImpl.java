@@ -69,7 +69,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public MarketServeRecordBO save(MarketServeRecordTO to) throws SerException {
         MarketServeRecord marketServeRecord = BeanTransform.copyProperties(to, MarketServeRecord.class, true);
         marketServeRecord = super.save(marketServeRecord);
@@ -84,7 +84,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeRecordTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             MarketServeRecord model = super.findById(to.getId());
@@ -119,7 +119,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void addClientInfo(CustomerInfoTO to) throws SerException {
        /* String marketServeId = to.getMarketServeId();
         List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
@@ -147,7 +147,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(MarketServeRecordTO to) throws SerException {
         String id = to.getId();
         MarketServeRecord entity = super.findById(id);
@@ -165,7 +165,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void executiveOpinion(MarketServeRecordTO to) throws SerException {
         String id = to.getId();//获取id
         MarketServeRecord entity = super.findById(id);
@@ -184,7 +184,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void importFile(InputStream inputStream, String targetPath) throws SerException {
         // TODO: 17-3-20
     }
@@ -197,7 +197,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public OutputStream exportFile(String filePath) throws SerException {
         // TODO: 17-3-20
         return null;
@@ -229,7 +229,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }

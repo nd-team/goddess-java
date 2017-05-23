@@ -74,6 +74,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
 
         String sb = getProjectGroup(to);
@@ -111,7 +112,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeSummaryTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             MarketServeSummary model = super.findById(to.getId());
@@ -149,6 +150,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void thaw(MarketServeSummaryTO to) throws SerException {
         to.setStatus(Status.THAW);
         this.update(to);
@@ -161,6 +163,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void congeal(MarketServeSummaryTO to) throws SerException {
         to.setStatus(Status.CONGEAL);
         this.update(to);

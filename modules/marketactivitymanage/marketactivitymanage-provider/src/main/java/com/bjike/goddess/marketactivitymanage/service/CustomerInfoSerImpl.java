@@ -50,7 +50,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public CustomerInfoBO save(CustomerInfoTO to) throws SerException {
         CustomerInfo entity = BeanTransform.copyProperties(to, CustomerInfo.class, true);
         entity = super.save(entity);
@@ -65,7 +65,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(CustomerInfoTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             CustomerInfo model = super.findById(to.getId());
@@ -100,7 +100,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }

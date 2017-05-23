@@ -58,7 +58,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public MarketServeApplyBO save(MarketServeApplyTO to) throws SerException {
         MarketServeApply marketServeApply = BeanTransform.copyProperties(to, MarketServeApply.class, true);
         marketServeApply = super.save(marketServeApply);
@@ -73,7 +73,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeApplyTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             MarketServeApply model = super.findById(to.getId());
@@ -108,7 +108,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void addClientInfo(CustomerInfoTO to) throws SerException {
 //        String marketServeId = to.getMarketServeId();
 //        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
@@ -136,7 +136,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(MarketServeApplyTO to) throws SerException {
         this.update(to);
     }
@@ -148,7 +148,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void executiveOpinion(MarketServeApplyTO to) throws SerException {
         this.update(to);
     }
@@ -198,7 +198,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
