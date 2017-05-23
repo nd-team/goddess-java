@@ -64,14 +64,34 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             bo.setPosition("");
             bo.setArrangement("");
             bo.setDepartment("");
-            if (null != detailBO)
-                for (String id : detailBO.getPositionIds().split(",")) {
-                    PositionDetailBO position = positionDetailAPI.findBOById(id);
-                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
-                    bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
-                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
-                    bo.setArea(bo.getArea() + "," + position.getArea());
+            if (null != detailBO) {
+                List<PositionDetailBO> positionBOs = positionDetailAPI.findByPostIds(detailBO.getPositionIds().split(","));
+                String area = "", department = "", arrangement = "";
+                for (PositionDetailBO position : positionBOs.stream()
+                        .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
+                        .collect(Collectors.toList())) {
+                    bo.setPosition(position.getPosition() + "," + bo.getPosition());
+                    if (!arrangement.equals(position.getArrangementName())) {
+                        arrangement = position.getArrangementName();
+                        bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+                    }
                 }
+
+                for (PositionDetailBO position : positionBOs.stream()
+                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                        .collect(Collectors.toList()))
+                    if (!department.equals(position.getDepartmentName())) {
+                        department = position.getDepartmentName();
+                        bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
+                    }
+                for (PositionDetailBO position : positionBOs.stream()
+                        .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+                        .collect(Collectors.toList()))
+                    if (!area.equals(position.getArea())) {
+                        area = position.getArea();
+                        bo.setArea(position.getArea() + "," + bo.getArea());
+                    }
+            }
         }
         bo.setEmployeeNumber(user.getEmployeeNumber());
         bo.setPhone(user.getPhone());
@@ -87,8 +107,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public DimissionInfoBO apply(DimissionInfoTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
-        entity.setUsername(userAPI.currentUser().getUsername());
+        entity.setUsername(user.getUsername());
         entity.setType(DimissionType.NORMAL);
         entity.setApplyDate(LocalDate.now());
         entity.setDimission(DimissionStatus.APPLY);
@@ -147,13 +168,14 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public DimissionInfoBO interview(DimissionInterviewTo to) throws SerException {
+        UserBO user = userAPI.currentUser();
         DimissionInfo entity = super.findById(to.getId());
         if (to.getAuthority()) {//是否为负责人面谈
-            entity.setLiable(userAPI.currentUser().getUsername());
+            entity.setLiable(user.getUsername());
             entity.setLiableOpinion(to.getOpinion());
             entity.setContent(to.getContent());
         } else {
-            entity.setManage(userAPI.currentUser().getUsername());
+            entity.setManage(user.getUsername());
             entity.setManageOpinion(to.getOpinion());
         }
         super.update(entity);
@@ -488,5 +510,20 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                 bos.add(reasonBO);
             }
         return bos;
+    }
+
+
+    @Override
+    public DimissionInfoBO getById(String id) throws SerException {
+        DimissionInfo entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        return super.count(dto);
     }
 }

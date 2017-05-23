@@ -44,4 +44,14 @@ public class HandoverReferenceApiImpl implements HandoverReferenceAPI {
     public List<HandoverReferenceBO> maps(HandoverReferenceDTO dto) throws SerException {
         return handoverReferenceSer.maps(dto);
     }
+
+    @Override
+    public HandoverReferenceBO getById(String id) throws SerException {
+        return handoverReferenceSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return handoverReferenceSer.getTotal();
+    }
 }

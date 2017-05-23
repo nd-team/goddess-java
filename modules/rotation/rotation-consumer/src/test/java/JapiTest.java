@@ -17,11 +17,10 @@ public class JapiTest {
 	public static void main(String[] args) throws IOException {
 		JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
-		JapiClient.setProjectJavaPath("modules/projectcost/projectcost-consumer");//主项目位置
-		JapiClient.setActionReletivePath("com/bjike/goddess/projectcost/action");//主项目action位置
+		JapiClient.setProjectJavaPath("modules/rotation/rotation-consumer");//主项目位置
+		JapiClient.setActionReletivePath("com/bjike/goddess/rotation/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
-				"modules/otherexpenses/otherexpenses-api",
-				"modules/projectcost/projectcost-api",
+				"modules/rotation/rotation-api",
 				"common/common-api"
 		});
 		JapiClient.setFlushServer(true);

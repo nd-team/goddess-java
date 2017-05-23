@@ -241,4 +241,26 @@ public interface DimissionInfoAPI {
         return null;
     }
 
+
+    /**
+     * 根据id获取离职信息数据
+     *
+     * @param id 离职信息数据id
+     * @return
+     * @throws SerException
+     */
+    default DimissionInfoBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

@@ -224,6 +224,16 @@ public interface UserAPI {
     default void deleteUser(String id) throws SerException {
     }
 
+    /**
+     * 员工入职获取最大员工编号
+     *
+     * @return UserBO
+     * @throws SerException
+     */
+    default String maxUserEmpNumber( ) throws SerException {
+        return null;
+    }
+
 
 
 }

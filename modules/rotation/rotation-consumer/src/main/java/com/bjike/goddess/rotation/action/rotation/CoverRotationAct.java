@@ -38,8 +38,6 @@ public class CoverRotationAct {
 
     @Autowired
     private CoverRotationAPI coverRotationAPI;
-    @Autowired
-    private UserAPI userAPI;
 
     /**
      * 保存
@@ -65,6 +63,7 @@ public class CoverRotationAct {
      * @return class CoverRotationVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(ADD.class) CoverRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -81,6 +80,7 @@ public class CoverRotationAct {
      * @return class CoverRotationVO
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -113,6 +113,7 @@ public class CoverRotationAct {
      * @return class CoverRotationOpinionVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/opinion/{id}")
     public Result opinion(@Validated(ADD.class) CoverRotationOpinionTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -131,6 +132,7 @@ public class CoverRotationAct {
      * @return class CoverRotationVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/general/opinion/{id}")
     public Result generalOpinion(@Validated(EDIT.class) CoverRotationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {

@@ -63,4 +63,18 @@ public class HandoverReferenceSerImpl extends ServiceImpl<HandoverReference, Han
         dto.getSorts().add("modifyTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), HandoverReferenceBO.class);
     }
+
+    @Override
+    public HandoverReferenceBO getById(String id) throws SerException {
+        HandoverReference entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, HandoverReferenceBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        HandoverReferenceDTO dto = new HandoverReferenceDTO();
+        return super.count(dto);
+    }
 }

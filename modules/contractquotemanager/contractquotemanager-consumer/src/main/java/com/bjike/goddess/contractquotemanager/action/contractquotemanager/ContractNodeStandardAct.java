@@ -12,6 +12,7 @@ import com.bjike.goddess.contractquotemanager.api.ContractNodeStandardAPI;
 import com.bjike.goddess.contractquotemanager.bo.ContractNodeStandardBO;
 import com.bjike.goddess.contractquotemanager.dto.ContractNodeStandardDTO;
 import com.bjike.goddess.contractquotemanager.to.ContractNodeStandardTO;
+import com.bjike.goddess.contractquotemanager.vo.ColationVO;
 import com.bjike.goddess.contractquotemanager.vo.ContractNodeStandardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -190,4 +191,35 @@ public class ContractNodeStandardAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取类别
+     *
+     * @return class ColationVO
+     * @version v1
+     */
+    @GetMapping("v1/findType")
+    public Result findType() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(contractNodeStandardAPI.findType(), ColationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取节点
+     *
+     * @return class ColationVO
+     * @version v1
+     */
+    @GetMapping("v1/findNode")
+    public Result findNode() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(contractNodeStandardAPI.findNode(), ColationVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -74,4 +74,24 @@ public interface WorkHandoverAPI {
         return null;
     }
 
+    /**
+     * 根据id获取工作交接数据
+     *
+     * @param id 工作交接数据id
+     * @return
+     * @throws SerException
+     */
+    default WorkHandoverBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }
