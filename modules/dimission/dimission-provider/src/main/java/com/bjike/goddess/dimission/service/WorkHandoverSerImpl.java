@@ -68,12 +68,12 @@ public class WorkHandoverSerImpl extends ServiceImpl<WorkHandover, WorkHandoverD
 
     @Override
     public WorkHandoverBO success(HandoverSuccessTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据id不能为空");
         WorkHandover entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        UserBO user = userAPI.currentUser();
         if (to.getAuthority()) {//是否为福利模块负责人
             entity.setDirector(user.getUsername());
             entity.setDirectorConfirm(to.getOpinion());
@@ -89,5 +89,19 @@ public class WorkHandoverSerImpl extends ServiceImpl<WorkHandover, WorkHandoverD
     public List<WorkHandoverBO> maps(WorkHandoverDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), WorkHandoverBO.class);
+    }
+
+    @Override
+    public WorkHandoverBO getById(String id) throws SerException {
+        WorkHandover entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, WorkHandoverBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        WorkHandoverDTO dto = new WorkHandoverDTO();
+        return super.count(dto);
     }
 }

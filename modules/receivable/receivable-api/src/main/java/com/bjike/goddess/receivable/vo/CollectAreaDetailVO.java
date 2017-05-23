@@ -11,10 +11,6 @@ public class CollectAreaDetailVO implements Serializable{
      */
     private String area;
     /**
-     * id
-     */
-    private String id;
-    /**
      * 项目内部名称
      */
     private String innerName;
@@ -80,7 +76,7 @@ public class CollectAreaDetailVO implements Serializable{
     /**
      * 总包单位
      */
-    private String contractor;
+    private String name;
     /**
      * 是否已走结算流程
      */
@@ -88,7 +84,7 @@ public class CollectAreaDetailVO implements Serializable{
     /**
      * 详细情况
      */
-    private String detailInfo;
+    private String remark;
 
     public String getArea() {
         return area;
@@ -96,14 +92,6 @@ public class CollectAreaDetailVO implements Serializable{
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getInnerName() {
@@ -218,12 +206,12 @@ public class CollectAreaDetailVO implements Serializable{
         this.afterTax = afterTax;
     }
 
-    public String getContractor() {
-        return contractor;
+    public String getName() {
+        return name;
     }
 
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIs_flow() {
@@ -234,11 +222,12 @@ public class CollectAreaDetailVO implements Serializable{
         this.is_flow = is_flow;
     }
 
-    public String getDetailInfo() {
-        return detailInfo;
+
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDetailInfo(String detailInfo) {
-        this.detailInfo = detailInfo;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

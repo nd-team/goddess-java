@@ -43,14 +43,14 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
 
     @Override
     public StorageUserBO register(StorageUserTO storageUserTO) throws SerException {
-        String sysNO = userAPI.currentSysNO();
+        String sysNO = userAPI.currentSysNO(storageUserTO.getUserToken());
         StorageUserDTO dto = new StorageUserDTO();
-        dto.getConditions().add(Restrict.or("moduleName", storageUserTO.getModuleName()));
-        dto.getConditions().add(Restrict.or("account", storageUserTO.getAccount()));
+        dto.getConditions().add(Restrict.eq("moduleName", storageUserTO.getModuleName()));
+        dto.getConditions().add(Restrict.eq("account", storageUserTO.getAccount()));
+        dto.getConditions().add(Restrict.eq(SYS_NO, sysNO));
         StorageUser storageUser = null;
         if (null == super.findOne(dto)) {
             storageUser = BeanTransform.copyProperties(storageUserTO, StorageUser.class);
-            storageUser.setStatus(Status.THAW);
             storageUser.setSystemNO(sysNO);
             try {
                 storageUser.setPassword(PasswordHash.createHash(storageUser.getPassword()));

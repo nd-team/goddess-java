@@ -53,7 +53,6 @@ public class CoverRotationOpinionAct {
      * 获取总条数
      *
      * @param id 岗位轮换自荐数据id
-     * @return
      * @version v1
      */
     @GetMapping("v1/getTotal/{id}")

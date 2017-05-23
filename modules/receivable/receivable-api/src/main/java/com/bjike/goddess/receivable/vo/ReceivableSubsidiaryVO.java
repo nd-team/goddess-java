@@ -190,7 +190,7 @@ public class ReceivableSubsidiaryVO {
     /**
      * 承包商
      */
-    private ContractorVO contractor;
+    private ContractorVO contractorVO;
 
     /**
      * 是否已支付
@@ -493,12 +493,12 @@ public class ReceivableSubsidiaryVO {
         this.moreMoney = moreMoney;
     }
 
-    public ContractorVO getContractor() {
-        return contractor;
+    public ContractorVO getContractorVO() {
+        return contractorVO;
     }
 
-    public void setContractor(ContractorVO contractor) {
-        this.contractor = contractor;
+    public void setContractorVO(ContractorVO contractorVO) {
+        this.contractorVO = contractorVO;
     }
 
     public Boolean getIspay() {

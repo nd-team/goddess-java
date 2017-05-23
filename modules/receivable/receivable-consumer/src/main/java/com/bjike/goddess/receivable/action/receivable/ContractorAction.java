@@ -132,7 +132,7 @@ public class ContractorAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             contractorAPI.removeContractor(id);
             return new ActResult("delete success");

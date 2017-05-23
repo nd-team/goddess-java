@@ -26,6 +26,7 @@
 	<dubbo:service interface="com.bjike.goddess.workjoin.api.WorkJoinTimeSpecificationAPI" ref="workJoinTimeSpecificationApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.workjoin.api.WorkJoinDutyAPI" ref="workJoinDutyApiImpl" />
 	<!--其他模块业务接口-->
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 
 </beans>

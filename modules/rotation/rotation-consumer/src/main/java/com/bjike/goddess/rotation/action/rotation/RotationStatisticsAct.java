@@ -10,7 +10,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.api.RotationStatisticsAPI;
 import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.to.RotationStatisticsTO;
-import com.bjike.goddess.rotation.vo.RecommendRotationVO;
+import com.bjike.goddess.rotation.vo.RotationStatisticsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -38,13 +38,13 @@ public class RotationStatisticsAct {
      * 保存
      *
      * @param to 岗位轮换统计传输对象
-     * @return class  RotationStatisticsVO
+     * @return class RotationStatisticsVO
      * @version v1
      */
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) RotationStatisticsTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.save(to), RecommendRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.save(to), RotationStatisticsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -54,13 +54,13 @@ public class RotationStatisticsAct {
      * 编辑
      *
      * @param to 岗位轮换统计传输对象
-     * @return class  RotationStatisticsVO
+     * @return class RotationStatisticsVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) RotationStatisticsTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.update(to), RecommendRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.update(to), RotationStatisticsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -70,13 +70,13 @@ public class RotationStatisticsAct {
      * 删除
      *
      * @param id 岗位轮换统计数据id
-     * @return class  RotationStatisticsVO
+     * @return class RotationStatisticsVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.delete(id), RecommendRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.delete(id), RotationStatisticsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -86,13 +86,13 @@ public class RotationStatisticsAct {
      * 根据id查询岗位轮换统计数据
      *
      * @param id 岗位轮换统计数据id
-     * @return class  RotationStatisticsVO
+     * @return class RotationStatisticsVO
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
     public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.getById(id), RecommendRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.getById(id), RotationStatisticsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -102,12 +102,13 @@ public class RotationStatisticsAct {
      * 列表
      *
      * @param dto 岗位轮换统计数据传输对象
-     * @return class  RotationStatisticsVO
+     * @return class RotationStatisticsVO
      * @version v1
      */
+    @GetMapping("v1/maps")
     public Result maps(RotationStatisticsDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.maps(dto), RecommendRotationVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(rotationStatisticsAPI.maps(dto), RotationStatisticsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

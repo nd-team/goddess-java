@@ -9,7 +9,7 @@ public class CollectContractorDetailBO implements Serializable{
     /**
      * 总包单位
      */
-    private String contractor;
+    private String name;
     /**
      * 地区
      */
@@ -80,11 +80,11 @@ public class CollectContractorDetailBO implements Serializable{
     /**
      * 是否已走结算流程
      */
-    private String isflow;
+    private String is_flow;
     /**
      * 详细情况
      */
-    private String detailInfo;
+    private String remark;
 
     public String getArea() {
         return area;
@@ -206,27 +206,27 @@ public class CollectContractorDetailBO implements Serializable{
         this.afterTax = afterTax;
     }
 
-    public String getContractor() {
-        return contractor;
+    public String getName() {
+        return name;
     }
 
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getIsflow() {
-        return isflow;
+    public String getIs_flow() {
+        return is_flow;
     }
 
-    public void setIsflow(String isflow) {
-        this.isflow = isflow;
+    public void setIs_flow(String is_flow) {
+        this.is_flow = is_flow;
     }
 
-    public String getDetailInfo() {
-        return detailInfo;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDetailInfo(String detailInfo) {
-        this.detailInfo = detailInfo;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

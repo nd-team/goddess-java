@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 交接信息参考
  *
@@ -91,6 +93,36 @@ public class HandoverReferenceAct {
     public Result maps(HandoverReferenceDTO dto) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(handoverReferenceAPI.maps(dto), HandoverReferenceVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取交接信息参考数据
+     *
+     * @param id 交接信息参考数据id
+     * @return class HandoverReferenceVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(handoverReferenceAPI.getById(id), HandoverReferenceVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(handoverReferenceAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

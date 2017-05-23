@@ -127,4 +127,14 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     public List<DimissionReasonBO> reasonCollect(DimissionCollectTO to) throws SerException {
         return dimissionInfoSer.reasonCollect(to);
     }
+
+    @Override
+    public DimissionInfoBO getById(String id) throws SerException {
+        return dimissionInfoSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return dimissionInfoSer.getTotal();
+    }
 }

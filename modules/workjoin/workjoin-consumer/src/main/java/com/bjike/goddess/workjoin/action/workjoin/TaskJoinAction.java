@@ -139,6 +139,7 @@ public class TaskJoinAction {
      * @des 根据用户id删除任务交接记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
