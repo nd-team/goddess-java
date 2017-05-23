@@ -124,4 +124,8 @@ public class UserApiImpl implements UserAPI {
         userSer.deleteUser(id);
     }
 
+    @Override
+    public String maxUserEmpNumber() throws SerException {
+        return userSer.maxUserEmpNumber();
+    }
 }
