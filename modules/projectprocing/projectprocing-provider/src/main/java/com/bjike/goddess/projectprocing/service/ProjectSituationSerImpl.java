@@ -1,5 +1,6 @@
 package com.bjike.goddess.projectprocing.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -33,6 +34,12 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
 
     @Override
     public Long countProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
+        if (StringUtils.isNotBlank(projectSituationDTO.getEnginPlace())) {
+            projectSituationDTO.getConditions().add(Restrict.like("enginPlace", projectSituationDTO.getEnginPlace()));
+        }
+        if (StringUtils.isNotBlank(projectSituationDTO.getCompleteCondition())) {
+            projectSituationDTO.getConditions().add(Restrict.like("completeCondition", projectSituationDTO.getCompleteCondition()));
+        }
         return super.count(projectSituationDTO);
     }
 
@@ -47,6 +54,12 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
 
     @Override
     public List<ProjectSituationBO> listProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
+        if (StringUtils.isNotBlank(projectSituationDTO.getEnginPlace())) {
+            projectSituationDTO.getConditions().add(Restrict.like("enginPlace", projectSituationDTO.getEnginPlace()));
+        }
+        if (StringUtils.isNotBlank(projectSituationDTO.getCompleteCondition())) {
+            projectSituationDTO.getConditions().add(Restrict.like("completeCondition", projectSituationDTO.getCompleteCondition()));
+        }
         List<ProjectSituation> list = super.findByCis(projectSituationDTO,true);
         return BeanTransform.copyProperties(list,ProjectSituationBO.class);
     }

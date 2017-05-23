@@ -71,6 +71,11 @@ public class EntryBasicInfoApiImpl implements EntryBasicInfoAPI{
     }
 
     @Override
+    public List<String> listPost() throws SerException {
+        return entryBasicInfoSer.listPost();
+    }
+
+    @Override
     public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         return entryBasicInfoSer.getEntryBasicInfoByName(name);
     }

@@ -20,6 +20,10 @@ public class StaffEntryRegisterVO {
      */
     private String empNumber;
     /**
+     * 员工密码
+     */
+    private String password;
+    /**
      * 用户名
      */
     private String userName;
@@ -52,6 +56,10 @@ public class StaffEntryRegisterVO {
      */
     private String workEmailPassword;
     /**
+     * 帐号密码是否已告知
+     */
+    private String tellStatus;
+    /**
      * 创建时间
      */
     private String createTime;
@@ -73,6 +81,14 @@ public class StaffEntryRegisterVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmpNumber() {
@@ -161,5 +177,13 @@ public class StaffEntryRegisterVO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTellStatus() {
+        return tellStatus;
+    }
+
+    public void setTellStatus(String tellStatus) {
+        this.tellStatus = tellStatus;
     }
 }

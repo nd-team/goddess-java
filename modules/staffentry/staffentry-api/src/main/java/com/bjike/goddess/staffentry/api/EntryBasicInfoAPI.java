@@ -104,6 +104,14 @@ public interface EntryBasicInfoAPI {
     }
 
     /**
+     * 汇总获取所有岗位
+     * @throws SerException
+     */
+    default List<String> listPost( ) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据名字查找信息
      * @param  name name
      * @return class entryBasicInfoBO

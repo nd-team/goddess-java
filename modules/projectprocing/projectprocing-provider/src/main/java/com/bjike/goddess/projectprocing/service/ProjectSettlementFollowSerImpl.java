@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,48 +37,58 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
 
     @Override
     public Long countProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
-        if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area",projectSettlementFollowDTO.getArea()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType",projectSettlementFollowDTO.getBusinessType()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject",projectSettlementFollowDTO.getBusinessSubject()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName",projectSettlementFollowDTO.getOperatorName()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit",projectSettlementFollowDTO.getOutsourcingUnit()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName",projectSettlementFollowDTO.getInnerName()));
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area", projectSettlementFollowDTO.getArea()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType", projectSettlementFollowDTO.getBusinessType()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject", projectSettlementFollowDTO.getBusinessSubject()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName", projectSettlementFollowDTO.getOperatorName()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit", projectSettlementFollowDTO.getOutsourcingUnit()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName", projectSettlementFollowDTO.getInnerName()));
         }
         return super.count(projectSettlementFollowDTO);
     }
 
     @Override
     public ProjectSettlementFollowBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
-            throw  new SerException("id不能为空");
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
         }
-        ProjectSettlementFollow projectSituation = super.findById( id );
-        return BeanTransform.copyProperties( projectSituation , ProjectSettlementFollowBO.class);
+        ProjectSettlementFollow projectSituation = super.findById(id);
+        return BeanTransform.copyProperties(projectSituation, ProjectSettlementFollowBO.class);
     }
 
     @Override
     public List<ProjectSettlementFollowBO> listProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
-        if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area",projectSettlementFollowDTO.getArea()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType",projectSettlementFollowDTO.getBusinessType()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject",projectSettlementFollowDTO.getBusinessSubject()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName",projectSettlementFollowDTO.getOperatorName()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit",projectSettlementFollowDTO.getOutsourcingUnit()));
-        }if(StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())){
-            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName",projectSettlementFollowDTO.getInnerName()));
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("area", projectSettlementFollowDTO.getArea()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessType())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessType", projectSettlementFollowDTO.getBusinessType()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getBusinessSubject())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("businessSubject", projectSettlementFollowDTO.getBusinessSubject()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getOperatorName())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("operatorName", projectSettlementFollowDTO.getOperatorName()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getOutsourcingUnit())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("outsourcingUnit", projectSettlementFollowDTO.getOutsourcingUnit()));
+        }
+        if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getInnerName())) {
+            projectSettlementFollowDTO.getConditions().add(Restrict.eq("innerName", projectSettlementFollowDTO.getInnerName()));
         }
         List<ProjectSettlementFollow> list = super.findByCis(projectSettlementFollowDTO, true);
-        List<ProjectSettlementFollowBO> projectSettlementFollowBOS =  BeanTransform.copyProperties(list, ProjectSettlementFollowBO.class);
+        List<ProjectSettlementFollowBO> projectSettlementFollowBOS = BeanTransform.copyProperties(list, ProjectSettlementFollowBO.class);
         return projectSettlementFollowBOS;
     }
 
@@ -96,12 +105,12 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSettlementFollowBO editProjectSettlementFollow(ProjectSettlementFollowTO projectSettlementFollowTO) throws SerException {
-        if (StringUtils.isBlank(projectSettlementFollowTO.getId()) || projectSettlementFollowTO.getId()==null ) {
+        if (StringUtils.isBlank(projectSettlementFollowTO.getId()) || projectSettlementFollowTO.getId() == null) {
             throw new SerException("编号不能为空");
         }
         ProjectSettlementFollow projectSettlementFollow = super.findById(projectSettlementFollowTO.getId());
-        if( projectSettlementFollow == null ){
-            throw  new SerException("编辑失败，您填写的数据可能有错");
+        if (projectSettlementFollow == null) {
+            throw new SerException("编辑失败，您填写的数据可能有错");
         }
         ProjectSettlementFollow temp = BeanTransform.copyProperties(projectSettlementFollowTO, ProjectSettlementFollow.class, true);
         BeanUtils.copyProperties(temp, projectSettlementFollow, "id", "createTime", "outerNameId", "innerNameId", "saleNumId", "businessId");
@@ -138,109 +147,153 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
         for (String unit : units) {
             CollectData collectData = new CollectData();
             String[] businessFields = new String[]{"name", "settleMoney", "noSettleMoney", "counts"};
-            List<CollectDataForBusiness> collectDataForBusinesses = super.findBySql(
-                    "SELECT businessSubject AS name, sum(settleMoney)  AS settleMoney ,sum(restSettleNum) as noSettleMoney ," +
-                            "  count(businessSubject) as counts FROM projectprocing_projectsettlementfollow" +
-                            " where outsourcingUnit = '" + unit.trim() + "' GROUP BY businessSubject  ORDER BY businessSubject ASC ", CollectDataForBusiness.class, businessFields);
-            collectData.setCollectDataForBusinessList( collectDataForBusinesses );
+            List<CollectDataForBusiness> collectDataForBusinessesList = new ArrayList<>();
+            //其他的unit设为空
+            for (int i = 0; i < units.size(); i++) {
+                List<CollectDataForBusiness> collectDataForBusinessesListTemp = new ArrayList<>();
+                String tempUnit = units.get(i);
+                if (!tempUnit.equals(unit)) {
+                    String[] businessFieldsTemp = new String[]{"name"};
+                    collectDataForBusinessesListTemp = super.findBySql(
+                            "SELECT businessSubject AS name FROM projectprocing_projectsettlementfollow " +
+                                    " where outsourcingUnit = '" + tempUnit.trim() + "' GROUP BY businessSubject  ORDER BY businessSubject ASC ", CollectDataForBusiness.class, businessFieldsTemp);
+                    CollectDataForBusiness tempData = collectDataForBusinessesListTemp.get(0);
+                    tempData.setName(tempData.getName());
+                    tempData.setCounts(0);
+                    tempData.setNoSettleMoney(0d);
+                    tempData.setSettleMoney(0d);
+                    collectDataForBusinessesList.add( tempData  );
+                } else if (tempUnit.equals(unit)) {
+                    collectDataForBusinessesListTemp = super.findBySql(
+                            "SELECT businessSubject AS name, sum(settleMoney)  AS settleMoney ,sum(restSettleNum) as noSettleMoney ," +
+                                    "  count(businessSubject) as counts FROM projectprocing_projectsettlementfollow " +
+                                    " where outsourcingUnit = '" + unit.trim() + "' GROUP BY businessSubject  ORDER BY businessSubject ASC ", CollectDataForBusiness.class, businessFields);
+                    collectDataForBusinessesList.add( collectDataForBusinessesListTemp.get(0));
+                }
+                collectData.setCollectDataForBusinessList(collectDataForBusinessesList);
+
+            }
+
             //统计是否初验
-            String[] startCheckFields = new String[]{"startCheckCount","noStartCheckCount"};
+            String[] startCheckFields = new String[]{"startCheckCount", "noStartCheckCount"};
             List<CollectData> startCheck = super.findBySql("SELECT count(ck1.startCheckCondition) AS startCheckCount," +
                     "  ( SELECT count(ck2.startCheckCondition) FROM projectprocing_projectsettlementfollow ck2 " +
                     "    WHERE ck2.outsourcingUnit = '" + unit.trim() + "' AND ck2.startCheckCondition = '已初验' " +
                     "  ) noStartCheckCount " +
                     " FROM projectprocing_projectsettlementfollow ck1 " +
                     " WHERE ck1.outsourcingUnit = '" + unit.trim() + "' AND ck1.startCheckCondition = '未初验'", CollectData.class, startCheckFields);
-            collectData.setStartCheckCount( startCheck.get(0).getStartCheckCount() ==null ? 0 : startCheck.get(0).getStartCheckCount() );
-            collectData.setNoStartCheckCount( startCheck.get(0).getNoStartCheckCount() ==null ? 0 : startCheck.get(0).getNoStartCheckCount() );
+            collectData.setStartCheckCount(startCheck.get(0).getStartCheckCount() == null ? 0 : startCheck.get(0).getStartCheckCount());
+            collectData.setNoStartCheckCount(startCheck.get(0).getNoStartCheckCount() == null ? 0 : startCheck.get(0).getNoStartCheckCount());
             //统计是否已制作申请结算资料
-            String[] settleFileFields = new String[]{"settleFileCount","noSettleFileCount"};
+            String[] settleFileFields = new String[]{"settleFileCount", "noSettleFileCount"};
             List<CollectData> settleFile = super.findBySql("SELECT count(ck1.settleFileCondition) AS settleFileCount," +
                     "  ( SELECT count(ck2.settleFileCondition) FROM projectprocing_projectsettlementfollow ck2 " +
                     "    WHERE ck2.outsourcingUnit = '" + unit.trim() + "' AND ck2.settleFileCondition = '否' " +
                     "  ) noSettleFileCount " +
                     " FROM projectprocing_projectsettlementfollow ck1 " +
                     " WHERE ck1.outsourcingUnit = '" + unit.trim() + "' AND ck1.settleFileCondition = '是'", CollectData.class, startCheckFields);
-            collectData.setSettleFileCount( settleFile.get(0).getSettleFileCount() ==null ? 0 : settleFile.get(0).getSettleFileCount() );
-            collectData.setNoSettleFileCount( settleFile.get(0).getNoSettleFileCount() ==null ? 0 : settleFile.get(0).getNoSettleFileCount() );
+            collectData.setSettleFileCount(settleFile.get(0).getSettleFileCount() == null ? 0 : settleFile.get(0).getSettleFileCount());
+            collectData.setNoSettleFileCount(settleFile.get(0).getNoSettleFileCount() == null ? 0 : settleFile.get(0).getNoSettleFileCount());
             //统计结算进度A、B、C
-            String[] settleABCFields = new String[]{"settleProcingACount","settleProcingBCount","settleProcingCCount"};
+            String[] settleABCFields = new String[]{"settleProcingACount", "settleProcingBCount", "settleProcingCCount"};
             List<CollectData> settleABC = super.findBySql("SELECT count(settleProcingA) AS settleProcingA, " +
-                            "  count(settleProcingB) AS settleProcingB,  count(settleProcingC) AS settleProcingC " +
-                            " FROM projectprocing_projectsettlementfollow WHERE outsourcingUnit = '"+unit.trim()+"'",CollectData.class,settleABCFields);
-            collectData.setSettleProcingACount( settleABC.get(0).getSettleProcingACount() ==null ? 0 : settleABC.get(0).getSettleProcingACount() );
-            collectData.setSettleProcingBCount( settleABC.get(0).getSettleProcingBCount() ==null ? 0 :  settleABC.get(0).getSettleProcingBCount() );
-            collectData.setSettleProcingCCount( settleABC.get(0).getSettleProcingCCount() ==null ? 0 : settleABC.get(0).getSettleProcingCCount() );
+                    "  count(settleProcingB) AS settleProcingB,  count(settleProcingC) AS settleProcingC " +
+                    " FROM projectprocing_projectsettlementfollow WHERE outsourcingUnit = '" + unit.trim() + "'", CollectData.class, settleABCFields);
+            collectData.setSettleProcingACount(settleABC.get(0).getSettleProcingACount() == null ? 0 : settleABC.get(0).getSettleProcingACount());
+            collectData.setSettleProcingBCount(settleABC.get(0).getSettleProcingBCount() == null ? 0 : settleABC.get(0).getSettleProcingBCount());
+            collectData.setSettleProcingCCount(settleABC.get(0).getSettleProcingCCount() == null ? 0 : settleABC.get(0).getSettleProcingCCount());
             //统计金额
-            String[] moneyFields = new String[]{"betraMoney","manageFee","settleMoney","resetSettleMoney","receiveSettleMoney"};
-            List<CollectData> money = super.findBySql( "select sum(betraFee) as betraMoney , " +
+            String[] moneyFields = new String[]{"betraMoney", "manageFee", "settleMoney", "resetSettleMoney", "receiveSettleMoney"};
+            List<CollectData> money = super.findBySql("select sum(betraFee) as betraMoney , " +
                     "  sum(manageFee) as manageFee , sum(settleMoney) as settleMoney , " +
                     "  sum(restSettleMoney) as resetSettleMoney , sum(receiveMoney) as receiveSettleMoney " +
-                    " from  projectprocing_projectsettlementfollow where outsourcingUnit = '"+unit.trim()+"'", CollectData.class , moneyFields);
-            collectData.setBetraMoney( money.get(0).getBetraMoney() ==null ? 0 : money.get(0).getBetraMoney() );
-            collectData.setManageFee( money.get(0).getManageFee() ==null ? 0 :  money.get(0).getManageFee() );
-            collectData.setSettleMoney( money.get(0).getSettleMoney() ==null ? 0 : money.get(0).getSettleMoney() );
-            collectData.setResetSettleMoney( money.get(0).getResetSettleMoney() ==null ? 0 : money.get(0).getResetSettleMoney() );
-            collectData.setReceiveSettleMoney( money.get(0).getReceiveSettleMoney() ==null ? 0 : money.get(0).getReceiveSettleMoney() );
+                    " from  projectprocing_projectsettlementfollow where outsourcingUnit = '" + unit.trim() + "'", CollectData.class, moneyFields);
+            collectData.setBetraMoney(money.get(0).getBetraMoney() == null ? 0 : money.get(0).getBetraMoney());
+            collectData.setManageFee(money.get(0).getManageFee() == null ? 0 : money.get(0).getManageFee());
+            collectData.setSettleMoney(money.get(0).getSettleMoney() == null ? 0 : money.get(0).getSettleMoney());
+            collectData.setResetSettleMoney(money.get(0).getResetSettleMoney() == null ? 0 : money.get(0).getResetSettleMoney());
+            collectData.setReceiveSettleMoney(money.get(0).getReceiveSettleMoney() == null ? 0 : money.get(0).getReceiveSettleMoney());
 
-            collectData.setOutsourcingUnit( unit );
-            collectDataList.add( collectData );
+            collectData.setOutsourcingUnit(unit);
+            collectDataList.add(collectData);
         }
         //合计
-        collectTotal( collectDataList );
+        collectTotal(collectDataList);
 
+        sortResult( collectDataList);
         return collectDataList;
     }
 
+    private void sortResult( List<CollectData> collectDataList ) {
+        //排序
+        collectDataList.stream().forEach(str->{
+            List<CollectDataForBusiness> cData = str.getCollectDataForBusinessList();
+
+            Collections.sort(cData, new Comparator<CollectDataForBusiness>(){
+
+                public int compare(CollectDataForBusiness o1, CollectDataForBusiness o2) {
+
+                    //按照学生的年龄进行升序排列
+                    if(o1.getName().compareTo(o2.getName()) > 0 ){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
+        });
+
+
+    }
+
     //合计
-    public void collectTotal ( List<CollectData> collectDataList ) throws SerException {
+    public void collectTotal(List<CollectData> collectDataList) throws SerException {
         CollectData collectData = new CollectData();
         String[] businessFields = new String[]{"name", "settleMoney", "noSettleMoney", "counts"};
         List<CollectDataForBusiness> collectDataForBusinesses = super.findBySql(
                 "SELECT businessSubject AS name, sum(settleMoney)  AS settleMoney ,sum(restSettleNum) as noSettleMoney ," +
                         "  count(businessSubject) as counts FROM projectprocing_projectsettlementfollow" +
                         "  GROUP BY businessSubject  ORDER BY businessSubject ASC ", CollectDataForBusiness.class, businessFields);
-        collectData.setCollectDataForBusinessList( collectDataForBusinesses );
+        collectData.setCollectDataForBusinessList(collectDataForBusinesses);
 
         //统计是否初验
-        String[] startCheckFields = new String[]{"startCheckCount","noStartCheckCount"};
+        String[] startCheckFields = new String[]{"startCheckCount", "noStartCheckCount"};
         List<CollectData> startCheck = super.findBySql("SELECT count(ck1.startCheckCondition) AS startCheckCount," +
                 "  ( SELECT count(ck2.startCheckCondition) FROM projectprocing_projectsettlementfollow ck2 " +
                 "   where ck2.startCheckCondition = '已初验' " +
                 "  ) noStartCheckCount " +
                 " FROM projectprocing_projectsettlementfollow ck1 " +
                 " where ck1.startCheckCondition = '未初验'", CollectData.class, startCheckFields);
-        collectData.setStartCheckCount( startCheck.get(0).getStartCheckCount()==null ? 0 : startCheck.get(0).getStartCheckCount() );
-        collectData.setNoStartCheckCount( startCheck.get(0).getNoStartCheckCount() ==null ? 0 : startCheck.get(0).getNoStartCheckCount() );
+        collectData.setStartCheckCount(startCheck.get(0).getStartCheckCount() == null ? 0 : startCheck.get(0).getStartCheckCount());
+        collectData.setNoStartCheckCount(startCheck.get(0).getNoStartCheckCount() == null ? 0 : startCheck.get(0).getNoStartCheckCount());
         //统计是否已制作申请结算资料
-        String[] settleFileFields = new String[]{"settleFileCount","noSettleFileCount"};
+        String[] settleFileFields = new String[]{"settleFileCount", "noSettleFileCount"};
         List<CollectData> settleFile = super.findBySql("SELECT count(ck1.settleFileCondition) AS settleFileCount," +
                 "  ( SELECT count(ck2.settleFileCondition) FROM projectprocing_projectsettlementfollow ck2 " +
                 "   where  ck2.settleFileCondition = '否' " +
                 "  ) noSettleFileCount " +
                 " FROM projectprocing_projectsettlementfollow ck1 " +
                 " where ck1.settleFileCondition = '是'", CollectData.class, startCheckFields);
-        collectData.setSettleFileCount( settleFile.get(0).getSettleFileCount() ==null ? 0 : settleFile.get(0).getSettleFileCount() );
-        collectData.setNoSettleFileCount( settleFile.get(0).getNoSettleFileCount() ==null ? 0 : settleFile.get(0).getNoSettleFileCount() );
+        collectData.setSettleFileCount(settleFile.get(0).getSettleFileCount() == null ? 0 : settleFile.get(0).getSettleFileCount());
+        collectData.setNoSettleFileCount(settleFile.get(0).getNoSettleFileCount() == null ? 0 : settleFile.get(0).getNoSettleFileCount());
         //统计结算进度A、B、C
-        String[] settleABCFields = new String[]{"settleProcingACount","settleProcingBCount","settleProcingCCount"};
+        String[] settleABCFields = new String[]{"settleProcingACount", "settleProcingBCount", "settleProcingCCount"};
         List<CollectData> settleABC = super.findBySql("SELECT count(settleProcingA) AS settleProcingA, " +
                 "  count(settleProcingB) AS settleProcingB,  count(settleProcingC) AS settleProcingC " +
-                " FROM projectprocing_projectsettlementfollow ",CollectData.class,settleABCFields);
-        collectData.setSettleProcingACount( settleABC.get(0).getSettleProcingACount() ==null ? 0 : settleABC.get(0).getSettleProcingACount() );
-        collectData.setSettleProcingBCount( settleABC.get(0).getSettleProcingBCount() ==null ? 0 : settleABC.get(0).getSettleProcingBCount() );
-        collectData.setSettleProcingCCount( settleABC.get(0).getSettleProcingCCount() ==null ? 0 :  settleABC.get(0).getSettleProcingCCount() );
+                " FROM projectprocing_projectsettlementfollow ", CollectData.class, settleABCFields);
+        collectData.setSettleProcingACount(settleABC.get(0).getSettleProcingACount() == null ? 0 : settleABC.get(0).getSettleProcingACount());
+        collectData.setSettleProcingBCount(settleABC.get(0).getSettleProcingBCount() == null ? 0 : settleABC.get(0).getSettleProcingBCount());
+        collectData.setSettleProcingCCount(settleABC.get(0).getSettleProcingCCount() == null ? 0 : settleABC.get(0).getSettleProcingCCount());
         //统计金额
-        String[] moneyFields = new String[]{"betraMoney","manageFee","settleMoney","resetSettleMoney","receiveSettleMoney"};
-        List<CollectData> money = super.findBySql( "select sum(betraFee) as betraMoney , " +
+        String[] moneyFields = new String[]{"betraMoney", "manageFee", "settleMoney", "resetSettleMoney", "receiveSettleMoney"};
+        List<CollectData> money = super.findBySql("select sum(betraFee) as betraMoney , " +
                 "  sum(manageFee) as manageFee , sum(settleMoney) as settleMoney , " +
                 "  sum(restSettleMoney) as resetSettleMoney , sum(receiveMoney) as receiveSettleMoney " +
-                " from  projectprocing_projectsettlementfollow ", CollectData.class , moneyFields);
-        collectData.setBetraMoney( money.get(0).getBetraMoney() ==null ? 0 : money.get(0).getBetraMoney() );
-        collectData.setManageFee( money.get(0).getManageFee() ==null ? 0 : money.get(0).getManageFee() );
-        collectData.setSettleMoney( money.get(0).getSettleMoney() ==null ? 0 :  money.get(0).getSettleMoney() );
-        collectData.setResetSettleMoney( money.get(0).getResetSettleMoney() ==null ? 0 : money.get(0).getResetSettleMoney() );
-        collectData.setReceiveSettleMoney( money.get(0).getReceiveSettleMoney() ==null ? 0 :  money.get(0).getReceiveSettleMoney() );
+                " from  projectprocing_projectsettlementfollow ", CollectData.class, moneyFields);
+        collectData.setBetraMoney(money.get(0).getBetraMoney() == null ? 0 : money.get(0).getBetraMoney());
+        collectData.setManageFee(money.get(0).getManageFee() == null ? 0 : money.get(0).getManageFee());
+        collectData.setSettleMoney(money.get(0).getSettleMoney() == null ? 0 : money.get(0).getSettleMoney());
+        collectData.setResetSettleMoney(money.get(0).getResetSettleMoney() == null ? 0 : money.get(0).getResetSettleMoney());
+        collectData.setReceiveSettleMoney(money.get(0).getReceiveSettleMoney() == null ? 0 : money.get(0).getReceiveSettleMoney());
 
         collectData.setOutsourcingUnit("合计");
         collectDataList.add(collectData);

@@ -64,7 +64,7 @@ public class ManageFeeAction {
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            List<ManageFeeVO> manageFeeVOList = BeanTransform.copyProperties(
+            ManageFeeVO manageFeeVOList = BeanTransform.copyProperties(
                     manageFeeAPI.getOneById(id), ManageFeeVO.class);
             return ActResult.initialize(manageFeeVOList);
         } catch (SerException e) {

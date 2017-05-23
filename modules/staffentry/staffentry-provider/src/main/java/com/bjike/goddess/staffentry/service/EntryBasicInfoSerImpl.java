@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 入职基本信息业务实现
@@ -195,6 +196,15 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         return list;
     }
 
+    @Override
+    public List<String> listPost() throws SerException {
+        List<String> post = new ArrayList<>();
+        String[] fiels = new String[]{"position"};
+        String sql = "select position from staffentry_entrybasicinfo group by  position ";
+        List<EntryBasicInfoBO> list  = super.findBySql( sql , EntryBasicInfoBO.class , fiels);
+        post = list.stream().filter(str -> StringUtils.isNotBlank(str.getPosition())).map(EntryBasicInfoBO::getPosition).collect(Collectors.toList());
+        return post;
+    }
 
     @Override
     public List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {

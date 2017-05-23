@@ -20,6 +20,10 @@ public class StaffEntryRegisterBO extends BaseBO {
      */
     private String empNumber;
     /**
+     * 员工密码
+     */
+    private String password;
+    /**
      * 用户名
      */
     private String userName;
@@ -60,7 +64,10 @@ public class StaffEntryRegisterBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
-
+    /**
+     * 帐号密码是否已告知(是/否)
+     */
+    private String tellStatus;
     /**
      * 用户id
      */
@@ -73,6 +80,14 @@ public class StaffEntryRegisterBO extends BaseBO {
 
     public void setEmpNumber(String empNumber) {
         this.empNumber = empNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUserName() {
@@ -153,5 +168,13 @@ public class StaffEntryRegisterBO extends BaseBO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTellStatus() {
+        return tellStatus;
+    }
+
+    public void setTellStatus(String tellStatus) {
+        this.tellStatus = tellStatus;
     }
 }

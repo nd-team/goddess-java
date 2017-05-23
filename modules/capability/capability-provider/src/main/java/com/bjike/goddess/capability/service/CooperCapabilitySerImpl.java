@@ -35,6 +35,9 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     @Override
     public Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+        if (StringUtils.isNotBlank(cooperCapabilityDTO.getCompanyName() )) {
+            cooperCapabilityDTO.getConditions().add(Restrict.like("companyName",cooperCapabilityDTO.getCompanyName()));
+        }
         Long count = super.count(cooperCapabilityDTO);
         return count;
     }
@@ -52,6 +55,9 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
     public List<CooperCapabilityBO> listCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
 
         cooperCapabilityDTO.getSorts().add("createTime=desc");
+        if (StringUtils.isNotBlank(cooperCapabilityDTO.getCompanyName() )) {
+            cooperCapabilityDTO.getConditions().add(Restrict.like("companyName",cooperCapabilityDTO.getCompanyName()));
+        }
         List<CooperCapability> list = super.findByCis(cooperCapabilityDTO, true);
 
         return BeanTransform.copyProperties(list, CooperCapabilityBO.class );
