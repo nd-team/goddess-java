@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("schedulejob-group")
-public class ScheduleJobGroupAction {
+public class ScheduleJobGroupAct {
 
     @Autowired
     private ScheduleJobGroupAPI scheduleJobGroupAPI;

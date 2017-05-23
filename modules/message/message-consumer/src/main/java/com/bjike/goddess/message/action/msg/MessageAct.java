@@ -37,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @LoginAuth
-public class MessageAction {
+public class MessageAct {
     @Autowired
     private MessageAPI messageAPI;
     @Autowired

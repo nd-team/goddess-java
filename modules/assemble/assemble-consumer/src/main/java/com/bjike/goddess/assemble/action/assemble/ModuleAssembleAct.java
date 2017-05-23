@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("assemble")
-public class ModuleAssembleAction {
+public class ModuleAssembleAct {
     @Autowired
     private ModuleAssembleAPI moduleAssembleAPI;
 
