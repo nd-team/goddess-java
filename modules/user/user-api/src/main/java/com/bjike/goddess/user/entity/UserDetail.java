@@ -32,7 +32,7 @@ public class UserDetail extends BaseEntity {
      * 年龄
      */
     @Range(min = 0, max = 120)
-    @Column(columnDefinition = "TINYINT COMMENT '年龄' ")
+    @Column(columnDefinition = "INT(3) COMMENT '年龄' ")
     private Integer age;
 
     /**
@@ -44,17 +44,17 @@ public class UserDetail extends BaseEntity {
     /**
      * 真实姓名
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '真实姓名' ")
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '真实姓名' ")
     private String realName;
     /**
      * 出生年月
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '出生年月' ")
+    @Column(columnDefinition = "DATETIME COMMENT '出生年月' ")
     private LocalDate birthday;
     /**
      * 身份证
      */
-    @Column(unique = true, columnDefinition = "VARCHAR(255) COMMENT '身份证' ")
+    @Column(unique = true, columnDefinition = "VARCHAR(18) COMMENT '身份证' ")
     private String idCard;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
