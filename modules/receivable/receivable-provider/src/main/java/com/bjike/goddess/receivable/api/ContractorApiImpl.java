@@ -53,7 +53,7 @@ public class ContractorApiImpl implements ContractorAPI {
 
     @Override
     public void removeContractor(String id) throws SerException {
-        contractorSer.remove(id);
+        contractorSer.removeContractor(id);
     }
 
 

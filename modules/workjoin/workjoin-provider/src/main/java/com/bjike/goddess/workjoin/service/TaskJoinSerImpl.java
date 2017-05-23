@@ -36,13 +36,13 @@ public class TaskJoinSerImpl extends ServiceImpl<TaskJoin, TaskJoinDTO> implemen
     @Override
     public TaskJoinBO getOne(String id) throws SerException {
         TaskJoin taskJoin = super.findById(id);
-        return BeanTransform.copyProperties(taskJoin,TaskJoinBO.class,true);
+        return BeanTransform.copyProperties(taskJoin,TaskJoinBO.class);
     }
 
     @Override
     public List<TaskJoinBO> findListTaskJoin(TaskJoinDTO taskJoinDTO) throws SerException {
         List<TaskJoin> taskJoins = super.findByPage(taskJoinDTO);
-        List<TaskJoinBO> taskJoinBOS = BeanTransform.copyProperties(taskJoins,TaskJoinBO.class,true);
+        List<TaskJoinBO> taskJoinBOS = BeanTransform.copyProperties(taskJoins,TaskJoinBO.class);
         return taskJoinBOS;
     }
 
@@ -51,7 +51,7 @@ public class TaskJoinSerImpl extends ServiceImpl<TaskJoin, TaskJoinDTO> implemen
         TaskJoin taskJoin = BeanTransform.copyProperties(taskJoinTO,TaskJoin.class,true);
         taskJoin.setCreateTime(LocalDateTime.now());
         super.save(taskJoin);
-        return BeanTransform.copyProperties(taskJoin,TaskJoinBO.class,true);
+        return BeanTransform.copyProperties(taskJoin,TaskJoinBO.class);
     }
 
     @Override

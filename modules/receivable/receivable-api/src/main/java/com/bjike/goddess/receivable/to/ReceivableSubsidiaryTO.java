@@ -50,7 +50,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 合同规模金额(派工单价*合同规模数)
      */
-    @NotNull(message = "合同规模金额不能为空")
     private Double pactMoney;
 
     /**
@@ -62,7 +61,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 中兴派工金额(派工单价*已派工量)
      */
-    @NotNull(message = "中兴派工金额不能为空")
     private Double taskMoney;
 
     /**
@@ -74,7 +72,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 已完工金额(派工单价*已完工量)
      */
-    @NotNull(message = "已完工金额不能为空")
     private Double finishMoney;
 
     /**
@@ -86,7 +83,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 未完工金额(派工单价*未完工量)
      */
-    @NotNull(message = "未完工金额不能为空")
     private Double unfinishMoney;
 
     /**
@@ -158,7 +154,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 管理费(实际数量金额*承包商比例)
      */
-    @NotNull(message = "管理费不能为空")
     private Double managementFee;
 
     /**
@@ -190,31 +185,26 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 到账金额(实际数量金额*管理费)
      */
-    @NotNull(message = "到账金额不能为空")
     private Double accountMoney;
 
     /**
      * 税金(到账金额*6.79%)
      */
-    @NotNull(message = "税金不能为空")
     private Double taxes;
 
     /**
      * 税后金额(到账金额-税金)
      */
-    @NotNull(message = "税后金额不能为空")
     private Double afterTax;
 
     /**
      * 剩余结算量(已派工量-实际结算数量)
      */
-    @NotNull(message = "剩余结算量不能为空")
     private Double moreNum;
 
     /**
      * 剩余结算金额(派工单价*剩余结算量)
      */
-    @NotNull(message = "剩余结算金额不能为空")
     private Double moreMoney;
 
     /**

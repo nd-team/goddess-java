@@ -136,10 +136,10 @@ public class StaffEntryRegisterAction {
 
 
     /**
-     * 删除用户
+     * 删除
      *
-     * @param id 用户id
-     * @des 根据用户id删除用户
+     * @param id 列表id
+     * @des 根据列表id删除用户
      * @version v1
      */
     @LoginAuth

@@ -74,14 +74,4 @@ public interface ContractorAPI {
     default void removeContractor(String id) throws SerException {
 
     }
-    /**
-     * 根据名字查询
-     *
-     * @param name
-     * @throws SerException
-     */
-    default Contractor findByName(String name) throws SerException{
-        return null;
-    }
-
 }

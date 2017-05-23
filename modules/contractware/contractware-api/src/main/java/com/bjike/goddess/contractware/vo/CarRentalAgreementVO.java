@@ -18,7 +18,7 @@ public class CarRentalAgreementVO {
     /**
      * 时间
      */
-    private String time;
+    private String times;
 
     /**
      * 合同名称
@@ -79,12 +79,12 @@ public class CarRentalAgreementVO {
         this.id = id;
     }
 
-    public String getTime() {
-        return time;
+    public String getTimes() {
+        return times;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimes(String times) {
+        this.times = times;
     }
 
     public String getContractName() {

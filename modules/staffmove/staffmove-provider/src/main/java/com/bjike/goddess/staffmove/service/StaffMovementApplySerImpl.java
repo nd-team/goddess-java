@@ -9,9 +9,7 @@ import com.bjike.goddess.staffmove.dto.StaffMovementApplyDTO;
 import com.bjike.goddess.staffmove.entity.StaffMovementApply;
 import com.bjike.goddess.staffmove.enums.AuditorType;
 import com.bjike.goddess.staffmove.to.StaffMovementApplyTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,17 +34,17 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         Long count = super.count(staffMovementApplyDTO);
         return count;
     }
+
     @Override
     public StaffMovementApplyBO getOne(String id) throws SerException {
         StaffMovementApply staffMovementApply = super.findById(id);
-        return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class,true);
+        return BeanTransform.copyProperties(staffMovementApply, StaffMovementApplyBO.class);
     }
 
     @Override
     public List<StaffMovementApplyBO> findListStaffMovementApply(StaffMovementApplyDTO staffMovementApplyDTO) throws SerException {
-        staffMovementApplyDTO.getSorts().add("createTime=desc");
         List<StaffMovementApply> staffMovementApplies = super.findByCis(staffMovementApplyDTO, true);
-        List<StaffMovementApplyBO> staffMovementApplyBOS = BeanTransform.copyProperties(staffMovementApplies, StaffMovementApplyBO.class, true);
+        List<StaffMovementApplyBO> staffMovementApplyBOS = BeanTransform.copyProperties(staffMovementApplies, StaffMovementApplyBO.class);
         return staffMovementApplyBOS;
     }
 
@@ -64,39 +62,73 @@ public class StaffMovementApplySerImpl extends ServiceImpl<StaffMovementApply, S
         BeanTransform.copyProperties(staffMovementApplyTO, staffMovementApply, true);
         staffMovementApply.setModifyTime(LocalDateTime.now());
         super.update(staffMovementApply);
-        return BeanTransform.copyProperties(staffMovementApplyTO, StaffMovementApplyBO.class);
+        return BeanTransform.copyProperties(staffMovementApply, StaffMovementApplyBO.class);
     }
 
     @Override
     public void removeStaffMovementApply(String id) throws SerException {
-        if (StringUtils.isNotBlank(id)) {
-            throw new SerException("id不能为空");
-        }
         super.remove(id);
     }
 
     @Override
     public StaffMovementApplyBO auditStaffMovementApply(StaffMovementApplyTO staffMovementApplyTO) throws SerException {
-        StaffMovementApplyDTO dto = new StaffMovementApplyDTO();
-        dto.getSorts().add("createTime=desc");
-        StaffMovementApply staffMovementApply = BeanTransform.copyProperties(staffMovementApplyTO,StaffMovementApply.class,true);
-        if(staffMovementApply.getAuditor().equals(AuditorType.GENERALMANAGER)){
+        StaffMovementApply staffMovementApply = super.findById(staffMovementApplyTO.getId());
+        BeanTransform.copyProperties(staffMovementApplyTO,staffMovementApply, true);
+//        switch (staffMovementApply.getAuditor()) {
+//            case GENERALMANAGER:
+//                staffMovementApply.setGeneralAuditOpinion(staffMovementApplyTO.getGeneralAuditOpinion());
+//                break;
+//            case ORIGINALPOLICYMAKERS:
+//                staffMovementApply.setOriginalAuditOpinion(staffMovementApplyTO.getOriginalAuditOpinion());
+//                break;
+//            case TRANSFERREDPOLICYMAKERS:
+//                staffMovementApply.setTransferAuditOpinion(staffMovementApplyTO.getTransferAuditOpinion());
+//                break;
+//            case PLANMODULE:
+//                staffMovementApply.setPlanAuditOpinion(staffMovementApplyTO.getPlanAuditOpinion());
+//                break;
+//            case BUDGETMODULE:
+//                staffMovementApply.setBudgetAuditOpinion(staffMovementApplyTO.getBudgetAuditOpinion());
+//                break;
+//            default:
+//                break;
+//        }
+        if (AuditorType.GENERALMANAGER.equals(AuditorType.GENERALMANAGER)) {
+            staffMovementApply.setGeneralAuditOpinion(staffMovementApplyTO.getGeneralAuditOpinion());
+        }
+        if (AuditorType.ORIGINALPOLICYMAKERS.equals(AuditorType.ORIGINALPOLICYMAKERS)) {
+            staffMovementApply.setOriginalAuditOpinion(staffMovementApplyTO.getOriginalAuditOpinion());
+        }
+        if (AuditorType.TRANSFERREDPOLICYMAKERS.equals(AuditorType.TRANSFERREDPOLICYMAKERS)) {
+            staffMovementApply.setTransferAuditOpinion(staffMovementApplyTO.getTransferAuditOpinion());
+        }
+        if (AuditorType.PLANMODULE.equals(AuditorType.PLANMODULE)) {
+            staffMovementApply.setPlanAuditOpinion(staffMovementApplyTO.getPlanAuditOpinion());
+        }
+        if (AuditorType.BUDGETMODULE.equals(AuditorType.BUDGETMODULE)) {
+            staffMovementApply.setBudgetAuditOpinion(staffMovementApplyTO.getBudgetAuditOpinion());
+        }
+        /*if (AuditorType.GENERALMANAGER.equals(staffMovementApply.getAuditor())) {
             dto.getConditions().add(Restrict.eq("generalmanager", AuditorType.GENERALMANAGER));
             staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
-        }else if(staffMovementApply.getAuditor().equals(AuditorType.ORIGINALPOLICYMAKERS)){
-            dto.getConditions().add(Restrict.eq("originalpolicymakers",AuditorType.ORIGINALPOLICYMAKERS));
-            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
-        }else if(staffMovementApply.getAuditor().equals(AuditorType.TRANSFERREDPOLICYMAKERS)){
-            dto.getConditions().add(Restrict.eq("transferredpolicymakers",AuditorType.TRANSFERREDPOLICYMAKERS));
-            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
-        }else if(staffMovementApply.getAuditor().equals(AuditorType.PLANMODULE)){
-            dto.getConditions().add(Restrict.eq("planmodule",AuditorType.PLANMODULE));
-            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
-        }else if(staffMovementApply.getAuditor().equals(AuditorType.BUDGETMODULE)){
-            dto.getConditions().add(Restrict.eq("budgetmodule",AuditorType.BUDGETMODULE));
+        }
+        if (AuditorType.ORIGINALPOLICYMAKERS.equals(staffMovementApply.getAuditor())) {
+            dto.getConditions().add(Restrict.eq("originalpolicymakers", AuditorType.ORIGINALPOLICYMAKERS));
             staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
         }
+        if (AuditorType.TRANSFERREDPOLICYMAKERS.equals(staffMovementApply.getAuditor())) {
+            dto.getConditions().add(Restrict.eq("transferredpolicymakers", AuditorType.TRANSFERREDPOLICYMAKERS));
+            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
+        }
+        if (AuditorType.PLANMODULE.equals(staffMovementApply.getAuditor())) {
+            dto.getConditions().add(Restrict.eq("planmodule", AuditorType.PLANMODULE));
+            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
+        }
+        if (AuditorType.BUDGETMODULE.equals(staffMovementApply.getAuditor())) {
+            dto.getConditions().add(Restrict.eq("budgetmodule", AuditorType.BUDGETMODULE));
+            staffMovementApply.setAuditOpinion(staffMovementApplyTO.getAuditOpinion());
+        }*/
         super.save(staffMovementApply);
-        return BeanTransform.copyProperties(staffMovementApply,StaffMovementApplyBO.class);
+        return BeanTransform.copyProperties(staffMovementApply, StaffMovementApplyBO.class);
     }
 }

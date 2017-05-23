@@ -202,6 +202,26 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public List<VoucherGenerateBO> ctReSub(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return voucherGenerateSer.ctReSub(voucherGenerateDTO);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> ctReArea(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return voucherGenerateSer.ctReArea(voucherGenerateDTO);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> ctReGroup(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return voucherGenerateSer.ctReGroup(voucherGenerateDTO);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> ctRePname(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        return voucherGenerateSer.ctRePname(voucherGenerateDTO);
+    }
+
+    @Override
     public List<String> listFirstSubject() throws SerException {
         return voucherGenerateSer.listFirstSubject();
     }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffpay.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.staffpay.enums.ConfirmStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class FirstPayRecord extends BaseEntity {
      * 月份
      */
     @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '月份'")
-    private Integer month;
+    private Integer months;
 
     /**
      * 计薪周期（开始）
@@ -204,14 +205,15 @@ public class FirstPayRecord extends BaseEntity {
     /**
      * 是否确认第一次工资发放记录
      */
-    @Column(name = "is_confirmFirstSalary", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否确认第一次工资发放记录'", insertable = false)
-    private Boolean confirmFirstSalary;
+    @Column(name = "confirmFirstSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认第一次工资发放记录(是/否)'")
+    private ConfirmStatus confirmFirstSalary;
 
     /**
      * 是否确认工资
      */
-    @Column(name = "is_confirmSalary", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否确认工资'", insertable = false)
-    private Boolean confirmSalary;
+    @Column(name = "confirmSalary", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '是否确认工资(是/否)'")
+    private ConfirmStatus confirmSalary;
+
 
     /**
      * 第一次付款时间
@@ -226,12 +228,12 @@ public class FirstPayRecord extends BaseEntity {
     private LocalDate secondPayTime;
 
 
-    public Integer getMonth() {
-        return month;
+    public Integer getMonths() {
+        return months;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
     public LocalDate getStartPaidCycle() {
@@ -466,19 +468,19 @@ public class FirstPayRecord extends BaseEntity {
         this.paidInvoiceAmount = paidInvoiceAmount;
     }
 
-    public Boolean getConfirmFirstSalary() {
+    public ConfirmStatus getConfirmFirstSalary() {
         return confirmFirstSalary;
     }
 
-    public void setConfirmFirstSalary(Boolean confirmFirstSalary) {
+    public void setConfirmFirstSalary(ConfirmStatus confirmFirstSalary) {
         this.confirmFirstSalary = confirmFirstSalary;
     }
 
-    public Boolean getConfirmSalary() {
+    public ConfirmStatus getConfirmSalary() {
         return confirmSalary;
     }
 
-    public void setConfirmSalary(Boolean confirmSalary) {
+    public void setConfirmSalary(ConfirmStatus confirmSalary) {
         this.confirmSalary = confirmSalary;
     }
 

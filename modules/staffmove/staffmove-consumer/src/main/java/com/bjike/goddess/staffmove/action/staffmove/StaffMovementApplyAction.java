@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffmove.api.StaffMovementApplyAPI;
@@ -97,6 +98,7 @@ public class StaffMovementApplyAction {
      * @des 添加人员调动申请
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) StaffMovementApplyTO staffMovementApplyTO, BindingResult bindingResult) throws ActException {
         try {
@@ -115,6 +117,7 @@ public class StaffMovementApplyAction {
      * @des 编辑人员调动申请
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated StaffMovementApplyTO staffMovementApplyTO,BindingResult bindingResult) throws ActException {
         try {
@@ -132,6 +135,7 @@ public class StaffMovementApplyAction {
      * @des 根据用户id删除人员调动申请记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

@@ -11,10 +11,6 @@ public class CollectAreaDetailBO implements Serializable{
      */
     private String area;
     /**
-     * id
-     */
-    private String id;
-    /**
      * 项目名称
      */
     private String innerName;
@@ -80,7 +76,7 @@ public class CollectAreaDetailBO implements Serializable{
     /**
      * 总包单位
      */
-    private String contractor;
+    private String name;
     /**
      * 是否已走结算流程
      */
@@ -96,14 +92,6 @@ public class CollectAreaDetailBO implements Serializable{
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getInnerName() {
@@ -218,12 +206,12 @@ public class CollectAreaDetailBO implements Serializable{
         this.afterTax = afterTax;
     }
 
-    public String getContractor() {
-        return contractor;
+    public String getName() {
+        return name;
     }
 
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIs_flow() {
