@@ -35,7 +35,7 @@ import java.util.List;
 @StorageAuth
 @RestController
 @RequestMapping("file")
-public class FileAction extends BaseFileAction {
+public class FileAct extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 
@@ -53,7 +53,7 @@ public class FileAction extends BaseFileAction {
         String url = null;
         try {
             byte[] bytes = fileAPI.download(fileInfo);
-            url = previewUrl(bytes, "kiss.xlsx");
+            url = previewUrl(bytes, fileInfo.getFileName());
             return ActResult.initialize(url);
         } catch (
                 SerException e)

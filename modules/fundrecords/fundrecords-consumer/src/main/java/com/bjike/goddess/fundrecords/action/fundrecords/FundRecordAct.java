@@ -181,7 +181,7 @@ public class FundRecordAct {
      * @version v1
      */
     @GetMapping("v1/area")
-    public Result areaAnalyze(Integer year, Integer month, String area, HttpServletRequest request) throws ActException {
+    public Result areaAnalyze(@RequestParam Integer year, @RequestParam Integer month, String area, HttpServletRequest request) throws ActException {
         try {
             List<AreaAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.areaAnalyze(year, month, area), AreaAnalyzeVO.class, request);
             return ActResult.initialize(voList);
@@ -200,7 +200,7 @@ public class FundRecordAct {
      * @version v1
      */
     @GetMapping("v1/group")
-    public Result groupAnalyze(Integer year, Integer month, String group, HttpServletRequest request) throws ActException {
+    public Result groupAnalyze(@RequestParam Integer year, @RequestParam Integer month, String group, HttpServletRequest request) throws ActException {
         try {
             List<GroupAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.groupAnalyze(year, month, group), GroupAnalyzeVO.class, request);
             return ActResult.initialize(voList);
@@ -219,7 +219,7 @@ public class FundRecordAct {
      * @version v1
      */
     @GetMapping("v1/project")
-    public Result projectAnalyze(Integer year, Integer month, String project, HttpServletRequest request) throws ActException {
+    public Result projectAnalyze(@RequestParam Integer year, @RequestParam Integer month, String project, HttpServletRequest request) throws ActException {
         try {
             List<ProjectAnalyzeVO> voList = BeanTransform.copyProperties(fundRecordAPI.projectAnalyze(year, month, project), ProjectAnalyzeVO.class, request);
             return ActResult.initialize(voList);

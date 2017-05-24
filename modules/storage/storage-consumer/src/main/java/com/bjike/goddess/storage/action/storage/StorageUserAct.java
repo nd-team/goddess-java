@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Copy: [ com.bjike ]
  */
 @RestController
-public class StorageUserAction {
+public class StorageUserAct {
 
     @Autowired
     private StorageUserAPI storageUserAPI;

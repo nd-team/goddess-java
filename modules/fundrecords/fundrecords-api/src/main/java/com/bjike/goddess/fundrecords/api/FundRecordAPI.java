@@ -76,14 +76,6 @@ public interface FundRecordAPI {
     List<ConditionCollectBO> condition(CollectTO to) throws SerException;
 
     /**
-     * 分析
-     *
-     * @param to 分析条件
-     * @return 分析结果集
-     */
-    List<AnalyzeBO> analyze(CollectTO to) throws SerException;
-
-    /**
      * 根据id查询资金流水
      *
      * @param id 资金流水id

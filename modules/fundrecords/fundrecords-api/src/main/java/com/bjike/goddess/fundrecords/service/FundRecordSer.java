@@ -79,14 +79,6 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
     List<ConditionCollectBO> condition(CollectTO to) throws SerException;
 
     /**
-     * 分析
-     *
-     * @param to 分析条件
-     * @return 分析结果集
-     */
-    List<AnalyzeBO> analyze(CollectTO to) throws SerException;
-
-    /**
      * 地区分析
      *
      * @param year  年份

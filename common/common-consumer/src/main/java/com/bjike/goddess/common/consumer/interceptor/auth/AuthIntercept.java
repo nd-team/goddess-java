@@ -1,5 +1,7 @@
 package com.bjike.goddess.common.consumer.interceptor.auth;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.api.rbac.PermissionAPI;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
@@ -51,6 +53,12 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
             if (pass) {
                 return super.preHandle(request, response, handler);
             }
+        }
+        Object obj = request.getHeader(RpcCommon.USER_TOKEN);
+        String token = null;
+        if (null != obj) {
+            token = obj.toString();
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,token);
         }
         List<PermissionBO> permissions = permissionAPI.currentPermissions();
         for (PermissionBO per : permissions) {
