@@ -36,6 +36,7 @@ public class OilCardBasicAct {
      * 新增油卡基础信息
      *
      * @param to 油卡基础信息
+     * @return class OilCardBasicVO
      * @version v1
      */
     @PostMapping("v1/add")
@@ -53,6 +54,7 @@ public class OilCardBasicAct {
      * 编辑油卡基础信息
      *
      * @param to 油卡基础信息
+     * @return class OilCardBasicVO
      * @version v1
      */
     @PostMapping("v1/edit")
@@ -77,24 +79,24 @@ public class OilCardBasicAct {
 
         try {
             oilCardBasicAPI.freezeOilCardBasic(id);
-            return new ActResult();
+            return new ActResult("冻结成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 冻结油卡信息
+     * 解冻油卡信息
      *
      * @param id 油卡信息记录ID
      * @version v1
      */
-    @PostMapping("v1/breakFreeze/{id}")
+    @PostMapping("v1/unfreeze/{id}")
     public Result breakFreeze(@PathVariable String id) throws ActException {
 
         try {
             oilCardBasicAPI.breakFreeze(id);
-            return new ActResult();
+            return new ActResult("解冻成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -111,7 +113,7 @@ public class OilCardBasicAct {
 
         try {
             oilCardBasicAPI.deleteOilCardBasic(id);
-            return new ActResult();
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -121,9 +123,10 @@ public class OilCardBasicAct {
      * 油卡基本信息分页查询
      *
      * @param dto 分页查询信息
+     * @return class OilCardBasicVO
      * @version v1
      */
-    @GetMapping("v1/pageList")
+    @GetMapping("v1/list")
     public Result pageList(OilCardBasicDTO dto) throws ActException {
 
         try {

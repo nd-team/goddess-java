@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.consumer.file.BaseFileAction;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.driverinfo.api.DriverInfoAPI;
@@ -133,7 +133,7 @@ public class DriverInfoAct extends BaseFileAction {
     public Result uploadImage(String name, HttpServletRequest request) throws ActException {
         try {
             String path = "driverinfo";
-            fileAPI.upload(this.getInputStreams(request, path.toString()));
+            fileAPI.upload(super.getInputStreams(request, path));
             return new ActResult("上传成功");
         }catch (SerException e){
             throw new ActException(e.getMessage());
