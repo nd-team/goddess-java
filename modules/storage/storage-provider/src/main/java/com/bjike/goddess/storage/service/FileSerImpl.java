@@ -256,7 +256,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
         String realPath = null;
         if (!"admin".equals(module)) {//回收站目录
-            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + module + PathCommon.SEPARATOR + sysNO + path;
+            realPath = PathCommon.RECYCLE_PATH + PathCommon.SEPARATOR + sysNO + PathCommon.SEPARATOR +module  + path;
         } else {
             realPath = PathCommon.RECYCLE_PATH + path;
         }
@@ -318,7 +318,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     private List<FileBO> getFileBo(java.io.File[] files, String module, String sysNO, String root) throws SerException {
         String rootPath = root;
         if (null != module) {
-            rootPath += (PathCommon.SEPARATOR + module + PathCommon.SEPARATOR + sysNO);
+            rootPath += (PathCommon.SEPARATOR + sysNO + PathCommon.SEPARATOR + module);
         }
         if (null != files) {
             List<FileBO> fileBOS = new ArrayList<>(files.length);
