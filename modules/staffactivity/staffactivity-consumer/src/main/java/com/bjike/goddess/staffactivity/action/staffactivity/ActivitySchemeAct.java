@@ -8,9 +8,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivitySchemeAPI;
+import com.bjike.goddess.staffactivity.bo.ActivityFundSummaryBO;
 import com.bjike.goddess.staffactivity.bo.ActivitySchemeBO;
 import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
+import com.bjike.goddess.staffactivity.vo.ActivityFundSummaryVO;
 import com.bjike.goddess.staffactivity.vo.ActivitySchemeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -298,11 +300,12 @@ public class ActivitySchemeAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/activityFundSummary")
-    public Result activityFundSummary(String startDate, String endDate) throws ActException {
+    @GetMapping("v1/activityFundSummary")
+    public Result activityFundSummary(String startDate, String endDate, HttpServletRequest request) throws ActException {
         try {
-            activitySchemeAPI.activityFundSummary(startDate, endDate);
-            return new ActResult("activityFundSummary success!");
+            List<ActivityFundSummaryBO> listBO = activitySchemeAPI.activityFundSummary(startDate, endDate);
+            List<ActivityFundSummaryVO> listVO = BeanTransform.copyProperties(listBO, ActivityFundSummaryVO.class, request);
+            return ActResult.initialize(listVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

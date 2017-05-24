@@ -85,8 +85,8 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        List<ActivityStaffList> staffList = getStaffListByApplyId(id);
-        activityStaffListSer.remove(staffList);//删除子类对象
+        List<ActivityStaffList> list = getStaffListByApplyId(id);
+        activityStaffListSer.remove(list);//删除子类对象
         super.remove(id);//删除父类对象
     }
 
@@ -168,8 +168,10 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void exitActivity(String id, String abandonReason) throws SerException {
+        String curUsername = userAPI.currentUser().getUsername();
         ActivityStaffListDTO staffDTO = new ActivityStaffListDTO();
         staffDTO.getConditions().add(Restrict.eq("applyInforId", id));
+        staffDTO.getConditions().add(Restrict.eq("staffName", curUsername));
         ActivityStaffList staff = activityStaffListSer.findOne(staffDTO);
         staff.setAbandonReason(abandonReason);
         staff.setIfAttend(Boolean.FALSE);//设置参与状态为FALSE
@@ -186,9 +188,9 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ActivityStaffListBO> checkStaffList(String id) throws SerException {
-        List<ActivityStaffList> staffList = getStaffListByApplyId(id);//根据活动申请信息id查询活动人员列表
-        List<ActivityStaffListBO> staffBOList = BeanTransform.copyProperties(staffList, ActivityStaffListBO.class);
-        return staffBOList;
+        List<ActivityStaffList> list = getStaffListByApplyId(id);//根据活动申请信息id查询活动人员列表
+        List<ActivityStaffListBO> listBO = BeanTransform.copyProperties(list, ActivityStaffListBO.class);
+        return listBO;
     }
 
     /**
@@ -204,8 +206,8 @@ public class ActivityApplyInforSerImpl extends ServiceImpl<ActivityApplyInfor, A
         ActivityStaffListDTO dto = new ActivityStaffListDTO();
         dto.getConditions().add(Restrict.eq("applyInforId", id));
         dto.getConditions().add(Restrict.eq("ifAttend", Boolean.TRUE));
-        List<ActivityStaffList> staffList = activityStaffListSer.findByCis(dto);
-        List<ActivityStaffListBO> staffBOList = BeanTransform.copyProperties(staffList, ActivityStaffListBO.class);
-        return staffBOList;
+        List<ActivityStaffList> list = activityStaffListSer.findByCis(dto);
+        List<ActivityStaffListBO> listBO = BeanTransform.copyProperties(list, ActivityStaffListBO.class);
+        return listBO;
     }
 }

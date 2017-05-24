@@ -48,7 +48,7 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @GetMapping("v1/activityapplyinfor/{id}")
-    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             ActivityApplyInforBO bo = activityApplyInforAPI.findById(id);
             ActivityApplyInforVO vo = BeanTransform.copyProperties(bo, ActivityApplyInforVO.class, request);
@@ -123,7 +123,7 @@ public class ActivityApplyInforAct {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable(value = "id") String id) throws ActException {
         try {
             activityApplyInforAPI.remove(id);
             return new ActResult("delete success!");
@@ -141,7 +141,7 @@ public class ActivityApplyInforAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) ActivityApplyInforTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) ActivityApplyInforTO to) throws ActException {
         try {
             activityApplyInforAPI.update(to);
             return new ActResult("edit success!");
@@ -159,8 +159,8 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/joinActivity")
-    public Result joinActivity(@RequestParam(value = "id") String id, @RequestParam(value = "area") String area) throws ActException {
+    @PatchMapping("v1/joinActivity/{id}")
+    public Result joinActivity(@PathVariable(value = "id") String id, @RequestParam(value = "area") String area) throws ActException {
         try {
             activityApplyInforAPI.joinActivity(id, area);
             return new ActResult("joinActivity success!");
@@ -178,8 +178,8 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/exitActivity")
-    public Result exitActivity(@RequestParam(value = "id") String id, @RequestParam(value = "abandonReason") String abandonReason) throws ActException {
+    @PatchMapping("v1/exitActivity/{id}")
+    public Result exitActivity(@PathVariable(value = "id") String id, @RequestParam(value = "abandonReason") String abandonReason) throws ActException {
         try {
             activityApplyInforAPI.exitActivity(id, abandonReason);
             return new ActResult("exitActivity success!");
@@ -196,8 +196,8 @@ public class ActivityApplyInforAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/checkStaffList")
-    public Result checkStaffList(String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/checkStaffList/{id}")
+    public Result checkStaffList(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             List<ActivityStaffListBO> boList = activityApplyInforAPI.checkStaffList(id);
             List<ActivityStaffListVO> voList = BeanTransform.copyProperties(boList, ActivityStaffListVO.class, request);

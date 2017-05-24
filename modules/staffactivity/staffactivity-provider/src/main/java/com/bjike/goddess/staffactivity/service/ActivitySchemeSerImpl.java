@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -235,13 +236,16 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         LocalDateTime[] activityTime = new LocalDateTime[]{beginTime, finishTime};
         String timeSlot = getTimeSlot(beginTime, finishTime);
         List<String> areas = findAllAreas();
+        if (CollectionUtils.isEmpty(areas)) {
+            return Collections.emptyList();
+        }
         List<ActivityFundSummaryBO> boList = new ArrayList<>(0);
         for (String area : areas) {
             ActivitySchemeDTO dto = new ActivitySchemeDTO();
             dto.getConditions().add(Restrict.between("activityTime", activityTime));
             dto.getConditions().add(Restrict.eq("area", area));
             List<ActivityScheme> schemeList = super.findByCis(dto);
-            Double activityFund = schemeList.stream().mapToDouble(c -> c.getTotalActivityFund()).sum();
+            Double activityFund = schemeList.stream().filter(c -> c.getTotalActivityFund() != null).mapToDouble(c -> c.getTotalActivityFund()).sum();
             ActivityFundSummaryBO bo = new ActivityFundSummaryBO();
             bo.setActivityTime(timeSlot);
             bo.setArea(area);
@@ -250,16 +254,15 @@ public class ActivitySchemeSerImpl extends ServiceImpl<ActivityScheme, ActivityS
         }
 
         //计算合计项
-        countCombinedItem(timeSlot, areas, boList);
+        countCombinedItem(timeSlot, boList);
         return boList;
     }
 
-    private void countCombinedItem(String timeSlot, List<String> areas, List<ActivityFundSummaryBO> boList) {
-        String countAreaNo = String.valueOf(areas.size());
-        Double totalFund = boList.stream().mapToDouble(c -> c.getActivityFund()).sum();
+    private void countCombinedItem(String timeSlot, List<ActivityFundSummaryBO> boList) {
+        Double totalFund = boList.stream().filter(c -> c.getActivityFund() != null).mapToDouble(c -> c.getActivityFund()).sum();
         ActivityFundSummaryBO bo = new ActivityFundSummaryBO();
         bo.setActivityTime(timeSlot);
-        bo.setArea(countAreaNo);
+        bo.setArea("合计");
         bo.setActivityFund(totalFund);
         boList.add(bo);
     }
