@@ -311,6 +311,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 case "BigDecimal":
                     obj = Double.parseDouble(val);
                     break;
+                case "Boolean":
+                    obj = Boolean.parseBoolean(val);
+                    break;
                 case "Integer":
                     obj = Integer.parseInt(val);
                     break;
