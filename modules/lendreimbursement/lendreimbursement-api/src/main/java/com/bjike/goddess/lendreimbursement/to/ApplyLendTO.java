@@ -138,7 +138,6 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 备注
      */
-    @NotBlank(groups = {ApplyLendTO.TESTAddAndEdit.class},message ="备注不能为空" )
     private String remark;
 
     /**

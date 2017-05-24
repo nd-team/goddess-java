@@ -20,13 +20,13 @@ import java.util.List;
 public interface EntryBasicInfoAPI {
 
     /**
-     * 薪资确认列表总条数
+     * 入职基本信息列表总条数
      */
     default Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         return null;
     }
     /**
-     * 获取所有入职登记
+     * 获取所有入职基本信息
      * @param entryBasicInfoDTO 入职登记dto
      * @return class entryBasicInfoBO
      * @throws SerException
@@ -118,6 +118,15 @@ public interface EntryBasicInfoAPI {
      * @throws SerException
      */
     default List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
+        return null;
+    }
+    /**
+     * 根据员工编号获取入职时间
+     * @param  empNumber empNumber
+     * @return class entryBasicInfoBO
+     * @throws SerException
+     */
+    default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
         return null;
     }
 }
