@@ -17,9 +17,11 @@ import com.bjike.goddess.recruit.to.InterviewAddressInforTO;
 import com.bjike.goddess.recruit.vo.FailFirstInterviewReasonVO;
 import com.bjike.goddess.recruit.vo.InterviewAddressInforVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,11 +34,48 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/interviewAddressInfor")
+@RequestMapping("interviewAddressInfor")
 public class InterviewAddressInforAct {
 
     @Autowired
     private InterviewAddressInforAPI interviewAddressInforAPI;
+
+    /**
+     * 根据id查询面试地址信息
+     *
+     * @param id 面试地址信息唯一标识
+     * @return class InterviewAddressInforVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/interviewAddressInfor/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            InterviewAddressInforBO bo = interviewAddressInforAPI.findById(id);
+            InterviewAddressInforVO vo = BeanTransform.copyProperties(bo, InterviewAddressInforVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 面试地址信息dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated InterviewAddressInforDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = interviewAddressInforAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 获取列表
@@ -47,10 +86,10 @@ public class InterviewAddressInforAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(InterviewAddressInforDTO dto) throws ActException {
+    public Result list(InterviewAddressInforDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<InterviewAddressInforBO> boList = interviewAddressInforAPI.list(dto);
-            List<InterviewAddressInforVO> voList = BeanTransform.copyProperties(boList, InterviewAddressInforVO.class);
+            List<InterviewAddressInforVO> voList = BeanTransform.copyProperties(boList, InterviewAddressInforVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -66,10 +105,10 @@ public class InterviewAddressInforAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) InterviewAddressInforTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) InterviewAddressInforTO to, HttpServletRequest request) throws ActException {
         try {
             InterviewAddressInforBO bo = interviewAddressInforAPI.save(to);
-            InterviewAddressInforVO vo = BeanTransform.copyProperties(bo, InterviewAddressInforVO.class);
+            InterviewAddressInforVO vo = BeanTransform.copyProperties(bo, InterviewAddressInforVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -101,7 +140,7 @@ public class InterviewAddressInforAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) InterviewAddressInforTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) InterviewAddressInforTO to) throws ActException {
         try {
             interviewAddressInforAPI.update(to);
             return new ActResult("edit success!");

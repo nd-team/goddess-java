@@ -1,8 +1,11 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 /**
  * 招聘计划
@@ -18,61 +21,73 @@ public class RecruitPlanTO extends BaseTO {
     /**
      * 招聘地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘地区不能为空")
     private String recruitArea;
 
     /**
      * 招聘部门/项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘部门/项目组不能为空")
     private String recruitDepart;
 
     /**
      * 招聘日期
      */
-    private LocalDate recruitDate;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘日期不能为空")
+    private String recruitDate;
 
     /**
      * 招聘岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘岗位不能为空")
     private String recruitPost;
 
     /**
      * 计划招聘人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划招聘人数不能为空")
     private Integer planRecruitNo;
 
     /**
      * 岗位说明书
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位说明书不能为空")
     private String postInstruction;
 
     /**
      * 岗位要求
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位要求不能为空")
     private String postRequire;
 
     /**
      * 到岗时间
      */
-    private LocalDate dutyTime;
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "到岗时间不能为空")
+    private String dutyTime;
 
     /**
      * 优先级
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "优先级不能为空")
     private String priority;
 
     /**
      * 招聘渠道
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘渠道不能为空")
     private String recruitName;
 
     /**
      * 计划日简历筛选量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划日简历筛选量不能为空")
     private Integer planDayResumeNo;
 
     /**
      * 计划日邀约面试量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划日邀约面试量不能为空")
     private Integer planDayInviteNo;
 
     /**
@@ -111,11 +126,11 @@ public class RecruitPlanTO extends BaseTO {
         this.recruitDepart = recruitDepart;
     }
 
-    public LocalDate getRecruitDate() {
+    public String getRecruitDate() {
         return recruitDate;
     }
 
-    public void setRecruitDate(LocalDate recruitDate) {
+    public void setRecruitDate(String recruitDate) {
         this.recruitDate = recruitDate;
     }
 
@@ -151,11 +166,11 @@ public class RecruitPlanTO extends BaseTO {
         this.postRequire = postRequire;
     }
 
-    public LocalDate getDutyTime() {
+    public String getDutyTime() {
         return dutyTime;
     }
 
-    public void setDutyTime(LocalDate dutyTime) {
+    public void setDutyTime(String dutyTime) {
         this.dutyTime = dutyTime;
     }
 

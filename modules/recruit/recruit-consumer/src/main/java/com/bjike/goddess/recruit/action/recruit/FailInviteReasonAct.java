@@ -10,13 +10,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.FailInviteReasonAPI;
 import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
 import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
-import com.bjike.goddess.recruit.entity.FailInviteReason;
 import com.bjike.goddess.recruit.to.FailInviteReasonTO;
 import com.bjike.goddess.recruit.vo.FailInviteReasonVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,11 +30,47 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/failInviteReason")
+@RequestMapping("failInviteReason")
 public class FailInviteReasonAct {
 
     @Autowired
     private FailInviteReasonAPI failInviteReasonAPI;
+
+    /**
+     * 根据id查询未邀约成功原因
+     *
+     * @param id 未邀约成功原因唯一标识
+     * @return class FailInviteReasonVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/failinvitereason/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            FailInviteReasonBO bo = failInviteReasonAPI.findById(id);
+            FailInviteReasonVO vo = BeanTransform.copyProperties(bo, FailInviteReasonVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 未邀约成功原因dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated FailInviteReasonDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = failInviteReasonAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -44,10 +81,10 @@ public class FailInviteReasonAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(FailInviteReasonDTO dto) throws ActException {
+    public Result list(FailInviteReasonDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<FailInviteReasonBO> boList = failInviteReasonAPI.list(dto);
-            List<FailInviteReasonVO> voList = BeanTransform.copyProperties(boList, FailInviteReasonVO.class);
+            List<FailInviteReasonVO> voList = BeanTransform.copyProperties(boList, FailInviteReasonVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -63,10 +100,10 @@ public class FailInviteReasonAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) FailInviteReasonTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) FailInviteReasonTO to, HttpServletRequest request) throws ActException {
         try {
             FailInviteReasonBO bo = failInviteReasonAPI.save(to);
-            FailInviteReasonVO vo = BeanTransform.copyProperties(bo, FailInviteReasonVO.class);
+            FailInviteReasonVO vo = BeanTransform.copyProperties(bo, FailInviteReasonVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

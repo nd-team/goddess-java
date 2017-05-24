@@ -13,9 +13,11 @@ import com.bjike.goddess.recruit.dto.RecruitDemandDTO;
 import com.bjike.goddess.recruit.to.RecruitDemandTO;
 import com.bjike.goddess.recruit.vo.RecruitDemandVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,11 +30,47 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/recruitDemand")
+@RequestMapping("recruitDemand")
 public class RecruitDemandAct {
 
     @Autowired
     private RecruitDemandAPI recruitDemandAPI;
+
+    /**
+     * 根据id查询招聘需求
+     *
+     * @param id 招聘需求唯一标识
+     * @return class RecruitDemandVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/recruitDemand/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecruitDemandBO bo = recruitDemandAPI.findById(id);
+            RecruitDemandVO vo = BeanTransform.copyProperties(bo, RecruitDemandVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 招聘需求dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RecruitDemandDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = recruitDemandAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -62,7 +100,7 @@ public class RecruitDemandAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RecruitDemandTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RecruitDemandTO to) throws ActException {
         try {
             RecruitDemandBO bo = recruitDemandAPI.save(to);
             RecruitDemandVO vo = BeanTransform.copyProperties(bo, RecruitDemandVO.class);
@@ -97,7 +135,7 @@ public class RecruitDemandAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) RecruitDemandTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) RecruitDemandTO to) throws ActException {
         try {
             recruitDemandAPI.update(to);
             return new ActResult("edit success!");

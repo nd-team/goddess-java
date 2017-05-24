@@ -13,9 +13,11 @@ import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.vo.RecruitProVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,11 +30,49 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/recruitPro")
+@RequestMapping("recruitPro")
 public class RecruitProAct {
 
     @Autowired
     private RecruitProAPI recruitProAPI;
+
+
+
+    /**
+     * 根据id查询招聘方案
+     *
+     * @param id 招聘方案唯一标识
+     * @return class RecruitProVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/recruitPro/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecruitProBO bo = recruitProAPI.findById(id);
+            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 招聘方案dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RecruitProDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = recruitProAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -43,10 +83,10 @@ public class RecruitProAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(RecruitProDTO dto) throws ActException {
+    public Result list(RecruitProDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<RecruitProBO> boList = recruitProAPI.list(dto);
-            List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class);
+            List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -62,10 +102,10 @@ public class RecruitProAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RecruitProTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RecruitProTO to, HttpServletRequest request) throws ActException {
         try {
             RecruitProBO bo = recruitProAPI.save(to);
-            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class);
+            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -109,12 +149,12 @@ public class RecruitProAct {
     /**
      * 运营商务部审核
      *
-     * @param to 招聘方案to信息
+     * @param to   招聘方案to信息
      * @param pass 是否通过
      * @throws ActException
      */
     @PutMapping("v1/yyEdit")
-    public Result yyEdit(@Validated({EDIT.class}) RecruitProTO to,Boolean pass) throws ActException {
+    public Result yyEdit(@Validated(value = {EDIT.class}) RecruitProTO to, Boolean pass) throws ActException {
         try {
             recruitProAPI.yyEdit(to, pass);
             return new ActResult("yyEdit success!");
@@ -126,7 +166,7 @@ public class RecruitProAct {
     /**
      * 总经办审核
      *
-     * @param to 招聘方案to信息
+     * @param to   招聘方案to信息
      * @param pass 是否通过
      * @throws ActException
      */

@@ -1,10 +1,5 @@
 package com.bjike.goddess.recruit;
 
-import com.dounine.japi.JapiClient;
-import com.dounine.japi.JapiClientStorage;
-import com.dounine.japi.JapiClientTransfer;
-import com.dounine.japi.core.IProject;
-import com.dounine.japi.core.impl.ProjectImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,16 +21,16 @@ import java.io.IOException;
  * @Copy: [com.bjike]
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.recruit.action","com.bjike.goddess.common.consumer"},
+@ComponentScan(basePackages = {"com.bjike.goddess.recruit.action", "com.bjike.goddess.common.consumer"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
                 value = {Configuration.class})})
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
-public class Application{
+public class Application {
 
     public static void main(String[] args) throws IOException {
-        SpringApplication.run(Application.class,args);
+        SpringApplication.run(Application.class, args);
         System.in.read();
     }
 

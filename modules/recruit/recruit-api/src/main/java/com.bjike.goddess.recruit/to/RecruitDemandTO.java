@@ -1,7 +1,12 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.AuditType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 招聘需求
@@ -17,21 +22,25 @@ public class RecruitDemandTO extends BaseTO {
     /**
      * 招聘地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘地区不能为空")
     private String recruitArea;
 
     /**
      * 招聘部门/项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘部门/项目组不能为空")
     private String recruitGroup;
 
     /**
      * 招聘岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘岗位不能为空")
     private String recruitPost;
 
     /**
      * 计划招聘人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划招聘人数不能为空")
     private Integer planRecruitNo;
 
     /**

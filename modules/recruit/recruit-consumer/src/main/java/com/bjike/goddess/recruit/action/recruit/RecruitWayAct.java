@@ -17,9 +17,11 @@ import com.bjike.goddess.recruit.to.RecruitWayTO;
 import com.bjike.goddess.recruit.vo.NotEntryReasonVO;
 import com.bjike.goddess.recruit.vo.RecruitWayVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,11 +34,47 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/recruitWay")
+@RequestMapping("recruitWay")
 public class RecruitWayAct {
 
     @Autowired
     private RecruitWayAPI recruitWayAPI;
+
+    /**
+     * 根据id查询招聘渠道
+     *
+     * @param id 招聘渠道唯一标识
+     * @return class RecruitWayVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/recruitWay/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecruitWayBO bo = recruitWayAPI.findById(id);
+            RecruitWayVO vo = BeanTransform.copyProperties(bo, RecruitWayVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 招聘渠道dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RecruitWayDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = recruitWayAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -47,10 +85,10 @@ public class RecruitWayAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(RecruitWayDTO dto) throws ActException {
+    public Result list(RecruitWayDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<RecruitWayBO> boList = recruitWayAPI.list(dto);
-            List<RecruitWayVO> voList = BeanTransform.copyProperties(boList, RecruitWayVO.class);
+            List<RecruitWayVO> voList = BeanTransform.copyProperties(boList, RecruitWayVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -66,10 +104,10 @@ public class RecruitWayAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RecruitWayTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RecruitWayTO to, HttpServletRequest request) throws ActException {
         try {
             RecruitWayBO bo = recruitWayAPI.save(to);
-            RecruitWayVO vo = BeanTransform.copyProperties(bo, RecruitWayVO.class);
+            RecruitWayVO vo = BeanTransform.copyProperties(bo, RecruitWayVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -101,7 +139,7 @@ public class RecruitWayAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) RecruitWayTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) RecruitWayTO to) throws ActException {
         try {
             recruitWayAPI.update(to);
             return new ActResult("edit success!");

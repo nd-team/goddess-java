@@ -17,9 +17,11 @@ import com.bjike.goddess.recruit.to.TemplateManageTO;
 import com.bjike.goddess.recruit.vo.RecruitWayVO;
 import com.bjike.goddess.recruit.vo.TemplateManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,11 +34,47 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/templateManage")
+@RequestMapping("templateManage")
 public class TemplateManageAct {
 
     @Autowired
     private TemplateManageAPI templateManageAPI;
+
+    /**
+     * 根据id查询模板管理
+     *
+     * @param id 模板管理唯一标识
+     * @return class TemplateManageVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/templateManage/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            TemplateManageBO bo = templateManageAPI.findById(id);
+            TemplateManageVO vo = BeanTransform.copyProperties(bo, TemplateManageVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 模板管理dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated TemplateManageDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = templateManageAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -66,7 +104,7 @@ public class TemplateManageAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) TemplateManageTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) TemplateManageTO to) throws ActException {
         try {
             TemplateManageBO bo = templateManageAPI.save(to);
             TemplateManageVO vo = BeanTransform.copyProperties(bo, TemplateManageVO.class);
@@ -101,7 +139,7 @@ public class TemplateManageAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) TemplateManageTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) TemplateManageTO to) throws ActException {
         try {
             templateManageAPI.update(to);
             return new ActResult("edit success!");

@@ -1,8 +1,13 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.recruit.type.AuditType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 招聘方案
@@ -23,31 +28,37 @@ public class RecruitProTO extends BaseTO {
     /**
      * 招聘网站
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘网站不能为空")
     private String recruitSite;
 
     /**
      * 套餐名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "套餐名称不能为空")
     private String name;
 
     /**
      * 招聘套餐费用
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "招聘套餐费用不能为空")
     private Double cost;
 
     /**
      * 套餐时效
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "套餐时效不能为空")
     private String aging;
 
     /**
      * 招聘套餐可发布岗位数
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘套餐可发布岗位数不能为空")
     private String postCount;
 
     /**
      * 招聘套餐可下载简历数
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘套餐可下载简历数不能为空")
     private String downloadCount;
 
     /**

@@ -8,8 +8,11 @@ import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.entity.RecruitPro;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,51 +36,72 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
      */
     @Override
     public List<RecruitProBO> list(RecruitProDTO dto) throws SerException {
-        List<RecruitPro> proList =  super.findByPage(dto);
-        List<RecruitProBO> recruitProBOList = BeanTransform.copyProperties(proList, RecruitProBO.class);
-        return recruitProBOList;
+        List<RecruitPro> list =  super.findByPage(dto);
+        List<RecruitProBO> listBO = BeanTransform.copyProperties(list, RecruitProBO.class);
+        return listBO;
     }
 
     /**
      * 保存招聘方案
      *
-     * @param recruitProTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public RecruitProBO save(RecruitProTO recruitProTO) throws SerException {
-        RecruitPro recruitPro = BeanTransform.copyProperties(recruitProTO, RecruitPro.class, true);
-        RecruitPro entity = super.save(recruitPro);
-        RecruitProBO recruitProBO = BeanTransform.copyProperties(entity, RecruitProBO.class);
-        return recruitProBO;
+    @Transactional(rollbackFor = SerException.class)
+    public RecruitProBO save(RecruitProTO to) throws SerException {
+        RecruitPro model = BeanTransform.copyProperties(to, RecruitPro.class, true);
+        RecruitPro entity = super.save(model);
+        RecruitProBO bo = BeanTransform.copyProperties(entity, RecruitProBO.class);
+        return bo;
     }
 
     /**
      * 更新招聘方案
      *
-     * @param recruitProTO
+     * @param to 招聘方案to
      * @throws SerException
      */
     @Override
-    public void update(RecruitProTO recruitProTO) throws SerException {
-        RecruitPro original = super.findById(recruitProTO.getId());
-        original.setAuditType(original.getAuditType());
-        original.setStatus(original.getStatus());
-        super.update(original);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(RecruitProTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            RecruitPro model = super.findById(to.getId());
+            if (model != null) {
+                updateRecruitPro(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新招聘方案
+     *
+     * @param to 招聘方案to
+     * @param model 招聘方案实体
+     */
+    private void updateRecruitPro(RecruitProTO to, RecruitPro model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
      * 运营商务部审核
      *
-     * @param recruitProTO
+     * @param to
      * @param pass
      * @throws SerException
      */
     @Override
-    public void yyEdit (RecruitProTO recruitProTO, Boolean pass) throws SerException {
-        RecruitPro editObj = super.findById(recruitProTO.getId());
-        editObj.setYy_Opinion(recruitProTO.getYy_Opinion());
+    @Transactional(rollbackFor = SerException.class)
+    public void yyEdit (RecruitProTO to, Boolean pass) throws SerException {
+        RecruitPro editObj = super.findById(to.getId());
+        editObj.setYy_Opinion(to.getYy_Opinion());
         editObj.setAuditType(pass? AuditType.NONE:AuditType.DENIED);
         super.update(editObj);
     }
@@ -85,16 +109,28 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     /**
      * 总经办审核
      *
-     * @param recruitProTO
+     * @param to
      * @param pass
      * @throws SerException
      */
     @Override
-    public void managerEdit (RecruitProTO recruitProTO, Boolean pass) throws SerException {
-        RecruitPro editObj = super.findById(recruitProTO.getId());
-        editObj.setZjb_Opnion(recruitProTO.getZjb_Opnion());
+    @Transactional(rollbackFor = SerException.class)
+    public void managerEdit (RecruitProTO to, Boolean pass) throws SerException {
+        RecruitPro editObj = super.findById(to.getId());
+        editObj.setZjb_Opnion(to.getZjb_Opnion());
         editObj.setAuditType(Boolean.TRUE == pass? AuditType.ALLOWED:AuditType.DENIED);
         super.update(editObj);
     }
 
+    /**
+     * 根据id删除招聘方案
+     *
+     * @param id 招聘方案唯一标识
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void remove(String id) throws SerException {
+        super.remove(id);
+    }
 }

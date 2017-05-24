@@ -1,7 +1,12 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.Gender;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 面试信息
@@ -17,46 +22,55 @@ public class InterviewInforTO extends BaseTO {
     /**
      * 电访日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "电访日期不能为空")
     private String date;
 
     /**
      * 姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 简历来源
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "简历来源不能为空")
     private String resumeResource;
 
     /**
      * 应聘岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘岗位不能为空")
     private String position;
 
     /**
      * 应聘部门
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘部门不能为空")
     private String department;
 
     /**
      * 应聘地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "应聘地区不能为空")
     private String area;
 
     /**
      * 性别
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
     private Gender gender;
 
     /**
      * 联系电话
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "联系电话不能为空")
     private String phone;
 
     /**
      * 电子邮箱
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "电子邮箱不能为空")
     private String email;
 
     /**

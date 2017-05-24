@@ -32,11 +32,11 @@ public interface ReportAddressInforSer extends Ser<ReportAddressInfor, ReportAdd
     /**
      * 保存报道地址信息
      *
-     * @param reportAddressInforTO
+     * @param to
      * @return
      * @throws SerException
      */
-    ReportAddressInforBO save(ReportAddressInforTO reportAddressInforTO) throws SerException;
+    ReportAddressInforBO save(ReportAddressInforTO to) throws SerException;
 
     /**
      * 根据id删除报道地址信息
@@ -49,9 +49,9 @@ public interface ReportAddressInforSer extends Ser<ReportAddressInfor, ReportAdd
     /**
      * 更新报道地址信息
      *
-     * @param reportAddressInforTO
+     * @param to
      * @throws SerException
      */
-    void update(ReportAddressInforTO reportAddressInforTO) throws SerException;
+    void update(ReportAddressInforTO to) throws SerException;
 
 }

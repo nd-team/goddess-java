@@ -1,6 +1,9 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 未入职原因
@@ -16,6 +19,7 @@ public class NotEntryReasonTO extends BaseTO {
     /**
      * 未入职原因类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "未入职原因类型不能为空")
     private String notEntryReasonType;
 
     /**

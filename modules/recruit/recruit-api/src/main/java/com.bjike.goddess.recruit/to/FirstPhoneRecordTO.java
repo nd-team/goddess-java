@@ -1,7 +1,12 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.Gender;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 第一次电访记录
@@ -17,36 +22,43 @@ public class FirstPhoneRecordTO extends BaseTO {
     /**
      * 日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "日期不能为空")
     private String date;
 
     /**
      * 简历来源
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "简历来源不能为空")
     private String resumeResource;
 
     /**
      * 岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String position;
 
     /**
      * 姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 性别
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
     private Gender gender;
 
     /**
      * 联系方式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "联系方式不能为空")
     private String telephone;
 
     /**
      * 简历筛选是否通过
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "简历筛选是否通过不能为空")
     private Boolean whetherPass;
 
     /**

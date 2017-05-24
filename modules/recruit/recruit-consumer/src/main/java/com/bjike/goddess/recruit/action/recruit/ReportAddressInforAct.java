@@ -8,18 +8,20 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.ReportAddressInforAPI;
-import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
-import com.bjike.goddess.recruit.dto.RecruitWayDTO;
+import com.bjike.goddess.recruit.bo.ReportAddressInforBO;
 import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
-import com.bjike.goddess.recruit.to.RecruitWayTO;
+import com.bjike.goddess.recruit.dto.ReportAddressInforDTO;
 import com.bjike.goddess.recruit.to.ReportAddressInforTO;
-import com.bjike.goddess.recruit.vo.RecruitWayVO;
+import com.bjike.goddess.recruit.to.ReportAddressInforTO;
+import com.bjike.goddess.recruit.vo.ReportAddressInforVO;
 import com.bjike.goddess.recruit.vo.ReportAddressInforVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,11 +34,47 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @RestController
-@RequestMapping("recruit/reportAddressInfor")
+@RequestMapping("reportAddressInfor")
 public class ReportAddressInforAct {
 
     @Autowired
     private ReportAddressInforAPI reportAddressInforAPI;
+
+    /**
+     * 根据id查询报道地址信息
+     *
+     * @param id 报道地址信息唯一标识
+     * @return class ReportAddressInforVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/recruitWay/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ReportAddressInforBO bo = reportAddressInforAPI.findById(id);
+            ReportAddressInforVO vo = BeanTransform.copyProperties(bo, ReportAddressInforVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 报道地址信息dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ReportAddressInforDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = reportAddressInforAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取列表
@@ -66,7 +104,7 @@ public class ReportAddressInforAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ReportAddressInforTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ReportAddressInforTO to) throws ActException {
         try {
             ReportAddressInforBO bo = reportAddressInforAPI.save(to);
             ReportAddressInforVO vo = BeanTransform.copyProperties(bo, ReportAddressInforVO.class);
@@ -101,7 +139,7 @@ public class ReportAddressInforAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) ReportAddressInforTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ReportAddressInforTO to) throws ActException {
         try {
             reportAddressInforAPI.update(to);
             return new ActResult("edit success!");

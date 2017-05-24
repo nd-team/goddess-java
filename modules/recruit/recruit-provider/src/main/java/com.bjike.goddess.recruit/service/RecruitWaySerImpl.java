@@ -7,8 +7,11 @@ import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitWayDTO;
 import com.bjike.goddess.recruit.entity.RecruitWay;
 import com.bjike.goddess.recruit.to.RecruitWayTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,38 +35,67 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
      */
     @Override
     public List<RecruitWayBO> list(RecruitWayDTO dto) throws SerException {
-        List<RecruitWay> recruitWayList = super.findByPage(dto);
-        List<RecruitWayBO> recruitWayBOList = BeanTransform.copyProperties(recruitWayList, RecruitWayBO.class);
-        return recruitWayBOList;
+        List<RecruitWay> list = super.findByPage(dto);
+        List<RecruitWayBO> listBO = BeanTransform.copyProperties(list, RecruitWayBO.class);
+        return listBO;
     }
 
     /**
      * 保存招聘渠道
      *
-     * @param recruitWayTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public RecruitWayBO save(RecruitWayTO recruitWayTO) throws SerException {
-        RecruitWay recruitWay = BeanTransform.copyProperties(recruitWayTO, RecruitWay.class, true);
-        RecruitWayBO entity = BeanTransform.copyProperties(recruitWay, RecruitWayBO.class);
-        return entity;
+    @Transactional(rollbackFor = SerException.class)
+    public RecruitWayBO save(RecruitWayTO to) throws SerException {
+        RecruitWay model = BeanTransform.copyProperties(to, RecruitWay.class, true);
+        RecruitWayBO bo = BeanTransform.copyProperties(model, RecruitWayBO.class);
+        return bo;
     }
 
     /**
-     * 修改招聘渠道
+     * 更新招聘渠道
      *
-     * @param recruitWayTO
+     * @param to 招聘渠道to
      * @throws SerException
      */
     @Override
-    public void update(RecruitWayTO recruitWayTO) throws SerException {
-        RecruitWay recruitWay = BeanTransform.copyProperties(recruitWayTO, RecruitWay.class, true);
-        super.update(recruitWay);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(RecruitWayTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            RecruitWay model = super.findById(to.getId());
+            if (model != null) {
+                updateRecruitWay(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
     }
 
+    /**
+     * 更新招聘渠道
+     *
+     * @param to    招聘渠道to
+     * @param model 招聘渠道实体
+     */
+    private void updateRecruitWay(RecruitWayTO to, RecruitWay model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     *根据id删除招聘渠道
+     *
+     * @param id 招聘渠道唯一标识
+     * @throws SerException
+     */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }

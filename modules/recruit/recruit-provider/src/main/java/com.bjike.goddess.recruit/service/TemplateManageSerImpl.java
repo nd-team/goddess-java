@@ -7,8 +7,11 @@ import com.bjike.goddess.recruit.bo.TemplateManageBO;
 import com.bjike.goddess.recruit.dto.TemplateManageDTO;
 import com.bjike.goddess.recruit.entity.TemplateManage;
 import com.bjike.goddess.recruit.to.TemplateManageTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,35 +35,69 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
      */
     @Override
     public List<TemplateManageBO> list(TemplateManageDTO dto) throws SerException {
-        List<TemplateManage> templateManageList = super.findByPage(dto);
-        List<TemplateManageBO> templateManageBOList = BeanTransform.copyProperties(templateManageList, TemplateManageBO.class);
-        return templateManageBOList;
+        List<TemplateManage> list = super.findByPage(dto);
+        List<TemplateManageBO> listBO = BeanTransform.copyProperties(list, TemplateManageBO.class);
+        return listBO;
     }
 
     /**
      * 保存模板管理
      *
-     * @param templateManageTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public TemplateManageBO save(TemplateManageTO templateManageTO) throws SerException {
-        TemplateManage templateManage = BeanTransform.copyProperties(templateManageTO, TemplateManage.class, true);
-        templateManage = super.save(templateManage);
-        TemplateManageBO templateManageBO = BeanTransform.copyProperties(templateManage, TemplateManageBO.class);
-        return templateManageBO;
+    @Transactional(rollbackFor = SerException.class)
+    public TemplateManageBO save(TemplateManageTO to) throws SerException {
+        TemplateManage model = BeanTransform.copyProperties(to, TemplateManage.class, true);
+        model = super.save(model);
+        TemplateManageBO bo = BeanTransform.copyProperties(model, TemplateManageBO.class);
+        return bo;
     }
 
     /**
      * 更新模板管理
      *
-     * @param templateManageTO
+     * @param to 模板管理to
      * @throws SerException
      */
     @Override
-    public void update(TemplateManageTO templateManageTO) throws SerException {
-        TemplateManage templateManage = BeanTransform.copyProperties(templateManageTO, TemplateManage.class, true);
-        super.update(templateManage);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(TemplateManageTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            TemplateManage model = super.findById(to.getId());
+            if (model != null) {
+                updateTemplateManage(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新模板管理
+     *
+     * @param to    模板管理to
+     * @param model 模板管理实体
+     */
+    private void updateTemplateManage(TemplateManageTO to, TemplateManage model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 根据id删除模板管理
+     *
+     * @param id 模板管理唯一标识
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void remove(String id) throws SerException {
+        super.remove(id);
     }
 }

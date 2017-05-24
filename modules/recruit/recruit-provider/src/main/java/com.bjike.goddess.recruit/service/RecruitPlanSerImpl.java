@@ -8,8 +8,11 @@ import com.bjike.goddess.recruit.bo.RecruitWayBO;
 import com.bjike.goddess.recruit.dto.RecruitPlanDTO;
 import com.bjike.goddess.recruit.entity.RecruitPlan;
 import com.bjike.goddess.recruit.to.RecruitPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,36 +36,58 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
      */
     @Override
     public List<RecruitPlanBO> list(RecruitPlanDTO dto) throws SerException {
-        List<RecruitPlan> recruitPlanList = super.findByPage(dto);
-        List<RecruitPlanBO> recruitWayBOList = BeanTransform.copyProperties(recruitPlanList, RecruitPlanBO.class);
-        return recruitWayBOList;
+        List<RecruitPlan> list = super.findByPage(dto);
+        List<RecruitPlanBO> listBO = BeanTransform.copyProperties(list, RecruitPlanBO.class);
+        return listBO;
     }
 
     /**
      * 保存招聘计划
      *
-     * @param recruitPlanTO
+     * @param to
      * @return
      * @throws SerException
      */
     @Override
-    public RecruitPlanBO save(RecruitPlanTO recruitPlanTO) throws SerException {
-        RecruitPlan recruitPlan = BeanTransform.copyProperties(recruitPlanTO, RecruitPlan.class, true);
-        recruitPlan = super.save(recruitPlan);
-        RecruitPlanBO recruitPlanBO = BeanTransform.copyProperties(recruitPlan, RecruitWayBO.class);
-        return recruitPlanBO;
+    @Transactional(rollbackFor = SerException.class)
+    public RecruitPlanBO save(RecruitPlanTO to) throws SerException {
+        RecruitPlan model = BeanTransform.copyProperties(to, RecruitPlan.class, true);
+        model = super.save(model);
+        RecruitPlanBO bo = BeanTransform.copyProperties(model, RecruitWayBO.class);
+        return bo;
     }
 
     /**
      * 更新招聘计划
      *
-     * @param recruitPlanTO
+     * @param to 招聘计划to
      * @throws SerException
      */
     @Override
-    public void update(RecruitPlanTO recruitPlanTO) throws SerException {
-        RecruitPlan recruitPlan = BeanTransform.copyProperties(recruitPlanTO, RecruitPlan.class, true);
-        super.update(recruitPlan);
+    @Transactional(rollbackFor = SerException.class)
+    public void update(RecruitPlanTO to) throws SerException {
+        if (StringUtils.isNotEmpty(to.getId())) {
+            RecruitPlan model = super.findById(to.getId());
+            if (model != null) {
+                updateRecruitPlan(to, model);
+            } else {
+                throw new SerException("更新对象不能为空!");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+    }
+
+    /**
+     * 更新招聘计划
+     *
+     * @param to 招聘计划to
+     * @param model 招聘计划实体
+     */
+    private void updateRecruitPlan(RecruitPlanTO to, RecruitPlan model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
@@ -72,6 +97,7 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }

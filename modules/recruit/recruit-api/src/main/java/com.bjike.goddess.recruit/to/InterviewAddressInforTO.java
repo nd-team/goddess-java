@@ -1,6 +1,9 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 面试地址信息
@@ -16,6 +19,7 @@ public class InterviewAddressInforTO extends BaseTO {
     /**
      * 面试地址
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "面试地址信息")
     private String interviewAddress;
 
     /**
