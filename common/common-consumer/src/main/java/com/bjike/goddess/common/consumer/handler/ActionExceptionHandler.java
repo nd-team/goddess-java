@@ -42,6 +42,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             LOGGER.error(e.getMessage());
         }
         if (StringUtils.isNotBlank(e.getMessage()) && e.getMessage().startsWith("Forbid consumer")) {
+            LOGGER.error(e.getMessage());
             actResult.setMsg("服务调用失败");
         } else {
             actResult.setMsg(e.getMessage());
