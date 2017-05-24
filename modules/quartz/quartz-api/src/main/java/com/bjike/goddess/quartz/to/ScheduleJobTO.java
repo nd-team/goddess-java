@@ -46,7 +46,7 @@ public class ScheduleJobTO extends BaseTO {
     /**
      * 描述
      */
-
+    @NotBlank(message = "描述不能为空", groups = {ADD.class,EDIT.class})
     private String description;
 
     /**
@@ -55,7 +55,11 @@ public class ScheduleJobTO extends BaseTO {
     @NotNull(message = "是否启用不能为空", groups = {ADD.class, EDIT.class})
     private Boolean enable;
 
-
+    /**
+     * 地址
+     */
+    @NotBlank(message = "地址不能为空", groups = {ADD.class, EDIT.class})
+    private String address;
     /**
      * 任务所属调度组
      */
@@ -116,5 +120,13 @@ public class ScheduleJobTO extends BaseTO {
 
     public void setScheduleJobGroupId(String scheduleJobGroupId) {
         this.scheduleJobGroupId = scheduleJobGroupId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
