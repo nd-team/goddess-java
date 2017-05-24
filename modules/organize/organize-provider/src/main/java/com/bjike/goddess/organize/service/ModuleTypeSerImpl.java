@@ -106,9 +106,10 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
     @Override
     public List<OpinionBO> findThawOpinion() throws SerException {
         List<ModuleTypeBO> list = this.findByStatus(Status.THAW);
-        List<OpinionBO> bos =new ArrayList<>(0);
-        for(ModuleTypeBO entity : list)
-            bos.add(new OpinionBO(entity.getId(),entity.getModule()));
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (ModuleTypeBO entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getModule()));
         return bos;
     }
 }

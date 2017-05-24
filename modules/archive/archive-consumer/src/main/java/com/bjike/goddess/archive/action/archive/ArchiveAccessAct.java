@@ -10,12 +10,15 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 档案调阅
@@ -40,6 +43,7 @@ public class ArchiveAccessAct {
      * @return class ArchiveAccessVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) ArchiveAccessTO to, BindingResult result) throws ActException {
         try {
@@ -56,6 +60,7 @@ public class ArchiveAccessAct {
      * @return class ArchiveAccessVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) ArchiveAccessTO to, BindingResult result) throws ActException {
         try {
@@ -108,6 +113,36 @@ public class ArchiveAccessAct {
     public Result maps(ArchiveAccessDTO dto) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(archiveAccessAPI.maps(dto), ArchiveAccessVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取档案调阅数据
+     *
+     * @param id 档案调阅数据id
+     * @return class ArchiveAccessVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(archiveAccessAPI.getById(id), ArchiveAccessVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(archiveAccessAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

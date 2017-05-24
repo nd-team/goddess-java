@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.api.LaborRelationAPI;
 import com.bjike.goddess.archive.dto.LaborRelationDTO;
 import com.bjike.goddess.archive.to.LaborRelationTO;
 import com.bjike.goddess.archive.vo.LaborRelationVO;
+import com.bjike.goddess.archive.vo.LaborRelationVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 劳动关系类型
@@ -160,4 +163,33 @@ public class LaborRelationAct {
         }
     }
 
+    /**
+     * 根据id获取劳动关系类型数据
+     *
+     * @param id 劳动关系类型数据id
+     * @return class LaborRelationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.getById(id), LaborRelationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(laborRelationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
