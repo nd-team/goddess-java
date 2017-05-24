@@ -35,7 +35,7 @@ import java.util.List;
 @StorageAuth
 @RestController
 @RequestMapping("file")
-public class FileAction extends BaseFileAction {
+public class FileAct extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
 

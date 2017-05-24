@@ -30,7 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("schedulejob")
-public class ScheduleJobAction {
+public class ScheduleJobAct {
 
     @Autowired
     private ScheduleJobAPI scheduleJobAPI;
