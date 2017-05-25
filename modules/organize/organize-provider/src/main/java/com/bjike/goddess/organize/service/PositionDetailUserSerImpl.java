@@ -159,7 +159,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public Boolean checkAsUserPosition(String userId, String[] positionIds) throws SerException {
         PositionDetailUser entity = this.findByUser(userId);
-        if (null != entity)
+        if (null != entity && null != entity.getPositionSet() && null != positionIds)
             for (PositionDetail detail : entity.getPositionSet())
                 for (String id : positionIds)
                     if (detail.getPosition().equals(id))
@@ -170,7 +170,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         PositionDetailUser entity = this.findByUser(userId);
-        if (null != entity)
+        if (null != entity && null != entity.getPositionSet() && null != arrangementIds)
             for (PositionDetail detail : entity.getPositionSet())
                 for (String id : arrangementIds)
                     if (detail.getArrangement().getId().equals(id))
@@ -179,9 +179,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
+    public Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+        PositionDetailUser entity = this.findByUser(userId);
+        if (null != entity && null != entity.getPositionSet() && null != departmentIds)
+            for (PositionDetail detail : entity.getPositionSet())
+                for (String id : departmentIds)
+                    if (detail.getDepartment().getId().equals(id))
+                        return true;
+        return false;
+    }
+
+    @Override
     public Boolean checkAsUserModule(String userId, String... moduleIds) throws SerException {
         PositionDetailUser entity = this.findByUser(userId);
-        if (null != entity)
+        if (null != entity && null != entity.getPositionSet() && null != moduleIds)
             for (PositionDetail detail : entity.getPositionSet())
                 for (String id : moduleIds)
                     if (detail.getModule().getId().equals(id))

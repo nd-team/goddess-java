@@ -92,7 +92,7 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     /**
      * 检测用户是否在指定层级中
      *
-     * @param user_id        用户id
+     * @param user_id         用户id
      * @param arrangement_ids 层级id
      * @return
      * @throws SerException
@@ -102,9 +102,21 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     }
 
     /**
+     * 检测用户是否在指定部门中
+     *
+     * @param userId        用户id
+     * @param departmentIds 部门id
+     * @return
+     * @throws SerException
+     */
+    default Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+        return null;
+    }
+
+    /**
      * 检测用户是否在指定模块中
      *
-     * @param user_id   用户id
+     * @param user_id    用户id
      * @param module_ids 模块id
      * @return
      * @throws SerException
@@ -148,10 +160,11 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
 
     /**
      * 获取用户列表
+     *
      * @return
      * @throws SerException
      */
-    default List<UserBO> findUserList() throws SerException{
+    default List<UserBO> findUserList() throws SerException {
         return null;
     }
 }

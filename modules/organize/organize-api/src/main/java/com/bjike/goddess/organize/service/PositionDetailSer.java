@@ -162,4 +162,26 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     default List<OpinionBO> findThawOpinion() throws SerException {
         return null;
     }
+
+    /**
+     * 根据部门id获取职位详细数据
+     *
+     * @param departmentIds 部门id
+     * @return
+     * @throws SerException
+     */
+    default List<PositionDetailBO> findByDepartment(String... departmentIds) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id查询岗位详细数据
+     *
+     * @param ids 岗位详细数据id数组
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findByIds(String... ids) throws SerException {
+        return null;
+    }
 }

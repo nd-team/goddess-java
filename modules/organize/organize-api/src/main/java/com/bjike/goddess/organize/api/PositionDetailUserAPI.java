@@ -112,6 +112,18 @@ public interface PositionDetailUserAPI {
     }
 
     /**
+     * 检测用户是否在指定部门中
+     *
+     * @param userId        用户id
+     * @param departmentIds 部门id
+     * @return
+     * @throws SerException
+     */
+    default Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+        return null;
+    }
+
+    /**
      * 列表
      *
      * @param dto 用户职位数据传输对象
@@ -156,10 +168,11 @@ public interface PositionDetailUserAPI {
 
     /**
      * 获取用户列表
+     *
      * @return
      * @throws SerException
      */
-    default List<UserBO> findUserList() throws SerException{
+    default List<UserBO> findUserList() throws SerException {
         return null;
     }
 

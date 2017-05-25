@@ -116,4 +116,15 @@ public interface ArrangementSer extends Ser<Arrangement, ArrangementDTO> {
         return null;
     }
 
+
+    /**
+     * 根据id查询岗位层级数据
+     *
+     * @param ids 岗位层级数据id数组
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findByIds(String... ids) throws SerException {
+        return null;
+    }
 }
