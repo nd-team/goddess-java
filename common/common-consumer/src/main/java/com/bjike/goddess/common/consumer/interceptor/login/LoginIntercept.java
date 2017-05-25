@@ -3,6 +3,7 @@ package com.bjike.goddess.common.consumer.interceptor.login;
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.constant.RpcCommon;
+import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -102,13 +103,11 @@ public class LoginIntercept extends HandlerInterceptorAdapter {
      * @throws IOException
      */
     private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
-        response.setContentType("text/html; charset=UTF-8"); //转码
-        PrintWriter out = response.getWriter();
-        out.flush();
+        ActResult actResult = new ActResult();
+        response.setContentType("text/html;charset=utf-8");
+        actResult.setCode(403);
+        actResult.setMsg("用户未登录!");
         response.setStatus(200);
-        ActResult result = new ActResult();
-        result.setMsg(msg);
-        result.setCode(403);
-        out.println(JSON.toJSONString(result));
+        ResponseContext.writeData(actResult);
     }
 }
