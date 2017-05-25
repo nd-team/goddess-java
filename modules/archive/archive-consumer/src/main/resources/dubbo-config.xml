@@ -38,6 +38,8 @@
                      id="staffRecordsApiImpl"/>
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

@@ -50,4 +50,14 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
     public List<ArchiveAccessBO> maps(ArchiveAccessDTO dto) throws SerException {
         return archiveAccessSer.maps(dto);
     }
+
+    @Override
+    public ArchiveAccessBO getById(String id) throws SerException {
+        return archiveAccessSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return archiveAccessSer.getTotal();
+    }
 }

@@ -76,4 +76,25 @@ public interface ArchiveAccessSer extends Ser<ArchiveAccess, ArchiveAccessDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取档案调阅数据
+     *
+     * @param id 档案调阅数据id
+     * @return
+     * @throws SerException
+     */
+    default ArchiveAccessBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

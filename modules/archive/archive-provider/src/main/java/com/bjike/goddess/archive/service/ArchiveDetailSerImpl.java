@@ -103,6 +103,8 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     @Override
     public ArchiveDetailBO delete(String id) throws SerException {
         ArchiveDetail entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -118,5 +120,19 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     @Override
     public List<ArchiveDetailBO> maps(ArchiveDetailDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public ArchiveDetailBO getById(String id) throws SerException {
+        ArchiveDetail entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ArchiveDetailDTO dto = new ArchiveDetailDTO();
+        return super.count(dto);
     }
 }

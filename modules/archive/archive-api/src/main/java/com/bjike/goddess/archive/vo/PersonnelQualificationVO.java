@@ -33,7 +33,7 @@ public class PersonnelQualificationVO {
     /**
      * 劳动关系类型id
      */
-    private String lobor_id;
+    private String loborId;
 
     /**
      * 劳动关系类型
@@ -43,7 +43,7 @@ public class PersonnelQualificationVO {
     /**
      * 社保购买类型
      */
-    private String social_id;
+    private String socialId;
 
     /**
      * 社保购买类型
@@ -118,12 +118,12 @@ public class PersonnelQualificationVO {
         this.identityCard = identityCard;
     }
 
-    public String getLobor_id() {
-        return lobor_id;
+    public String getLoborId() {
+        return loborId;
     }
 
-    public void setLobor_id(String lobor_id) {
-        this.lobor_id = lobor_id;
+    public void setLoborId(String loborId) {
+        this.loborId = loborId;
     }
 
     public String getLaborName() {
@@ -134,12 +134,12 @@ public class PersonnelQualificationVO {
         this.laborName = laborName;
     }
 
-    public String getSocial_id() {
-        return social_id;
+    public String getSocialId() {
+        return socialId;
     }
 
-    public void setSocial_id(String social_id) {
-        this.social_id = social_id;
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
     }
 
     public String getSocialName() {

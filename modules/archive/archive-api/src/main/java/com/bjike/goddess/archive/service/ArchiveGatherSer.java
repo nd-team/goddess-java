@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.service;
 
+import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.bo.ArchiveGatherBO;
 import com.bjike.goddess.archive.dto.ArchiveGatherDTO;
 import com.bjike.goddess.archive.entity.ArchiveGather;
@@ -64,5 +65,25 @@ public interface ArchiveGatherSer extends Ser<ArchiveGather, ArchiveGatherDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取档案调阅数据
+     *
+     * @param id 档案调阅数据id
+     * @return
+     * @throws SerException
+     */
+    default ArchiveGatherBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 
 }

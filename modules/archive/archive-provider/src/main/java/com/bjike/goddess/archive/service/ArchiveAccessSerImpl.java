@@ -43,8 +43,9 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveAccessBO save(ArchiveAccessTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         ArchiveAccess entity = BeanTransform.copyProperties(to, ArchiveAccess.class, true);
-        entity.setUsername(userAPI.currentUser().getUsername());
+        entity.setUsername(user.getUsername());
         StringBuilder sb = new StringBuilder(0);
         for (String name : to.getAccessNames())
             sb.append(name).append(",");
@@ -78,6 +79,8 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     @Override
     public ArchiveAccessBO delete(String id) throws SerException {
         ArchiveAccess entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ArchiveAccessBO.class);
     }
@@ -85,11 +88,12 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ArchiveAccessBO audit(AccessAuditTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据ID不能为空");
-
         ArchiveAccess entity = super.findById(to.getId());
-        UserBO user = userAPI.currentUser();
+        if (null == entity)
+            throw new SerException("该数据不存在");
         if (null == user)
             throw new SerException("请登陆重试");
         UserDetailBO detail = userDetailAPI.findByUserId(user.getId());
@@ -112,5 +116,19 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
     @Override
     public List<ArchiveAccessBO> maps(ArchiveAccessDTO dto) throws SerException {
         return BeanTransform.copyProperties(super.findByPage(dto), ArchiveAccessBO.class);
+    }
+
+    @Override
+    public ArchiveAccessBO getById(String id) throws SerException {
+        ArchiveAccess entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, ArchiveAccessBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ArchiveAccessDTO dto = new ArchiveAccessDTO();
+        return super.count(dto);
     }
 }

@@ -63,7 +63,7 @@ public class WorkHandoverSerImpl extends ServiceImpl<WorkHandover, WorkHandoverD
         if (null == entity)
             throw new SerException("数据对象不能为空");
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, HandoverReferenceBO.class);
+        return BeanTransform.copyProperties(entity, WorkHandoverBO.class);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class WorkHandoverSerImpl extends ServiceImpl<WorkHandover, WorkHandoverD
                 entity.setConfirm(to.getOpinion());
         }
         super.update(entity);
-        return BeanTransform.copyProperties(entity, HandoverReferenceBO.class);
+        return BeanTransform.copyProperties(entity, WorkHandoverBO.class);
     }
 
     @Override

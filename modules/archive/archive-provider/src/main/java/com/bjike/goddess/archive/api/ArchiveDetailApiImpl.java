@@ -49,4 +49,14 @@ public class ArchiveDetailApiImpl implements ArchiveDetailAPI {
     public List<ArchiveDetailBO> maps(ArchiveDetailDTO dto) throws SerException {
         return archiveDetailSer.maps(dto);
     }
+
+    @Override
+    public ArchiveDetailBO getById(String id) throws SerException {
+        return archiveDetailSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return archiveDetailSer.getTotal();
+    }
 }

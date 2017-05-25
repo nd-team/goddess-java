@@ -60,4 +60,14 @@ public class EnclosureTypeApiImpl implements EnclosureTypeAPI {
     public List<EnclosureTypeBO> maps(EnclosureTypeDTO dto) throws SerException {
         return enclosureTypeSer.maps(dto);
     }
+
+    @Override
+    public EnclosureTypeBO getById(String id) throws SerException {
+        return enclosureTypeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return enclosureTypeSer.getTotal();
+    }
 }

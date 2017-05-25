@@ -37,7 +37,7 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 离职类型
      */
-    @Column(name = "type", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职类型'", insertable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职类型'")
     private DimissionType type;
 
     /**
@@ -49,7 +49,7 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 员工状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '员工状态'", insertable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '员工状态'")
     private EmployeeStatus status;
 
     /**
@@ -61,7 +61,7 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 是否申请提前离职
      */
-    @Column(name = "is_advanceApply", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否申请提前离职'", insertable = false)
+    @Column(name = "is_advanceApply", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否申请提前离职'")
     private Boolean advanceApply;
 
     /**
@@ -79,7 +79,7 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 离职状态
      */
-    @Column(name = "dimission", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职状态'", insertable = false)
+    @Column(name = "dimission", nullable = false, columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职状态'")
     private DimissionStatus dimission;
 
     /**
@@ -133,19 +133,19 @@ public class DimissionInfo extends BaseEntity {
     /**
      * 离职办理状态
      */
-    @Column(name = "handle", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职办理状态'", insertable = false)
+    @Column(name = "handle", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职办理状态'")
     private HandleStatus handle;
 
     /**
      * 薪资确认
      */
-    @Column(name = "salaryConfirmation", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '薪资确认'", insertable = false)
+    @Column(name = "salaryConfirmation", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '薪资确认'")
     private ConfirmationType salaryConfirmation;
 
     /**
      * 离职确认情况
      */
-    @Column(name = "dimissionConfirmation", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职确认情况'", insertable = false)
+    @Column(name = "dimissionConfirmation", columnDefinition = "TINYINT(2)  DEFAULT 0  COMMENT '离职确认情况'")
     private ConfirmationType dimissionConfirmation;
 
 
