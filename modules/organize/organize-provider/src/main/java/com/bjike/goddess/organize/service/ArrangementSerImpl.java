@@ -10,7 +10,6 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.ArrangementDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.entity.Arrangement;
-import com.bjike.goddess.organize.entity.ModuleType;
 import com.bjike.goddess.organize.enums.ArrangementType;
 import com.bjike.goddess.organize.to.ArrangementTO;
 import org.apache.commons.lang3.StringUtils;
@@ -183,8 +182,18 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
     @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         ArrangementDTO dto = new ArrangementDTO();
-        dto.getConditions().add(Restrict.in(ID,ids));
+        dto.getConditions().add(Restrict.in(ID, ids));
         List<Arrangement> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (Arrangement entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getArrangement()));
+        return bos;
+    }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        List<Arrangement> list = super.findAll();
         List<OpinionBO> bos = new ArrayList<>(0);
         if (null != list)
             for (Arrangement entity : list)

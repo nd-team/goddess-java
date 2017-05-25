@@ -207,4 +207,24 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
                 bos.add(new OpinionBO(entity.getId(), entity.getDepartment()));
         return bos;
     }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        List<DepartmentDetailBO> list = this.findStatus();
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (DepartmentDetailBO bo : list)
+                bos.add(new OpinionBO(bo.getId(), bo.getDepartment()));
+        return bos;
+    }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        List<DepartmentDetail> list = super.findAll();
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (DepartmentDetail entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getDepartment()));
+        return bos;
+    }
 }

@@ -76,4 +76,9 @@ public class ArrangementApiImpl implements ArrangementAPI {
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         return arrangementSer.findByIds(ids);
     }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        return arrangementSer.findAllOpinion();
+    }
 }

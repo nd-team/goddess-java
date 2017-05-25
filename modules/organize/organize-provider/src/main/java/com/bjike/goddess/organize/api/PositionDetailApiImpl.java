@@ -109,4 +109,9 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         return positionDetailSer.findByIds(ids);
     }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        return positionDetailSer.findAllOpinion();
+    }
 }
