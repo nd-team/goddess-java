@@ -1,6 +1,5 @@
 package com.bjike.goddess.outcarfare.action.outcarfare;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,10 +7,16 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.outcarfare.api.WaitPayAPI;
-import com.bjike.goddess.outcarfare.bo.*;
+import com.bjike.goddess.outcarfare.bo.ArrivalCountBO;
+import com.bjike.goddess.outcarfare.bo.CarUserCountBO;
+import com.bjike.goddess.outcarfare.bo.DriverCountBO;
+import com.bjike.goddess.outcarfare.bo.WaitPayBO;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
-import com.bjike.goddess.outcarfare.vo.*;
+import com.bjike.goddess.outcarfare.vo.ArrivalCountVO;
+import com.bjike.goddess.outcarfare.vo.CarUserCountVO;
+import com.bjike.goddess.outcarfare.vo.DriverCountVO;
+import com.bjike.goddess.outcarfare.vo.WaitPayVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -62,7 +67,7 @@ public class WaitPayAct {
      * @version v1
      */
     @PatchMapping("v1/pay")
-    public Result pay(@Validated({EDIT.class}) WaitPayTO to,BindingResult result) throws ActException {
+    public Result pay(@Validated({EDIT.class}) WaitPayTO to, BindingResult result) throws ActException {
         try {
             waitPayAPI.pay(to);
             return new ActResult("编辑成功!");
@@ -89,7 +94,7 @@ public class WaitPayAct {
 //    }
 
     /**
-     * 查找
+     * 等待付款列表
      *
      * @param dto     等待付款分页信息
      * @param request 请求对象
@@ -181,18 +186,50 @@ public class WaitPayAct {
     }
 
     /**
-     * 查找所有已付款的名单
+     * 查找已付款列表
      *
-     * @param request 请求对象
-     * @return class PayVO
+     * @param dto dto
+     * @return class WaitPayVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findAlreadyPays")
-    public Result findAlreadyPays(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/pays")
+    public Result pays(WaitPayDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<PayBO> list = waitPayAPI.findAlreadyPays();
-            return ActResult.initialize(BeanTransform.copyProperties(list, PayVO.class, request));
+            List<WaitPayBO> list = waitPayAPI.pays(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找等待付款总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitCountSum")
+    public Result waitCountSum(WaitPayDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.waitCountSum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找已付款总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/payCountSum")
+    public Result payCountSum(WaitPayDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.payCountSum(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -65,7 +65,17 @@ public class WaitPayApiImpl implements WaitPayAPI {
     }
 
     @Override
-    public List<PayBO> findAlreadyPays() throws SerException {
-        return waitPaySer.findAlreadyPays();
+    public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        return waitPaySer.pays(dto);
+    }
+
+    @Override
+    public Long waitCountSum(WaitPayDTO dto) throws SerException {
+        return waitPaySer.waitCountSum(dto);
+    }
+
+    @Override
+    public Long payCountSum(WaitPayDTO dto) throws SerException {
+        return waitPaySer.payCountSum(dto);
     }
 }

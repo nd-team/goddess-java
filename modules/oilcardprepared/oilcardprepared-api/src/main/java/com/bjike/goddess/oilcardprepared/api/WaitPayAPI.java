@@ -73,12 +73,13 @@ public interface WaitPayAPI {
     }
 
     /**
-     * 查找所有已付款信息
+     * 已付款列表
      *
+     * @param dto 付款dto
      * @return class WaitPayBO
      * @throws SerException
      */
-    default List<WaitPayBO> allPay() throws SerException {
+    default List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
         return null;
     }
 }

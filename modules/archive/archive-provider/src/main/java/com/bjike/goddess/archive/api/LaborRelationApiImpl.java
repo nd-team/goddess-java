@@ -60,4 +60,14 @@ public class LaborRelationApiImpl implements LaborRelationAPI {
     public List<LaborRelationBO> maps(LaborRelationDTO dto) throws SerException {
         return laborRelationSer.maps(dto);
     }
+
+    @Override
+    public LaborRelationBO getById(String id) throws SerException {
+        return laborRelationSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return laborRelationSer.getTotal();
+    }
 }

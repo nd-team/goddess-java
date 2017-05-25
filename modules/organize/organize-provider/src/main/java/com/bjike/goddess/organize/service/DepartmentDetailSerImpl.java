@@ -7,6 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
@@ -193,5 +194,17 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.eq("area", area));
         return this.transformationToBOList(super.findByCis(dto));
+    }
+
+    @Override
+    public List<OpinionBO> findByIds(String... ids) throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        dto.getConditions().add(Restrict.in(ID, ids));
+        List<DepartmentDetail> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (DepartmentDetail entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getDepartment()));
+        return bos;
     }
 }

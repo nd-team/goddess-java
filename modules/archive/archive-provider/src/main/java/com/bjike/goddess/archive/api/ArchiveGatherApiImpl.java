@@ -44,4 +44,14 @@ public class ArchiveGatherApiImpl implements ArchiveGatherAPI {
     public List<ArchiveGatherBO> maps(ArchiveGatherDTO dto) throws SerException {
         return archiveGatherSer.maps(dto);
     }
+
+    @Override
+    public ArchiveGatherBO getById(String id) throws SerException {
+        return archiveGatherSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return archiveGatherSer.getTotal();
+    }
 }

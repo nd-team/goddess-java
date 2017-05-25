@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.api.PersonnelQualificationAPI;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
 import com.bjike.goddess.archive.vo.PersonnelQualificationVO;
+import com.bjike.goddess.archive.vo.PersonnelQualificationVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -121,4 +122,33 @@ public class PersonnelQualificationAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 根据id获取人员资质数据
+     *
+     * @param id 人员资质数据id
+     * @return class PersonnelQualificationVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(personnelQualificationAPI.getById(id), PersonnelQualificationVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(personnelQualificationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

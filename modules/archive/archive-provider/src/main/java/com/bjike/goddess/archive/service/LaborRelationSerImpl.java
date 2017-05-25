@@ -59,6 +59,8 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
     @Override
     public LaborRelationBO delete(String id) throws SerException {
         LaborRelation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
     }
@@ -67,6 +69,8 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
     @Override
     public LaborRelationBO congeal(String id) throws SerException {
         LaborRelation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
@@ -76,6 +80,8 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
     @Override
     public LaborRelationBO thaw(String id) throws SerException {
         LaborRelation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, LaborRelationBO.class);
@@ -94,5 +100,20 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         dto.getSorts().add("status");
         return BeanTransform.copyProperties(super.findByPage(dto), LaborRelationBO.class);
     }
+
+    @Override
+    public LaborRelationBO getById(String id) throws SerException {
+        LaborRelation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, LaborRelationBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        LaborRelationDTO dto = new LaborRelationDTO();
+        return super.count(dto);
+    }
+
 
 }

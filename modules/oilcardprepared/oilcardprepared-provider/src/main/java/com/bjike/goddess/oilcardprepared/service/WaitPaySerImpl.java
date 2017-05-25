@@ -113,6 +113,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                 super.remove(p.getId());
             }
         }
+        dto.getConditions().add(Restrict.eq("pay", Boolean.TRUE));
         List<WaitPay> l = super.findByCis(dto, true);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
     }
@@ -297,7 +298,20 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public List<WaitPayBO> allPay() throws SerException {
+    public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        list(new WaitPayDTO());
+        dto.getConditions().add(Restrict.eq("pay", Boolean.FALSE));
+        List<WaitPay> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, WaitPayBO.class);
+    }
+
+    /**
+     * 查找所有已付款信息
+     *
+     * @return class WaitPayBO
+     * @throws SerException
+     */
+    private List<WaitPayBO> allPay() throws SerException {
         list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         List<WaitPay> l = new ArrayList<WaitPay>();

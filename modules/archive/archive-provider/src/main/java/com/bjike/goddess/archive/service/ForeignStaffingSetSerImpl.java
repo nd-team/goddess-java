@@ -59,6 +59,8 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
     @Override
     public ForeignStaffingSetBO delete(String id) throws SerException {
         ForeignStaffingSet entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
     }
@@ -67,6 +69,8 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
     @Override
     public ForeignStaffingSetBO congeal(String id) throws SerException {
         ForeignStaffingSet entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
@@ -76,6 +80,8 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
     @Override
     public ForeignStaffingSetBO thaw(String id) throws SerException {
         ForeignStaffingSet entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
@@ -93,6 +99,20 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
     public List<ForeignStaffingSetBO> maps(ForeignStaffingSetDTO dto) throws SerException {
         dto.getSorts().add("status");
         return BeanTransform.copyProperties(super.findByPage(dto), ForeignStaffingSetBO.class);
+    }
+
+    @Override
+    public ForeignStaffingSetBO getById(String id) throws SerException {
+        ForeignStaffingSet entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ForeignStaffingSetDTO dto = new ForeignStaffingSetDTO();
+        return super.count(dto);
     }
 
 }

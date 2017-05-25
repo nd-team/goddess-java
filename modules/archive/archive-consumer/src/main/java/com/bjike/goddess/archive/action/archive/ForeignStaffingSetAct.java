@@ -4,6 +4,7 @@ import com.bjike.goddess.archive.api.ForeignStaffingSetAPI;
 import com.bjike.goddess.archive.dto.ForeignStaffingSetDTO;
 import com.bjike.goddess.archive.to.ForeignStaffingSetTO;
 import com.bjike.goddess.archive.vo.ForeignStaffingSetVO;
+import com.bjike.goddess.archive.vo.ForeignStaffingSetVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 对外人员基本信息设置
@@ -160,4 +163,33 @@ public class ForeignStaffingSetAct {
         }
     }
 
+    /**
+     * 根据id获取对外人员基本信息数据
+     *
+     * @param id 对外人员基本信息数据id
+     * @return class ForeignStaffingSetVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(foreignStaffingSetAPI.getById(id), ForeignStaffingSetVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(foreignStaffingSetAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
