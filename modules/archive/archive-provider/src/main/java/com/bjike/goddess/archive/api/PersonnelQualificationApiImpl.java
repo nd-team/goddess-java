@@ -44,4 +44,14 @@ public class PersonnelQualificationApiImpl implements PersonnelQualificationAPI 
     public List<PersonnelQualificationBO> maps(PersonnelQualificationDTO dto) throws SerException {
         return personnelQualificationSer.maps(dto);
     }
+
+    @Override
+    public PersonnelQualificationBO getById(String id) throws SerException {
+        return personnelQualificationSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return personnelQualificationSer.getTotal();
+    }
 }

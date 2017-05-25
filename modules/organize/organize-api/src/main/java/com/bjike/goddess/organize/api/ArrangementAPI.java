@@ -114,4 +114,24 @@ public interface ArrangementAPI {
         return null;
     }
 
+    /**
+     * 根据id查询岗位层级数据
+     *
+     * @param ids 岗位层级数据id数组
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findByIds(String... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部岗位层级选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findAllOpinion() throws SerException {
+        return null;
+    }
 }

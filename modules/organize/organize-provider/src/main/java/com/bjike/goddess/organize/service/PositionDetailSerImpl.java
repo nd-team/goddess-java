@@ -229,8 +229,40 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<PositionDetail> list = super.findByCis(dto);
         List<OpinionBO> bos = new ArrayList<>(0);
-        for(PositionDetail entity :list)
-            bos.add(new OpinionBO(entity.getId(),entity.getPosition()));
+        for (PositionDetail entity : list)
+            bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
+        return bos;
+    }
+
+    @Override
+    public List<PositionDetailBO> findByDepartment(String... departmentIds) throws SerException {
+        List<PositionDetailBO> list = findStatus(), bos = new ArrayList<>(0);
+        if (null != departmentIds && list != null)
+            for (PositionDetailBO bo : list)
+                for (String id : departmentIds)
+                    if (bo.getDepartmentId().equals(id))
+                        bos.add(bo);
+        return bos;
+    }
+
+    @Override
+    public List<OpinionBO> findByIds(String... ids) throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.in(ID, ids));
+        List<PositionDetail> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (PositionDetail entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
+        return bos;
+    }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        List<PositionDetail> list = super.findAll();
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for (PositionDetail entity : list)
+            bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
         return bos;
     }
 }

@@ -35,6 +35,9 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
 
     @Override
     public Long counts(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        if (StringUtils.isNotBlank(companyCapabilityDTO.getCompany() )) {
+            companyCapabilityDTO.getConditions().add(Restrict.like("company",companyCapabilityDTO.getCompany()));
+        }
         Long count = super.count(companyCapabilityDTO);
         return count;
     }
@@ -52,6 +55,9 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
     @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
         companyCapabilityDTO.getSorts().add("createTime=desc");
+        if (StringUtils.isNotBlank(companyCapabilityDTO.getCompany() )) {
+            companyCapabilityDTO.getConditions().add(Restrict.like("company",companyCapabilityDTO.getCompany()));
+        }
         List<CompanyCapability> list = super.findByPage(companyCapabilityDTO);
 
         return BeanTransform.copyProperties(list, CompanyCapabilityBO.class );

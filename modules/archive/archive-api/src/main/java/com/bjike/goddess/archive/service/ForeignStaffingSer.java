@@ -65,4 +65,24 @@ ForeignStaffingSer extends Ser<ForeignStaffing, ForeignStaffingDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取对外人员信息数据
+     *
+     * @param id 对外人员信息数据id
+     * @return
+     * @throws SerException
+     */
+    default ForeignStaffingBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

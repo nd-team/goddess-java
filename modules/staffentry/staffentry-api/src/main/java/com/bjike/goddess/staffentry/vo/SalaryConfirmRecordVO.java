@@ -32,7 +32,7 @@ public class SalaryConfirmRecordVO {
     /**
      * 办理入职时间
      */
-    private LocalDate entryTime;
+    private String entryTime;
     /**
      * 入职前居住地
      */
@@ -143,11 +143,11 @@ public class SalaryConfirmRecordVO {
         this.nativePlace = nativePlace;
     }
 
-    public LocalDate getEntryTime() {
+    public String getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(LocalDate entryTime) {
+    public void setEntryTime(String entryTime) {
         this.entryTime = entryTime;
     }
 

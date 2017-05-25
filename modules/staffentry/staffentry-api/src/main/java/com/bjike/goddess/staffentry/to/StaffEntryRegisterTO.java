@@ -75,6 +75,10 @@ public class StaffEntryRegisterTO extends BaseTO {
     private String modifyTime;
 
     /**
+     * 帐号密码是否已告知(是/否)
+     */
+    private String tellStatus;
+    /**
      * 用户id
      */
     private String userId;
@@ -173,5 +177,13 @@ public class StaffEntryRegisterTO extends BaseTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTellStatus() {
+        return tellStatus;
+    }
+
+    public void setTellStatus(String tellStatus) {
+        this.tellStatus = tellStatus;
     }
 }

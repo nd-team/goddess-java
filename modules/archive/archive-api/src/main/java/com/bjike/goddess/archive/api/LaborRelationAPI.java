@@ -96,4 +96,24 @@ public interface LaborRelationAPI {
         return null;
     }
 
+    /**
+     * 根据id获取劳动关系类型数据
+     *
+     * @param id 劳动关系类型数据id
+     * @return
+     * @throws SerException
+     */
+    default LaborRelationBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

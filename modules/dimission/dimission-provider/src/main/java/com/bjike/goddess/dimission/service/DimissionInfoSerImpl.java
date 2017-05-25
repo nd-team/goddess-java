@@ -59,6 +59,8 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         DimissionInfoBO bo = BeanTransform.copyProperties(entity, DimissionInfoBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (user != null) {
+            bo.setEmployeeNumber(user.getEmployeeNumber());
+            bo.setPhone(user.getPhone());
             PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
             bo.setArea("");
             bo.setPosition("");
@@ -93,8 +95,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                     }
             }
         }
-        bo.setEmployeeNumber(user.getEmployeeNumber());
-        bo.setPhone(user.getPhone());
+
         return bo;
     }
 
@@ -219,15 +220,17 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     @Override
     public List<DimissionInfoBO> findByType(DimissionType type) throws SerException {
+        if (null == type)
+            return new ArrayList<>(0);
         DimissionInfoDTO dto = new DimissionInfoDTO();
-        dto.getConditions().add(Restrict.eq("type", type));
+        dto.getConditions().add(Restrict.eq("type", type.getValue()));
         List<DimissionInfo> list = super.findByCis(dto);
         return this.tranformBOList(list);
     }
 
     @Override
     public List<DimissionInfoBO> presumeList(DimissionInfoDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.eq("type", DimissionType.PRESUME));
+        dto.getConditions().add(Restrict.eq("type", DimissionType.PRESUME.getValue()));
         return this.maps(dto);
     }
 
@@ -247,7 +250,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             throw new SerException("时间格式错误(例:2010-12-31)");
         }
         dto.getConditions().add(Restrict.between("dimissionDate", dates));
-        dto.getConditions().add(Restrict.eq("handle", HandleStatus.AFFIRM));
+        dto.getConditions().add(Restrict.eq("handle", HandleStatus.AFFIRM.getValue()));
         return this.tranformBOList(super.findByCis(dto));
     }
 
@@ -267,7 +270,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getDepartment())) {
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getDepartment().equals(to.getDepartment()))
                     .collect(Collectors.toList());
             DimissionInfoCollectBO bo = new DimissionInfoCollectBO();
             bo.setDepartment(to.getDepartment());
@@ -277,13 +280,14 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition()))
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getPosition().equals(to.getPosition()))
                     .sorted(Comparator.comparing(DimissionInfoBO::getDepartment))
                     .collect(Collectors.toList());
 
 
         if (StringUtils.isBlank(to.getPosition()) && StringUtils.isBlank(to.getDepartment()))
             list = list.stream()
+                    .filter(d -> d.getDepartment() != null)
                     .sorted(Comparator.comparing(DimissionInfoBO::getDepartment))
                     .collect(Collectors.toList());
 
@@ -317,7 +321,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition())) {
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getPosition().equals(to.getPosition()))
                     .collect(Collectors.toList());
             DimissionInfoCollectBO bo = new DimissionInfoCollectBO();
             bo.setPosition(to.getPosition());
@@ -327,12 +331,13 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getDepartment()))
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getDepartment().equals(to.getDepartment()))
                     .sorted(Comparator.comparing(DimissionInfoBO::getPosition))
                     .collect(Collectors.toList());
 
         if (StringUtils.isBlank(to.getPosition()) && StringUtils.isBlank(to.getDepartment()))
             list = list.stream()
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()))
                     .sorted(Comparator.comparing(DimissionInfoBO::getPosition))
                     .collect(Collectors.toList());
 
@@ -341,7 +346,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         for (DimissionInfoBO bo : list)
             if (!bo.getPosition().equals(position)) {
                 position = bo.getPosition();
-                List<DimissionInfoBO> temp = list.stream().filter(d -> d.getPosition().equals(bo.getPosition())).collect(Collectors.toList());
+                List<DimissionInfoBO> temp = list.stream()
+                        .filter(d -> d.getPosition().equals(bo.getPosition()))
+                        .collect(Collectors.toList());
                 DimissionInfoCollectBO collectBO = new DimissionInfoCollectBO();
                 collectBO.setPosition(position);
                 bos.add(this.countCollectBO(collectBO, temp));
@@ -360,12 +367,12 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition()))
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getPosition().equals(to.getPosition()))
                     .collect(Collectors.toList());
 
         if (StringUtils.isNotBlank(to.getDepartment()))
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getDepartment().equals(to.getDepartment()))
                     .collect(Collectors.toList());
         list = list.stream()
                 .filter(d -> StringUtils.isNotBlank(d.getEntryTime()))
@@ -404,15 +411,16 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition()))
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getPosition().equals(to.getPosition()))
                     .collect(Collectors.toList());
 
         if (StringUtils.isNotBlank(to.getDepartment()))
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getDepartment().equals(to.getDepartment()))
                     .collect(Collectors.toList());
 
         list = list.stream()
+                .filter(d -> StringUtils.isNotBlank(d.getSeniority()))
                 .sorted(Comparator.comparing(DimissionInfoBO::getSeniority))
                 .collect(Collectors.toList());
 
@@ -441,15 +449,16 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition()))
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getPosition().equals(to.getPosition()))
                     .collect(Collectors.toList());
 
         if (StringUtils.isNotBlank(to.getDepartment()))
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getDepartment().equals(to.getDepartment()))
                     .collect(Collectors.toList());
 
         list = list.stream()
+                .filter(d -> StringUtils.isNotBlank(d.getEducation()))
                 .sorted(Comparator.comparing(DimissionInfoBO::getEducation))
                 .collect(Collectors.toList());
 
@@ -479,15 +488,16 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
         if (StringUtils.isNotBlank(to.getPosition()))
             list = list.stream()
-                    .filter(d -> d.getPosition().equals(to.getPosition()))
+                    .filter(d -> StringUtils.isNotBlank(d.getPosition()) && d.getPosition().equals(to.getPosition()))
                     .collect(Collectors.toList());
 
         if (StringUtils.isNotBlank(to.getDepartment()))
             list = list.stream()
-                    .filter(d -> d.getDepartment().equals(to.getDepartment()))
+                    .filter(d -> StringUtils.isNotBlank(d.getDepartment()) && d.getDepartment().equals(to.getDepartment()))
                     .collect(Collectors.toList());
 
         list = list.stream()
+                .filter(d -> d.getType() != null)
                 .sorted(Comparator.comparing(DimissionInfoBO::getType))
                 .collect(Collectors.toList());
         DimissionType type = null;

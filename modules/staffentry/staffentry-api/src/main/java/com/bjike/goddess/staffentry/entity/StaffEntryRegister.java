@@ -53,6 +53,12 @@ public class StaffEntryRegister extends BaseEntity {
     @Column(name = "workEmailPassword",  columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱密码'")
     private String workEmailPassword;
 
+    /**
+     * 帐号密码是否已告知(是/否)
+     */
+    @Column(name = "tellStatus",  columnDefinition = "VARCHAR(255)   COMMENT '帐号密码是否已告知(是/否)'")
+    private String tellStatus;
+
 
     /**
      * 用户id
@@ -115,5 +121,13 @@ public class StaffEntryRegister extends BaseEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTellStatus() {
+        return tellStatus;
+    }
+
+    public void setTellStatus(String tellStatus) {
+        this.tellStatus = tellStatus;
     }
 }

@@ -99,4 +99,19 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     public List<OpinionBO> findThawOpinion() throws SerException {
         return positionDetailSer.findThawOpinion();
     }
+
+    @Override
+    public List<PositionDetailBO> findByDepartment(String... departmentIds) throws SerException {
+        return positionDetailSer.findByDepartment(departmentIds);
+    }
+
+    @Override
+    public List<OpinionBO> findByIds(String... ids) throws SerException {
+        return positionDetailSer.findByIds(ids);
+    }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        return positionDetailSer.findAllOpinion();
+    }
 }

@@ -2,7 +2,10 @@ package com.bjike.goddess.outcarfare.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.outcarfare.bo.*;
+import com.bjike.goddess.outcarfare.bo.ArrivalCountBO;
+import com.bjike.goddess.outcarfare.bo.CarUserCountBO;
+import com.bjike.goddess.outcarfare.bo.DriverCountBO;
+import com.bjike.goddess.outcarfare.bo.WaitPayBO;
 import com.bjike.goddess.outcarfare.dto.WaitPayDTO;
 import com.bjike.goddess.outcarfare.entity.WaitPay;
 import com.bjike.goddess.outcarfare.to.WaitPayTO;
@@ -50,7 +53,7 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     }
 
     /**
-     * 查找
+     * 等待付款列表
      *
      * @param dto 等待付款分页信息
      * @return class WaitPayBO
@@ -103,12 +106,33 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     }
 
     /**
-     * 查找所有已付款的名单
+     * 查找已付款列表
      *
-     * @return class PayBO
+     * @param dto dto
+     * @return class WaitPayBO
      * @throws SerException
      */
-    default List<PayBO> findAlreadyPays() throws SerException {
+    default List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找等待付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    default Long waitCountSum(WaitPayDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找已付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    default Long payCountSum(WaitPayDTO dto) throws SerException {
         return null;
     }
 }

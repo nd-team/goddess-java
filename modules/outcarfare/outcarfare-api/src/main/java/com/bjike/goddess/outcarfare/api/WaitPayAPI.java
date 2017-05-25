@@ -101,12 +101,33 @@ public interface WaitPayAPI {
     }
 
     /**
-     * 查找所有已付款的名单
+     * 查找已付款列表
      *
-     * @return class PayBO
+     * @param dto dto
+     * @return class WaitPayBO
      * @throws SerException
      */
-    default List<PayBO> findAlreadyPays() throws SerException {
+    default List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找等待付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    default Long waitCountSum(WaitPayDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查找已付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    default Long payCountSum(WaitPayDTO dto) throws SerException {
         return null;
     }
 }
