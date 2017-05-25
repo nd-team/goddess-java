@@ -12,6 +12,11 @@ package com.bjike.goddess.recruit.vo;
 public class FailInviteReasonVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 未邀约成功原因类型
      */
     private String failInviteReasonType;
@@ -20,6 +25,14 @@ public class FailInviteReasonVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFailInviteReasonType() {
         return failInviteReasonType;

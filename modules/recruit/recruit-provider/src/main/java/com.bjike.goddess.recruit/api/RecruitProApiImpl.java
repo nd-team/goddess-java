@@ -100,24 +100,26 @@ public class RecruitProApiImpl implements RecruitProAPI {
     /**
      * 运营商务部审核
      *
-     * @param recruitProTO
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param yy_Opinion 运营商务部意见
+     * @param pass 是否通过
      * @throws SerException
      */
     @Override
-    public void yyEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException {
-        recruitProSer.yyEdit(recruitProTO, pass);
+    public void yyEdit(String id, String yy_Opinion, Boolean pass) throws SerException {
+        recruitProSer.yyEdit(id, yy_Opinion, pass);
     }
 
     /**
      * 总经办审核
      *
-     * @param recruitProTO
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param zjb_Opnion 总经办意见
+     * @param pass 是否通过
      * @throws SerException
      */
     @Override
-    public void managerEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException {
-        recruitProSer.managerEdit(recruitProTO, pass);
+    public void managerEdit(String id, String zjb_Opnion, Boolean pass) throws SerException {
+        recruitProSer.managerEdit(id, zjb_Opnion, pass);
     }
 }

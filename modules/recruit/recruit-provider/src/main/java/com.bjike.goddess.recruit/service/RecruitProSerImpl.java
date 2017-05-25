@@ -93,15 +93,16 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     /**
      * 运营商务部审核
      *
-     * @param to
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param yy_Opinion 运营商务部意见
+     * @param pass 是否通过
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void yyEdit (RecruitProTO to, Boolean pass) throws SerException {
-        RecruitPro editObj = super.findById(to.getId());
-        editObj.setYy_Opinion(to.getYy_Opinion());
+    public void yyEdit (String id, String yy_Opinion, Boolean pass) throws SerException {
+        RecruitPro editObj = super.findById(id);
+        editObj.setYy_Opinion(yy_Opinion);
         editObj.setAuditType(pass? AuditType.NONE:AuditType.DENIED);
         super.update(editObj);
     }
@@ -109,15 +110,16 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     /**
      * 总经办审核
      *
-     * @param to
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param zjb_Opnion 总经办意见
+     * @param pass 是否通过
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void managerEdit (RecruitProTO to, Boolean pass) throws SerException {
-        RecruitPro editObj = super.findById(to.getId());
-        editObj.setZjb_Opnion(to.getZjb_Opnion());
+    public void managerEdit (String id, String zjb_Opnion, Boolean pass) throws SerException {
+        RecruitPro editObj = super.findById(id);
+        editObj.setZjb_Opnion(zjb_Opnion);
         editObj.setAuditType(Boolean.TRUE == pass? AuditType.ALLOWED:AuditType.DENIED);
         super.update(editObj);
     }

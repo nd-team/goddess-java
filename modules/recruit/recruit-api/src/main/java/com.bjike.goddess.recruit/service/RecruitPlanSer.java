@@ -32,11 +32,11 @@ public interface RecruitPlanSer extends Ser<RecruitPlan, RecruitPlanDTO> {
     /**
      * 保存招聘计划
      *
-     * @param recruitPlanTO
+     * @param to
      * @return
      * @throws SerException
      */
-    RecruitPlanBO save(RecruitPlanTO recruitPlanTO) throws SerException;
+    RecruitPlanBO save(RecruitPlanTO to) throws SerException;
 
     /**
      * 根据id删除招聘计划
@@ -49,9 +49,9 @@ public interface RecruitPlanSer extends Ser<RecruitPlan, RecruitPlanDTO> {
     /**
      * 更新招聘计划
      *
-     * @param recruitPlanTO
+     * @param to
      * @throws SerException
      */
-    void update(RecruitPlanTO recruitPlanTO) throws SerException;
+    void update(RecruitPlanTO to) throws SerException;
 
 }

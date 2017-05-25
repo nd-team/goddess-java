@@ -51,7 +51,8 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Transactional(rollbackFor = SerException.class)
     public RecruitWayBO save(RecruitWayTO to) throws SerException {
         RecruitWay model = BeanTransform.copyProperties(to, RecruitWay.class, true);
-        RecruitWayBO bo = BeanTransform.copyProperties(model, RecruitWayBO.class);
+        RecruitWay entity = super.save(model);
+        RecruitWayBO bo = BeanTransform.copyProperties(entity, RecruitWayBO.class);
         return bo;
     }
 

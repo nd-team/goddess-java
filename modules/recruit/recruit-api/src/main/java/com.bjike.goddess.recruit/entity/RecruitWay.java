@@ -16,7 +16,7 @@ import javax.persistence.Table;
  * @Copy: [com.bjike]
  */
 @Entity
-@Table(name = "welfare_recruitway")
+@Table(name = "recruit_recruitway")
 public class RecruitWay extends BaseEntity {
 
     /**

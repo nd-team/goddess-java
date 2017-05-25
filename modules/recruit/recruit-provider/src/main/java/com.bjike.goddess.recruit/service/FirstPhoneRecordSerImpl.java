@@ -36,7 +36,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Override
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         List<FirstPhoneRecord> list = super.findByPage(dto);
-        List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class, true);
+        List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
         return listBO;
     }
 

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitProAPI;
@@ -35,8 +36,6 @@ public class RecruitProAct {
 
     @Autowired
     private RecruitProAPI recruitProAPI;
-
-
 
     /**
      * 根据id查询招聘方案
@@ -101,6 +100,7 @@ public class RecruitProAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) RecruitProTO to, HttpServletRequest request) throws ActException {
         try {
@@ -119,6 +119,7 @@ public class RecruitProAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -130,12 +131,13 @@ public class RecruitProAct {
     }
 
     /**
-     * 编辑招聘方案
+     * 综合资源部意见
      *
      * @param to 招聘方案to信息
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) RecruitProTO to) throws ActException {
         try {
@@ -149,14 +151,19 @@ public class RecruitProAct {
     /**
      * 运营商务部审核
      *
-     * @param to   招聘方案to信息
+     * @param id 招聘方案唯一标识
+     * @param yy_Opinion 运营商务部意见
      * @param pass 是否通过
      * @throws ActException
+     * @version v1
      */
-    @PutMapping("v1/yyEdit")
-    public Result yyEdit(@Validated(value = {EDIT.class}) RecruitProTO to, Boolean pass) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/yyEdit/{id}")
+    public Result yyEdit(@PathVariable(value = "id") String id,
+                         @RequestParam(value = "yy_Opinion") String yy_Opinion,
+                         @RequestParam(value = "pass") Boolean pass) throws ActException {
         try {
-            recruitProAPI.yyEdit(to, pass);
+            recruitProAPI.yyEdit(id, yy_Opinion, pass);
             return new ActResult("yyEdit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -166,14 +173,19 @@ public class RecruitProAct {
     /**
      * 总经办审核
      *
-     * @param to   招聘方案to信息
+     * @param id 招聘方案唯一标识
+     * @param zjb_Opnion 总经办意见
      * @param pass 是否通过
      * @throws ActException
+     * @version v1
      */
-    @PutMapping("v1/managerEdit")
-    public Result managerEdit(@Validated({EDIT.class}) RecruitProTO to, Boolean pass) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/managerEdit/{id}")
+    public Result managerEdit(@PathVariable(value = "id") String id,
+                              @RequestParam(value = "zjb_Opnion") String zjb_Opnion,
+                              @RequestParam(value = "pass") Boolean pass) throws ActException {
         try {
-            recruitProAPI.managerEdit(to, pass);
+            recruitProAPI.managerEdit(id, zjb_Opnion, pass);
             return new ActResult("managerEdit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

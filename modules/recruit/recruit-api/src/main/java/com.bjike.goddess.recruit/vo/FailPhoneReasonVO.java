@@ -12,6 +12,11 @@ package com.bjike.goddess.recruit.vo;
 public class FailPhoneReasonVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 未成功通话原因类型
      */
     private String failPhoneReasonType;
@@ -20,6 +25,14 @@ public class FailPhoneReasonVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFailPhoneReasonType() {
         return failPhoneReasonType;

@@ -12,6 +12,11 @@ package com.bjike.goddess.recruit.vo;
 public class InterviewAddressInforVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 面试地址
      */
     private String interviewAddress;
@@ -20,6 +25,14 @@ public class InterviewAddressInforVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getInterviewAddress() {
         return interviewAddress;

@@ -12,6 +12,11 @@ package com.bjike.goddess.recruit.vo;
 public class NotEntryReasonVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 未入职原因类型
      */
     private String notEntryReasonType;
@@ -20,6 +25,14 @@ public class NotEntryReasonVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNotEntryReasonType() {
         return notEntryReasonType;

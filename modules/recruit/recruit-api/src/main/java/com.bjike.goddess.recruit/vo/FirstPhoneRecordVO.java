@@ -12,6 +12,12 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Copy: [com.bjike]
  */
 public class FirstPhoneRecordVO {
+
+    /**
+     * id
+     */
+    private String id;
+
     /**
      * 日期
      */
@@ -116,6 +122,14 @@ public class FirstPhoneRecordVO {
      * 附件地址
      */
     private String attachmentAddr;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDate() {
         return date;

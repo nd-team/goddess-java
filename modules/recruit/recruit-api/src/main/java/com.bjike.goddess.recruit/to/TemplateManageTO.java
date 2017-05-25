@@ -1,7 +1,12 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.recruit.type.TemplateStatus;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 模板管理
@@ -17,21 +22,25 @@ public class TemplateManageTO extends BaseTO {
     /**
      * 模板名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模板名称不能为空")
     private String templteName;
 
     /**
      * 模板类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模板类型不能为空")
     private String templateType;
 
     /**
      * 模板内容
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "模板内容不能为空")
     private String templateContent;
 
     /**
      * 模板状态
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "模板状态不能为空")
     private TemplateStatus templateStatus;
 
     public String getTemplteName() {

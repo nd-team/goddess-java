@@ -72,18 +72,20 @@ public interface RecruitProAPI {
     /**
      * 运营商务部审核
      *
-     * @param recruitProTO
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param yy_Opinion 运营商务部意见
+     * @param pass 是否通过
      * @throws SerException
      */
-    void yyEdit(RecruitProTO recruitProTO,Boolean pass) throws SerException;
+    void yyEdit(String id, String yy_Opinion, Boolean pass) throws SerException;
 
     /**
      * 总经办审核
      *
-     * @param recruitProTO
-     * @param pass
+     * @param id 招聘方案唯一标识
+     * @param zjb_Opnion 总经办意见
+     * @param pass 是否通过
      * @throws SerException
      */
-    void managerEdit(RecruitProTO recruitProTO, Boolean pass) throws SerException;
+    void managerEdit(String id, String zjb_Opnion, Boolean pass) throws SerException;
 }

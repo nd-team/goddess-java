@@ -14,6 +14,11 @@ import com.bjike.goddess.recruit.type.TemplateStatus;
 public class TemplateManageVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 模板名称
      */
     private String templteName;
@@ -32,6 +37,14 @@ public class TemplateManageVO {
      * 模板状态
      */
     private TemplateStatus templateStatus;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTemplteName() {
         return templteName;

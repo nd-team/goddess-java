@@ -12,6 +12,11 @@ package com.bjike.goddess.recruit.vo;
 public class ReportAddressInforVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 报道地址
      */
     private String reportAddress;
@@ -20,6 +25,14 @@ public class ReportAddressInforVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getReportAddress() {
         return reportAddress;
