@@ -40,7 +40,7 @@ public class ContractorVO {
     /**
      * 状态
      */
-    private Status status;
+    private String status;
 
 
     public String getId() {
@@ -83,11 +83,11 @@ public class ContractorVO {
         this.creationTime = creationTime;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

@@ -47,8 +47,8 @@ public class Contractor extends BaseEntity {
     /**
      * 状态
      */
-    @Column(name = "", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
-    private Status status;
+    @Column(name = "status", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    private String  status;
 
 
     public String getName() {
@@ -83,12 +83,11 @@ public class Contractor extends BaseEntity {
         this.creationTime = creationTime;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
-
 }

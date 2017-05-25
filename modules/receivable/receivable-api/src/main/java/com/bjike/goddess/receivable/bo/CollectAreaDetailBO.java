@@ -80,11 +80,12 @@ public class CollectAreaDetailBO implements Serializable{
     /**
      * 是否已走结算流程
      */
-    private String is_flow;
+    private String isflow;
     /**
      * 详细情况
      */
     private String remark;
+
 
     public String getArea() {
         return area;
@@ -214,12 +215,12 @@ public class CollectAreaDetailBO implements Serializable{
         this.name = name;
     }
 
-    public String getIs_flow() {
-        return is_flow;
+    public String getIsflow() {
+        return isflow;
     }
 
-    public void setIs_flow(String is_flow) {
-        this.is_flow = is_flow;
+    public void setIsflow(String isflow) {
+        this.isflow = isflow;
     }
 
     public String getRemark() {

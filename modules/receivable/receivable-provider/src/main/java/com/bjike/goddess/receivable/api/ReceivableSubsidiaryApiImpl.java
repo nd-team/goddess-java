@@ -1,6 +1,7 @@
 package com.bjike.goddess.receivable.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
@@ -121,7 +122,10 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     public List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return receivableSubsidiarySer.collectContractorDetail(contractors);
     }
-
+    @Override
+    public ReceivableSubsidiaryBO collectId(String id) throws SerException {
+        return receivableSubsidiarySer.collectId(id);
+    }
     @Override
     public List<ReceivableSubsidiaryBO> collectCompare(ReceivableSubsidiaryTO receivableSubsidiaryTO) throws SerException {
         return receivableSubsidiarySer.collectCompare(receivableSubsidiaryTO);

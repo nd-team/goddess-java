@@ -90,8 +90,16 @@ public class ReceivableSubsidiaryAction {
     @GetMapping("v1/list")
     public Result list(ReceivableSubsidiaryDTO receivableSubsidiaryDTO, HttpServletRequest request) throws ActException {
         try {
+            List<ReceivableSubsidiaryBO> bo = receivableSubsidiaryAPI.findListReceivableSubsidiary(receivableSubsidiaryDTO);
             List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties
-                    (receivableSubsidiaryAPI.findListReceivableSubsidiary(receivableSubsidiaryDTO),ReceivableSubsidiaryVO.class,request);
+                    ( bo ,ReceivableSubsidiaryVO.class,request);
+
+            for( int i =0 ;i<bo.size();i++){
+                ReceivableSubsidiaryBO temp = bo.get(i);
+                ContractorVO  cvo = BeanTransform.copyProperties( temp.getContractorBO() ,ContractorVO.class);
+                receivableSubsidiaryVOS.get(i).setContractorVO( cvo );
+            }
+
             return ActResult.initialize(receivableSubsidiaryVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -353,6 +361,31 @@ public class ReceivableSubsidiaryAction {
         }
     }
 
+    /**
+     * 汇总id
+     *
+     * @param id
+     * @return class ReceivableSubsidiaryVO
+     * @des 获取一个汇总id
+     * @version v1
+     */
+    @GetMapping("v1/collect/{id}")
+    public Result collect(@PathVariable String id) throws ActException {
+        try {
+            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.collectId(id);
+            ReceivableSubsidiaryVO vo = BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class);
+            ContractorVO  cvo = new ContractorVO();
+            if(null != receivableSubsidiaryBO.getContractorBO()){
+                cvo = BeanTransform.copyProperties( receivableSubsidiaryBO.getContractorBO() ,ContractorVO.class);
+            }
+
+            vo.setContractorVO(cvo);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
     /**
      * 对比汇总
      *

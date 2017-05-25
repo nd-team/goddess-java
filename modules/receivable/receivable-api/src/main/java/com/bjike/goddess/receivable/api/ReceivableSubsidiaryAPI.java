@@ -215,6 +215,15 @@ public interface ReceivableSubsidiaryAPI {
     default List<CollectContractorDetailBO> collectContractorDetail(String[] contractors) throws SerException {
         return null;
     }
+    /**
+     * id获取汇总详情
+     *
+     * @return class ReceivableSubsidiaryBO
+     * @throws SerException
+     */
+    default ReceivableSubsidiaryBO collectId(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 对比汇总
