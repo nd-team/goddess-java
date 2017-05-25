@@ -137,6 +137,7 @@ public class WaitPayAction {
      * @des 根据用户id删除等待付款
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

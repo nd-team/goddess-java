@@ -47,7 +47,7 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        dto.getConditions().add(Restrict.eq(SYS_NO,userSer.sysNO()));
+        dto.getConditions().add(Restrict.eq(SYS_NO,userSer.currentSysNO()));
         List<Department> departments = super.findByCis(dto);
 
         return BeanTransform.copyProperties(departments, DepartmentBO.class);
@@ -88,8 +88,7 @@ public class DepartmentSerImpl extends ServiceImpl<Department, DepartmentDTO> im
             }
         }
         department.setHasChild(false);
-        department.setSystemNO(userSer.sysNO());
-
+        department.setSystemNO(userSer.currentSysNO());
         super.save(department);
         return BeanTransform.copyProperties(department, DepartmentBO.class);
     }

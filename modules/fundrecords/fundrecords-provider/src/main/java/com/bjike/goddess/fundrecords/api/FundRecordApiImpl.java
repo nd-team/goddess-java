@@ -2,14 +2,13 @@ package com.bjike.goddess.fundrecords.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.fundrecords.bo.AnalyzeBO;
-import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
-import com.bjike.goddess.fundrecords.bo.FundRecordBO;
-import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
+import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.service.FundRecordSer;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
+import com.bjike.goddess.fundrecords.vo.GroupAnalyzeVO;
+import com.bjike.goddess.fundrecords.vo.ProjectAnalyzeVO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,13 +66,23 @@ public class FundRecordApiImpl implements FundRecordAPI {
     }
 
     @Override
-    public AnalyzeBO analyze(CollectTO to) throws SerException {
-        return fundRecordSer.analyze(to);
+    public FundRecordBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(fundRecordSer.findById(id),FundRecordBO.class);
     }
 
     @Override
-    public FundRecordBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(fundRecordSer.findById(id),FundRecordBO.class);
+    public List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException {
+        return fundRecordSer.areaAnalyze(year,month,area);
+    }
+
+    @Override
+    public List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String group) throws SerException {
+        return fundRecordSer.groupAnalyze(year,month,group);
+    }
+
+    @Override
+    public List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException {
+        return fundRecordSer.projectAnalyze(year,month,project);
     }
 
 }

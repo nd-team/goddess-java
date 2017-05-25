@@ -18,5 +18,6 @@
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.EmailAPI" id="emailApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

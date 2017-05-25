@@ -49,6 +49,15 @@ public class UserApiImpl implements UserAPI {
         return userSer.currentUser(userToken);
     }
 
+    @Override
+    public String currentSysNO(String userToken) throws SerException {
+        return userSer.currentSysNO(userToken);
+    }
+
+    @Override
+    public String currentSysNO() throws SerException {
+        return userSer.currentSysNO();
+    }
 
     @Override
     public UserBO add(TransactionContext context,UserTO userTO) throws SerException {
@@ -115,4 +124,8 @@ public class UserApiImpl implements UserAPI {
         userSer.deleteUser(id);
     }
 
+    @Override
+    public String maxUserEmpNumber() throws SerException {
+        return userSer.maxUserEmpNumber();
+    }
 }

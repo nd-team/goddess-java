@@ -44,7 +44,7 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
             dto.getConditions().add(Restrict.isNull("parent.id")); //查找根节点
         }
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.sysNO()));
+        dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Role> roles = super.findByCis(dto);
 
@@ -72,7 +72,7 @@ public class RoleSerImpl extends ServiceImpl<Role, RoleDTO> implements RoleSer {
     @Override
     public RoleBO save(RoleTO roleTO) throws SerException {
         Role role = BeanTransform.copyProperties(roleTO, Role.class, true);
-        role.setSystemNO(userSer.sysNO());
+        role.setSystemNO(userSer.currentSysNO());
         if (StringUtils.isNotBlank(roleTO.getParentId())) {
             RoleDTO dto = new RoleDTO();
             dto.getConditions().add(Restrict.eq("id", roleTO.getParentId()));

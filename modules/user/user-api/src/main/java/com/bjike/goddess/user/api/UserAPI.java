@@ -59,13 +59,25 @@ public interface UserAPI {
         return null;
     }
 
+
     /**
-     * 获取当前用户Token
+     * 获取当前用户系统号
+     *
+     * @param userToken 用户令牌
+     * @return
+     * @throws SerException
+     */
+    default String currentSysNO(String userToken) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前用户系统号
      *
      * @return
      * @throws SerException
      */
-    default String currentToken() throws SerException {
+    default String currentSysNO() throws SerException {
         return null;
     }
 
@@ -210,6 +222,16 @@ public interface UserAPI {
      * @throws SerException
      */
     default void deleteUser(String id) throws SerException {
+    }
+
+    /**
+     * 员工入职获取最大员工编号
+     *
+     * @return UserBO
+     * @throws SerException
+     */
+    default String maxUserEmpNumber( ) throws SerException {
+        return null;
     }
 
 

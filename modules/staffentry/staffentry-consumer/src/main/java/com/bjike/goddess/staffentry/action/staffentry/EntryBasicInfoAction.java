@@ -115,8 +115,8 @@ public class EntryBasicInfoAction {
     /**
      * 删除入职信息
      *
-     * @param id 用户id
-     * @des 根据用户id删除员工入职基本信息记录
+     * @param id 列表id
+     * @des 根据列表id删除员工入职基本信息记录
      * @version v1
      */
     @LoginAuth

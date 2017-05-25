@@ -35,7 +35,6 @@ import java.util.List;
 @LoginAuth
 @RestController
 @RequestMapping("group")
-@DefaultProperties
 public class GroupAct {
     @Autowired
     private GroupAPI groupAPI;

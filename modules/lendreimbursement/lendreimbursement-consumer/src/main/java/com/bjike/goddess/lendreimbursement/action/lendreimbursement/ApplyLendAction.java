@@ -188,6 +188,7 @@ public class ApplyLendAction {
      *
      * @param id id
      * @des 根据id删除申请借款信息记录
+     * @return class LendAuditDetailVO
      * @version v1
      */
     @GetMapping("v1/applyAuditDetail/{id}")

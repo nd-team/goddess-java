@@ -4,15 +4,20 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.projectcost.bo.CarCostBO;
 import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.entity.CarCost;
 import com.bjike.goddess.projectcost.to.CarCostTO;
 import com.bjike.goddess.projectcost.to.FindTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,8 +34,8 @@ import java.util.List;
 @Service
 public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements CarCostSer {
 
-//    @Autowired
-//    private DispatchCarInfoAPI
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     @Override
     public CarCostBO save(CarCostTO to) throws SerException {
@@ -41,8 +46,20 @@ public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements 
     }
 
     private void countCost(CarCost entity) throws SerException {
-        //@TODO 统计实际出车次数
-        entity.setActualDegree(0);
+        ConditionTO to = BeanTransform.copyProperties(entity, ConditionTO.class);
+        String format;
+        if (entity.getMonth() >= 10)
+            format = "%d-%d-01";
+        else
+            format = "$d-0%d-01";
+        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+        LocalDate end = start.withDayOfMonth(start.getMonth().maxLength());
+        to.setDispatchDate(new LocalDate[]{start, end});
+        List<DispatchCarInfoBO> list = dispatchCarInfoAPI.getByConfition(to);
+        if (null != list)
+            entity.setActualDegree(list.size());
+        else
+            entity.setActualDegree(0);
         entity.setBalanceDegree(entity.getTargetDegree() - entity.getActualDegree() + 0d);
         entity.setTargetCost(entity.getTargetDegree() * entity.getUnivalent());
         entity.setActualCost(entity.getActualDegree() * entity.getUnivalent());

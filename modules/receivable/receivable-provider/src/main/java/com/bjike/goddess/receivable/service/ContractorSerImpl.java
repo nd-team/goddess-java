@@ -47,7 +47,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
         List<ContractorBO> contractorBOS = BeanTransform.copyProperties(contractors, ContractorBO.class);
         return contractorBOS;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO insertContractor(ContractorTO contractorTO) throws SerException {
         Contractor contractor = BeanTransform.copyProperties(contractorTO,Contractor.class,true);
@@ -55,7 +55,7 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
         super.save(contractor);
         return BeanTransform.copyProperties(contractor,ContractorBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractorBO editContractor(ContractorTO contractorTO) throws SerException {
         if (!StringUtils.isEmpty(contractorTO.getId())) {
@@ -69,12 +69,9 @@ public class ContractorSerImpl extends ServiceImpl<Contractor, ContractorDTO> im
         return BeanTransform.copyProperties(contractorTO, ContractorBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeContractor(String id) throws SerException {
-        try {
-            super.remove(id);
-        }catch (SerException e){
-            throw  new SerException(e.getMessage());
-        }
+        super.remove(id);
     }
 }

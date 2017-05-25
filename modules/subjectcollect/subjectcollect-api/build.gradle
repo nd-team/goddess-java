@@ -4,4 +4,6 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:voucher:voucher-api")
     compile project(":modules:financeinit:financeinit-api")
+    compile project(":modules:user:user-api")
+
 }

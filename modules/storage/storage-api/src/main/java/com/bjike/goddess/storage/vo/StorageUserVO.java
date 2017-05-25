@@ -28,11 +28,6 @@ public class StorageUserVO {
     private String account;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
      * 状态
      */
     private Status status;
@@ -60,14 +55,6 @@ public class StorageUserVO {
 
     public void setAccount(String account) {
         this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Status getStatus() {

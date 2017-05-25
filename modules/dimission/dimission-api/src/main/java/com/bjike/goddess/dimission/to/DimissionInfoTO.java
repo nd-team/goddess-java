@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.dimission.enums.*;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +27,7 @@ public class DimissionInfoTO extends BaseTO {
     /**
      * 私人邮箱
      */
-    @NotNull(message = "私人邮箱不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "私人邮箱不能为空", groups = {ADD.class, EDIT.class})
     private String email;
 
     /**
@@ -37,7 +38,7 @@ public class DimissionInfoTO extends BaseTO {
     /**
      * 离职原因
      */
-    @NotNull(message = "离职原因不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "离职原因不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**

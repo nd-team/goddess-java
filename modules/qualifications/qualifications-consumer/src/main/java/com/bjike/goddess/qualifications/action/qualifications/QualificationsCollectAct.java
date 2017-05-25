@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.QualificationsCollectAPI;
@@ -49,6 +50,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @return class QualificationsCollectVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) QualificationsCollectTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -65,6 +67,7 @@ public class QualificationsCollectAct extends BaseFileAction {
      * @return class QualificationsCollectVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) QualificationsCollectTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {

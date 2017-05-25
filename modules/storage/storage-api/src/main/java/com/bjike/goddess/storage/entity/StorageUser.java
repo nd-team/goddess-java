@@ -20,31 +20,42 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "storage_user")
 public class StorageUser extends BaseEntity {
-
+    /**
+     * 系统编号
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
+    private String systemNO;
     /**
      * 模块名
      */
-    @Column(name = "moduleName", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '模块名'")
+    @Column( nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '模块名'")
     private String moduleName;
 
     /**
      * 登录账号
      */
-    @Column(name = "account", nullable = false, unique = true, columnDefinition = "VARCHAR(36)   COMMENT '登录账号'")
+    @Column( nullable = false, unique = true, columnDefinition = "VARCHAR(36)   COMMENT '登录账号'")
     private String account;
 
     /**
      * 密码
      */
-    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '密码'")
+    @Column( nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '密码'")
     private String password;
 
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
     private Status status;
 
+    public String getSystemNO() {
+        return systemNO;
+    }
+
+    public void setSystemNO(String systemNO) {
+        this.systemNO = systemNO;
+    }
 
     public String getModuleName() {
         return moduleName;

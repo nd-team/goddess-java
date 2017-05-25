@@ -43,7 +43,7 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
 
     private RotationStatisticsBO transformBO(RotationStatistics entity) throws SerException {
         RotationStatisticsBO bo = BeanTransform.copyProperties(entity, RotationStatisticsBO.class);
-        bo.setArrangement(entity.getArrangement().getArrangement());
+        bo.setArrangementName(entity.getArrangement().getArrangement());
         bo.setArrangementId(entity.getArrangement().getId());
         return bo;
     }

@@ -98,9 +98,25 @@ public class StaffMovementApplyVO {
     private AuditorType auditor;
 
     /**
-     * 审核意见
+     * 总经办审核意见
      */
-    private String auditOpinion;
+    private String generalAuditOpinion;
+    /**
+     * 原决策层审核意见
+     */
+    private String originalAuditOpinion;
+    /**
+     * 调往决策层审核意见
+     */
+    private String transferAuditOpinion;
+    /**
+     * 规划模块审核意见
+     */
+    private String planAuditOpinion;
+    /**
+     * 预算审核意见
+     */
+    private String budgetAuditOpinion;
 
 
     public String getId() {
@@ -239,11 +255,44 @@ public class StaffMovementApplyVO {
         this.auditor = auditor;
     }
 
-    public String getAuditOpinion() {
-        return auditOpinion;
+
+    public String getGeneralAuditOpinion() {
+        return generalAuditOpinion;
     }
 
-    public void setAuditOpinion(String auditOpinion) {
-        this.auditOpinion = auditOpinion;
+    public void setGeneralAuditOpinion(String generalAuditOpinion) {
+        this.generalAuditOpinion = generalAuditOpinion;
+    }
+
+    public String getOriginalAuditOpinion() {
+        return originalAuditOpinion;
+    }
+
+    public void setOriginalAuditOpinion(String originalAuditOpinion) {
+        this.originalAuditOpinion = originalAuditOpinion;
+    }
+
+    public String getTransferAuditOpinion() {
+        return transferAuditOpinion;
+    }
+
+    public void setTransferAuditOpinion(String transferAuditOpinion) {
+        this.transferAuditOpinion = transferAuditOpinion;
+    }
+
+    public String getPlanAuditOpinion() {
+        return planAuditOpinion;
+    }
+
+    public void setPlanAuditOpinion(String planAuditOpinion) {
+        this.planAuditOpinion = planAuditOpinion;
+    }
+
+    public String getBudgetAuditOpinion() {
+        return budgetAuditOpinion;
+    }
+
+    public void setBudgetAuditOpinion(String budgetAuditOpinion) {
+        this.budgetAuditOpinion = budgetAuditOpinion;
     }
 }

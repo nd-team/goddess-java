@@ -55,7 +55,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
     @Override
     public ProjectContractBO editProjectContract(ProjectContractTO projectContractTO) throws SerException {
-        ProjectContract projectContract = super.findById(projectContractTO.getContractId());
+        ProjectContract projectContract = super.findById(projectContractTO.getId());
         BeanTransform.copyProperties(projectContractTO,projectContract,true);
         projectContract.setModifyTime(LocalDateTime.now());
         super.update(projectContract);

@@ -136,6 +136,7 @@ public class DeviceJoinAction {
      * @des 根据用户id删除设备交接记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
