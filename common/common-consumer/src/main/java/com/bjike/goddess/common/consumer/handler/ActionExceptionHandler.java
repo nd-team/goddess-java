@@ -29,6 +29,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
+        actResult.setMsg(e.getMessage());
         if (e instanceof ActException) {
             actResult.setCode(1);
             httpServletResponse.setStatus(SUCCESS_STATUS);
@@ -38,7 +39,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             if ("expire".equals(e.getMessage())) {
                 actResult.setCode(401);
                 actResult.setMsg("登录已失效!");
-            }else if("notLogin".equals(e.getMessage())){
+            } else if ("notLogin".equals(e.getMessage())) {
                 actResult.setCode(403);
                 actResult.setMsg("用户未登录!");
             }
@@ -48,10 +49,6 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             LOGGER.error(e.getMessage());
             actResult.setMsg("服务调用失败");
         }
-            if(StringUtils.isBlank(actResult.getMsg())){
-                actResult.setMsg(e.getMessage());
-            }
-
         ResponseContext.writeData(actResult);
 
         return new ModelAndView();
