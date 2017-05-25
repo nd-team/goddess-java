@@ -38,15 +38,20 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             if ("expire".equals(e.getMessage())) {
                 actResult.setCode(401);
                 actResult.setMsg("登录已失效!");
+            }else if("notLogin".equals(e.getMessage())){
+                actResult.setCode(403);
+                actResult.setMsg("用户未登录!");
             }
             LOGGER.error(e.getMessage());
         }
         if (StringUtils.isNotBlank(e.getMessage()) && e.getMessage().startsWith("Forbid consumer")) {
             LOGGER.error(e.getMessage());
             actResult.setMsg("服务调用失败");
-        } else {
-            actResult.setMsg(e.getMessage());
         }
+            if(StringUtils.isBlank(actResult.getMsg())){
+                actResult.setMsg(e.getMessage());
+            }
+
         ResponseContext.writeData(actResult);
 
         return new ModelAndView();

@@ -57,8 +57,8 @@ public class CustomIntercept implements Interceptor {
         /**
          * 暂时不加权限
          */
-        return Arrays.asList(smoothInfo, authInfo);
+       return Arrays.asList(smoothInfo, authInfo);
 
-//        return Arrays.asList(smoothInfo, authInfo,loginInfo);
+//     return Arrays.asList(smoothInfo, authInfo,loginInfo);
     }
 }
