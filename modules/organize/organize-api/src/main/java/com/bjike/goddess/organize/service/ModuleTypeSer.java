@@ -118,4 +118,14 @@ public interface ModuleTypeSer extends Ser<ModuleType, ModuleTypeDTO> {
     default List<OpinionBO> findByIds(String... ids) throws SerException {
         return null;
     }
+
+    /**
+     * 获取全部类型选项选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findAllOpinion() throws SerException {
+        return null;
+    }
 }
