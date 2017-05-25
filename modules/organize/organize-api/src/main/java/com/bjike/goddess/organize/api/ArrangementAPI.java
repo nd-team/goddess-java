@@ -124,4 +124,14 @@ public interface ArrangementAPI {
     default List<OpinionBO> findByIds(String... ids) throws SerException {
         return null;
     }
+
+    /**
+     * 获取全部岗位层级选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findAllOpinion() throws SerException {
+        return null;
+    }
 }

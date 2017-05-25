@@ -181,4 +181,24 @@ public interface DepartmentDetailAPI {
     default List<OpinionBO> findByIds(String... ids) throws SerException {
         return null;
     }
+
+    /**
+     * 查询未冻结部门选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部部门选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findAllOpinion() throws SerException {
+        return null;
+    }
 }

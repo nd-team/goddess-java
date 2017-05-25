@@ -256,4 +256,13 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
                 bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
         return bos;
     }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        List<PositionDetail> list = super.findAll();
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for (PositionDetail entity : list)
+            bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
+        return bos;
+    }
 }
