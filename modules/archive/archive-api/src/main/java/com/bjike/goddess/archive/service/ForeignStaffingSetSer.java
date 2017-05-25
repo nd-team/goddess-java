@@ -98,4 +98,24 @@ public interface ForeignStaffingSetSer extends Ser<ForeignStaffingSet, ForeignSt
         return null;
     }
 
+    /**
+     * 根据id获取对外人员基本信息设置数据
+     *
+     * @param id 对外人员基本信息设置数据id
+     * @return
+     * @throws SerException
+     */
+    default ForeignStaffingSetBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

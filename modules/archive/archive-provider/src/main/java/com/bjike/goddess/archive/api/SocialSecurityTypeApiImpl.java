@@ -60,4 +60,14 @@ public class SocialSecurityTypeApiImpl implements SocialSecurityTypeAPI {
     public List<SocialSecurityTypeBO> maps(SocialSecurityTypeDTO dto) throws SerException {
         return socialSecurityTypeSer.maps(dto);
     }
+
+    @Override
+    public SocialSecurityTypeBO getById(String id) throws SerException {
+        return socialSecurityTypeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return socialSecurityTypeSer.getTotal();
+    }
 }

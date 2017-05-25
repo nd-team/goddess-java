@@ -59,6 +59,8 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
     @Override
     public EnclosureTypeBO delete(String id) throws SerException {
         EnclosureType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
     }
@@ -67,6 +69,8 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
     @Override
     public EnclosureTypeBO congeal(String id) throws SerException {
         EnclosureType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
@@ -76,6 +80,8 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
     @Override
     public EnclosureTypeBO thaw(String id) throws SerException {
         EnclosureType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
@@ -93,5 +99,19 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
     public List<EnclosureTypeBO> maps(EnclosureTypeDTO dto) throws SerException {
         dto.getSorts().add("status");
         return BeanTransform.copyProperties(super.findByPage(dto), EnclosureTypeBO.class);
+    }
+
+    @Override
+    public EnclosureTypeBO getById(String id) throws SerException {
+        EnclosureType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        EnclosureTypeDTO dto = new EnclosureTypeDTO();
+        return super.count(dto);
     }
 }

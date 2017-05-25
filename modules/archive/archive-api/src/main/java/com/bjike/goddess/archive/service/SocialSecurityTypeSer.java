@@ -97,4 +97,26 @@ public interface SocialSecurityTypeSer extends Ser<SocialSecurityType, SocialSec
     default List<SocialSecurityTypeBO> maps(SocialSecurityTypeDTO dto) throws SerException {
         return null;
     }
+
+
+    /**
+     * 根据id获取公司社保购买类型数据
+     *
+     * @param id 公司社保购买类型数据id
+     * @return
+     * @throws SerException
+     */
+    default SocialSecurityTypeBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

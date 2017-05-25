@@ -104,6 +104,8 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
     @Override
     public ArchiveGatherBO delete(String id) throws SerException {
         ArchiveGather entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -111,5 +113,19 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
     @Override
     public List<ArchiveGatherBO> maps(ArchiveGatherDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public ArchiveGatherBO getById(String id) throws SerException {
+        ArchiveGather entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ArchiveGatherDTO dto = new ArchiveGatherDTO();
+        return super.count(dto);
     }
 }

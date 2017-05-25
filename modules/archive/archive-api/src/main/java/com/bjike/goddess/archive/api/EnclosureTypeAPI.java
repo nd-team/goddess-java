@@ -1,5 +1,6 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.bo.EnclosureTypeBO;
 import com.bjike.goddess.archive.dto.EnclosureTypeDTO;
 import com.bjike.goddess.archive.to.EnclosureTypeTO;
@@ -96,4 +97,24 @@ public interface EnclosureTypeAPI {
         return null;
     }
 
+    /**
+     * 根据id获取附件类型数据
+     *
+     * @param id 附件类型数据id
+     * @return
+     * @throws SerException
+     */
+    default EnclosureTypeBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

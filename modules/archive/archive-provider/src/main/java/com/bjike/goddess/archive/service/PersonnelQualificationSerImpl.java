@@ -100,6 +100,8 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
     @Override
     public PersonnelQualificationBO delete(String id) throws SerException {
         PersonnelQualification entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -107,5 +109,19 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
     @Override
     public List<PersonnelQualificationBO> maps(PersonnelQualificationDTO dto) throws SerException {
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public PersonnelQualificationBO getById(String id) throws SerException {
+        PersonnelQualification entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, PersonnelQualificationBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        PersonnelQualificationDTO dto = new PersonnelQualificationDTO();
+        return super.count(dto);
     }
 }

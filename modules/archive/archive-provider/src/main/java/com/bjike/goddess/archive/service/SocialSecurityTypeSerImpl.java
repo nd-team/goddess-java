@@ -59,6 +59,8 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
     @Override
     public SocialSecurityTypeBO delete(String id) throws SerException {
         SocialSecurityType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
     }
@@ -67,6 +69,8 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
     @Override
     public SocialSecurityTypeBO congeal(String id) throws SerException {
         SocialSecurityType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
@@ -76,6 +80,8 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
     @Override
     public SocialSecurityTypeBO thaw(String id) throws SerException {
         SocialSecurityType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
@@ -91,8 +97,22 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
 
     @Override
     public List<SocialSecurityTypeBO> maps(SocialSecurityTypeDTO dto) throws SerException {
-        dto.getSorts().add("status");
+        dto.getSorts().add("status=asc");
         return BeanTransform.copyProperties(super.findByPage(dto), SocialSecurityTypeBO.class);
+    }
+
+    @Override
+    public SocialSecurityTypeBO getById(String id) throws SerException {
+        SocialSecurityType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SocialSecurityTypeDTO dto = new SocialSecurityTypeDTO();
+        return super.count(dto);
     }
 
 }
