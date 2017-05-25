@@ -41,8 +41,8 @@ public class WaitPayApiImpl implements WaitPayAPI {
     }
 
     @Override
-    public List<WaitPayBO> allPay() throws SerException {
-        return waitPaySer.allPay();
+    public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        return waitPaySer.pays(dto);
     }
 
     @Override

@@ -16,7 +16,7 @@
 	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.deviceinventory.api.InventoryAPI" ref="inventoryApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.deviceinventory.api.InventoryAPI" ref="inventoryApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.deviceinventory.api.InventoryRecordAPI" ref="inventoryRecordApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.materialinstock.api.MaterialInStockAPI" id="materialInStockApiImpl"/>
