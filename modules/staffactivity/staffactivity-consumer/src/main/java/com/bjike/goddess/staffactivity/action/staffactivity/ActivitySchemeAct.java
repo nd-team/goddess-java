@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -14,6 +15,7 @@ import com.bjike.goddess.staffactivity.dto.ActivitySchemeDTO;
 import com.bjike.goddess.staffactivity.to.ActivitySchemeTO;
 import com.bjike.goddess.staffactivity.vo.ActivityFundSummaryVO;
 import com.bjike.goddess.staffactivity.vo.ActivitySchemeVO;
+import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 活动方案
@@ -34,15 +35,17 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("activityscheme")
-public class ActivitySchemeAct {
+public class ActivitySchemeAct extends BaseFileAction {
 
     @Autowired
     private ActivitySchemeAPI activitySchemeAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
-     * 根据id查询合同节点标准信息
+     * 根据id查询活动方案
      *
-     * @param id 合同节点标准信息唯一标识
+     * @param id 活动方案唯一标识
      * @return class ActivitySchemeVO
      * @throws ActException
      * @version v1
@@ -61,7 +64,7 @@ public class ActivitySchemeAct {
     /**
      * 计算总数量
      *
-     * @param dto 合同节点标准信息dto
+     * @param dto 活动方案dto
      * @throws ActException
      * @version v1
      */
@@ -153,15 +156,22 @@ public class ActivitySchemeAct {
     /**
      * 上传文件
      *
-     * @param maps 文件名，文件字节
-     * @param path 上传路径
+     * @param request  上传请求
+     * @param username 员工姓名(创建对应文件夹使用)
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/upload")
-    public Result upload(Map<String, byte[]> maps, String path) throws ActException {
-        return new ActResult("upload success!");
+    public Result upload(HttpServletRequest request, String username) throws ActException {
+        try {
+
+            String path = "/" + username;
+            fileAPI.upload(this.getInputStreams(request, path));
+            return new ActResult("上传成功");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
     /**
