@@ -124,4 +124,14 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
                 bos.add(new OpinionBO(entity.getId(), entity.getModule()));
         return bos;
     }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        List<ModuleType> list = super.findAll();
+        List<OpinionBO> bos = new ArrayList<>(0);
+        if (null != list)
+            for (ModuleType entity : list)
+                bos.add(new OpinionBO(entity.getId(), entity.getModule()));
+        return bos;
+    }
 }
