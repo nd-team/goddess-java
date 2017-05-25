@@ -24,6 +24,7 @@ public class KafkaProducerImpl implements KafkaProducer {
     @Autowired
     private Environment env;
 
+    @SuppressWarnings("all")
     @Override
     public void produce(MessageTO messageTO) {
 
@@ -36,7 +37,8 @@ public class KafkaProducerImpl implements KafkaProducer {
         //配置key的序列化类
         props.put("key.serializer.class", StringEncoder.class.getName());
         props.put("request.required.acks", env.getProperty("request.required.acks"));
-        Producer producer = new Producer(new ProducerConfig(props));
+
+        Producer<String,String> producer = new Producer(new ProducerConfig(props));
         producer.send(new KeyedMessage("message", messageTO.getId(), JSON.toJSONString(messageTO)));
     }
 
