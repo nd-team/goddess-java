@@ -72,17 +72,17 @@ public class SalaryConfirmRecord extends BaseEntity {
     /**
      *是否同意征税
      */
-    @Column(name ="is_whetherTax", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否同意征税(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_whetherTax", columnDefinition = "TINYINT(2)   COMMENT '是否同意征税(0无，1有)'", nullable = false )
     private Boolean whetherTax;
     /**
      *是否需要公司安排住宿
      */
-    @Column(name ="is_whetherArrangeResidence", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否需要公司安排住宿(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_whetherArrangeResidence", columnDefinition = "TINYINT(2)   COMMENT '是否需要公司安排住宿(0无，1有)'", nullable = false )
     private Boolean whetherArrangeResidence;
     /**
      *是否购买社保
      */
-    @Column(name ="is_whetherSocialSecurity", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否购买社保(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_whetherSocialSecurity", columnDefinition = "TINYINT(2) COMMENT '是否购买社保(0无，1有)'", nullable = false )
     private Boolean whetherSocialSecurity;
     /**
      *紧急联络人
@@ -117,12 +117,12 @@ public class SalaryConfirmRecord extends BaseEntity {
     /**
      *是否有面谈确认单原件
      */
-    @Column(name ="is_whetherVoucher", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有面谈确认单原件(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_whetherVoucher", columnDefinition = "TINYINT(2)   COMMENT '是否有面谈确认单原件(0无，1有)'", nullable = false )
     private Boolean whetherVoucher;
     /**
      *是否有住宿
      */
-    @Column(name ="is_whetherAccommodation", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有住宿(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_whetherAccommodation", columnDefinition = "TINYINT(2)   COMMENT '是否有住宿(0无，1有)'", nullable = false )
     private Boolean whetherAccommodation;
     /**
      *确认人

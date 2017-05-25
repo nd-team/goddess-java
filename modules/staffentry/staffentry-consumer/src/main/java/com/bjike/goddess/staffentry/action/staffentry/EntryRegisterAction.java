@@ -9,9 +9,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
+import com.bjike.goddess.staffentry.entity.Credential;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
-import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
+import com.bjike.goddess.staffentry.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -209,8 +210,17 @@ public class EntryRegisterAction {
     public Result findOneEntryRegister(@PathVariable String id) throws ActException {
         try {
             EntryRegisterBO bo = entryRegisterAPI.getEntryRegisterDetail(id);
+            List<FamilyMemberBO> fbo = bo.getFamilyMemberBOList();
+            List<StudyExperienceBO> sbo = bo.getStudyExperienceBOList();
+            List<WorkExperienceBO> wbo = bo.getWorkExperienceBOList();
+            List<CredentialBO> cbo = bo.getCredentialBOList();
+
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
                     bo, EntryRegisterVO.class);
+            entryRegisterVO.setFamilyMemberVOList( BeanTransform.copyProperties(fbo , FamilyMemberVO.class));
+            entryRegisterVO.setStudyExperienceVOList( BeanTransform.copyProperties(sbo , StudyExperienceVO.class));
+            entryRegisterVO.setWorkExperienceVOList( BeanTransform.copyProperties(wbo , WorkExperienceVO.class));
+            entryRegisterVO.setCredentialVOList( BeanTransform.copyProperties(cbo , CredentialVO.class));
             return ActResult.initialize(entryRegisterVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

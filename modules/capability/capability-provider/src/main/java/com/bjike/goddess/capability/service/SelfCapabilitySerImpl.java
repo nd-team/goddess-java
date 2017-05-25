@@ -41,6 +41,9 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     @Override
     public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        if(StringUtils.isNotBlank(selfCapabilityDTO.getName()) ) {
+            selfCapabilityDTO.getConditions().add(Restrict.like("name", selfCapabilityDTO.getName().trim()));
+        }
         Long count = super.count(selfCapabilityDTO);
         return count;
     }
@@ -57,6 +60,9 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
         selfCapabilityDTO.getSorts().add("createTime=desc");
+        if(StringUtils.isNotBlank(selfCapabilityDTO.getName()) ) {
+            selfCapabilityDTO.getConditions().add(Restrict.like("name", selfCapabilityDTO.getName().trim()));
+        }
         List<SelfCapability> list = super.findByCis(selfCapabilityDTO, true);
 
         return BeanTransform.copyProperties(list, SelfCapabilityBO.class );

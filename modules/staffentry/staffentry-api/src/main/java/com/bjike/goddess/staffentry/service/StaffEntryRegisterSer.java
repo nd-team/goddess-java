@@ -72,4 +72,13 @@ public interface StaffEntryRegisterSer extends Ser<StaffEntryRegister, StaffEntr
     default void delete(String id) throws SerException {
     }
 
+
+    /**
+     * 获取注册的员工编号
+     *
+     */
+    default String  maxEmpNumber( ) throws SerException {
+        return null;
+    }
+
 }

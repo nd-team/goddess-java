@@ -299,6 +299,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
+        if (lend.getLendStatus().getCode() == 5 ) {
+            throw new SerException("该条数据已经申请过冻结，不能再操作");
+        }
+
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime", "lendStatus");
         lend.setEstimateLendDate(applyLend.getEstimateLendDate());
         lend.setLender( applyLend.getLender());
@@ -361,6 +365,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             lend.setLendStatus(LendStatus.CHARGENOTPASS);
             lend.setLendError(9);
         }
+        if (lend.getLendStatus().getCode() == 5 ) {
+            throw new SerException("该条数据已经申请过冻结，不能再操作");
+        }
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
@@ -399,6 +406,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("财务运营部审核失败，负责人还未审核");
         } else if (lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部审核失败，此单为申请单有误编辑过来的，先得要负责人先审");
+        }
+        if (lend.getLendStatus().getCode() == 5 ) {
+            throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
         lend.setFinacer(userBO.getUsername());
@@ -453,6 +463,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else {
             throw new SerException("总经办审核失败，财务运营部还未审核");
         }
+        if (lend.getLendStatus().getCode() == 5 ) {
+            throw new SerException("该条数据已经申请过冻结，不能再操作");
+        }
 
         lend.setManager(userBO.getUsername());
         lend.setManagerOpinion(applyLendTO.getManagerOpinion());
@@ -496,6 +509,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         if (lend.getLendStatus().getCode() == 0 || lend.getLendStatus().getCode() == 9) {
             throw new SerException("财务运营部冻结失败，负责人还未审核");
+        }
+        if (lend.getLendStatus().getCode() == 5 ) {
+            throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
         lend.setFinacer(userBO.getUsername());

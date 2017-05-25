@@ -87,43 +87,43 @@ public class EntryBasicInfo extends BaseEntity {
     /**
      *薪资是否确认(0否，1是)
      */
-    @Column(name ="is_salaryConfirm", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '薪资是否确认(0否，1是)'", nullable = false, insertable = false)
+    @Column(name ="is_salaryConfirm", columnDefinition = "TINYINT(2)  COMMENT '薪资是否确认(0否，1是)'", nullable = false )
     private Boolean salaryConfirm;
 
     /**
      * 是否有身份件复印件(0无，1有)
      */
-    @Column(name ="is_iDFile", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有身份件复印件(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_iDFile", columnDefinition = "TINYINT(2)   COMMENT '是否有身份件复印件(0无，1有)'", nullable = false )
     private Boolean iDFile;
 
     /**
      * 是否有学历学位证书复印件(0无，1有)
      */
-    @Column(name ="is_educationFile", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有学历学位证书复印件(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_educationFile", columnDefinition = "TINYINT(2)  COMMENT '是否有学历学位证书复印件(0无，1有)'", nullable = false )
     private Boolean educationFile;
 
     /**
      * 是否有照片纸质版(0无，1有)
      */
-    @Column(name ="is_photoFile", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有照片纸质版(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_photoFile", columnDefinition = "TINYINT(2)  COMMENT '是否有照片纸质版(0无，1有)'", nullable = false )
     private Boolean photoFile;
 
     /**
      * 是否有照片电子版(0无，1有)
      */
-    @Column(name ="is_photoEletricFile", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有照片电子版(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_photoEletricFile", columnDefinition = "TINYINT(2)   COMMENT '是否有照片电子版(0无，1有)'", nullable = false )
     private Boolean photoEletricFile;
 
     /**
      * 是否有其本人银行卡、身份证、签名的复印件(0无，1有)
      */
-    @Column(name ="is_bankAndOtherFile", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否有其本人银行卡、身份证、签名的复印件(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_bankAndOtherFile", columnDefinition = "TINYINT(2)   COMMENT '是否有其本人银行卡、身份证、签名的复印件(0无，1有)'", nullable = false )
     private Boolean bankAndOtherFile;
 
     /**
      * 是否已邮件发送入职通告(0无，1有)
      */
-    @Column(name ="is_emailInfo", columnDefinition = "TINYINT(1) DEFAULT 0 COMMENT '是否已邮件发送入职通告(0无，1有)'", nullable = false, insertable = false)
+    @Column(name ="is_emailInfo", columnDefinition = "TINYINT(2)   COMMENT '是否已邮件发送入职通告(0无，1有)'", nullable = false )
     private Boolean emailInfo;
 
     public String getArea() {
