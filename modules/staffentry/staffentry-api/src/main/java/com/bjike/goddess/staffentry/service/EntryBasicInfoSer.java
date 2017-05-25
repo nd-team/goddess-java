@@ -105,6 +105,14 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     }
 
     /**
+     * 汇总获取所有岗位
+     * @throws SerException
+     */
+    default List<String> listPost( ) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据名字查找信息
      * @param  name name
      * @return class EntryBasicInfoBO
@@ -113,7 +121,15 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     default List<EntryBasicInfoVO> getEntryBasicInfoByName(String name) throws SerException {
         return null;
     }
-
+    /**
+     * 根据员工编号获取入职时间
+     * @param  empNumber empNumber
+     * @return class entryBasicInfoBO
+     * @throws SerException
+     */
+    default List<EntryBasicInfoVO> getByEmpNumber(String empNumber) throws SerException {
+        return null;
+    }
 
 
 }

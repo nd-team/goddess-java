@@ -17,6 +17,11 @@ public class EntryRegisterVO {
      * 入职登记
      */
     private String id;
+
+    /**
+     * 员工编号
+     */
+    private String empNumber;
     /**
      * 姓名
      */
@@ -146,6 +151,14 @@ public class EntryRegisterVO {
      * 证书集合
      */
     private List<CredentialVO> credentialVOList;
+
+    public String getEmpNumber() {
+        return empNumber;
+    }
+
+    public void setEmpNumber(String empNumber) {
+        this.empNumber = empNumber;
+    }
 
     public String getId() {
         return id;

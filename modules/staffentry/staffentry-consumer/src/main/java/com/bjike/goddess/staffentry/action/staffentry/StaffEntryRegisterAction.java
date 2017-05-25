@@ -155,6 +155,23 @@ public class StaffEntryRegisterAction {
 
 
 
+    /**
+     * 获取注册的员工编号
+     *
+     * @des 获取注册的员工编号
+     * @version v1
+     */
+    @GetMapping("v1/maxEmpNumber")
+    public Result maxEmpNumber( ) throws ActException {
+        try {
+            String empNumber = staffEntryRegisterAPI.maxEmpNumber( );
+            return ActResult.initialize( empNumber );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 
 

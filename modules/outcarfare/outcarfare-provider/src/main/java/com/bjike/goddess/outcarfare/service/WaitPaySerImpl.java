@@ -1,5 +1,6 @@
 package com.bjike.goddess.outcarfare.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -137,6 +138,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                 super.remove(p.getId());
             }
         }
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
         List<WaitPay> l = super.findByCis(dto, true);
         return BeanTransform.copyProperties(l, WaitPayBO.class);
     }
@@ -271,7 +273,25 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     @Override
-    public List<PayBO> findAlreadyPays() throws SerException {
+    public List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        List<WaitPay> l = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(l, WaitPayBO.class);
+    }
+
+    @Override
+    public Long waitCountSum(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.TRUE));
+        return super.count(dto);
+    }
+
+    @Override
+    public Long payCountSum(WaitPayDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("isPay", Boolean.FALSE));
+        return super.count(dto);
+    }
+
+    private List<PayBO> findAlreadyPays() throws SerException {
         list(new WaitPayDTO());
         List<WaitPay> list = super.findAll();
         List<PayBO> boList = new ArrayList<PayBO>();

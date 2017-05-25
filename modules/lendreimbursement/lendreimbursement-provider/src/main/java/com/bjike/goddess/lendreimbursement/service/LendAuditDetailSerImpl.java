@@ -1,5 +1,6 @@
 package com.bjike.goddess.lendreimbursement.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -43,6 +44,9 @@ public class LendAuditDetailSerImpl extends ServiceImpl<LendAuditDetail, LendAud
     @Override
     public List<LendAuditDetailBO> listLendAuditDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {
         lendAuditDetailDTO.getSorts().add("modifyTime=desc");
+        if(StringUtils.isNotBlank(lendAuditDetailDTO.getApplyLendId())){
+            lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId",lendAuditDetailDTO.getApplyLendId()));
+        }
         List<LendAuditDetail> lendAuditDetails = super.findByCis( lendAuditDetailDTO,true);
         List<LendAuditDetailBO> lendAuditDetailBOS = BeanTransform.copyProperties(lendAuditDetails,LendAuditDetailBO.class);
         return lendAuditDetailBOS;

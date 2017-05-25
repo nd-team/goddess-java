@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.staffentry.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
@@ -41,7 +42,9 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
             throw new SerException("id不能为空");
         }
         SalaryConfirmRecord  salaryConfirmRecord = super.findById(id);
+        String dates =  salaryConfirmRecord.getEntryTime().toString();
         SalaryConfirmRecordBO bo = BeanTransform.copyProperties( salaryConfirmRecord , SalaryConfirmRecordBO.class,"entryTime");
+        bo.setEntryTime(  dates);
         return bo;
     }
 

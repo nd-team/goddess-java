@@ -222,7 +222,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     public EntryRegisterBO insertEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                                WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
-        //TODO:tanghaixiang 2017-03-03 获取当前用户工号,不用了
         if(StringUtils.isBlank(entryRegisterTO.getEmpNumber())){
             throw new SerException("员工编号不能为空");
         }
@@ -327,7 +326,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             for (int i = 0; i < countName; i++) {
                 Credential temp = new Credential();
                 temp.setName(credentialTO.getNameses().get(i));
-                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater));
+                String ss = credentialTO.getObtainTimes().get(i);
+
+                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:StringUtils.isBlank(credentialTO.getObtainTimes().get(i))?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater));
                 temp.setEntryRegister(entryRegister);
 
                 credentialTOS.add(temp);

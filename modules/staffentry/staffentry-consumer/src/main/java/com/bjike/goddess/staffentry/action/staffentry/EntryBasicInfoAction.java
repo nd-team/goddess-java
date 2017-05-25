@@ -188,6 +188,23 @@ public class EntryBasicInfoAction {
     }
 
     /**
+     * 汇总获取所有岗位
+     *
+     * @des 汇总获取所有岗位
+     * @version v1
+     */
+    @GetMapping("v1/listPost")
+    public Result listPost( ) throws ActException {
+        try {
+            List<String> entryBasicInfoVOList =  entryBasicInfoAPI.listPost( ) ;
+            return ActResult.initialize(entryBasicInfoVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 根据姓名查找入职信息
      *
      * @param name name
