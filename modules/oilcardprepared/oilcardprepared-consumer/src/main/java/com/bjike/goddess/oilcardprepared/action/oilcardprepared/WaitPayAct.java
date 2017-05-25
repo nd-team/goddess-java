@@ -133,15 +133,15 @@ public class WaitPayAct {
     /**
      * 查找所有已付款的名单
      *
-     * @param request 请求对象
+     * @param dto dto
      * @return class WaitPayVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/allPay")
-    public Result allPay(HttpServletRequest request) throws ActException {
+    @GetMapping("v1/pays")
+    public Result pays(WaitPayDTO dto,HttpServletRequest request) throws ActException {
         try {
-            List<WaitPayBO> list = waitPayAPI.allPay();
+            List<WaitPayBO> list = waitPayAPI.pays(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -40,6 +40,7 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:message:message-api")
+compile project(":modules:user:user-api")
 compile("org.springframework.boot:spring-boot-starter-web")
 }
 

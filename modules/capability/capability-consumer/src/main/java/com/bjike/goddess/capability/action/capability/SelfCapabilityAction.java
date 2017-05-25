@@ -150,24 +150,6 @@ public class SelfCapabilityAction {
         }
     }
 
-    /**
-     * 搜索模糊搜索
-     *
-     * @param selfCapabilityDTO 个人能力信息dto里面的公司名称
-     * @return class SelfCapabilityVO
-     * @des 获取搜索到的所有个人能力信息
-     * @version v1
-     */
-    @GetMapping("v1/listCapabilityByCompanyName")
-    public Result listCompanyCbilityByCompanyName(SelfCapabilityDTO selfCapabilityDTO) throws ActException {
-        try {
-            List<SelfCapabilityVO> selfCapabilityVOList = BeanTransform.copyProperties(
-                    selfCapabilityAPI.listSelfCapabilityByName(selfCapabilityDTO), SelfCapabilityVO.class, true);
-            return ActResult.initialize(selfCapabilityVOList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 导入

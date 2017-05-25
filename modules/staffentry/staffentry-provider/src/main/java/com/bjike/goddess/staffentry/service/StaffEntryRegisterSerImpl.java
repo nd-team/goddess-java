@@ -54,7 +54,16 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             throw new SerException("id不能为空");
         }
         StaffEntryRegister staffEntryRegister = super.findById(id);
+        UserDTO userDTO  = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("id",staffEntryRegister.getUserId()));
+        List<UserBO> userList = userAPI.findByCis( userDTO  );
+
         StaffEntryRegisterBO bo = BeanTransform.copyProperties(staffEntryRegister, StaffEntryRegisterBO.class);
+        if( userList!= null && userList.size()>0 ){
+            bo.setEmpNumber( userList.get(0).getEmployeeNumber());
+            bo.setUserName( userList.get(0).getUsername());
+            bo.setPassword( userList.get(0).getPassword());
+        }
         return bo;
     }
 
@@ -96,7 +105,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         userTO.setUsername(staffEntryRegisterTO.getUserName());
         userTO.setPassword(staffEntryRegisterTO.getPassword());
         userTO.setStatus(Status.THAW);
-        userTO.setUserType(UserType.CUSTOMER);
+        userTO.setUserType(UserType.EMPLOYEE);
         UserBO userBO = userAPI.add(null, userTO);
 
         //填自己的表
@@ -171,5 +180,11 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             }
         }
         super.remove(id);
+    }
+
+    @Override
+    public String maxEmpNumber() throws SerException {
+        String empNumber = userAPI.maxUserEmpNumber();
+        return empNumber;
     }
 }

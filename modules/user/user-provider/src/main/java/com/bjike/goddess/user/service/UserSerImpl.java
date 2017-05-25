@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.regex.Validator;
@@ -165,10 +166,15 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
     public UserBO add(TransactionContext txContext, UserTO userTO) throws SerException {
-        String sysNO =this.currentSysNO();
+        String sysNO = this.currentSysNO();
         User user = BeanTransform.copyProperties(userTO, User.class);
         user.setUserType(UserType.EMPLOYEE);
         user.setSystemNO(sysNO);
+        try {
+            user.setPassword(PasswordHash.createHash(userTO.getPassword()));
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
         user.setEmployeeNumber(userTO.getEmployeeNumber());
         return BeanTransform.copyProperties(super.save(user), UserBO.class);
     }
@@ -318,8 +324,8 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public String maxUserEmpNumber() throws SerException {
-        String max  = super.findByMaxField("employeeNumber",User.class);
-        String empNumber =  SeqUtil.generateEmp( max );
+        String max = super.findByMaxField("employeeNumber", User.class);
+        String empNumber = SeqUtil.generateEmp(max);
         return empNumber;
     }
 }

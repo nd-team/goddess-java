@@ -66,11 +66,6 @@ public class FundRecordApiImpl implements FundRecordAPI {
     }
 
     @Override
-    public List<AnalyzeBO> analyze(CollectTO to) throws SerException {
-        return fundRecordSer.analyze(to);
-    }
-
-    @Override
     public FundRecordBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(fundRecordSer.findById(id),FundRecordBO.class);
     }

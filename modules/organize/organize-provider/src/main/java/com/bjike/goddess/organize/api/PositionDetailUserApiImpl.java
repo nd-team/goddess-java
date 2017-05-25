@@ -68,6 +68,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
+    public Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+        return positionDetailUserSer.checkAsUserDepartment(userId, departmentIds);
+    }
+
+    @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
         return positionDetailUserSer.maps(dto);
     }

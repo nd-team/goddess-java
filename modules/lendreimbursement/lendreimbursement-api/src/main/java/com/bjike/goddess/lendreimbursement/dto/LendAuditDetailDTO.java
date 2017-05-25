@@ -13,4 +13,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class LendAuditDetailDTO extends BaseDTO {
 
+    /**
+     * 借款id
+     */
+    private String applyLendId;
+
+    public String getApplyLendId() {
+        return applyLendId;
+    }
+
+    public void setApplyLendId(String applyLendId) {
+        this.applyLendId = applyLendId;
+    }
 }

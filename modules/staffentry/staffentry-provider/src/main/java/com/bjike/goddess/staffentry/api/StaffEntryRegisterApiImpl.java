@@ -54,4 +54,10 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     public void delete(String id) throws SerException {
         staffEntryRegisterSer.delete(id);
     }
+
+
+    @Override
+    public String maxEmpNumber() throws SerException {
+        return staffEntryRegisterSer.maxEmpNumber();
+    }
 }

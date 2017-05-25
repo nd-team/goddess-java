@@ -44,6 +44,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     private VoucherGenerateAPI voucherGenerateAPI;
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public FundRecordBO insertModel(FundRecordTO to) throws SerException {
         FundRecord model = BeanTransform.copyProperties(to, FundRecord.class, true);
         super.save(model);
@@ -52,6 +53,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public FundRecordBO updateModel(FundRecordTO to) throws SerException {
         if (!StringUtils.isEmpty(to.getId())) {
             FundRecord model = super.findById(to.getId());
@@ -69,6 +71,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         try {
             super.remove(id);
@@ -119,6 +122,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MonthCollectBO month(Integer year, Integer month) throws SerException {
         //查询month月的收入支出情况
         VoucherGenerateDTO generateDTO = new VoucherGenerateDTO();
@@ -161,6 +165,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ConditionCollectBO> condition(CollectTO to) throws SerException {
         List<FundRecordBO> boList = getByMonth(to);
         return BeanTransform.copyProperties(boList, ConditionCollectBO.class);
@@ -196,6 +201,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<AreaAnalyzeBO> areaAnalyze(Integer year, Integer month, String area) throws SerException {
 
         //查询month月数据
@@ -302,6 +308,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<GroupAnalyzeBO> groupAnalyze(Integer year, Integer month, String group) throws SerException {
 
         //查询month月数据
@@ -409,6 +416,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<ProjectAnalyzeBO> projectAnalyze(Integer year, Integer month, String project) throws SerException {
 
         //查询month月数据
@@ -512,58 +520,6 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         return boList;
     }
 
-    @Override
-    public List<AnalyzeBO> analyze(CollectTO to) throws SerException {
-
-        //查询本月记录
-        List<FundRecordBO> boList = getByMonth(to);
-        //查询上月记录
-        CollectTO lastTo = new CollectTO();
-        BeanUtils.copyProperties(to, lastTo);
-        lastTo.setMonth(to.getMonth() - 1);
-        List<FundRecordBO> lastBOList = getByMonth(lastTo);
-
-        //查询所有List
-        List<FundRecordBO> allList = findAllBO(new FundRecordDTO(), new VoucherGenerateDTO());
-
-        //month月份的收入
-        Double income = boList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
-        //month月份的支出
-        Double expenditure = boList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
-
-        //month上月收入
-        Double lastIncome = lastBOList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
-        //month上月支出
-        Double lastExpenditure = lastBOList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
-
-        //总收入
-        Double allIncome = allList.stream().filter(p -> p.getIncome() != null).mapToDouble(FundRecordBO::getIncome).sum();
-        //总支出
-        Double allExpenditure = allList.stream().filter(p -> p.getExpenditure() != null).mapToDouble(FundRecordBO::getExpenditure).sum();
-
-        AnalyzeBO analyzeBO = new AnalyzeBO();
-        analyzeBO.setIncome(income);
-        analyzeBO.setExpenditure(expenditure);
-        analyzeBO.setLastIncome(lastIncome);
-        analyzeBO.setLastExpenditure(lastExpenditure);
-        analyzeBO.setIncomeSubtract(income - lastIncome);
-        analyzeBO.setExpenditureSubtract(expenditure - lastExpenditure);
-        if (allIncome != 0.0) {
-            analyzeBO.setIncomeRate(expenditure / allIncome);
-        }
-        if (allExpenditure != 0.0) {
-            analyzeBO.setExpenditureRate(expenditure / allExpenditure);
-        }
-        DecimalFormat df = new java.text.DecimalFormat("#.00");
-        if (lastIncome != 0.0) {
-            analyzeBO.setIncomeGrowRate(df.format((income - lastIncome) / lastIncome) + "%");
-        }
-        if (lastExpenditure != 0.0) {
-            analyzeBO.setExpenditureGrowRate(df.format((expenditure - lastExpenditure) / lastExpenditure) + "%");
-        }
-        return null;
-//        return analyzeBO;
-    }
 
     //排序并分页数据
     public List<FundRecordBO> sortPageList(List<FundRecordBO> boList, FundRecordDTO dto) {

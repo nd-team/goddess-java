@@ -44,4 +44,14 @@ public class ForeignStaffingApiImpl implements ForeignStaffingAPI {
     public List<ForeignStaffingBO> maps(ForeignStaffingDTO dto) throws SerException {
         return foreignStaffingSer.maps(dto);
     }
+
+    @Override
+    public ForeignStaffingBO getById(String id) throws SerException {
+        return foreignStaffingSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return foreignStaffingSer.getTotal();
+    }
 }

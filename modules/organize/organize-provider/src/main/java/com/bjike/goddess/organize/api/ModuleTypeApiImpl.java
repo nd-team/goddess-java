@@ -78,4 +78,14 @@ public class ModuleTypeApiImpl implements ModuleTypeAPI {
     public List<OpinionBO> findThawOpinion() throws SerException {
         return moduleTypeSer.findThawOpinion();
     }
+
+    @Override
+    public List<OpinionBO> findByIds(String... ids) throws SerException {
+        return moduleTypeSer.findByIds(ids);
+    }
+
+    @Override
+    public List<OpinionBO> findAllOpinion() throws SerException {
+        return moduleTypeSer.findAllOpinion();
+    }
 }

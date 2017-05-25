@@ -452,8 +452,8 @@ public class ApplyLendAction {
      * @des 获取所有申请单有误审核详情
      * @version v1
      */
-    @GetMapping("v1/getError")
-    public Result getError(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/getError/{id}")
+    public Result getError(@PathVariable String id ) throws ActException {
         try {
             ApplyLendVO applyLendVO = BeanTransform.copyProperties(
                     applyLendAPI.getApplyApplyError(id), ApplyLendVO.class);

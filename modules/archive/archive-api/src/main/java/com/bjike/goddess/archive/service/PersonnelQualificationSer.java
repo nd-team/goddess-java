@@ -64,4 +64,24 @@ public interface PersonnelQualificationSer extends Ser<PersonnelQualification, P
         return null;
     }
 
+    /**
+     * 根据id获取人员资质数据
+     *
+     * @param id 人员资质数据id
+     * @return
+     * @throws SerException
+     */
+    default PersonnelQualificationBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }
