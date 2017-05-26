@@ -11,6 +11,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
 @Service
 public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocial, SelfCapabilitySocialDTO> implements SelfCapabilitySocialSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
 
     @Override
     public Long counts(SelfCapabilitySocialDTO selfCapabilitySocialDTO) throws SerException {
@@ -46,6 +49,8 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
 
     @Override
     public SelfCapabilitySocialBO getOne(String id) throws SerException {
+
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("社交id不能为空哦");
         }
@@ -55,6 +60,11 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
 
     @Override
     public List<SelfCapabilitySocialBO> listSelfCapabilitySocial(SelfCapabilitySocialDTO selfCapabilitySocialDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         if (StringUtils.isBlank(selfCapabilitySocialDTO.getSelfCapabilityId())) {
             throw new SerException("个人能力id不能为空哦");
         }
@@ -68,6 +78,12 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilitySocialBO addSelfCapabilitySocial(SelfCapabilitySocialTO selfCapabilitySocialTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加个人社交能力操作");
+        }
+
         if (StringUtils.isBlank(selfCapabilitySocialTO.getSelfCapabilityId())) {
             throw new SerException("个人能力id不能为空哦");
         }
@@ -81,6 +97,11 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilitySocialBO editSelfCapabilitySocial(String id ,SelfCapabilitySocialTO selfCapabilitySocialTO) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑个人社交能力操作");
+        }
         if (StringUtils.isBlank(id)) {
             throw new SerException("社交id不能为空哦");
         }
@@ -97,6 +118,11 @@ public class SelfCapabilitySocialSerImpl extends ServiceImpl<SelfCapabilitySocia
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSelfCapabilitySocial(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除个人社交能力操作");
+        }
         if (StringUtils.isBlank(id)) {
             throw new SerException("社交id不能为空哦");
         }

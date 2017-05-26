@@ -737,15 +737,15 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public Long countHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
         ApplyLendDTO dto = applyLendDTO;
+        //LendStatus.CHARGESURECONGEL
+        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6,5,9}));
+        //LendStatus.FINACECONGEL
+//        dto.getConditions().add(Restrict.ne("lendStatus", 5));
+        //LendStatus.LISTERROR
+//        dto.getConditions().add(Restrict.ne("lendStatus", 9));
         dto.getConditions().add(Restrict.eq("managerPass", "是"));
         dto.getConditions().add(Restrict.or("fincerPass", "是"));
-        dto.getConditions().add(Restrict.or("chargerPass", "是"));
-        //LendStatus.CHARGESURECONGEL
-        dto.getConditions().add(Restrict.ne("lendStatus", 6));
-        //LendStatus.FINACECONGEL
-        dto.getConditions().add(Restrict.ne("lendStatus", 5));
-        //LendStatus.LISTERROR
-        dto.getConditions().add(Restrict.ne("lendStatus", 9));
+//        dto.getConditions().add(Restrict.or("chargerPass", "是"));
 
         Long counts = super.count(dto);
         return counts;
@@ -754,15 +754,16 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public List<ApplyLendBO> listHasAudit(ApplyLendDTO applyLendDTO) throws SerException {
         ApplyLendDTO dto = applyLendDTO;
+        //LendStatus.CHARGESURECONGEL
+        dto.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{6,5,9}));
+        //LendStatus.FINACECONGEL
+//        dto.getConditions().add(Restrict.ne("lendStatus", 5));
+        //LendStatus.LISTERROR
+//        dto.getConditions().add(Restrict.ne("lendStatus", 9));
         dto.getConditions().add(Restrict.eq("managerPass", "是"));
         dto.getConditions().add(Restrict.or("fincerPass", "是"));
-        dto.getConditions().add(Restrict.or("chargerPass", "是"));
-        //LendStatus.CHARGESURECONGEL
-        dto.getConditions().add(Restrict.ne("lendStatus", 6));
-        //LendStatus.FINACECONGEL
-        dto.getConditions().add(Restrict.ne("lendStatus", 5));
-        //LendStatus.LISTERROR
-        dto.getConditions().add(Restrict.ne("lendStatus", 9));
+//        dto.getConditions().add(Restrict.or("chargerPass", "是"));
+
 
         List<ApplyLend> applyLend = super.findByCis(dto, true);
         List<ApplyLendBO> bolist = new ArrayList<>();
@@ -1335,5 +1336,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         return areaList;
 
+    }
+
+    @Override
+    public List<String> listAccountCom() throws SerException {
+        //TODO 账户来源
+        return null;
     }
 }

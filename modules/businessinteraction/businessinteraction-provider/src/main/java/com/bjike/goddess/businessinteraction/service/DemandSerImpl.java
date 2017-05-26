@@ -8,9 +8,11 @@ import com.bjike.goddess.businessinteraction.to.DemandTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,9 @@ import java.util.List;
 @Service
 public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements DemandSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
     @Override
     public Long countInter(DemandDTO demandDTO) throws SerException {
         Long count =  super.count(demandDTO);
@@ -40,6 +45,8 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
 
     @Override
     public DemandBO getOneById(String id) throws SerException {
+
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
@@ -51,6 +58,12 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
     
     @Override
     public List<DemandBO> listDemand(DemandDTO demandDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
+
         List<Demand> list = super.findByCis(demandDTO, true);
 
         return BeanTransform.copyProperties(list, DemandBO.class );
@@ -59,6 +72,13 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandBO addDemand(DemandTO demandTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
         Demand demand = null;
         try {
             demand = BeanTransform.copyProperties(demandTO,Demand.class,true);
@@ -73,6 +93,14 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandBO editDemand(DemandTO demandTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑操作");
+        }
+
+
         Demand demandTarget = null;
         try {
             Demand demand = BeanTransform.copyProperties(demandTO,Demand.class,true);
@@ -90,6 +118,13 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteDemand(String id) throws SerException {
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
+
         if (StringUtils.isNotBlank(id)){
             super.remove(id);
         }else{

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.ProjectSituationBO;
 import com.bjike.goddess.projectprocing.dto.ProjectSituationDTO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.projectprocing.entity.ProjectSituation;
 import com.bjike.goddess.projectprocing.to.ProjectSituationTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import java.util.List;
 @Service
 public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, ProjectSituationDTO> implements ProjectSituationSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
 
     @Override
@@ -54,6 +58,13 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
 
     @Override
     public List<ProjectSituationBO> listProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
+        //列表权限
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+
+
         if (StringUtils.isNotBlank(projectSituationDTO.getEnginPlace())) {
             projectSituationDTO.getConditions().add(Restrict.like("enginPlace", projectSituationDTO.getEnginPlace()));
         }
@@ -67,6 +78,13 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSituationBO addProjectSituation(ProjectSituationTO projectSituationTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加基本信息操作");
+        }
+
         ProjectSituation projectSituation = BeanTransform.copyProperties(projectSituationTO,ProjectSituation.class,true);
         projectSituation.setCreateTime(LocalDateTime.now());
         //TODO: tanghaixiang 2017-03-31 链接关系没做
@@ -77,6 +95,14 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSituationBO editProjectSituation(ProjectSituationTO projectSituationTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑基本信息操作");
+        }
+
+
         if(StringUtils.isBlank(projectSituationTO.getId()) || projectSituationTO.getId()==null){
             throw  new SerException("编号不能为空");
         }
@@ -95,6 +121,14 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteProjectSituation(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除基本信息操作");
+        }
+
+
         if(StringUtils.isBlank(id)){
             throw  new SerException("id不能为空");
         }

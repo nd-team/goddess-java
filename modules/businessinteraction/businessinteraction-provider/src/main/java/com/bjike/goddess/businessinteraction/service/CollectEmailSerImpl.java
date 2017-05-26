@@ -1,19 +1,20 @@
 package com.bjike.goddess.businessinteraction.service;
 
 import com.bjike.goddess.businessinteraction.bo.CollectData;
+import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
+import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
 import com.bjike.goddess.businessinteraction.dto.DemandDTO;
 import com.bjike.goddess.businessinteraction.dto.InteractionRelationDTO;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
+import com.bjike.goddess.businessinteraction.entity.CollectEmail;
 import com.bjike.goddess.businessinteraction.entity.InteractionRelation;
+import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
-import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
-import com.bjike.goddess.businessinteraction.entity.CollectEmail;
-import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +54,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Autowired
     private TalkDetailSer talkDetailSer;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
     @Override
     public Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
         Long count =  super.count(collectEmailDTO);
@@ -59,6 +66,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public CollectEmailBO getOneById(String id) throws SerException {
+
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
@@ -70,6 +79,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Cacheable
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         List<CollectEmail> list = super.findByCis(collectEmailDTO, true);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
     }
@@ -77,6 +91,14 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
+
         List<String> works = Arrays.asList(collectEmailTO.getWorks());
         //设置行业
         StringBuffer workBuf = new StringBuffer("");
@@ -94,6 +116,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
+
+
+        RpcTransmit.transmitUserToken(userToken);
+
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
         collectEmail.setCreateTime(LocalDateTime.now());
         collectEmail.setStatus(Status.THAW);
@@ -118,6 +144,14 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑操作");
+        }
+
+
         List<String> works = Arrays.asList(collectEmailTO.getWorks());
         //设置行业
         StringBuffer workBuf = new StringBuffer("");
@@ -134,6 +168,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
+
+        RpcTransmit.transmitUserToken(userToken);
 
         //先查出来
         CollectEmail getEmail = super.findById(collectEmailTO.getId());
@@ -159,12 +195,25 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCollectEmail(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCollectEmail(String id) throws SerException {
+        //商务模块冻结权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.CONGEAL);
         super.update(collectEmail);
@@ -174,6 +223,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCollectEmail(String id) throws SerException {
+        //商务模块解冻权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.THAW);
         super.update(collectEmail);

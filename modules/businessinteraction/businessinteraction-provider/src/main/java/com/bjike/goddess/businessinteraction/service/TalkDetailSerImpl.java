@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
 import com.bjike.goddess.businessinteraction.entity.TalkDetail;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,9 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
 
     @Autowired
     private CooperCapabilityAPI cooperCapabilityAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
 
     @Override
     public Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
@@ -45,6 +49,7 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
 
     @Override
     public TalkDetailBO getOneById(String id) throws SerException {
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
@@ -55,6 +60,12 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     
     @Override
     public List<TalkDetailBO> listTalkDetail(TalkDetailDTO talkDetailDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
+        talkDetailDTO.getSorts().add("createTime=desc");
         List<TalkDetail> list = super.findByCis(talkDetailDTO, true);
 
         return BeanTransform.copyProperties(list, TalkDetailBO.class );
@@ -63,6 +74,13 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TalkDetailBO addTalkDetail(TalkDetailTO talkDetailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
         TalkDetail talkDetail = null;
         try {
             talkDetail = BeanTransform.copyProperties(talkDetailTO,TalkDetail.class,true);
@@ -77,6 +95,13 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TalkDetailBO editTalkDetail(TalkDetailTO talkDetailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑操作");
+        }
+
         TalkDetail talkDetailTarget = null;
         try {
             TalkDetail talkDetail = BeanTransform.copyProperties(talkDetailTO,TalkDetail.class,true);
@@ -94,6 +119,12 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteTalkDetail(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         if (StringUtils.isNotBlank(id)){
             super.remove(id);
         }else{

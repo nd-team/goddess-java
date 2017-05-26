@@ -514,5 +514,13 @@ public interface ApplyLendAPI {
         return null;
     }
 
+    /**
+     * 获取所有账户来源
+     *
+     * @return
+     */
+    default List<String> listAccountCom() throws SerException {
+        return null;
+    }
 
 }

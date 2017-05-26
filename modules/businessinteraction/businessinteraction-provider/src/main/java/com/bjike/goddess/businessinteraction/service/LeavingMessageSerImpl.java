@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessinteraction.dto.LeavingMessageDTO;
 import com.bjike.goddess.businessinteraction.entity.LeavingMessage;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -35,9 +36,23 @@ public class LeavingMessageSerImpl extends ServiceImpl<LeavingMessage, LeavingMe
 
     @Autowired
     private InteractionRelationSer interactionRelationSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+//    @Override
+//    public Long countInter(LeavingMessageDTO leavingMessageDTO) throws SerException {
+//        LeavingMessageDTO dto = new LeavingMessageDTO();
+//        dto.getConditions().add(Restrict.eq("interactionRelation.id",interactionId ));
+//
+//        Long count = super.count( dto );
+//        return count;
+//    }
 
     @Override
     public List<LeavingMessageBO> listLeavingMessage(String interactionId ) throws SerException {
+
+
+
         LeavingMessageDTO dto = new LeavingMessageDTO();
         dto.getConditions().add(Restrict.eq("interactionRelation.id",interactionId ));
         dto.getSorts().add("createTime=desc");
@@ -49,6 +64,14 @@ public class LeavingMessageSerImpl extends ServiceImpl<LeavingMessage, LeavingMe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public LeavingMessageBO addLeavingMessage(LeavingMessageTO leavingMessageTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
+
         if( StringUtils.isBlank(leavingMessageTO.getInteractionId() )){
             throw  new SerException("互动联系信息id为空");
         }

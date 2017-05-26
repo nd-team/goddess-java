@@ -38,6 +38,9 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     @Autowired
     private SelfCapabilitySocialSer selfCapabilitySocialSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
+
 
     @Override
     public Long counts(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
@@ -59,6 +62,10 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
 
     @Override
     public List<SelfCapabilityBO> listSelfCapability(SelfCapabilityDTO selfCapabilityDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
         selfCapabilityDTO.getSorts().add("createTime=desc");
         if(StringUtils.isNotBlank(selfCapabilityDTO.getName()) ) {
             selfCapabilityDTO.getConditions().add(Restrict.like("name", selfCapabilityDTO.getName().trim()));
@@ -71,6 +78,12 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilityBO addSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应人员，不可以进行添加操作");
+        }
+
         SelfCapability selfCapability = BeanTransform.copyProperties(selfCapabilityTO,SelfCapability.class,true);
         selfCapability.setCreateTime(LocalDateTime.now());
 
@@ -100,6 +113,12 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SelfCapabilityBO editSelfCapability(SelfCapabilityTO selfCapabilityTO) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应人员，不可以进行编辑操作");
+        }
+
         if( StringUtils.isBlank(selfCapabilityTO.getName())){
             throw new SerException("失败，姓名不能为空");
         }
@@ -123,6 +142,12 @@ public class SelfCapabilitySerImpl extends ServiceImpl<SelfCapability, SelfCapab
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSelfCapability(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         //先删社交
         SelfCapabilitySocialDTO ssDTO = new SelfCapabilitySocialDTO();
         ssDTO.getConditions().add(Restrict.eq("selfCapabilityId",id));

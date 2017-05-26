@@ -77,7 +77,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public CustomerDetailBO addCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行添加详细信息操作");
         }
@@ -116,7 +116,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public CustomerDetailBO editCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行编辑详细信息操作");
         }
@@ -158,7 +158,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Override
     public void deleteCustomerDetail(String id) throws SerException {
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("4");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行删除详细信息操作");
         }
