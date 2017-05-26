@@ -1,5 +1,6 @@
 package com.bjike.goddess.message.api;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.to.email.Email;
