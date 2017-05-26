@@ -91,7 +91,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         }
 
         FirstPayRecord firstPayRecord = new FirstPayRecord();
-        BeanTransform.copyProperties(waitPay,firstPayRecord,true);
+        BeanUtils.copyProperties(waitPay,firstPayRecord);
         firstPayRecordSer.save(firstPayRecord);
         return BeanTransform.copyProperties(firstPayRecord, FirstPayRecordBO.class);
     }

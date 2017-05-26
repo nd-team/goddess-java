@@ -392,7 +392,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
     @Override
     public List<String> getContractor() throws SerException {
         String[] fields = new String[]{"name"};
-        List<ContractorBO> contractorBOS = super.findBySql("select distinct name as contractor from receivable_contractor group by contractor order by contractor asc ", ContractorBO.class, fields);
+        List<ContractorBO> contractorBOS = super.findBySql("SELECT b.name FROM receivable_receivablesubsidiary a ,receivable_contractor b where a.contractor_id = b.id GROUP BY b.name ", ContractorBO.class, fields);
 
         List<String> contractorList = contractorBOS.stream().map(ContractorBO::getName)
                 .filter(name -> (StringUtils.isNotBlank(name))).distinct().collect(Collectors.toList());
