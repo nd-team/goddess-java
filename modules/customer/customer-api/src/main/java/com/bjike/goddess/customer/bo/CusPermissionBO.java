@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.customer.enums.CusPermissionType;
 
 import javax.persistence.Column;
+import java.util.List;
 
 /**
  * 客户权限配置业务传输对象
@@ -42,6 +43,11 @@ public class CusPermissionBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
+
+    /**
+     * list返回的操作对象
+     */
+    private List<CusOperateBO> cusOperateBO;
 
     public String getIdFlag() {
         return idFlag;
@@ -89,5 +95,13 @@ public class CusPermissionBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public List<CusOperateBO> getCusOperateBO() {
+        return cusOperateBO;
+    }
+
+    public void setCusOperateBO(List<CusOperateBO> cusOperateBO) {
+        this.cusOperateBO = cusOperateBO;
     }
 }

@@ -51,6 +51,7 @@ public interface BankAccountInfoAPI {
 
     /**
      * 查询总记录数
+     *
      * @param dto 查询条件
      * @return 总记录数
      */
@@ -58,8 +59,16 @@ public interface BankAccountInfoAPI {
 
     /**
      * 根据id查询账户
+     *
      * @param id 账户信息id
      * @return 账户信息
      */
     BankAccountInfoBO findById(String id) throws SerException;
+
+    /**
+     * 查询账户列表
+     *
+     * @return 账户信息结果集
+     */
+    List<BankAccountInfoBO> findAll() throws SerException;
 }

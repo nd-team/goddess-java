@@ -3,8 +3,8 @@ package com.bjike.goddess.customer.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.customer.bo.CusPermissionBO;
-import com.bjike.goddess.customer.entity.CusPermission;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
+import com.bjike.goddess.customer.entity.CusPermission;
 import com.bjike.goddess.customer.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 
@@ -78,5 +78,16 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @throws SerException
      */
     default Boolean getCusPermission(String idFlag) throws SerException{return null;}
+
+    /**
+     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
+     *
+     * @param idFlag 客户权限idFlag
+     * @throws SerException
+     */
+    default Boolean busCusPermission(String idFlag) throws SerException {
+        return null;
+    }
+
 
 }
