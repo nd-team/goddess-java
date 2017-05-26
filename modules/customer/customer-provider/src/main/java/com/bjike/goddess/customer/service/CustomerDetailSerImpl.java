@@ -43,6 +43,8 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     private CustomerBaseInfoSer customerBaseInfoAPI;
     @Autowired
     private CusFamilyMemberSer cusFamilyMemberAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public Long countCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
@@ -52,6 +54,11 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
     @Override
     public List<CustomerDetailBO> listCustomerDetail(CustomerDetailDTO customerDetailDTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+        customerDetailDTO.getSorts().add("createTime=desc");
         List<CustomerDetail> list = super.findByCis(customerDetailDTO, true);
         List<CustomerDetailBO> customerDetailBOArrayList = new ArrayList<>();
         list.stream().forEach(str->{
@@ -69,6 +76,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerDetailBO addCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行添加详细信息操作");
+        }
+
         String baseInfoNum = customerDetailTO.getCustomerNum();
         CustomerBaseInfoDTO baseInfoDTO = new CustomerBaseInfoDTO();
         baseInfoDTO.getConditions().add( Restrict.eq( "customerNum",baseInfoNum) );
@@ -102,6 +115,11 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerDetailBO editCustomerDetail(CustomerDetailTO customerDetailTO) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行编辑详细信息操作");
+        }
 
         //先查一遍详细
         CustomerDetailDTO dto = new CustomerDetailDTO();
@@ -139,6 +157,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCustomerDetail(String id) throws SerException {
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("15");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行删除详细信息操作");
+        }
+
         CustomerDetail customerDetail = super.findById( id );
 
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();

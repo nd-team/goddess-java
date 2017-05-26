@@ -38,9 +38,9 @@ public class CustomerLevelAction {
     private CusPermissionAPI cusPermissionAPI;
 
     /**
-     *  客户等级列表总条数
+     * 客户等级列表总条数
      *
-     * @param customerBaseInfoDTO  客户等级信息dto
+     * @param customerBaseInfoDTO 客户等级信息dto
      * @des 获取所有客户等级信息总条数
      * @version v1
      */
@@ -58,21 +58,18 @@ public class CustomerLevelAction {
      * 客户等级列表
      *
      * @param customerLevelDTO 客户等级信息dto
+     * @return class CustomerLevelVO
      * @des 获取所有客户等级信息
-     * @return  class CustomerLevelVO
      * @version v1
      */
     @GetMapping("v1/listCustomerLevel")
     public Result findListCustomerLevel(CustomerLevelDTO customerLevelDTO, BindingResult bindingResult) throws ActException {
         try {
-            Boolean permissionLevel = cusPermissionAPI.getCusPermission("1");
-            if( permissionLevel ){
-                List<CustomerLevelVO> customerLevelVOList = BeanTransform.copyProperties(
-                        customerLevelAPI.listCustomerLevel(customerLevelDTO), CustomerLevelVO.class);
-                return ActResult.initialize(customerLevelVOList);
-            }else{
-                return ActResult.initialize(null);
-            }
+
+            List<CustomerLevelVO> customerLevelVOList = BeanTransform.copyProperties(
+                    customerLevelAPI.listCustomerLevel(customerLevelDTO), CustomerLevelVO.class);
+            return ActResult.initialize(customerLevelVOList);
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -82,16 +79,18 @@ public class CustomerLevelAction {
      * 添加客户等级
      *
      * @param customerLevelTO 客户等级基本信息数据to
+     * @return class CustomerLevelVO
      * @des 添加客户等级
-     * @return  class CustomerLevelVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerLevel(@Validated CustomerLevelTO customerLevelTO, BindingResult bindingResult) throws ActException {
         try {
+
             CustomerLevelBO customerLevelBO1 = customerLevelAPI.addCustomerLevel(customerLevelTO);
-            return ActResult.initialize(BeanTransform.copyProperties(customerLevelBO1,CustomerLevelVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(customerLevelBO1, CustomerLevelVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -102,16 +101,18 @@ public class CustomerLevelAction {
      * 编辑客户等级
      *
      * @param customerLevelTO 客户等级基本信息数据bo
+     * @return class CustomerLevelVO
      * @des 编辑客户等级
-     * @return  class CustomerLevelVO
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerLevel(@Validated CustomerLevelTO customerLevelTO) throws ActException {
         try {
+
             CustomerLevelBO customerLevelBO1 = customerLevelAPI.editCustomerLevel(customerLevelTO);
-            return ActResult.initialize(BeanTransform.copyProperties(customerLevelBO1,CustomerLevelVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(customerLevelBO1, CustomerLevelVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -128,10 +129,12 @@ public class CustomerLevelAction {
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCustomerLevel(@PathVariable String id) throws ActException {
         try {
+
             customerLevelAPI.deleteCustomerLevel(id);
             return new ActResult("delete success!");
+
         } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
+            throw new ActException("删除失败：" + e.getMessage());
         }
     }
 
@@ -139,12 +142,12 @@ public class CustomerLevelAction {
      * 查找客户等级
      *
      * @param name 客户等级名name
+     * @return class CustomerLevelVO
      * @des 根据id查找某个客户等级信息
-     * @return  class CustomerLevelVO
      * @version v1
      */
     @GetMapping("v1/getCustomerLevel")
-    public Result findOneCustomerLevel( String name) throws ActException {
+    public Result findOneCustomerLevel(String name) throws ActException {
         try {
             CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(
                     customerLevelAPI.getCustomerLevelByName(name), CustomerLevelVO.class, true);
@@ -166,10 +169,12 @@ public class CustomerLevelAction {
     @PostMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
+
             customerLevelAPI.congealCustomerLevel(id);
             return new ActResult("congeal success!");
+
         } catch (SerException e) {
-            throw new ActException("冻结失败："+e.getMessage());
+            throw new ActException("冻结失败：" + e.getMessage());
         }
     }
 
@@ -183,12 +188,14 @@ public class CustomerLevelAction {
      */
     @LoginAuth
     @PostMapping("v1/thaw/{id}")
-    public Result thaw (@PathVariable String id) throws ActException {
+    public Result thaw(@PathVariable String id) throws ActException {
         try {
+
             customerLevelAPI.thawCustomerLevel(id);
             return new ActResult("thaw success!");
+
         } catch (SerException e) {
-            throw new ActException("冻结失败："+e.getMessage());
+            throw new ActException("冻结失败：" + e.getMessage());
         }
     }
 

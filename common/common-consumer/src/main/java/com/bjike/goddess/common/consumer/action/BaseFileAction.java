@@ -206,7 +206,7 @@ public abstract class BaseFileAction {
             throw new SerException("上传表单不是multipart/form-data类型");
         }
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request; // 转换成多部分request
-        return multiRequest.getFiles("file");
+        return multiRequest.getFiles("files");
 
     }
 

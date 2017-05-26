@@ -69,20 +69,17 @@ public class CustomerBaseInfoAction {
     @GetMapping("v1/listCustomerBaseInfo")
     public Result findListCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws ActException {
         try {
-            Boolean permission = cusPermissionAPI.getCusPermission("1");
-            if( permission ) {
-                List<CustomerBaseInfoBO> customerBaseInfoBOList = customerBaseInfoAPI.listCustomerBaseInfo(customerBaseInfoDTO);
-                List<CustomerBaseInfoVO> customerBaseInfoVOList = new ArrayList<>();
-                customerBaseInfoBOList.stream().forEach(str -> {
-                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerLevelBO(), CustomerLevelVO.class, true);
-                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str, CustomerBaseInfoVO.class);
-                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                    customerBaseInfoVOList.add(customerBaseInfoVO);
-                });
-                return ActResult.initialize(customerBaseInfoVOList);
-            }else{
-                return ActResult.initialize(null);
-            }
+
+            List<CustomerBaseInfoBO> customerBaseInfoBOList = customerBaseInfoAPI.listCustomerBaseInfo(customerBaseInfoDTO);
+            List<CustomerBaseInfoVO> customerBaseInfoVOList = new ArrayList<>();
+            customerBaseInfoBOList.stream().forEach(str -> {
+                CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerLevelBO(), CustomerLevelVO.class, true);
+                CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str, CustomerBaseInfoVO.class);
+                customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                customerBaseInfoVOList.add(customerBaseInfoVO);
+            });
+            return ActResult.initialize(customerBaseInfoVOList);
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -117,8 +114,10 @@ public class CustomerBaseInfoAction {
     @PostMapping("v1/add")
     public Result addCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO, BindingResult bindingResult) throws ActException {
         try {
+
             CustomerBaseInfoBO customerBaseInfoBO1 = customerBaseInfoAPI.addCustomerBaseInfo(customerBaseInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(customerBaseInfoBO1, CustomerBaseInfoVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,8 +136,10 @@ public class CustomerBaseInfoAction {
     @PutMapping("v1/edit")
     public Result editCustomerBaseInfo(@Validated CustomerBaseInfoTO customerBaseInfoTO) throws ActException {
         try {
+
             CustomerBaseInfoBO customerBaseInfoBO1 = customerBaseInfoAPI.editCustomerBaseInfo(customerBaseInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(customerBaseInfoBO1, CustomerBaseInfoVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -155,8 +156,10 @@ public class CustomerBaseInfoAction {
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCustomerBaseInfo(@PathVariable String id) throws ActException {
         try {
+
             customerBaseInfoAPI.deleteCustomerBaseInfo(id);
             return new ActResult("delete success!");
+
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
         }
@@ -174,8 +177,10 @@ public class CustomerBaseInfoAction {
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
+
             customerBaseInfoAPI.congealCustomerBaseInfo(id);
             return new ActResult("congeal success!");
+
         } catch (SerException e) {
             throw new ActException("冻结失败：" + e.getMessage());
         }
@@ -193,8 +198,10 @@ public class CustomerBaseInfoAction {
     @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
+
             customerBaseInfoAPI.thawCustomerBaseInfo(id);
             return new ActResult("thaw success!");
+
         } catch (SerException e) {
             throw new ActException("解冻失败：" + e.getMessage());
         }
@@ -263,9 +270,9 @@ public class CustomerBaseInfoAction {
     public Result getCustomer(String customerNum) throws ActException {
         try {
             CustomerBaseInfoBO bo = customerBaseInfoAPI.getCustomerInfoByNum(customerNum);
-            CustomerLevelVO customerLevelVO =  BeanTransform.copyProperties(bo.getCustomerLevelBO(),CustomerLevelVO.class);
+            CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(bo.getCustomerLevelBO(), CustomerLevelVO.class);
             CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(bo, CustomerBaseInfoVO.class);
-            customerBaseInfoVO.setCustomerLevelVO( customerLevelVO );
+            customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
             return ActResult.initialize(customerBaseInfoVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

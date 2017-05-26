@@ -161,7 +161,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/leadExcel")
+    @PostMapping("v1/lead")
     public Result leadExcel(HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
@@ -183,7 +183,7 @@ public class ProjectOutsourcingAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/exportExcel")
+    @PostMapping("v1/export")
     public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "项目外包洽谈.xlsx";

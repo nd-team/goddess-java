@@ -2,6 +2,8 @@ package com.bjike.goddess.customer.vo;
 
 import com.bjike.goddess.customer.enums.CusPermissionType;
 
+import java.util.List;
+
 /**
  * 客户权限配置表现层对象
  *
@@ -44,6 +46,11 @@ public class CusPermissionVO {
      * 修改时间
      */
     private String modifyTime;
+
+    /**
+     * list返回的操作对象
+     */
+    private List<CusOperateVO> cusOperateVO;
 
 
     public String getId() {
@@ -100,5 +107,13 @@ public class CusPermissionVO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public List<CusOperateVO> getCusOperateVO() {
+        return cusOperateVO;
+    }
+
+    public void setCusOperateVO(List<CusOperateVO> cusOperateVO) {
+        this.cusOperateVO = cusOperateVO;
     }
 }

@@ -256,7 +256,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
             UserSession.put(token, loginUser);
         } else {
-            throw new SerException("userToken is null,登录异常");
+            throw new SerException("notLogin");
         }
 
     }
@@ -290,7 +290,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             }
             throw new SerException("expire");
         } else {
-            throw new SerException("用户未登录");
+            throw new SerException("notLogin");
         }
     }
 
