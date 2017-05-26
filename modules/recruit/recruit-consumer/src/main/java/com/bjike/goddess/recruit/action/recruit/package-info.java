@@ -1,8 +1,5 @@
 /**
- * @Author: [sunfengtao]
- * @Date: [2017-03-15 10:00]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * 未入职原因业务接口
+ * Created by sunfengtao on 2017-05-26 01:59.
  */
 package com.bjike.goddess.recruit.action.recruit;
