@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public BonusBudgetBO save(BonusBudgetTO to) throws SerException {
         BonusBudget entity = BeanTransform.copyProperties(to, BonusBudget.class, true);
         entity = super.save(entity);
@@ -71,6 +73,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         List<RewardProgramRatio> list = getRewardRatioById(id);
         rewardProgramRatioSer.remove(list);//删除子表中的数据
@@ -84,6 +87,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(BonusBudgetTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             BonusBudget model = super.findById(to.getId());

@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -38,6 +39,42 @@ public class RewardPeopleNoStatAct {
     private RewardPeopleNoStatAPI rewardPeopleNoStatAPI;
 
     /**
+     * 根据id查询奖励人数统计
+     *
+     * @param id      奖励人数统计唯一标识
+     * @return class RewardPeopleNoStatVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/bonusbudget/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.findById(id);
+            RewardPeopleNoStatVO vo = BeanTransform.copyProperties(bo, RewardPeopleNoStatVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 奖励人数统计dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RewardPeopleNoStatDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = rewardPeopleNoStatAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询奖励人数统计
      *
      * @param dto 奖励人数统计dto
@@ -46,7 +83,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated RewardPeopleNoStatDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated RewardPeopleNoStatDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<RewardPeopleNoStatBO> boList = rewardPeopleNoStatAPI.list(dto);
             List<RewardPeopleNoStatVO> voList = BeanTransform.copyProperties(boList, RewardPeopleNoStatVO.class);
@@ -65,7 +102,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.save(to);
             RewardPeopleNoStatVO vo = BeanTransform.copyProperties(bo, RewardPeopleNoStatVO.class);
@@ -151,11 +188,11 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/checkAwardDetails")
-    public Result checkAwardDetails(String statId) throws ActException {
+    @GetMapping("v1/checkAwardDetails/{statId}")
+    public Result checkAwardDetails(@PathVariable String statId, HttpServletRequest request) throws ActException {
         try {
             List<AwardDetailBO> boList = rewardPeopleNoStatAPI.checkAwardDetails(statId);
-            List<AwardDetailVO> voList = BeanTransform.copyProperties(boList, AwardDetailVO.class);
+            List<AwardDetailVO> voList = BeanTransform.copyProperties(boList, AwardDetailVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

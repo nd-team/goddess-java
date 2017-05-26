@@ -1,6 +1,7 @@
 package com.bjike.goddess.firmreward.action.firmreward;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -13,13 +14,12 @@ import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import com.bjike.goddess.firmreward.vo.BonusBudgetVO;
 import com.bjike.goddess.firmreward.vo.RewardProgramRatioVO;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -39,6 +39,42 @@ public class BonusBudgetAct {
     private BonusBudgetAPI bonusBudgetAPI;
 
     /**
+     * 根据id查询奖金预算
+     *
+     * @param id      奖金预算唯一标识
+     * @return class BonusBudgetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/bonusbudget/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            BonusBudgetBO bo = bonusBudgetAPI.findById(id);
+            BonusBudgetVO vo = BeanTransform.copyProperties(bo, BonusBudgetVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 奖金预算dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated BonusBudgetDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = bonusBudgetAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询奖金预算
      *
      * @param dto 奖金预算dto
@@ -47,10 +83,10 @@ public class BonusBudgetAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated BonusBudgetDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated BonusBudgetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<BonusBudgetBO> boList = bonusBudgetAPI.list(dto);
-            List<BonusBudgetVO> voList = BeanTransform.copyProperties(boList, BonusBudgetVO.class);
+            List<BonusBudgetVO> voList = BeanTransform.copyProperties(boList, BonusBudgetVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -66,10 +102,10 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) BonusBudgetTO to, BindingResult result) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) BonusBudgetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             BonusBudgetBO bo = bonusBudgetAPI.save(to);
-            BonusBudgetVO vo = BeanTransform.copyProperties(bo, BonusBudgetVO.class);
+            BonusBudgetVO vo = BeanTransform.copyProperties(bo, BonusBudgetVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -101,7 +137,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) BonusBudgetTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.update(to);
             return new ActResult("edit success!");
@@ -153,10 +189,10 @@ public class BonusBudgetAct {
      * @version v1
      */
     @GetMapping("v1/checkRewardProgramRatios/{ratioId}")
-    public Result checkRewardProgramRatios(@Validated String ratioId, BindingResult result) throws ActException {
+    public Result checkRewardProgramRatios(@PathVariable(value = "ratioId") String ratioId, HttpServletRequest request) throws ActException {
         try {
             List<RewardProgramRatioBO> boList = bonusBudgetAPI.checkRewardProgramRatios(ratioId);
-            List<RewardProgramRatioVO> voList = BeanTransform.copyProperties(boList, RewardProgramRatioVO.class);
+            List<RewardProgramRatioVO> voList = BeanTransform.copyProperties(boList, RewardProgramRatioVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

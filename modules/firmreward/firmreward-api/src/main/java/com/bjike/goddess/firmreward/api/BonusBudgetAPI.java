@@ -20,6 +20,23 @@ import java.util.List;
 public interface BonusBudgetAPI {
 
     /**
+     * 根据id查询奖金预算
+     *
+     * @param id 奖金预算唯一标识
+     * @return class BonusBudgetBO
+     * @throws SerException
+     */
+    BonusBudgetBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖金预算dto
+     * @throws SerException
+     */
+    Long count(BonusBudgetDTO dto) throws SerException;
+
+    /**
      * 分页查询奖金预算
      *
      * @return class BonusBudgetBO

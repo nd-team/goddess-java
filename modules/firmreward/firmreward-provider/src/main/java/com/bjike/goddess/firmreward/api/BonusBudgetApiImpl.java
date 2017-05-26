@@ -1,9 +1,11 @@
 package com.bjike.goddess.firmreward.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
+import com.bjike.goddess.firmreward.entity.BonusBudget;
 import com.bjike.goddess.firmreward.service.BonusBudgetSer;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,31 @@ public class BonusBudgetApiImpl implements BonusBudgetAPI {
 
     @Autowired
     private BonusBudgetSer bonusBudgetSer;
+
+    /**
+     * 根据id查询奖金预算
+     *
+     * @param id 奖金预算唯一标识
+     * @return class BonusBudgetBO
+     * @throws SerException
+     */
+    @Override
+    public BonusBudgetBO findById(String id) throws SerException {
+        BonusBudget model = bonusBudgetSer.findById(id);
+        return BeanTransform.copyProperties(model, BonusBudgetBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖金预算dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(BonusBudgetDTO dto) throws SerException {
+        return bonusBudgetSer.count(dto);
+    }
+
 
     /**
      * 分页查询奖金预算

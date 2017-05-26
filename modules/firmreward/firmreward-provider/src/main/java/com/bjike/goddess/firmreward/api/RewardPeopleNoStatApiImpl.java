@@ -1,9 +1,11 @@
 package com.bjike.goddess.firmreward.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.AwardDetailBO;
 import com.bjike.goddess.firmreward.bo.RewardPeopleNoStatBO;
 import com.bjike.goddess.firmreward.dto.RewardPeopleNoStatDTO;
+import com.bjike.goddess.firmreward.entity.RewardPeopleNoStat;
 import com.bjike.goddess.firmreward.service.RewardPeopleNoStatSer;
 import com.bjike.goddess.firmreward.to.RewardPeopleNoStatTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,30 @@ public class RewardPeopleNoStatApiImpl implements RewardPeopleNoStatAPI {
 
     @Autowired
     private RewardPeopleNoStatSer rewardPeopleNoStatSer;
+
+    /**
+     * 根据id查询奖励人数统计
+     *
+     * @param id 奖励人数统计唯一标识
+     * @return class RewardPeopleNoStatBO
+     * @throws SerException
+     */
+    @Override
+    public RewardPeopleNoStatBO findById(String id) throws SerException {
+        RewardPeopleNoStat model = rewardPeopleNoStatSer.findById(id);
+        return BeanTransform.copyProperties(model, RewardPeopleNoStatBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖励人数统计dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(RewardPeopleNoStatDTO dto) throws SerException {
+        return rewardPeopleNoStatSer.count(dto);
+    }
 
     /**
      * 分页查询奖励人数统计

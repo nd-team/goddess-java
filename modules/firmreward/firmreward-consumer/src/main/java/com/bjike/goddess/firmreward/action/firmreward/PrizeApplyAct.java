@@ -16,7 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,6 +36,42 @@ public class PrizeApplyAct {
     private PrizeApplyAPI prizeApplyAPI;
 
     /**
+     * 根据id查询奖金预算
+     *
+     * @param id 奖品申请唯一标识
+     * @return class PrizeApplyVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/bonusbudget/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            PrizeApplyBO bo = prizeApplyAPI.findById(id);
+            PrizeApplyVO vo = BeanTransform.copyProperties(bo, PrizeApplyVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 奖品申请dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated PrizeApplyDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = prizeApplyAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询奖品申请
      *
      * @param dto 奖品申请dto
@@ -44,10 +80,10 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated PrizeApplyDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated PrizeApplyDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<PrizeApplyBO> boList = prizeApplyAPI.list(dto);
-            List<PrizeApplyVO> voList = BeanTransform.copyProperties(boList, PrizeApplyVO.class);
+            List<PrizeApplyVO> voList = BeanTransform.copyProperties(boList, PrizeApplyVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -63,10 +99,10 @@ public class PrizeApplyAct {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) PrizeApplyTO to, BindingResult result) throws ActException {
+    public Result add(@Validated({ADD.class}) PrizeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             PrizeApplyBO bo = prizeApplyAPI.save(to);
-            PrizeApplyVO vo = BeanTransform.copyProperties(bo, PrizeApplyVO.class);
+            PrizeApplyVO vo = BeanTransform.copyProperties(bo, PrizeApplyVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -150,7 +186,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/checkPrizeDetails")
-    public Result checkPrizeDetails(String applyId) throws ActException {
+    public Result checkPrizeDetails(String applyId, HttpServletRequest request) throws ActException {
         try {
             List<PrizeDetailBO> boList = prizeApplyAPI.checkPrizeDetails(applyId);
             List<PrizeDetailVO> voList = BeanTransform.copyProperties(boList, PrizeDetailVO.class);
@@ -168,10 +204,10 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/staffRewardCollect")
-    public Result staffRewardCollect() throws ActException {
+    public Result staffRewardCollect(HttpServletRequest request) throws ActException {
         try {
             List<StaffRewardCollectBO> boList = prizeApplyAPI.staffRewardCollect();
-            List<StaffRewardCollectVO> voList = BeanTransform.copyProperties(boList, StaffRewardCollectVO.class);
+            List<StaffRewardCollectVO> voList = BeanTransform.copyProperties(boList, StaffRewardCollectVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -186,10 +222,10 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/projectGroupRewardCollect")
-    public Result projectGroupRewardCollect() throws ActException {
+    public Result projectGroupRewardCollect(HttpServletRequest request) throws ActException {
         try {
             List<ProjectGroupRewardCollectBO> boList = prizeApplyAPI.projectGroupRewardCollect();
-            List<ProjectGroupRewardCollectVO> voList = BeanTransform.copyProperties(boList, ProjectGroupRewardCollectVO.class);
+            List<ProjectGroupRewardCollectVO> voList = BeanTransform.copyProperties(boList, ProjectGroupRewardCollectVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -204,10 +240,10 @@ public class PrizeApplyAct {
      * @version v1
      */
     @GetMapping("v1/areaRewardCollect")
-    public Result areaRewardCollect() throws ActException {
+    public Result areaRewardCollect(HttpServletRequest request) throws ActException {
         try {
             List<AreaRewardCollectBO> boList = prizeApplyAPI.areaRewardCollect();
-            List<AreaRewardCollectVO> voList = BeanTransform.copyProperties(boList, AreaRewardCollectVO.class);
+            List<AreaRewardCollectVO> voList = BeanTransform.copyProperties(boList, AreaRewardCollectVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
