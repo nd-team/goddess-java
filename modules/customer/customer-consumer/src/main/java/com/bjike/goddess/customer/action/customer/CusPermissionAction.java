@@ -7,9 +7,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CusPermissionAPI;
+import com.bjike.goddess.customer.bo.CusOperateBO;
 import com.bjike.goddess.customer.bo.CusPermissionBO;
 import com.bjike.goddess.customer.dto.CusPermissionDTO;
 import com.bjike.goddess.customer.to.CusPermissionTO;
+import com.bjike.goddess.customer.vo.CusOperateVO;
 import com.bjike.goddess.customer.vo.CusPermissionVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,8 +68,18 @@ public class CusPermissionAction {
     @GetMapping("v1/getOneById/{id}")
     public Result getOneById(@PathVariable String id) throws ActException {
         try {
+            CusPermissionBO temp = cusPermissionAPI.getOneById(id);
             CusPermissionVO cusPermissionVOList = BeanTransform.copyProperties(
-                    cusPermissionAPI.getOneById(id), CusPermissionVO.class);
+                    temp , CusPermissionVO.class);
+            if( null != temp   ){
+                List<CusOperateBO> cboList  = temp.getCusOperateBO();
+                List<CusOperateVO> cvoList = new ArrayList<>();
+                if( cboList != null && cboList.size()>0 ){
+                    cvoList = BeanTransform.copyProperties(
+                            cboList , CusOperateVO.class);
+                }
+                cusPermissionVOList.setCusOperateVO( cvoList );
+            }
             return ActResult.initialize(cusPermissionVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -102,8 +115,18 @@ public class CusPermissionAction {
     @GetMapping("v1/list")
     public Result findListCusPermission(CusPermissionDTO cusPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<CusPermissionVO> cusPermissionVOList = BeanTransform.copyProperties(
-                    cusPermissionAPI.list(cusPermissionDTO), CusPermissionVO.class, request);
+            List<CusPermissionBO> boList = cusPermissionAPI.list(cusPermissionDTO);
+            List<CusPermissionVO> cusPermissionVOList = new ArrayList<>();
+            boList.stream().forEach(str->{
+                CusPermissionVO temp = BeanTransform.copyProperties( str, CusPermissionVO.class, request);
+                List<CusOperateVO> covo = new ArrayList<>();
+                if(null != str.getCusOperateBO()){
+                    covo = BeanTransform.copyProperties(str.getCusOperateBO(),CusOperateVO.class);
+                }
+                temp.setCusOperateVO( covo );
+                cusPermissionVOList.add( temp );
+            });
+
             return ActResult.initialize(cusPermissionVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CusEmailBO;
 import com.bjike.goddess.customer.dto.CusEmailDTO;
@@ -43,6 +44,8 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     private CustomerBaseInfoSer customerBaseInfoAPI;
     @Autowired
     private CustomerLevelSer customerLevelAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public Long countCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
@@ -52,6 +55,11 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Cacheable
     @Override
     public List<CusEmailBO> listCusEmail(CusEmailDTO cusEmailDTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+        cusEmailDTO.getSorts().add("createTime=desc");
         List<CusEmail> list = super.findByCis(cusEmailDTO, true);
         return BeanTransform.copyProperties(list, CusEmailBO.class);
     }
@@ -65,6 +73,14 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CusEmailBO addCusEmail(CusEmailTO cusEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行添加操作");
+        }
+        RpcTransmit.transmitUserToken( userToken );
+
         if (cusEmailTO.getWorks() == null || cusEmailTO.getWorks().length <= 0) {
             throw new SerException("行业数组必须填");
         }
@@ -109,6 +125,15 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CusEmailBO editCusEmail(CusEmailTO cusEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行编辑操作");
+        }
+        RpcTransmit.transmitUserToken( userToken );
+
+
         List<String> works = Arrays.asList(cusEmailTO.getWorks());
         //设置行业
         StringBuffer workBuf = new StringBuffer("");
@@ -150,12 +175,23 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCusEmail(String id) throws SerException {
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行删除操作");
+        }
+
         super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCusEmail(String id) throws SerException {
+        //商务模块冻结权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行冻结操作");
+        }
         CusEmail cusEmail = super.findById(id);
         cusEmail.setStatus(Status.CONGEAL);
         super.update(cusEmail);
@@ -165,6 +201,12 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCusEmail(String id) throws SerException {
+        //商务模块解冻权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行解冻操作");
+        }
+
         CusEmail cusEmail = super.findById(id);
         cusEmail.setStatus(Status.THAW);
         super.update(cusEmail);

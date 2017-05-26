@@ -33,7 +33,7 @@ public class CusPermission extends BaseEntity {
     /**
      * 操作对象
      */
-    @Column(name = "operator",  columnDefinition = "VARCHAR(255)   COMMENT '操作对象'")
+    @Column(name = "operator",  columnDefinition = "TEXT   COMMENT '操作对象'")
     private String operator;
 
     /**
