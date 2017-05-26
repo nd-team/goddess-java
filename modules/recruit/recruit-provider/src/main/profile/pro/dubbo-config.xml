@@ -11,22 +11,24 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider filter="userFilter" timeout="${dubbo.provider.timeout}" />
 	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
-	<!--配置暴露的公共接口-->
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailFirstInterviewReasonAPI" id="failFirstInterviewReasonApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailInviteReasonAPI" id="failInviteReasonApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FailPhoneReasonAPI" id="failPhoneReasonApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.FirstPhoneRecordAPI" id="firstPhoneRecordApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewAddressInforAPI" id="interviewAddressInforApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewInforAPI" id="interviewInforApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.NotEntryReasonAPI" id="notEntryReasonApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitDemandAPI" id="recruitDemandApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitPlanAPI" id="recruitPlanApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitProAPI" id="recruitProApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitWayAPI" id="RecruitWayApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" id="reportAddressInforApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.TemplateManageAPI" id="templateManageApiImpl"/>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.FailFirstInterviewReasonAPI" ref="failFirstInterviewReasonApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.FailInviteReasonAPI" ref="failInviteReasonApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.FailPhoneReasonAPI" ref="failPhoneReasonApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.FirstPhoneRecordAPI" ref="firstPhoneRecordApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.InterviewAddressInforAPI" ref="interviewAddressInforApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.InterviewInforAPI" ref="interviewInforApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.NotEntryReasonAPI" ref="notEntryReasonApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitDemandAPI" ref="recruitDemandApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitPlanAPI" ref="recruitPlanApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitProAPI" ref="recruitProApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" ref="reportAddressInforApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.TemplateManageAPI" ref="templateManageApiImpl"></dubbo:service>
 
 </beans>

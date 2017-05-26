@@ -2,17 +2,56 @@ package com.bjike.goddess.recruit.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.recruit.entity.NotEntryReason;
+import com.bjike.goddess.recruit.bo.NotEntryReasonBO;
 import com.bjike.goddess.recruit.dto.NotEntryReasonDTO;
+import com.bjike.goddess.recruit.entity.NotEntryReason;
+import com.bjike.goddess.recruit.to.NotEntryReasonTO;
+
+import java.util.List;
 
 /**
-* 未入职原因业务接口
-* @Author:			[ sunfengtao ]
-* @Date:			[  2017-05-26 01:59 ]
-* @Description:	[ 未入职原因业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public interface NotEntryReasonSer extends Ser<NotEntryReason, NotEntryReasonDTO> { 
+ * 未入职原因
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-04-08 05:10 ]
+ * @Description: [  ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface NotEntryReasonSer extends Ser<NotEntryReason, NotEntryReasonDTO> {
 
- }
+    /**
+     * 分页查询未入职原因
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<NotEntryReasonBO> list(NotEntryReasonDTO dto) throws SerException;
+
+    /**
+     * 保存未入职原因
+     *
+     * @param notEntryReasonTO
+     * @return
+     * @throws SerException
+     */
+    NotEntryReasonBO save(NotEntryReasonTO notEntryReasonTO) throws SerException;
+
+    /**
+     * 根据id删除未入职原因
+     *
+     * @param id
+     * @throws SerException
+     */
+    void remove(String id) throws SerException;
+
+    /**
+     * 更新未入职原因
+     *
+     * @param notEntryReasonTO
+     * @throws SerException
+     */
+    void update(NotEntryReasonTO notEntryReasonTO) throws SerException;
+
+}

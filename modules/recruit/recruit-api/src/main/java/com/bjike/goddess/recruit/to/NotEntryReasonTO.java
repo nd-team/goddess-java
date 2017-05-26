@@ -1,38 +1,45 @@
 package com.bjike.goddess.recruit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-/**
-* 未入职原因
-* @Author:			[ sunfengtao ]
-* @Date:			[  2017-05-26 01:59 ]
-* @Description:	[ 未入职原因 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class NotEntryReasonTO extends BaseTO { 
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
-* 汇总起始时间
-*/
- private String  notEntryReasonType; 
+ * 未入职原因
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-04-08 05:10 ]
+ * @Description: [  ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class NotEntryReasonTO extends BaseTO {
 
-/**
-* 备注
-*/
- private String  comment; 
+    /**
+     * 未入职原因类型
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "未入职原因类型不能为空")
+    private String notEntryReasonType;
 
+    /**
+     * 备注
+     */
+    private String comment;
 
+    public String getNotEntryReasonType() {
+        return notEntryReasonType;
+    }
 
- public String getNotEntryReasonType () { 
- return notEntryReasonType;
- } 
- public void setNotEntryReasonType (String notEntryReasonType ) { 
- this.notEntryReasonType = notEntryReasonType ; 
- } 
- public String getComment () { 
- return comment;
- } 
- public void setComment (String comment ) { 
- this.comment = comment ; 
- } 
- }
+    public void setNotEntryReasonType(String notEntryReasonType) {
+        this.notEntryReasonType = notEntryReasonType;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+}
