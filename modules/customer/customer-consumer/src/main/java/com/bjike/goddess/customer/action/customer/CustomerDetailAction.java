@@ -45,7 +45,7 @@ public class CustomerDetailAction {
     private CusPermissionAPI cusPermissionAPI;
 
     /**
-     *  客户详细列表总条数
+     * 客户详细列表总条数
      *
      * @param customerDetailDTO 客户详细信息dto
      * @des 获取所有客户详细信息总条数
@@ -65,34 +65,31 @@ public class CustomerDetailAction {
      * 客户详细列表
      *
      * @param customerDetailDTO 客户详细信息dto
-     * @des 获取所有客户详细信息
      * @return class CustomerDetailVO
+     * @des 获取所有客户详细信息
      * @version v1
      */
     @GetMapping("v1/listCustomerDetail")
     public Result findListCustomerDetail(CustomerDetailDTO customerDetailDTO) throws ActException {
         try {
-            Boolean permission = cusPermissionAPI.getCusPermission("1");
-            if( permission ) {
-                List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
-                List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
 
-                if (customerDetailBOList == null) {
-                    return ActResult.initialize(null);
-                } else {
-                    customerDetailBOList.stream().forEach(str -> {
-                        CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO(), CustomerLevelVO.class, true);
-                        CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
-                        customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
-                        CustomerDetailVO customerDetailVO = BeanTransform.copyProperties(str, CustomerDetailVO.class, true);
-                        customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
-                        customerDetailVOList.add(customerDetailVO);
-                    });
-                    return ActResult.initialize(customerDetailVOList);
-                }
-            }else{
-                return  ActResult.initialize(null);
+            List<CustomerDetailVO> customerDetailVOList = new ArrayList<>();
+            List<CustomerDetailBO> customerDetailBOList = customerDetailAPI.listCustomerDetail(customerDetailDTO);
+
+            if (customerDetailBOList == null) {
+                return ActResult.initialize(null);
+            } else {
+                customerDetailBOList.stream().forEach(str -> {
+                    CustomerLevelVO customerLevelVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO().getCustomerLevelBO(), CustomerLevelVO.class, true);
+                    CustomerBaseInfoVO customerBaseInfoVO = BeanTransform.copyProperties(str.getCustomerBaseInfoBO(), CustomerBaseInfoVO.class);
+                    customerBaseInfoVO.setCustomerLevelVO(customerLevelVO);
+                    CustomerDetailVO customerDetailVO = BeanTransform.copyProperties(str, CustomerDetailVO.class, true);
+                    customerDetailVO.setCustomerBaseInfoVO(customerBaseInfoVO);
+                    customerDetailVOList.add(customerDetailVO);
+                });
+                return ActResult.initialize(customerDetailVOList);
             }
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -102,8 +99,8 @@ public class CustomerDetailAction {
      * 获取客户详细
      *
      * @param customerNum 客户编号
-     * @des 根据客户编号获取单个客户详细
      * @return class CustomerDetailVO
+     * @des 根据客户编号获取单个客户详细
      * @version v1
      */
     @GetMapping("v1/getInfoByCustomerNum")
@@ -112,14 +109,14 @@ public class CustomerDetailAction {
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.getCustomerDetailByNum(customerNum);
 
             CustomerBaseInfoBO customerBaseInfoBO = customerDetailBO1.getCustomerBaseInfoBO();
-            CustomerBaseInfoVO baseInfoVO = BeanTransform.copyProperties(customerBaseInfoBO,CustomerBaseInfoVO.class);
-            CustomerLevelVO clevel = BeanTransform.copyProperties( customerBaseInfoBO.getCustomerLevelBO(), CustomerLevelVO.class);
-            baseInfoVO.setCustomerLevelVO( clevel );
-            List<CusFamilyMemberVO> family =  BeanTransform.copyProperties(customerDetailBO1.getCusFamilyMemberBOList(),CusFamilyMemberVO.class);
+            CustomerBaseInfoVO baseInfoVO = BeanTransform.copyProperties(customerBaseInfoBO, CustomerBaseInfoVO.class);
+            CustomerLevelVO clevel = BeanTransform.copyProperties(customerBaseInfoBO.getCustomerLevelBO(), CustomerLevelVO.class);
+            baseInfoVO.setCustomerLevelVO(clevel);
+            List<CusFamilyMemberVO> family = BeanTransform.copyProperties(customerDetailBO1.getCusFamilyMemberBOList(), CusFamilyMemberVO.class);
 
-            CustomerDetailVO vo = BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true);
+            CustomerDetailVO vo = BeanTransform.copyProperties(customerDetailBO1, CustomerDetailVO.class, true);
             vo.setCusFamilyMemberVOList(family);
-            vo.setCustomerBaseInfoVO( baseInfoVO );
+            vo.setCustomerBaseInfoVO(baseInfoVO);
 
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -131,16 +128,18 @@ public class CustomerDetailAction {
      * 添加客户详细
      *
      * @param customerDetailTO 客户详细基本信息数据to
-     * @des 添加客户详细
      * @return class CustomerDetailVO
+     * @des 添加客户详细
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
     public Result addCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
+
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.addCustomerDetail(customerDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1, CustomerDetailVO.class));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -151,16 +150,18 @@ public class CustomerDetailAction {
      * 编辑客户详细
      *
      * @param customerDetailTO 客户详细基本信息数据bo
-     * @des 添加客户详细
      * @return class CustomerDetailVO
+     * @des 添加客户详细
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
     public Result editCustomerDetail(@Validated CustomerDetailTO customerDetailTO, BindingResult bindingResult) throws ActException {
         try {
+
             CustomerDetailBO customerDetailBO1 = customerDetailAPI.editCustomerDetail(customerDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1,CustomerDetailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(customerDetailBO1, CustomerDetailVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -177,8 +178,10 @@ public class CustomerDetailAction {
     @DeleteMapping("v1/delete/{id}")
     public Result deleteEntryBasicInfo(@PathVariable String id) throws ActException {
         try {
+
             customerDetailAPI.deleteCustomerDetail(id);
             return new ActResult("delete success!");
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -188,13 +191,13 @@ public class CustomerDetailAction {
     /**
      * 导出
      *
-     * @param area 地区
+     * @param area         地区
      * @param customerName 客户名
      * @des 根据地区或客户名导出还不可以用
      * @version v1
      */
     @GetMapping("v1/exportInfo")
-    public Result exportCustomerBasicInfo(String area ,String customerName) throws ActException {
+    public Result exportCustomerBasicInfo(String area, String customerName) throws ActException {
         //TODO : tanghaixiang 2017-03-16 导出未做
 //            customerDetailAPI.deleteCustomerDetail(id);
         return new ActResult("export success!");

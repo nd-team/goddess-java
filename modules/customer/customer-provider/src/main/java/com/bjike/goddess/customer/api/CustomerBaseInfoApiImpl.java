@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.service.CustomerBaseInfoSer;
@@ -26,6 +27,7 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     @Autowired
     private CustomerBaseInfoSer customerBaseInfoSer;
 
+
     @Override
     public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
         return customerBaseInfoSer.countCustomerBaseInfo(customerBaseInfoDTO);
@@ -47,8 +49,8 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     }
 
     @Override
-    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
-        return customerBaseInfoSer.editCustomerBaseInfo(customerBaseInfoTO);
+    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+        return customerBaseInfoSer.editCustomerBaseInfo(customerBaseInfoTO );
     }
 
     @Override
