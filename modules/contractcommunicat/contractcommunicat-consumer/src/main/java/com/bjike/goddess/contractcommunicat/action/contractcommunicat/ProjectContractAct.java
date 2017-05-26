@@ -163,7 +163,7 @@ public class ProjectContractAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/leadExcel")
+    @PostMapping("v1/lead")
     public Result leadExcel(HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
@@ -172,7 +172,7 @@ public class ProjectContractAct extends BaseFileAction {
             List<ProjectContractExcel> tos = ExcelUtil.excelToClazz(is, ProjectContractExcel.class, excel);
             List<ProjectContractTO> toList = BeanTransform.copyProperties(tos,ProjectContractTO.class);
             projectContractAPI.leadExcel(toList);
-            return new ActResult("上传成功");
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -186,7 +186,7 @@ public class ProjectContractAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/exportExcel")
+    @PostMapping("v1/export")
     public Result exportExcel(ExportExcelTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "项目承包洽谈.xlsx";

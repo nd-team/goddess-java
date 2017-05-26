@@ -55,4 +55,9 @@ public class BankAccountInfoApiImpl implements BankAccountInfoAPI {
     public BankAccountInfoBO findById(String id) throws SerException {
         return BeanTransform.copyProperties(bankAccountInfoSer.findById(id),BankAccountInfoBO.class);
     }
+
+    @Override
+    public List<BankAccountInfoBO> findAll() throws SerException {
+        return BeanTransform.copyProperties(bankAccountInfoSer.findAll(),BankAccountInfoBO.class);
+    }
 }

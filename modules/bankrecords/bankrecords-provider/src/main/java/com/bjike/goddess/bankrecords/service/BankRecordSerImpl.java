@@ -162,6 +162,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     @Override
     public List<BankRecordBO> pageList(BankRecordDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("accountId",dto.getAccountId()));
         List<BankRecordBO> bolist = BeanTransform.copyProperties(super.findByPage(dto), BankRecordBO.class);
         if (bolist != null && !bolist.isEmpty()) {
             for (BankRecordBO bo : bolist) {
