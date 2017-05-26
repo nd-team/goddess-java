@@ -19,6 +19,8 @@ import java.util.List;
  */
 public interface CustomerBaseInfoAPI {
 
+
+
     /**
      * 自动生成一个客户编号
      *
@@ -60,7 +62,7 @@ public interface CustomerBaseInfoAPI {
      * @param customerBaseInfoTO 客户基本信息信息
      * @return class CustomerBaseInfoBO
      */
-    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
+    default CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
         return null;
     }
 

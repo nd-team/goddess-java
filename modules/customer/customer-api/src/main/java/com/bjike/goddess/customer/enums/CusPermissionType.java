@@ -16,7 +16,11 @@ public enum CusPermissionType {
     /**
      * 岗位
      */
-    POSITION(2)
+    POSITION(2),
+    /**
+     * 部门
+     */
+    DEPART(3)
     ;
     private int code;
 

@@ -1,10 +1,13 @@
 package com.bjike.goddess.customer.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CusFamilyMemberDTO;
@@ -51,8 +54,10 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     private CustomerDetailSer customerDetailAPI;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
-    
+
     @Override
     public CustomerBaseInfoBO generateCustomerNum() throws SerException {
         String[] fields = new String[]{"customerNum", "customerName"};
@@ -73,17 +78,23 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         return cbo;
     }
 
-    
+
     @Override
     public List<CustomerBaseInfoBO> listCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
-        customerBaseInfoDTO.getSorts().add("customerPosition=asc");
-        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO,true);
+        //列表权限
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+
+        customerBaseInfoDTO.getSorts().add("createTime=desc");
+        List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
 
         List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
-        list.stream().forEach(str->{
+        list.stream().forEach(str -> {
             CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(str.getCustomerLevel(), CustomerLevelBO.class);
             CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(str, CustomerBaseInfoBO.class);
-            customerBaseInfoBO.setCustomerLevelBO( customerLevelBO );
+            customerBaseInfoBO.setCustomerLevelBO(customerLevelBO);
             customerBaseInfoBOList.add(customerBaseInfoBO);
         });
 
@@ -92,13 +103,20 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
     @Override
     public Long countCustomerBaseInfo(CustomerBaseInfoDTO customerBaseInfoDTO) throws SerException {
-        Long count = super.count(customerBaseInfoDTO );
+        Long count = super.count(customerBaseInfoDTO);
         return count;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerBaseInfoBO addCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行添加基本信息操作");
+        }
+
         CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
         dto.getConditions().add(Restrict.eq("customerName", customerBaseInfoTO.getCustomerName()));
         Long count = super.count(dto);
@@ -109,13 +127,15 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName(levelName);
             CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelBO, CustomerLevel.class, true);
 
+            RpcTransmit.transmitUserToken(userToken);
+
             performance(customerBaseInfoTO);
             CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
             customerBaseInfo.setCreateTime(LocalDateTime.now());
             customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
             customerBaseInfo.setCustomerLevel(customerLevel);
             customerBaseInfo.setCustomerPosition(
-                    Double.parseDouble(customerBaseInfoTO.getCustomerNum().substring(5,customerBaseInfoTO.getCustomerNum().length())));
+                    Double.parseDouble(customerBaseInfoTO.getCustomerNum().substring(5, customerBaseInfoTO.getCustomerNum().length())));
 
             super.save(customerBaseInfo);
             return BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfoBO.class);
@@ -124,11 +144,18 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
+    public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行编辑基本信息操作");
+        }
         //查一遍级别
         CustomerBaseInfo cusBase = null;
         try {
             String levelName = customerBaseInfoTO.getCustomerLevelName();
+
             CustomerLevelBO customerLevelBO = customerLevelAPI.getCustomerLevelByName(levelName);
             CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelBO, CustomerLevel.class, true);
             //先查一遍基本信息
@@ -138,20 +165,28 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             CustomerBaseInfo customerBaseInfo = BeanTransform.copyProperties(customerBaseInfoTO, CustomerBaseInfo.class, true);
             customerBaseInfo.setCustomerLevel(customerLevel);
 
-            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime","id","customerPosition");
+            BeanUtils.copyProperties(customerBaseInfo, cusBase, "customerNum", "status", "customerDetail", "createTime", "id", "customerPosition");
             cusBase.setModifyTime(LocalDateTime.now());
+            RpcTransmit.transmitUserToken(userToken);
             cusBase.setModifyPersion(userAPI.currentUser().getUsername());
             super.update(cusBase);
         } catch (SerException e) {
-            throw new SerException("更新失败"+e.getMessage());
+            throw new SerException("更新失败" + e.getMessage());
         }
-         CustomerBaseInfoBO b = BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
+        CustomerBaseInfoBO b = BeanTransform.copyProperties(cusBase, CustomerBaseInfoBO.class);
         return b;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCustomerBaseInfo(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行删除基本信息操作");
+        }
+        RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
             CustomerDetail detail = customerBaseInfo.getCustomerDetail();
@@ -170,7 +205,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                 super.remove(customerBaseInfo);
             }
         } catch (SerException e) {
-            throw new SerException("删除出现错误，删除失败"+e.getMessage());
+            throw new SerException("删除出现错误，删除失败" + e.getMessage());
         }
 
     }
@@ -178,6 +213,13 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCustomerBaseInfo(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块冻结权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行冻结基本信息操作");
+        }
+        RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
             customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
@@ -186,13 +228,20 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
             super.update(customerBaseInfo);
         } catch (SerException e) {
-            throw new SerException("冻结出现错误，冻结失败"+e.getMessage());
+            throw new SerException("冻结出现错误，冻结失败" + e.getMessage());
         }
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCustomerBaseInfo(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块解冻权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行解冻基本信息操作");
+        }
+        RpcTransmit.transmitUserToken(userToken);
         try {
             CustomerBaseInfo customerBaseInfo = super.findById(id);
             customerBaseInfo.setModifyPersion(userAPI.currentUser().getUsername());
@@ -201,7 +250,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
             super.update(customerBaseInfo);
         } catch (SerException e) {
-            throw new SerException("解冻出现错误，解冻失败"+e.getMessage());
+            throw new SerException("解冻出现错误，解冻失败" + e.getMessage());
         }
     }
 
@@ -227,17 +276,17 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         List<String> areaList = customerBaseInfoBOS.stream().map(CustomerBaseInfoBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
         List<String> areas = new ArrayList<>();
-        areaList.stream().forEach(str->{
+        areaList.stream().forEach(str -> {
             str = str.trim();
-            if( ! areas.contains(str)){
-                areas.add( str );
+            if (!areas.contains(str)) {
+                areas.add(str);
             }
         });
 
         return areas;
     }
 
-    
+
     @Override
     public List<String> getCustomerBaseInfoName() throws SerException {
         String[] fields = new String[]{"customerName"};
@@ -269,15 +318,15 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (customerBaseInfoTO.getCustomerSex()!= null ) {
+        if (customerBaseInfoTO.getCustomerSex() != null) {
             now++;
         }
         sum++;
-        if (customerBaseInfoTO.getCustomerType()!= null ) {
+        if (customerBaseInfoTO.getCustomerType() != null) {
             now++;
         }
         sum++;
-        if (customerBaseInfoTO.getCustomerStatus()!= null ) {
+        if (customerBaseInfoTO.getCustomerStatus() != null) {
             now++;
         }
         sum++;
@@ -390,8 +439,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         CustomerBaseInfo customerBaseInfo = super.findOne(dto);
 
         CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
-        if(customerBaseInfoBO != null ){
-            customerBaseInfoBO.setCustomerLevelBO( BeanTransform.copyProperties(
+        if (customerBaseInfoBO != null) {
+            customerBaseInfoBO.setCustomerLevelBO(BeanTransform.copyProperties(
                     customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class));
         }
         return customerBaseInfoBO;

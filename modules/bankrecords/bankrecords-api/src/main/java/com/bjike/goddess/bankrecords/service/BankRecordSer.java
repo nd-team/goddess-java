@@ -28,7 +28,7 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      *
      * @version v1
      */
-    List<String> check(List<InputStream> bytes) throws SerException;
+    List<String> check(List<InputStream> streamList) throws SerException;
 
     /**
      * 导入银行流水
