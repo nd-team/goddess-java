@@ -9,6 +9,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,8 +31,7 @@ public class CustomIntercept implements Interceptor {
         List<HIInfo> list = new ArrayList<>();
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
         HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI), "/**");
-        list.add(loginInfo);
-        list.add(storage);
-        return list;
+
+        return Arrays.asList(loginInfo, storage);
     }
 }

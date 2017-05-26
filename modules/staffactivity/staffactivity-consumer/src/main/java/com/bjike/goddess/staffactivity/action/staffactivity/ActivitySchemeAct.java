@@ -204,9 +204,7 @@ public class ActivitySchemeAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/zjbOpinion/{id}")
-    public Result zjbOpinion(@PathVariable(value = "id") String id,
-                             @RequestParam(value = "ifSchemePass") Boolean ifSchemePass,
-                             @RequestParam(value = "zjbOpinion") String zjbOpinion) throws ActException {
+    public Result zjbOpinion(@PathVariable(value = "id") String id, @RequestParam(value = "ifSchemePass") Boolean ifSchemePass, @RequestParam(value = "zjbOpinion") String zjbOpinion) throws ActException {
         try {
             activitySchemeAPI.zjbOpinion(id, ifSchemePass, zjbOpinion);
             return new ActResult("zjbOpinion success!");
@@ -226,9 +224,7 @@ public class ActivitySchemeAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/ifContinueLaunch/{id}")
-    public Result ifContinueLaunch(@PathVariable(value = "id") String id,
-                                   @RequestParam(value = "ifNeedContinue") Boolean ifNeedContinue,
-                                   @RequestParam(value = "reasonAndOpinion") String reasonAndOpinion) throws ActException {
+    public Result ifContinueLaunch(@PathVariable(value = "id") String id, @RequestParam(value = "ifNeedContinue") Boolean ifNeedContinue, @RequestParam(value = "reasonAndOpinion") String reasonAndOpinion) throws ActException {
         try {
             activitySchemeAPI.ifContinueLaunch(id, ifNeedContinue, reasonAndOpinion);
             return new ActResult("ifContinueLaunch success!");
@@ -248,9 +244,7 @@ public class ActivitySchemeAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/yYFundEvaluate/{id}")
-    public Result yYFundEvaluate(@PathVariable(value = "id") String id,
-                                 @RequestParam(value = "ifTotalOutlayRational") Boolean ifTotalOutlayRational,
-                                 @RequestParam(value = "fundProposal") String fundProposal) throws ActException {
+    public Result yYFundEvaluate(@PathVariable(value = "id") String id, @RequestParam(value = "ifTotalOutlayRational") Boolean ifTotalOutlayRational, @RequestParam(value = "fundProposal") String fundProposal) throws ActException {
         try {
             activitySchemeAPI.yYFundEvaluate(id, ifTotalOutlayRational, fundProposal);
             return new ActResult("yYFundEvaluate success!");
@@ -266,12 +260,11 @@ public class ActivitySchemeAct extends BaseFileAction {
      * @param ifFlowDefect 活动流程是否存在缺陷
      * @param flowProposal 流程建议
      * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @PutMapping("v1/supervisorEvaluate/{id}")
-    public Result supervisorEvaluate(@PathVariable(value = "id") String id,
-                                     @RequestParam(value = "ifFlowDefect") Boolean ifFlowDefect,
-                                     @RequestParam(value = "flowProposal") String flowProposal) throws ActException {
+    public Result supervisorEvaluate(@PathVariable(value = "id") String id, @RequestParam(value = "ifFlowDefect") Boolean ifFlowDefect, @RequestParam(value = "flowProposal") String flowProposal) throws ActException {
         try {
             activitySchemeAPI.supervisorEvaluate(id, ifFlowDefect, flowProposal);
             return new ActResult("supervisorEvaluate success!");
@@ -287,12 +280,11 @@ public class ActivitySchemeAct extends BaseFileAction {
      * @param activityEffect 活动效应
      * @param zjbEvaluate    总经办评价及建议
      * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @PutMapping("v1/zjbEvaluate/{id}")
-    public Result zjbEvaluate(@PathVariable(value = "id") String id,
-                              @RequestParam(value = "activityEffect") String activityEffect,
-                              @RequestParam(value = "zjbEvaluate") String zjbEvaluate) throws ActException {
+    public Result zjbEvaluate(@PathVariable(value = "id") String id, @RequestParam(value = "activityEffect") String activityEffect, @RequestParam(value = "zjbEvaluate") String zjbEvaluate) throws ActException {
         try {
             activitySchemeAPI.zjbEvaluate(id, activityEffect, zjbEvaluate);
             return new ActResult("zjbEvaluate success!");
