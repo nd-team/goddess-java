@@ -2,6 +2,7 @@ package com.bjike.goddess.marketactivitymanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
@@ -34,7 +35,23 @@ import java.util.List;
 public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, MarketServeApplyDTO> implements MarketServeApplySer {
 
     @Autowired
-    private CustomerInfoAPI customerInfoAPI;
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if (!permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
 
     /**
      * 分页查询市场招待申请
@@ -60,6 +77,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketServeApplyBO save(MarketServeApplyTO to) throws SerException {
+        checkPermission();
         MarketServeApply marketServeApply = BeanTransform.copyProperties(to, MarketServeApply.class, true);
         marketServeApply = super.save(marketServeApply);
         MarketServeApplyBO bo = BeanTransform.copyProperties(marketServeApply, MarketServeApplyBO.class);
@@ -75,7 +93,8 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeApplyTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        checkPermission();
+        if (StringUtils.isNotEmpty(to.getId())) {
             MarketServeApply model = super.findById(to.getId());
             if (model != null) {
                 updateMarketServeApply(to, model);
@@ -138,6 +157,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(MarketServeApplyTO to) throws SerException {
+        checkPermission();
         this.update(to);
     }
 
@@ -150,6 +170,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void executiveOpinion(MarketServeApplyTO to) throws SerException {
+        checkPermission();
         this.update(to);
     }
 
@@ -157,7 +178,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * 导入文件
      *
      * @param inputStream 目标路径
-     * @param targetPath 文件输入流
+     * @param targetPath  文件输入流
      * @throws SerException
      */
     @Override
@@ -200,6 +221,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 }

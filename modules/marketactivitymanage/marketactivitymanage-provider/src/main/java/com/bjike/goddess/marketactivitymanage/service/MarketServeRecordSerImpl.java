@@ -3,15 +3,13 @@ package com.bjike.goddess.marketactivitymanage.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
-import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
-import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
@@ -26,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.DoubleToIntFunction;
 
 /**
  * 市场招待记录业务实现
@@ -42,10 +39,26 @@ import java.util.function.DoubleToIntFunction;
 public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, MarketServeRecordDTO> implements MarketServeRecordSer {
 
     @Autowired
-    private CustomerInfoAPI customerInfoAPI;
+    private CustomerInfoSer customerInfoSer;
 
     @Autowired
-    private CustomerInfoSer customerInfoSer;
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if (!permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
 
     /**
      * 分页查询市场招待记录
@@ -71,6 +84,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketServeRecordBO save(MarketServeRecordTO to) throws SerException {
+        checkPermission();
         MarketServeRecord marketServeRecord = BeanTransform.copyProperties(to, MarketServeRecord.class, true);
         marketServeRecord = super.save(marketServeRecord);
         MarketServeRecordBO bo = BeanTransform.copyProperties(marketServeRecord, MarketServeRecordBO.class);
@@ -86,7 +100,8 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeRecordTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        checkPermission();
+        if (StringUtils.isNotEmpty(to.getId())) {
             MarketServeRecord model = super.findById(to.getId());
             if (model != null) {
                 updateMarketServeRecord(to, model);
@@ -149,6 +164,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void fundModuleOpinion(MarketServeRecordTO to) throws SerException {
+        checkPermission();
         String id = to.getId();
         MarketServeRecord entity = super.findById(id);
         String yyFundModule = to.getYyFundModule();//运营商务部资金模块意见
@@ -167,6 +183,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void executiveOpinion(MarketServeRecordTO to) throws SerException {
+        checkPermission();
         String id = to.getId();//获取id
         MarketServeRecord entity = super.findById(id);
         String decisionLevel = to.getDecisionLevel();//获取决策层
@@ -180,7 +197,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      * 导入文件
      *
      * @param inputStream 目标路径
-     * @param targetPath 文件输入流
+     * @param targetPath  文件输入流
      * @throws SerException
      */
     @Override
@@ -212,6 +229,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      */
     @Override
     public MarketServeRecordBO checkDetails(String id) throws SerException {
+        checkPermission();
         MarketServeRecord entity = super.findById(id);
         MarketServeRecordBO bo = BeanTransform.copyProperties(entity, MarketServeRecordBO.class);
         CustomerInfoDTO dto = new CustomerInfoDTO();
@@ -231,6 +249,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 }

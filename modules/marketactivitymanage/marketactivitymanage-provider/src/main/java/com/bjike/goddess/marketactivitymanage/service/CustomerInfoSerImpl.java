@@ -2,12 +2,14 @@ package com.bjike.goddess.marketactivitymanage.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,25 @@ import java.util.List;
 @CacheConfig(cacheNames = "marketactivitymanageSerCache")
 @Service
 public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoDTO> implements CustomerInfoSer {
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken( userToken );
+
+    }
 
     /**
      * 分页查询客户信息
@@ -52,6 +73,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CustomerInfoBO save(CustomerInfoTO to) throws SerException {
+        checkPermission();
         CustomerInfo entity = BeanTransform.copyProperties(to, CustomerInfo.class, true);
         entity = super.save(entity);
         CustomerInfoBO customerInfoBO = BeanTransform.copyProperties(entity, CustomerInfoBO.class);
@@ -67,6 +89,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(CustomerInfoTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())){
             CustomerInfo model = super.findById(to.getId());
             if (model != null) {
@@ -102,6 +125,7 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
@@ -52,6 +53,25 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Autowired
     private UserAPI userAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if (!permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
     /**
      * 分页查询市场招待汇总
      *
@@ -76,7 +96,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
-
+        checkPermission();
         String sb = getProjectGroup(to);
         String curUsername = userAPI.currentUser().getUsername();
         MarketServeSummary marketServeSummary = BeanTransform.copyProperties(to, MarketServeSummary.class, true);
@@ -114,6 +134,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeSummaryTO to) throws SerException {
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())){
             MarketServeSummary model = super.findById(to.getId());
             if (model != null) {
@@ -152,6 +173,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void thaw(MarketServeSummaryTO to) throws SerException {
+        checkPermission();
         to.setStatus(Status.THAW);
         this.update(to);
     }
@@ -165,6 +187,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void congeal(MarketServeSummaryTO to) throws SerException {
+        checkPermission();
         to.setStatus(Status.CONGEAL);
         this.update(to);
     }
@@ -178,6 +201,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     @Override
     public List<ServeSummaryBO> summarize(MarketServeSummaryTO to) throws SerException {
+        checkPermission();
         boolean isApply = to.getType();                 //判断是市场招待申请汇总还是实际汇总
         if (isApply) {
             return summarizePlan(to);
