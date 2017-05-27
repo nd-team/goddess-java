@@ -17,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ public class RewardIndicatorAct {
     /**
      * 根据id查询奖励指标
      *
-     * @param id      奖励指标唯一标识
+     * @param id 奖励指标唯一标识
      * @return class RewardIndicatorVO
      * @throws ActException
      * @version v1

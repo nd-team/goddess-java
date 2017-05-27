@@ -41,7 +41,7 @@ public class BonusBudgetAct {
     /**
      * 根据id查询奖金预算
      *
-     * @param id      奖金预算唯一标识
+     * @param id 奖金预算唯一标识
      * @return class BonusBudgetVO
      * @throws ActException
      * @version v1
