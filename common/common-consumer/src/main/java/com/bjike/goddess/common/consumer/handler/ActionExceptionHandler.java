@@ -3,6 +3,7 @@ package com.bjike.goddess.common.consumer.handler;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.netflix.hystrix.exception.HystrixBadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,23 +30,24 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
-        if (e instanceof ActException) {
+        actResult.setMsg(e.getMessage());
+        if (e instanceof ActException || e instanceof HystrixBadRequestException) {
             actResult.setCode(1);
             httpServletResponse.setStatus(SUCCESS_STATUS);
-        } else {
+        }else {
             httpServletResponse.setStatus(EXCEPTION_STATUS);
             actResult.setCode(EXCEPTION_CODE);
-            if ("expire".equals(e.getMessage())) {
-                actResult.setCode(401);
-                actResult.setMsg("登录已失效!");
-            }
-            LOGGER.error(e.getMessage());
+        }
+        if ("expire".equals(e.getMessage())) {
+            actResult.setCode(401);
+            actResult.setMsg("登录已失效!");
+        } else if ("notLogin".equals(e.getMessage())) {
+            actResult.setCode(403);
+            actResult.setMsg("用户未登录!");
         }
         if (StringUtils.isNotBlank(e.getMessage()) && e.getMessage().startsWith("Forbid consumer")) {
             LOGGER.error(e.getMessage());
             actResult.setMsg("服务调用失败");
-        } else {
-            actResult.setMsg(e.getMessage());
         }
         ResponseContext.writeData(actResult);
 

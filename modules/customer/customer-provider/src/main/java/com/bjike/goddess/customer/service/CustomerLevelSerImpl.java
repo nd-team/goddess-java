@@ -5,14 +5,17 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.to.CustomerLevelTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLevelDTO> implements CustomerLevelSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
     @Override
     public Long countCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
         Long count = super.count(customerLevelDTO);
@@ -38,6 +43,10 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
 
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
         customerLevelDTO.getSorts().add("name=asc");
         List<CustomerLevel> list = super.findByCis(customerLevelDTO,true);
 
@@ -47,6 +56,11 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerLevelBO addCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行添加客户级别操作");
+        }
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         customerLevel.setCreateTime(LocalDateTime.now());
         super.save( customerLevel );
@@ -56,6 +70,11 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerLevelBO editCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行编辑客户级别操作");
+        }
         CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelTO,CustomerLevel.class,true);
         CustomerLevel cusLevel = super.findById( customerLevelTO.getId() );
 
@@ -70,13 +89,22 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCustomerLevel(String id) throws SerException {
-
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行删除客户级别操作");
+        }
         super.remove( id );
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCustomerLevel(String id) throws SerException {
+        //商务模块冻结权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行冻结客户级别操作");
+        }
         CustomerLevel customerLevel = super.findById( id );
         customerLevel.setStatus(Status.CONGEAL);
         customerLevel.setModifyTime(LocalDateTime.now());
@@ -86,6 +114,11 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCustomerLevel(String id) throws SerException {
+        //商务模块解冻权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块的人员，不可以进行解冻客户级别操作");
+        }
         CustomerLevel customerLevel = super.findById( id );
         customerLevel.setStatus(Status.THAW);
         customerLevel.setModifyTime(LocalDateTime.now());
@@ -95,6 +128,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     
     @Override
     public CustomerLevelBO getCustomerLevelByName(String name) throws SerException {
+
         CustomerLevelDTO dto = new CustomerLevelDTO();
         dto.getConditions().add(Restrict.eq("name",name));
 

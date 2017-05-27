@@ -58,21 +58,18 @@ public class CusEmailAction {
      * 客户邮件汇总列表
      *
      * @param cusEmailDTO 客户邮件汇总信息dto
+     * @return class CusEmailVO
      * @des 获取所有客户邮件汇总信息
-     * @return  class CusEmailVO
      * @version v1
      */
     @GetMapping("v1/listCusEmail")
     public Result findListCusEmail(CusEmailDTO cusEmailDTO) throws ActException {
         try {
-            Boolean permission = cusPermissionAPI.getCusPermission("1");
-            if( permission ) {
-                List<CusEmailVO> cusEmailVOList = BeanTransform.copyProperties(
-                        cusEmailAPI.listCusEmail(cusEmailDTO), CusEmailVO.class, true);
-                return ActResult.initialize(cusEmailVOList);
-            }else{
-                return ActResult.initialize(null);
-            }
+
+            List<CusEmailVO> cusEmailVOList = BeanTransform.copyProperties(
+                    cusEmailAPI.listCusEmail(cusEmailDTO), CusEmailVO.class, true);
+            return ActResult.initialize(cusEmailVOList);
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -82,16 +79,18 @@ public class CusEmailAction {
      * 添加客户邮件汇总
      *
      * @param cusEmailTO 客户邮件汇总基本信息数据to
-     * @des 添加客户邮件汇总,行业不能为空发送间隔汇总间隔等都不能为空
-     * @return  class CusEmailVO
+     * @return class CusEmailVO
+     * @des 添加客户邮件汇总, 行业不能为空发送间隔汇总间隔等都不能为空
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCusEmail( @Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
+    public Result addCusEmail(@Validated CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
         try {
+
             CusEmailBO cusEmailBO1 = cusEmailAPI.addCusEmail(cusEmailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1,CusEmailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1, CusEmailVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -102,16 +101,18 @@ public class CusEmailAction {
      * 编辑客户邮件汇总
      *
      * @param cusEmailTO 客户邮件汇总基本信息数据bo
-     * @des 添加客户邮件汇总,行业不能为空发送间隔汇总间隔等都不能为空
-     * @return  class CusEmailVO
+     * @return class CusEmailVO
+     * @des 添加客户邮件汇总, 行业不能为空发送间隔汇总间隔等都不能为空
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editCusEmail(@Validated CusEmailTO cusEmailTO , BindingResult bindingResult) throws ActException {
+    public Result editCusEmail(@Validated CusEmailTO cusEmailTO, BindingResult bindingResult) throws ActException {
         try {
+
             CusEmailBO cusEmailBO1 = cusEmailAPI.editCusEmail(cusEmailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1,CusEmailVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(cusEmailBO1, CusEmailVO.class, true));
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -128,8 +129,10 @@ public class CusEmailAction {
     @DeleteMapping("v1/delete/{id}")
     public Result deleteCusEmail(@PathVariable String id) throws ActException {
         try {
+
             cusEmailAPI.deleteCusEmail(id);
             return new ActResult("delete success!");
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -164,7 +167,7 @@ public class CusEmailAction {
      */
     @LoginAuth
     @PutMapping("v1/thaw/{id}")
-    public Result thaw (@PathVariable String id) throws ActException {
+    public Result thaw(@PathVariable String id) throws ActException {
         try {
             cusEmailAPI.thawCusEmail(id);
             return new ActResult("thaw success!");
@@ -178,12 +181,12 @@ public class CusEmailAction {
      * 汇总
      *
      * @param works 行业
+     * @return class CusEmailVO
      * @des 根据行业汇总
-     * @return  class CusEmailVO
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result CollectSign (@RequestParam String[] works ) throws ActException {
+    public Result CollectSign(@RequestParam String[] works) throws ActException {
         try {
             List<CusEmailVO> collectEmailVOList = BeanTransform.copyProperties(
                     cusEmailAPI.collectCusEmail(works), CusEmailVO.class, true);
@@ -197,8 +200,8 @@ public class CusEmailAction {
      * 一个客户邮件
      *
      * @param id id
+     * @return class CusEmailVO
      * @des 获取所有客户邮件汇总信息
-     * @return  class CusEmailVO
      * @version v1
      */
     @GetMapping("v1/getCusEmailById/{id}")

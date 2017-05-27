@@ -24,20 +24,21 @@ public class KafkaProducerImpl implements KafkaProducer {
     @Autowired
     private Environment env;
 
+    @SuppressWarnings("all")
     @Override
     public void produce(MessageTO messageTO) {
 
         Properties props = new Properties();
         //此处配置的是kafka的端口
         props.put("metadata.broker.list", env.getProperty("metadata.broker.list"));
-
         //配置value的序列化类
         props.put("serializer.class", env.getProperty("serializer.class"));
         //配置key的序列化类
         props.put("key.serializer.class", StringEncoder.class.getName());
         props.put("request.required.acks", env.getProperty("request.required.acks"));
-        Producer producer = new Producer(new ProducerConfig(props));
-        producer.send(new KeyedMessage("message", messageTO.getId(), JSON.toJSONString(messageTO)));
+
+        Producer<String,String> producer = new Producer(new ProducerConfig(props));
+        producer.send(new KeyedMessage("messages", messageTO.getId(), JSON.toJSONString(messageTO)));
     }
 
 
