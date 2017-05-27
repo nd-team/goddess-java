@@ -10,6 +10,7 @@ import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingResult, ProblemHandlingResultDTO> implements ProblemHandlingResultSer {
 
+    @Autowired
+    private ProPermissionSer proPermissionSer;
     @Override
     public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
         problemHandlingResultDTO.getSorts().add("createTime=desc");
@@ -39,13 +42,19 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public ProblemHandlingResultBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         ProblemHandlingResult problemHandlingResult = super.findById(id);
         return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class, true);
     }
 
     @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
-        problemHandlingResultDTO.getSorts().add("createTime=desc");
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<ProblemHandlingResult> problemHandlingResults = super.findByCis(problemHandlingResultDTO, true);
         List<ProblemHandlingResultBO> problemHandlingResultBOS = BeanTransform.copyProperties(problemHandlingResults, ProblemHandlingResultBO.class);
         return problemHandlingResultBOS;
@@ -53,6 +62,10 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true);
         problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
@@ -61,6 +74,13 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(problemHandlingResultTO.getId())){
+            throw new SerException("id不能为空");
+        }
         ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
         BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true);
         problemHandlingResult.setModifyTime(LocalDateTime.now());
@@ -70,6 +90,10 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public void removeProblemHandlingResult(String id) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         try {
             super.remove(id);
         } catch (SerException e) {

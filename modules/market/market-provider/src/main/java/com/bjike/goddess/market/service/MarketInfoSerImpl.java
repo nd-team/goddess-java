@@ -8,6 +8,8 @@ import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.market.entity.MarketInfo;
 import com.bjike.goddess.market.enums.MarketProjectNature;
 import com.bjike.goddess.market.to.MarketInfoTO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,15 @@ import java.util.List;
 @Service
 public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> implements MarketInfoSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    private void checkSeeIdentity () throws SerException{
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+    }
     @Override
     public Long countMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
         marketInfoDTO.getSorts().add("createTime=desc");
@@ -38,13 +49,16 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
 
     @Override
     public MarketInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         MarketInfo marketInfo = super.findById(id);
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
 
-    @Cacheable
     @Override
     public List<MarketInfoBO> findListMarketInfo(MarketInfoDTO marketInfoDTO) throws SerException {
+        checkSeeIdentity();
         List<MarketInfo> marketInfos = super.findByCis(marketInfoDTO, true);
         List<MarketInfoBO> marketInfoBOS = BeanTransform.copyProperties(marketInfos, MarketInfoBO.class);
         return marketInfoBOS;
@@ -53,6 +67,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO insertMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketInfo marketInfo = BeanTransform.copyProperties(marketInfoTO, MarketInfo.class, true);
         try {
             //判断是否为有效信息
@@ -71,10 +89,13 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
         }
         return BeanTransform.copyProperties(marketInfo, MarketInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoBO editMarketInfo(MarketInfoTO marketInfoTO) throws SerException {
-      /*  try {
+        if(StringUtils.isBlank(marketInfoTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        /*  try {
             String customerNum = "";
             CustomerBaseInfoBO customerBaseInfoBO = customerBaseInfoAPI.getCustomerInfoByNum(customerNum);
             if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerName())) {
@@ -82,6 +103,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
             } else if (StringUtils.isNotEmpty(customerBaseInfoBO.getCustomerNum())) {
                 customerBaseInfoAPI.addMarketCustomerInfo(customerBaseInfoBO.getCustomerName(), customerBaseInfoBO.getOriganizion());
             } else {*/
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketInfo marketInfo = super.findById(marketInfoTO.getId());
         BeanTransform.copyProperties(marketInfoTO, marketInfo, true);
         marketInfo.setModifyTime(LocalDateTime.now());
@@ -97,6 +122,10 @@ public class MarketInfoSerImpl extends ServiceImpl<MarketInfo, MarketInfoDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeMarketInfo(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         try {
             super.remove(id);
         } catch (SerException e) {

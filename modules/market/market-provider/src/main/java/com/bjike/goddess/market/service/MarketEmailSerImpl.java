@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO> implements MarketEmailSer {
 
     @Autowired
-    private MarketInfoSer marketInfoSer;
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public Long counts(MarketEmailDTO marketEmailDTO) throws SerException {
@@ -44,6 +45,9 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
     @Override
     public MarketEmailBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         MarketEmail marketEmail = super.findById(id);
         return BeanTransform.copyProperties(marketEmail, MarketEmailBO.class);
     }
@@ -51,22 +55,37 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
 
     @Override
     public List<MarketEmailBO> listMarketEmail(MarketEmailDTO marketEmailDTO) throws SerException {
-        marketEmailDTO.getSorts().add("createTime=desc");
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<MarketEmail> marketEmails = super.findByPage(marketEmailDTO);
         List<MarketEmailBO> marketEmailBOS = BeanTransform.copyProperties(marketEmails, MarketEmailBO.class, true);
         return marketEmailBOS;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketEmailBO addMarketEmail(MarketEmailTO marketEmailTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketEmail marketEmail = BeanTransform.copyProperties(marketEmailTO, MarketEmail.class, true);
         marketEmail.setCreateTime(LocalDateTime.now());
         super.save(marketEmail);
         return BeanTransform.copyProperties(marketEmail, MarketEmailBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketEmailBO editMarketEmail(MarketEmailTO marketEmailTO) throws SerException {
+        if(StringUtils.isBlank(marketEmailTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         MarketEmail temp = super.findById(marketEmailTO.getId());
         MarketEmail marketEmail = BeanTransform.copyProperties(marketEmailTO, MarketEmail.class, true);
         BeanUtils.copyProperties(marketEmail, temp, "createTime");
@@ -74,9 +93,13 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         super.update(temp);
         return BeanTransform.copyProperties(temp, MarketEmailBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteMarketEmail(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         super.remove(id);
     }
 

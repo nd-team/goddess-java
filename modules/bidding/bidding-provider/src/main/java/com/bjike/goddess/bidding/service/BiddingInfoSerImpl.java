@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO> implements BiddingInfoSer {
 
     @Autowired
-    private BiddingInfoSer biddingInfoAPI;
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
@@ -49,35 +49,49 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
     @Override
     public List<BiddingInfoBO> findListBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
-        biddingInfoDTO.getSorts().add("createTime=desc");
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<BiddingInfo> biddingInfo = super.findByCis(biddingInfoDTO,true);
         List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfo,BiddingInfoBO.class);
         return biddingInfoBOS;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
         biddingInfo.setId(biddingInfoTO.getId());
         super.save(biddingInfo);
         return BeanTransform.copyProperties(biddingInfo, BiddingInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO editBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
         BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true);
         biddingInfo.setModifyTime(LocalDateTime.now());
         super.update(biddingInfo);
         return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingInfo(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         super.remove(id);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public String exportExcel(String projectName) throws SerException {
         //TODO: xiazhili 2017-03-10 未做导出明细
@@ -118,14 +132,12 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return biddingInfoBOS;
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public void upload() throws SerException {
         //TODO: xiazhili 2017-03-17 未做上传
         return;
 
     }
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         //TODO: xiazhili 2017-03-17 未做发送邮件
