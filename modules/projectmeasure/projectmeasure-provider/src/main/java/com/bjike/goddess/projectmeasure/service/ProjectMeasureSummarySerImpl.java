@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureBO;
 import com.bjike.goddess.projectmeasure.bo.ProjectMeasureSummaryBO;
@@ -18,6 +19,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +53,25 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Autowired
     private MultipleProjectMultipleUISer multipleProjectMultipleUISer;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken( userToken );
+
+    }
+
     /**
      * 分页查询项目测算汇总邮件发送
      *
@@ -60,6 +81,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      */
     @Override
     public List<ProjectMeasureSummaryBO> list(ProjectMeasureSummaryDTO dto) throws SerException {
+        checkPermission();
         List<ProjectMeasureSummary> list = super.findByPage(dto);
         List<ProjectMeasureSummaryBO> listBO = BeanTransform.copyProperties(list, ProjectMeasureSummaryBO.class);
         return listBO;
@@ -73,8 +95,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ProjectMeasureSummaryBO save(ProjectMeasureSummaryTO to) throws SerException {
+        checkPermission();
         ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
         entity = super.save(entity);
         ProjectMeasureSummaryBO bo = BeanTransform.copyProperties(entity, ProjectMeasureSummaryBO.class);
@@ -84,53 +107,81 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     /**
      * 更新项目测算汇总邮件记录
      *
-     * @param to 项目测算汇总to
+     * @param to 项目测算汇总邮件记录to
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ProjectMeasureSummaryTO to) throws SerException {
-        ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
-        super.update(entity);
+        checkPermission();
+        if (StringUtils.isNotEmpty(to.getId())) {
+            ProjectMeasureSummary model = super.findById(to.getId());
+            if (model != null) {
+                updateProjectMeasureSummary(to, model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("更新ID不能为空!");
+        }
+
     }
 
     /**
-     * 冻结项目测算汇总邮件记录
+     * 更新项目测算汇总邮件记录
      *
-     * @param to 项目测算汇总to
+     * @param to
+     * @param model
+     * @throws SerException
+     */
+    private void updateProjectMeasureSummary(ProjectMeasureSummaryTO to, ProjectMeasureSummary model) throws SerException {
+        BeanTransform.copyProperties(to, model, true);
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
+    }
+
+    /**
+     * 冻结项目测算汇总
+     *
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void thaw(ProjectMeasureSummaryTO to) throws SerException {
-        to.setStatus(Status.THAW);//将状态修改为冻结状态
-        update(to);//执行更新操作
+    @Transactional(rollbackFor = SerException.class)
+    public void thaw(String id) throws SerException {
+        checkPermission();
+        ProjectMeasureSummary model = super.findById(id);
+        model.setStatus(Status.THAW);
+        super.update(model);
     }
 
     /**
      * 解冻项目测算汇总邮件记录
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void congeal(ProjectMeasureSummaryTO to) throws SerException {
-        to.setStatus(Status.CONGEAL);//将状态修改为解冻状态
-        update(to);//执行更新操作
+    @Transactional(rollbackFor = SerException.class)
+    public void congeal(String id) throws SerException {
+        checkPermission();
+        ProjectMeasureSummary model = super.findById(id);
+        model.setStatus(Status.CONGEAL);//将状态修改为解冻状态
+        super.update(model);
     }
 
     /**
-     * 项目预算管理汇总
+     * 项目测算管理汇总
      *
-     * @param to 项目测算汇总to
+     * @param areas 汇总地区
      * @return class ProjectMeasureBO
      * @throws SerException
      */
     @Override
-    public List<ProjectMeasureBO> summarize(ProjectMeasureSummaryTO to) throws SerException {
+    public List<ProjectMeasureBO> summarize(String[] areas) throws SerException {
+        checkPermission();
         List<ProjectMeasureBO> projectMeasureBOList = new ArrayList<>(0);
-        String[] areas = to.getAreas();
+//        String[] areas = to.getAreas()
         for (String area : areas) {
             Integer projectNo = countProjectNo(area);//某一地区的项目数量
             Double projectProfit = countProjectProfit(area);//计算项目利润
