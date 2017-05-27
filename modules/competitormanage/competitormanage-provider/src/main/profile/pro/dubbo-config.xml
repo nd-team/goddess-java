@@ -21,6 +21,12 @@
 
 	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI" ref="competitorCollectApiImpl"/>
 
+
+	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+
+	<dubbo:service interface="com.bjike.goddess.competitormanage.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 
