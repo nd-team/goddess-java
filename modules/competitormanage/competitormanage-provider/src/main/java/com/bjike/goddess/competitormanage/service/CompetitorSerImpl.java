@@ -9,6 +9,7 @@ import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,15 @@ import java.util.List;
 @Service
 public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> implements CompetitorSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CompetitorBO saveCompetitor(CompetitorTO to) throws SerException {
+
+        getCusPermission();
+
         Competitor model = BeanTransform.copyProperties(to, Competitor.class, true);
         //save前查询当前数据库最新的编号
         CompetitorDTO dto = new CompetitorDTO();
@@ -68,6 +75,8 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Transactional(rollbackFor = SerException.class)
     public CompetitorBO editCompetitor(CompetitorTO to) throws SerException {
 
+        getCusPermission();
+
         updateModel(to);
         return BeanTransform.copyProperties(to, CompetitorBO.class);
     }
@@ -82,6 +91,9 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorBO> pageList(CompetitorDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         List<Competitor> list = super.findByPage(dto);
@@ -91,6 +103,8 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
+        getCusPermission();
+
         //考虑到编号完整性，删除只冻结数据状态
         Competitor model = super.findById(id);
         if (model != null) {
@@ -122,4 +136,14 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
             throw new SerException("更新ID不能为空!");
         }
     }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无权限");
+        }
+    }
+
 }

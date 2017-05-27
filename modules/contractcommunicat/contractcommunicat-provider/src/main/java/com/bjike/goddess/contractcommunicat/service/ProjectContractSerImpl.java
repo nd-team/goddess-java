@@ -17,6 +17,7 @@ import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +40,15 @@ import java.util.List;
 @Service
 public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, ProjectContractDTO> implements ProjectContractSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO saveProjectContract(ProjectContractTO to) throws SerException {
+
+        getCusPermission();
+
         isExist(to, null);
         ProjectContract model = BeanTransform.copyProperties(to, ProjectContract.class, true);
         super.save(model);
@@ -52,6 +59,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectContractBO editProjectContract(ProjectContractTO to) throws SerException {
+
+        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectContract model = super.findById(to.getId());
@@ -129,6 +138,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectContractBO> pageList(ProjectContractDTO dto) throws SerException {
 
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         if (!StringUtils.isEmpty(dto.getCommunicateUser())) {
             dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
@@ -147,6 +158,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectContractCollectBO> collect(CollectConditionTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectContractDTO dto = new ProjectContractDTO();
         dto.getSorts().add("createTime=desc");
         if (!StringUtils.isEmpty(to.getContractInProject())) {
@@ -171,6 +185,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void leadExcel(List<ProjectContractTO> toList) throws SerException {
+
+        getCusPermission();
+
         for (int i = 1; i <= toList.size(); i++) {
             isExist(toList.get(i - 1), i);
         }
@@ -180,6 +197,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
     @Override
     public byte[] exportExcel(ExportExcelTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectContractDTO dto = new ProjectContractDTO();
         if (!StringUtils.isEmpty(to.getContractInProject())) {
             dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
@@ -229,5 +249,14 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         ProjectContractCollectBO total = new ProjectContractCollectBO("合计", null, null, null, null, totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
         returnBoList.add(total);
         return returnBoList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }

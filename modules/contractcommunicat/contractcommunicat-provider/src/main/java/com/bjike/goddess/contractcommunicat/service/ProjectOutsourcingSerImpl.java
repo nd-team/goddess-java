@@ -17,6 +17,7 @@ import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +40,14 @@ import java.util.List;
 @Service
 public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, ProjectOutsourcingDTO> implements ProjectOutsourcingSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO saveProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
+        getCusPermission();
+
         isExist(to,null);
         ProjectOutsourcing model = BeanTransform.copyProperties(to, ProjectOutsourcing.class, true);
         super.save(model);
@@ -52,6 +58,8 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectOutsourcingBO editProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
+
+        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectOutsourcing model = super.findById(to.getId());
@@ -159,6 +167,8 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectOutsourcingBO> pageList(ProjectOutsourcingDTO dto) throws SerException {
 
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         if (dto.getCommunicateUser() != null) {
             dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
@@ -177,6 +187,9 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectOutsourcingCollectBO> collect(CollectConditionTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
         dto.getSorts().add("createTime=desc");
         if (!StringUtils.isEmpty(to.getContractInProject())) {
@@ -200,6 +213,9 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
 
     @Override
     public void leadExcel(List<ProjectOutsourcingTO> toList) throws SerException {
+
+        getCusPermission();
+
         for (int i = 1; i <= toList.size(); i++) {
             isExist(toList.get(i - 1), i);
         }
@@ -209,6 +225,9 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
 
     @Override
     public byte[] exportExcel(ExportExcelTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
         if (!StringUtils.isEmpty(to.getContractInProject())) {
             dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
@@ -261,5 +280,14 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         returnBoList.add(total);
 
         return returnBoList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }
