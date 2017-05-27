@@ -43,7 +43,7 @@ public class LoginAct {
      * @version v1
      */
     @PostMapping("v1/login")
-    public Result login(@Validated UserLoginTO loginTO, HttpServletRequest request, BindingResult result) throws ActException {
+    public Result login(@Validated UserLoginTO loginTO, BindingResult result, HttpServletRequest request) throws ActException {
         try {
 //            String userAgent = request.getHeader("USER-AGENT").toLowerCase();
             LoginType type = LoginType.PC;

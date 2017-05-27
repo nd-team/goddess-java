@@ -11,6 +11,8 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 import kafka.utils.VerifiableProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
@@ -26,7 +28,7 @@ import java.util.Properties;
  * @Copy: [com.bjike]
  */
 public class KafkaConsumer {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
     public static EmailAPI emailAPI;
     public static Environment env;
@@ -52,26 +54,26 @@ public class KafkaConsumer {
 
         ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(config);
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put("message", new Integer(1));
+        topicCountMap.put("messages", new Integer(1));
 
         StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
         StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
 
         Map<String, List<KafkaStream<String, String>>> consumerMap =
                 consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
-        KafkaStream<String, String> stream = consumerMap.get("message").get(0);
+        KafkaStream<String, String> stream = consumerMap.get("messages").get(0);
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {
             String msg = new String(it.next().message());
             MessageTO to = JSON.parseObject(msg, MessageTO.class);
-            if(null!=to.getReceivers()){
-                Email email = new Email(to.getTitle(), to.getContent());
-                email.setReceiver(to.getReceivers());
+            if (null != to.getReceivers()) {
                 try {
-                    emailAPI.send(email);
+                    Email email = new Email(to.getTitle(), to.getContent());
+                    email.setReceiver(to.getReceivers());
+                        emailAPI.send(email);
                     System.out.println("收到消息：" + msg);
                 } catch (SerException e) {
-                    System.out.println(e.getMessage());
+                    LOGGER.error(e.getMessage());
                 }
             }
         }
