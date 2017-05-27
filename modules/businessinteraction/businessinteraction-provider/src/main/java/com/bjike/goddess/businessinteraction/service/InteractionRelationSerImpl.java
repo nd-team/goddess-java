@@ -43,6 +43,10 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Override
     public Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
         if(StringUtils.isNoneBlank(interactionRelationDTO.getCompanyName())){
             interactionRelationDTO.getConditions().add(Restrict.like("companyName",interactionRelationDTO.getCompanyName()));
         }

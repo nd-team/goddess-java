@@ -11,6 +11,7 @@ import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,23 @@ import java.util.stream.Collectors;
 @Service
 public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasicInfoDTO> implements EntryBasicInfoSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
+    /**
+     * 检测部门
+     * @param idFlag
+     * @throws SerException
+     */
+    private void checkDepartIdentity(String idFlag) throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission( idFlag );
+        if( !flag){
+            throw new SerException("你不是相应部门的人员，不能进行操作");
+        }
+    }
+
+
     @Override
     public Long countEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
         Long count = super.count(entryBasicInfoDTO);
@@ -43,6 +61,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Override
     public List<EntryBasicInfoBO> listEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        checkDepartIdentity("3");
 
         List<EntryBasicInfo> entryBasicInfos = super.findByPage(entryBasicInfoDTO);
         List<EntryBasicInfoBO> boList = BeanTransform.copyProperties(entryBasicInfos, EntryBasicInfoBO.class);
@@ -63,6 +82,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EntryBasicInfoBO insertEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
+        checkDepartIdentity("7");
+
         EntryBasicInfo entryBasicInfo = BeanTransform.copyProperties(entryBasicInfoTO, EntryBasicInfo.class, true);
         try {
             entryBasicInfo.setCreateTime(LocalDateTime.now());
@@ -76,6 +97,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public EntryBasicInfoBO editEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
+        checkDepartIdentity("7");
+
         if (StringUtils.isBlank(entryBasicInfoTO.getId())) {
             throw new SerException("id不能为空");
         }
@@ -95,6 +118,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeEntryBasicInfo(String id) throws SerException {
+        checkDepartIdentity("7");
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
@@ -156,6 +181,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Override
     public List<EntryBasicInfoBO> collectEntryBasicInfo(EntryBasicInfoDTO entryBasicInfoDTO) throws SerException {
+        checkDepartIdentity("6");
+
         //多选职位
         if (entryBasicInfoDTO == null) {
             throw new SerException("您好!查询条件为空,无法进行查询!");

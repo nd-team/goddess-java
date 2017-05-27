@@ -9,6 +9,7 @@ import com.bjike.goddess.businessproject.entity.ContractCategory;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,31 @@ import java.util.List;
 @Service
 public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, ContractCategoryDTO> implements ContractCategorySer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以查看");
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        if( !flag ){
+            throw new SerException("您不是岗位的人员，不可以操作");
+        }
+    }
+
+
+
     @Override
     public Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
         Long count = super.count( contractCategoryDTO );
@@ -46,6 +72,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
 
     @Override
     public List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
+        checkSeeIdentity();
+
         List<ContractCategory> list = super.findByPage(contractCategoryDTO);
         List<ContractCategoryBO> contractCategoryBOS = BeanTransform.copyProperties(list, ContractCategoryBO.class);
         return contractCategoryBOS;
@@ -54,6 +82,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractCategoryBO addContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
+        checkAddIdentity();
+
         ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
         contractCategory.setCreateTime(LocalDateTime.now());
 
@@ -65,6 +95,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContractCategoryBO editContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
+        checkAddIdentity();
+
         ContractCategory temp = super.findById( contractCategoryTO.getId());
 
         ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
@@ -79,6 +111,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteContractCategory(String id) throws SerException {
+        checkAddIdentity();
+
         super.remove(id);
     }
 }

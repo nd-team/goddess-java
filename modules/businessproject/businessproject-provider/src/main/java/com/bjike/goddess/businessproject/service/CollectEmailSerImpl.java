@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +47,28 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private BaseInfoManageSer baseInfoManageAPI;
     @Autowired
     private DispatchSheetSer dispatchSheetAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以查看");
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        if( !flag ){
+            throw new SerException("您不是岗位的人员，不可以操作");
+        }
+    }
 
     @Override
     public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
@@ -66,6 +88,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
+        checkSeeIdentity();
+
         collectEmailDTO.getSorts().add("createTime=desc");
         List<CollectEmail> list = super.findByPage(collectEmailDTO);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
@@ -76,6 +100,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String useToken = RpcTransmit.getUserToken();
+        checkAddIdentity();
+        RpcTransmit.transmitUserToken( useToken );
+
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -105,6 +133,10 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String useToken = RpcTransmit.getUserToken();
+        checkAddIdentity();
+        RpcTransmit.transmitUserToken( useToken );
+
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -133,12 +165,16 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCollectEmail(String id) throws SerException {
+        checkAddIdentity();
+
         super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCollectEmail(String id) throws SerException {
+        checkAddIdentity();
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.CONGEAL);
         super.update(collectEmail);
@@ -148,6 +184,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCollectEmail(String id) throws SerException {
+        checkAddIdentity();
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.THAW);
         super.update(collectEmail);

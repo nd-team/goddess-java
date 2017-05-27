@@ -43,6 +43,10 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
 
     @Override
     public Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
         Long count =  super.count(talkDetailDTO);
         return count;
     }

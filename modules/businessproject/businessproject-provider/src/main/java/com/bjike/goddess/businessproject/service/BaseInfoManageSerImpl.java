@@ -14,6 +14,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +38,29 @@ import java.util.stream.Collectors;
 @Service
 public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoManageDTO> implements BaseInfoManageSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以查看");
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        if( !flag ){
+            throw new SerException("您不是岗位的人员，不可以操作");
+        }
+    }
+
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         searchCondition( baseInfoManageDTO);
@@ -55,6 +79,8 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        checkSeeIdentity();
+
         searchCondition( baseInfoManageDTO);
         List<BaseInfoManage> list = super.findByPage(baseInfoManageDTO);
         List<BaseInfoManageBO> baseInfoManageBOList = BeanTransform.copyProperties(list, BaseInfoManageBO.class);
@@ -64,6 +90,8 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
+        checkAddIdentity();
+
         //签订年份
         String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime())?"0000":baseInfoManageTO.getSiginTime().substring(0, 4);
         baseInfoManageTO.setSiginYear( tempTime );
@@ -84,6 +112,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BaseInfoManageBO editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
+        checkAddIdentity();
 
         BaseInfoManage temp = super.findById( baseInfoManageTO.getId());
 
@@ -99,6 +128,8 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteBaseInfoManage(String id) throws SerException {
+        checkAddIdentity();
+
         super.remove( id );
     }
 

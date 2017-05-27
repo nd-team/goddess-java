@@ -39,6 +39,11 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
 
     @Override
     public Long countInter(DemandDTO demandDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         Long count =  super.count(demandDTO);
         return count;
     }

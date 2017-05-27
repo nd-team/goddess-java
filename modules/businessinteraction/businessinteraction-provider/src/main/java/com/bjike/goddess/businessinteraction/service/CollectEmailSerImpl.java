@@ -60,6 +60,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         Long count =  super.count(collectEmailDTO);
         return count;
     }
@@ -441,7 +446,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Override
     public List<String> areaList() throws SerException {
         String [] field = new String[]{"area"};
-        String sql = "select area, 1 from businessinteraction_interactionrelation group by area";
+        String sql = "select area from businessinteraction_interactionrelation group by area";
 
         List<InteractionRelation> list = interactionRelationSer.findBySql(sql , InteractionRelation.class , field );
         List<String> areaList = list.stream().map(InteractionRelation::getArea).collect(Collectors.toList());

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
@@ -43,6 +44,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
 
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
