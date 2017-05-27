@@ -1,11 +1,14 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
+import com.bjike.goddess.attainment.dto.SkillAnalyseDTO;
 import com.bjike.goddess.attainment.service.SkillAnalyseSer;
 import com.bjike.goddess.attainment.to.SkillAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 技能分析表业务接口实现
@@ -35,5 +38,20 @@ public class SkillAnalyseApiImpl implements SkillAnalyseAPI {
     @Override
     public SkillAnalyseBO delete(String id) throws SerException {
         return skillAnalyseSer.delete(id);
+    }
+
+    @Override
+    public List<SkillAnalyseBO> maps(SkillAnalyseDTO dto) throws SerException {
+        return skillAnalyseSer.maps(dto);
+    }
+
+    @Override
+    public SkillAnalyseBO getById(String id) throws SerException {
+        return skillAnalyseSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return skillAnalyseSer.getTotal();
     }
 }

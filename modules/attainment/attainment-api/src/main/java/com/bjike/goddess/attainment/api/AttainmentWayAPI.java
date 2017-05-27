@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.AttainmentWayBO;
+import com.bjike.goddess.attainment.dto.AttainmentWayDTO;
 import com.bjike.goddess.attainment.to.AttainmentWayTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -82,5 +83,36 @@ public interface AttainmentWayAPI {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研方式数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<AttainmentWayBO> maps(AttainmentWayDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取调研方式数据
+     *
+     * @param id 调研方式数据id
+     * @return
+     * @throws SerException
+     */
+    default AttainmentWayBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 
 }

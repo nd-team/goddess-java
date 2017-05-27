@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 技能分析表业务实现
@@ -37,8 +38,9 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SkillAnalyseBO save(SkillAnalyseTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
-        entity.setWriter(userAPI.currentUser().getUsername());
+        entity.setWriter(user.getUsername());
         entity.setWriterTime(LocalDateTime.now());
         return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
     }
@@ -48,10 +50,10 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     public SkillAnalyseBO update(SkillAnalyseTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             try {
+                UserBO user = userAPI.currentUser();
                 SkillAnalyse entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
-                UserBO user = userAPI.currentUser();
                 if (!user.getUsername().equals(entity.getWriter())) {
                     entity.setWriter(user.getUsername());
                     entity.setWriterTime(LocalDateTime.now());
@@ -70,7 +72,29 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
     @Override
     public SkillAnalyseBO delete(String id) throws SerException {
         SkillAnalyse entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+    }
+
+    @Override
+    public List<SkillAnalyseBO> maps(SkillAnalyseDTO dto) throws SerException {
+        dto.getSorts().add("writerTime=desc");
+        return BeanTransform.copyProperties(super.findByPage(dto), SkillAnalyseBO.class);
+    }
+
+    @Override
+    public SkillAnalyseBO getById(String id) throws SerException {
+        SkillAnalyse entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SkillAnalyseDTO dto = new SkillAnalyseDTO();
+        return super.count(dto);
     }
 }

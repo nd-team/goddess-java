@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.service.SurveyPlanSer;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -47,5 +48,15 @@ public class SurveyPlanApiImpl implements SurveyPlanAPI {
     @Override
     public SurveyPlanBO findBOById(String id) throws SerException {
         return surveyPlanSer.findBOById(id);
+    }
+
+    @Override
+    public List<SurveyPlanBO> maps(SurveyPlanDTO dto) throws SerException {
+        return surveyPlanSer.maps(dto);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return surveyPlanSer.getTotal();
     }
 }

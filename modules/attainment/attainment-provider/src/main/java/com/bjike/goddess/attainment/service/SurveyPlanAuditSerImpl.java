@@ -64,6 +64,8 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
         SurveyPlanAuditBO auditBO = this.findByUserPlan(to.getPlan_id(), user.getUsername());
         SurveyPlanAudit entity;
         SurveyPlan plan = surveyPlanSer.findById(to.getPlan_id());
+        if (null == plan)
+            throw new SerException("研究计划不能为空");
         if (null == auditBO) {
             entity = BeanTransform.copyProperties(to, SurveyPlanAudit.class, true);
             entity.setAuditor(user.getUsername());
@@ -78,8 +80,6 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
             entity.setAuditTime(LocalDateTime.now());
             super.update(entity);
         }
-        if (null == plan)
-            throw new SerException("研究计划不能为空");
         if (entity.isPass())
             plan.setAudit(AuditType.ALLOWED);
         else
@@ -104,6 +104,8 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
     @Override
     public SurveyPlanAuditBO delete(String id) throws SerException {
         SurveyPlanAudit entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }

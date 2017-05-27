@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.PerformanceIndicatorBO;
+import com.bjike.goddess.bonus.dto.PerformanceIndicatorDTO;
 import com.bjike.goddess.bonus.service.PerformanceIndicatorSer;
 import com.bjike.goddess.bonus.to.PerformanceIndicatorTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -52,5 +53,20 @@ public class PerformanceIndicatorApiImpl implements PerformanceIndicatorAPI {
     @Override
     public List<PerformanceIndicatorBO> findByStatus(Boolean status) throws SerException {
         return performanceIndicatorSer.findByStatus(status);
+    }
+
+    @Override
+    public List<PerformanceIndicatorBO> maps(PerformanceIndicatorDTO dto) throws SerException {
+        return performanceIndicatorSer.maps(dto);
+    }
+
+    @Override
+    public PerformanceIndicatorBO getById(String id) throws SerException {
+        return performanceIndicatorSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return performanceIndicatorSer.getTotal();
     }
 }

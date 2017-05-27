@@ -63,5 +63,4 @@ public interface SurveyQuestionnaireSer extends Ser<SurveyQuestionnaire, SurveyQ
     default List<SurveyQuestionnaireBO> findByActualize(String actualize_id) throws SerException {
         return null;
     }
-
 }

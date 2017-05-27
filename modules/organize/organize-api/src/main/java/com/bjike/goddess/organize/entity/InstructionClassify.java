@@ -35,12 +35,6 @@ public class InstructionClassify extends BaseEntity {
 
 
     /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "DATETIME COMMENT '创建时间'",nullable = false)
-    private LocalDateTime createTime;
-
-    /**
      * 使用状态
      */
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'", nullable = false, insertable = false)
@@ -61,14 +55,6 @@ public class InstructionClassify extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public Status getStatus() {

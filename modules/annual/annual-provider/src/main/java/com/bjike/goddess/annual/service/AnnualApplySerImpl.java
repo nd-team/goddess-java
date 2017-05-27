@@ -96,13 +96,13 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO save(AnnualApplyTO to) throws SerException {
+        UserBO userBO = userAPI.currentUser();
         AnnualApply entity = BeanTransform.copyProperties(to, AnnualApply.class, true);
         entity.setAudit(AuditType.NONE);
         entity.setInfo(annualInfoSer.findById(to.getInfoId()));
         entity.setLeave(this.countLeave(entity));
         if (entity.getLeave() > entity.getInfo().getSurplus())
             throw new SerException("请不要超出剩余年假数");
-        UserBO userBO = userAPI.currentUser();
         if (!userBO.getUsername().equals(entity.getInfo().getUsername()))
             throw new SerException("请不要替他人提交年假申请");
         super.save(entity);
@@ -112,8 +112,10 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO delete(AnnualApplyTO to) throws SerException {
-        AnnualApply entity = super.findById(to.getId());
         UserBO userBO = userAPI.currentUser();
+        AnnualApply entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
         if (!userBO.getUsername().equals(entity.getInfo().getUsername()))
             throw new SerException("请不要对他人的年假申请做处理");
         super.remove(entity);
@@ -123,8 +125,11 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AnnualApplyBO audit(AnnualApplyAuditTo to) throws SerException {
+        UserBO auditor = userAPI.currentUser();
         AnnualApply entity = super.findById(to.getId());
-        UserBO auditor = userAPI.currentUser(), user = userAPI.findByUsername(entity.getInfo().getUsername());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        UserBO user = userAPI.findByUsername(entity.getInfo().getUsername());
         UserDetailBO auditorDetailBO = userDetailAPI.findByUserId(auditor.getId()), userDetailBO = userDetailAPI.findByUserId(user.getId());
         List<PositionBO> positionBOs = positionAPI.findChild(auditorDetailBO.getPositionId());
         boolean adopt = false;
@@ -172,5 +177,19 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
         dto.getSorts().add("info.id");
         List<AnnualApply> list = super.findByPage(dto);
         return this.transformBOList(list);
+    }
+
+    @Override
+    public AnnualApplyBO getById(String id) throws SerException {
+        AnnualApply entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AnnualApplyDTO dto = new AnnualApplyDTO();
+        return super.count(dto);
     }
 }

@@ -97,4 +97,36 @@ public interface AnnualStandardSer extends Ser<AnnualStandard, AnnualStandardDTO
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 年假标准数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<AnnualStandardBO> maps(AnnualStandardDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取年假标准数据
+     *
+     * @param id 年假标准数据id
+     * @return
+     * @throws SerException
+     */
+    default AnnualStandardBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

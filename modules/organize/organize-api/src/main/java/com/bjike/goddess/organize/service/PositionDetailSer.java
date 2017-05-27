@@ -194,4 +194,26 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     default List<OpinionBO> findAllOpinion() throws SerException {
         return null;
     }
+
+    /**
+     * 根据编号查询岗位信息
+     *
+     * @param serialNumber 编号
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO findByNumber(String serialNumber) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据岗位名称查询岗位信息
+     *
+     * @param position 岗位名称
+     * @return
+     * @throws SerException
+     */
+    default PositionDetailBO findByPosition(String position) throws SerException {
+        return null;
+    }
 }

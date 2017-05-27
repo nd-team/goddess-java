@@ -117,6 +117,8 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public DisciplineRecordBO delete(String id) throws SerException {
         DisciplineRecord entity = super.findById(id);
+        if (null != entity)
+            throw new SerException("数据不存在");
         UserBO user = userAPI.currentUser();
         if (!user.getUsername().equals(entity.getLaunch()))
             throw new SerException("不要修改他人的数据");
@@ -329,5 +331,39 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
         return BeanTransform.copyProperties(this.getListByFilter(to), DisciplineRecordBO.class);
+    }
+
+    @Override
+    public List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("status", Boolean.TRUE));
+        return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
+    }
+
+    @Override
+    public List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("status", Boolean.FALSE));
+        return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
+    }
+
+    @Override
+    public DisciplineRecordBO getById(String id) throws SerException {
+        DisciplineRecord entity = super.findById(id);
+        if (null != entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
+    }
+
+    @Override
+    public Long getRewardTotal() throws SerException {
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getConditions().add(Restrict.eq("status", Boolean.TRUE));
+        return super.count(dto);
+    }
+
+    @Override
+    public Long getPushTotal() throws SerException {
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getConditions().add(Restrict.eq("status", Boolean.FALSE));
+        return super.count(dto);
     }
 }

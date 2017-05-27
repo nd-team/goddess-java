@@ -55,4 +55,14 @@ public class AnnualApplyApiImpl implements AnnualApplyAPI {
     public List<AnnualApplyBO> maps(AnnualApplyDTO dto) throws SerException {
         return annualApplySer.maps(dto);
     }
+
+    @Override
+    public AnnualApplyBO getById(String id) throws SerException {
+        return annualApplySer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return annualApplySer.getTotal();
+    }
 }

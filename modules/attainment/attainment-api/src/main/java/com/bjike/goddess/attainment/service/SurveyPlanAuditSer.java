@@ -64,5 +64,4 @@ public interface SurveyPlanAuditSer extends Ser<SurveyPlanAudit, SurveyPlanAudit
     default List<SurveyPlanAuditBO> findByPlan(String plan_id) throws SerException {
         return null;
     }
-
 }

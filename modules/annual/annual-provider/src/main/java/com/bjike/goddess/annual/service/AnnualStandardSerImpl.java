@@ -95,4 +95,24 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         else
             return BeanTransform.copyProperties(list.get(0), AnnualStandardBO.class);
     }
+
+    @Override
+    public List<AnnualStandardBO> maps(AnnualStandardDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        return BeanTransform.copyProperties(super.findByPage(dto), AnnualStandardBO.class);
+    }
+
+    @Override
+    public AnnualStandardBO getById(String id) throws SerException {
+        AnnualStandard entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AnnualStandardDTO dto = new AnnualStandardDTO();
+        return super.count(dto);
+    }
 }

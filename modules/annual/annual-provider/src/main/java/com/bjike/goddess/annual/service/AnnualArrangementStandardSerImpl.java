@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,11 +80,16 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         if (bo == null) {
             entity = BeanTransform.copyProperties(to, AnnualArrangementStandard.class);
             entity.setStandard(annualStandardSer.findById(to.getStandardId()));
+            if (null == entity.getStandard())
+                throw new SerException("年假标准为空,无法保存");
             super.save(entity);
         } else {
-            entity = BeanTransform.copyProperties(to, AnnualArrangementStandard.class);
+            entity = super.findById(bo.getId());
+            BeanTransform.copyProperties(to, entity, true);
             entity.setStandard(annualStandardSer.findById(to.getArrangementId()));
-            entity.setId(bo.getId());
+            if (null == entity.getStandard())
+                throw new SerException("年假标准为空,无法保存");
+            entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
         }
         return this.transformBO(entity);
@@ -114,5 +120,19 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
         dto.getSorts().add("arrangementId");
         List<AnnualArrangementStandard> list = super.findByPage(dto);
         return this.transformBOList(list);
+    }
+
+    @Override
+    public AnnualArrangementStandardBO getById(String id) throws SerException {
+        AnnualArrangementStandard entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
+        return super.count(dto);
     }
 }

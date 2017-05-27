@@ -107,7 +107,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         try {
             super.remove(entity);
         } catch (Exception e) {
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         }
         return transformBO(entity);
     }

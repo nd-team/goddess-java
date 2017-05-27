@@ -62,4 +62,25 @@ public interface AnnualArrangementStandardAPI {
     default AnnualArrangementStandardBO findByArrangementStandard(String standardId, String arrangementId) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取年假层级标准数据
+     *
+     * @param id 年假层级标准数据id
+     * @return
+     * @throws SerException
+     */
+    default AnnualArrangementStandardBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }
