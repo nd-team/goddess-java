@@ -34,4 +34,5 @@ public class CustomIntercept implements Interceptor {
 
         return Arrays.asList(loginInfo, storage);
     }
+
 }
