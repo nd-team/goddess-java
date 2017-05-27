@@ -62,6 +62,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      */
     @Override
     public List<MarketServeApplyBO> list(MarketServeApplyDTO dto) throws SerException {
+        checkPermission();
         List<MarketServeApply> list = super.findByPage(dto);
         List<MarketServeApplyBO> listBO = BeanTransform.copyProperties(list, MarketServeApplyBO.class);
         return listBO;

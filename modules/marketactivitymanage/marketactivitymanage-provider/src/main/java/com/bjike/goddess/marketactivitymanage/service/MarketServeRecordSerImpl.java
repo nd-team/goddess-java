@@ -54,7 +54,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         //商务模块权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
         if (!permissionLevel) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您不是相应模块人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
 
@@ -69,6 +69,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
      */
     @Override
     public List<MarketServeRecordBO> list(MarketServeRecordDTO dto) throws SerException {
+        checkPermission();
         List<MarketServeRecord> list = super.findByPage(dto);
         List<MarketServeRecordBO> listBO = BeanTransform.copyProperties(list, MarketServeRecordBO.class);
         return listBO;

@@ -81,6 +81,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     @Override
     public List<MarketServeSummaryBO> list(MarketServeSummaryDTO dto) throws SerException {
+        checkPermission();
         List<MarketServeSummary> list = super.findByPage(dto);
         List<MarketServeSummaryBO> listBO = BeanTransform.copyProperties(list, MarketServeSummaryBO.class);
         return listBO;
