@@ -1,9 +1,11 @@
 package com.bjike.goddess.firmreward.action.firmreward;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.api.PrizeApplyAPI;
@@ -43,6 +45,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/bonusbudget/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -61,6 +64,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated PrizeApplyDTO dto, BindingResult result) throws ActException {
         try {
@@ -79,6 +83,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(@Validated PrizeApplyDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -98,8 +103,9 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) PrizeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) PrizeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             PrizeApplyBO bo = prizeApplyAPI.save(to);
             PrizeApplyVO vo = BeanTransform.copyProperties(bo, PrizeApplyVO.class, request);
@@ -116,6 +122,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -133,8 +140,9 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = (EDIT.class)) PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.update(to);
             return new ActResult("edit success!");
@@ -150,6 +158,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/addPrizeDetails")
     public Result addPrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
         try {
@@ -167,6 +176,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/updatePrizeDetails")
     public Result updatePrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
         try {
@@ -185,6 +195,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/checkPrizeDetails")
     public Result checkPrizeDetails(String applyId, HttpServletRequest request) throws ActException {
         try {
@@ -203,6 +214,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/staffRewardCollect")
     public Result staffRewardCollect(HttpServletRequest request) throws ActException {
         try {
@@ -221,6 +233,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/projectGroupRewardCollect")
     public Result projectGroupRewardCollect(HttpServletRequest request) throws ActException {
         try {
@@ -239,6 +252,7 @@ public class PrizeApplyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/areaRewardCollect")
     public Result areaRewardCollect(HttpServletRequest request) throws ActException {
         try {

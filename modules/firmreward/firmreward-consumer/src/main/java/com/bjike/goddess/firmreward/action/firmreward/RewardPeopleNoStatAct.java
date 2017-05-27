@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.api.RewardPeopleNoStatAPI;
@@ -45,6 +46,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/bonusbudget/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -63,6 +65,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated RewardPeopleNoStatDTO dto, BindingResult result) throws ActException {
         try {
@@ -81,6 +84,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(@Validated RewardPeopleNoStatDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -100,6 +104,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -118,6 +123,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -135,6 +141,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
@@ -152,6 +159,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/addAwardDetails")
     public Result addAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
@@ -169,6 +177,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/updateAwardDetails")
     public Result updateAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
@@ -187,6 +196,7 @@ public class RewardPeopleNoStatAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/checkAwardDetails/{statId}")
     public Result checkAwardDetails(@PathVariable String statId, HttpServletRequest request) throws ActException {
         try {

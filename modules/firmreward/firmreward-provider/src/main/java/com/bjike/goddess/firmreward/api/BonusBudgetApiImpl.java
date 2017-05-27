@@ -8,6 +8,7 @@ import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
 import com.bjike.goddess.firmreward.service.BonusBudgetSer;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
+import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,22 +102,22 @@ public class BonusBudgetApiImpl implements BonusBudgetAPI {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
     @Override
-    public void addRewardProgramRatios(BonusBudgetTO to) throws SerException {
+    public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
         bonusBudgetSer.addRewardProgramRatios(to);
     }
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
     @Override
-    public void updateRewardProgramRatios(BonusBudgetTO to) throws SerException {
+    public void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
         bonusBudgetSer.updateRewardProgramRatios(to);
     }
 

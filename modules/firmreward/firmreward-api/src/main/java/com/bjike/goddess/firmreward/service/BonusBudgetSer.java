@@ -7,6 +7,7 @@ import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
+import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
 
 import java.util.List;
 
@@ -57,18 +58,18 @@ public interface BonusBudgetSer extends Ser<BonusBudget, BonusBudgetDTO> {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
-    void addRewardProgramRatios(BonusBudgetTO to) throws SerException;
+    void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
-    void updateRewardProgramRatios(BonusBudgetTO to) throws SerException;
+    void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
 
     /**
      * 查看奖励项目比例

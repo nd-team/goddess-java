@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.api.BonusBudgetAPI;
@@ -12,6 +13,7 @@ import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
+import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
 import com.bjike.goddess.firmreward.vo.BonusBudgetVO;
 import com.bjike.goddess.firmreward.vo.RewardProgramRatioVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/bonusbudget/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -64,6 +67,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated BonusBudgetDTO dto, BindingResult result) throws ActException {
         try {
@@ -82,6 +86,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(@Validated BonusBudgetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -101,6 +106,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) BonusBudgetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -119,6 +125,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -136,6 +143,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(value = {EDIT.class}) BonusBudgetTO to, BindingResult result) throws ActException {
         try {
@@ -154,7 +162,7 @@ public class BonusBudgetAct {
      * @version v1
      */
     @PostMapping("v1/addRewardProgramRatios")
-    public Result addRewardProgramRatios(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
+    public Result addRewardProgramRatios(@Validated RewardProgramRatiosTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.addRewardProgramRatios(to);
             return new ActResult("addRewardProgramRatios success!");
@@ -166,12 +174,13 @@ public class BonusBudgetAct {
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/updateRewardProgramRatios")
-    public Result updateRewardProgramRatios(@Validated BonusBudgetTO to, BindingResult result) throws ActException {
+    public Result updateRewardProgramRatios(@Validated RewardProgramRatiosTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.updateRewardProgramRatios(to);
             return new ActResult("updateRewardProgramRatios success!");
@@ -188,6 +197,7 @@ public class BonusBudgetAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/checkRewardProgramRatios/{ratioId}")
     public Result checkRewardProgramRatios(@PathVariable(value = "ratioId") String ratioId, HttpServletRequest request) throws ActException {
         try {
