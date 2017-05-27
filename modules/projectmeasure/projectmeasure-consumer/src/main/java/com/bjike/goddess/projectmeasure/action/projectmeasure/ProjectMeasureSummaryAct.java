@@ -34,7 +34,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/projectmeasuresummary")
+@RequestMapping("projectmeasuresummary")
 public class ProjectMeasureSummaryAct {
 
     @Autowired

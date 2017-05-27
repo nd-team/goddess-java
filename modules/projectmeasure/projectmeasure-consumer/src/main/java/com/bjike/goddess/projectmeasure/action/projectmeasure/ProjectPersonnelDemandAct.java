@@ -32,7 +32,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/projectpersonneldemand")
+@RequestMapping("projectpersonneldemand")
 public class ProjectPersonnelDemandAct {
 
     @Autowired

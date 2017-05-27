@@ -36,7 +36,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("multipleprojectsingleui")
+@RequestMapping("msui")
 public class MultipleProjectSingleUIAct {
 
     @Autowired
@@ -51,7 +51,7 @@ public class MultipleProjectSingleUIAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/multipleprojectsingleui/{id}")
+    @GetMapping("v1/msui/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             MultipleProjectSingleUIBO bo = multipleProjectSingleUIAPI.findById(id);

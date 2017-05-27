@@ -33,7 +33,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/projectcoststatus")
+@RequestMapping("projectcoststatus")
 public class ProjectCostStatusAct {
 
     @Autowired
@@ -48,7 +48,7 @@ public class ProjectCostStatusAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/projectbasicinfo/{id}")
+    @GetMapping("v1/projectcoststatus/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             ProjectCostStatusBO bo = projectCostStatusAPI.findById(id);

@@ -33,7 +33,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("singleprojectsingleui")
+@RequestMapping("ssui")
 public class SingleProjectSingleUIAct {
 
     @Autowired
@@ -48,7 +48,7 @@ public class SingleProjectSingleUIAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/singleprojectsingleui/{id}")
+    @GetMapping("v1/ssui/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             SingleProjectSingleUIBO bo = singleProjectSingleUIAPI.findById(id);
