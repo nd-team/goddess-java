@@ -142,7 +142,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         Boolean permission = cusPermissionSer.getCusPermission("1");
 
         if (!permission) {
-            throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无没有权限");
+            throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无权限");
         }
     }
 

@@ -18,10 +18,24 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!-- 发布接口 -->
-    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.ProjectContractAPI"
-                   ref="projectContractApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.ProjectContractAPI" ref="projectContractApiImpl"/>
 
-    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI"
-                   ref="projectOutsourcingApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI" ref="projectOutsourcingApiImpl"/>
+
+    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+
+    <dubbo:service interface="com.bjike.goddess.contractcommunicat.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+    <dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+
+    <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+
+    <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
+    <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
 </beans>

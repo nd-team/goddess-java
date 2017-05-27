@@ -5,9 +5,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
+import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.entity.CompetitorCollect;
 import com.bjike.goddess.competitormanage.enums.BusinessType;
@@ -184,7 +186,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
         List<CompetitorCollect> list = super.findByCis(dto);
         //遍历所有未冻结汇总定时器,
         for (CompetitorCollect model : list) {
-            if(model.getLastSendTime()!=null){
+            if (model.getLastSendTime() != null) {
                 switch (model.getSendIntervalType()) {
                     case MINUTE:
 
@@ -222,12 +224,52 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
 
 
     //校验分钟
-    public void minute(CompetitorCollect model) {
+    public void minute(CompetitorCollect model) throws SerException {
 
         if (LocalDateTime.now().minusMinutes(model.getSendInterval()).compareTo(model.getLastSendTime()) > 0) {
 
+            //查询指定汇总间隔的数据
+            CompetitorDTO dto = new CompetitorDTO();
+
+            LocalDateTime start = null;
+            LocalDateTime end = null;
+
+
+            switch (model.getCollectInterval()) {
+
+                case ONEDAY:
+                    LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+                    start = startOfDay;
+                    end = startOfDay.plusDays(1);
+                    break;
+
+                case ONEWEEK:
+
+                    LocalDateTime startOfWeek = DateUtil.getStartWeek().atStartOfDay();
+                    start = startOfWeek;
+                    end = startOfWeek.plusWeeks(1);
+
+                    break;
+
+                case ONEMONTH:
+
+                    LocalDateTime startOfMonth = DateUtil.getStartMonth().atStartOfDay();
+                    start = startOfMonth;
+                    end = startOfMonth.plusMonths(1);
+
+                    break;
+            }
+
+            dto.getConditions().add(Restrict.gt("createTime", start));
+            dto.getConditions().add(Restrict.lt("createTime", end));
+            List<Competitor> competitorList = competitorSer.findByCis(dto);
+            sendEmail(competitorList, model.getSendUser());
         }
 
+
+    }
+
+    public void sendEmail(List<Competitor> competitorList, String sendUser) {
 
     }
 
