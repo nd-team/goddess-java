@@ -3,6 +3,7 @@ package com.bjike.goddess.staffpay.action.staffpay;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffpay.api.FirstPayRecordAPI;
@@ -99,6 +100,7 @@ public class FirstPayRecordAction {
      * @des 根据用户id删除第一次已付款记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

@@ -9,7 +9,7 @@ public class CollectContractorVO implements Serializable{
     /**
      * 总包单位
      */
-    private String contractor;
+    private String name;
     /**
      * 管理费
      */
@@ -27,12 +27,12 @@ public class CollectContractorVO implements Serializable{
      */
     private Double afterTax;
 
-    public String getContractor() {
-        return contractor;
+    public String getName() {
+        return name;
     }
 
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getManagementFee() {

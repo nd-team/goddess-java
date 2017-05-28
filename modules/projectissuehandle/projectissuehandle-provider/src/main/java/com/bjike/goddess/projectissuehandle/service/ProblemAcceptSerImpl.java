@@ -9,6 +9,7 @@ import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectissuehandleSerCache")
 @Service
 public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcceptDTO> implements ProblemAcceptSer {
+    @Autowired
+    private ProPermissionSer proPermissionSer;
     @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         problemAcceptDTO.getSorts().add("createTime=desc");
@@ -37,13 +40,19 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
     @Override
     public ProblemAcceptBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         ProblemAccept problemAccept = super.findById(id);
         return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class, true);
     }
 
     @Override
     public List<ProblemAcceptBO> findListProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
-        problemAcceptDTO.getSorts().add("createTime=desc");
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
         List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
         return problemAcceptBOS;
@@ -52,6 +61,10 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO insertProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         ProblemAccept problemAccept = BeanTransform.copyProperties(problemAcceptTO, ProblemAccept.class, true);
         problemAccept.setCreateTime(LocalDateTime.now());
         super.save(problemAccept);
@@ -61,6 +74,13 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemAcceptBO editProblemAccept(ProblemAcceptTO problemAcceptTO) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(problemAcceptTO.getId())){
+            throw new SerException("id不能为空");
+        }
         ProblemAccept problemAccept = super.findById(problemAcceptTO.getId());
         BeanTransform.copyProperties(problemAcceptTO, problemAccept, true);
         problemAccept.setModifyTime(LocalDateTime.now());
@@ -71,6 +91,10 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeProblemAccept(String id) throws SerException {
+        Boolean permission = proPermissionSer.getProPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         try {
             super.remove(id);
         } catch (SerException e) {

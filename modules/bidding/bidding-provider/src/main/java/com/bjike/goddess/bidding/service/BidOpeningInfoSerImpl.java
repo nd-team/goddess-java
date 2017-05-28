@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpeningInfoDTO> implements BidOpeningInfoSer{
     @Autowired
-    private BidOpeningInfoSer bidOpeningInfoAPI;
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
         bidOpeningInfoDTO.getSorts().add("createTime=desc");
@@ -53,30 +53,47 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
     }
     @Override
     public List<BidOpeningInfoBO> findListBidOpeningInfo(BidOpeningInfoDTO bidOpeningInfoDTO) throws SerException {
-        bidOpeningInfoDTO.getSorts().add("createTime=desc");
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO,true);
         List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class);
         return bidOpeningInfoBOS;
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO insertBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         BidOpeningInfo bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
         bidOpeningInfo.setModifyTime(LocalDateTime.now());
         super.save(bidOpeningInfo);
         return BeanTransform.copyProperties(bidOpeningInfo, BidOpeningInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BidOpeningInfoBO editBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         BidOpeningInfo bidOpeningInfo = super.findById(bidOpeningInfoTO.getId());
         BeanTransform.copyProperties(bidOpeningInfoTO, bidOpeningInfo, true);
         bidOpeningInfo.setModifyTime(LocalDateTime.now());
         super.update(bidOpeningInfo);
         return BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBidOpeningInfo(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         super.remove(id);
 
     }

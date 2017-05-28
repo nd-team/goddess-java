@@ -10,6 +10,7 @@ import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.entity.TenderInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ import java.util.List;
 @Service
 public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> implements TenderInfoSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
         tenderInfoDTO.getSorts().add("createTime=desc");
@@ -43,31 +46,46 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
     }
     @Override
     public List<TenderInfoBO> findListTenderInfo(TenderInfoDTO tenderInfoDTO) throws SerException {
-        tenderInfoDTO.getSorts().add("createTime=desc");
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<TenderInfo> tenderInfo = super.findByCis(tenderInfoDTO,true);
         List<TenderInfoBO> tenderInfoBOS = BeanTransform.copyProperties(tenderInfo,TenderInfoBO.class);
         return tenderInfoBOS;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TenderInfoBO insertTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         TenderInfo tenderInfo = BeanTransform.copyProperties(tenderInfoTO, TenderInfo.class, true);
         tenderInfo.setModifyTime(LocalDateTime.now());
         super.save(tenderInfo);
         return BeanTransform.copyProperties(tenderInfo, TenderInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public TenderInfoBO editTenderInfo(TenderInfoTO tenderInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         TenderInfo tenderInfo = super.findById(tenderInfoTO.getId());
         BeanTransform.copyProperties(tenderInfoTO, tenderInfo, true);
         tenderInfo.setModifyTime(LocalDateTime.now());
         super.update(tenderInfo);
         return BeanTransform.copyProperties(tenderInfoTO, TenderInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeTenderInfo(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         super.remove(id);
     }
     @Override

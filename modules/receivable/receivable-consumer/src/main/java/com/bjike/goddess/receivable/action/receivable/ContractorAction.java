@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.receivable.api.ContractorAPI;
@@ -96,6 +97,7 @@ public class ContractorAction {
      * @des 添加承包商列表
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
         try {
@@ -114,6 +116,7 @@ public class ContractorAction {
      * @des 编辑承包商列表
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ContractorTO contractorTO, BindingResult bindingResult) throws ActException {
         try {
@@ -131,6 +134,7 @@ public class ContractorAction {
      * @des 根据用户id删除承包商列表记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {

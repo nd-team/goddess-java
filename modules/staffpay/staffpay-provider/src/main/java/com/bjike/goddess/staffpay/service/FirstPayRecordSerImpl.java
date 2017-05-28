@@ -10,6 +10,7 @@ import com.bjike.goddess.staffpay.entity.FirstPayRecord;
 import com.bjike.goddess.staffpay.entity.PayRecord;
 import com.bjike.goddess.staffpay.enums.ConfirmStatus;
 import com.bjike.goddess.staffpay.to.FirstPayRecordTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class FirstPayRecordSerImpl extends ServiceImpl<FirstPayRecord, FirstPayR
         }
 
         PayRecord payRecord = new PayRecord();
-        BeanTransform.copyProperties(firstPayRecord,payRecord,true);
+        BeanUtils.copyProperties(firstPayRecord,payRecord);
         payRecordSer.save(payRecord);
         return BeanTransform.copyProperties(payRecord, PayRecordBO.class);
     }
