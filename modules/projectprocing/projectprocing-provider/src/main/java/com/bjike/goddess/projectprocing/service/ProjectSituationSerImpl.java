@@ -58,6 +58,7 @@ public class ProjectSituationSerImpl extends ServiceImpl<ProjectSituation, Proje
 
     @Override
     public List<ProjectSituationBO> listProjectSituation(ProjectSituationDTO projectSituationDTO) throws SerException {
+
         //列表权限
         Boolean permission = cusPermissionSer.getCusPermission("1");
         if ( !permission) {
