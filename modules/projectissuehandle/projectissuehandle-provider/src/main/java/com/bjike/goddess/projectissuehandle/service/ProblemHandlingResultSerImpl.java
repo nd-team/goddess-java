@@ -10,6 +10,7 @@ import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
             throw new SerException("id不能为空");
         }
         ProblemHandlingResult problemHandlingResult = super.findById(id);
-        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class, true);
+        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
     }
 
     @Override

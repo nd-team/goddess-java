@@ -1,6 +1,7 @@
 package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
@@ -17,6 +18,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface RentPayAPI {
+    /**
+     * 房租缴费列表总条数
+     */
+    default Long countRentPay(RentPayDTO rentPayDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个房租缴费
+     *
+     * @return class RentPayBO
+     */
+    default RentPayBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取房租缴费
      *
@@ -69,14 +85,21 @@ public interface RentPayAPI {
     /**
      * 汇总
      *
-     * @param area area
-     * @return class RentPayBO
+     * @param areas areas
+     * @return class CollectAreaBO
      * @throws SerException
      */
-    default List<RentPayBO> collectArea(String[] area) throws SerException {
+    default List<CollectAreaBO> collectArea(String[] areas) throws SerException {
         return null;
     }
 
-
+    /**
+     * 获取地区
+     *
+     * @return class String
+     */
+    default List<String> getArea() throws SerException {
+        return null;
+    }
 
 }

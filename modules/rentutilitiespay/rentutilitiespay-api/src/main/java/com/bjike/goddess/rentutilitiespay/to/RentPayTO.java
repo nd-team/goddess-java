@@ -1,6 +1,11 @@
 package com.bjike.goddess.rentutilitiespay.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 房租缴费
@@ -16,26 +21,31 @@ public class RentPayTO extends BaseTO {
     /**
      * 缴费日期
      */
+    @NotBlank(message = "缴费日期不能为空",groups = {ADD.class, EDIT.class})
     private String payDate;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空",groups = {ADD.class, EDIT.class})
     private String projectGroup;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
      * 租房地址
      */
+    @NotBlank(message = "租房地址不能为空",groups = {ADD.class, EDIT.class})
     private String address;
 
     /**
@@ -116,16 +126,19 @@ public class RentPayTO extends BaseTO {
     /**
      * 水费初期数目
      */
+    @NotNull(message = "水费初期数目不能为空",groups = {ADD.class, EDIT.class})
     private Double waterBeginNum;
 
     /**
      * 水费计价金额（元/吨）
      */
+    @NotNull(message = "水费计价金额（元/吨）不能为空",groups = {ADD.class, EDIT.class})
     private Double waterValuationMoney;
 
     /**
      * 水费期末数目
      */
+    @NotNull(message = "水费期末数目不能为空",groups = {ADD.class, EDIT.class})
     private Double waterEndNum;
 
     /**
@@ -141,31 +154,37 @@ public class RentPayTO extends BaseTO {
     /**
      * 水费缴纳开始时间
      */
+    @NotBlank(message = "水费缴纳开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String waterStartTime;
 
     /**
      * 水费缴纳结束时间
      */
+    @NotBlank(message = "水费缴纳结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String waterEndTime;
 
     /**
      * 水费缴费方
      */
-    private Double waterPay;
+    @NotBlank(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private String waterPay;
 
     /**
      * 电费初期数目
      */
+    @NotBlank(message = "电费初期数目不能为空",groups = {ADD.class, EDIT.class})
     private Double energyBeginNum;
 
     /**
      * 电费计价金额（元/吨）
      */
+    @NotBlank(message = "电费计价金额（元/吨）不能为空",groups = {ADD.class, EDIT.class})
     private Double energyValuationMoney;
 
     /**
      * 电费期末数目
      */
+    @NotBlank(message = "电费期末数目不能为空",groups = {ADD.class, EDIT.class})
     private Double energyEndNum;
 
     /**
@@ -181,37 +200,44 @@ public class RentPayTO extends BaseTO {
     /**
      * 电费缴纳开始时间
      */
+    @NotBlank(message = "电费缴纳开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String energyStartTime;
 
     /**
      * 电费缴纳结束时间
      */
+    @NotBlank(message = "电费缴纳结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String energyEndTime;
 
     /**
      * 电费缴费方
      */
-    private Double energyPay;
+    @NotBlank(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private String energyPay;
 
     /**
      * 管道燃气费充值额度
      */
+    @NotNull(message = "管道燃气费充值额度不能为空",groups = {ADD.class, EDIT.class})
     private Double gasRechargeLines;
 
     /**
      * 燃气费缴纳开始时间
      */
+    @NotBlank(message = "燃气费缴纳开始时间不能为空",groups = {ADD.class, EDIT.class})
     private String gasStartTime;
 
     /**
      * 燃气费缴纳结束时间
      */
+    @NotBlank(message = "燃气费缴纳结束时间不能为空",groups = {ADD.class, EDIT.class})
     private String gasEndTime;
 
     /**
      * 燃气费缴费方
      */
-    private Double gasPay;
+    @NotBlank(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    private String gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -221,11 +247,13 @@ public class RentPayTO extends BaseTO {
     /**
      * 运营财务部确认是否缴费
      */
+    @NotNull(message = "运营财务部确认是否缴费不能为空",groups = {ADD.class, EDIT.class})
     private Boolean operatingPay;
 
     /**
      * 房租收费是否已邮寄到广州
      */
+    @NotNull(message = "房租收费是否已邮寄到广州不能为空")
     private Boolean rentMoneyMail;
 
     /**
@@ -455,11 +483,11 @@ public class RentPayTO extends BaseTO {
         this.waterEndTime = waterEndTime;
     }
 
-    public Double getWaterPay() {
+    public String getWaterPay() {
         return waterPay;
     }
 
-    public void setWaterPay(Double waterPay) {
+    public void setWaterPay(String waterPay) {
         this.waterPay = waterPay;
     }
 
@@ -519,11 +547,11 @@ public class RentPayTO extends BaseTO {
         this.energyEndTime = energyEndTime;
     }
 
-    public Double getEnergyPay() {
+    public String getEnergyPay() {
         return energyPay;
     }
 
-    public void setEnergyPay(Double energyPay) {
+    public void setEnergyPay(String energyPay) {
         this.energyPay = energyPay;
     }
 
@@ -551,11 +579,11 @@ public class RentPayTO extends BaseTO {
         this.gasEndTime = gasEndTime;
     }
 
-    public Double getGasPay() {
+    public String getGasPay() {
         return gasPay;
     }
 
-    public void setGasPay(Double gasPay) {
+    public void setGasPay(String gasPay) {
         this.gasPay = gasPay;
     }
 

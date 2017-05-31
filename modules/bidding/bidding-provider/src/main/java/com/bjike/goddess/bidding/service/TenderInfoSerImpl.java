@@ -41,6 +41,9 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
     }
     @Override
     public TenderInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         TenderInfo tenderInfo = super.findById(id);
         return BeanTransform.copyProperties(tenderInfo,TenderInfoBO.class);
     }
@@ -73,6 +76,9 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
+        if(StringUtils.isBlank(tenderInfoTO.getId())){
+            throw new SerException("id不能为空");
+        }
         TenderInfo tenderInfo = super.findById(tenderInfoTO.getId());
         BeanTransform.copyProperties(tenderInfoTO, tenderInfo, true);
         tenderInfo.setModifyTime(LocalDateTime.now());
@@ -85,6 +91,9 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         Boolean permission = cusPermissionSer.getCusPermission("1");
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
         }
         super.remove(id);
     }

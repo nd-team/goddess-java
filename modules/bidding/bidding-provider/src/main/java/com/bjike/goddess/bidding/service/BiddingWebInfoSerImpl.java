@@ -38,6 +38,9 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
     }
     @Override
     public BiddingWebInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         BiddingWebInfo biddingWebInfo = super.findById(id);
         return BeanTransform.copyProperties(biddingWebInfo,BiddingWebInfoBO.class);
     }
@@ -70,6 +73,9 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
+        if(StringUtils.isBlank(biddingWebInfoTO.getId())){
+            throw new SerException("id不能为空");
+        }
         BiddingWebInfo biddingWebInfo = super.findById(biddingWebInfoTO.getId());
         BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
         biddingWebInfo.setModifyTime(LocalDateTime.now());
@@ -82,6 +88,9 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         Boolean permission = cusPermissionSer.getCusPermission("1");
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
         }
         super.remove(id);
     }
