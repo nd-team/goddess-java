@@ -8,14 +8,12 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
-import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
-import com.bjike.goddess.marketactivitymanage.vo.CustomerInfoVO;
+import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import com.bjike.goddess.marketactivitymanage.vo.MarketServeApplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,13 +39,10 @@ public class MarketServeApplyAct {
     @Autowired
     private MarketServeApplyAPI marketServeApplyAPI;
 
-    @Autowired
-    private CustomerInfoAPI customerInfoAPI;
-
     /**
      * 根据id查询市场招待申请
      *
-     * @param id      市场招待申请唯一标识
+     * @param id 市场招待申请唯一标识
      * @return class MarketServeApplyVO
      * @throws ActException
      * @version v1
@@ -109,7 +104,7 @@ public class MarketServeApplyAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) MarketServeApplyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             MarketServeApplyBO bo = marketServeApplyAPI.save(to);
             MarketServeApplyVO vo = BeanTransform.copyProperties(bo, MarketServeApplyVO.class, request);
@@ -146,7 +141,7 @@ public class MarketServeApplyAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) MarketServeApplyTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) MarketServeApplyTO to, BindingResult result) throws ActException {
         try {
             marketServeApplyAPI.update(to);
             return new ActResult("edit success!");
@@ -162,11 +157,19 @@ public class MarketServeApplyAct {
      * @throws ActException
      * @version v1
      */
+    /**
+     * 运营商务部资金模块意见
+     *
+     * @param id                市场招待申请唯一标识
+     * @param fundModuleOpinion 运营商务部资金模块意见
+     * @throws ActException
+     * @version v1
+     */
     @LoginAuth
-    @PutMapping("v1/fundModuleOpinion")
-    public Result fundModuleOpinion(@Validated(MarketServeApplyTO.FUNDMODULE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
+    @PatchMapping("v1/fundModuleOpinion/{id}")
+    public Result fundModuleOpinion(@PathVariable String id, @RequestParam(value = "fundModuleOpinion") String fundModuleOpinion) throws ActException {
         try {
-            marketServeApplyAPI.fundModuleOpinion(to);
+            marketServeApplyAPI.fundModuleOpinion(id, fundModuleOpinion);
             return new ActResult("fundModuleOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -174,17 +177,18 @@ public class MarketServeApplyAct {
     }
 
     /**
-     * 决策层审核意见不能为空
+     * 决策层审核意见
      *
-     * @param to 市场招待申请to信息
+     * @param id                    市场招待申请唯一标识
+     * @param executiveAuditOpinion 决策层审核意见
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/executiveOpinion")
-    public Result executiveOpinion(@Validated(MarketServeApplyTO.EXECUTIVE.class) MarketServeApplyTO to, BindingResult result) throws ActException {
+    @PatchMapping("v1/executiveOpinion/{id}")
+    public Result executiveOpinion(@PathVariable String id, @RequestParam(value = "executiveAuditOpinion") AuditType executiveAuditOpinion) throws ActException {
         try {
-            marketServeApplyAPI.executiveOpinion(to);
+            marketServeApplyAPI.executiveOpinion(id, executiveAuditOpinion);
             return new ActResult("executiveOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -195,20 +199,35 @@ public class MarketServeApplyAct {
      * 添加客户信息
      *
      * @param to 客户信息to
-     * @return class CustomerInfoVO
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/addcustomerinfo")
-    public Result add(@Validated({ADD.class}) CustomerInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/addCustomerInfo")
+    public Result addClientInfo(@Validated({ADD.class}) CustomerInfoTO to, BindingResult result) throws ActException {
         try {
-            CustomerInfoBO bo = customerInfoAPI.save(to);
-            CustomerInfoVO vo = BeanTransform.copyProperties(bo, CustomerInfoVO.class, request);
-            return ActResult.initialize(vo);
+            marketServeApplyAPI.addClientInfo(to);
+            return ActResult.initialize("addcustomerinfo success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/editCustomerInfo")
+    public Result editClientInfo(@Validated(value = {CustomerInfoTO.EditCustomer.class}) CustomerInfoTO to, BindingResult result) throws ActException {
+        try {
+            marketServeApplyAPI.editClientInfo(to);
+            return ActResult.initialize("editClientInfo success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

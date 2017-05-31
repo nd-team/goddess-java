@@ -26,7 +26,7 @@ public class MarketServeSummaryTO extends BaseTO {
      * 项目组
      */
     @Size(groups = {ADD.class, EDIT.class}, min = 1, message = "项目组数量必须大于0")
-    private String[] projectGroups;
+    private String[] projects;
 
     /**
      * 类型
@@ -67,7 +67,7 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "发送间隔最小为1")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
     private Integer sendInterval;
 
     /**
@@ -79,7 +79,7 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 汇总间隔
      */
-    @Min(groups = {ADD.class, EDIT.class}, value = 1, message = "汇总间隔最小为1")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总间隔不能为空")
     private Integer detailInterval;
 
     /**
@@ -99,12 +99,12 @@ public class MarketServeSummaryTO extends BaseTO {
      */
     private Status status;
 
-    public String[] getProjectGroups() {
-        return projectGroups;
+    public String[] getProjects() {
+        return projects;
     }
 
-    public void setProjectGroups(String[] projectGroups) {
-        this.projectGroups = projectGroups;
+    public void setProjects(String[] projects) {
+        this.projects = projects;
     }
 
     public Boolean getType() {

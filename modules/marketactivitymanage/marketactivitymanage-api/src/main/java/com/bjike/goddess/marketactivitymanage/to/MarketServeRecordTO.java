@@ -22,22 +22,16 @@ import javax.validation.constraints.Pattern;
  */
 public class MarketServeRecordTO extends BaseTO {
 
-    public interface FUNDMODULE {
-    }//运营商务部资金模块审核
-
-    public interface EXECUTIVE {
-    } //决策层审核
-
     /**
      * 计划活动时间点
      */
-    @Pattern(groups = {ADD.class, EDIT.class}, regexp = "^[1-9]\\d{3}\\-(0?[1-9]|1[0-2])\\-(0?[1-9]|[12]\\d|3[01])\\s*(0?[1-9]|1\\d|2[0-3])(\\:(0?[1-9]|[1-5]\\d)){2}$", message = "日期格式必须符合yy-MM-dd HH:mm:ss 如2015-01-27 10:11:12")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划活动时间点不能为空")
     private String planActivityTiming;
 
     /**
      * 实际活动时间点
      */
-    @Pattern(groups = {ADD.class, EDIT.class}, regexp = "^[1-9]\\d{3}\\-(0?[1-9]|1[0-2])\\-(0?[1-9]|[12]\\d|3[01])\\s*(0?[1-9]|1\\d|2[0-3])(\\:(0?[1-9]|[1-5]\\d)){2}$", message = "日期格式必须符合yy-MM-dd HH:mm:ss 如2015-01-27 10:11:12")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "实际活动时间点不能为空")
     private String actualActivityTiming;
 
     /**
@@ -109,7 +103,7 @@ public class MarketServeRecordTO extends BaseTO {
     /**
      * 预计费用
      */
-    @DecimalMin(groups = {ADD.class, EDIT.class}, value = "0.0", inclusive = false, message = "预计费用必须大于0.0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "预计费用不能为空")
     private Double predictCharge;
 
     /**
@@ -121,31 +115,29 @@ public class MarketServeRecordTO extends BaseTO {
     /**
      * 是否临时招待
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否临时招待")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否临时招待不能为空")
     private Boolean whetherTemporaryServe;
 
     /**
      * 运营商务部资金模块
      */
-    @NotBlank(groups = {MarketServeRecordTO.FUNDMODULE.class}, message = "运营商务部资金模块不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "运营商务部资金模块不能为空")
     private String yyFundModule;
 
     /**
      * 资金模块意见
      */
-    @NotBlank(groups = {MarketServeRecordTO.FUNDMODULE.class}, message = "资金模块意见不能为空")
     private String fundModuleOpinion;
 
     /**
      * 决策层
      */
-    @NotBlank(groups = {MarketServeRecordTO.EXECUTIVE.class}, message = "决策层不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "决策层不能为空")
     private String decisionLevel;
 
     /**
      * 决策层审核意见
      */
-    @NotNull(groups = {MarketServeRecordTO.EXECUTIVE.class}, message = "决策层审核意见不能为空")
     private AuditType executiveAuditOpinion;
 
 

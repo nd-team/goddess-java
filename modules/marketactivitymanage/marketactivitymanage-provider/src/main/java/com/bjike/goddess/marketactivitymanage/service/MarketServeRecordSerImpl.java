@@ -137,7 +137,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void addClientInfo(CustomerInfoTO to) throws SerException {
-       /* String marketServeId = to.getMarketServeId();
+        String marketServeId = to.getMarketServeId();
         List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
         List<String> clientNames = to.getClientNames();//客户姓名
         List<String> importanceLevels = to.getImportanceLevels();//重要性级别
@@ -151,74 +151,61 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
                 customerInfoTO.setImportanceLevel(importanceLevels.get(i));
                 customerInfoTO.setMarketServeId(marketServeId);
 
-                customerInfoAPI.save(customerInfoTO);
+                customerInfoSer.save(customerInfoTO);
             }
-        }*/
+        }
+    }
+
+    /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void editClientInfo(CustomerInfoTO to) throws SerException {
+        checkPermission();
+        String marketServeId = to.getMarketServeId();
+        CustomerInfoDTO dto = new CustomerInfoDTO();
+        dto.getConditions().add(Restrict.eq("marketServeId", marketServeId));
+        List<CustomerInfo> list = customerInfoSer.findByCis(dto);
+        customerInfoSer.remove(list);
+        addClientInfo(to);
     }
 
     /**
      * 资金模块意见
      *
-     * @param to 市场招待记录to
+     * @param id 市场招待记录唯一标识
+     * @param fundModuleOpinion 资金模块意见
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void fundModuleOpinion(MarketServeRecordTO to) throws SerException {
+    public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
         checkPermission();
-        String id = to.getId();
-        MarketServeRecord entity = super.findById(id);
-        String yyFundModule = to.getYyFundModule();//运营商务部资金模块意见
-        String fundModuleOpinion = to.getFundModuleOpinion();//资金模块意见
-        entity.setYyFundModule(yyFundModule);
-        entity.setFundModuleOpinion(fundModuleOpinion);
-        update(entity);//更新资金模块意见
+        MarketServeRecord model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setYyFundModule(fundModuleOpinion);
+        super.update(model);
     }
 
     /**
-     * 决策层意见
+     * 决策层审核意见
      *
-     * @param to 市场招待记录to
+     * @param id 市场招待记录唯一标识
+     * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void executiveOpinion(MarketServeRecordTO to) throws SerException {
+    public void executiveOpinion(String id, AuditType executiveAuditOpinion) throws SerException {
         checkPermission();
-        String id = to.getId();//获取id
-        MarketServeRecord entity = super.findById(id);
-        String decisionLevel = to.getDecisionLevel();//获取决策层
-        AuditType executiveAuditOpinion = to.getExecutiveAuditOpinion();//决策层审核意见
-        entity.setDecisionLevel(decisionLevel);
-        entity.setExecutiveAuditOpinion(executiveAuditOpinion);
-        update(entity);
-    }
-
-    /**
-     * 导入文件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath  文件输入流
-     * @throws SerException
-     */
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public void importFile(InputStream inputStream, String targetPath) throws SerException {
-        // TODO: 17-3-20
-    }
-
-    /**
-     * 导出文件
-     *
-     * @param filePath 需要导出的文件的路径
-     * @return class OutputStream
-     * @throws SerException
-     */
-    @Override
-    @Transactional(rollbackFor = SerException.class)
-    public OutputStream exportFile(String filePath) throws SerException {
-        // TODO: 17-3-20
-        return null;
+        MarketServeRecord model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setExecutiveAuditOpinion(executiveAuditOpinion);
+        super.update(model);
     }
 
     /**
