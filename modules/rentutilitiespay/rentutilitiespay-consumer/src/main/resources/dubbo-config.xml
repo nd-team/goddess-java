@@ -20,4 +20,7 @@
 	<dubbo:reference  validation="true" id="stayUtilitiesApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.StayUtilitiesAPI" />
 
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
+
 </beans>

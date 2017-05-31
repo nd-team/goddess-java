@@ -1,6 +1,7 @@
 package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
@@ -17,6 +18,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayUtilitiesAPI {
+    /**
+     * 员工住宿水电费列表总条数
+     */
+    default Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个员工住宿水电费
+     *
+     * @return class StayUtilitiesBO
+     */
+    default StayUtilitiesBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取员工住宿水电费
      *
@@ -62,13 +78,21 @@ public interface StayUtilitiesAPI {
     /**
      * 汇总
      *
-     * @param name name
-     * @return class StayUtilitiesBO
+     * @param names names
+     * @return class CollectNameBO
      * @throws SerException
      */
-    default List<StayUtilitiesBO> collectName(String[] name) throws SerException {
+    default List<CollectNameBO> collectName(String[] names) throws SerException {
         return null;
     }
 
+    /**
+     * 获取名字
+     *
+     * @return class String
+     */
+    default List<String> getName() throws SerException {
+        return null;
+    }
 
 }

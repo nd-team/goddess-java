@@ -38,6 +38,9 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
     }
    @Override
     public BiddingAnswerQuestionsBO getOne(String id) throws SerException {
+       if(StringUtils.isBlank(id)){
+           throw new SerException("id不能为空");
+       }
         BiddingAnswerQuestions biddingAnswerQuestions = super.findById(id);
         return BeanTransform.copyProperties(biddingAnswerQuestions,BiddingAnswerQuestionsBO.class);
     }
@@ -70,6 +73,9 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
+        if(StringUtils.isBlank(biddingAnswerQuestionsTO.getId())){
+            throw new SerException("id不能为空");
+        }
         BiddingAnswerQuestions biddingAnswerQuestions = super.findById(biddingAnswerQuestionsTO.getId());
         BeanTransform.copyProperties(biddingAnswerQuestionsTO, biddingAnswerQuestions, true);
         biddingAnswerQuestions.setModifyTime(LocalDateTime.now());
@@ -83,6 +89,9 @@ public class BiddingAnswerQuestionsSerImpl extends ServiceImpl<BiddingAnswerQues
         Boolean permission = cusPermissionSer.getCusPermission("1");
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
         }
         super.remove(id);
     }

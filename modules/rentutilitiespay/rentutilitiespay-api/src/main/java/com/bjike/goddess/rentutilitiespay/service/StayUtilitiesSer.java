@@ -2,7 +2,10 @@ package com.bjike.goddess.rentutilitiespay.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
+import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
+import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
@@ -19,6 +22,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayUtilitiesSer extends Ser<StayUtilities, StayUtilitiesDTO> {
+    /**
+     * 员工住宿水电费列表总条数
+     */
+    default Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个员工住宿水电费
+     *
+     * @return class StayUtilitiesBO
+     */
+    default StayUtilitiesBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取员工住宿水电费
      *
@@ -64,11 +82,11 @@ public interface StayUtilitiesSer extends Ser<StayUtilities, StayUtilitiesDTO> {
     /**
      * 汇总
      *
-     * @param name name
-     * @return class StayUtilitiesBO
+     * @param names names
+     * @return class CollectNameBO
      * @throws SerException
      */
-    default List<StayUtilitiesBO> collectName(String[] name) throws SerException {
+    default List<CollectNameBO> collectName(String[] names) throws SerException {
         return null;
     }
 
@@ -77,47 +95,7 @@ public interface StayUtilitiesSer extends Ser<StayUtilities, StayUtilitiesDTO> {
      *
      * @return class String
      */
-    default List<String> getStayUtilitiesName() throws SerException {
-        return null;
-    }
-    /**
-     * 获取编号
-     *
-     * @return class String
-     */
-    default List<String> getStayUtilitiesNum() throws SerException {
-        return null;
-    }
-    /**
-     * 获取地区
-     *
-     * @return class String
-     */
-    default List<String> getStayUtilitiesArea() throws SerException {
-        return null;
-    }
-    /**
-     * 获取项目组
-     *
-     * @return class String
-     */
-    default List<String> getStayUtilitiesProGroup() throws SerException {
-        return null;
-    }
-    /**
-     * 获取项目名称
-     *
-     * @return class String
-     */
-    default List<String> getStayUtilitiesProName() throws SerException {
-        return null;
-    }
-    /**
-     * 获取地址
-     *
-     * @return class String
-     */
-    default List<String> getStayUtilitiesAddress() throws SerException {
+    default List<String> getName() throws SerException {
         return null;
     }
 

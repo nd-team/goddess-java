@@ -142,16 +142,6 @@ public class StayUtilitiesBO extends BaseBO {
      */
     private String remark;
 
-    private int counts;//个数
-
-    private List<Map<String, String>> areaMap;//地区汇总集合
-    private List<Map<String, String>> numMap;//编号汇总集合
-    private List<Map<String, String>> proGroupMap;//项目组汇总集合
-    private List<Map<String, String>> proNameMap;//项目名称汇总集合
-    private List<Map<String, String>> addressMap;//住宿地址汇总集合
-
-
-
     public String getArea() {
         return area;
     }
@@ -352,63 +342,4 @@ public class StayUtilitiesBO extends BaseBO {
         this.remark = remark;
     }
 
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
-
-    public List<Map<String, String>> getNumMap() {
-        return numMap;
-    }
-
-    public void setNumMap(List<Map<String, String>> numMap) {
-        this.numMap = numMap;
-    }
-
-    public List<Map<String, String>> getProGroupMap() {
-        return proGroupMap;
-    }
-
-    public void setProGroupMap(List<Map<String, String>> proGroupMap) {
-        this.proGroupMap = proGroupMap;
-    }
-
-    public List<Map<String, String>> getProNameMap() {
-        return proNameMap;
-    }
-
-    public void setProNameMap(List<Map<String, String>> proNameMap) {
-        this.proNameMap = proNameMap;
-    }
-
-    public List<Map<String, String>> getAddressMap() {
-        return addressMap;
-    }
-
-    public void setAddressMap(List<Map<String, String>> addressMap) {
-        this.addressMap = addressMap;
-    }
-    public StayUtilitiesBO(String name,String num,String area,String projectGroup,String projectName,String address,Double waterStaffPay,Double energyStaffPay,Double gasStaffPay){
-        super();
-        this.name = name;
-        this.num = num;
-        this.area = area;
-        this.projectGroup = projectGroup;
-        this.projectName = projectName;
-        this.address = address;
-        this.waterStaffPay = waterStaffPay;
-        this.energyStaffPay = energyStaffPay;
-        this.gasStaffPay = gasStaffPay;
-    }
 }

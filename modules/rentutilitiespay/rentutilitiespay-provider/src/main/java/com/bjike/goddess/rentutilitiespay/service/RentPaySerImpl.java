@@ -3,11 +3,13 @@ package com.bjike.goddess.rentutilitiespay.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.RentPay;
 import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,10 +35,17 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "rentutilitiespaySerCache")
 @Service
 public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements RentPaySer {
-    @Autowired
-    private RentPaySer rentPaySer;
+    @Override
+    public Long countRentPay(RentPayDTO rentPayDTO) throws SerException {
+        Long count = super.count(rentPayDTO);
+        return count;
+    }
 
-    @Cacheable
+    @Override
+    public RentPayBO getOne(String id) throws SerException {
+        RentPay rentPay = super.findById(id);
+        return BeanTransform.copyProperties(rentPay,RentPayBO.class);
+    }
     @Override
     public List<RentPayBO> findListRentPay(RentPayDTO rentPayDTO) throws SerException {
         List<RentPay> rentPays = super.findByCis(rentPayDTO, true);
@@ -102,169 +111,101 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         //todo:未做上传附件
         return;
     }
-
-    /**
-     * 汇总
-     *
-     * @param area area
-     * @return class RentPayBO
-     * @throws SerException
-     */
-    public List<RentPayBO> collectArea(String[] area) throws SerException {
-        if (area == null || area.length <= 0) {
-            throw new SerException("汇总失败，请选择地区");
+    @Override
+    public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
+        String[] areasTemp = new String[areas.length];
+        for(int i = 0;i<areas.length;i++){
+            areasTemp[i] = "'"+areas[i]+"'";
         }
-        List<RentPayBO> rentPayBOList = new ArrayList<>();
+        String areaStr = StringUtils.join(areasTemp, ",");
 
-        //先查有几个地区
-        List<String> areaList = rentPaySer.getRentPayArea();
-        //项目组
-        List<String> projectGroup = rentPaySer.getRentPayProGroup();
-        //项目名称
-        List<String> projectName = rentPaySer.getRentPayProName();
-        //地址
-        List<String> address = rentPaySer.getRentPayAddress();
-        StringBuffer tempAreas = new StringBuffer("");
-        for (String str : areaList) {
-            tempAreas.append("'" + str + "',");
-        }
-        String areas = String.valueOf(tempAreas).substring(0, String.valueOf(tempAreas).lastIndexOf(","));
-
-        for (String areaStr : area) {
-            //处理地区汇总
-            String[] fields = new String[]{"counts", "area", "remark"};
-            String sql = "select count(*) as counts ,area as area  from  rentutilitiespay_rentpay " +
-                    "where area in (" + areaStr + ") area order by area asc  ";
-            List<Map<String, String>> areaMapList = new ArrayList<>();
-            areaMapList = sqlQueryString(areaList, fields, sql, areaMapList);
-            //处理项目组汇总
-            sql = "select count(*) as counts ,projectGroup as projectGroup  from  rentutilitiespay_rentpay " +
-                    "where projectGroup  order by projectGroup asc  ";
-            List<Map<String, String>> proGroupMapList = new ArrayList<>();
-            proGroupMapList = sqlQueryString(projectGroup, fields, sql, proGroupMapList);
-            //处理项目名称汇总
-            sql = "select count(*) as counts ,projectName as projectName  from  rentutilitiespay_rentpay " +
-                    "where projectName  order by projectName asc  ";
-            List<Map<String, String>> proNameMapList = new ArrayList<>();
-            proNameMapList = sqlQueryString(projectName, fields, sql, proNameMapList);
-            //处理租房地址汇总
-            sql = "select count(*) as counts ,address as address  from  rentutilitiespay_rentpay " +
-                    "where address  order by address asc  ";
-            List<Map<String, String>> addressMapList = new ArrayList<>();
-            addressMapList = sqlQueryString(address, fields, sql, addressMapList);
-
-        }
-        RentPayDTO rentPayDTO = new RentPayDTO();
-        List<RentPay> list = super.findByCis(rentPayDTO);
-
-        Double rent = list.stream().mapToDouble(RentPay::getRent).sum();//房租
-        Double waterPayMoney = list.stream().mapToDouble(RentPay::getWaterPayMoney).sum(); //水费缴纳金额
-        Double energyPayMoney = list.stream().mapToDouble(RentPay::getEnergyPayMoney).sum(); //电费缴纳金额
-        Double gasRechargeLines = list.stream().mapToDouble(RentPay::getGasRechargeLines).sum(); //燃气费充值额度
-        Double fee = list.stream().mapToDouble(RentPay::getFee).sum(); //管理费，卫生费
-        RentPayBO rentPayBO = new RentPayBO("合计", null, null, null, rent, waterPayMoney, energyPayMoney, gasRechargeLines, fee);
-
-        rentPayBO.setProjectGroup(String.valueOf(projectGroup));
-        rentPayBO.setProjectName(String.valueOf(projectName));
-        rentPayBO.setAddress(String.valueOf(address));
-        rentPayBOList.add(rentPayBO);
-        return rentPayBOList;
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT * FROM ");
+        sb.append(" (SELECT area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee, ");
+        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(fee)) AS remark ");
+        sb.append(" FROM rentutilitiespay_rentpay WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address, ");
+        sb.append(" area ORDER BY area)A ");
+        sb.append(" UNION ");
+        sb.append(" SELECT '合计' AS area,NULL as projectGroup,NULL as projectName,NULL as address, ");
+        sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee , ");
+        sb.append(" ( sum(remark)) as remark FROM ");
+        sb.append(" (SELECT area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee, ");
+        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(fee)) AS remark ");
+        sb.append(" FROM rentutilitiespay_rentpay WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address, ");
+        sb.append(" area ORDER BY area)A ");
+        String sql = sb.toString();
+        sql = String.format(sql, areaStr,areaStr);
+        String [] fields = new String[]{"area","projectGroup","projectName","address",
+            "rent","waterPayMoney","energyPayMoney","fee","remark"};
+        List<CollectAreaBO> collectAreaBOS = super.findBySql(sql,CollectAreaBO.class,fields);
+        return collectAreaBOS;
     }
 
     @Override
-    public List<String> getRentPayArea() throws SerException {
+    public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select area from rentutilitiespay_rentpay order by area asc ", RentPayBO.class, fields);
+        List<RentPayBO> rentPayBOS = super.findBySql("select distinct area from rentutilitiespay_rentpay group by area order by area asc ", RentPayBO.class, fields);
 
         List<String> areaList = rentPayBOS.stream().map(RentPayBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
 
         return areaList;
+
     }
 
-    @Override
-    public List<String> getRentPayProGroup() throws SerException {
-        String[] fields = new String[]{"projectGroup"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup from rentutilitiespay_rentpay order by projectGroup asc ", RentPayBO.class, fields);
-
-        List<String> proGroupList = rentPayBOS.stream().map(RentPayBO::getProjectGroup)
-                .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());
-
-
-        return proGroupList;
-    }
-
-    @Override
-    public List<String> getRentPayProName() throws SerException {
-        String[] fields = new String[]{"projectName"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectName from rentutilitiespay_rentpay order by projectName asc ", RentPayBO.class, fields);
-
-        List<String> proNameList = rentPayBOS.stream().map(RentPayBO::getProjectName)
-                .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
-
-
-        return proNameList;
-    }
-
-    @Override
-    public List<String> getRentPayAddress() throws SerException {
-        String[] fields = new String[]{"address"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select address from rentutilitiespay_rentpay order by address asc ", RentPayBO.class, fields);
-
-        List<String> addressList = rentPayBOS.stream().map(RentPayBO::getAddress)
-                .filter(address -> (address != null || !"".equals(address.trim()))).distinct().collect(Collectors.toList());
-
-
-        return addressList;
-    }
 
     /**
      * 数据库查询返回，然后添加map数组
      */
-    public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
-        List<RentPayBO> rentPayBOS = rentPaySer.findBySql(sql, RentPayBO.class, fields);
-        if (rentPayBOS != null && rentPayBOS.size() > 0) {
-            if (obj.size() == rentPayBOS.size()) {
-                for (RentPayBO cbo : rentPayBOS) {
-                    Map<String, String> areaMap = new HashMap<>();
-                    areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
-                    mapList.add(areaMap);
-                }
-            } else if (rentPayBOS.size() < obj.size()) {
-                List<String> cbStr = new ArrayList<>();
-                for (RentPayBO cb : rentPayBOS) {
-                    cbStr.add(cb.getRemark());
-                }
-
-                //获取到所有不同的  如：地区
-                List<String> diffrent = new ArrayList<>();
-                for (String o : obj) {
-                    if (!cbStr.contains(o)) {
-                        diffrent.add(o);
-                    }
-                }
-
-                //存map
-                for (String o : obj) {
-                    for (RentPayBO cbo : rentPayBOS) {
-                        Map<String, String> areaMap = new HashMap<>();
-                        if (!diffrent.contains(o) && cbo.getRemark().equals(o)) {
-                            areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
-                        } else {
-                            areaMap.put("remark", o);
-                            areaMap.put("count", 0 + "");
-                        }
-                        mapList.add(areaMap);
-                    }
-                }
-
-            }
-        }
-        return mapList;
-    }
+//    public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
+//        List<RentPayBO> rentPayBOS = rentPaySer.findBySql(sql, RentPayBO.class, fields);
+//        if (rentPayBOS != null && rentPayBOS.size() > 0) {
+//            if (obj.size() == rentPayBOS.size()) {
+//                for (RentPayBO cbo : rentPayBOS) {
+//                    Map<String, String> areaMap = new HashMap<>();
+//                    areaMap.put("remark", cbo.getRemark());
+//                    areaMap.put("count", String.valueOf(cbo.getCounts()));
+//                    mapList.add(areaMap);
+//                }
+//            } else if (rentPayBOS.size() < obj.size()) {
+//                List<String> cbStr = new ArrayList<>();
+//                for (RentPayBO cb : rentPayBOS) {
+//                    cbStr.add(cb.getRemark());
+//                }
+//
+//                //获取到所有不同的  如：地区
+//                List<String> diffrent = new ArrayList<>();
+//                for (String o : obj) {
+//                    if (!cbStr.contains(o)) {
+//                        diffrent.add(o);
+//                    }
+//                }
+//
+//                //存map
+//                for (String o : obj) {
+//                    for (RentPayBO cbo : rentPayBOS) {
+//                        Map<String, String> areaMap = new HashMap<>();
+//                        if (!diffrent.contains(o) && cbo.getRemark().equals(o)) {
+//                            areaMap.put("remark", cbo.getRemark());
+//                            areaMap.put("count", String.valueOf(cbo.getCounts()));
+//                        } else {
+//                            areaMap.put("remark", o);
+//                            areaMap.put("count", 0 + "");
+//                        }
+//                        mapList.add(areaMap);
+//                    }
+//                }
+//
+//            }
+//        }
+//        return mapList;
+//    }
 
 
 }

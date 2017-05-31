@@ -3,6 +3,7 @@ package com.bjike.goddess.rentutilitiespay.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
@@ -35,11 +36,18 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "rentutilitiespaySerCache")
 @Service
 public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtilitiesDTO> implements StayUtilitiesSer {
+    @Override
+    public Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
+        Long count = super.count(stayUtilitiesDTO);
+        return count;
+    }
 
-    @Autowired
-    private StayUtilitiesSer stayUtilitiesSer;
+    @Override
+    public StayUtilitiesBO getOne(String id) throws SerException {
+        StayUtilities stayUtilities = super.findById(id);
+        return BeanTransform.copyProperties(stayUtilities,StayUtilitiesBO.class);
+    }
 
-    @Cacheable
     @Override
     public List<StayUtilitiesBO> findListStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
         List<StayUtilities> stayUtilities = super.findByCis(stayUtilitiesDTO, true);
@@ -117,85 +125,40 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
 
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
-    public List<StayUtilitiesBO> collectName(String[] name) throws SerException {
-        if (name == null || name.length <= 0) {
-            throw new SerException("汇总失败，请选择姓名");
+    public List<CollectNameBO> collectName(String[] names) throws SerException {
+        String[] namesTemp = new String[names.length];
+        for(int i = 0;i<names.length;i++){
+            namesTemp[i] = "'"+names[i]+"'";
         }
-        List<StayUtilitiesBO> stayUtilitiesBOList = new ArrayList<>();
+        String namesStr = StringUtils.join(namesTemp, ",");
 
-        //先查姓名
-        List<String> nameList = stayUtilitiesSer.getStayUtilitiesName();
-        //员工编号
-        List<String> num = stayUtilitiesSer.getStayUtilitiesNum();
-        //地区
-        List<String> area = stayUtilitiesSer.getStayUtilitiesArea();
-        //项目组
-        List<String> projectGroup = stayUtilitiesSer.getStayUtilitiesProGroup();
-        //项目名称
-        List<String> projectName = stayUtilitiesSer.getStayUtilitiesProName();
-        //地址
-        List<String> address = stayUtilitiesSer.getStayUtilitiesAddress();
-        StringBuffer tempNames = new StringBuffer("");
-        for (String str : nameList) {
-            tempNames.append("'" + str + "',");
-        }
-        String names = String.valueOf(tempNames).substring(0, String.valueOf(tempNames).lastIndexOf(","));
-
-        for (String nameStr : name) {
-            //处理姓名汇总
-            String[] fields = new String[]{"counts", "name", "remark"};
-            String sql = "select count(*) as counts ,name as name  from  rentutilitiespay_stayutilities " +
-                    "where name in (" + nameStr + ") name order by name asc  ";
-            List<Map<String, String>> nameMapList = new ArrayList<>();
-            nameMapList = sqlQueryString(nameList, fields, sql, nameMapList);
-            //处理员工编号汇总
-            sql = "select count(*) as counts ,num as num  from  rentutilitiespay_stayutilities " +
-                    "where num  order by num asc  ";
-            List<Map<String, String>> numMapList = new ArrayList<>();
-            numMapList = sqlQueryString(num, fields, sql, numMapList);
-            //处理地区汇总
-            sql = "select count(*) as counts ,area as area  from  rentutilitiespay_stayutilities " +
-                    "where area  order by area asc  ";
-            List<Map<String, String>> areaMapList = new ArrayList<>();
-            areaMapList = sqlQueryString(area, fields, sql, areaMapList);
-            //处理项目组汇总
-            sql = "select count(*) as counts ,projectGroup as projectGroup  from  rentutilitiespay_stayutilities " +
-                    "where projectGroup  order by projectGroup asc  ";
-            List<Map<String, String>> proGroupMapList = new ArrayList<>();
-            proGroupMapList = sqlQueryString(projectGroup, fields, sql, proGroupMapList);
-            //处理项目名称汇总
-            sql = "select count(*) as counts ,projectName as projectName  from  rentutilitiespay_stayutilities " +
-                    "where projectName  order by projectName asc  ";
-            List<Map<String, String>> proNameMapList = new ArrayList<>();
-            proNameMapList = sqlQueryString(projectName, fields, sql, proNameMapList);
-            //处理租房地址汇总
-            sql = "select count(*) as counts ,address as address  from  rentutilitiespay_stayutilities " +
-                    "where address  order by address asc  ";
-            List<Map<String, String>> addressMapList = new ArrayList<>();
-            addressMapList = sqlQueryString(address, fields, sql, addressMapList);
-        }
-        StayUtilitiesDTO stayUtilitiesDTO = new StayUtilitiesDTO();
-        List<StayUtilities> list = super.findByCis(stayUtilitiesDTO);
-
-        Double waterStaffPay = list.stream().mapToDouble(StayUtilities::getWaterStaffPay).sum();//水费员工缴纳
-        Double energyStaffPay = list.stream().mapToDouble(StayUtilities::getEnergyStaffPay).sum();//电费员工缴纳
-        Double gasStaffPay = list.stream().mapToDouble(StayUtilities::getGasStaffPay).sum();//燃气费员工缴纳
-        StayUtilitiesBO stayUtilitiesBO = new StayUtilitiesBO("合计", null, null, null, null, null, waterStaffPay, energyStaffPay, gasStaffPay);
-
-        stayUtilitiesBO.setNum(String.valueOf(num));
-        stayUtilitiesBO.setArea(String.valueOf(area));
-        stayUtilitiesBO.setProjectGroup(String.valueOf(projectGroup));
-        stayUtilitiesBO.setProjectName(String.valueOf(projectName));
-        stayUtilitiesBO.setAddress(String.valueOf(address));
-        stayUtilitiesBOList.add(stayUtilitiesBO);
-
-        return stayUtilitiesBOList;
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT * FROM ");
+        sb.append(" (SELECT name,num AS num,area AS area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark ");
+        sb.append(" FROM rentutilitiespay_stayutilities WHERE name IN (%s) GROUP BY name,num,area,projectGroup,projectName,address, ");
+        sb.append(" name ORDER BY name)A ");
+        sb.append(" UNION ");
+        sb.append(" SELECT '合计' AS name,NULL as num,NULL as area,NULL as projectGroup,NULL as projectName,NULL as address, ");
+        sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark FROM ");
+        sb.append(" (SELECT name,num AS num,area AS area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
+        sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark ");
+        sb.append(" FROM rentutilitiespay_stayutilities WHERE name IN (%s) GROUP BY name,num,area,projectGroup,projectName,address, ");
+        sb.append(" name ORDER BY name)A ");
+        String sql = sb.toString();
+        sql = String.format(sql, namesStr,namesStr);
+        String [] fields = new String[]{"name","num","area","projectGroup","projectName","address",
+               "waterStaffPay","energyStaffPay","gasStaffPay","remark"};
+        List<CollectNameBO> collectNameBOS = super.findBySql(sql,CollectNameBO.class,fields);
+        return collectNameBOS;
     }
 
     @Override
-    public List<String> getStayUtilitiesName() throws SerException {
+    public List<String> getName() throws SerException {
         String[] fields = new String[]{"name"};
         List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select name from rentutilitiespay_stayutilities order by name asc ", StayUtilitiesBO.class, fields);
 
@@ -204,113 +167,6 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
 
 
         return nameList;
-    }
-
-    @Override
-    public List<String> getStayUtilitiesNum() throws SerException {
-        String[] fields = new String[]{"num"};
-        List<StayUtilitiesBO> stayUtilitiesBOS = super.findBySql("select num from rentutilitiespay_stayutilities order by num asc ", StayUtilitiesBO.class, fields);
-
-        List<String> nameList = stayUtilitiesBOS.stream().map(StayUtilitiesBO::getNum)
-                .filter(num -> (num != null || !"".equals(num.trim()))).distinct().collect(Collectors.toList());
-
-
-        return nameList;
-    }
-
-    @Override
-    public List<String> getStayUtilitiesArea() throws SerException {
-        String[] fields = new String[]{"area"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select area from rentutilitiespay_stayutilities order by area asc ", RentPayBO.class, fields);
-
-        List<String> areaList = rentPayBOS.stream().map(RentPayBO::getArea)
-                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
-
-
-        return areaList;
-    }
-
-    @Override
-    public List<String> getStayUtilitiesProGroup() throws SerException {
-        String[] fields = new String[]{"projectGroup"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectGroup from rentutilitiespay_stayutilities order by projectGroup asc ", RentPayBO.class, fields);
-
-        List<String> proGroupList = rentPayBOS.stream().map(RentPayBO::getProjectGroup)
-                .filter(projectGroup -> (projectGroup != null || !"".equals(projectGroup.trim()))).distinct().collect(Collectors.toList());
-
-
-        return proGroupList;
-    }
-
-    @Override
-    public List<String> getStayUtilitiesProName() throws SerException {
-        String[] fields = new String[]{"projectName"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select projectName from rentutilitiespay_stayutilities order by projectName asc ", RentPayBO.class, fields);
-
-        List<String> proNameList = rentPayBOS.stream().map(RentPayBO::getProjectName)
-                .filter(projectName -> (projectName != null || !"".equals(projectName.trim()))).distinct().collect(Collectors.toList());
-
-
-        return proNameList;
-    }
-
-    @Override
-    public List<String> getStayUtilitiesAddress() throws SerException {
-        String[] fields = new String[]{"address"};
-        List<RentPayBO> rentPayBOS = super.findBySql("select address from rentutilitiespay_stayutilities order by address asc ", RentPayBO.class, fields);
-
-        List<String> addressList = rentPayBOS.stream().map(RentPayBO::getAddress)
-                .filter(address -> (address != null || !"".equals(address.trim()))).distinct().collect(Collectors.toList());
-
-
-        return addressList;
-    }
-
-    /**
-     * 数据库查询返回，然后添加map数组
-     */
-    public List<Map<String, String>> sqlQueryString(List<String> obj, String[] fields, String sql, List<Map<String, String>> mapList) throws SerException {
-        List<StayUtilitiesBO> stayUtilitiesBOS = stayUtilitiesSer.findBySql(sql, RentPayBO.class, fields);
-        if (stayUtilitiesBOS != null && stayUtilitiesBOS.size() > 0) {
-            if (obj.size() == stayUtilitiesBOS.size()) {
-                for (StayUtilitiesBO cbo : stayUtilitiesBOS) {
-                    Map<String, String> areaMap = new HashMap<>();
-                    areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()));
-                    mapList.add(areaMap);
-                }
-            } else if (stayUtilitiesBOS.size() < obj.size()) {
-                List<String> cbStr = new ArrayList<>();
-                for (StayUtilitiesBO cb : stayUtilitiesBOS) {
-                    cbStr.add(cb.getRemark());
-                }
-
-                //获取到所有不同的  如：地区
-                List<String> diffrent = new ArrayList<>();
-                for (String o : obj) {
-                    if (!cbStr.contains(o)) {
-                        diffrent.add(o);
-                    }
-                }
-
-                //存map
-                for (String o : obj) {
-                    for (StayUtilitiesBO cbo : stayUtilitiesBOS) {
-                        Map<String, String> areaMap = new HashMap<>();
-                        if (!diffrent.contains(o) && cbo.getRemark().equals(o)) {
-                            areaMap.put("remark", cbo.getRemark());
-                            areaMap.put("count", String.valueOf(cbo.getCounts()));
-                        } else {
-                            areaMap.put("remark", o);
-                            areaMap.put("count", 0 + "");
-                        }
-                        mapList.add(areaMap);
-                    }
-                }
-
-            }
-        }
-        return mapList;
     }
 
 }
