@@ -136,6 +136,11 @@ public class MoneyReadySerImpl extends ServiceImpl<MoneyReady, MoneyReadyDTO> im
         }
     }
 
+    @Override
+    public Long countSum(MoneyReadyDTO dto) throws SerException {
+        return super.count(dto);
+    }
+
     /**
      * 获取所有项目组
      *

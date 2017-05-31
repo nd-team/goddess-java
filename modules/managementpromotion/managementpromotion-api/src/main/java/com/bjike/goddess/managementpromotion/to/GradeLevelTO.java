@@ -44,11 +44,6 @@ public class GradeLevelTO extends BaseTO {
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "技能等级不能为空")
     private String skillLevel;
 
-    /**
-     * 档次
-     */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "档次不能为空")
-    private String grade;
 
     /**
      * 职衔补助分数
@@ -126,14 +121,6 @@ public class GradeLevelTO extends BaseTO {
 
     public void setSkillLevel(String skillLevel) {
         this.skillLevel = skillLevel;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
     }
 
     public Integer getAllowanceRank() {

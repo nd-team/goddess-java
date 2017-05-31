@@ -54,6 +54,7 @@ public class WaitPayTO extends BaseTO {
     /**
      * 是否付款
      */
+    @NotNull(groups = {EDIT.class},message = "是否付款不能为空")
     private Boolean pay;
 
 

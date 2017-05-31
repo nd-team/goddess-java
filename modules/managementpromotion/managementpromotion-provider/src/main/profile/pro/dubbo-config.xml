@@ -23,5 +23,6 @@
 
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
-	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
 </beans>
