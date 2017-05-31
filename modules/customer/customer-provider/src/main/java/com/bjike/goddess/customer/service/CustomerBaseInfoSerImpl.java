@@ -112,7 +112,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public CustomerBaseInfoBO addCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行添加基本信息操作");
         }
@@ -147,7 +147,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public CustomerBaseInfoBO editCustomerBaseInfo(CustomerBaseInfoTO customerBaseInfoTO ) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行编辑基本信息操作");
         }
@@ -182,7 +182,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void deleteCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行删除基本信息操作");
         }
@@ -215,7 +215,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void congealCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块冻结权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行冻结基本信息操作");
         }
@@ -237,7 +237,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public void thawCustomerBaseInfo(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块解冻权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("14");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("3");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行解冻基本信息操作");
         }

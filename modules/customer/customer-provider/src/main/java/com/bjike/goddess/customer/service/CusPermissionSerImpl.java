@@ -225,7 +225,9 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
                 CusPermission temp = cusPermissionList.get(i);
                 Optional<CusPermission> cp = list.stream().filter(l->l.getIdFlag().equals(temp.getIdFlag())).findFirst();
                 if(cp.isPresent()){
-                    temp.setDescription(cp.get().getDescription());
+                    if( StringUtils.isBlank(temp.getDescription()) ){
+                        temp.setDescription(cp.get().getDescription());
+                    }
                     temp.setType(cp.get().getType());
                     cusPermissionTempList.add(temp);
                 }

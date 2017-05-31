@@ -50,6 +50,23 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Autowired
     private CredentialSer credentialSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+
+
+    /**
+     * 检测部门
+     * @param idFlag
+     * @throws SerException
+     */
+    private void checkDepartIdentity(String idFlag) throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission( idFlag );
+        if( !flag){
+            throw new SerException("你不是相应部门的人员，不能进行操作");
+        }
+    }
+
 
 
     @Override
@@ -69,6 +86,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        checkDepartIdentity("2");
+
         List<EntryRegister> entryRegisters = super.findByPage( entryRegisterDTO );
         return entryRegisters;
     }
@@ -120,6 +139,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
+        checkDepartIdentity("8");
+
         if(StringUtils.isBlank(id)){
             throw new SerException("Id不能为空哦");
         }
@@ -141,6 +162,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Transactional(rollbackFor = SerException.class)
     public EntryRegisterBO editEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                              WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
+        checkDepartIdentity("8");
+
         /**
          * 编辑主表中的数据
          */
@@ -221,6 +244,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Transactional(rollbackFor = SerException.class)
     public EntryRegisterBO insertEntryRegister(EntryRegisterTO entryRegisterTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
                                                WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
+        checkDepartIdentity("8");
+
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
         if(StringUtils.isBlank(entryRegisterTO.getEmpNumber())){
             throw new SerException("员工编号不能为空");

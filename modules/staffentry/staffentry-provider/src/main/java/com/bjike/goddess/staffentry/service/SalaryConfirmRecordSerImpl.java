@@ -9,6 +9,7 @@ import com.bjike.goddess.staffentry.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.staffentry.entity.SalaryConfirmRecord;
 import com.bjike.goddess.staffentry.to.SalaryConfirmRecordTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,23 @@ import java.util.List;
 @CacheConfig(cacheNames = "staffentrySerCache")
 @Service
 public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord, SalaryConfirmRecordDTO> implements SalaryConfirmRecordSer {
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检测模块
+     * @param idFlag
+     * @throws SerException
+     */
+    private void checkMoudleIdentity(String idFlag) throws SerException{
+        Boolean flag = cusPermissionSer.moudleCusPermission( idFlag );
+        if( !flag){
+            throw new SerException("你不是相应模块的人员，不能进行操作");
+        }
+    }
+
+
 
 
     @Override
@@ -50,6 +68,7 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
 
     @Override
     public List<SalaryConfirmRecord> listSalaryConfirmRecord(SalaryConfirmRecordDTO salaryConfirmRecordDTO) throws SerException {
+        checkMoudleIdentity("4");
 
         List<SalaryConfirmRecord> salaryConfirmRecords = super.findByPage( salaryConfirmRecordDTO );
         return salaryConfirmRecords;
@@ -58,6 +77,8 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SalaryConfirmRecordBO insertSalaryConfirmRecord(SalaryConfirmRecordTO salaryConfirmRecordTO) throws SerException {
+        checkMoudleIdentity("5");
+
         SalaryConfirmRecord salaryConfirmRecord = BeanTransform.copyProperties( salaryConfirmRecordTO , SalaryConfirmRecord.class ,true);
         salaryConfirmRecord.setCreateTime( LocalDateTime.now() );
         try {
@@ -71,6 +92,8 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SalaryConfirmRecordBO editSalaryConfirmRecord(SalaryConfirmRecordTO salaryConfirmRecordTO) throws SerException {
+        checkMoudleIdentity("5");
+
         if(StringUtils.isBlank(salaryConfirmRecordTO.getId())){
             throw new SerException("id不能为空");
         }
@@ -87,6 +110,8 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeSalaryConfirmRecord(String id) throws SerException {
+        checkMoudleIdentity("5");
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }
