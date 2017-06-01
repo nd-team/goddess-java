@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,12 +32,28 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
 
     @Autowired
     private PositionInstructionSer positionInstructionSer;
+    @Autowired
+    private InstructionClassifySer instructionClassifySer;
+
+    private ReflectBO transform(Reflect entity) throws SerException {
+        ReflectBO bo = BeanTransform.copyProperties(entity, ReflectBO.class);
+        bo.setClassifyId(entity.getId());
+        bo.setClassifyName(entity.getClassify().getName());
+        return bo;
+    }
+
+    private List<ReflectBO> transformList(List<Reflect> list) throws SerException {
+        List<ReflectBO> bos = new ArrayList<>(0);
+        for (Reflect entity : list)
+            bos.add(this.transform(entity));
+        return bos;
+    }
 
     @Override
     public List<ReflectBO> findStatus() throws SerException {
         ReflectDTO dto = new ReflectDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
-        return BeanTransform.copyProperties(super.findByCis(dto), ReflectBO.class);
+        return this.transformList(super.findByPage(dto));
     }
 
     /**
@@ -57,10 +74,12 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
     public ReflectBO save(ReflectTO to) throws SerException {
         this.checkUnique(to);
         Reflect reflect = BeanTransform.copyProperties(to, Reflect.class);
-        reflect.setCreateTime(LocalDateTime.now());
+        reflect.setClassify(instructionClassifySer.findById(to.getClassifyId()));
+        if (null == reflect.getClassify())
+            throw new SerException("选择分类不存在,无法保存");
         reflect.setStatus(Status.THAW);
         super.save(reflect);
-        return BeanTransform.copyProperties(reflect, ReflectBO.class);
+        return this.transform(reflect);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -74,9 +93,12 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         if (!entity.getName().equals(to.getName()))
             this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
+        entity.setClassify(instructionClassifySer.findById(to.getClassifyId()));
+        if (null == entity.getClassify())
+            throw new SerException("选择分类不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, ReflectBO.class);
+        return this.transform(entity);
     }
 
     @Override
@@ -87,7 +109,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         if (positionInstructionSer.findByReflect(id).size() > 0)
             throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
-        return BeanTransform.copyProperties(entity, ReflectBO.class);
+        return this.transform(entity);
     }
 
     @Override
@@ -97,7 +119,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
             throw new SerException("数据对象不能为空");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
-        return BeanTransform.copyProperties(entity, ReflectBO.class);
+        return this.transform(entity);
     }
 
     @Override
@@ -107,12 +129,30 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
             throw new SerException("数据对象不能为空");
         entity.setStatus(Status.THAW);
         super.update(entity);
-        return BeanTransform.copyProperties(entity, ReflectBO.class);
+        return this.transform(entity);
     }
 
     @Override
     public List<ReflectBO> maps(ReflectDTO dto) throws SerException {
         dto.getSorts().add("status=asc");
         return BeanTransform.copyProperties(super.findByPage(dto), ReflectBO.class);
+    }
+
+    @Override
+    public ReflectBO getById(String id) throws SerException {
+        Reflect entity = super.findById(id);
+        if (entity == null)
+            throw new SerException("数据对象不能为空");
+        return this.transform(entity);
+    }
+
+    @Override
+    public List<ReflectBO> findByClassify(String classifyId) throws SerException {
+        if (StringUtils.isBlank(classifyId))
+            return new ArrayList<>(0);
+        ReflectDTO dto = new ReflectDTO();
+        dto.getConditions().add(Restrict.eq("classify.id", classifyId));
+        List<Reflect> list = super.findByCis(dto);
+        return this.transformList(list);
     }
 }

@@ -1,7 +1,6 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.ReflectBO;
 import com.bjike.goddess.organize.dto.ReflectDTO;
 import com.bjike.goddess.organize.service.ReflectSer;
@@ -69,6 +68,6 @@ public class ReflectApiImpl implements ReflectAPI {
 
     @Override
     public ReflectBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(reflectSer.findById(id), ReflectBO.class);
+        return reflectSer.getById(id);
     }
 }

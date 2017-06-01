@@ -48,13 +48,6 @@ public class PositionInstruction extends BaseEntity {
     private Dimension dimension;
 
     /**
-     * 分类
-     */
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "classify_id", columnDefinition = "VARCHAR(36) COMMENT '分类'")
-    private InstructionClassify classify;
-
-    /**
      * 操作类型
      */
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -66,11 +59,9 @@ public class PositionInstruction extends BaseEntity {
     /**
      * 体现类别
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "organize_position_instruction_reflect",
-            joinColumns = {@JoinColumn(name = "instruction_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '岗位说明书'")},
-            inverseJoinColumns = {@JoinColumn(nullable = false, name = "reflect_id", columnDefinition = "VARCHAR(36) COMMENT '体现类别'")})
-    private Set<Reflect> reflects = new HashSet<>(0);
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "reflect_id", columnDefinition = "VARCHAR(36) COMMENT '体现类别'")
+    private Reflect reflect;
 
     /**
      * 工作描述
@@ -148,12 +139,12 @@ public class PositionInstruction extends BaseEntity {
         this.operates = operates;
     }
 
-    public Set<Reflect> getReflects() {
-        return reflects;
+    public Reflect getReflect() {
+        return reflect;
     }
 
-    public void setReflects(Set<Reflect> reflects) {
-        this.reflects = reflects;
+    public void setReflect(Reflect reflect) {
+        this.reflect = reflect;
     }
 
     public String getDescription() {
@@ -204,11 +195,4 @@ public class PositionInstruction extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public InstructionClassify getClassify() {
-        return classify;
-    }
-
-    public void setClassify(InstructionClassify classify) {
-        this.classify = classify;
-    }
 }

@@ -90,4 +90,26 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     void sendEmail() throws SerException;
+
+    /**
+     * 根据id获取内部通讯录数据
+     *
+     * @param id 内部通讯录数据id
+     * @return
+     * @throws SerException
+     */
+    default InternalContactsBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

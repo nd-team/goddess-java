@@ -8,7 +8,6 @@ import com.bjike.goddess.supplier.bo.ContactSituationBO;
 import com.bjike.goddess.supplier.dto.ContactSituationDTO;
 import com.bjike.goddess.supplier.entity.ContactSituation;
 import com.bjike.goddess.supplier.to.ContactSituationTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,10 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
 
     @Autowired
     private SupplierInformationSer supplierInformationSer;
+    @Autowired
+    private SupPermissionSer supPermissionSer;
+
+    private static final String idFlag = "supplier-01";
 
     /**
      * 转换联系情况传输对象
@@ -61,6 +64,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO save(ContactSituationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         ContactSituation entity = BeanTransform.copyProperties(to, ContactSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -72,8 +77,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO update(ContactSituationTO to) throws SerException {
-        if (StringUtils.isBlank(to.getId()))
-            throw new SerException("数据ID不能为空");
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         ContactSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -89,6 +94,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ContactSituationBO delete(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         ContactSituation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -98,6 +105,8 @@ public class ContactSituationSerImpl extends ServiceImpl<ContactSituation, Conta
 
     @Override
     public ContactSituationBO getById(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         ContactSituation entity = super.findById(id);
         if (null == entity)
             return null;

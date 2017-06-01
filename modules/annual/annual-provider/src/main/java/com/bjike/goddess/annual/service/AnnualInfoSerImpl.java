@@ -26,6 +26,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Override
     public List<AnnualInfoBO> findByUsername(String username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
+        if (StringUtils.isBlank(username))
+            return new ArrayList<>(0);
         dto.getConditions().add(Restrict.eq("username", username));
         List<AnnualInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AnnualInfoBO.class);
@@ -84,6 +87,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Override
     public List<AnnualInfoBO> findByUsers(String... username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
+        if (null == username)
+            return new ArrayList<>(0);
         dto.getConditions().add(Restrict.in("username", username));
         List<AnnualInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AnnualInfoBO.class);

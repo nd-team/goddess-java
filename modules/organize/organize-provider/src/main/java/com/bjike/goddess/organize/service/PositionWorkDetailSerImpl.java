@@ -43,7 +43,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         bo.setInstructionId(entity.getInstruction().getId());
         bo.setSerialNumber(entity.getInstruction().getSerialNumber());
         bo.setAngle(entity.getInstruction().getAngle().getName());
-        bo.setClassify(entity.getInstruction().getClassify().getName());
+        bo.setClassify(entity.getInstruction().getReflect().getClassify().getName());
         bo.setDimension(entity.getInstruction().getDimension().getName());
         bo.setFunction(entity.getInstruction().getFunction());
         bo.setFrequency(entity.getInstruction().getFrequency());

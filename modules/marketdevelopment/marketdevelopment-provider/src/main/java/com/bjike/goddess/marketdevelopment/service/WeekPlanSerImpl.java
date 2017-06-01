@@ -34,6 +34,16 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Autowired
     private MonthPlanSer monthPlanSer;
+    @Autowired
+    private MarPermissionSer marPermissionSer;
+
+    private static final String marketCheck = "market-check";
+
+    private static final String marketManage = "market-manage";
+
+    private static final String planManage = "plan-manage";
+
+    private static final String planCheck = "plan-check";
 
     private WeekPlanBO transformBO(WeekPlan entity) {
         WeekPlanBO bo = BeanTransform.copyProperties(entity, WeekPlanBO.class);
@@ -56,6 +66,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+            throw new SerException("您的帐号没有权限");
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
         entity.setMonth(monthPlanSer.findById(to.getMonthId()));
         entity.setTotal(entity.getActivity() + entity.getVisit() + entity.getContact() + entity.getKnow() + entity.getInquire());
@@ -66,6 +78,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 WeekPlan entity = super.findById(to.getId());
@@ -83,6 +97,8 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO delete(WeekPlanTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+            throw new SerException("您的帐号没有权限");
         WeekPlan entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -112,6 +128,9 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public WeekPlanBO getById(String id) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
+                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
         } catch (SerException e) {
@@ -121,6 +140,9 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
+                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("startCycle=desc");
         return this.transformBOList(super.findByPage(dto));
     }

@@ -82,15 +82,15 @@ public class AnnualArrangementStandardAct {
     /**
      * 根据标准和岗位层级查询年假层级标准
      *
-     * @param standard_id    年假标准ID
-     * @param arrangement_id 岗位层级ID
+     * @param standardId    年假标准ID
+     * @param arrangementId 岗位层级ID
      * @return class AnnualArrangementStandardVO
      * @version v1
      */
     @GetMapping("v1/findByArrangementStandard")
-    public Result findByArrangementStandard(String standard_id, String arrangement_id) throws ActException {
+    public Result findByArrangementStandard(String standardId, String arrangementId) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(annualArrangementStandardAPI.findByArrangementStandard(standard_id, arrangement_id), AnnualArrangementStandardVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(annualArrangementStandardAPI.findByArrangementStandard(standardId, arrangementId), AnnualArrangementStandardVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

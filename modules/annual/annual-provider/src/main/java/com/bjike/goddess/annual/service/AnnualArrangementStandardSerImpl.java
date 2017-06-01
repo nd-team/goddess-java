@@ -11,6 +11,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.ArrangementAPI;
 import com.bjike.goddess.organize.bo.ArrangementBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,8 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
 
     @Override
     public AnnualArrangementStandardBO findByArrangementStandard(String standardId, String arrangementId) throws SerException {
+        if (StringUtils.isBlank(standardId) && StringUtils.isBlank(arrangementId))
+            return new AnnualArrangementStandardBO();
         AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
         dto.getConditions().add(Restrict.eq("standard.id", standardId));
         dto.getConditions().add(Restrict.eq("arrangementId", arrangementId));
@@ -108,6 +111,8 @@ public class AnnualArrangementStandardSerImpl extends ServiceImpl<AnnualArrangem
 
     @Override
     public List<AnnualArrangementStandardBO> findByStandard(String standardId) throws SerException {
+        if (StringUtils.isBlank(standardId))
+            return new ArrayList<>(0);
         AnnualArrangementStandardDTO dto = new AnnualArrangementStandardDTO();
         dto.getConditions().add(Restrict.eq("standard.id", standardId));
         List<AnnualArrangementStandard> list = super.findByCis(dto);

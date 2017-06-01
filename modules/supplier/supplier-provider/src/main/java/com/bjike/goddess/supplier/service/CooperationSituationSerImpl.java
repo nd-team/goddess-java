@@ -33,6 +33,10 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
 
     @Autowired
     private SupplierInformationSer supplierInformationSer;
+    @Autowired
+    private SupPermissionSer supPermissionSer;
+
+    private static final String idFlag = "supplier-01";
 
     /**
      * 转换合作情况传输对象
@@ -60,6 +64,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO save(CooperationSituationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         CooperationSituation entity = BeanTransform.copyProperties(to, CooperationSituation.class);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -71,8 +77,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO update(CooperationSituationTO to) throws SerException {
-        if (StringUtils.isBlank(to.getId()))
-            throw new SerException("数据ID不能为空");
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         CooperationSituation entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -88,6 +94,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperationSituationBO delete(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         CooperationSituation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -97,6 +105,8 @@ public class CooperationSituationSerImpl extends ServiceImpl<CooperationSituatio
 
     @Override
     public CooperationSituationBO getById(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         CooperationSituation entity = super.findById(id);
         if (null == entity)
             return null;

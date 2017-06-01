@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 商务通讯录业务实现
@@ -42,8 +43,10 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceContactsBO update(CommerceContactsTO to) throws SerException {
-        CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class), contacts = super.findById(to.getId());
-        entity.setCreateTime(contacts.getCreateTime());
+        CommerceContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不村在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
@@ -52,7 +55,28 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(CommerceContactsTO to) throws SerException {
-        super.remove(to.getId());
+        CommerceContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不村在");
+        super.remove(entity);
     }
 
+    @Override
+    public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        return BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
+    }
+
+    @Override
+    public CommerceContactsBO getById(String id) throws SerException {
+        CommerceContacts entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不村在");
+        return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        CommerceContactsDTO dto = new CommerceContactsDTO();
+        return super.count(dto);
+    }
 }

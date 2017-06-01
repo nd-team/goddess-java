@@ -6,10 +6,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionInstructionBO;
+import com.bjike.goddess.organize.bo.ReflectBO;
 import com.bjike.goddess.organize.dto.PositionInstructionDTO;
 import com.bjike.goddess.organize.entity.Operate;
 import com.bjike.goddess.organize.entity.PositionInstruction;
-import com.bjike.goddess.organize.entity.Reflect;
 import com.bjike.goddess.organize.to.PositionInstructionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,6 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
     private AngleSer angleSer;
     @Autowired
     private DimensionSer dimensionSer;
-    @Autowired
-    private InstructionClassifySer classifySer;
     @Autowired
     private OperateSer operateSer;
     @Autowired
@@ -74,16 +72,13 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setAngleName(entity.getAngle().getName());
         bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        bo.setClassifyId(entity.getClassify().getId());
-        bo.setClassifyName(entity.getClassify().getName());
+        bo.setClassifyName(entity.getReflect().getClassify().getName());
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
         for (Operate operate : entity.getOperates())
             bo.setOperateNames(bo.getOperateNames() + operate.getName() + ",");
-        bo.setReflectIds(entity.getReflects().stream().map(Reflect::getId).collect(Collectors.toList()).toArray(new String[0]));
-        bo.setReflectNames("");
-        for (Reflect reflect : entity.getReflects())
-            bo.setReflectNames(bo.getReflectNames() + reflect.getName() + ",");
+        bo.setReflectId(entity.getReflect().getId());
+        bo.setReflectNames(entity.getReflect().getName());
         return bo;
     }
 
@@ -136,15 +131,12 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         instruction.setAngle(angleSer.findById(to.getAngleId()));
         if (null == instruction.getAngle())
             throw new SerException("角度不能为空");
-        instruction.setClassify(classifySer.findById(to.getClassifyId()));
-        if (null == instruction.getClassify())
-            throw new SerException("分类不能为空");
         instruction.setDimension(dimensionSer.findById(to.getDimensionId()));
         if (null == instruction.getDimension())
             throw new SerException("维度不能为空");
-        if (null != to.getReflectIds())
-            for (String id : to.getReflectIds())
-                instruction.getReflects().add(reflectSer.findById(id));
+        instruction.setReflect(reflectSer.findById(to.getReflectId()));
+        if (null == instruction.getReflect())
+            throw new SerException("体现类型不能为空");
         if (null != to.getOperateIds())
             for (String id : to.getOperateIds())
                 instruction.getOperates().add(operateSer.findById(id));
@@ -191,6 +183,8 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
 
     @Override
     public List<PositionInstructionBO> findByAngle(String angleId) throws SerException {
+        if (StringUtils.isBlank(angleId))
+            return new ArrayList<>(0);
         PositionInstructionDTO dto = new PositionInstructionDTO();
         dto.getConditions().add(Restrict.eq("angle.id", angleId));
         List<PositionInstruction> list = super.findByCis(dto);
@@ -199,6 +193,8 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
 
     @Override
     public List<PositionInstructionBO> findByDimension(String dimensionId) throws SerException {
+        if (StringUtils.isBlank(dimensionId))
+            return new ArrayList<>(0);
         PositionInstructionDTO dto = new PositionInstructionDTO();
         dto.getConditions().add(Restrict.eq("dimension.id", dimensionId));
         List<PositionInstruction> list = super.findByCis(dto);
@@ -207,14 +203,22 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
 
     @Override
     public List<PositionInstructionBO> findByClassify(String classifyId) throws SerException {
+        if (StringUtils.isBlank(classifyId))
+            return new ArrayList<>(0);
         PositionInstructionDTO dto = new PositionInstructionDTO();
-        dto.getConditions().add(Restrict.eq("classify.id", classifyId));
+        dto.getConditions().add(Restrict.in("reflect.id",
+                reflectSer.findByClassify(classifyId).stream()
+                        .map(ReflectBO::getId)
+                        .collect(Collectors.toList())
+                        .toArray(new String[0])));
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
 
     @Override
     public List<PositionInstructionBO> findByOperate(String operateId) throws SerException {
+        if (StringUtils.isBlank(operateId))
+            return new ArrayList<>(0);
         String[] fields = {"id"};
         String sql = String.format("SELECT  instruction_id  FROM organize_position_instruction_operate  WHERE operate_id = '%s'", operateId);
         List<PositionInstructionBO> bos = super.findBySql(sql, PositionDetailBO.class, fields);
@@ -226,12 +230,11 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
 
     @Override
     public List<PositionInstructionBO> findByReflect(String reflectId) throws SerException {
-        String[] fields = {"id"};
-        String sql = String.format("SELECT  instruction_id  FROM organize_position_instruction_reflect  WHERE reflect_id = '%s'", reflectId);
-        List<PositionInstructionBO> bos = super.findBySql(sql, PositionDetailBO.class, fields);
-        List<PositionInstruction> list = new ArrayList<>(0);
-        for (PositionInstructionBO bo : bos)
-            list.add(super.findById(bo.getId()));
+        if (StringUtils.isBlank(reflectId))
+            return new ArrayList<>(0);
+        PositionInstructionDTO dto = new PositionInstructionDTO();
+        dto.getConditions().add(Restrict.eq("reflect.id", reflectId));
+        List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
 }

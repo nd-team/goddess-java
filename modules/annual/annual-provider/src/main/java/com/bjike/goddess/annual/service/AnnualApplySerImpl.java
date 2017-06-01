@@ -18,6 +18,7 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -156,7 +157,11 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
 
     @Override
     public List<AnnualApplyBO> findByUsername(String username) throws SerException {
+        if (StringUtils.isBlank(username))
+            return new ArrayList<>(0);
         List<AnnualInfoBO> infoBOList = annualInfoSer.findByUsername(username);
+        if (null != infoBOList && infoBOList.size() > 0)
+            return new ArrayList<>(0);
         AnnualApplyDTO dto = new AnnualApplyDTO();
         dto.getConditions().add(Restrict.in("info.id", infoBOList.stream().map(AnnualInfoBO::getId).collect(Collectors.toList()).toArray(new String[0])));
         List<AnnualApply> list = super.findByCis(dto);

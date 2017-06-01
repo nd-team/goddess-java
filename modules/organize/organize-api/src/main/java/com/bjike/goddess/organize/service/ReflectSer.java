@@ -95,4 +95,20 @@ public interface ReflectSer extends Ser<Reflect, ReflectDTO> {
     default List<ReflectBO> maps(ReflectDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取体现类型数据
+     *
+     * @param id 体现类型数据id
+     * @return
+     * @throws SerException
+     */
+    default ReflectBO getById(String id) throws SerException {
+        return null;
+    }
+
+    default List<ReflectBO> findByClassify(String classifyId) throws SerException {
+        return null;
+    }
+
 }

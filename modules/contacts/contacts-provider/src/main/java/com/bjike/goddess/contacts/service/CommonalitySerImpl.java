@@ -42,8 +42,10 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommonalityBO update(CommonalityTO to) throws SerException {
-        Commonality entity = BeanTransform.copyProperties(to, Commonality.class), commonality = super.findById(to.getId());
-        entity.setCreateTime(commonality.getCreateTime());
+        Commonality entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(Status.THAW);
         super.update(entity);
@@ -54,6 +56,8 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public CommonalityBO delete(CommonalityTO to) throws SerException {
         Commonality entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
     }
@@ -62,6 +66,8 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public CommonalityBO congeal(CommonalityTO to) throws SerException {
         Commonality entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
@@ -71,6 +77,8 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public CommonalityBO thaw(CommonalityTO to) throws SerException {
         Commonality entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
@@ -96,5 +104,19 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         dto.getConditions().add(Restrict.eq("department_id", department));
         Commonality entity = super.findOne(dto);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
+    }
+
+    @Override
+    public CommonalityBO getById(String id) throws SerException {
+        Commonality entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, CommonalityBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        CommonalityDTO dto = new CommonalityDTO();
+        return super.count(dto);
     }
 }
