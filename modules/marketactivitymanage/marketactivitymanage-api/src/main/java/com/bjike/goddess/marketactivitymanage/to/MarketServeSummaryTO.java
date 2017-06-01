@@ -25,7 +25,7 @@ public class MarketServeSummaryTO extends BaseTO {
     /**
      * 项目组
      */
-    @Size(groups = {ADD.class, EDIT.class}, min = 1, message = "项目组数量必须大于0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String[] projects;
 
     /**
