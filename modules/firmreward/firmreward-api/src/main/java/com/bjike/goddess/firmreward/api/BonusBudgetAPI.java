@@ -5,6 +5,7 @@ import com.bjike.goddess.firmreward.bo.BonusBudgetBO;
 import com.bjike.goddess.firmreward.bo.RewardProgramRatioBO;
 import com.bjike.goddess.firmreward.dto.BonusBudgetDTO;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
+import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
 
 import java.util.List;
 
@@ -18,6 +19,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BonusBudgetAPI {
+
+    /**
+     * 根据id查询奖金预算
+     *
+     * @param id 奖金预算唯一标识
+     * @return class BonusBudgetBO
+     * @throws SerException
+     */
+    BonusBudgetBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖金预算dto
+     * @throws SerException
+     */
+    Long count(BonusBudgetDTO dto) throws SerException;
 
     /**
      * 分页查询奖金预算
@@ -55,18 +73,18 @@ public interface BonusBudgetAPI {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
-    void addRewardProgramRatios(BonusBudgetTO to) throws SerException;
+    void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
 
     /**
      * 更新奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws SerException
      */
-    void updateRewardProgramRatios(BonusBudgetTO to) throws SerException;
+    void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException;
 
     /**
      * 查看奖励项目比例

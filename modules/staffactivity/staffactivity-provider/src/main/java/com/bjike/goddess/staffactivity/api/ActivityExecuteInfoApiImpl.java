@@ -31,7 +31,7 @@ public class ActivityExecuteInfoApiImpl implements ActivityExecuteInfoAPI {
      * 根据id查询活动执行信息
      *
      * @param id 活动执行信息唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivityExecuteInfoBO
      * @throws SerException
      */
     @Override

@@ -10,6 +10,7 @@ import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,30 @@ import java.util.stream.Collectors;
 @Service
 public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchSheetDTO> implements DispatchSheetSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以查看");
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        if( !flag ){
+            throw new SerException("您不是岗位的人员，不可以操作");
+        }
+    }
+
+
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         searchCondition( dispatchSheetDTO);
@@ -50,6 +75,8 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     }
     @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
+        checkSeeIdentity();
+
         searchCondition( dispatchSheetDTO);
         List<DispatchSheet> list = super.findByPage(dispatchSheetDTO);
         List<DispatchSheetBO> dispatchSheetBOList = BeanTransform.copyProperties(list, DispatchSheetBO.class);
@@ -59,6 +86,8 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DispatchSheetBO addDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
+        checkAddIdentity();
+
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
         dispatchSheet.setCreateTime(LocalDateTime.now());
         super.save(dispatchSheet);
@@ -71,6 +100,8 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DispatchSheetBO editDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
+        checkAddIdentity();
+
         DispatchSheet temp = super.findById( dispatchSheetTO.getId());
 
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
@@ -86,6 +117,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteDispatchSheet(String id) throws SerException {
+        checkAddIdentity();
 
         super.remove(id);
     }

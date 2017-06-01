@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
-import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
+import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 

@@ -7,7 +7,6 @@ import com.bjike.goddess.intromanage.bo.CredentialSituationBO;
 import com.bjike.goddess.intromanage.dto.CredentialSituationDTO;
 import com.bjike.goddess.intromanage.entity.CredentialSituation;
 import com.bjike.goddess.intromanage.to.CredentialSituationTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

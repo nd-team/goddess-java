@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public PrizeApplyBO save(PrizeApplyTO to) throws SerException {
         PrizeApply entity = BeanTransform.copyProperties(to, PrizeApply.class, true);
         entity = super.save(entity);
@@ -71,6 +73,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         List<PrizeDetail> list = getPrizeDetailsByApplyId(id);
         prizeDetailSer.remove(list);//先删除子类对象
@@ -97,6 +100,7 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(PrizeApplyTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             PrizeApply model = super.findById(to.getId());

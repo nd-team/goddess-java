@@ -57,7 +57,7 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
-        return siginManageSer.addSiginManage( siginManageTO);
+        return siginManageSer.auditSiginManage( siginManageTO);
     }
 
     @Override

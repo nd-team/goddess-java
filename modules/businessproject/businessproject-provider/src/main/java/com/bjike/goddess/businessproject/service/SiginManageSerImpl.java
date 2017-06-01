@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.sun.org.apache.regexp.internal.RE;
@@ -39,6 +40,28 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以查看");
+        }
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        if( !flag ){
+            throw new SerException("您不是相应部门的人员，不可以操作");
+        }
+    }
 
     @Override
     public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
@@ -57,6 +80,8 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     }
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
+        checkSeeIdentity();
+
         searchCondition( siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);
         List<SiginManageBO> siginManageBOS =new ArrayList<>();
@@ -73,6 +98,8 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO addSiginManage(SiginManageTO siginManageTO) throws SerException {
+        checkAddIdentity();
+
         SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
         siginManage.setCreateTime(LocalDateTime.now());
         super.save( siginManage );
@@ -84,6 +111,8 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO editSiginManage(SiginManageTO siginManageTO) throws SerException {
+        checkAddIdentity();
+
         SiginManage temp = super.findById( siginManageTO.getId() );
         SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
         BeanUtils.copyProperties( siginManage , temp ,"id","createTime");
@@ -97,18 +126,25 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSiginManage(String id) throws SerException {
+        checkAddIdentity();
+
         super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
+        if(StringUtils.isBlank(siginManageTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        String userToken = RpcTransmit.getUserToken();
+        checkAddIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+
         SiginManage temp = super.findById( siginManageTO.getId() );
 
-        siginManageTO.setManager( userAPI.currentUser().getUsername());
-        SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
-
-        BeanUtils.copyProperties( siginManage , temp ,"id","createTime");
+        temp.setManager( userAPI.currentUser().getUsername());
+        temp.setAuditAdvice( siginManageTO.getAuditAdvice() );
         temp.setModifyTime(LocalDateTime.now());
         super.update( temp );
 

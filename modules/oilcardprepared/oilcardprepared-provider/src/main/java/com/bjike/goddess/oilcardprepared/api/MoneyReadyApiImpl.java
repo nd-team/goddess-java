@@ -54,4 +54,9 @@ public class MoneyReadyApiImpl implements MoneyReadyAPI {
     public List<MoneyReadyCountBO> count(Integer month) throws SerException {
         return moneyReadySer.count(month);
     }
+
+    @Override
+    public Long countSum(MoneyReadyDTO dto) throws SerException {
+        return moneyReadySer.countSum(dto);
+    }
 }

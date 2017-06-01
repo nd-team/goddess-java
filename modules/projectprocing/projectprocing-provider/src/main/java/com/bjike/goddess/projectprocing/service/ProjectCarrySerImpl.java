@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.ProjectCarryBO;
 import com.bjike.goddess.projectprocing.dto.ProjectCarryDTO;
@@ -12,6 +13,7 @@ import com.bjike.goddess.projectprocing.entity.ProjectCarry;
 import com.bjike.goddess.projectprocing.to.ProjectCarryTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,10 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectprocingSerCache")
 @Service
 public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryDTO> implements ProjectCarrySer {
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
 
     @Override
     public Long countProjectCarry(ProjectCarryDTO projectCarryDTO) throws SerException {
@@ -58,6 +64,12 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
     }
     @Override
     public List<ProjectCarryBO> listProjectCarry(ProjectCarryDTO projectCarryDTO) throws SerException {
+        //列表权限
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+        projectCarryDTO.getSorts().add("createTime=desc");
         if(StringUtils.isNoneBlank(projectCarryDTO.getArea())){
             projectCarryDTO.getConditions().add(Restrict.like("area",projectCarryDTO.getArea()));
         }if(StringUtils.isNoneBlank(projectCarryDTO.getBusinessSubject())){
@@ -76,6 +88,13 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectCarryBO addProjectCarry(ProjectCarryTO projectCarryTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加基本信息操作");
+        }
+
         ProjectCarry projectCarry = BeanTransform.copyProperties(projectCarryTO,ProjectCarry.class,true);
         projectCarry.setCreateTime(LocalDateTime.now());
         //TODO: tanghaixiang 2017-03-31 链接关系没做
@@ -86,6 +105,14 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectCarryBO editProjectCarry(ProjectCarryTO projectCarryTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑基本信息操作");
+        }
+
+
         if(StringUtils.isBlank(projectCarryTO.getId()) ){
             throw  new SerException("编号不能为空");
         }
@@ -105,6 +132,14 @@ public class ProjectCarrySerImpl extends ServiceImpl<ProjectCarry, ProjectCarryD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteProjectCarry(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除基本信息操作");
+        }
+
+
         if(StringUtils.isBlank(id)){
             throw  new SerException("id不能为空");
         }

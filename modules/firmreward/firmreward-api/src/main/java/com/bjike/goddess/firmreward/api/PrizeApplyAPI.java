@@ -3,7 +3,6 @@ package com.bjike.goddess.firmreward.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.firmreward.bo.*;
 import com.bjike.goddess.firmreward.dto.PrizeApplyDTO;
-import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.to.PrizeApplyTO;
 
 import java.util.List;
@@ -18,6 +17,23 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PrizeApplyAPI {
+
+    /**
+     * 根据id查询奖品申请
+     *
+     * @param id 奖品申请唯一标识
+     * @return class PrizeApplyBO
+     * @throws SerException
+     */
+    PrizeApplyBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖品申请dto
+     * @throws SerException
+     */
+    Long count(PrizeApplyDTO dto) throws SerException;
 
     /**
      * 分页查询奖品申请

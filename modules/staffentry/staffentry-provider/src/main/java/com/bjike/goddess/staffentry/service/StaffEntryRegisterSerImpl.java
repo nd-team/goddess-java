@@ -41,6 +41,33 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检测模块
+     * @param idFlag
+     * @throws SerException
+     */
+    private void checkMoudleIdentity(String idFlag) throws SerException{
+        Boolean flag = cusPermissionSer.moudleCusPermission( idFlag );
+        if( !flag){
+            throw new SerException("你不是相应模块的人员，不能进行操作");
+        }
+    }
+
+
+    /**
+     * 检测层级
+     * @param idFlag
+     * @throws SerException
+     */
+    private void checkLevelIdentity(String idFlag) throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission( idFlag );
+        if( !flag){
+            throw new SerException("你不是相应层级的人员，不能进行操作");
+        }
+    }
 
     @Override
     public Long countStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
@@ -71,6 +98,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     public List<StaffEntryRegisterBO> listStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
 
         String token = RpcTransmit.getUserToken();
+        checkLevelIdentity("1");
 
         List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
@@ -92,7 +120,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public StaffEntryRegisterBO addStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
-        //TODO 获取一个员工编号
+        String token = RpcTransmit.getUserToken();
+        checkMoudleIdentity("9");
+        RpcTransmit.transmitUserToken(token);
+
         if (StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())) {
             throw new SerException("员工编号不能为空");
         }
@@ -126,6 +157,8 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     @Override
     public StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
         String token = RpcTransmit.getUserToken();
+        checkMoudleIdentity("9");
+        RpcTransmit.transmitUserToken(token);
 
         if (StringUtils.isBlank(staffEntryRegisterTO.getEmpNumber())) {
             throw new SerException("员工编号不能为空");
@@ -164,13 +197,16 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public void delete(String id) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        checkMoudleIdentity("9");
+        RpcTransmit.transmitUserToken(token);
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         StaffEntryRegister staffEntryRegister = super.findById(id);
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
-        String token = RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
 
         if (userBOList != null && userBOList.size() > 0) {

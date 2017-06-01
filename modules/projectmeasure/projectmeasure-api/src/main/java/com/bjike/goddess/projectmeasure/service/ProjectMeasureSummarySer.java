@@ -56,28 +56,28 @@ public interface ProjectMeasureSummarySer extends Ser<ProjectMeasureSummary, Pro
     void update(ProjectMeasureSummaryTO to) throws SerException;
 
     /**
-     * 解冻项目测算汇总
+     * 解冻项目测算汇总邮件发送
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
-    void thaw(ProjectMeasureSummaryTO to) throws SerException;
+    void thaw(String id) throws SerException;
 
     /**
-     * 冻结项目测算汇总
+     * 冻结项目测算汇总邮件发送
      *
-     * @param to 项目测算汇总to
+     * @param id 项目测算汇总唯一标识
      * @throws SerException
      */
-    void congeal(ProjectMeasureSummaryTO to) throws SerException;
+    void congeal(String id) throws SerException;
 
     /**
      * 项目测算汇总
      *
-     * @param to 项目测算汇总to
+     * @param areas 汇总地区
      * @return class ProjectMeasureBO
      * @throws SerException
      */
-    List<ProjectMeasureBO> summarize(ProjectMeasureSummaryTO to) throws SerException;
+    List<ProjectMeasureBO> summarize(String[] areas) throws SerException;
 
 }

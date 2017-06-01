@@ -50,7 +50,7 @@ public class ActivityDivisionSerImpl extends ServiceImpl<ActivityDivision, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivityDivisionBO save(ActivityDivisionTO to) throws SerException {
         ActivityDivision entity = BeanTransform.copyProperties(to, ActivityDivision.class, true);
         entity = super.save(entity);
@@ -65,7 +65,7 @@ public class ActivityDivisionSerImpl extends ServiceImpl<ActivityDivision, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -77,7 +77,7 @@ public class ActivityDivisionSerImpl extends ServiceImpl<ActivityDivision, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivityDivisionTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             ActivityDivision model = super.findById(to.getId());

@@ -1,0 +1,57 @@
+package com.bjike.goddess.recruit.service;
+
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.recruit.bo.FailInviteReasonBO;
+import com.bjike.goddess.recruit.dto.FailInviteReasonDTO;
+import com.bjike.goddess.recruit.entity.FailInviteReason;
+import com.bjike.goddess.recruit.to.FailInviteReasonTO;
+
+import java.util.List;
+
+/**
+ * 未邀约成功原因
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-04-08 05:10 ]
+ * @Description: [  ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface FailInviteReasonSer extends Ser<FailInviteReason, FailInviteReasonDTO> {
+
+    /**
+     * 分页查询所有未成功邀约原因
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FailInviteReasonBO> list(FailInviteReasonDTO dto) throws SerException;
+
+    /**
+     * 保存未邀约成功原因
+     *
+     * @param failInviteReasonTO
+     * @return
+     * @throws SerException
+     */
+    FailInviteReasonBO save(FailInviteReasonTO failInviteReasonTO) throws SerException;
+
+    /**
+     * 根据id删除未邀约成功原因
+     *
+     * @param id
+     * @throws SerException
+     */
+    void remove(String id) throws SerException;
+
+    /**
+     * 更新未邀约成功原因
+     *
+     * @param failInviteReasonTO
+     * @throws SerException
+     */
+    void update(FailInviteReasonTO failInviteReasonTO) throws SerException;
+
+}

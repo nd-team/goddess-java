@@ -8,6 +8,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeApplySer;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
+import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,47 +115,25 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     /**
      * 运营商务部资金模块意见
      *
-     * @param to 市场招待申请to
+     * @param id 市场招待申请唯一标识
+     * @param fundModuleOpinion 运营商务部资金模块意见
      * @throws SerException
      */
     @Override
-    public void fundModuleOpinion(MarketServeApplyTO to) throws SerException {
-        marketServeApplySer.fundModuleOpinion(to);
+    public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
+        marketServeApplySer.fundModuleOpinion(id, fundModuleOpinion);
     }
 
     /**
      * 决策层意见
      *
-     * @param to 市场招待申请to
+     * @param id 市场招待申请唯一标识
+     * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */
     @Override
-    public void executiveOpinion(MarketServeApplyTO to) throws SerException {
-        marketServeApplySer.executiveOpinion(to);
-    }
-
-    /**
-     * 导入文件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void importFile(InputStream inputStream, String targetPath) throws SerException {
-        marketServeApplySer.importFile(inputStream, targetPath);
-    }
-
-    /**
-     * 导出文件
-     *
-     * @param filePath 需要导出的文件的路径
-     * @return class OutputStream
-     * @throws SerException
-     */
-    @Override
-    public OutputStream exportFile(String filePath) throws SerException {
-        return marketServeApplySer.exportFile(filePath);
+    public void executiveOpinion(String id, AuditType executiveAuditOpinion) throws SerException {
+        marketServeApplySer.executiveOpinion(id, executiveAuditOpinion);
     }
 
     /**
@@ -167,5 +146,16 @@ public class MarketServeApplyApiImpl implements MarketServeApplyAPI {
     @Override
     public MarketServeApplyBO checkDetails(String id) throws SerException {
         return marketServeApplySer.checkDetails(id);
+    }
+
+    /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void editClientInfo(CustomerInfoTO to) throws SerException {
+        marketServeApplySer.editClientInfo(to);
     }
 }

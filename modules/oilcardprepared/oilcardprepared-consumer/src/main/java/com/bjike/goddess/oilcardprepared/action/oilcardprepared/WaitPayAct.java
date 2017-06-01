@@ -131,7 +131,7 @@ public class WaitPayAct {
     }
 
     /**
-     * 查找所有已付款的名单
+     * 查找已付款列表
      *
      * @param dto dto
      * @return class WaitPayVO
@@ -139,10 +139,42 @@ public class WaitPayAct {
      * @version v1
      */
     @GetMapping("v1/pays")
-    public Result pays(WaitPayDTO dto,HttpServletRequest request) throws ActException {
+    public Result pays(WaitPayDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<WaitPayBO> list = waitPayAPI.pays(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, WaitPayVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找等待付款总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/waitCountSum")
+    public Result waitCountSum(WaitPayDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.waitCountSum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找已付款总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/payCountSum")
+    public Result payCountSum(WaitPayDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(waitPayAPI.payCountSum(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

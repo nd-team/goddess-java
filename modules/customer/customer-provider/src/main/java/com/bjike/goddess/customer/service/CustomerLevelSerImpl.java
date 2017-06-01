@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.api.CusPermissionAPI;
 import com.bjike.goddess.customer.bo.CustomerLevelBO;
@@ -43,6 +44,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
 
     @Override
     public List<CustomerLevelBO> listCustomerLevel(CustomerLevelDTO customerLevelDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
@@ -57,7 +59,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public CustomerLevelBO addCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("2");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行添加客户级别操作");
         }
@@ -71,7 +73,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public CustomerLevelBO editCustomerLevel(CustomerLevelTO customerLevelTO) throws SerException {
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("2");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行编辑客户级别操作");
         }
@@ -90,7 +92,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public void deleteCustomerLevel(String id) throws SerException {
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("2");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行删除客户级别操作");
         }
@@ -101,7 +103,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public void congealCustomerLevel(String id) throws SerException {
         //商务模块冻结权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("2");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行冻结客户级别操作");
         }
@@ -115,7 +117,7 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     @Override
     public void thawCustomerLevel(String id) throws SerException {
         //商务模块解冻权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("13");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("2");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行解冻客户级别操作");
         }

@@ -84,4 +84,20 @@ public interface WaitPaySer extends Ser<WaitPay, WaitPayDTO> {
     default List<WaitPayBO> pays(WaitPayDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 等待付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    Long waitCountSum(WaitPayDTO dto) throws SerException;
+
+    /**
+     * 已付款总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    Long payCountSum(WaitPayDTO dto) throws SerException;
 }

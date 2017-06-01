@@ -20,6 +20,23 @@ import java.util.List;
 public interface MultipleProjectSingleUIAPI {
 
     /**
+     * 根据id查询多项目单个界面
+     *
+     * @param id 多项目单个界面唯一标识
+     * @return class MultipleProjectSingleUIBO
+     * @throws SerException
+     */
+    MultipleProjectSingleUIBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 多项目单个界面dto
+     * @throws SerException
+     */
+    Long count(MultipleProjectSingleUIDTO dto) throws SerException;
+
+    /**
      * 分页查询多项目单个界面
      *
      * @return class MultipleProjectSingleUIBO
@@ -30,7 +47,7 @@ public interface MultipleProjectSingleUIAPI {
     /**
      * 保存多项目单个界面
      *
-     * @param to 多项目多个界面to
+     * @param to 多项目单个界面to
      * @return class MultipleProjectSingleUIBO
      * @throws SerException
      */

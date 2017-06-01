@@ -19,6 +19,23 @@ import java.util.List;
 public interface ProjectBasicInfoAPI {
 
     /**
+     * 根据id查询项目基本信息
+     *
+     * @param id 项目基本信息唯一标识
+     * @return class ProjectBasicInfoBO
+     * @throws SerException
+     */
+    ProjectBasicInfoBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 项目基本信息dto
+     * @throws SerException
+     */
+    Long count(ProjectBasicInfoDTO dto) throws SerException;
+
+    /**
      * 分页查询项目基本信息
      *
      * @return class ProjectBasicInfoBO

@@ -19,6 +19,23 @@ import java.util.List;
 public interface CommunicationPathAPI {
 
     /**
+     * 根据id查询通讯途径
+     *
+     * @param id 通讯途径唯一标识
+     * @return class CommunicationPathBO
+     * @throws SerException
+     */
+    CommunicationPathBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 通讯途径dto
+     * @throws SerException
+     */
+    Long count(CommunicationPathDTO dto) throws SerException;
+
+    /**
      * 分页查询通讯途径
      *
      * @return class CommunicationPathBO

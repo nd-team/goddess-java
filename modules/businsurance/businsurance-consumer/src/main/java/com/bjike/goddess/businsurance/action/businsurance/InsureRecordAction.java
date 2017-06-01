@@ -81,7 +81,7 @@ public class InsureRecordAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated InsureRecordTO insureRecordTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(InsureRecordTO.TestAdd.class) InsureRecordTO insureRecordTO ) throws ActException {
         try {
             InsureRecordBO insureRecordBO1 = insureRecordAPI.addInsureRecord(insureRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(insureRecordBO1,InsureRecordVO.class,true));
@@ -101,7 +101,7 @@ public class InsureRecordAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated InsureRecordTO insureRecordTO) throws ActException {
+    public Result edit(@Validated(InsureRecordTO.TestAdd.class) InsureRecordTO insureRecordTO) throws ActException {
         try {
             InsureRecordBO insureRecordBO1 = insureRecordAPI.editInsureRecord(insureRecordTO);
             return ActResult.initialize(BeanTransform.copyProperties(insureRecordBO1,InsureRecordVO.class,true));
@@ -131,7 +131,7 @@ public class InsureRecordAction {
 
 
     /**
-     * 一个方案查看详细
+     * 一个意外险记录
      *
      * @param id id
      * @des 根据id查看详细

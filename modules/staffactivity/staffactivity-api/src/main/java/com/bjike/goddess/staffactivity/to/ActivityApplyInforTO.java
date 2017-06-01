@@ -1,6 +1,9 @@
 package com.bjike.goddess.staffactivity.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 活动申请信息
@@ -16,56 +19,67 @@ public class ActivityApplyInforTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String username;
 
     /**
      * 所属地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属地区不能为空")
     private String area;
 
     /**
      * 所属项目
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属项目不能为空")
     private String project;
 
     /**
      * 岗位层级
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位层级不能为空")
     private String postHierarchy;
 
     /**
      * 原因类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "原因类型不能为空")
     private String reasonType;
 
     /**
      * 原因详情
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "原因详情不能为空")
     private String reasonDetail;
 
     /**
      * 活动目的
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动目的不能为空")
     private String activityGoal;
 
     /**
      * 活动类型
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动类型不能为空")
     private String activityType;
 
     /**
      * 活动周期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动周期不能为空")
     private String activityCycle;
 
     /**
      * 活动开始时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动开始时间不能为空")
     private String startTime;
 
     /**
      * 活动结束时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动结束时间不能为空")
     private String endTime;
 
     /**

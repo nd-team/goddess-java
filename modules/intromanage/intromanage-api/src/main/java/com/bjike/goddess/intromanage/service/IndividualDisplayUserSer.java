@@ -1,9 +1,8 @@
 package com.bjike.goddess.intromanage.service;
 
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.intromanage.entity.IndividualDisplayUser;
 import com.bjike.goddess.intromanage.dto.IndividualDisplayUserDTO;
+import com.bjike.goddess.intromanage.entity.IndividualDisplayUser;
 
 /**
  * 个人简介显示用户名称集合业务接口

@@ -19,6 +19,23 @@ import java.util.List;
 public interface EducateExperienceAPI {
 
     /**
+     * 根据id查询教育经历
+     *
+     * @param id 教育经历唯一标识
+     * @return class EducateExperienceBO
+     * @throws SerException
+     */
+    EducateExperienceBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 教育经历dto
+     * @throws SerException
+     */
+    Long count(EducateExperienceDTO dto) throws SerException;
+
+    /**
      * 分页查询教育经历
      *
      * @return class EducateExperienceBO

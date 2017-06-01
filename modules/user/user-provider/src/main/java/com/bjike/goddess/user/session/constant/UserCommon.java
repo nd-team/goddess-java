@@ -15,8 +15,8 @@ public class UserCommon {
 
 
     /**
-     * redis登录失效时间 1天
+     * redis登录失效时间 3天
      */
-    public static final Integer LOGIN_TIMEOUT = 60 * 60 * 24;
+    public static final Integer LOGIN_TIMEOUT = 3*60 * 60 * 24;
 
 }

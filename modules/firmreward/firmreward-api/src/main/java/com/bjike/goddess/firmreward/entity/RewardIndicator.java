@@ -76,7 +76,7 @@ public class RewardIndicator extends BaseEntity {
     /**
      * 设定排名总人数
      */
-    @Column(name = "totalNumber", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '设定排名总人数'")
+    @Column(name = "totalNumber", nullable = false, columnDefinition = "INT(11) COMMENT '设定排名总人数'")
     private Integer totalNumber;
 
     /**

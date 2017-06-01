@@ -1,8 +1,10 @@
 package com.bjike.goddess.projectmeasure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
+import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.service.SingleProjectSingleUISer;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class SingleProjectSingleUIApiImpl implements SingleProjectSingleUIAPI {
 
     @Autowired
     private SingleProjectSingleUISer singleProjectSingleUISer;
+
+    /**
+     * 根据id查询单个项目单个界面
+     *
+     * @param id 单个项目单个界面唯一标识
+     * @return class SingleProjectSingleUIBO
+     * @throws SerException
+     */
+    @Override
+    public SingleProjectSingleUIBO findById(String id) throws SerException {
+        SingleProjectSingleUI model = singleProjectSingleUISer.findById(id);
+        return BeanTransform.copyProperties(model, SingleProjectSingleUIBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 单个项目单个界面dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(SingleProjectSingleUIDTO dto) throws SerException {
+        return singleProjectSingleUISer.count(dto);
+    }
 
     /**
      * 分页查询单个项目单个界面

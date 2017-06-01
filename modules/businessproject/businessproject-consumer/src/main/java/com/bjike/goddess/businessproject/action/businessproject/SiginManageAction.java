@@ -169,7 +169,7 @@ public class SiginManageAction {
     @PostMapping("v1/audit")
     public Result auditSiginManage( SiginManageTO siginManageTO , BindingResult bindingResult) throws ActException {
         try {
-            SiginManageBO siginManageBO1 = siginManageAPI.addSiginManage(siginManageTO);
+            SiginManageBO siginManageBO1 = siginManageAPI.auditSiginManage(siginManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

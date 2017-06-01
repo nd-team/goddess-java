@@ -19,6 +19,23 @@ import java.util.List;
 public interface CredentialSituationAPI {
 
     /**
+     * 根据id查询证书情况
+     *
+     * @param id 证书情况唯一标识
+     * @return class CredentialSituationBO
+     * @throws SerException
+     */
+    CredentialSituationBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 证书情况dto
+     * @throws SerException
+     */
+    Long count(CredentialSituationDTO dto) throws SerException;
+
+    /**
      * 分页查询证书情况
      *
      * @return class CredentialSituationBO

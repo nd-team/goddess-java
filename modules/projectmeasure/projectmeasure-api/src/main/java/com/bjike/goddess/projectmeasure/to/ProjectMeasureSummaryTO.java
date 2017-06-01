@@ -1,8 +1,13 @@
 package com.bjike.goddess.projectmeasure.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.projectmeasure.type.CycleType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目测算汇总
@@ -16,14 +21,10 @@ import com.bjike.goddess.projectmeasure.type.CycleType;
 public class ProjectMeasureSummaryTO extends BaseTO {
 
     /**
-     * 地区
-     */
-    private String[] areas;
-
-    /**
      * 项目组
      */
-    private String projectGroups;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
+    private String[] projects;
 
     /**
      * 创建/修改人
@@ -43,26 +44,31 @@ public class ProjectMeasureSummaryTO extends BaseTO {
     /**
      * 发送间隔
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送间隔不能为空")
     private Integer sendInterval;
 
     /**
      * 发送时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "发送时间格式不能为空")
     private CycleType cycle;
 
     /**
      * 汇总间隔
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总间隔不能为空")
     private Integer detailInterval;
 
     /**
      * 汇总时间格式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总时间格式不能为空")
     private CycleType detailCycle;
 
     /**
      * 发送对象
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "发送对象不能为空")
     private String emails;
 
     /**
@@ -70,20 +76,12 @@ public class ProjectMeasureSummaryTO extends BaseTO {
      */
     private Status status;
 
-    public String[] getAreas() {
-        return areas;
+    public String[] getProjects() {
+        return projects;
     }
 
-    public void setAreas(String[] areas) {
-        this.areas = areas;
-    }
-
-    public String getProjectGroups() {
-        return projectGroups;
-    }
-
-    public void setProjectGroups(String projectGroups) {
-        this.projectGroups = projectGroups;
+    public void setProjects(String[] projects) {
+        this.projects = projects;
     }
 
     public String getCreateUser() {

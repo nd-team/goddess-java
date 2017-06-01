@@ -66,6 +66,13 @@ public interface BusInsuranceSer extends Ser<BusInsurance, BusInsuranceDTO> {
      * @return class BusInsuranceBO
      */
     default BusInsuranceBO editAdvice(BusInsuranceTO busInsuranceTO) throws SerException { return null;}
+
+    /**
+     *  编辑方案运营审核
+     * @param busInsuranceTO 商业保险方案信息
+     * @return class BusInsuranceBO
+     */
+    default BusInsuranceBO editBusAdvice(BusInsuranceTO busInsuranceTO) throws SerException { return null;}
     /**
      *  总经办审核
      * @param busInsuranceTO 商业保险方案信息
