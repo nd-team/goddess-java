@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,11 +32,46 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("timecriteriaset")
-@DefaultProperties
 public class TimeCriteriaSetAct {
 
     @Autowired
     private TimeCriteriaSetAPI timeCriteriaSetAPI;
+
+    /**
+     * 根据id查询时间条件设置
+     *
+     * @param id 时间条件设置唯一标识
+     * @return class TimeCriteriaSetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/timecriteriaset/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            TimeCriteriaSetBO bo = timeCriteriaSetAPI.findById(id);
+            TimeCriteriaSetVO vo = BeanTransform.copyProperties(bo, TimeCriteriaSetVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 时间条件设置dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated TimeCriteriaSetDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = timeCriteriaSetAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分页查询时间条件设置

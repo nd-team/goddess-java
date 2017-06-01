@@ -41,6 +41,17 @@ public class TimeCriteriaSetApiImpl implements TimeCriteriaSetAPI {
     }
 
     /**
+     * 计算总条数
+     *
+     * @param dto 时间条件设置dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(TimeCriteriaSetDTO dto) throws SerException {
+        return timeCriteriaSetSer.count(dto);
+    }
+
+    /**
      * 分页查询时间条件设置
      *
      * @return class TimeCriteriaSetBO

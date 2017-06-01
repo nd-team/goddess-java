@@ -175,7 +175,6 @@ public class RegularizationVO {
      */
     private String posFacialInfor;
 
-
     public String getId() {
         return id;
     }

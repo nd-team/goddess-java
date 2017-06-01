@@ -10,6 +10,7 @@ import com.bjike.goddess.regularization.to.ScoreFormulaSetTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +49,7 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public ScoreFormulaSetBO save(ScoreFormulaSetTO to) throws SerException {
         ScoreFormulaSet entity = BeanTransform.copyProperties(to, ScoreFormulaSet.class, true);
         String scoreRange = String.valueOf(entity.getLowestScore()) + "~" + String.valueOf(entity.getHighestScore());
@@ -64,6 +66,7 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void update(ScoreFormulaSetTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             ScoreFormulaSet model = super.findById(to.getId());
@@ -99,6 +102,7 @@ public class ScoreFormulaSetSerImpl extends ServiceImpl<ScoreFormulaSet, ScoreFo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }

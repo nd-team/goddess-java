@@ -1,6 +1,5 @@
 package com.bjike.goddess.regularization.config;
 
-import com.bjike.goddess.common.jpa.boot.EntityToScan;
 import com.bjike.goddess.common.jpa.boot.JpaComponents;
 import org.springframework.stereotype.Component;
 
@@ -12,5 +11,5 @@ import org.springframework.stereotype.Component;
  * @Copy: [com.bjike]
  */
 @Component
-public class AppComponents extends JpaComponents implements EntityToScan<AppRoot> {
+public class AppComponents extends JpaComponents {
 }

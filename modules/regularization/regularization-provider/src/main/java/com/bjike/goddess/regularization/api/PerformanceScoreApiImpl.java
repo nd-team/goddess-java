@@ -31,7 +31,7 @@ public class PerformanceScoreApiImpl implements PerformanceScoreAPI {
     /**
      * 根据id查询工作表现评分
      *
-     * @param id 工作表现评分
+     * @param id 工作表现评分唯一标识
      * @return class PerformanceScoreBO
      * @throws SerException
      */
@@ -39,6 +39,17 @@ public class PerformanceScoreApiImpl implements PerformanceScoreAPI {
     public PerformanceScoreBO findById(String id) throws SerException {
         PerformanceScore model = performanceScoreSer.findById(id);
         return BeanTransform.copyProperties(model, PerformanceScoreBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 工作表现评分dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(PerformanceScoreDTO dto) throws SerException {
+        return performanceScoreSer.count(dto);
     }
 
     /**

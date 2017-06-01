@@ -2,8 +2,6 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 时间条件设置业务传输对象
  *
@@ -24,7 +22,6 @@ public class TimeCriteriaSetBO extends BaseBO {
      * 参数值
      */
     private String parameterValue;
-
 
     public String getParameterName() {
         return parameterName;

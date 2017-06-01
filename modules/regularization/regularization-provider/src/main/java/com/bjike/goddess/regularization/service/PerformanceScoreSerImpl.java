@@ -11,6 +11,7 @@ import com.bjike.goddess.regularization.to.PerformanceScoreTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,6 +50,7 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public PerformanceScoreBO save(PerformanceScoreTO to) throws SerException {
         PerformanceScore entity = BeanTransform.copyProperties(to, PerformanceScore.class, true);
         entity = super.save(entity);
@@ -63,6 +65,7 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void update(PerformanceScoreTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             PerformanceScore model = super.findById(to.getId());
@@ -96,6 +99,7 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }
