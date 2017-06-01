@@ -236,6 +236,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         conditions.add(Restrict.eq("username", accountNumber));
         conditions.add(Restrict.or("phone", accountNumber));
         conditions.add(Restrict.or("email", accountNumber));
+        conditions.add(Restrict.or("employeeNumber", accountNumber));
         User user = super.findOne(dto);
         UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
         return userBO;
@@ -251,14 +252,10 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             user.setModifyTime(LocalDateTime.now());
             super.update(user);
             //更新session及缓存
-            UserBO currentUser = currentUser(token);
-            if(currentUser.getId().equals(user.getId())){
-                LoginUser loginUser = new LoginUser();
-                BeanUtils.copyProperties(user, loginUser);
-                redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
-                UserSession.put(token, loginUser);
-            }
-
+            LoginUser loginUser = new LoginUser();
+            BeanUtils.copyProperties(user, loginUser);
+            redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
+            UserSession.put(token, loginUser);
         } else {
             throw new SerException("notLogin");
         }
