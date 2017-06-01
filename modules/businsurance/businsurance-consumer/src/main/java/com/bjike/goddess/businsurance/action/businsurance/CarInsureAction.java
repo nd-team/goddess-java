@@ -211,7 +211,7 @@ public class CarInsureAction {
 
 
     /**
-     * 一个方案查看详细
+     * 一个车险查看详细
      *
      * @param id id
      * @return class CarInsureVO

@@ -29,6 +29,11 @@ public class PositionIndexSetDTO extends BaseDTO {
     private String month;
 
     /**
+     * 岗位
+     */
+    private String posit;
+
+    /**
      * 责任人
      */
     private String positioner;
@@ -55,6 +60,14 @@ public class PositionIndexSetDTO extends BaseDTO {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getPosit() {
+        return posit;
+    }
+
+    public void setPosit(String posit) {
+        this.posit = posit;
     }
 
     public String getPositioner() {

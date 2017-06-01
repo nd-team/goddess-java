@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.DepartMonIndexSetBO;
 import com.bjike.goddess.balancecard.dto.DepartMonIndexSetDTO;
 import com.bjike.goddess.balancecard.to.DepartMonIndexSetTO;
+import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -100,6 +101,16 @@ public interface DepartMonIndexSetAPI {
     default List<DepartMonIndexSetBO> listNow(DepartMonIndexSetDTO departMonIndexSetDTO) throws SerException {
         return null;
     }
+
+    /**
+     * 部门月度报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    default byte[] departMonReport(ExportExcelDepartTO to) throws SerException{
+        return null;
+    };
 
 
 }

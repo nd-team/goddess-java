@@ -1,169 +1,187 @@
-package com.bjike.goddess.balancecard.to;
+package com.bjike.goddess.balancecard.excel;
 
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
- * 个人指标设置
+ * 岗位指标设置
  *
  * @Author: [ tanghaixiang ]
- * @Date: [ 2017-05-22 07:23 ]
- * @Description: [ 个人指标设置 ]
+ * @Date: [ 2017-05-19 09:11 ]
+ * @Description: [ 岗位指标设置 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SelfIndexSetTO extends BaseTO {
+public class PositionIndexSetExcel extends BaseTO {
 
     /**
      * 指标名称
      */
+    @ExcelHeader(name = "指标名称",notNull = true)
     private String indexName;
 
     /**
      * 年份
      */
+    @ExcelHeader(name = "年份",notNull = true)
     private String year;
 
     /**
      * 月份
      */
+    @ExcelHeader(name = "月份",notNull = true)
     private String month;
 
     /**
      * 指标类型
      */
+    @ExcelHeader(name = "指标类型",notNull = true)
     private String indexType;
 
     /**
      * 维度
      */
+    @ExcelHeader(name = "维度",notNull = true)
     private String dimension;
 
     /**
      * 总指标权重
      */
+    @ExcelHeader(name = "总指标权重",notNull = true)
     private Double describtion;
 
     /**
      * 责任部门
      */
+    @ExcelHeader(name = "责任部门",notNull = true)
     private String department;
 
     /**
      * 部门年度指标权重
      */
+    @ExcelHeader(name = "部门年度指标权重",notNull = true)
     private Double departYearWeight;
 
     /**
-     * 部门年度对赌值
+     * 部门月度对赌值
      */
+    @ExcelHeader(name = "部门月度对赌值",notNull = true)
     private Double departYearWager;
 
     /**
      * 责任岗位
      */
+    @ExcelHeader(name = "责任岗位",notNull = true)
     private String position;
 
     /**
      * 责任人
      */
+    @ExcelHeader(name = "责任人",notNull = true)
     private String positioner;
 
     /**
      * 岗位指标权重
      */
+    @ExcelHeader(name = "岗位指标权重",notNull = true)
     private Double weight;
 
     /**
      * 岗位指标权重之和
      */
+    @ExcelHeader(name = "岗位指标权重之和",notNull = true)
     private Double weightSum;
 
     /**
      * 岗位指标目标值
      */
+    @ExcelHeader(name = "岗位指标目标值",notNull = true)
     private Double target;
 
     /**
      * 对赌值
      */
+    @ExcelHeader(name = "对赌值",notNull = true)
     private Double wager;
 
     /**
      * 完成值
      */
+    @ExcelHeader(name = "完成值",notNull = true)
     private Double complete;
 
     /**
      * 考核方式
      */
+    @ExcelHeader(name = "考核方式",notNull = true)
     private String examWay;
 
     /**
      * 是否达标
      */
+    @ExcelHeader(name = "是否达标",notNull = true)
     private String whetherStandar;
 
     /**
      * 达成率
      */
+    @ExcelHeader(name = "达成率",notNull = true)
     private Double standardRate;
 
     /**
      * 考核得分
      */
+    @ExcelHeader(name = "考核得分",notNull = true)
     private Double examScore;
 
     /**
      * 填报人员
      */
+    @ExcelHeader(name = "填报人员",notNull = true)
     private String writePerson;
 
     /**
      * 考核部门
      */
+    @ExcelHeader(name = "考核部门",notNull = true)
     private String examDepart;
 
     /**
      * 数据来源
      */
+    @ExcelHeader(name = "数据来源",notNull = true)
     private String dataOrigin;
 
     /**
      * 考核周期
      */
+    @ExcelHeader(name = "考核周期",notNull = true)
     private String examDuring;
 
     /**
      * 岗位指标添加人
      */
+    @ExcelHeader(name = "岗位指标添加人",notNull = true)
     private String posionIndexPersion;
 
     /**
      * 岗位指标添加时间
      */
+    @ExcelHeader(name = "岗位指标添加时间",notNull = true)
     private String posionIndexTime;
 
     /**
      * 是否由分解得来状态
      */
+    @ExcelHeader(name = "是否由分解得来状态",notNull = true)
     private SeperateComeStatus seperateComeStatus;
 
     /**
      * 部门月度指标设置id
      */
+    @ExcelHeader(name = "部门月度指标设置id",notNull = true)
     private String departMonIndexSetId;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
-
 
     public String getIndexName() {
         return indexName;
@@ -387,21 +405,5 @@ public class SelfIndexSetTO extends BaseTO {
 
     public void setDepartMonIndexSetId(String departMonIndexSetId) {
         this.departMonIndexSetId = departMonIndexSetId;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

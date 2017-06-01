@@ -113,8 +113,23 @@ public class BusInsuranceSerImpl extends ServiceImpl<BusInsurance, BusInsuranceD
         }
         BusInsurance cusLevel = super.findById( busInsuranceTO.getId() );
 
+
         cusLevel.setWarefareAdvice( busInsuranceTO.getWarefareAdvice());
-        cusLevel.setManageAdvice( busInsuranceTO.getManageAdvice());
+        cusLevel.setModifyTime(LocalDateTime.now());
+        super.update( cusLevel );
+        return BeanTransform.copyProperties(cusLevel, BusInsuranceBO.class);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public BusInsuranceBO editBusAdvice(BusInsuranceTO busInsuranceTO) throws SerException {
+        if(StringUtils.isBlank(busInsuranceTO.getId())){
+            throw  new SerException("id不能为空");
+        }
+        BusInsurance cusLevel = super.findById( busInsuranceTO.getId() );
+
+
+        cusLevel.setOperaAdvice( busInsuranceTO.getOperaAdvice());
         cusLevel.setModifyTime(LocalDateTime.now());
         super.update( cusLevel );
         return BeanTransform.copyProperties(cusLevel, BusInsuranceBO.class);

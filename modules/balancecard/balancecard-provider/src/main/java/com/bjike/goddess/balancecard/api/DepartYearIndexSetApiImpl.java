@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.bo.DepartYearIndexSetBO;
 import com.bjike.goddess.balancecard.dto.DepartYearIndexSetDTO;
 import com.bjike.goddess.balancecard.service.DepartYearIndexSetSer;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
+import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,8 @@ public class DepartYearIndexSetApiImpl implements DepartYearIndexSetAPI {
         return departYearIndexSetSer.seperateDepartYear(departYearIndexSetTO);
     }
 
-
-    
+    @Override
+    public byte[] departYearReport(ExportExcelDepartTO to) throws SerException {
+        return departYearIndexSetSer.departYearReport(to);
+    }
 }

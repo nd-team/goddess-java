@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.DepartYearIndexSetBO;
 import com.bjike.goddess.balancecard.dto.DepartYearIndexSetDTO;
 import com.bjike.goddess.balancecard.to.DepartYearIndexSetTO;
+import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -82,5 +83,18 @@ public interface DepartYearIndexSetAPI {
     default DepartYearIndexSetBO seperateDepartYear(DepartYearIndexSetTO departYearIndexSetTO) throws SerException {
         return null;
     }
-    
+
+    /**
+     * 部门年度报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    default byte[] departYearReport(ExportExcelDepartTO to) throws SerException{
+        return null;
+    };
+
+
+
+
 }

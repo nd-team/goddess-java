@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.sun.org.apache.regexp.internal.RE;
@@ -58,7 +59,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     private void checkAddIdentity() throws SerException{
         Boolean flag = cusPermissionSer.busCusPermission("2");
         if( !flag ){
-            throw new SerException("您不是岗位的人员，不可以操作");
+            throw new SerException("您不是相应部门的人员，不可以操作");
         }
     }
 
@@ -133,14 +134,17 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
+        if(StringUtils.isBlank(siginManageTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        String userToken = RpcTransmit.getUserToken();
         checkAddIdentity();
+        RpcTransmit.transmitUserToken( userToken );
 
         SiginManage temp = super.findById( siginManageTO.getId() );
 
-        siginManageTO.setManager( userAPI.currentUser().getUsername());
-        SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
-
-        BeanUtils.copyProperties( siginManage , temp ,"id","createTime");
+        temp.setManager( userAPI.currentUser().getUsername());
+        temp.setAuditAdvice( siginManageTO.getAuditAdvice() );
         temp.setModifyTime(LocalDateTime.now());
         super.update( temp );
 

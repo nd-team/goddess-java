@@ -18,12 +18,12 @@ public class InsureRecordVO {
     /**
      * 商业险类型
      */
-    private String insureNumber;
+    private String busType;
 
     /**
      * 商业险名称
      */
-    private String addr;
+    private String typeName;
 
     /**
      * 保单生效日
@@ -38,57 +38,57 @@ public class InsureRecordVO {
     /**
      * 投保人名字
      */
-    private Double totalFee;
+    private String insureName;
 
     /**
      * 被保险人名字
      */
-    private String payWay;
+    private String insureByName;
 
     /**
      * 险种名称
      */
-    private String argueWay;
+    private String insureTypeName;
 
     /**
      * 组合名称
      */
-    private String insurer;
+    private String combiName;
 
     /**
      * 销售机构名称
      */
-    private String insureIdCard;
+    private String saleGroupName;
 
     /**
      * 销售员名称
      */
-    private String insureAddr;
+    private String salerName;
 
     /**
      * 机构电话
      */
-    private String tel;
+    private String organTel;
 
     /**
      * 合同存储编号
      */
-    private String carNumber;
+    private String storageNumber;
 
     /**
      * 合同存储路径
      */
-    private String brand;
+    private String storagePath;
 
     /**
      * 合同附件
      */
-    private String priceChoice;
+    private String storageFile;
 
     /**
      * 是否已续保
      */
-    private String ownNature;
+    private String renewal;
 
     /**
      * 创建时间
@@ -109,20 +109,20 @@ public class InsureRecordVO {
         this.id = id;
     }
 
-    public String getInsureNumber() {
-        return insureNumber;
+    public String getBusType() {
+        return busType;
     }
 
-    public void setInsureNumber(String insureNumber) {
-        this.insureNumber = insureNumber;
+    public void setBusType(String busType) {
+        this.busType = busType;
     }
 
-    public String getAddr() {
-        return addr;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setAddr(String addr) {
-        this.addr = addr;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getStartDate() {
@@ -141,92 +141,92 @@ public class InsureRecordVO {
         this.endDate = endDate;
     }
 
-    public Double getTotalFee() {
-        return totalFee;
+    public String getInsureName() {
+        return insureName;
     }
 
-    public void setTotalFee(Double totalFee) {
-        this.totalFee = totalFee;
+    public void setInsureName(String insureName) {
+        this.insureName = insureName;
     }
 
-    public String getPayWay() {
-        return payWay;
+    public String getInsureByName() {
+        return insureByName;
     }
 
-    public void setPayWay(String payWay) {
-        this.payWay = payWay;
+    public void setInsureByName(String insureByName) {
+        this.insureByName = insureByName;
     }
 
-    public String getArgueWay() {
-        return argueWay;
+    public String getInsureTypeName() {
+        return insureTypeName;
     }
 
-    public void setArgueWay(String argueWay) {
-        this.argueWay = argueWay;
+    public void setInsureTypeName(String insureTypeName) {
+        this.insureTypeName = insureTypeName;
     }
 
-    public String getInsurer() {
-        return insurer;
+    public String getCombiName() {
+        return combiName;
     }
 
-    public void setInsurer(String insurer) {
-        this.insurer = insurer;
+    public void setCombiName(String combiName) {
+        this.combiName = combiName;
     }
 
-    public String getInsureIdCard() {
-        return insureIdCard;
+    public String getSaleGroupName() {
+        return saleGroupName;
     }
 
-    public void setInsureIdCard(String insureIdCard) {
-        this.insureIdCard = insureIdCard;
+    public void setSaleGroupName(String saleGroupName) {
+        this.saleGroupName = saleGroupName;
     }
 
-    public String getInsureAddr() {
-        return insureAddr;
+    public String getSalerName() {
+        return salerName;
     }
 
-    public void setInsureAddr(String insureAddr) {
-        this.insureAddr = insureAddr;
+    public void setSalerName(String salerName) {
+        this.salerName = salerName;
     }
 
-    public String getTel() {
-        return tel;
+    public String getOrganTel() {
+        return organTel;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setOrganTel(String organTel) {
+        this.organTel = organTel;
     }
 
-    public String getCarNumber() {
-        return carNumber;
+    public String getStorageNumber() {
+        return storageNumber;
     }
 
-    public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
+    public void setStorageNumber(String storageNumber) {
+        this.storageNumber = storageNumber;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getStoragePath() {
+        return storagePath;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setStoragePath(String storagePath) {
+        this.storagePath = storagePath;
     }
 
-    public String getPriceChoice() {
-        return priceChoice;
+    public String getStorageFile() {
+        return storageFile;
     }
 
-    public void setPriceChoice(String priceChoice) {
-        this.priceChoice = priceChoice;
+    public void setStorageFile(String storageFile) {
+        this.storageFile = storageFile;
     }
 
-    public String getOwnNature() {
-        return ownNature;
+    public String getRenewal() {
+        return renewal;
     }
 
-    public void setOwnNature(String ownNature) {
-        this.ownNature = ownNature;
+    public void setRenewal(String renewal) {
+        this.renewal = renewal;
     }
 
     public String getCreateTime() {

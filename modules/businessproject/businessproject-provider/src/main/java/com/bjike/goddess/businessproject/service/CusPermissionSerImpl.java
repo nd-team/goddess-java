@@ -299,6 +299,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
     @Override
     public Boolean getCusPermission(String idFlag) throws SerException {
+        String ss = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = userAPI.currentUser();
@@ -388,10 +389,10 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (positionFlag) {
+        if (moduleFlag) {
             flag = true;
         } else {
             flag = false;
