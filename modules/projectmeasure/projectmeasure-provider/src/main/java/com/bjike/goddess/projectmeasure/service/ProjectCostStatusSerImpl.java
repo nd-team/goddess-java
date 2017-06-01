@@ -57,7 +57,7 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
      */
     @Override
     public List<ProjectCostStatusBO> list(ProjectCostStatusDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         dto.getSorts().add("projectName=asc");
         List<ProjectCostStatus> list = super.findByPage(dto);
         List<ProjectCostStatusBO> listBO = BeanTransform.copyProperties(list, ProjectCostStatusBO.class);
@@ -74,7 +74,7 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectCostStatusBO save(ProjectCostStatusTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectCostStatus entity = BeanTransform.copyProperties(to, ProjectCostStatus.class, true);
         entity = super.save(entity);
         ProjectCostStatusBO bo = BeanTransform.copyProperties(entity, ProjectCostStatusBO.class);
@@ -90,7 +90,7 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ProjectCostStatusTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectCostStatus model = super.findById(to.getId());
             if (model != null) {
@@ -126,7 +126,7 @@ public class ProjectCostStatusSerImpl extends ServiceImpl<ProjectCostStatus, Pro
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         super.remove(id);
     }
 }

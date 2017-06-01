@@ -68,7 +68,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
      */
     @Override
     public List<ProjectBasicInfoBO> list(ProjectBasicInfoDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<ProjectBasicInfo> list = super.findByPage(dto);
         List<ProjectBasicInfoBO> listBO = BeanTransform.copyProperties(list, ProjectBasicInfoBO.class);
         return listBO;
@@ -84,7 +84,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectBasicInfoBO save(ProjectBasicInfoTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectBasicInfo entity = BeanTransform.copyProperties(to, ProjectBasicInfo.class, true);
         entity = super.save(entity);
         ProjectBasicInfoBO bo = BeanTransform.copyProperties(entity, ProjectBasicInfoBO.class);
@@ -100,7 +100,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ProjectBasicInfoTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectBasicInfo model = super.findById(to.getId());
             if (model != null) {
@@ -136,7 +136,7 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectBasicInfo entity = super.findById(id);
         String projectName = entity.getProjectName();//获取项目名称
         deleteProjectCostByName(projectName);//删除项目费用情况

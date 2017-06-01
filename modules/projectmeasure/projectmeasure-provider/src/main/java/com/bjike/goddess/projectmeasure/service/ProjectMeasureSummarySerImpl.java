@@ -13,6 +13,7 @@ import com.bjike.goddess.projectmeasure.dto.ProjectMeasureSummaryDTO;
 import com.bjike.goddess.projectmeasure.entity.*;
 import com.bjike.goddess.projectmeasure.to.ProjectMeasureSummaryTO;
 import com.bjike.goddess.projectmeasure.type.CooperationType;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -56,6 +57,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    @Autowired
+    private UserAPI userAPI;
+
     /**
      * 检查权限
      *
@@ -81,7 +85,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      */
     @Override
     public List<ProjectMeasureSummaryBO> list(ProjectMeasureSummaryDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<ProjectMeasureSummary> list = super.findByPage(dto);
         List<ProjectMeasureSummaryBO> listBO = BeanTransform.copyProperties(list, ProjectMeasureSummaryBO.class);
         return listBO;
@@ -97,11 +101,34 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectMeasureSummaryBO save(ProjectMeasureSummaryTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
+        String curUsername = userAPI.currentUser().getUsername();
+        String sb = getProjectGroup(to);
         ProjectMeasureSummary entity = BeanTransform.copyProperties(to, ProjectMeasureSummary.class, true);
+        entity.setStatus(Status.THAW);
+        entity.setCreateUser(curUsername);
+        entity.setProjectGroups(sb);
+        entity.setUpdateTime(LocalDateTime.now());
         entity = super.save(entity);
         ProjectMeasureSummaryBO bo = BeanTransform.copyProperties(entity, ProjectMeasureSummaryBO.class);
         return bo;
+    }
+
+    private String getProjectGroup(ProjectMeasureSummaryTO to) {
+        String[] projectGroups = to.getProjects();
+        boolean projectGroupNotEmpty = (projectGroups != null) && (projectGroups.length > 0);
+        StringBuilder sb = new StringBuilder();
+        if (projectGroupNotEmpty) {
+
+            for (int i = 0; i < projectGroups.length; i++) {
+                if (i < projectGroups.length - 1) {
+                    sb.append(projectGroups[i]).append(",");
+                } else {
+                    sb.append(projectGroups[i]);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -113,7 +140,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ProjectMeasureSummaryTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectMeasureSummary model = super.findById(to.getId());
             if (model != null) {
@@ -135,8 +162,11 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @throws SerException
      */
     private void updateProjectMeasureSummary(ProjectMeasureSummaryTO to, ProjectMeasureSummary model) throws SerException {
+        String sb = getProjectGroup(to);
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
+        model.setProjectGroups(sb);
+        model.setUpdateTime(LocalDateTime.now());
         super.update(model);
     }
 
@@ -149,8 +179,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void thaw(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectMeasureSummary model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
         model.setStatus(Status.THAW);
         super.update(model);
     }
@@ -164,8 +195,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void congeal(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectMeasureSummary model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
         model.setStatus(Status.CONGEAL);//将状态修改为解冻状态
         super.update(model);
     }
@@ -179,7 +211,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      */
     @Override
     public List<ProjectMeasureBO> summarize(String[] areas) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<ProjectMeasureBO> projectMeasureBOList = new ArrayList<>(0);
 //        String[] areas = to.getAreas()
         for (String area : areas) {
@@ -189,9 +221,9 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
             Integer msProjectNo = countmSProjectNo(area);//计算多项目单界面项目数量
             Integer smProjectNo = countsMProjectNo(area);//计算单项目多界面项目数量
             Integer ssProjectNo = countsSProjectNo(area);//计算多项目多界面项目数量
-            Integer longTermProjectNo = countProjectNoByType(area, CooperationType.LONG_TEAM_COOPERATION);//计算长期合作项目数量
-            Integer matterProjectNo = countProjectNoByType(area, CooperationType.MATTER_COOPERATION);//计算事项合作项目
-            Integer intermediaryProjectNo = countProjectNoByType(area, CooperationType.INTERMEDIARY);//计算中介合作项目
+            Integer longTermProjectNo = countLongTermProjectNo(area);//计算长期合作项目数量
+            Integer matterProjectNo = countMatterProjectNo(area);//计算事项合作项目
+            Integer intermediaryProjectNo = countIntermediaryProjectNo(area);//计算中介合作项目
             // TODO: 17-3-26
             //这里需要计算盈利项目的数量
 
@@ -232,6 +264,7 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
         boSummary.setLongTermProjectCount(longTermProjectNoSum);
         boSummary.setMatterProjectCount(matterProjectNoSum);
         boSummary.setAgencyProjectCount(intermediaryProjectNoSum);
+        projectMeasureBOList.add(boSummary);
 
         return projectMeasureBOList;
     }
@@ -242,13 +275,42 @@ public class ProjectMeasureSummarySerImpl extends ServiceImpl<ProjectMeasureSumm
      * @param area
      * @return
      */
-    private Integer countProjectNoByType(String area, CooperationType cooperationType) throws SerException {
+    private Integer countLongTermProjectNo(String area) throws SerException {
         ProjectBasicInfoDTO dto = new ProjectBasicInfoDTO();
         dto.getConditions().add(Restrict.eq("area", area));
-        dto.getConditions().add(Restrict.eq("cooperationType", cooperationType));
+        dto.getConditions().add(Restrict.eq("cooperationType", 0));
         List<ProjectBasicInfo> projectBasicInfoList = projectBasicInfoSer.findByCis(dto);
         return projectBasicInfoList.size();
     }
+
+    /**
+     * 计算事项合作项目数量
+     *
+     * @param area
+     * @return
+     */
+    private Integer countMatterProjectNo(String area) throws SerException {
+        ProjectBasicInfoDTO dto = new ProjectBasicInfoDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("cooperationType", 1));
+        List<ProjectBasicInfo> projectBasicInfoList = projectBasicInfoSer.findByCis(dto);
+        return projectBasicInfoList.size();
+    }
+
+    /**
+     * 计算中介合作项目数量
+     *
+     * @param area
+     * @return
+     */
+    private Integer countIntermediaryProjectNo(String area) throws SerException {
+        ProjectBasicInfoDTO dto = new ProjectBasicInfoDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("cooperationType", 2));
+        List<ProjectBasicInfo> projectBasicInfoList = projectBasicInfoSer.findByCis(dto);
+        return projectBasicInfoList.size();
+    }
+
 
     /**
      * 根据地区计算单个项目单个界面的数量

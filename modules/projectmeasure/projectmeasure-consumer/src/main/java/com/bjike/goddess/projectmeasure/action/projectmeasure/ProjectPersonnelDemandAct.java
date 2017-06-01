@@ -47,7 +47,7 @@ public class ProjectPersonnelDemandAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/projectbasicinfo/{id}")
+    @GetMapping("v1/projectpersonneldemand/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             ProjectPersonnelDemandBO bo = projectPersonnelDemandAPI.findById(id);

@@ -21,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class ProjectMeasureSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/projectbasicinfo/{id}")
+    @GetMapping("v1/projectmeasuresummary/{id}")
     public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             ProjectMeasureSummaryBO bo = projectMeasureSummaryAPI.findById(id);
@@ -161,7 +160,7 @@ public class ProjectMeasureSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/thaw/{id}")
+    @PatchMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
             projectMeasureSummaryAPI.thaw(id);
@@ -179,7 +178,7 @@ public class ProjectMeasureSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/congeal/{id}")
+    @PatchMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             projectMeasureSummaryAPI.congeal(id);
@@ -198,7 +197,7 @@ public class ProjectMeasureSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/summarize")
+    @PostMapping("v1/summarize")
     public Result summarize(String[] areas, HttpServletRequest request) throws ActException {
         try {
             List<ProjectMeasureBO> boList = projectMeasureSummaryAPI.summarize(areas);

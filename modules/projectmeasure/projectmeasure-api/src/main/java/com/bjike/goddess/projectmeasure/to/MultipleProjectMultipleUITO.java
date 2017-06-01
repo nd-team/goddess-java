@@ -29,7 +29,6 @@ public class MultipleProjectMultipleUITO extends BaseTO {
     /**
      * 项目类别
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "项目类别不能为空")
     private ProjectCategory projectCategory;
 
     /**

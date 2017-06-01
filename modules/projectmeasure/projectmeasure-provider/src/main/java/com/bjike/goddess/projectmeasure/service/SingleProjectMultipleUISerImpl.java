@@ -8,6 +8,7 @@ import com.bjike.goddess.projectmeasure.bo.SingleProjectMultipleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectMultipleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectMultipleUI;
 import com.bjike.goddess.projectmeasure.to.SingleProjectMultipleUITO;
+import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -57,9 +58,9 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
      */
     @Override
     public List<SingleProjectMultipleUIBO> list(SingleProjectMultipleUIDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<SingleProjectMultipleUI> list = super.findByPage(dto);
-        List<SingleProjectMultipleUIBO> listBO = BeanTransform.copyProperties(list, SingleProjectMultipleUI.class);
+        List<SingleProjectMultipleUIBO> listBO = BeanTransform.copyProperties(list, SingleProjectMultipleUIBO.class);
         return listBO;
     }
 
@@ -73,8 +74,9 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
     @Override
     @Transactional(rollbackFor = SerException.class)
     public SingleProjectMultipleUIBO save(SingleProjectMultipleUITO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         SingleProjectMultipleUI entity = BeanTransform.copyProperties(to, SingleProjectMultipleUI.class, true);
+        entity.setProjectCategory(ProjectCategory.SINGLE_MULTIPLE);
         entity = super.save(entity);
         SingleProjectMultipleUIBO bo = BeanTransform.copyProperties(entity, SingleProjectMultipleUIBO.class);
         return bo;
@@ -89,7 +91,7 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(SingleProjectMultipleUITO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             SingleProjectMultipleUI model = super.findById(to.getId());
             if (model != null) {
@@ -125,7 +127,7 @@ public class SingleProjectMultipleUISerImpl extends ServiceImpl<SingleProjectMul
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         super.remove(id);
     }
 }

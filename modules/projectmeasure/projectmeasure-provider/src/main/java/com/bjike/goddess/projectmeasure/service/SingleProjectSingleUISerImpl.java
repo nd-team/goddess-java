@@ -8,6 +8,7 @@ import com.bjike.goddess.projectmeasure.bo.SingleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.SingleProjectSingleUIDTO;
 import com.bjike.goddess.projectmeasure.entity.SingleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.to.SingleProjectSingleUITO;
+import com.bjike.goddess.projectmeasure.type.ProjectCategory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -43,7 +44,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
         //商务模块权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
         if ( !permissionLevel) {
-            throw new SerException("您不是商务模块人员,没有该操作权限");
+            throw new SerException("您没有该操作权限");
         }
         RpcTransmit.transmitUserToken( userToken );
 
@@ -57,7 +58,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
      */
     @Override
     public List<SingleProjectSingleUIBO> list(SingleProjectSingleUIDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<SingleProjectSingleUI> list = super.findByPage(dto);
         List<SingleProjectSingleUIBO> listBO = BeanTransform.copyProperties(list, SingleProjectSingleUIBO.class);
         return listBO;
@@ -73,8 +74,9 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public SingleProjectSingleUIBO save(SingleProjectSingleUITO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         SingleProjectSingleUI entity = BeanTransform.copyProperties(to, SingleProjectSingleUI.class, true);
+        entity.setProjectCategory(ProjectCategory.SINGLE_SINGLE);
         entity = super.save(entity);
         SingleProjectSingleUIBO bo = BeanTransform.copyProperties(entity, SingleProjectSingleUIBO.class);
         return bo;
@@ -89,7 +91,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(SingleProjectSingleUITO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             SingleProjectSingleUI model = super.findById(to.getId());
             if (model != null) {
@@ -125,7 +127,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         super.remove(id);
     }
 }

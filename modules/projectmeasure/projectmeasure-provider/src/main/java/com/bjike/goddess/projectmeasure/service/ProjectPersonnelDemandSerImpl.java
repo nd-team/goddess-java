@@ -57,7 +57,7 @@ public class ProjectPersonnelDemandSerImpl extends ServiceImpl<ProjectPersonnelD
      */
     @Override
     public List<ProjectPersonnelDemandBO> list(ProjectPersonnelDemandDTO dto) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<ProjectPersonnelDemand> list = super.findByPage(dto);
         List<ProjectPersonnelDemandBO> listBO = BeanTransform.copyProperties(list, ProjectPersonnelDemandBO.class);
         return listBO;
@@ -73,7 +73,7 @@ public class ProjectPersonnelDemandSerImpl extends ServiceImpl<ProjectPersonnelD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectPersonnelDemandBO save(ProjectPersonnelDemandTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         ProjectPersonnelDemand entity = BeanTransform.copyProperties(to, ProjectPersonnelDemand.class, true);
         entity = super.save(entity);
         ProjectPersonnelDemandBO bo = BeanTransform.copyProperties(entity, ProjectPersonnelDemandBO.class);
@@ -89,7 +89,7 @@ public class ProjectPersonnelDemandSerImpl extends ServiceImpl<ProjectPersonnelD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ProjectPersonnelDemandTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             ProjectPersonnelDemand model = super.findById(to.getId());
             if (model != null) {
@@ -125,7 +125,7 @@ public class ProjectPersonnelDemandSerImpl extends ServiceImpl<ProjectPersonnelD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-        checkPermission();
+//        checkPermission();
         super.remove(id);
     }
 }
