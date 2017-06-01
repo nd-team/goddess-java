@@ -84,4 +84,12 @@ public interface MoneyReadySer extends Ser<MoneyReady, MoneyReadyDTO> {
     default List<MoneyReadyCountBO> count(Integer month) throws SerException {
         return null;
     }
+
+    /**
+     * 查询总记录数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    Long countSum(MoneyReadyDTO dto) throws SerException;
 }

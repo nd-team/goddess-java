@@ -32,6 +32,7 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
+    compile project(":modules:staffentry:staffentry-api")
     compile project(":common:common-utils")
 }
 

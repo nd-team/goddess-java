@@ -82,9 +82,9 @@ public interface GradeLevelSer extends Ser<GradeLevel, GradeLevelDTO> {
     }
 
     /**
-     * 获取所有部门
+     * 获取所有体系
      *
      * @throws SerException
      */
-    Set<String> allDepartments() throws SerException;
+    Set<String> allHierarchys() throws SerException;
 }
