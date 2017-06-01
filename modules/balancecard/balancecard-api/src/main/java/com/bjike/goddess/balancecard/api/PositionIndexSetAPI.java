@@ -2,6 +2,7 @@ package com.bjike.goddess.balancecard.api;
 
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
+import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -142,5 +143,25 @@ public interface PositionIndexSetAPI {
     }
 
     ;
-    
+
+    /**
+     * 岗位报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    default byte[] positionReport(ExportExcelPositTO to) throws SerException{
+        return null;
+    };
+
+    /**
+     * 个人报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    default byte[] personReport(ExportExcelPositTO to) throws SerException{
+        return null;
+    };
+
 }

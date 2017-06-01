@@ -251,10 +251,14 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             user.setModifyTime(LocalDateTime.now());
             super.update(user);
             //更新session及缓存
-            LoginUser loginUser = new LoginUser();
-            BeanUtils.copyProperties(user, loginUser);
-            redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
-            UserSession.put(token, loginUser);
+            UserBO currentUser = currentUser(token);
+            if(currentUser.getId().equals(user.getId())){
+                LoginUser loginUser = new LoginUser();
+                BeanUtils.copyProperties(user, loginUser);
+                redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
+                UserSession.put(token, loginUser);
+            }
+
         } else {
             throw new SerException("notLogin");
         }

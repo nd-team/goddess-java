@@ -3,6 +3,7 @@ package com.bjike.goddess.balancecard.api;
 import com.bjike.goddess.balancecard.bo.PositionIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
 import com.bjike.goddess.balancecard.service.PositionIndexSetSer;
+import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,15 @@ public class PositionIndexSetApiImpl implements PositionIndexSetAPI {
     @Override
     public void deleteSelf(String id) throws SerException {
         positionIndexSetSer.deleteSelf(id);
+    }
+
+    @Override
+    public byte[] positionReport(ExportExcelPositTO to) throws SerException {
+        return positionIndexSetSer.positionReport(to);
+    }
+
+    @Override
+    public byte[] personReport(ExportExcelPositTO to) throws SerException {
+        return positionIndexSetSer.personReport(to);
     }
 }

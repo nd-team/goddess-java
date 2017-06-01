@@ -416,4 +416,60 @@ public class YearIndexSetSerImpl extends ServiceImpl<YearIndexSet, YearIndexSetD
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
     }
+
+    @Override
+    public byte[] exportYearExcel(ExportExcelYearTO to) throws SerException {
+        YearIndexSetDTO dto = new YearIndexSetDTO();
+        if ( StringUtils.isBlank(to.getStartTime()) && !StringUtils.isBlank(to.getEndTime())) {
+            throw new SerException("请输入时间");
+        }
+        LocalDate start = LocalDate.parse(to.getStartTime());
+        LocalDate end  = LocalDate.parse(to.getEndTime());
+        String startYear = String.valueOf(start.getYear());
+        String endYear = String.valueOf(end.getYear());
+
+        String [] years = new String[]{startYear,endYear};
+        dto.getConditions().add(Restrict.between("year", years ));
+
+        List<YearIndexSet> list = super.findByCis(dto);
+        List<YearIndexSetExcel> toList = new ArrayList<YearIndexSetExcel>();
+        for (YearIndexSet model : list) {
+            YearIndexSetExcel excel = new YearIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+    @Override
+    public byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException {
+        YearIndexSetDTO dto = new YearIndexSetDTO();
+        if(StringUtils.isNotBlank(to.getIndexType())){
+            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        }
+        if(StringUtils.isNotBlank(to.getDimension())){
+            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        }
+
+        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
+            LocalDate start  = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+            String [] years = new String[]{startYear,endYear};
+            dto.getConditions().add(Restrict.between("year", years ));
+        }
+
+        List<YearIndexSet> list = super.findByCis(dto);
+        List<YearIndexSetExcel> toList = new ArrayList<YearIndexSetExcel>();
+        for (YearIndexSet model : list) {
+            YearIndexSetExcel excel = new YearIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
 }

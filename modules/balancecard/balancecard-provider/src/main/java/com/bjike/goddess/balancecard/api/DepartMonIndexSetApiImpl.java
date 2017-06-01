@@ -4,6 +4,7 @@ import com.bjike.goddess.balancecard.bo.DepartMonIndexSetBO;
 import com.bjike.goddess.balancecard.dto.DepartMonIndexSetDTO;
 import com.bjike.goddess.balancecard.service.DepartMonIndexSetSer;
 import com.bjike.goddess.balancecard.to.DepartMonIndexSetTO;
+import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class DepartMonIndexSetApiImpl implements DepartMonIndexSetAPI {
     @Override
     public List<DepartMonIndexSetBO> listNow(DepartMonIndexSetDTO departMonIndexSetDTO) throws SerException {
         return departMonIndexSetSer.listNow(departMonIndexSetDTO);
+    }
+
+    @Override
+    public byte[] departMonReport(ExportExcelDepartTO to) throws SerException {
+        return departMonIndexSetSer.departMonReport(to);
     }
 }

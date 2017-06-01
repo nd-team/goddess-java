@@ -7,7 +7,9 @@ import com.bjike.goddess.balancecard.entity.PositionIndexSet;
 import com.bjike.goddess.balancecard.entity.YearIndexSet;
 import com.bjike.goddess.balancecard.enums.SeparateStatus;
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
+import com.bjike.goddess.balancecard.excel.DepartMonIndexSetExcel;
 import com.bjike.goddess.balancecard.to.DepartMonIndexSetTO;
+import com.bjike.goddess.balancecard.to.ExportExcelDepartTO;
 import com.bjike.goddess.balancecard.to.PostSerperateTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -15,9 +17,12 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.balancecard.dto.DepartMonIndexSetDTO;
 import com.bjike.goddess.balancecard.entity.DepartMonIndexSet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -329,5 +334,41 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
         return listBO;
     }
 
+    @Override
+    public byte[] departMonReport(ExportExcelDepartTO to) throws SerException {
+        DepartMonIndexSetDTO dto = new DepartMonIndexSetDTO();
+        if(StringUtils.isNotBlank(dto.getDepartment())){
+            dto.getConditions().add(Restrict.between("department", dto.getDepartment() ));
+        }
+        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
+            LocalDate start  = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+            String startMon = String.valueOf(start.getMonthValue());
+            String endMon = String.valueOf(end.getMonthValue());
+            String [] years = new String[]{startYear,endYear};
+            String [] months = new String[]{startMon,endMon};
+            dto.getConditions().add(Restrict.between("year", years ));
+            dto.getConditions().add(Restrict.between("month", months ));
+        }
 
+        if(StringUtils.isNotBlank(to.getIndexType())){
+            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        }
+        if(StringUtils.isNotBlank(to.getDimension())){
+            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        }
+
+        List<DepartMonIndexSet> list = super.findByCis(dto);
+        List<DepartMonIndexSetExcel> toList = new ArrayList<DepartMonIndexSetExcel>();
+        for (DepartMonIndexSet model : list) {
+            DepartMonIndexSetExcel excel = new DepartMonIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
 }

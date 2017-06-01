@@ -3,20 +3,25 @@ package com.bjike.goddess.balancecard.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
- * 年度指标设置导出条件
+ * 岗位指标设置导出条件
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-05-19 09:11 ]
- * @Description: [ 年度指标设置导出条件 ]
+ * @Description: [ 岗位指标设置导出条件 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ExportExcelYearTO extends BaseTO {
+public class ExportExcelPositTO extends BaseTO {
 
     /**
-     * 指标名称
+     * 岗位
      */
-    private String indexName;
+    private String post;
+
+    /**
+     * 个人姓名
+     */
+    private String positioner;
 
     /**
      * 指标类型
@@ -29,19 +34,29 @@ public class ExportExcelYearTO extends BaseTO {
     private String dimension;
 
     /**
-     * 年份
-     */
-    private String year;
-
-    /**
      * 开始时间
      */
-    private String startTime ;
+    private String startTime;
     /**
      * 结束时间
      */
-    private String endTime ;
+    private String endTime;
 
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public String getPositioner() {
+        return positioner;
+    }
+
+    public void setPositioner(String positioner) {
+        this.positioner = positioner;
+    }
 
     public String getIndexType() {
         return indexType;
@@ -57,22 +72,6 @@ public class ExportExcelYearTO extends BaseTO {
 
     public void setDimension(String dimension) {
         this.dimension = dimension;
-    }
-
-    public String getIndexName() {
-        return indexName;
-    }
-
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
     }
 
     public String getStartTime() {

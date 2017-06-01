@@ -15,9 +15,9 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-<!--
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
--->
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
 	<dubbo:reference  validation="true" id="busInsuranceApiImpl" interface="com.bjike.goddess.businsurance.api.BusInsuranceAPI" />
 	<dubbo:reference  validation="true" id="carInsureApiImpl" interface="com.bjike.goddess.businsurance.api.CarInsureAPI" />
 	<dubbo:reference  validation="true" id="groupByInsurerApiImpl" interface="com.bjike.goddess.businsurance.api.GroupByInsurerAPI" />

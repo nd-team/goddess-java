@@ -77,4 +77,14 @@ public class YearIndexSetApiImpl implements YearIndexSetAPI {
     public byte[] exportExcel(ExportExcelYearTO to) throws SerException {
         return yearIndexSetSer.exportExcel(to);
     }
+
+    @Override
+    public byte[] exportYearExcel(ExportExcelYearTO to) throws SerException {
+        return yearIndexSetSer.exportYearExcel(to);
+    }
+
+    @Override
+    public byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException {
+        return yearIndexSetSer.exportYearDeExcel(to);
+    }
 }

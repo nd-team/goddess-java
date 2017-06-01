@@ -61,6 +61,11 @@ public class BusInsuranceApiImpl implements BusInsuranceAPI {
     }
 
     @Override
+    public BusInsuranceBO editBusAdvice(BusInsuranceTO busInsuranceTO) throws SerException {
+        return busInsuranceSer.editBusAdvice(busInsuranceTO);
+    }
+
+    @Override
     public BusInsuranceBO audit(BusInsuranceTO busInsuranceTO) throws SerException {
         return busInsuranceSer.audit(busInsuranceTO);
     }

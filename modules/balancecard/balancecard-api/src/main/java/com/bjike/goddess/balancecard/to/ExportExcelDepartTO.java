@@ -3,20 +3,20 @@ package com.bjike.goddess.balancecard.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
- * 年度指标设置导出条件
+ * 部门年度指标设置导出条件
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-05-19 09:11 ]
- * @Description: [ 年度指标设置导出条件 ]
+ * @Description: [ 部门年度指标设置导出条件 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class ExportExcelYearTO extends BaseTO {
+public class ExportExcelDepartTO extends BaseTO {
 
     /**
-     * 指标名称
+     * 部门
      */
-    private String indexName;
+    private String depart;
 
     /**
      * 指标类型
@@ -27,11 +27,6 @@ public class ExportExcelYearTO extends BaseTO {
      * 维度
      */
     private String dimension;
-
-    /**
-     * 年份
-     */
-    private String year;
 
     /**
      * 开始时间
@@ -59,20 +54,12 @@ public class ExportExcelYearTO extends BaseTO {
         this.dimension = dimension;
     }
 
-    public String getIndexName() {
-        return indexName;
+    public String getDepart() {
+        return depart;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
+    public void setDepart(String depart) {
+        this.depart = depart;
     }
 
     public String getStartTime() {

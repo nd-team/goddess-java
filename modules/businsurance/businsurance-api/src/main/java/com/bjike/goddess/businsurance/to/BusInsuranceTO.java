@@ -1,6 +1,7 @@
 package com.bjike.goddess.businsurance.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 商业保险方案
@@ -12,6 +13,9 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class BusInsuranceTO extends BaseTO {
+    public interface editWareAdvice{}
+    public interface editBusAdvice{}
+    public interface audit{}
 
     /**
      * 保险公司(中国人寿/这个平安/其它)
@@ -81,16 +85,19 @@ public class BusInsuranceTO extends BaseTO {
     /**
      * 福利模块意见
      */
+    @NotBlank(groups = {BusInsuranceTO.editWareAdvice.class} , message = "福利模块意见不能为空")
     private String warefareAdvice;
 
     /**
      * 运营商务部意见
      */
+    @NotBlank(groups = {BusInsuranceTO.editBusAdvice.class} , message = "运营商务部意见不能为空")
     private String operaAdvice;
 
     /**
-     * 总经办是否通过
+     * 总经办是否通过(未处理/通过/不通过)
      */
+    @NotBlank(groups = {BusInsuranceTO.audit.class} , message = "总经办是否通过(未处理/通过/不通过) 不能为空")
     private String manageAdvice;
 
     /**

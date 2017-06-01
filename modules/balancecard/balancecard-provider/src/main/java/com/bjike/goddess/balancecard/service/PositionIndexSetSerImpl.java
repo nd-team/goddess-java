@@ -6,6 +6,8 @@ import com.bjike.goddess.balancecard.entity.DepartMonIndexSet;
 import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
 import com.bjike.goddess.balancecard.entity.YearIndexSet;
 import com.bjike.goddess.balancecard.enums.SeperateComeStatus;
+import com.bjike.goddess.balancecard.excel.PositionIndexSetExcel;
+import com.bjike.goddess.balancecard.to.ExportExcelPositTO;
 import com.bjike.goddess.balancecard.to.PositionIndexSetTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -13,15 +15,19 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
 import com.bjike.goddess.balancecard.entity.PositionIndexSet;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -370,4 +376,78 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         return BeanTransform.copyProperties(temp, PositionIndexSetBO.class);
     }
 
+    @Override
+    public byte[] positionReport(ExportExcelPositTO to) throws SerException {
+        PositionIndexSetDTO dto = new PositionIndexSetDTO();
+        if(StringUtils.isNotBlank(to.getPost())){
+            dto.getConditions().add(Restrict.between("position", to.getPost() ));
+        }
+        if(StringUtils.isNotBlank(to.getIndexType())){
+            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        }
+        if(StringUtils.isNotBlank(to.getDimension())){
+            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        }
+        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
+            LocalDate start  = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+            String startMon = String.valueOf(start.getMonthValue());
+            String endMon = String.valueOf(end.getMonthValue());
+            String [] years = new String[]{startYear,endYear};
+            String [] months = new String[]{startMon,endMon};
+            dto.getConditions().add(Restrict.between("year", years ));
+            dto.getConditions().add(Restrict.between("month", months ));
+        }
+
+        List<PositionIndexSet> list = super.findByCis(dto);
+        List<PositionIndexSetExcel> toList = new ArrayList<PositionIndexSetExcel>();
+        for (PositionIndexSet model : list) {
+            PositionIndexSetExcel excel = new PositionIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] personReport(ExportExcelPositTO to) throws SerException {
+        PositionIndexSetDTO dto = new PositionIndexSetDTO();
+        if(StringUtils.isNotBlank(to.getPositioner())){
+            dto.getConditions().add(Restrict.between("positioner", to.getPositioner() ));
+        }
+        if(StringUtils.isNotBlank(to.getIndexType())){
+            dto.getConditions().add(Restrict.between("indexType", to.getIndexType() ));
+        }
+        if(StringUtils.isNotBlank(to.getDimension())){
+            dto.getConditions().add(Restrict.between("dimension", to.getDimension() ));
+        }
+        if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
+            LocalDate start  = LocalDate.parse(to.getStartTime());
+            LocalDate end = LocalDate.parse(to.getEndTime());
+            String startYear = String.valueOf(start.getYear());
+            String endYear = String.valueOf(end.getYear());
+            String startMon = String.valueOf(start.getMonthValue());
+            String endMon = String.valueOf(end.getMonthValue());
+            String [] years = new String[]{startYear,endYear};
+            String [] months = new String[]{startMon,endMon};
+            dto.getConditions().add(Restrict.between("year", years ));
+            dto.getConditions().add(Restrict.between("month", months ));
+        }
+
+
+        List<PositionIndexSet> list = super.findByCis(dto);
+        List<PositionIndexSetExcel> toList = new ArrayList<PositionIndexSetExcel>();
+        for (PositionIndexSet model : list) {
+            PositionIndexSetExcel excel = new PositionIndexSetExcel();
+            BeanUtils.copyProperties(model, excel);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
 }

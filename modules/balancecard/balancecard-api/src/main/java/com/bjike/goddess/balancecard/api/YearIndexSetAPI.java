@@ -29,9 +29,12 @@ public interface YearIndexSetAPI {
 
     /**
      * 年度指标列表id
+     *
      * @return class YearIndexSetBO
      */
-    default YearIndexSetBO getOneById (String id) throws SerException {return null;}
+    default YearIndexSetBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -87,9 +90,8 @@ public interface YearIndexSetAPI {
 
     /**
      * 获取所有年份
-     *
      */
-    default List<String> yearList( ) throws SerException {
+    default List<String> yearList() throws SerException {
 
         return null;
     }
@@ -104,11 +106,27 @@ public interface YearIndexSetAPI {
 
     /**
      * 导出Excel
+     *
      * @param to
      * @throws SerException
      */
     byte[] exportExcel(ExportExcelYearTO to) throws SerException;
 
+    /**
+     * 年度报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportYearExcel(ExportExcelYearTO to) throws SerException;
+
+    /**
+     * 维度和指标类型报告导出Excel
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportYearDeExcel(ExportExcelYearTO to) throws SerException;
 
 
 }
