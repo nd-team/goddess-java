@@ -19,6 +19,23 @@ import java.util.List;
 public interface RewardIndicatorAPI {
 
     /**
+     * 根据id查询奖励指标
+     *
+     * @param id 奖励指标唯一标识
+     * @return class RewardIndicatorBO
+     * @throws SerException
+     */
+    RewardIndicatorBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖励指标dto
+     * @throws SerException
+     */
+    Long count(RewardIndicatorDTO dto) throws SerException;
+
+    /**
      * 分页查询奖励指标
      *
      * @return class RewardIndicatorBO

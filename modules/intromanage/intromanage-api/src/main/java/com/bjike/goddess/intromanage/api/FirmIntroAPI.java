@@ -20,6 +20,23 @@ import java.util.List;
 public interface FirmIntroAPI {
 
     /**
+     * 根据id查询公司简介
+     *
+     * @param id 公司简介唯一标识
+     * @return class FirmIntroBO
+     * @throws SerException
+     */
+    FirmIntroBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 公司简介dto
+     * @throws SerException
+     */
+    Long count(FirmIntroDTO dto) throws SerException;
+
+    /**
      * 分页查询公司简介
      *
      * @return class FirmIntroBO
@@ -30,7 +47,7 @@ public interface FirmIntroAPI {
     /**
      * 保存公司简介
      *
-     * @param to 教育经历to
+     * @param to 公司简介to
      * @return class FirmIntroBO
      * @throws SerException
      */

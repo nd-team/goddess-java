@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.action.staffactivity;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityApplyInforAPI;
@@ -46,7 +48,7 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @GetMapping("v1/activityapplyinfor/{id}")
-    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+    public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             ActivityApplyInforBO bo = activityApplyInforAPI.findById(id);
             ActivityApplyInforVO vo = BeanTransform.copyProperties(bo, ActivityApplyInforVO.class, request);
@@ -82,10 +84,10 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ActivityApplyInforDTO dto) throws ActException {
+    public Result list(ActivityApplyInforDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ActivityApplyInforBO> boList = activityApplyInforAPI.list(dto);
-            List<ActivityApplyInforVO> voList = BeanTransform.copyProperties(boList, ActivityApplyInforVO.class);
+            List<ActivityApplyInforVO> voList = BeanTransform.copyProperties(boList, ActivityApplyInforVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -100,11 +102,12 @@ public class ActivityApplyInforAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ActivityApplyInforTO to) throws ActException {
+    public Result add(@Validated({ADD.class}) ActivityApplyInforTO to, HttpServletRequest request) throws ActException {
         try {
             ActivityApplyInforBO bo = activityApplyInforAPI.save(to);
-            ActivityApplyInforVO vo = BeanTransform.copyProperties(bo, ActivityApplyInforVO.class);
+            ActivityApplyInforVO vo = BeanTransform.copyProperties(bo, ActivityApplyInforVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -118,8 +121,9 @@ public class ActivityApplyInforAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable(value = "id") String id) throws ActException {
         try {
             activityApplyInforAPI.remove(id);
             return new ActResult("delete success!");
@@ -135,8 +139,9 @@ public class ActivityApplyInforAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(ActivityApplyInforTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) ActivityApplyInforTO to) throws ActException {
         try {
             activityApplyInforAPI.update(to);
             return new ActResult("edit success!");
@@ -148,14 +153,16 @@ public class ActivityApplyInforAct {
     /**
      * 参与该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param area 地区
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/joinActivity")
-    public Result joinActivity(ActivityApplyInforTO to) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/joinActivity/{id}")
+    public Result joinActivity(@PathVariable(value = "id") String id, @RequestParam(value = "area") String area) throws ActException {
         try {
-            activityApplyInforAPI.joinActivity(to);
+            activityApplyInforAPI.joinActivity(id, area);
             return new ActResult("joinActivity success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -165,14 +172,16 @@ public class ActivityApplyInforAct {
     /**
      * 退出该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param abandonReason 放弃原因
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/exitActivity")
-    public Result exitActivity(ActivityApplyInforTO to) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/exitActivity/{id}")
+    public Result exitActivity(@PathVariable(value = "id") String id, @RequestParam(value = "abandonReason") String abandonReason) throws ActException {
         try {
-            activityApplyInforAPI.exitActivity(to);
+            activityApplyInforAPI.exitActivity(id, abandonReason);
             return new ActResult("exitActivity success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -185,12 +194,13 @@ public class ActivityApplyInforAct {
      * @param id 活动申请信息唯一标识
      * @return class ActivityStaffListVO
      * @throws ActException
+     * @version v1
      */
-    @GetMapping("v1/checkStaffList")
-    public Result checkStaffList(String id) throws ActException {
+    @GetMapping("v1/checkStaffList/{id}")
+    public Result checkStaffList(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
             List<ActivityStaffListBO> boList = activityApplyInforAPI.checkStaffList(id);
-            List<ActivityStaffListVO> voList = BeanTransform.copyProperties(boList, ActivityStaffListVO.class);
+            List<ActivityStaffListVO> voList = BeanTransform.copyProperties(boList, ActivityStaffListVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

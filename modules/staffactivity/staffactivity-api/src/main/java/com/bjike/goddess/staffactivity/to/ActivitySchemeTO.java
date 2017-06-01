@@ -1,6 +1,11 @@
 package com.bjike.goddess.staffactivity.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 活动方案
@@ -16,26 +21,31 @@ public class ActivitySchemeTO extends BaseTO {
     /**
      * 活动主题
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动主题不能为空")
     private String theme;
 
     /**
      * 活动时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动时间不能为空")
     private String activityTime;
 
     /**
      * 活动地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动地区不能为空")
     private String area;
 
     /**
      * 开展形式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "开展形式不能为空")
     private String developForm;
 
     /**
      * 参与人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "参与人员不能为空")
     private Integer attendNo;
 
     /**

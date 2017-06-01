@@ -51,7 +51,7 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivityExecuteInfoBO save(ActivityExecuteInfoTO to) throws SerException {
         ActivityExecuteInfo entity = BeanTransform.copyProperties(to, ActivityExecuteInfo.class, true);
         entity = super.save(entity);
@@ -66,7 +66,7 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -78,7 +78,7 @@ public class ActivityExecuteInfoSerImpl extends ServiceImpl<ActivityExecuteInfo,
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivityExecuteInfoTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             ActivityExecuteInfo model = super.findById(to.getId());

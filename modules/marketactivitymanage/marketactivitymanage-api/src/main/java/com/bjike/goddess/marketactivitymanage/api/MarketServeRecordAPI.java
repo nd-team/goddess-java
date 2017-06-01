@@ -5,6 +5,7 @@ import com.bjike.goddess.marketactivitymanage.bo.MarketServeRecordBO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeRecordDTO;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
+import com.bjike.goddess.marketactivitymanage.type.AuditType;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -73,46 +74,28 @@ public interface MarketServeRecordAPI {
     void update(MarketServeRecordTO to) throws SerException;
 
     /**
-     * 添加客户信息
-     *
-     * @param to 客户信息to
-     * @throws SerException
-     */
-    void addClientInfo(CustomerInfoTO to) throws SerException;
-
-    /**
      * 资金模块意见
      *
      * @param to 市场招待记录to
      * @throws SerException
      */
-    void fundModuleOpinion(MarketServeRecordTO to) throws SerException;
+    /**
+     * 运营商务部资金模块审核
+     *
+     * @param id 市场招待记录唯一标识
+     * @param fundModuleOpinion 运营商务部资金模块
+     * @throws SerException
+     */
+    void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException;
 
     /**
      * 决策层意见
      *
-     * @param to 市场招待记录to
+     * @param id 市场招待记录唯一标识
+     * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */
-    void executiveOpinion(MarketServeRecordTO to) throws SerException;
-
-    /**
-     * 导入
-     *
-     * @param inputStream 目标路径
-     * @param targetPath  文件输入流
-     * @throws SerException
-     */
-    void importFile(InputStream inputStream, String targetPath) throws SerException;
-
-    /**
-     * 导出文件
-     *
-     * @param filePath 需要导出的文件的路径
-     * @return class OutputStream
-     * @throws SerException
-     */
-    OutputStream exportFile(String filePath) throws SerException;
+    void executiveOpinion(String id, AuditType executiveAuditOpinion) throws SerException;
 
     /**
      * 查看详情
@@ -122,4 +105,20 @@ public interface MarketServeRecordAPI {
      * @throws SerException
      */
     MarketServeRecordBO checkDetails(String id) throws SerException;
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    void addClientInfo(CustomerInfoTO to) throws SerException;
+
+    /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    void editClientInfo(CustomerInfoTO to) throws SerException;
 }

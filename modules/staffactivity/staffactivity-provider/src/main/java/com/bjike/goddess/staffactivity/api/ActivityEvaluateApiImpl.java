@@ -33,7 +33,7 @@ public class ActivityEvaluateApiImpl implements ActivityEvaluateAPI {
      * 根据id查询活动评价
      *
      * @param id 活动评价唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivityEvaluateBO
      * @throws SerException
      */
     @Override

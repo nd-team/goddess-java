@@ -99,36 +99,39 @@ public class MarketServeSummaryApiImpl implements MarketServeSummaryAPI {
     }
 
     /**
-     * 解冻市场招待汇总
+     * 解冻市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
     @Override
-    public void thaw(MarketServeSummaryTO to) throws SerException {
-        marketServeSummarySer.thaw(to);
+    public void thaw(String id) throws SerException {
+        marketServeSummarySer.thaw(id);
     }
 
     /**
-     * 冻结市场招待汇总
+     * 冻结市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
     @Override
-    public void congeal(MarketServeSummaryTO to) throws SerException {
-        marketServeSummarySer.congeal(to);
+    public void congeal(String id) throws SerException {
+        marketServeSummarySer.congeal(id);
     }
 
     /**
-     * 总结市场招待汇总
+     * 市场招待汇总
      *
-     * @param to 市场招待汇总to
-     * @return class ServeSummaryBO
+     * @param type 汇总类型
+     * @param projectGroups 部门/项目组
+     * @param startTimeString 起始时间
+     * @param endTimeString 结束时间
+     * @return class MarketServeSummaryVO
      * @throws SerException
      */
     @Override
-    public List<ServeSummaryBO> summarize(MarketServeSummaryTO to) throws SerException {
-        return marketServeSummarySer.summarize(to);
+    public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+        return marketServeSummarySer.summarize(type, projectGroups, startTimeString, endTimeString);
     }
 }

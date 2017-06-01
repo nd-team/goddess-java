@@ -57,7 +57,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public ActivityEvaluateBO save(ActivityEvaluateTO to) throws SerException {
         ActivityEvaluate entity = BeanTransform.copyProperties(to, ActivityEvaluate.class, true);
         entity = super.save(entity);
@@ -72,7 +72,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -84,7 +84,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(ActivityEvaluateTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             ActivityEvaluate model = super.findById(to.getId());
@@ -119,6 +119,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public List<EvaluateScoreSummaryBO> evaluateScoreSummary(String[] schemes) throws SerException {
         List<EvaluateScoreSummaryBO> boList = new ArrayList<>();
         for (String scheme : schemes) {
@@ -189,7 +190,7 @@ public class ActivityEvaluateSerImpl extends ServiceImpl<ActivityEvaluate, Activ
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public List<ActivityEvaluateSummaryBO> evaluateSummary(String startDate, String endDate) throws SerException {
         LocalDate beginDate = DateUtil.parseDate(startDate);//起始日期
         LocalDate finishDate = DateUtil.parseDate(endDate);//结束日期

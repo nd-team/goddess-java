@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.action.staffactivity;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityEvaluateAPI;
@@ -80,10 +82,10 @@ public class ActivityEvaluateAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ActivityEvaluateDTO dto) throws ActException {
+    public Result list(ActivityEvaluateDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ActivityEvaluateBO> boList = activityEvaluateAPI.list(dto);
-            List<ActivityEvaluateVO> voList = BeanTransform.copyProperties(boList, ActivityEvaluateVO.class);
+            List<ActivityEvaluateVO> voList = BeanTransform.copyProperties(boList, ActivityEvaluateVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,11 +100,12 @@ public class ActivityEvaluateAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ActivityEvaluateTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ActivityEvaluateTO to, HttpServletRequest request) throws ActException {
         try {
             ActivityEvaluateBO bo = activityEvaluateAPI.save(to);
-            ActivityEvaluateVO vo = BeanTransform.copyProperties(bo, ActivityEvaluateVO.class);
+            ActivityEvaluateVO vo = BeanTransform.copyProperties(bo, ActivityEvaluateVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -116,6 +119,7 @@ public class ActivityEvaluateAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -133,8 +137,9 @@ public class ActivityEvaluateAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(ActivityEvaluateTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ActivityEvaluateTO to) throws ActException {
         try {
             activityEvaluateAPI.update(to);
             return new ActResult("edit success!");

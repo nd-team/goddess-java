@@ -1,14 +1,19 @@
 package com.bjike.goddess.marketactivitymanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeApplyBO;
+import com.bjike.goddess.marketactivitymanage.dto.CustomerInfoDTO;
 import com.bjike.goddess.marketactivitymanage.dto.MarketServeApplyDTO;
+import com.bjike.goddess.marketactivitymanage.entity.CustomerInfo;
 import com.bjike.goddess.marketactivitymanage.entity.MarketServeApply;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeApplyTO;
+import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,7 +39,26 @@ import java.util.List;
 public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, MarketServeApplyDTO> implements MarketServeApplySer {
 
     @Autowired
-    private CustomerInfoAPI customerInfoAPI;
+    private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private CustomerInfoSer customerInfoSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if (!permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
 
     /**
      * 分页查询市场招待申请
@@ -45,6 +69,7 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      */
     @Override
     public List<MarketServeApplyBO> list(MarketServeApplyDTO dto) throws SerException {
+        checkPermission();
         List<MarketServeApply> list = super.findByPage(dto);
         List<MarketServeApplyBO> listBO = BeanTransform.copyProperties(list, MarketServeApplyBO.class);
         return listBO;
@@ -58,8 +83,9 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public MarketServeApplyBO save(MarketServeApplyTO to) throws SerException {
+        checkPermission();
         MarketServeApply marketServeApply = BeanTransform.copyProperties(to, MarketServeApply.class, true);
         marketServeApply = super.save(marketServeApply);
         MarketServeApplyBO bo = BeanTransform.copyProperties(marketServeApply, MarketServeApplyBO.class);
@@ -73,9 +99,10 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeApplyTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        checkPermission();
+        if (StringUtils.isNotEmpty(to.getId())) {
             MarketServeApply model = super.findById(to.getId());
             if (model != null) {
                 updateMarketServeApply(to, model);
@@ -108,74 +135,59 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void addClientInfo(CustomerInfoTO to) throws SerException {
-//        String marketServeId = to.getMarketServeId();
-//        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
-//        List<String> clientNames = to.getClientNames();//客户姓名
-//        List<String> importanceLevels = to.getImportanceLevels();//重要性级别
-//
-//        if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
-//            int clientSize = clientInfoNos.size();
-//            for (int i = 0; i < clientSize; i ++) {
-//                CustomerInfoTO customerInfoTO = new CustomerInfoTO();
-//                customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
-//                customerInfoTO.setClientName(clientNames.get(i));
-//                customerInfoTO.setImportanceLevel(importanceLevels.get(i));
-//                customerInfoTO.setMarketServeId(marketServeId);
-//
-//                customerInfoAPI.save(customerInfoTO);
-//            }
-//        }
+        String marketServeId = to.getMarketServeId();
+        List<String> clientInfoNos = to.getClientInfoNos();//客户信息编号
+        List<String> clientNames = to.getClientNames();//客户姓名
+        List<String> importanceLevels = to.getImportanceLevels();//重要性级别
+
+        if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
+            int clientSize = clientInfoNos.size();
+            for (int i = 0; i < clientSize; i ++) {
+                CustomerInfoTO customerInfoTO = new CustomerInfoTO();
+                customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
+                customerInfoTO.setClientName(clientNames.get(i));
+                customerInfoTO.setImportanceLevel(importanceLevels.get(i));
+                customerInfoTO.setMarketServeId(marketServeId);
+
+                customerInfoSer.save(customerInfoTO);
+            }
+        }
     }
 
     /**
      * 运营商务部资金模块意见
      *
-     * @param to 市场招待申请to
+     * @param id 市场招待申请唯一标识
+     * @param fundModuleOpinion 运营商务部资金模块意见
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void fundModuleOpinion(MarketServeApplyTO to) throws SerException {
-        this.update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
+        checkPermission();
+        MarketServeApply model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setFundModuleOpinion(fundModuleOpinion);
+        super.update(model);
     }
 
     /**
      * 决策层意见
      *
-     * @param to 市场招待申请to
+     * @param id 市场招待申请唯一标识
+     * @param executiveAuditOpinion 决策层意见
      * @throws SerException
      */
     @Override
-    @Transactional
-    public void executiveOpinion(MarketServeApplyTO to) throws SerException {
-        this.update(to);
-    }
-
-    /**
-     * 导入文件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void importFile(InputStream inputStream, String targetPath) throws SerException {
-        // TODO: 17-3-20
-    }
-
-    /**
-     * 导出文件
-     *
-     * @param filePath 需要导出的文件的路径
-     * @return class OutputStream
-     * @throws SerException
-     */
-    @Override
-    public OutputStream exportFile(String filePath) throws SerException {
-        // TODO: 17-3-20
-        return null;
+    @Transactional(rollbackFor = SerException.class)
+    public void executiveOpinion(String id, AuditType executiveAuditOpinion) throws SerException {
+        checkPermission();
+        MarketServeApply model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setExecutiveAuditOpinion(executiveAuditOpinion);
+        super.update(model);
     }
 
     /**
@@ -192,14 +204,32 @@ public class MarketServeApplySerImpl extends ServiceImpl<MarketServeApply, Marke
     }
 
     /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void editClientInfo(CustomerInfoTO to) throws SerException {
+        checkPermission();
+        String marketServeId = to.getMarketServeId();
+        CustomerInfoDTO dto = new CustomerInfoDTO();
+        dto.getConditions().add(Restrict.eq("marketServeId", marketServeId));
+        List<CustomerInfo> list = customerInfoSer.findByCis(dto);
+        customerInfoSer.remove(list);
+        addClientInfo(to);
+    }
+
+    /**
      * 根据id删除市场招待申请
      *
      * @param id 市场招待申请唯一标识
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 }

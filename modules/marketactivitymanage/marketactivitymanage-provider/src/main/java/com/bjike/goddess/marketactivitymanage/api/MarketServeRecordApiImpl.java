@@ -8,6 +8,7 @@ import com.bjike.goddess.marketactivitymanage.entity.MarketServeRecord;
 import com.bjike.goddess.marketactivitymanage.service.MarketServeRecordSer;
 import com.bjike.goddess.marketactivitymanage.to.CustomerInfoTO;
 import com.bjike.goddess.marketactivitymanage.to.MarketServeRecordTO;
+import com.bjike.goddess.marketactivitymanage.type.AuditType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,60 +102,27 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
     }
 
     /**
-     * 添加客户信息
-     *
-     * @param to 客户信息to
-     * @throws SerException
-     */
-    @Override
-    public void addClientInfo(CustomerInfoTO to) throws SerException {
-        marketServeRecordSer.addClientInfo(to);
-    }
-
-    /**
      * 运营商务部资金模块意见
      *
-     * @param to 市场招待记录to
+     * @param id 市场招待记录唯一标识
+     * @param fundModuleOpinion 运营商务部资金模块
      * @throws SerException
      */
     @Override
-    public void fundModuleOpinion(MarketServeRecordTO to) throws SerException {
-        marketServeRecordSer.fundModuleOpinion(to);
+    public void fundModuleOpinion(String id, String fundModuleOpinion) throws SerException {
+        marketServeRecordSer.fundModuleOpinion(id, fundModuleOpinion);
     }
 
     /**
-     * 决策层意见
+     * 决策层审核意见
      *
-     * @param to 市场招待记录to
+     * @param id 市场招待记录唯一标识
+     * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */
     @Override
-    public void executiveOpinion(MarketServeRecordTO to) throws SerException {
-        marketServeRecordSer.executiveOpinion(to);
-    }
-
-    /**
-     * 导入文件
-     *
-     * @param inputStream 目标路径
-     * @param targetPath 文件输入流
-     * @throws SerException
-     */
-    @Override
-    public void importFile(InputStream inputStream, String targetPath) throws SerException {
-        marketServeRecordSer.importFile(inputStream, targetPath);
-    }
-
-    /**
-     * 导出文件
-     *
-     * @param filePath 需要导出的文件的路径
-     * @return class OutputStream
-     * @throws SerException
-     */
-    @Override
-    public OutputStream exportFile(String filePath) throws SerException {
-        return marketServeRecordSer.exportFile(filePath);
+    public void executiveOpinion(String id, AuditType executiveAuditOpinion) throws SerException {
+        marketServeRecordSer.executiveOpinion(id, executiveAuditOpinion);
     }
 
     /**
@@ -167,6 +135,28 @@ public class MarketServeRecordApiImpl implements MarketServeRecordAPI {
     @Override
     public MarketServeRecordBO checkDetails(String id) throws SerException {
         return marketServeRecordSer.checkDetails(id);
+    }
+
+    /**
+     * 添加客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void addClientInfo(CustomerInfoTO to) throws SerException {
+        marketServeRecordSer.addClientInfo(to);
+    }
+
+    /**
+     * 编辑客户信息
+     *
+     * @param to 客户信息to
+     * @throws SerException
+     */
+    @Override
+    public void editClientInfo(CustomerInfoTO to) throws SerException {
+        marketServeRecordSer.editClientInfo(to);
     }
 
 }

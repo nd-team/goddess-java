@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.api.RecruitProAPI;
@@ -13,40 +14,78 @@ import com.bjike.goddess.recruit.dto.RecruitProDTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.vo.RecruitProVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
  * 招聘方案
  *
- * @Author: [sunfengtao]
- * @Date: [2017-03-15 17:22]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-04-08 05:10 ]
+ * @Description: [  ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("recruit/recruitPro")
+@RequestMapping("recruitPro")
 public class RecruitProAct {
 
     @Autowired
     private RecruitProAPI recruitProAPI;
 
     /**
+     * 根据id查询招聘方案
+     *
+     * @param id 招聘方案唯一标识
+     * @return class RecruitProVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/recruitPro/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RecruitProBO bo = recruitProAPI.findById(id);
+            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 招聘方案dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RecruitProDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = recruitProAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取列表
      *
      * @param dto 招聘方案传输对象
-     * @return class NotEntryReasonVO
+     * @return class RecruitProVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(RecruitProDTO dto) throws ActException {
+    public Result list(RecruitProDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<RecruitProBO> boList = recruitProAPI.list(dto);
-            List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class);
+            List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -61,11 +100,12 @@ public class RecruitProAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RecruitProTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RecruitProTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             RecruitProBO bo = recruitProAPI.save(to);
-            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class);
+            RecruitProVO vo = BeanTransform.copyProperties(bo, RecruitProVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -79,6 +119,7 @@ public class RecruitProAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -90,14 +131,15 @@ public class RecruitProAct {
     }
 
     /**
-     * 编辑招聘方案
+     * 综合资源部意见
      *
      * @param to 招聘方案to信息
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) RecruitProTO to) throws ActException {
+    public Result edit(@Validated({EDIT.class}) RecruitProTO to, BindingResult result) throws ActException {
         try {
             recruitProAPI.update(to);
             return new ActResult("edit success!");
@@ -109,14 +151,17 @@ public class RecruitProAct {
     /**
      * 运营商务部审核
      *
-     * @param to 招聘方案to信息
-     * @param pass 是否通过
+     * @param id         招聘方案唯一标识
+     * @param yy_Opinion 运营商务部意见
+     * @param pass       是否通过
      * @throws ActException
+     * @version v1
      */
-    @PutMapping("v1/yyEdit")
-    public Result yyEdit(@Validated({EDIT.class}) RecruitProTO to,Boolean pass) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/yyEdit/{id}")
+    public Result yyEdit(@PathVariable(value = "id") String id, @RequestParam(value = "yy_Opinion") String yy_Opinion, @RequestParam(value = "pass") Boolean pass) throws ActException {
         try {
-            recruitProAPI.yyEdit(to, pass);
+            recruitProAPI.yyEdit(id, yy_Opinion, pass);
             return new ActResult("yyEdit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -126,14 +171,17 @@ public class RecruitProAct {
     /**
      * 总经办审核
      *
-     * @param to 招聘方案to信息
-     * @param pass 是否通过
+     * @param id         招聘方案唯一标识
+     * @param zjbOpnion 总经办意见
+     * @param pass       是否通过
      * @throws ActException
+     * @version v1
      */
-    @PutMapping("v1/managerEdit")
-    public Result managerEdit(@Validated({EDIT.class}) RecruitProTO to, Boolean pass) throws ActException {
+    @LoginAuth
+    @PatchMapping("v1/managerEdit/{id}")
+    public Result managerEdit(@PathVariable(value = "id") String id, @RequestParam(value = "zjbOpnion") String zjbOpnion, @RequestParam(value = "pass") Boolean pass) throws ActException {
         try {
-            recruitProAPI.managerEdit(to, pass);
+            recruitProAPI.managerEdit(id, zjbOpnion, pass);
             return new ActResult("managerEdit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

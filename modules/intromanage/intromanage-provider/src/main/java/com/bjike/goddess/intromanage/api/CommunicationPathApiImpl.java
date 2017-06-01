@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.CommunicationPathBO;
 import com.bjike.goddess.intromanage.dto.CommunicationPathDTO;
+import com.bjike.goddess.intromanage.entity.CommunicationPath;
 import com.bjike.goddess.intromanage.service.CommunicationPathSer;
 import com.bjike.goddess.intromanage.to.CommunicationPathTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class CommunicationPathApiImpl implements CommunicationPathAPI {
 
     @Autowired
     private CommunicationPathSer communicationPathSer;
+
+    /**
+     * 根据id查询通讯途径
+     *
+     * @param id 通讯途径唯一标识
+     * @return class CommunicationPathBO
+     * @throws SerException
+     */
+    @Override
+    public CommunicationPathBO findById(String id) throws SerException {
+        CommunicationPath model = communicationPathSer.findById(id);
+        return BeanTransform.copyProperties(model, CommunicationPathBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 通讯途径dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(CommunicationPathDTO dto) throws SerException {
+        return communicationPathSer.count(dto);
+    }
 
     /**
      * 分页查询通讯途径
