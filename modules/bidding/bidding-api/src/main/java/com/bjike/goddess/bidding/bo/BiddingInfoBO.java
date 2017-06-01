@@ -1,5 +1,7 @@
 package com.bjike.goddess.bidding.bo;
 
+import com.bjike.goddess.bidding.enums.BiddingType;
+import com.bjike.goddess.bidding.enums.BusinessType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
 
@@ -24,6 +26,16 @@ public class BiddingInfoBO extends BaseBO {
      */
     private String url;
 
+    /**
+     * 招投标类型
+     */
+    private BiddingType biddingType;
+
+
+    /**
+     * 业务类型
+     */
+    private BusinessType businessType;
 
     /**
      * 业务方向科目
@@ -152,6 +164,22 @@ public class BiddingInfoBO extends BaseBO {
 
     public void setBusinessDirectionSubject(String businessDirectionSubject) {
         this.businessDirectionSubject = businessDirectionSubject;
+    }
+
+    public BiddingType getBiddingType() {
+        return biddingType;
+    }
+
+    public void setBiddingType(BiddingType biddingType) {
+        this.biddingType = biddingType;
+    }
+
+    public BusinessType getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(BusinessType businessType) {
+        this.businessType = businessType;
     }
 
     public String getTenderModule() {
