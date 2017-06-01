@@ -16,6 +16,8 @@ import com.bjike.goddess.managementpromotion.enums.ManagerOpinion;
 import com.bjike.goddess.managementpromotion.to.LevelShowTO;
 import com.bjike.goddess.managementpromotion.to.PromotionApplyTO;
 import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +52,33 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private UserAPI userAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
         PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-        //TODO：根据员工编号获取入职时间，计算在司工龄
+        List<EntryBasicInfoVO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+        if ((list != null) && (list.size() != 0)) {
+            LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
+            int entryYear = time.getYear();
+            int entryMonth = time.getMonthValue();
+            int year = LocalDate.now().getYear();
+            int month = LocalDate.now().getMonthValue();
+            if (month - entryMonth >= 0) {
+                if (year - entryYear > 0) {
+                    double d = (year - entryYear) * 12 + (month - entryMonth);
+                    entity.setWorkAge(d);
+                } else {
+                    entity.setWorkAge((double) (month - entryMonth));
+                }
+            }else {
+                double d=(year-entryYear-1)*12+(12-entryMonth+month);
+                entity.setWorkAge(d);
+            }
+        }
+        //todo:根据员工编号获取员工转正时间
         super.save(entity);
         return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
     }
@@ -220,17 +243,17 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         if (ManagerOpinion.PASS.equals(entity.getManagerOpinion())) {
             List<LevelShowBO> list = levelShowAPI.findAll(new LevelShowDTO());
             if ((list != null) && (list.size() != 0)) {
-                boolean b=true;
+                boolean b = true;
                 for (LevelShowBO l : list) {
                     if (entity.getEmployeeId().equals(l.getEmployeeId())) {
                         LevelShowTO levelShowTO = new LevelShowTO();
                         BeanUtils.copyProperties(entity, levelShowTO);
                         levelShowTO.setId(levelShowAPI.findBySql(l.getEmployeeId()).getId());
                         levelShowAPI.update(levelShowTO);
-                        b=false;
+                        b = false;
                     }
                 }
-                if (b){
+                if (b) {
                     LevelShowTO levelShowTO = new LevelShowTO();
                     BeanUtils.copyProperties(entity, levelShowTO);
                     levelShowAPI.save(levelShowTO);
@@ -318,7 +341,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         }
     }
 
-    //TODO:定时器，先添加任务调度组,再添加任务调度
+    //TODO:定时器，先添加任务调度组,再添加任务调度,地址为localhost:哪个模块方法的生产者端口
     @Override
     //定时发邮件给总经办
     public void send() throws SerException {

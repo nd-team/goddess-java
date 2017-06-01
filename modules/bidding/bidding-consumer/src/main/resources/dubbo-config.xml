@@ -26,12 +26,19 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserRegisterAPI" id="userRegisterApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAuthCodeAPI" id="userAuthCodeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserLoginLogAPI" id="userLoginLogApiImpl"/>-->
-	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingInfoAPI" id="biddingInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingWebInfoAPI" id="biddingWebInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BidOpeningInfoAPI" id="bidOpeningInfoApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.BiddingAnswerQuestionsAPI" id="biddingAnswerQuestionsApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.bidding.api.TenderInfoAPI" id="tenderInfoApiImpl"/>
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.bidding.api.CusPermissionOperateAPI" />
 
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 </beans>

@@ -32,7 +32,14 @@
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" ref="problemAcceptApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" ref="problemHandlingResultApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" ref="involvedProcessingTaskApiImpl"/>
+	<dubbo:service  ref="proPermissionApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionAPI" />
+	<dubbo:service  ref="proPermissionOperateApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionOperateAPI" />
+
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 </beans>

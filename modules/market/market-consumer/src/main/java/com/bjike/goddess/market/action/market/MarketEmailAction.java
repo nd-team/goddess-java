@@ -150,7 +150,7 @@ public class MarketEmailAction {
      *
      * @param areas 地区
      * @des 项目市场信息管理
-     * @return  class MarketEmailVO
+     * @return  class MarketCollectVO
      * @version v1
      */
     @GetMapping("v1/collect")

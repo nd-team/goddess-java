@@ -1,6 +1,7 @@
 package com.bjike.goddess.contractware.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.contractware.bo.ProjectBO;
 import com.bjike.goddess.contractware.bo.ProjectContractBO;
 import com.bjike.goddess.contractware.dto.ProjectContractDTO;
 import com.bjike.goddess.contractware.to.ProjectContractTO;
@@ -76,5 +77,16 @@ public interface ProjectContractAPI {
     default void removeProjectContract(String id) throws SerException {
 
     }
+    /**
+     * 项目合同
+     *
+     * @return class ProjectBO
+     * @throws SerException
+     */
+    default ProjectBO listProjectContract() throws SerException {
+        return null;
+    }
+
+
 
 }

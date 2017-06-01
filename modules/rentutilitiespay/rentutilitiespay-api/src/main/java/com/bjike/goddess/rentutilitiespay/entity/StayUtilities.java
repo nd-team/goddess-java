@@ -23,127 +23,127 @@ public class StayUtilities extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 项目名称
      */
-    @Column(name = "projectName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "projectName", columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
     private String projectName;
 
     /**
      * 住宿地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '住宿地址'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '住宿地址'")
     private String address;
 
     /**
      * 员工姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
     private String name;
 
     /**
      * 员工编号
      */
-    @Column(name = "num", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name = "num", columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
     private String num;
 
     /**
      * 住宿开始时间
      */
-    @Column(name = "stayStartTime", nullable = false, columnDefinition = "DATE   COMMENT '住宿开始时间'")
+    @Column(name = "stayStartTime", columnDefinition = "DATE   COMMENT '住宿开始时间'")
     private LocalDate stayStartTime;
 
     /**
      * 住宿结束时间
      */
-    @Column(name = "stayEndTime", nullable = false, columnDefinition = "DATE   COMMENT '住宿结束时间'")
+    @Column(name = "stayEndTime", columnDefinition = "DATE   COMMENT '住宿结束时间'")
     private LocalDate stayEndTime;
 
     /**
      * 住宿天数
      */
-    @Column(name = "stayDay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '住宿天数'")
+    @Column(name = "stayDay", columnDefinition = "DECIMAL(10,2)   COMMENT '住宿天数'")
     private Double stayDay;
 
     /**
      * 房租公司缴纳
      */
-    @Column(name = "rentCompanyPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '房租公司缴纳'")
+    @Column(name = "rentCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '房租公司缴纳'")
     private Double rentCompanyPay;
 
     /**
      * 房租员工缴纳
      */
-    @Column(name = "rentStaffPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '房租员工缴纳'")
+    @Column(name = "rentStaffPay", columnDefinition = "DECIMAL(10,2)   COMMENT '房租员工缴纳'")
     private Double rentStaffPay;
 
     /**
      * 当月应缴水费总额
      */
-    @Column(name = "waterAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴水费总额'")
+    @Column(name = "waterAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴水费总额'")
     private Double waterAmount;
 
     /**
      * 水费公司缴纳
      */
-    @Column(name = "waterCompanyPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '水费公司缴纳'")
+    @Column(name = "waterCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '水费公司缴纳'")
     private Double waterCompanyPay;
 
     /**
      * 水费员工缴纳（(当月应缴水费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
-    @Column(name = "waterStaffPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '水费员工缴纳'")
+    @Column(name = "waterStaffPay", columnDefinition = "DECIMAL(10,2)   COMMENT '水费员工缴纳'")
     private Double waterStaffPay;
 
     /**
      * 当月应缴电费总额
      */
-    @Column(name = "energyAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴电费总额'")
+    @Column(name = "energyAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴电费总额'")
     private Double energyAmount;
 
     /**
      * 电费公司缴纳
      */
-    @Column(name = "energyCompanyPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '电费公司缴纳'")
+    @Column(name = "energyCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费公司缴纳'")
     private Double energyCompanyPay;
 
     /**
      * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
-    @Column(name = "energyStaffPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '电费员工缴纳'")
+    @Column(name = "energyStaffPay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费员工缴纳'")
     private Double energyStaffPay;
 
     /**
      * 管道燃气费充值额度
      */
-    @Column(name = "gasRechargeLines", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '管道燃气费充值额度'")
+    @Column(name = "gasRechargeLines", columnDefinition = "DECIMAL(10,2)   COMMENT '管道燃气费充值额度'")
     private Double gasRechargeLines;
 
     /**
      * 燃气费公司缴纳
      */
-    @Column(name = "gasCompanyPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费公司缴纳'")
+    @Column(name = "gasCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费公司缴纳'")
     private Double gasCompanyPay;
 
     /**
      * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
-    @Column(name = "gasStaffPay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费员工缴纳'")
+    @Column(name = "gasStaffPay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费员工缴纳'")
     private Double gasStaffPay;
 
     /**
      * 员工应缴金额汇总（水费员工缴纳+电费员工缴纳+燃气费员工缴纳）
      */
-    @Column(name = "staffPayCollect", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '员工应缴金额汇总（水费员工缴纳+电费员工缴纳+燃气费员工缴纳）'")
+    @Column(name = "staffPayCollect", columnDefinition = "DECIMAL(10,2)   COMMENT '员工应缴金额汇总（水费员工缴纳+电费员工缴纳+燃气费员工缴纳）'")
     private Double staffPayCollect;
 
     /**
@@ -154,19 +154,19 @@ public class StayUtilities extends BaseEntity {
     /**
      * 综合资源部核实情况（是否需要修改）
      */
-    @Column(name = "is_comprehensiveVerifySituation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '综合资源部核实情况（是否需要修改）'", insertable = false)
+    @Column(name = "is_comprehensiveVerifySituation", columnDefinition = "TINYINT(2) COMMENT '综合资源部核实情况（是否需要修改）'")
     private Boolean comprehensiveVerifySituation;
 
     /**
      * 扣款情况（运营商务部确认）
      */
-    @Column(name = "deductionSituation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT ''")
+    @Column(name = "deductionSituation", columnDefinition = "VARCHAR(255)   COMMENT '扣款情况（运营商务部确认）'")
     private String deductionSituation;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     private Integer sumDays;//天数总和

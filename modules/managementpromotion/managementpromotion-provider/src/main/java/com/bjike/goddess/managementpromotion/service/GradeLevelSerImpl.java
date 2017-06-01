@@ -7,9 +7,8 @@ import com.bjike.goddess.managementpromotion.bo.GradeLevelBO;
 import com.bjike.goddess.managementpromotion.dto.GradeLevelDTO;
 import com.bjike.goddess.managementpromotion.entity.GradeLevel;
 import com.bjike.goddess.managementpromotion.to.GradeLevelTO;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.organize.api.HierarchyAPI;
+import com.bjike.goddess.organize.bo.HierarchyBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -33,12 +32,19 @@ import java.util.Set;
 @Service
 public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> implements GradeLevelSer {
     @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
+    private HierarchyAPI hierarchyAPI;
+    @Autowired
+    private LevelDesignSer levelDesignSer;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public GradeLevelBO save(GradeLevelTO to) throws SerException {
         GradeLevel gradeLevel = BeanTransform.copyProperties(to, GradeLevel.class, true);
+        String grade=levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
+        if (grade==null){
+            throw new SerException("获取档次失败，请输入正确的分类，管理方向和技能等级");
+        }
+        gradeLevel.setGrade(grade);
         gradeLevel.setQuotaJob(gradeLevel.getAllowanceRank() * gradeLevel.getConvertLine());
         gradeLevel.setSubsidySum(gradeLevel.getSubsidyAmount() + gradeLevel.getQuotaJob());
         GradeLevel g = findBySql(gradeLevel.getSystem(), gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getAllowanceRank());
@@ -61,11 +67,16 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
     @Transactional(rollbackFor = {SerException.class})
     public void edit(GradeLevelTO to) throws SerException {
         GradeLevel gradeLevel = super.findById(to.getId());
-        if (gradeLevel==null){
+        if (gradeLevel == null) {
             throw new SerException("对象不存在");
         }
-        LocalDateTime a=gradeLevel.getCreateTime();
+        LocalDateTime a = gradeLevel.getCreateTime();
         gradeLevel = BeanTransform.copyProperties(to, GradeLevel.class, true);
+        String grade=levelDesignSer.findGrade(gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getSkillLevel());
+        if (grade==null){
+            throw new SerException("获取档次失败，请输入正确的分类，管理方向和技能等级");
+        }
+        gradeLevel.setGrade(grade);
         gradeLevel.setQuotaJob(gradeLevel.getAllowanceRank() * gradeLevel.getConvertLine());
         gradeLevel.setSubsidySum(gradeLevel.getSubsidyAmount() + gradeLevel.getQuotaJob());
         GradeLevel g = findBySql(gradeLevel.getSystem(), gradeLevel.getClassification(), gradeLevel.getDirection(), gradeLevel.getAllowanceRank());
@@ -99,11 +110,11 @@ public class GradeLevelSerImpl extends ServiceImpl<GradeLevel, GradeLevelDTO> im
     }
 
     @Override
-    public Set<String> allDepartments() throws SerException {
-        List<DepartmentDetailBO> list = departmentDetailAPI.view(new DepartmentDetailDTO());
+    public Set<String> allHierarchys() throws SerException {
+        List<HierarchyBO> list = hierarchyAPI.findStatus();
         Set<String> set = new HashSet<String>();
-        for (DepartmentDetailBO d : list) {
-            set.add(d.getDepartment());
+        for (HierarchyBO h : list) {
+            set.add(h.getHierarchy());
         }
         return set;
     }

@@ -2,6 +2,7 @@ package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.entity.StayUtilities;
@@ -29,6 +30,15 @@ public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
     @Autowired
     private StayUtilitiesSer stayUtilitiesSer;
     @Override
+    public Long countStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
+        return stayUtilitiesSer.countStayUtilities(stayUtilitiesDTO);
+    }
+
+    @Override
+    public StayUtilitiesBO getOne(String id) throws SerException {
+        return stayUtilitiesSer.getOne(id);
+    }
+    @Override
     public List<StayUtilitiesBO> findListStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
         return stayUtilitiesSer.findListStayUtilities(stayUtilitiesDTO);
     }
@@ -49,8 +59,12 @@ public class StayUtilitiesApiImpl implements StayUtilitiesAPI {
     }
 
     @Override
-    public List<StayUtilitiesBO> collectName(String[] name) throws SerException {
-        return stayUtilitiesSer.collectName(name);
+    public List<CollectNameBO> collectName(String[] names) throws SerException {
+        return stayUtilitiesSer.collectName(names);
+    }
+    @Override
+    public List<String> getName() throws SerException {
+        return stayUtilitiesSer.getName();
     }
 
 

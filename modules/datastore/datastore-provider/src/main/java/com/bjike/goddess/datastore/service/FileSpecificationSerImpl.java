@@ -45,7 +45,7 @@ public class FileSpecificationSerImpl extends ServiceImpl<FileSpecification, Fil
     public List<FileSpecificationBO> findListFileSpecification(FileSpecificationDTO fileSpecificationDTO) throws SerException {
         fileSpecificationDTO.getSorts().add("createTime=desc");
         List<FileSpecification> fileSpecifications = super.findByCis(fileSpecificationDTO, true);
-        List<FileSpecificationBO> fileSpecificationBOS = BeanTransform.copyProperties(fileSpecifications,FileSpecificationBO.class,true);
+        List<FileSpecificationBO> fileSpecificationBOS = BeanTransform.copyProperties(fileSpecifications,FileSpecificationBO.class);
         return fileSpecificationBOS;
     }
 

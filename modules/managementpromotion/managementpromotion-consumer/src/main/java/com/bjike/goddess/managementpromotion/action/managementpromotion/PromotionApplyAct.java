@@ -286,15 +286,15 @@ public class PromotionApplyAct {
     }
 
     /**
-     * 查找所有体系部门
+     * 查找所有体系
      *
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/allDepartments")
-    public Result allDepartments() throws ActException {
+    @GetMapping("v1/allHierarchys")
+    public Result allHierarchys() throws ActException {
         try {
-            Set<String> set = gradeLevelAPI.allDepartments();
+            Set<String> set = gradeLevelAPI.allHierarchys();
             return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

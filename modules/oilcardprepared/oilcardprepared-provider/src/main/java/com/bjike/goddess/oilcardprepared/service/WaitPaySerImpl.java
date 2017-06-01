@@ -305,6 +305,20 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         return BeanTransform.copyProperties(list, WaitPayBO.class);
     }
 
+    @Override
+    public Long waitCountSum(WaitPayDTO dto) throws SerException {
+        list(new WaitPayDTO());
+        dto.getConditions().add(Restrict.eq("pay", Boolean.TRUE));
+        return super.count(dto);
+    }
+
+    @Override
+    public Long payCountSum(WaitPayDTO dto) throws SerException {
+        list(new WaitPayDTO());
+        dto.getConditions().add(Restrict.eq("pay", Boolean.FALSE));
+        return super.count(dto);
+    }
+
     /**
      * 查找所有已付款信息
      *

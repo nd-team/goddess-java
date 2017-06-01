@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
@@ -89,8 +90,16 @@ public class ReceivableSubsidiaryAction {
     @GetMapping("v1/list")
     public Result list(ReceivableSubsidiaryDTO receivableSubsidiaryDTO, HttpServletRequest request) throws ActException {
         try {
+            List<ReceivableSubsidiaryBO> bo = receivableSubsidiaryAPI.findListReceivableSubsidiary(receivableSubsidiaryDTO);
             List<ReceivableSubsidiaryVO> receivableSubsidiaryVOS = BeanTransform.copyProperties
-                    (receivableSubsidiaryAPI.findListReceivableSubsidiary(receivableSubsidiaryDTO),ReceivableSubsidiaryVO.class,request);
+                    ( bo ,ReceivableSubsidiaryVO.class,request);
+
+            for( int i =0 ;i<bo.size();i++){
+                ReceivableSubsidiaryBO temp = bo.get(i);
+                ContractorVO  cvo = BeanTransform.copyProperties( temp.getContractorBO() ,ContractorVO.class);
+                receivableSubsidiaryVOS.get(i).setContractorVO( cvo );
+            }
+
             return ActResult.initialize(receivableSubsidiaryVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -105,6 +114,7 @@ public class ReceivableSubsidiaryAction {
      * @des 添加回款明细
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ReceivableSubsidiaryTO receivableSubsidiaryTO, BindingResult bindingResult) throws ActException {
         try {
@@ -123,6 +133,7 @@ public class ReceivableSubsidiaryAction {
      * @des 编辑回款明细
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) ReceivableSubsidiaryTO receivableSubsidiaryTO,BindingResult bindingResult) throws ActException {
         try {
@@ -140,6 +151,7 @@ public class ReceivableSubsidiaryAction {
      * @des 根据用户id删除回款明细记录
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -349,6 +361,31 @@ public class ReceivableSubsidiaryAction {
         }
     }
 
+    /**
+     * 汇总id
+     *
+     * @param id
+     * @return class ReceivableSubsidiaryVO
+     * @des 获取一个汇总id
+     * @version v1
+     */
+    @GetMapping("v1/collect/{id}")
+    public Result collect(@PathVariable String id) throws ActException {
+        try {
+            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.collectId(id);
+            ReceivableSubsidiaryVO vo = BeanTransform.copyProperties(receivableSubsidiaryBO, ReceivableSubsidiaryVO.class);
+            ContractorVO  cvo = new ContractorVO();
+            if(null != receivableSubsidiaryBO.getContractorBO()){
+                cvo = BeanTransform.copyProperties( receivableSubsidiaryBO.getContractorBO() ,ContractorVO.class);
+            }
+
+            vo.setContractorVO(cvo);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
     /**
      * 对比汇总
      *

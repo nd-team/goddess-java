@@ -156,7 +156,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 水费缴费方
      */
-    private Double waterPay;
+    private String waterPay;
 
     /**
      * 电费初期数目
@@ -196,7 +196,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 电费缴费方
      */
-    private Double energyPay;
+    private String energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -216,7 +216,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 燃气费缴费方
      */
-    private Double gasPay;
+    private String gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -243,13 +243,6 @@ public class RentPayBO extends BaseBO {
      */
     private String remark;
 
-    private int counts;//个数
-    private int enumConvert;//数据库枚举转换
-
-    private List<Map<String, String>> areaMap;//地区汇总集合
-    private List<Map<String, String>> proGroupMap;//项目组汇总集合
-    private List<Map<String, String>> proNameMap;//项目名称汇总集合
-    private List<Map<String, String>> addressMap;//租房地址汇总集合
 
 
     public String getPayDate() {
@@ -468,11 +461,11 @@ public class RentPayBO extends BaseBO {
         this.waterEndTime = waterEndTime;
     }
 
-    public Double getWaterPay() {
+    public String getWaterPay() {
         return waterPay;
     }
 
-    public void setWaterPay(Double waterPay) {
+    public void setWaterPay(String waterPay) {
         this.waterPay = waterPay;
     }
 
@@ -532,11 +525,11 @@ public class RentPayBO extends BaseBO {
         this.energyEndTime = energyEndTime;
     }
 
-    public Double getEnergyPay() {
+    public String getEnergyPay() {
         return energyPay;
     }
 
-    public void setEnergyPay(Double energyPay) {
+    public void setEnergyPay(String energyPay) {
         this.energyPay = energyPay;
     }
 
@@ -564,11 +557,11 @@ public class RentPayBO extends BaseBO {
         this.gasEndTime = gasEndTime;
     }
 
-    public Double getGasPay() {
+    public String getGasPay() {
         return gasPay;
     }
 
-    public void setGasPay(Double gasPay) {
+    public void setGasPay(String gasPay) {
         this.gasPay = gasPay;
     }
 
@@ -612,63 +605,4 @@ public class RentPayBO extends BaseBO {
         this.remark = remark;
     }
 
-    public int getCounts() {
-        return counts;
-    }
-
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
-    public int getEnumConvert() {
-        return enumConvert;
-    }
-
-    public void setEnumConvert(int enumConvert) {
-        this.enumConvert = enumConvert;
-    }
-
-    public List<Map<String, String>> getAreaMap() {
-        return areaMap;
-    }
-
-    public void setAreaMap(List<Map<String, String>> areaMap) {
-        this.areaMap = areaMap;
-    }
-
-    public List<Map<String, String>> getProGroupMap() {
-        return proGroupMap;
-    }
-
-    public void setProGroupMap(List<Map<String, String>> proGroupMap) {
-        this.proGroupMap = proGroupMap;
-    }
-
-    public List<Map<String, String>> getProNameMap() {
-        return proNameMap;
-    }
-
-    public void setProNameMap(List<Map<String, String>> proNameMap) {
-        this.proNameMap = proNameMap;
-    }
-
-    public List<Map<String, String>> getAddressMap() {
-        return addressMap;
-    }
-
-    public void setAddressMap(List<Map<String, String>> addressMap) {
-        this.addressMap = addressMap;
-    }
-    public RentPayBO(String area,String projectGroup,String projectName,String address,Double rent,Double waterPayMoney,Double energyPayMoney,Double gasRechargeLines,Double fee){
-        super();
-        this.area = area;
-        this.projectGroup = projectGroup;
-        this.projectName = projectName;
-        this.address = address;
-        this.rent = rent;
-        this.waterPayMoney = waterPayMoney;
-        this.energyPayMoney = energyPayMoney;
-        this.gasRechargeLines = gasRechargeLines;
-        this.fee = fee;
-    }
 }

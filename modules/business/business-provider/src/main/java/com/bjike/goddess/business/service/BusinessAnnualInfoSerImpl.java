@@ -10,8 +10,10 @@ import com.bjike.goddess.business.dto.BusinessAnnualInfoDTO;
 import com.bjike.goddess.business.entity.BusinessAnnualInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,8 @@ import java.util.List;
 @Service
 public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, BusinessAnnualInfoDTO> implements BusinessAnnualInfoSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
         businessAnnualInfoDTO.getSorts().add("createTime=desc");
@@ -37,38 +41,60 @@ public class BusinessAnnualInfoSerImpl extends ServiceImpl<BusinessAnnualInfo, B
     }
     @Override
     public BusinessAnnualInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         BusinessAnnualInfo businessAnnualInfo = super.findById(id);
         return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class);
     }
 
     @Override
     public List<BusinessAnnualInfoBO> findListBusinessAnnualInfo(BusinessAnnualInfoDTO businessAnnualInfoDTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<BusinessAnnualInfo> businessAnnualInfos = super.findByCis(businessAnnualInfoDTO,true);
         List<BusinessAnnualInfoBO> businessAnnualInfoBOS = BeanTransform.copyProperties(businessAnnualInfos, BusinessAnnualInfoBO.class);
         return businessAnnualInfoBOS;
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessAnnualInfoBO insertBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
+        }
         BusinessAnnualInfo businessAnnualInfo = BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfo.class,true);
         businessAnnualInfo.setCreateTime(LocalDateTime.now());
         super.save(businessAnnualInfo);
         return BeanTransform.copyProperties(businessAnnualInfo,BusinessAnnualInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessAnnualInfoBO editBusinessAnnualInfo(BusinessAnnualInfoTO businessAnnualInfoTO) throws SerException {
+        if(StringUtils.isBlank(businessAnnualInfoTO.getId())){
+            throw new SerException("id不能为空");
+        }
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
+        }
         BusinessAnnualInfo businessAnnualInfo = super.findById(businessAnnualInfoTO.getId());
         BeanTransform.copyProperties(businessAnnualInfoTO,businessAnnualInfo,true);
         businessAnnualInfo.setModifyTime(LocalDateTime.now());
         super.update(businessAnnualInfo);
         return BeanTransform.copyProperties(businessAnnualInfoTO,BusinessAnnualInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBusinessAnnualInfo(String id) throws SerException {
         if (StringUtils.isBlank(id)){
             throw  new SerException("id不能为空");
+        }
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
         }
         super.remove(id);
     }

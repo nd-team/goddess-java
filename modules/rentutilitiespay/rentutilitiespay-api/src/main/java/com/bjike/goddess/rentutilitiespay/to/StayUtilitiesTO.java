@@ -1,6 +1,11 @@
 package com.bjike.goddess.rentutilitiespay.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 员工住宿水电费
@@ -16,31 +21,37 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(message = "项目组不能为空",groups = {ADD.class, EDIT.class})
     private String projectGroup;
 
     /**
      * 项目名称
      */
+    @NotBlank(message = "项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String projectName;
 
     /**
      * 住宿地址
      */
+    @NotBlank(message = "住宿地址不能为空",groups = {ADD.class, EDIT.class})
     private String address;
 
     /**
      * 员工姓名
      */
+    @NotBlank(message = "员工姓名不能为空",groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 员工编号
      */
+    @NotBlank(message = "员工编号不能为空",groups = {ADD.class, EDIT.class})
     private String num;
 
     /**
@@ -56,60 +67,69 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 住宿天数
      */
+    @NotNull(message = "住宿天数不能为空",groups = {ADD.class, EDIT.class})
     private Double stayDay;
 
     /**
      * 房租公司缴纳
      */
+    @NotNull(message = "房租公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double rentCompanyPay;
 
     /**
      * 房租员工缴纳
      */
+    @NotNull(message = "房租员工缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double rentStaffPay;
 
     /**
      * 当月应缴水费总额
      */
+    @NotNull(message = "当月应缴水费总额不能为空",groups = {ADD.class, EDIT.class})
     private Double waterAmount;
 
     /**
      * 水费公司缴纳
      */
+    @NotNull(message = "水费公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double waterCompanyPay;
 
     /**
-     * 水费员工缴纳
+     * 水费员工缴纳（(当月应缴水费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double waterStaffPay;
 
     /**
      * 当月应缴电费总额
      */
+    @NotNull(message = "当月应缴电费总额不能为空",groups = {ADD.class, EDIT.class})
     private Double energyAmount;
 
     /**
      * 电费公司缴纳
      */
+    @NotNull(message = "电费公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double energyCompanyPay;
 
     /**
-     * 电费员工缴纳
+     * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double energyStaffPay;
 
     /**
      * 管道燃气费充值额度
      */
+    @NotNull(message = "管道燃气费充值额度不能为空",groups = {ADD.class, EDIT.class})
     private Double gasRechargeLines;
 
     /**
      * 燃气费公司缴纳
      */
+    @NotNull(message = "燃气费公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double gasCompanyPay;
 
     /**
-     * 燃气费员工缴纳
+     * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double gasStaffPay;
 
