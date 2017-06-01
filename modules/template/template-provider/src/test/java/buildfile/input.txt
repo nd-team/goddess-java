@@ -1,27 +1,12 @@
-模块名:businsurance
-类名:InsureRecord
-作者:tanghaixiang
-描述:意外险记录
+模块名:assemble
+类名:ModuleApply
+作者:liguiqin
+描述:模块应用
 
 #参数[变量类型  变量名 ]
 #parameter--------------
 
 (
-String busType 商业险类型;
-String typeName 商业险名称;
-String startDate 保单生效日;
-String endDate 保单期满日;
-String insureName 投保人名字;
-String insureByName 被保险人名字;
-String insureTypeName 险种名称;
-String combiName 组合名称;
-String saleGroupName 销售机构名称;
-String salerName 销售员名称;
-String organTel 机构电话;
-String storageNumber 合同存储编号;
-String storagePath 合同存储路径;
-String storageFile 合同附件;
-String renewal 是否已续保;
-String createTime 创建时间;
-String modifyTime 修改时间;
+Module module 模块;
+String company 公司;
 )
