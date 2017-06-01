@@ -34,7 +34,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         if (e instanceof ActException || e instanceof HystrixBadRequestException) {
             actResult.setCode(1);
             httpServletResponse.setStatus(SUCCESS_STATUS);
-        }else {
+        } else {
             httpServletResponse.setStatus(EXCEPTION_STATUS);
             actResult.setCode(EXCEPTION_CODE);
         }
@@ -49,8 +49,49 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
             LOGGER.error(e.getMessage());
             actResult.setMsg("服务调用失败");
         }
+        /**
+         * 处理数据库异常
+         */
+        String msg = handleJapException(e);
+        if(null!=msg){
+            actResult.setMsg(msg);
+        }
         ResponseContext.writeData(actResult);
-
         return new ModelAndView();
+    }
+
+    private String handleJapException(Exception throwable) {
+        String msg = throwable.getMessage();
+        String result = null;
+        result = StringUtils.substringAfter(msg, "Caused by: java.sql.SQLIntegrityConstraintViolationException:");
+        if (StringUtils.isNotBlank(result)) {
+
+            /**
+             * 处理非空约束
+             */
+
+            result = StringUtils.substringBefore(result, "' cannot be null");
+            result = StringUtils.substringAfter(result, "Column '");
+            if (StringUtils.isNotBlank(result)) {
+                return "[" + result + "]不能为空!";
+            }
+            /**
+             * 处理唯一约束
+             */
+            result = StringUtils.substringBefore(result, "' for key");
+            result = StringUtils.substringAfter(result, "Duplicate entry '");
+            if (StringUtils.isNotBlank(result)) {
+                return "[" + result + "]该名称已被占用!";
+            }
+        }
+        result =StringUtils.substringAfter(msg,"com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column '");
+        if (StringUtils.isNotBlank(result)) {
+            /**
+             * 数据长度
+             */
+            result = StringUtils.substringBefore(result, "' at row");
+            return "[" + result + "]超出长度范围!";
+        }
+        return null;
     }
 }
