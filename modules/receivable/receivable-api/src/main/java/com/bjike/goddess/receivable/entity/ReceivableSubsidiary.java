@@ -226,7 +226,7 @@ public class ReceivableSubsidiary extends BaseEntity {
     /**
      * 承包商
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "contractor_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '承包商'")
     private Contractor contractor;
     /*@Column(name = "contractor", columnDefinition = "VARCHAR(255)   COMMENT '承包商'")
@@ -235,26 +235,26 @@ public class ReceivableSubsidiary extends BaseEntity {
     /**
      * 是否已支付
      */
-    @Column(name = "is_pay", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否已支付'", insertable = false)
-    private Boolean ispay;
+    @Column(name = "is_pay", columnDefinition = "TINYINT(2)  COMMENT '是否已支付'")
+    private Boolean pay;
 
     /**
      * 是否框架内
      */
-    @Column(name = "is_frame", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否框架内'", insertable = false)
-    private Boolean isframe;
+    @Column(name = "is_frame", columnDefinition = "TINYINT(2) COMMENT '是否框架内'")
+    private Boolean frame;
 
     /**
      * 是否有单次合同
      */
-    @Column(name = "is_pact", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否有单次合同'", insertable = false)
-    private Boolean ispact;
+    @Column(name = "is_pact", columnDefinition = "TINYINT(2) COMMENT '是否有单次合同'")
+    private Boolean pact;
 
     /**
      * 是否已走结算流程
      */
-    @Column(name = "is_flow", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否已走结算流程'", insertable = false)
-    private Boolean isflow;
+    @Column(name = "is_flow", columnDefinition = "TINYINT(2) COMMENT '是否已走结算流程'")
+    private Boolean flow;
     /**
      * 描述
      */
@@ -555,36 +555,36 @@ public class ReceivableSubsidiary extends BaseEntity {
         this.contractor = contractor;
     }
 
-    public Boolean getIspay() {
-        return ispay;
+    public Boolean getPay() {
+        return pay;
     }
 
-    public void setIspay(Boolean ispay) {
-        this.ispay = ispay;
+    public void setPay(Boolean pay) {
+        this.pay = pay;
     }
 
-    public Boolean getIsframe() {
-        return isframe;
+    public Boolean getFrame() {
+        return frame;
     }
 
-    public void setIsframe(Boolean isframe) {
-        this.isframe = isframe;
+    public void setFrame(Boolean frame) {
+        this.frame = frame;
     }
 
-    public Boolean getIspact() {
-        return ispact;
+    public Boolean getPact() {
+        return pact;
     }
 
-    public void setIspact(Boolean ispact) {
-        this.ispact = ispact;
+    public void setPact(Boolean pact) {
+        this.pact = pact;
     }
 
-    public Boolean getIsflow() {
-        return isflow;
+    public Boolean getFlow() {
+        return flow;
     }
 
-    public void setIsflow(Boolean isflow) {
-        this.isflow = isflow;
+    public void setFlow(Boolean flow) {
+        this.flow = flow;
     }
 
     public AuditStatus getAuditStatus() {

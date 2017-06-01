@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.ProjectAcceptanceBO;
 import com.bjike.goddess.projectprocing.dto.ProjectAcceptanceDTO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.projectprocing.entity.ProjectAcceptance;
 import com.bjike.goddess.projectprocing.to.ProjectAcceptanceTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "projectprocingSerCache")
 @Service
 public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, ProjectAcceptanceDTO> implements ProjectAcceptanceSer {
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     public Long countProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
@@ -49,6 +53,12 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
 
     @Override
     public List<ProjectAcceptanceBO> listProjectAcceptance(ProjectAcceptanceDTO projectAcceptanceDTO) throws SerException {
+        //列表权限
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         if(StringUtils.isNoneBlank(projectAcceptanceDTO.getArea())){
             projectAcceptanceDTO.getConditions().add(Restrict.like("area",projectAcceptanceDTO.getArea()));
         }
@@ -59,6 +69,13 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectAcceptanceBO addProjectAcceptance(ProjectAcceptanceTO projectAcceptanceTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加基本信息操作");
+        }
+
         ProjectAcceptance projectAcceptance = BeanTransform.copyProperties(projectAcceptanceTO,ProjectAcceptance.class,true);
         projectAcceptance.setCreateTime(LocalDateTime.now());
         //TODO: tanghaixiang 2017-03-31 链接关系没做
@@ -69,6 +86,13 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectAcceptanceBO editProjectAcceptance(ProjectAcceptanceTO projectAcceptanceTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑基本信息操作");
+        }
+
         if(StringUtils.isBlank(projectAcceptanceTO.getId()) ){
             throw  new SerException("编号不能为空");
         }
@@ -87,6 +111,13 @@ public class ProjectAcceptanceSerImpl extends ServiceImpl<ProjectAcceptance, Pro
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteProjectAcceptance(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除基本信息操作");
+        }
+
         if(StringUtils.isBlank(id)){
             throw  new SerException("id不能为空");
         }

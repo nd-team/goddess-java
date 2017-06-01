@@ -6,18 +6,18 @@ import java.io.Serializable;
  * Created by ike on 17-5-6.
  */
 public class CollectContractorBO implements Serializable{
-    private String contractor;
+    private String name;
     private Double managementFee;
     private Double accountMoney;
     private Double taxes;
     private Double afterTax;
 
-    public String getContractor() {
-        return contractor;
+    public String getName() {
+        return name;
     }
 
-    public void setContractor(String contractor) {
-        this.contractor = contractor;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getManagementFee() {

@@ -19,6 +19,24 @@ import java.util.List;
 public interface SuccessStoriesAPI {
 
     /**
+     * 根据id查询成功案例
+     *
+     * @param id 成功案例唯一标识
+     * @return class SuccessStoriesBO
+     * @throws SerException
+     */
+    SuccessStoriesBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 成功案例dto
+     * @throws SerException
+     */
+    Long count(SuccessStoriesDTO dto) throws SerException;
+
+
+    /**
      * 分页查询成功案例
      *
      * @return class SuccessStoriesBO

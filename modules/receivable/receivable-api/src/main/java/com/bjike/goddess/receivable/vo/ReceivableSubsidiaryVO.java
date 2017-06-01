@@ -195,22 +195,22 @@ public class ReceivableSubsidiaryVO {
     /**
      * 是否已支付
      */
-    private Boolean ispay;
+    private Boolean pay;
 
     /**
      * 是否框架内
      */
-    private Boolean isframe;
+    private Boolean frame;
 
     /**
      * 是否有单次合同
      */
-    private Boolean ispact;
+    private Boolean pact;
 
     /**
      * 是否已走结算流程
      */
-    private Boolean isflow;
+    private Boolean flow;
 
 
     public String getId() {
@@ -501,35 +501,35 @@ public class ReceivableSubsidiaryVO {
         this.contractorVO = contractorVO;
     }
 
-    public Boolean getIspay() {
-        return ispay;
+    public Boolean getPay() {
+        return pay;
     }
 
-    public void setIspay(Boolean ispay) {
-        this.ispay = ispay;
+    public void setPay(Boolean pay) {
+        this.pay = pay;
     }
 
-    public Boolean getIsframe() {
-        return isframe;
+    public Boolean getFrame() {
+        return frame;
     }
 
-    public void setIsframe(Boolean isframe) {
-        this.isframe = isframe;
+    public void setFrame(Boolean frame) {
+        this.frame = frame;
     }
 
-    public Boolean getIspact() {
-        return ispact;
+    public Boolean getPact() {
+        return pact;
     }
 
-    public void setIspact(Boolean ispact) {
-        this.ispact = ispact;
+    public void setPact(Boolean pact) {
+        this.pact = pact;
     }
 
-    public Boolean getIsflow() {
-        return isflow;
+    public Boolean getFlow() {
+        return flow;
     }
 
-    public void setIsflow(Boolean isflow) {
-        this.isflow = isflow;
+    public void setFlow(Boolean flow) {
+        this.flow = flow;
     }
 }

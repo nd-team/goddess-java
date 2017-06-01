@@ -113,6 +113,7 @@ public abstract class BaseFileAction {
      * @throws IOException
      */
     public void writeOutFile(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+        fileName = fileName.replaceAll(" ", "");
         response.reset();
         response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
         response.addHeader("Content-Length", "" + bytes.length);

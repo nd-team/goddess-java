@@ -146,4 +146,20 @@ public class MoneyReadyAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/countSum")
+    public Result countSum(MoneyReadyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(moneyReadyAPI.countSum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

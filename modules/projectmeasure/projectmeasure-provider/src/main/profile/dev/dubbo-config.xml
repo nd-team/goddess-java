@@ -25,5 +25,17 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.ProjectPersonnelDemandAPI" ref="projectPersonnelDemandApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectMultipleUIAPI" ref="singleProjectMultipleUIApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.SingleProjectSingleUIAPI" ref="singleProjectSingleUIApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.projectmeasure.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
+
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+
+
 
 </beans>

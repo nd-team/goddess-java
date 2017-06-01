@@ -8,6 +8,7 @@ import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingWebInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "biddingSerCache")
 @Service
 public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWebInfoDTO> implements BiddingWebInfoSer {
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
         biddingWebInfoDTO.getSorts().add("createTime=desc");
@@ -35,35 +38,60 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
     }
     @Override
     public BiddingWebInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         BiddingWebInfo biddingWebInfo = super.findById(id);
         return BeanTransform.copyProperties(biddingWebInfo,BiddingWebInfoBO.class);
     }
     @Override
     public List<BiddingWebInfoBO> findListBiddingWebInfo(BiddingWebInfoDTO biddingWebInfoDTO) throws SerException {
-        biddingWebInfoDTO.getSorts().add("createTime=desc");
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<BiddingWebInfo> biddingWebInfos = super.findByCis(biddingWebInfoDTO,true);
         List<BiddingWebInfoBO> biddingWebInfoBOS = BeanTransform.copyProperties(biddingWebInfos,BiddingWebInfoBO.class);
         return biddingWebInfoBOS;
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO insertBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
         BiddingWebInfo biddingWebInfo = BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
         biddingWebInfo.setId(biddingWebInfoTO.getId());
         super.save(biddingWebInfo);
         return BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public BiddingWebInfoBO editBiddingWebInfo(BiddingWebInfoTO biddingWebInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(biddingWebInfoTO.getId())){
+            throw new SerException("id不能为空");
+        }
         BiddingWebInfo biddingWebInfo = super.findById(biddingWebInfoTO.getId());
         BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
         biddingWebInfo.setModifyTime(LocalDateTime.now());
         super.update(biddingWebInfo);
         return BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeBiddingWebInfo(String id) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是商务人员，没有权限");
+        }
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         super.remove(id);
     }
 

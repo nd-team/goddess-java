@@ -15,6 +15,8 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
+//		JapiClient.delete(true);
+		JapiClient.setClassLoader(JapiTest.class);
 		JapiClient.setPrefixPath("/home/ike/pro/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/marketactivitymanage/marketactivitymanage-consumer");//主项目位置
@@ -24,6 +26,7 @@ public class JapiTest {
 				"common/common-api",
 				"modules/user/user-api"
 		});
+		JapiClient.setFlushServer(true);
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 		IProject project = ProjectImpl.init();
 		JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();

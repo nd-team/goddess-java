@@ -56,28 +56,31 @@ public interface MarketServeSummarySer extends Ser<MarketServeSummary, MarketSer
     void update(MarketServeSummaryTO to) throws SerException;
 
     /**
-     * 解冻市场招待汇总
+     * 解冻市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
-    void thaw(MarketServeSummaryTO to) throws SerException;
+    void thaw(String id) throws SerException;
 
     /**
-     * 冻结市场招待汇总
+     * 冻结市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
-    void congeal(MarketServeSummaryTO to) throws SerException;
+    void congeal(String id) throws SerException;
 
     /**
      * 市场招待汇总
      *
-     * @param to 市场招待汇总to
-     * @return class ServeSummaryBO
+     * @param type 汇总类型
+     * @param projectGroups 部门/项目组
+     * @param startTimeString 起始时间
+     * @param endTimeString 结束时间
+     * @return class MarketServeSummaryVO
      * @throws SerException
      */
-    List<ServeSummaryBO> summarize(MarketServeSummaryTO to) throws SerException;
+    List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException;
 
 }

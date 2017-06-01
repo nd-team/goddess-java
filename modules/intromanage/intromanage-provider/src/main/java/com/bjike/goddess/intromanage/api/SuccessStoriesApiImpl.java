@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.SuccessStoriesBO;
 import com.bjike.goddess.intromanage.dto.SuccessStoriesDTO;
+import com.bjike.goddess.intromanage.entity.SuccessStories;
 import com.bjike.goddess.intromanage.service.SuccessStoriesSer;
 import com.bjike.goddess.intromanage.to.SuccessStoriesTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class SuccessStoriesApiImpl implements SuccessStoriesAPI {
 
     @Autowired
     private SuccessStoriesSer successStoriesSer;
+
+    /**
+     * 根据id查询成功案例
+     *
+     * @param id 成功案例唯一标识
+     * @return class SuccessStoriesBO
+     * @throws SerException
+     */
+    @Override
+    public SuccessStoriesBO findById(String id) throws SerException {
+        SuccessStories model = successStoriesSer.findById(id);
+        return BeanTransform.copyProperties(model, SuccessStoriesBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 成功案例dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(SuccessStoriesDTO dto) throws SerException {
+        return successStoriesSer.count(dto);
+    }
 
     /**
      * 分页查询成功案例

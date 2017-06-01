@@ -75,7 +75,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     public CusEmailBO addCusEmail(CusEmailTO cusEmailTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块添加权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行添加操作");
         }
@@ -127,7 +127,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     public CusEmailBO editCusEmail(CusEmailTO cusEmailTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         //商务模块编辑权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行编辑操作");
         }
@@ -176,7 +176,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void deleteCusEmail(String id) throws SerException {
         //商务模块删除权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行删除操作");
         }
@@ -188,7 +188,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void congealCusEmail(String id) throws SerException {
         //商务模块冻结权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行冻结操作");
         }
@@ -202,7 +202,7 @@ public class CusEmailSerImpl extends ServiceImpl<CusEmail, CusEmailDTO> implemen
     @Override
     public void thawCusEmail(String id) throws SerException {
         //商务模块解冻权限
-        Boolean permissionLevel = cusPermissionSer.busCusPermission("16");
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("5");
         if ( !permissionLevel) {
             throw new SerException("您不是商务模块的人员，不可以进行解冻操作");
         }

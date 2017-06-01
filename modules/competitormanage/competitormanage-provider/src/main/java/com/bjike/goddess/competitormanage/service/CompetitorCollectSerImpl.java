@@ -1,12 +1,15 @@
 package com.bjike.goddess.competitormanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.competitormanage.bo.CollectionTotalBO;
 import com.bjike.goddess.competitormanage.bo.CompetitorCollectBO;
 import com.bjike.goddess.competitormanage.dto.CompetitorCollectDTO;
+import com.bjike.goddess.competitormanage.dto.CompetitorDTO;
 import com.bjike.goddess.competitormanage.entity.Competitor;
 import com.bjike.goddess.competitormanage.entity.CompetitorCollect;
 import com.bjike.goddess.competitormanage.enums.BusinessType;
@@ -39,11 +42,13 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     private UserAPI userAPI;
     @Autowired
     private CompetitorSer competitorSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CompetitorCollectBO saveModel(CompetitorCollectTO to) throws SerException {
-
+        getCusPermission();
         CompetitorCollect model = BeanTransform.copyProperties(to, CompetitorCollect.class, true);
         model.setOperateUser(userAPI.currentUser().getUsername());
         super.save(model);
@@ -54,7 +59,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public CompetitorCollectBO editModel(CompetitorCollectTO to) throws SerException {
-
+        getCusPermission();
         if (!StringUtils.isEmpty(to.getId())) {
             CompetitorCollect model = super.findById(to.getId());
             if (model != null) {
@@ -73,7 +78,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
-
+        getCusPermission();
         if (!StringUtils.isEmpty(id)) {
             CompetitorCollect model = super.findById(id);
             if (model != null) {
@@ -92,7 +97,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
-
+        getCusPermission();
         if (!StringUtils.isEmpty(id)) {
             CompetitorCollect model = super.findById(id);
             if (model != null) {
@@ -112,6 +117,7 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Transactional(rollbackFor = SerException.class)
     public List<CollectionTotalBO> collectionTotal() throws SerException {
 
+        getCusPermission();
         //查询地区
         List<Competitor> competitorList = competitorSer.findBySql("select distinct area  from competitormanage_competitor", Competitor.class, new String[]{"area"});
 
@@ -175,24 +181,113 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void sendCollectEmail() throws SerException {
-        /*List<CompetitorCollect> list = super.findAll();
-        //遍历所有未冻结汇总定时器
+        CompetitorCollectDTO dto = new CompetitorCollectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<CompetitorCollect> list = super.findByCis(dto);
+        //遍历所有未冻结汇总定时器,
         for (CompetitorCollect model : list) {
-            if (model.getStatus() == Status.THAW) {
-                //判断发送间隔类型
+            if (model.getLastSendTime() != null) {
                 switch (model.getSendIntervalType()) {
+                    case MINUTE:
+
+
+                        break;
+
+                    case HOUR:
+                        break;
+
+                    case DAY:
+
+
+                        break;
+
+                    case WEEK:
+                        break;
+
+                    case MONTH:
+
+
+                        break;
+
+                    case QUARTER:
+                        break;
+
+                    case YEAR:
+                        break;
 
                 }
             }
-        }*/
-        // TODO: 17-3-24
+
+        }
+
+    }
+
+
+    //校验分钟
+    public void minute(CompetitorCollect model) throws SerException {
+
+        if (LocalDateTime.now().minusMinutes(model.getSendInterval()).compareTo(model.getLastSendTime()) > 0) {
+
+            //查询指定汇总间隔的数据
+            CompetitorDTO dto = new CompetitorDTO();
+
+            LocalDateTime start = null;
+            LocalDateTime end = null;
+
+
+            switch (model.getCollectInterval()) {
+
+                case ONEDAY:
+                    LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+                    start = startOfDay;
+                    end = startOfDay.plusDays(1);
+                    break;
+
+                case ONEWEEK:
+
+                    LocalDateTime startOfWeek = DateUtil.getStartWeek().atStartOfDay();
+                    start = startOfWeek;
+                    end = startOfWeek.plusWeeks(1);
+
+                    break;
+
+                case ONEMONTH:
+
+                    LocalDateTime startOfMonth = DateUtil.getStartMonth().atStartOfDay();
+                    start = startOfMonth;
+                    end = startOfMonth.plusMonths(1);
+
+                    break;
+            }
+
+            dto.getConditions().add(Restrict.gt("createTime", start));
+            dto.getConditions().add(Restrict.lt("createTime", end));
+            List<Competitor> competitorList = competitorSer.findByCis(dto);
+            sendEmail(competitorList, model.getSendUser());
+        }
+
+
+    }
+
+    public void sendEmail(List<Competitor> competitorList, String sendUser) {
+
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<CompetitorCollectBO> pageList(CompetitorCollectDTO dto) throws SerException {
+        getCusPermission();
         dto.getSorts().add("createTime=desc");
         List<CompetitorCollect> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, CompetitorCollectBO.class);
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该模块只有商务模块负责人可操作，您的帐号尚无没有权限");
+        }
     }
 }

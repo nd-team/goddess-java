@@ -23,7 +23,7 @@ public interface ActivityApplyInforAPI {
      * 根据id查询活动申请信息
      *
      * @param id 活动申请信息唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivityApplyInforBO
      * @throws SerException
      */
     ActivityApplyInforBO findById(String id) throws SerException;
@@ -73,18 +73,20 @@ public interface ActivityApplyInforAPI {
     /**
      * 参与该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param area 地区
      * @throws SerException
      */
-    void joinActivity(ActivityApplyInforTO to) throws SerException;
+    void joinActivity(String id, String area) throws SerException;
 
     /**
      * 退出该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param abandonReason 放弃原因
      * @throws SerException
      */
-    void exitActivity(ActivityApplyInforTO to) throws SerException;
+    void exitActivity(String id, String abandonReason) throws SerException;
 
     /**
      * 查看活动人员名单

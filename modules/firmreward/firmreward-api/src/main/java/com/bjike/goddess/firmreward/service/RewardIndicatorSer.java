@@ -3,8 +3,8 @@ package com.bjike.goddess.firmreward.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.firmreward.bo.RewardIndicatorBO;
-import com.bjike.goddess.firmreward.entity.RewardIndicator;
 import com.bjike.goddess.firmreward.dto.RewardIndicatorDTO;
+import com.bjike.goddess.firmreward.entity.RewardIndicator;
 import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
 
 import java.util.List;

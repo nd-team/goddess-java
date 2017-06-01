@@ -293,4 +293,9 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     public List<String> listProjectName() throws SerException {
         return applyLendSer.listProjectName();
     }
+
+    @Override
+    public List<String> listAccountCom() throws SerException {
+        return applyLendSer.listAccountCom();
+    }
 }

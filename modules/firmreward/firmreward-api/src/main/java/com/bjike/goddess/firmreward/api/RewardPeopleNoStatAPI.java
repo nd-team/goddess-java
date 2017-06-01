@@ -21,6 +21,23 @@ import java.util.List;
 public interface RewardPeopleNoStatAPI {
 
     /**
+     * 根据id查询奖励人数统计
+     *
+     * @param id 奖励人数统计唯一标识
+     * @return class RewardPeopleNoStatBO
+     * @throws SerException
+     */
+    RewardPeopleNoStatBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖励人数统计dto
+     * @throws SerException
+     */
+    Long count(RewardPeopleNoStatDTO dto) throws SerException;
+
+    /**
      * 分页查询奖励人数统计
      *
      * @return class RewardPeopleNoStatBO

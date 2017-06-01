@@ -153,7 +153,7 @@ public class RentPayVO {
     /**
      * 水费缴费方
      */
-    private Double waterPay;
+    private String waterPay;
 
     /**
      * 电费初期数目
@@ -193,7 +193,7 @@ public class RentPayVO {
     /**
      * 电费缴费方
      */
-    private Double energyPay;
+    private String energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -213,7 +213,7 @@ public class RentPayVO {
     /**
      * 燃气费缴费方
      */
-    private Double gasPay;
+    private String gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -465,11 +465,11 @@ public class RentPayVO {
         this.waterEndTime = waterEndTime;
     }
 
-    public Double getWaterPay() {
+    public String getWaterPay() {
         return waterPay;
     }
 
-    public void setWaterPay(Double waterPay) {
+    public void setWaterPay(String waterPay) {
         this.waterPay = waterPay;
     }
 
@@ -529,11 +529,11 @@ public class RentPayVO {
         this.energyEndTime = energyEndTime;
     }
 
-    public Double getEnergyPay() {
+    public String getEnergyPay() {
         return energyPay;
     }
 
-    public void setEnergyPay(Double energyPay) {
+    public void setEnergyPay(String energyPay) {
         this.energyPay = energyPay;
     }
 
@@ -561,11 +561,11 @@ public class RentPayVO {
         this.gasEndTime = gasEndTime;
     }
 
-    public Double getGasPay() {
+    public String getGasPay() {
         return gasPay;
     }
 
-    public void setGasPay(Double gasPay) {
+    public void setGasPay(String gasPay) {
         this.gasPay = gasPay;
     }
 

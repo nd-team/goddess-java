@@ -37,24 +37,6 @@ import java.util.Set;
 public class LevelDesignAct {
     @Autowired
     private LevelDesignAPI levelDesignAPI;
-    @Autowired
-    private GradeLevelAPI gradeLevelAPI;
-
-    /**
-     * 查找所有体系部门
-     *
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/allDepartments")
-    public Result allDepartments() throws ActException {
-        try {
-            Set<String> set = gradeLevelAPI.allDepartments();
-            return ActResult.initialize(set);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 管理分类等级设计列表总条数

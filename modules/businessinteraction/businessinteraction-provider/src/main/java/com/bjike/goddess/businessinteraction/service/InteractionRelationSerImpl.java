@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessinteraction.dto.InteractionRelationDTO;
 import com.bjike.goddess.businessinteraction.entity.InteractionRelation;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,9 +37,16 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Autowired
     private LeavingMessageSer leavingMessageSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
 
     @Override
     public Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
         if(StringUtils.isNoneBlank(interactionRelationDTO.getCompanyName())){
             interactionRelationDTO.getConditions().add(Restrict.like("companyName",interactionRelationDTO.getCompanyName()));
         }
@@ -48,6 +56,9 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Override
     public InteractionRelationBO getOneById(String id) throws SerException {
+
+
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id部嫩嗯为空");
         }
@@ -58,6 +69,11 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Override
     public List<InteractionRelationBO> listInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         if(StringUtils.isNoneBlank(interactionRelationDTO.getCompanyName())){
             interactionRelationDTO.getConditions().add(Restrict.like("companyName",interactionRelationDTO.getCompanyName()));
         }
@@ -69,6 +85,14 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InteractionRelationBO addInteractionRelation(InteractionRelationTO interactionRelationTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
+
         InteractionRelation interactionRelation = null;
         try {
             interactionRelation = BeanTransform.copyProperties(interactionRelationTO,InteractionRelation.class,true);
@@ -84,6 +108,13 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InteractionRelationBO editInteractionRelation(InteractionRelationTO interactionRelationTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑操作");
+        }
+
         InteractionRelation interact = null;
         try {
             InteractionRelation interactionRelation = BeanTransform.copyProperties(interactionRelationTO,InteractionRelation.class,true);
@@ -103,6 +134,13 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteInteractionRelation(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
+
         if (StringUtils.isNotBlank(id)){
             LeavingMessageDTO leavingMessageDTO = new LeavingMessageDTO();
             leavingMessageDTO.getConditions().add(Restrict.eq("interactionRelation.id",id));

@@ -1,8 +1,10 @@
 package com.bjike.goddess.firmreward.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.firmreward.bo.PrizeDetailBO;
 import com.bjike.goddess.firmreward.dto.PrizeDetailDTO;
+import com.bjike.goddess.firmreward.entity.PrizeDetail;
 import com.bjike.goddess.firmreward.service.PrizeDetailSer;
 import com.bjike.goddess.firmreward.to.PrizeDetailTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class PrizeDetailApiImpl implements PrizeDetailAPI {
 
     @Autowired
     private PrizeDetailSer prizeDetailSer;
+
+    /**
+     * 根据id查询奖品明细
+     *
+     * @param id 奖品明细唯一标识
+     * @return class PrizeDetailBO
+     * @throws SerException
+     */
+    @Override
+    public PrizeDetailBO findById(String id) throws SerException {
+        PrizeDetail model = prizeDetailSer.findById(id);
+        return BeanTransform.copyProperties(model, PrizeDetailBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 奖品明细dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(PrizeDetailDTO dto) throws SerException {
+        return prizeDetailSer.count(dto);
+    }
 
     /**
      * 分页查询奖品明细

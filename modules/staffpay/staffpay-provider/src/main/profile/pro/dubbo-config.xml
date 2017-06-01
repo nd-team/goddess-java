@@ -33,5 +33,6 @@
 	<dubbo:service interface="com.bjike.goddess.staffpay.api.FirstPayRecordAPI" ref="firstPayRecordApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.staffpay.api.PayRecordAPI" ref="payRecordApiImpl"/>
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

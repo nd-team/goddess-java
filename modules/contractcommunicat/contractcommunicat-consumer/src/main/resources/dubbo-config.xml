@@ -27,4 +27,9 @@
 
 	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 
+	<dubbo:reference id="cusPermissionApiImpl" interface="com.bjike.goddess.contractcommunicat.api.CusPermissionAPI" />
+
+	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.contractcommunicat.api.CusPermissionOperateAPI" />
+
+
 </beans>

@@ -246,7 +246,7 @@ public class TowerInsureAction {
 
 
     /**
-     * 一个方案查看详细
+     * 一个塔工意外险
      *
      * @param id id
      * @return class TowerInsureVO

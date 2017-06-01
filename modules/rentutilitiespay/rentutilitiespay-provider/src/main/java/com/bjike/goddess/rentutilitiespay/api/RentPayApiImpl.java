@@ -2,6 +2,7 @@ package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.rentutilitiespay.bo.CollectAreaBO;
 import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.dto.RentPayDTO;
 import com.bjike.goddess.rentutilitiespay.entity.RentPay;
@@ -30,6 +31,15 @@ public class RentPayApiImpl implements RentPayAPI {
     @Autowired
     private RentPaySer rentPaySer;
     @Override
+    public Long countRentPay(RentPayDTO rentPayDTO) throws SerException {
+        return rentPaySer.countRentPay(rentPayDTO);
+    }
+
+    @Override
+    public RentPayBO getOne(String id) throws SerException {
+        return  rentPaySer.getOne(id);
+    }
+    @Override
     public List<RentPayBO> findListRentPay(RentPayDTO rentPayDTO) throws SerException {
         return rentPaySer.findListRentPay(rentPayDTO);
     }
@@ -53,8 +63,12 @@ public class RentPayApiImpl implements RentPayAPI {
         rentPaySer.uploadAttachments();
     }
     @Override
-    public List<RentPayBO> collectArea(String[] area) throws SerException {
-        return rentPaySer.collectArea(area);
+    public List<CollectAreaBO> collectArea(String[] areas) throws SerException {
+        return rentPaySer.collectArea(areas);
+    }
+    @Override
+    public List<String> getArea() throws SerException {
+        return  rentPaySer.getArea();
     }
 
 }

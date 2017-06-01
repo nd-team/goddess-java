@@ -13,7 +13,8 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.projectissuehandle.action","com.bjike.goddess.projectissuehandle.config", "com.bjike.goddess.common.consumer"})
+@ComponentScan(basePackages = {"com.bjike.goddess.projectissuehandle.action","com.bjike.goddess.projectissuehandle.config","com.bjike.goddess.projectissuehandle.config", "com.bjike.goddess.common.consumer"})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application{

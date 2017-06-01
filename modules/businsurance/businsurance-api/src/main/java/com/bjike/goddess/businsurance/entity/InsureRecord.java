@@ -22,14 +22,14 @@ public class InsureRecord extends BaseEntity {
     /**
      * 商业险类型
      */
-    @Column(name = "insureNumber",  columnDefinition = "VARCHAR(255)   COMMENT '商业险类型'")
-    private String insureNumber;
+    @Column(name = "busType",  columnDefinition = "VARCHAR(255)   COMMENT '商业险类型'")
+    private String busType;
 
     /**
      * 商业险名称
      */
-    @Column(name = "addr",  columnDefinition = "VARCHAR(255)   COMMENT '商业险名称'")
-    private String addr;
+    @Column(name = "typeName",  columnDefinition = "VARCHAR(255)   COMMENT '商业险名称'")
+    private String typeName;
 
     /**
      * 保单生效日
@@ -46,84 +46,83 @@ public class InsureRecord extends BaseEntity {
     /**
      * 投保人名字
      */
-    @Column(name = "totalFee",  columnDefinition = "DECIMAL(10,2)   COMMENT '投保人名字'")
-    private Double totalFee;
+    @Column(name = "insureName",  columnDefinition = "VARCHAR(255)   COMMENT '投保人名字'")
+    private String insureName;
 
     /**
      * 被保险人名字
      */
-    @Column(name = "payWay",  columnDefinition = "VARCHAR(255)   COMMENT '被保险人名字'")
-    private String payWay;
+    @Column(name = "insureByName",  columnDefinition = "VARCHAR(255)   COMMENT '被保险人名字'")
+    private String insureByName;
 
     /**
      * 险种名称
      */
-    @Column(name = "argueWay",  columnDefinition = "VARCHAR(255)   COMMENT '险种名称'")
-    private String argueWay;
+    @Column(name = "insureTypeName",  columnDefinition = "VARCHAR(255)   COMMENT '险种名称'")
+    private String insureTypeName;
 
     /**
      * 组合名称
      */
-    @Column(name = "insurer",  columnDefinition = "VARCHAR(255)   COMMENT '组合名称'")
-    private String insurer;
+    @Column(name = "combiName",  columnDefinition = "VARCHAR(255)   COMMENT '组合名称'")
+    private String combiName;
 
     /**
      * 销售机构名称
      */
-    @Column(name = "insureIdCard",  columnDefinition = "VARCHAR(255)   COMMENT '销售机构名称'")
-    private String insureIdCard;
+    @Column(name = "saleGroupName",  columnDefinition = "VARCHAR(255)   COMMENT '销售机构名称'")
+    private String saleGroupName;
 
     /**
      * 销售员名称
      */
-    @Column(name = "insureAddr",  columnDefinition = "VARCHAR(255)   COMMENT '销售员名称'")
-    private String insureAddr;
+    @Column(name = "salerName",  columnDefinition = "VARCHAR(255)   COMMENT '销售员名称'")
+    private String salerName;
 
     /**
      * 机构电话
      */
-    @Column(name = "tel",  columnDefinition = "VARCHAR(255)   COMMENT '机构电话'")
-    private String tel;
+    @Column(name = "organTel",  columnDefinition = "VARCHAR(255)   COMMENT '机构电话'")
+    private String organTel;
 
     /**
      * 合同存储编号
      */
-    @Column(name = "carNumber",  columnDefinition = "VARCHAR(255)   COMMENT '合同存储编号'")
-    private String carNumber;
+    @Column(name = "storageNumber",  columnDefinition = "VARCHAR(255)   COMMENT '合同存储编号'")
+    private String storageNumber;
 
     /**
      * 合同存储路径
      */
-    @Column(name = "brand",  columnDefinition = "VARCHAR(255)   COMMENT '合同存储路径'")
-    private String brand;
+    @Column(name = "storagePath",  columnDefinition = "VARCHAR(255)   COMMENT '合同存储路径'")
+    private String storagePath;
 
     /**
      * 合同附件
      */
-    @Column(name = "priceChoice",  columnDefinition = "VARCHAR(255)   COMMENT '合同附件'")
-    private String priceChoice;
+    @Column(name = "storageFile",  columnDefinition = "VARCHAR(255)   COMMENT '合同附件'")
+    private String storageFile;
 
     /**
      * 是否已续保
      */
-    @Column(name = "ownNature",  columnDefinition = "VARCHAR(255)   COMMENT '是否已续保'")
-    private String ownNature;
+    @Column(name = "renewal",  columnDefinition = "VARCHAR(255)   COMMENT '是否已续保'")
+    private String renewal;
 
-
-    public String getInsureNumber() {
-        return insureNumber;
+    public String getBusType() {
+        return busType;
     }
 
-    public void setInsureNumber(String insureNumber) {
-        this.insureNumber = insureNumber;
+    public void setBusType(String busType) {
+        this.busType = busType;
     }
 
-    public String getAddr() {
-        return addr;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setAddr(String addr) {
-        this.addr = addr;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public LocalDate getStartDate() {
@@ -142,91 +141,91 @@ public class InsureRecord extends BaseEntity {
         this.endDate = endDate;
     }
 
-    public Double getTotalFee() {
-        return totalFee;
+    public String getInsureName() {
+        return insureName;
     }
 
-    public void setTotalFee(Double totalFee) {
-        this.totalFee = totalFee;
+    public void setInsureName(String insureName) {
+        this.insureName = insureName;
     }
 
-    public String getPayWay() {
-        return payWay;
+    public String getInsureByName() {
+        return insureByName;
     }
 
-    public void setPayWay(String payWay) {
-        this.payWay = payWay;
+    public void setInsureByName(String insureByName) {
+        this.insureByName = insureByName;
     }
 
-    public String getArgueWay() {
-        return argueWay;
+    public String getInsureTypeName() {
+        return insureTypeName;
     }
 
-    public void setArgueWay(String argueWay) {
-        this.argueWay = argueWay;
+    public void setInsureTypeName(String insureTypeName) {
+        this.insureTypeName = insureTypeName;
     }
 
-    public String getInsurer() {
-        return insurer;
+    public String getCombiName() {
+        return combiName;
     }
 
-    public void setInsurer(String insurer) {
-        this.insurer = insurer;
+    public void setCombiName(String combiName) {
+        this.combiName = combiName;
     }
 
-    public String getInsureIdCard() {
-        return insureIdCard;
+    public String getSaleGroupName() {
+        return saleGroupName;
     }
 
-    public void setInsureIdCard(String insureIdCard) {
-        this.insureIdCard = insureIdCard;
+    public void setSaleGroupName(String saleGroupName) {
+        this.saleGroupName = saleGroupName;
     }
 
-    public String getInsureAddr() {
-        return insureAddr;
+    public String getSalerName() {
+        return salerName;
     }
 
-    public void setInsureAddr(String insureAddr) {
-        this.insureAddr = insureAddr;
+    public void setSalerName(String salerName) {
+        this.salerName = salerName;
     }
 
-    public String getTel() {
-        return tel;
+    public String getOrganTel() {
+        return organTel;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setOrganTel(String organTel) {
+        this.organTel = organTel;
     }
 
-    public String getCarNumber() {
-        return carNumber;
+    public String getStorageNumber() {
+        return storageNumber;
     }
 
-    public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
+    public void setStorageNumber(String storageNumber) {
+        this.storageNumber = storageNumber;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getStoragePath() {
+        return storagePath;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setStoragePath(String storagePath) {
+        this.storagePath = storagePath;
     }
 
-    public String getPriceChoice() {
-        return priceChoice;
+    public String getStorageFile() {
+        return storageFile;
     }
 
-    public void setPriceChoice(String priceChoice) {
-        this.priceChoice = priceChoice;
+    public void setStorageFile(String storageFile) {
+        this.storageFile = storageFile;
     }
 
-    public String getOwnNature() {
-        return ownNature;
+    public String getRenewal() {
+        return renewal;
     }
 
-    public void setOwnNature(String ownNature) {
-        this.ownNature = ownNature;
+    public void setRenewal(String renewal) {
+        this.renewal = renewal;
     }
 }

@@ -26,6 +26,11 @@ public class LeavingMessageApiImpl implements LeavingMessageAPI {
     private LeavingMessageSer leavingMessageSer;
 
     @Override
+    public Long countInter(LeavingMessageDTO leavingMessageDTO) throws SerException {
+        return leavingMessageSer.countInter(leavingMessageDTO);
+    }
+
+    @Override
     public List<LeavingMessageBO> listLeavingMessage(String interactionId ) throws SerException {
         return leavingMessageSer.listLeavingMessage(interactionId);
     }

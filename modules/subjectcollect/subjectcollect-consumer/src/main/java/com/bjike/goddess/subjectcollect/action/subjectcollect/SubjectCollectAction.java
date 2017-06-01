@@ -168,18 +168,18 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 已审核科目汇总
+     * 记账凭证记录科目汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
      * @return class VoucherGenerateVO
-     * @des 在所有已审核记账凭证信息进行科目汇总
+     * @des 在所有记账凭证记录记账凭证信息进行科目汇总
      * @version v1
      */
-    @GetMapping("v1/collectSub")
-    public Result collectSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/ctReSub")
+    public Result ctReSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.collectSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.ctReSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -187,18 +187,18 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 已审核地区汇总
+     * 记账凭证记录地区汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
      * @return class VoucherGenerateVO
-     * @des 在所有已审核记账凭证信息进行地区汇总
+     * @des 在所有记账凭证记录记账凭证信息进行地区汇总
      * @version v1
      */
-    @GetMapping("v1/collectArea")
-    public Result collectArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/ctReArea")
+    public Result ctReArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.collectArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.ctReArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -206,18 +206,18 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 已审核项目组汇总
+     * 记账凭证记录项目组汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
      * @return class VoucherGenerateVO
-     * @des 在所有已审核记账凭证信息进行项目组汇总
+     * @des 在所有记账凭证记录记账凭证信息进行项目组汇总
      * @version v1
      */
-    @GetMapping("v1/collectGroup")
-    public Result collectGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/ctReGroup")
+    public Result ctReGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.collectGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.ctReGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -225,18 +225,18 @@ public class SubjectCollectAction {
     }
 
     /**
-     * 已审核项目名称汇总
+     * 记账凭证记录项目名称汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
      * @return class VoucherGenerateVO
-     * @des 在所有已审核记账凭证信息进行项目名称汇总
+     * @des 在所有记账凭证记录记账凭证信息进行项目名称汇总
      * @version v1
      */
-    @GetMapping("v1/collectPname")
-    public Result collectPname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
+    @GetMapping("v1/ctRePname")
+    public Result ctRePname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
             List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.collectPname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+                    voucherGenerateAPI.ctRePname(voucherGenerateDTO), VoucherGenerateVO.class, true);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

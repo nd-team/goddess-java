@@ -9,6 +9,7 @@ import com.bjike.goddess.capability.dto.CooperCapabilityDTO;
 import com.bjike.goddess.capability.entity.CooperCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ import java.util.stream.Collectors;
 @Service
 public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, CooperCapabilityDTO> implements CooperCapabilitySer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
+
     @Override
     public Long counts(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
         if (StringUtils.isNotBlank(cooperCapabilityDTO.getCompanyName() )) {
@@ -44,6 +48,8 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     @Override
     public CooperCapabilityBO getOne(String id) throws SerException {
+
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空哦");
         }
@@ -53,6 +59,11 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
 
     @Override
     public List<CooperCapabilityBO> listCooperCapability(CooperCapabilityDTO cooperCapabilityDTO) throws SerException {
+
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
 
         cooperCapabilityDTO.getSorts().add("createTime=desc");
         if (StringUtils.isNotBlank(cooperCapabilityDTO.getCompanyName() )) {
@@ -66,6 +77,12 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperCapabilityBO addCooperCapability(CooperCapabilityTO cooperCapabilityTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加合作对象操作");
+        }
+
         CooperCapability cooperCapability = BeanTransform.copyProperties(cooperCapabilityTO,CooperCapability.class,true);
         cooperCapability.setCreateTime(LocalDateTime.now());
 
@@ -95,6 +112,13 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CooperCapabilityBO editCooperCapability(CooperCapabilityTO cooperCapabilityTO) throws SerException {
+
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑合作对象操作");
+        }
+
         CooperCapability cooperCapability = super.findById( cooperCapabilityTO.getId() );
 
         CooperCapabilityDTO dto = new CooperCapabilityDTO();
@@ -116,6 +140,12 @@ public class CooperCapabilitySerImpl extends ServiceImpl<CooperCapability, Coope
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCooperCapability(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除合作对象操作");
+        }
+
         super.remove(id);
     }
 

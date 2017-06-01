@@ -16,11 +16,22 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
 	<dubbo:reference  validation="true" id="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
 	<dubbo:reference  validation="true" id="demandApiImpl" interface="com.bjike.goddess.businessinteraction.api.DemandAPI" />
 	<dubbo:reference  validation="true" id="interactionRelationApiImpl" interface="com.bjike.goddess.businessinteraction.api.InteractionRelationAPI" />
 	<dubbo:reference  validation="true" id="leavingMessageApiImpl" interface="com.bjike.goddess.businessinteraction.api.LeavingMessageAPI" />
 	<dubbo:reference  validation="true" id="talkDetailApiImpl" interface="com.bjike.goddess.businessinteraction.api.TalkDetailAPI" />
 	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI" />
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionOperateAPI" />
+
 
 </beans>

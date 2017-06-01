@@ -159,7 +159,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存所有的子对象
      *
-     * @param to 公司简介to
+     * @param to     公司简介to
      * @param firmId 公司简介记录id
      * @throws SerException
      */
@@ -174,7 +174,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存通讯途径
      *
-     * @param to 公司简介to
+     * @param to     公司简介to
      * @param firmId 公司记录id
      * @throws SerException
      */
@@ -187,7 +187,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         if (headOfficeAddressesNotEmpty) {
             List<CommunicationPath> list = new ArrayList<>(0);
             int len = headOfficeAddresses.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 CommunicationPath model = new CommunicationPath();
                 model.setHeadOfficeAddress(headOfficeAddresses[i]);
                 model.setHeadOfficeContact(headOfficeContactes[i]);
@@ -202,7 +202,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存客户及合作伙伴
      *
-     * @param to 公司简介
+     * @param to     公司简介
      * @param firmId 公司记录id
      * @throws SerException
      */
@@ -215,7 +215,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         if (operatorsNotEmpty) {
             List<CustomerAndPartner> list = new ArrayList<>(0);
             int len = operators.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 CustomerAndPartner model = new CustomerAndPartner();
                 model.setOperators(operators[i]);
                 model.setManufacturer(manufacturers[i]);
@@ -231,7 +231,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存成功案例
      *
-     * @param to 公司简介to
+     * @param to     公司简介to
      * @param firmId 公司记录id
      * @throws SerException
      */
@@ -239,12 +239,12 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         String[] communications = to.getCommunications();//通信类
         String[] softwares = to.getSoftwares();//软件类
         String[] systemIntegrations = to.getSystemIntegrations();//系统集成类
-        String[] marketingPlannings =to.getMarketingPlannings();//营销策划类
+        String[] marketingPlannings = to.getMarketingPlannings();//营销策划类
         boolean communicationsNotEmpty = (communications != null) && (communications.length > 0);
         if (communicationsNotEmpty) {
             List<SuccessStories> list = new ArrayList<>(0);
             int len = communications.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 SuccessStories model = new SuccessStories();
                 model.setCommunication(communications[i]);
                 model.setSoftware(softwares[i]);
@@ -260,7 +260,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存主业介绍
      *
-     * @param to 公司简介to
+     * @param to     公司简介to
      * @param firmId 公司记录id
      * @throws SerException
      */
@@ -271,7 +271,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         if (businessTypesNotEmpty) {
             List<MainBusinessIntro> list = new ArrayList<>(0);
             int len = businessTypes.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 MainBusinessIntro model = new MainBusinessIntro();
                 model.setBusinessType(businessTypes[i]);
                 model.setProjectSubject(projectSubjects[i]);
@@ -285,7 +285,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     /**
      * 保存荣誉与资质
      *
-     * @param to 公司简介to
+     * @param to     公司简介to
      * @param firmId 公司记录id
      * @throws SerException
      */
@@ -296,7 +296,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         if (certificatesNotEmpty) {
             List<HonorAndQuality> list = new ArrayList<>(0);
             int len = certificates.length;
-            for (int i = 0; i < len; i ++) {
+            for (int i = 0; i < len; i++) {
                 HonorAndQuality model = new HonorAndQuality();//荣誉与资质
                 model.setCertificates(certificates[i]);
                 model.setSoftwareCopyright(softwareCopyrights[i]);
@@ -440,7 +440,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * 设置哪些用户可以查看哪些字段
      *
      * @param username 用户名集合
-     * @param to 公司简介需要显示的字段
+     * @param to       公司简介需要显示的字段
      * @throws SerException
      */
     @Override
@@ -449,7 +449,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         Boolean usernameIsNotEmpty = (username != null) && (username.length > 0);
         if (usernameIsNotEmpty) {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < username.length; i ++) {
+            for (int i = 0; i < username.length; i++) {
                 if (i < username.length - 1) {
                     sb.append(username[i]).append(",");
                 } else {

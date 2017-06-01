@@ -555,6 +555,22 @@ public class ApplyLendAction {
     }
 
     /**
+     * 获取付款来源
+     *
+     * @des 获取付款来源
+     * @version v1
+     */
+    @GetMapping("v1/listAccountCom")
+    public Result listAccountCom(  ) throws ActException {
+        try {
+            List<String> list = applyLendAPI.listAccountCom( );
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 付款
      *
      * @param applyLendTO 申请借款基本信息数据bo

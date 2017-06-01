@@ -23,4 +23,5 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.ActivitySchemeAPI" ref="activitySchemeApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityStaffListAPI" ref="activityStaffListApiImpl"></dubbo:service>
 
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 </beans>

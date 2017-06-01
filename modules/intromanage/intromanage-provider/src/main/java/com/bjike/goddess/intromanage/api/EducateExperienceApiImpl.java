@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.EducateExperienceBO;
 import com.bjike.goddess.intromanage.dto.EducateExperienceDTO;
+import com.bjike.goddess.intromanage.entity.EducateExperience;
 import com.bjike.goddess.intromanage.service.EducateExperienceSer;
 import com.bjike.goddess.intromanage.to.EducateExperienceTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class EducateExperienceApiImpl implements EducateExperienceAPI {
 
     @Autowired
     private EducateExperienceSer educateExperienceSer;
+
+    /**
+     * 根据id查询教育经历
+     *
+     * @param id 教育经历唯一标识
+     * @return class EducateExperienceBO
+     * @throws SerException
+     */
+    @Override
+    public EducateExperienceBO findById(String id) throws SerException {
+        EducateExperience model = educateExperienceSer.findById(id);
+        return BeanTransform.copyProperties(model, EducateExperienceBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 教育经历dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(EducateExperienceDTO dto) throws SerException {
+        return educateExperienceSer.count(dto);
+    }
 
     /**
      * 分页查询教育经历

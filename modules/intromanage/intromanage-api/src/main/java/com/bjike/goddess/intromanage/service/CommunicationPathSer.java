@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.CommunicationPathBO;
-import com.bjike.goddess.intromanage.entity.CommunicationPath;
 import com.bjike.goddess.intromanage.dto.CommunicationPathDTO;
+import com.bjike.goddess.intromanage.entity.CommunicationPath;
 import com.bjike.goddess.intromanage.to.CommunicationPathTO;
 
 import java.util.List;

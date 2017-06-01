@@ -22,6 +22,8 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/contractcommunicat/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/contractcommunicat/contractcommunicat-api",
+                "modules/user/user-api",
+                "modules/organize/organize-api",
                 "common/common-api"
         });
 //        JapiClient.saveHistory(false);

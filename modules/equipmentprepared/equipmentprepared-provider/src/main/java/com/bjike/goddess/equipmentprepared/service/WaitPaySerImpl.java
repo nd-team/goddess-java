@@ -207,13 +207,14 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void confirmPay(WaitPayTO to) throws SerException {
+        String name=userAPI.currentUser().getUsername();
         WaitPay waitPay = super.findById(to.getId());
         try {
             waitPay.setPayTime(DateUtil.parseDateTime(to.getPayTime()));
         } catch (Exception e) {
             throw new SerException("日期格式错误");
         }
-        waitPay.setPayMan(userAPI.currentUser().getUsername());
+        waitPay.setPayMan(name);
         waitPay.setIfPayment(true);
         super.update(waitPay);
     }
@@ -293,7 +294,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     }
 
     /**
-     * 查找所有
+     * 查找所有已付款
      *
      * @return
      * @throws SerException
@@ -312,12 +313,14 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
 
     @Override
     public Long waitCountSum(WaitPayDTO dto) throws SerException{
+        list(new WaitPayDTO());
         dto.getConditions().add(Restrict.eq("ifPayment", Boolean.TRUE));
         return super.count(dto);
     }
 
     @Override
     public Long payCountSum(WaitPayDTO dto) throws SerException{
+        list(new WaitPayDTO());
         dto.getConditions().add(Restrict.eq("ifPayment", Boolean.FALSE));
         return super.count(dto);
     }

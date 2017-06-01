@@ -10,6 +10,7 @@ import com.bjike.goddess.capability.entity.CompanyCapability;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, CompanyCapabilityDTO> implements CompanyCapabilitySer {
 
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
+
     @Override
     public Long counts(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
         if (StringUtils.isNotBlank(companyCapabilityDTO.getCompany() )) {
@@ -44,6 +49,8 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
 
     @Override
     public CompanyCapabilityBO getOne(String id) throws SerException {
+
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空哦");
         }
@@ -54,6 +61,11 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
 
     @Override
     public List<CompanyCapabilityBO> listCompanyCapability(CompanyCapabilityDTO companyCapabilityDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         companyCapabilityDTO.getSorts().add("createTime=desc");
         if (StringUtils.isNotBlank(companyCapabilityDTO.getCompany() )) {
             companyCapabilityDTO.getConditions().add(Restrict.like("company",companyCapabilityDTO.getCompany()));
@@ -66,6 +78,12 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyCapabilityBO addCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException {
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加公司能力操作");
+        }
+
         CompanyCapability companyCapability = BeanTransform.copyProperties(companyCapabilityTO,CompanyCapability.class,true);
         companyCapability.setCreateTime(LocalDateTime.now());
         super.save( companyCapability );
@@ -75,6 +93,12 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CompanyCapabilityBO editCompanyCapability(CompanyCapabilityTO companyCapabilityTO) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑公司能力操作");
+        }
+
         if (StringUtils.isBlank(companyCapabilityTO.getId() )) {
             throw new SerException("id不能为空");
         }
@@ -89,6 +113,12 @@ public class CompanyCapabilitySerImpl extends ServiceImpl<CompanyCapability, Com
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCompanyCapability(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除公司能力操作");
+        }
+
         super.remove( id );
     }
 

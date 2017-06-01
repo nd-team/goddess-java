@@ -19,8 +19,14 @@
 
 	<dubbo:reference id="competitorCollectApiImpl" interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI" />
 
-	<!--<dubbo:reference id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
+	<dubbo:reference id="cusPermissionApiImpl" interface="com.bjike.goddess.competitormanage.api.CusPermissionAPI" />
 
+	<dubbo:reference id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.competitormanage.api.CusPermissionOperateAPI" />
+
+	<!-- userAPI -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
+	<!-- 部门API -->
+	<dubbo:reference interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl" />
 
 
 </beans>

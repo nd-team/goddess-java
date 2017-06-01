@@ -8,6 +8,7 @@ import com.bjike.goddess.capability.to.CollectEmailTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +44,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Autowired
     private SelfCapabilitySer selfCapabilityAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer ;
+
+
+
     @Override
     public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
         Long count = super.count(collectEmailDTO);
@@ -51,6 +57,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public CollectEmailBO getOne(String id) throws SerException {
+
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空哦");
         }
@@ -61,6 +68,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您的帐号没有权限");
+        }
+
         collectEmailDTO.getSorts().add("createTime=desc");
         List<CollectEmail> list = super.findByPage(collectEmailDTO);
         return BeanTransform.copyProperties(list, CollectEmailBO.class);
@@ -69,6 +81,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加操作");
+        }
+
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -76,11 +95,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
+
+        RpcTransmit.transmitUserToken(userToken);
+
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
         collectEmail.setCreateTime(LocalDateTime.now());
         collectEmail.setStatus(Status.THAW);
         collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
-//        collectEmail.setCreatePersion("汪如意");
 
         //设置汇总公司名和人名
         String companyOrName ="";
@@ -106,6 +127,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑操作");
+        }
+
         if (StringUtils.isBlank(collectEmailTO.getId() )) {
             throw new SerException("id不能为空");
         }
@@ -118,12 +146,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
+        RpcTransmit.transmitUserToken(userToken);
+
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
         BeanUtils.copyProperties( collectEmail,temp ,"id","createTime","createPersion","lastSendTime","status");
         temp.setModifyTime(LocalDateTime.now());
-//        collectEmail.setCreatePersion(us
-// ike
-// erAPI.currentUser().getUsername());
 
         //设置汇总公司名和人名
         String companyOrName ="";
@@ -146,12 +173,25 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteCollectEmail(String id) throws SerException {
+        //商务模块编辑权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         super.remove(id);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void congealCollectEmail(String id) throws SerException {
+
+        //商务模块冻结权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.CONGEAL);
         super.update(collectEmail);
@@ -161,6 +201,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void thawCollectEmail(String id) throws SerException {
+        //商务模块解冻权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除操作");
+        }
+
         CollectEmail collectEmail = super.findById(id);
         collectEmail.setStatus(Status.THAW);
         super.update(collectEmail);

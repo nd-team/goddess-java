@@ -30,4 +30,7 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.staffpay.api.WaitPayAPI" id="waitPayApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.staffpay.api.FirstPayRecordAPI" id="firstPayRecordApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.staffpay.api.PayRecordAPI" id="payRecordApiImpl"/>
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 </beans>

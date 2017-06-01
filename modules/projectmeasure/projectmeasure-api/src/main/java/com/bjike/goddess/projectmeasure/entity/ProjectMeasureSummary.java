@@ -42,7 +42,7 @@ public class ProjectMeasureSummary extends BaseEntity {
     /**
      * 上次发送时间
      */
-    @Column(name = "lastTime", nullable = false, columnDefinition = "DATETIME COMMENT '上次发送时间'")
+    @Column(name = "lastTime", columnDefinition = "DATETIME COMMENT '上次发送时间'")
     private LocalDateTime lastTime;
 
     /**

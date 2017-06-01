@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.ProjectSettlementFollowBO;
 import com.bjike.goddess.projectprocing.dto.ProjectSettlementFollowDTO;
@@ -14,6 +15,7 @@ import com.bjike.goddess.projectprocing.utils.CollectData;
 import com.bjike.goddess.projectprocing.utils.CollectDataForBusiness;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,10 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "projectprocingSerCache")
 @Service
 public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlementFollow, ProjectSettlementFollowDTO> implements ProjectSettlementFollowSer {
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
 
     @Override
     public Long countProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
@@ -69,6 +75,12 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
 
     @Override
     public List<ProjectSettlementFollowBO> listProjectSettlementFollow(ProjectSettlementFollowDTO projectSettlementFollowDTO) throws SerException {
+        //列表权限
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
+        projectSettlementFollowDTO.getSorts().add("createTime=desc");
         if (StringUtils.isNoneBlank(projectSettlementFollowDTO.getArea())) {
             projectSettlementFollowDTO.getConditions().add(Restrict.eq("area", projectSettlementFollowDTO.getArea()));
         }
@@ -95,6 +107,13 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSettlementFollowBO addProjectSettlementFollow(ProjectSettlementFollowTO projectSettlementFollowTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行添加基本信息操作");
+        }
+
         ProjectSettlementFollow projectSettlementFollow = BeanTransform.copyProperties(projectSettlementFollowTO, ProjectSettlementFollow.class, true);
         projectSettlementFollow.setCreateTime(LocalDateTime.now());
         //TODO: tanghaixiang 2017-03-31 链接关系没做
@@ -105,6 +124,14 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProjectSettlementFollowBO editProjectSettlementFollow(ProjectSettlementFollowTO projectSettlementFollowTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块添加权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行编辑基本信息操作");
+        }
+
+
         if (StringUtils.isBlank(projectSettlementFollowTO.getId()) || projectSettlementFollowTO.getId() == null) {
             throw new SerException("编号不能为空");
         }
@@ -123,6 +150,13 @@ public class ProjectSettlementFollowSerImpl extends ServiceImpl<ProjectSettlemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteProjectSettlementFollow(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块删除权限
+        Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        if ( !permissionLevel) {
+            throw new SerException("您不是相应的人员，不可以进行删除基本信息操作");
+        }
+
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }

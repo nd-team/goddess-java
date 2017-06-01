@@ -9,8 +9,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO> implements AccountInfoSer {
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
     @Override
     public Long countAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
         Long count = super.count(accountInfoDTO);
@@ -37,25 +41,40 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
 
     @Override
     public AccountInfoBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         AccountInfo accountInfo = super.findById(id);
         return BeanTransform.copyProperties(accountInfo,AccountInfoBO.class);
     }
     @Override
     public List<AccountInfoBO> findListAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您的帐号没有权限");
+        }
         List<AccountInfo> accountInfos = super.findByCis(accountInfoDTO,true);
         return BeanTransform.copyProperties(accountInfos,AccountInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AccountInfoBO insertAccountInfo(AccountInfoTO accountInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
+        }
         AccountInfo accountInfo = BeanTransform.copyProperties(accountInfoTO,AccountInfo.class,true);
         accountInfo.setCreateTime(LocalDateTime.now());
         super.save(accountInfo);
         return BeanTransform.copyProperties(accountInfo,AccountInfoBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public AccountInfoBO editAccountInfo(AccountInfoTO accountInfoTO) throws SerException {
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
+        }
         if(!StringUtils.isEmpty(accountInfoTO.getId())){
             AccountInfo accountInfo = super.findById(accountInfoTO.getId());
             BeanTransform.copyProperties(accountInfoTO,accountInfo,true);
@@ -66,8 +85,17 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
         }
         return BeanTransform.copyProperties(accountInfoTO,AccountInfoBO.class);
     }
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeAccountInfo(String id) throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+        if ( !permission) {
+            throw new SerException("您不是财务人员，没有权限");
+        }
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
         super.remove(id);
     }
 
@@ -93,18 +121,6 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
         return accountCollectBOS;
     }
 
-    public static void main(String[] args) {
-        String [] areas = new String[]{};
-        String areaStr = StringUtils.join(areas,",");
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT area,projectName AS projectName,projectGroup AS projectGroup, ");
-        sb.append(" firstSubject AS firstSubject,secondSubject AS secondSubject,thirdSubject AS thirdSubject ");
-        sb.append(" FROM account_accountinfo a WHERE area in('guangzhou')GROUP BY ");
-        sb.append(" firstSubject,secondSubject,thirdSubject,projectName,projectGroup,area ORDER BY area; ");
-        String sql = sb.toString();
-        sql = String.format(sql,areaStr);
-        System.out.println(sql);
-    }
     @Override
     public List<String> getArea() throws SerException {
         String [] fields = new String[]{"area"};

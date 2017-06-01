@@ -10,6 +10,7 @@ import com.bjike.goddess.firmreward.to.RewardIndicatorTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +49,7 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public RewardIndicatorBO save(RewardIndicatorTO to) throws SerException {
         RewardIndicator entity = BeanTransform.copyProperties(to, RewardIndicator.class, true);
         entity = super.save(entity);
@@ -62,6 +64,7 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -73,6 +76,7 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(RewardIndicatorTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             RewardIndicator model = super.findById(to.getId());

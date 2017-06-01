@@ -19,6 +19,23 @@ import java.util.List;
 public interface AwardDetailAPI {
 
     /**
+     * 根据id查询获奖明细
+     *
+     * @param id 获奖明细唯一标识
+     * @return class AwardDetailBO
+     * @throws SerException
+     */
+    AwardDetailBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 获奖明细dto
+     * @throws SerException
+     */
+    Long count(AwardDetailDTO dto) throws SerException;
+
+    /**
      * 分页查询获奖明细
      *
      * @return class AwardDetailBO

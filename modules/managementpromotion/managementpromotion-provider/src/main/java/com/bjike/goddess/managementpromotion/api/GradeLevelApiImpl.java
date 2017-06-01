@@ -56,9 +56,7 @@ public class GradeLevelApiImpl implements GradeLevelAPI {
     }
 
     @Override
-    public Set<String> allDepartments() throws SerException {
-        return gradeLevelSer.allDepartments();
+    public Set<String> allHierarchys() throws SerException {
+        return gradeLevelSer.allHierarchys();
     }
-
-
 }

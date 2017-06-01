@@ -81,7 +81,7 @@ public class BusInsuranceAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated BusInsuranceTO busInsuranceTO, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated BusInsuranceTO busInsuranceTO) throws ActException {
         try {
             BusInsuranceBO busInsuranceBO1 = busInsuranceAPI.addBusInsurance(busInsuranceTO);
             return ActResult.initialize(BeanTransform.copyProperties(busInsuranceBO1,BusInsuranceVO.class,true));
@@ -148,7 +148,7 @@ public class BusInsuranceAction {
     }
 
     /**
-     * 编辑商业保险方案审核
+     * 福利模块审核
      *
      * @param busInsuranceTO 商业保险方案基本信息数据bo
      * @des 编辑商业保险方案审核
@@ -156,10 +156,28 @@ public class BusInsuranceAction {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/editAdvice")
-    public Result editAdvice(@Validated BusInsuranceTO busInsuranceTO) throws ActException {
+    @PutMapping("v1/editWareAdvice")
+    public Result editWareAdvice(@Validated(BusInsuranceTO.editWareAdvice.class) BusInsuranceTO busInsuranceTO) throws ActException {
         try {
             BusInsuranceBO busInsuranceBO1 = busInsuranceAPI.editAdvice(busInsuranceTO);
+            return ActResult.initialize(BeanTransform.copyProperties(busInsuranceBO1,BusInsuranceVO.class,true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 运营商务部审核
+     *
+     * @param busInsuranceTO 商业保险方案基本信息数据bo
+     * @des 编辑商业保险方案审核
+     * @return  class BusInsuranceVO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/editBusAdvice")
+    public Result editBusAdvice(@Validated(BusInsuranceTO.editBusAdvice.class) BusInsuranceTO busInsuranceTO) throws ActException {
+        try {
+            BusInsuranceBO busInsuranceBO1 = busInsuranceAPI.editBusAdvice(busInsuranceTO);
             return ActResult.initialize(BeanTransform.copyProperties(busInsuranceBO1,BusInsuranceVO.class,true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -177,7 +195,7 @@ public class BusInsuranceAction {
      */
     @LoginAuth
     @PutMapping("v1/audit")
-    public Result audit(@Validated BusInsuranceTO busInsuranceTO) throws ActException {
+    public Result audit(@Validated(BusInsuranceTO.audit.class)  BusInsuranceTO busInsuranceTO) throws ActException {
         try {
             BusInsuranceBO busInsuranceBO1 = busInsuranceAPI.audit(busInsuranceTO);
             return ActResult.initialize(BeanTransform.copyProperties(busInsuranceBO1,BusInsuranceVO.class,true));
@@ -188,7 +206,7 @@ public class BusInsuranceAction {
 
 
     /**
-     * 一个方案查看详细
+     * 一个或查看方案查看详细
      *
      * @param id id
      * @des 根据id查看详细
