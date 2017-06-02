@@ -1,5 +1,6 @@
 package com.bjike.goddess.marketactivitymanage.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -127,5 +128,21 @@ public class CustomerInfoSerImpl extends ServiceImpl<CustomerInfo, CustomerInfoD
     public void remove(String id) throws SerException {
 //        checkPermission();
         super.remove(id);
+    }
+
+    /**
+     * 根据市场活动id查询客户信息
+     *
+     * @param id 市场活动唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public List<CustomerInfoBO> findByMarketServeId(String id) throws SerException {
+        CustomerInfoDTO dto = new CustomerInfoDTO();
+        dto.getConditions().add(Restrict.eq("marketServeId", id));
+        List<CustomerInfo> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, CustomerInfoBO.class);
     }
 }

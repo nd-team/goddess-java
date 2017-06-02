@@ -12,10 +12,6 @@ package com.bjike.goddess.marketactivitymanage.vo;
 public class CustomerInfoVO {
 
     /**
-     * id
-     */
-    private String id;
-    /**
      * 客户信息编号
      */
     private String clientInfoNo;
@@ -29,20 +25,6 @@ public class CustomerInfoVO {
      * 重要性级别
      */
     private String importanceLevel;
-
-    /**
-     * 市场招待唯一标识
-     */
-    private String marketServeId;
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getClientInfoNo() {
         return clientInfoNo;
@@ -68,11 +50,4 @@ public class CustomerInfoVO {
         this.importanceLevel = importanceLevel;
     }
 
-    public String getMarketServeId() {
-        return marketServeId;
-    }
-
-    public void setMarketServeId(String marketServeId) {
-        this.marketServeId = marketServeId;
-    }
 }
