@@ -8,9 +8,11 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.vo.PositionDetailUserVO;
+import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.organize.vo.UserPositionVO;
 import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +151,11 @@ public class PositionDetailUserAct {
     public Result maps(PositionDetailUserDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<PositionDetailUserVO> vos = BeanTransform.copyProperties(positionDetailUserAPI.maps(dto), PositionDetailUserVO.class, request);
+            for (PositionDetailUserVO vo : vos) {
+                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(vo.getUserId());
+                if (positionDetailBOs != null)
+                    vo.setPositionVo(BeanTransform.copyProperties(positionDetailBOs, PositionDetailVO.class));
+            }
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

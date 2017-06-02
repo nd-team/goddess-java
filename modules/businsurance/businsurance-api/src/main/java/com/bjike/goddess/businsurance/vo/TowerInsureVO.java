@@ -11,6 +11,8 @@ package com.bjike.goddess.businsurance.vo;
  */
 public class TowerInsureVO {
 
+    private String id;
+
     /**
      * 合同号
      */
@@ -320,6 +322,25 @@ public class TowerInsureVO {
      * 意外险记录id
      */
     private String insureRecordId;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getContractNum() {
         return contractNum;
@@ -815,5 +836,21 @@ public class TowerInsureVO {
 
     public void setInsureRecordId(String insureRecordId) {
         this.insureRecordId = insureRecordId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

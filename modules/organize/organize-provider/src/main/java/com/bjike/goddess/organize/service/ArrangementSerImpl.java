@@ -136,7 +136,7 @@ public class ArrangementSerImpl extends ServiceImpl<Arrangement, ArrangementDTO>
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("arrangement.id", id));
         if (this.findChild(id).size() > 0 || positionDetailSer.findByCis(dto).size() > 0)
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         super.remove(arrangement);
         return this.transformBO(arrangement);
     }

@@ -2,10 +2,13 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.CommerceContactsBO;
+import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.service.CommerceContactsSer;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 商务通讯录业务接口实现
@@ -35,5 +38,20 @@ public class CommerceContactsApiImpl implements CommerceContactsAPI {
     @Override
     public void delete(CommerceContactsTO to) throws SerException {
         commerceContactsSer.delete(to);
+    }
+
+    @Override
+    public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        return commerceContactsSer.maps(dto);
+    }
+
+    @Override
+    public CommerceContactsBO getById(String id) throws SerException {
+        return commerceContactsSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return commerceContactsSer.getTotal();
     }
 }

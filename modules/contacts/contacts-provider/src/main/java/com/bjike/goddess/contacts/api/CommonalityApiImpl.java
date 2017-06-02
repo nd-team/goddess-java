@@ -64,4 +64,14 @@ public class CommonalityApiImpl implements CommonalityAPI {
     public CommonalityBO findByDepartment(String department) throws SerException {
         return commonalitySer.findByDepartment(department);
     }
+
+    @Override
+    public CommonalityBO getById(String id) throws SerException {
+        return commonalitySer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return commonalitySer.getTotal();
+    }
 }

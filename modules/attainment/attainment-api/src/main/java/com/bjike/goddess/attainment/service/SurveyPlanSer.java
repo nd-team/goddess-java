@@ -75,4 +75,24 @@ public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyPlanBO> maps(SurveyPlanDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

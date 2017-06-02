@@ -73,4 +73,25 @@ public interface ExternalContactsAPI {
         return null;
     }
 
+
+    /**
+     * 根据id获取外部通讯录数据
+     *
+     * @param id 外部通讯录数据id
+     * @return
+     * @throws SerException
+     */
+    default ExternalContactsBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

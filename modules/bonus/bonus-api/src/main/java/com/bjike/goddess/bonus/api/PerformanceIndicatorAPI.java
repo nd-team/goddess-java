@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.PerformanceIndicatorBO;
+import com.bjike.goddess.bonus.dto.PerformanceIndicatorDTO;
 import com.bjike.goddess.bonus.to.PerformanceIndicatorTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -83,4 +84,36 @@ public interface PerformanceIndicatorAPI {
         return null;
     }
 
+
+    /**
+     * 列表
+     *
+     * @param dto 绩效指标数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<PerformanceIndicatorBO> maps(PerformanceIndicatorDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据\id获取绩效指标数据
+     *
+     * @param id 绩效指标数据id
+     * @return
+     * @throws SerException
+     */
+    default PerformanceIndicatorBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

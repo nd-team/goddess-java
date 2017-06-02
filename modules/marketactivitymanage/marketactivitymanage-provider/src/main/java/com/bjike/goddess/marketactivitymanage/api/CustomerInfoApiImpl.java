@@ -96,4 +96,16 @@ public class CustomerInfoApiImpl implements CustomerInfoAPI {
     public void update(CustomerInfoTO to) throws SerException {
         customerInfoSer.update(to);
     }
+
+    /**
+     * 根据市场活动id查找客户信息
+     *
+     * @param id 市场活动唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    @Override
+    public List<CustomerInfoBO> findByMarketServeId(String id) throws SerException {
+        return customerInfoSer.findByMarketServeId(id);
+    }
 }

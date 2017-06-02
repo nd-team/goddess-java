@@ -59,4 +59,14 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     public void sendEmail() throws SerException {
         internalContactsSer.sendEmail();
     }
+
+    @Override
+    public InternalContactsBO getById(String id) throws SerException {
+        return internalContactsSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return internalContactsSer.getTotal();
+    }
 }

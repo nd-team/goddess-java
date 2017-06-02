@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 其他通讯录
  *
@@ -88,9 +90,40 @@ public class OtherContactsAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(OtherContactsDTO dto) throws ActException {
+    public Result maps(OtherContactsDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.maps(dto), OtherContactsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.maps(dto), OtherContactsVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id获取其他通讯录数据
+     *
+     * @param id 其他通讯录数据id
+     * @return class OtherContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(otherContactsAPI.getById(id), OtherContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(otherContactsAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

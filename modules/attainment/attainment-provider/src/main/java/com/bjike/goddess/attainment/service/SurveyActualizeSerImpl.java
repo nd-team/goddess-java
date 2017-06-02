@@ -8,13 +8,14 @@ import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 调研实施记录业务实现
@@ -42,11 +43,20 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         return bo;
     }
 
+    private List<SurveyActualizeBO> transformBOList(List<SurveyActualize> list) throws SerException {
+        List<SurveyActualizeBO> bos = new ArrayList<>(0);
+        for (SurveyActualize entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {
         SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class, true);
         entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        if (null == entity.getPlan())
+            throw new SerException("调研计划不存在,无法保存");
         entity.setStartTime(LocalDateTime.now());
         entity.setSurvey(SurveyStatus.UNDERWAY);
         super.save(entity);
@@ -56,24 +66,24 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyActualizeBO update(SurveyActualizeTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                SurveyActualize entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        SurveyActualize entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        if (null == entity.getPlan())
+            throw new SerException("调研计划不存在,无法保存");
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyActualizeBO delete(String id) throws SerException {
         SurveyActualize entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -86,5 +96,25 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         entity.setEndTime(LocalDateTime.now());
         super.update(entity);
         return this.transformBO(entity);
+    }
+
+    @Override
+    public List<SurveyActualizeBO> maps(SurveyActualizeDTO dto) throws SerException {
+        dto.getSorts().add("startTime=desc");
+        return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public SurveyActualizeBO getById(String id) throws SerException {
+        SurveyActualize entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SurveyActualizeDTO dto = new SurveyActualizeDTO();
+        return super.count(dto);
     }
 }

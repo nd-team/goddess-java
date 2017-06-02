@@ -9,6 +9,7 @@ import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.entity.DemandAnalysis;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +30,20 @@ import java.util.List;
 @Service
 public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAnalysisDTO> implements DemandAnalysisSer {
 
+    @Autowired
+    private MarPermissionSer marPermissionSer;
+
+    private static final String marketCheck = "market-check";
+
+    private static final String marketManage = "market-manage";
+
+    private static final String demandManage = "demand-manage";
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO save(DemandAnalysisTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+            throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, DemandAnalysisBO.class);
@@ -40,6 +52,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO update(DemandAnalysisTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 DemandAnalysis entity = super.findById(to.getId());
@@ -57,6 +71,8 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+            throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -87,5 +103,12 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
         dto.getConditions().add(Restrict.eq("type", type));
         List<DemandAnalysis> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, DemandAnalysisBO.class);
+    }
+
+    @Override
+    public List<DemandAnalysis> findByPage(DemandAnalysisDTO dto) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage) && !marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        return super.findByPage(dto);
     }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
+import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
 import com.bjike.goddess.attainment.service.AttainmentTypeSer;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -57,5 +58,20 @@ public class AttainmentTypeApiImpl implements AttainmentTypeAPI {
     @Override
     public List<AttainmentTypeBO> findRegular(Boolean regular) throws SerException {
         return attainmentTypeSer.findRegular(regular);
+    }
+
+    @Override
+    public List<AttainmentTypeBO> maps(AttainmentTypeDTO dto) throws SerException {
+        return attainmentTypeSer.maps(dto);
+    }
+
+    @Override
+    public AttainmentTypeBO getById(String id) throws SerException {
+        return attainmentTypeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return attainmentTypeSer.getTotal();
     }
 }

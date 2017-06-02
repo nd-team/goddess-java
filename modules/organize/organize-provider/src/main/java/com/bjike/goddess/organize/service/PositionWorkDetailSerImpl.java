@@ -43,7 +43,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         bo.setInstructionId(entity.getInstruction().getId());
         bo.setSerialNumber(entity.getInstruction().getSerialNumber());
         bo.setAngle(entity.getInstruction().getAngle().getName());
-        bo.setClassify(entity.getInstruction().getClassify().getName());
+        bo.setClassify(entity.getInstruction().getReflect().getClassify().getName());
         bo.setDimension(entity.getInstruction().getDimension().getName());
         bo.setFunction(entity.getInstruction().getFunction());
         bo.setFrequency(entity.getInstruction().getFrequency());
@@ -107,7 +107,7 @@ public class PositionWorkDetailSerImpl extends ServiceImpl<PositionWorkDetail, P
         try {
             super.remove(entity);
         } catch (Exception e) {
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         }
         return transformBO(entity);
     }

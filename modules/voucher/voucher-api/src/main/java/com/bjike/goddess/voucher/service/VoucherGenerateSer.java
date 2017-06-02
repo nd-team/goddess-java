@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -465,4 +466,15 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<VoucherGenerateBO> allSales() throws SerException{
         return null;
     }
+
+    /**
+     * xiazhili
+     * 在已过账记录里面根据二级或三级统计金额
+     * @return class PartBO
+     * @throws SerException
+     */
+    default List<PartBO> findByCondition(String condition ) throws SerException{
+        return null;
+    }
+
 }

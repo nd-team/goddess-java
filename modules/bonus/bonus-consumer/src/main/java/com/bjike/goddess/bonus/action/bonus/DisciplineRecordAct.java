@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.action.bonus;
 
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
+import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
 import com.bjike.goddess.bonus.vo.*;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 奖罚记录
@@ -238,6 +241,83 @@ public class DisciplineRecordAct {
     public Result findByFilter(CollectFilterTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.findByFilter(to), DisciplineRecordVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 奖励列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return class DisciplineRecordVO
+     * @version v1
+     */
+    @GetMapping("v1/reward/maps")
+    public Result rewardMaps(DisciplineRecordDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.rewardMaps(dto), DisciplineRecordVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 处罚列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return class DisciplineRecordVO
+     * @version v1
+     */
+    @GetMapping("v1/push/maps")
+    public Result pushMaps(DisciplineRecordDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.pushMaps(dto), DisciplineRecordVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取奖罚记录
+     *
+     * @param id 奖罚记录数据id
+     * @return class DisciplineRecordVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(disciplineRecordAPI.getById(id), DisciplineRecordVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取奖励总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/reward/total")
+    public Result getRewardTotal() throws ActException {
+        try {
+            return ActResult.initialize(disciplineRecordAPI.getRewardTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取处罚总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/push/total")
+    public Result getPushTotal() throws ActException {
+        try {
+            return ActResult.initialize(disciplineRecordAPI.getPushTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

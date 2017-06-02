@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -53,9 +54,12 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionUserBO save(SurveyQuestionnaireOptionUserTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         SurveyQuestionnaireOptionUser entity = new SurveyQuestionnaireOptionUser();
         SurveyQuestionnaireOption option = optionSer.findById(to.getOption_id());
-        entity.setUser(userAPI.currentUser().getUsername());
+        if (null == option)
+            throw new SerException("选项对象不存在,无法保存");
+        entity.setUser(user.getUsername());
         entity.setOption(option);
         entity.setTableName(entity.getOption().getQuestionnaire().getQuestionnaire());
         super.save(entity);
@@ -68,6 +72,8 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
     @Override
     public SurveyQuestionnaireOptionUserBO delete(String id) throws SerException {
         SurveyQuestionnaireOptionUser entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }

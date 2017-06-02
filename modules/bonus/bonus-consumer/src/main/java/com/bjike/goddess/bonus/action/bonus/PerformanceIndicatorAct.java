@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.action.bonus;
 
 import com.bjike.goddess.bonus.api.PerformanceIndicatorAPI;
+import com.bjike.goddess.bonus.dto.PerformanceIndicatorDTO;
 import com.bjike.goddess.bonus.to.PerformanceIndicatorTO;
 import com.bjike.goddess.bonus.vo.PerformanceIndicatorVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 绩效指标
@@ -119,9 +122,9 @@ public class PerformanceIndicatorAct {
      * @version v1
      */
     @GetMapping("v1/findByStatus")
-    public Result findByStatus(Boolean status) throws ActException {
+    public Result findByStatus(Boolean status, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.findByStatus(status), PerformanceIndicatorVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.findByStatus(status), PerformanceIndicatorVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -134,13 +137,58 @@ public class PerformanceIndicatorAct {
      * @version v1
      */
     @GetMapping("v1/findStart")
-    public Result findStart() throws ActException {
+    public Result findStart(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.findByStatus(Boolean.TRUE), PerformanceIndicatorVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.findByStatus(Boolean.TRUE), PerformanceIndicatorVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
 
+    /**
+     * 列表
+     *
+     * @param dto 绩效指标数据传输对象
+     * @return class PerformanceIndicatorVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(PerformanceIndicatorDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.maps(dto), PerformanceIndicatorVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据\id获取绩效指标数据
+     *
+     * @param id 绩效指标数据id
+     * @return class PerformanceIndicatorVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.getById(id), PerformanceIndicatorVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(performanceIndicatorAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

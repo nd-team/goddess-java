@@ -44,4 +44,14 @@ public class CommerceMemberApiImpl implements CommerceMemberAPI {
     public List<CommerceMemberBO> maps(CommerceMemberDTO dto) throws SerException {
         return commerceMemberSer.maps(dto);
     }
+
+    @Override
+    public CommerceMemberBO getById(String id) throws SerException {
+        return commerceMemberSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return commerceMemberSer.getTotal();
+    }
 }

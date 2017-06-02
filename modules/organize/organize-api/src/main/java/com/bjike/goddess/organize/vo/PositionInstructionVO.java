@@ -21,7 +21,7 @@ public class PositionInstructionVO {
     private String serialNumber;
 
     /**
-     * 岗位详细id
+     * 岗位id
      */
     private String positionId;
 
@@ -91,11 +91,6 @@ public class PositionInstructionVO {
     private String dimensionName;
 
     /**
-     * 岗位说明书分类ID
-     */
-    private String classifyId;
-
-    /**
      * 分类
      */
     private String classifyName;
@@ -114,7 +109,7 @@ public class PositionInstructionVO {
     /**
      * 体现类别
      */
-    private String[] reflectIds;
+    private String reflectId;
 
     /**
      * 体现类别
@@ -178,14 +173,6 @@ public class PositionInstructionVO {
 
     public void setDimensionId(String dimensionId) {
         this.dimensionId = dimensionId;
-    }
-
-    public String getClassifyId() {
-        return classifyId;
-    }
-
-    public void setClassifyId(String classifyId) {
-        this.classifyId = classifyId;
     }
 
     public String getSerialNumber() {
@@ -316,12 +303,12 @@ public class PositionInstructionVO {
         this.operateNames = operateNames;
     }
 
-    public String[] getReflectIds() {
-        return reflectIds;
+    public String getReflectId() {
+        return reflectId;
     }
 
-    public void setReflectIds(String[] reflectIds) {
-        this.reflectIds = reflectIds;
+    public void setReflectId(String reflectId) {
+        this.reflectId = reflectId;
     }
 
     public String getReflectNames() {

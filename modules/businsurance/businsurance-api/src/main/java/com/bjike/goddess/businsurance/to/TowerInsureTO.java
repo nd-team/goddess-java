@@ -3,6 +3,8 @@ package com.bjike.goddess.businsurance.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 塔工意外险信息管理
  *
@@ -19,73 +21,73 @@ public class TowerInsureTO extends BaseTO {
     /**
      * 合同号
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "合同号不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "合同号不能为空")
     private String contractNum;
 
     /**
      * 投保单号
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "投保单号不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "投保单号不能为空")
     private String insureNumber;
 
     /**
      * 投保人
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "投保人不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "投保人不能为空")
     private String insurer;
 
     /**
      * 投保人客户号
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "投保人客户号不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "投保人客户号不能为空")
     private String insureCusNum;
 
     /**
      * 被投保人
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "被投保人不能为空")
-    private Double insureByPerson;
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "被投保人不能为空")
+    private String insureByPerson;
 
     /**
      * 被投保人客户号
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "被投保人客户号不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "被投保人客户号不能为空")
     private String insureByCusNum;
 
     /**
      * 合同生效日期
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "合同生效日期不能为空，日期格式年月日")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "合同生效日期不能为空，日期格式年月日")
     private String effectDate;
 
     /**
      * 合同期满日期
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "合同期满日期不能为空,日期格式年月日")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "合同期满日期不能为空,日期格式年月日")
     private String expireDate;
 
     /**
      * 保险期间
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "保险期间不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "保险期间不能为空")
     private String insurePeriod;
 
     /**
      * 保险费合计
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "保险费合计不能为空")
+    @NotNull(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "保险费合计不能为空")
     private Double insureTotalFee;
 
     /**
      * 币种
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "币种不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "币种不能为空")
     private String billType;
 
     /**
      * 缴费方式
      */
-    @NotBlank(groups = TowerInsureTO.TestAddAndEdit.class , message = "缴费方式不能为空")
+    @NotBlank(groups = {TowerInsureTO.TestAddAndEdit.class} , message = "缴费方式不能为空")
     private String payWay;
 
     /**
@@ -371,11 +373,11 @@ public class TowerInsureTO extends BaseTO {
         this.insureCusNum = insureCusNum;
     }
 
-    public Double getInsureByPerson() {
+    public String getInsureByPerson() {
         return insureByPerson;
     }
 
-    public void setInsureByPerson(Double insureByPerson) {
+    public void setInsureByPerson(String insureByPerson) {
         this.insureByPerson = insureByPerson;
     }
 

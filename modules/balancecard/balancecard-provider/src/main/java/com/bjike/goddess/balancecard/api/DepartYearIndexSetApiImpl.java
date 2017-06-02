@@ -66,4 +66,19 @@ public class DepartYearIndexSetApiImpl implements DepartYearIndexSetAPI {
     public byte[] departYearReport(ExportExcelDepartTO to) throws SerException {
         return departYearIndexSetSer.departYearReport(to);
     }
+
+    @Override
+    public List<String> listArea() throws SerException {
+        return departYearIndexSetSer.listArea();
+    }
+
+    @Override
+    public List<String> listDepart() throws SerException {
+        return departYearIndexSetSer.listDepart();
+    }
+
+    @Override
+    public List<String> listEmp() throws SerException {
+        return departYearIndexSetSer.listEmp();
+    }
 }

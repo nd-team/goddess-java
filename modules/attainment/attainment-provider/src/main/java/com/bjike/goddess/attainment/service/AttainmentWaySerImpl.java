@@ -62,6 +62,8 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
     @Override
     public AttainmentWayBO delete(String id) throws SerException {
         AttainmentWay entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
     }
@@ -70,6 +72,8 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
     @Override
     public AttainmentWayBO congeal(String id) throws SerException {
         AttainmentWay entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.CONGEAL);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -80,6 +84,8 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
     @Override
     public AttainmentWayBO thaw(String id) throws SerException {
         AttainmentWay entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.THAW);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -92,5 +98,25 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<AttainmentWay> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AttainmentWayBO.class);
+    }
+
+    @Override
+    public List<AttainmentWayBO> maps(AttainmentWayDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        return BeanTransform.copyProperties(super.findByPage(dto), AttainmentWayBO.class);
+    }
+
+    @Override
+    public AttainmentWayBO getById(String id) throws SerException {
+        AttainmentWay entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AttainmentWayDTO dto = new AttainmentWayDTO();
+        return super.count(dto);
     }
 }

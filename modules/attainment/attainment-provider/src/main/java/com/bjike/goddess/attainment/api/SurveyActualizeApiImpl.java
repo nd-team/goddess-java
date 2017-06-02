@@ -1,11 +1,14 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyActualizeBO;
+import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.service.SurveyActualizeSer;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 调研实施记录业务接口实现
@@ -40,5 +43,20 @@ public class SurveyActualizeApiImpl implements SurveyActualizeAPI {
     @Override
     public SurveyActualizeBO over(String id) throws SerException {
         return surveyActualizeSer.over(id);
+    }
+
+    @Override
+    public List<SurveyActualizeBO> maps(SurveyActualizeDTO dto) throws SerException {
+        return surveyActualizeSer.maps(dto);
+    }
+
+    @Override
+    public SurveyActualizeBO getById(String id) throws SerException {
+        return surveyActualizeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return surveyActualizeSer.getTotal();
     }
 }

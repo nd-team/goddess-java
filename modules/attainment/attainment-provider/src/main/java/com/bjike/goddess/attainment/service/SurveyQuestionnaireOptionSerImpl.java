@@ -8,7 +8,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -54,31 +53,32 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
         SurveyQuestionnaireOption entity = BeanTransform.copyProperties(to, SurveyQuestionnaireOption.class);
         entity.setBallot(0);
         entity.setQuestionnaire(surveyQuestionnaireSer.findById(to.getId()));
+        if (null == entity.getQuestionnaire())
+            throw new SerException("问题对象不存在,无法保存");
         return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionBO update(SurveyQuestionnaireOptionTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                SurveyQuestionnaireOption entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                entity.setQuestionnaire(surveyQuestionnaireSer.findById(to.getQuestionnaire_id()));
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        SurveyQuestionnaireOption entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        entity.setQuestionnaire(surveyQuestionnaireSer.findById(to.getQuestionnaire_id()));
+        if (null == entity.getQuestionnaire())
+            throw new SerException("问题对象不存在,无法保存");
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireOptionBO delete(String id) throws SerException {
         SurveyQuestionnaireOption entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }

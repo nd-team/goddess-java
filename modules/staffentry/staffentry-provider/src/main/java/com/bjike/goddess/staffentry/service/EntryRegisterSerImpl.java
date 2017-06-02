@@ -87,7 +87,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         checkDepartIdentity("2");
-
+        entryRegisterDTO.getSorts().add("createTime=desc");
         List<EntryRegister> entryRegisters = super.findByPage( entryRegisterDTO );
         return entryRegisters;
     }
@@ -351,9 +351,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             for (int i = 0; i < countName; i++) {
                 Credential temp = new Credential();
                 temp.setName(credentialTO.getNameses().get(i));
-                String ss = credentialTO.getObtainTimes().get(i);
 
-                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:StringUtils.isBlank(credentialTO.getObtainTimes().get(i))?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater));
+                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:(StringUtils.isBlank(credentialTO.getObtainTimes().get(i))?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater)));
                 temp.setEntryRegister(entryRegister);
 
                 credentialTOS.add(temp);

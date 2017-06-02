@@ -38,8 +38,10 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OtherContactsBO update(OtherContactsTO to) throws SerException {
-        OtherContacts entity = BeanTransform.copyProperties(to, OtherContacts.class, true), contacts = super.findById(to.getId());
-        entity.setCreateTime(contacts.getCreateTime());
+        OtherContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
@@ -49,6 +51,8 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Override
     public OtherContactsBO delete(OtherContactsTO to) throws SerException {
         OtherContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, OtherContactsBO.class, true);
     }
@@ -57,5 +61,19 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     public List<OtherContactsBO> maps(OtherContactsDTO dto) throws SerException {
         List<OtherContacts> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, OtherContactsBO.class, true);
+    }
+
+    @Override
+    public OtherContactsBO getById(String id) throws SerException {
+        OtherContacts entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, OtherContactsBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        OtherContactsDTO dto = new OtherContactsDTO();
+        return super.count(dto);
     }
 }
