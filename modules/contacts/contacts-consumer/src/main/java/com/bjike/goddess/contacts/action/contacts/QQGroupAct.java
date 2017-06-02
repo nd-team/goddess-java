@@ -112,4 +112,35 @@ public class QQGroupAct {
         }
     }
 
+
+    /**
+     * 根据id获取QQ群管理数据
+     *
+     * @param id QQ群管理数据id
+     * @return class QQGroupVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(qqGroupAPI.getById(id), QQGroupVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(qqGroupAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

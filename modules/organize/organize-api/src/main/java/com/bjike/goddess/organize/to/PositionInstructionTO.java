@@ -102,7 +102,7 @@ public class PositionInstructionTO extends BaseTO {
     /**
      * 体现类别id
      */
-    private String[] reflectIds;
+    private String reflectId;
 
     /**
      * 工作描述
@@ -242,20 +242,20 @@ public class PositionInstructionTO extends BaseTO {
         this.children = children;
     }
 
+    public String getReflectId() {
+        return reflectId;
+    }
+
+    public void setReflectId(String reflectId) {
+        this.reflectId = reflectId;
+    }
+
     public String[] getOperateIds() {
         return operateIds;
     }
 
     public void setOperateIds(String[] operateIds) {
         this.operateIds = operateIds;
-    }
-
-    public String[] getReflectIds() {
-        return reflectIds;
-    }
-
-    public void setReflectIds(String[] reflectIds) {
-        this.reflectIds = reflectIds;
     }
 
     public String getDescription() {

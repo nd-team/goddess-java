@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
+import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
 import com.bjike.goddess.attainment.to.SurveyAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -61,4 +62,35 @@ public interface SurveyAnalyseAPI {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研分析数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyAnalyseBO> maps(SurveyAnalyseDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取调研分析数据
+     *
+     * @param id 调研分析数据id
+     * @return
+     * @throws SerException
+     */
+    default SurveyAnalyseBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

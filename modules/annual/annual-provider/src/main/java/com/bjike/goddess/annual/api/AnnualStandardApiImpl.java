@@ -1,6 +1,7 @@
 package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualStandardBO;
+import com.bjike.goddess.annual.dto.AnnualStandardDTO;
 import com.bjike.goddess.annual.service.AnnualStandardSer;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -57,5 +58,20 @@ public class AnnualStandardApiImpl implements AnnualStandardAPI {
     @Override
     public AnnualStandardBO findBySeniority(Integer seniority) throws SerException {
         return annualStandardSer.findBySeniority(seniority);
+    }
+
+    @Override
+    public List<AnnualStandardBO> maps(AnnualStandardDTO dto) throws SerException {
+        return annualStandardSer.maps(dto);
+    }
+
+    @Override
+    public AnnualStandardBO getById(String id) throws SerException {
+        return annualStandardSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return annualStandardSer.getTotal();
     }
 }

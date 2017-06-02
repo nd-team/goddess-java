@@ -7,6 +7,8 @@ import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 
+import java.util.List;
+
 /**
  * 商务通讯录业务接口
  *
@@ -47,5 +49,37 @@ public interface CommerceContactsSer extends Ser<CommerceContacts, CommerceConta
      * @throws SerException
      */
     void delete(CommerceContactsTO to) throws SerException;
+
+    /**
+     * 列表
+     *
+     * @param dto 商务通讯录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取商务通讯录数据
+     *
+     * @param id 商务通讯录数据id
+     * @return
+     * @throws SerException
+     */
+    default CommerceContactsBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 
 }

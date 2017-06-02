@@ -22,5 +22,6 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualInfoAPI" id="annualInfoApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.annual.api.AnnualStandardAPI"
                      id="annualStandardApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

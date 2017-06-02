@@ -52,4 +52,5 @@ public interface SurveyQuestionnaireOptionUserSer extends Ser<SurveyQuestionnair
     default List<SurveyQuestionnaireOptionUserBO> findByOption(String option_id) throws SerException {
         return null;
     }
+
 }

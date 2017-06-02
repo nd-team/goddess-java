@@ -154,7 +154,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         try {
             super.remove(entity);
         } catch (SerException e) {
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         }
         return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }

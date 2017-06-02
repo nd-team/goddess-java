@@ -48,15 +48,16 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         List<UserBO> userBOs = userAPI.findByCis(userDTO);
-        if (userBOs.size() > 0) {
+        if (null != userBOs && userBOs.size() > 0) {
             bo.setUsername(userBOs.get(0).getUsername());
             bo.setEmployeesNumber(userBOs.get(0).getEmployeeNumber());
         }
         StringBuilder positionId = new StringBuilder(0), positionName = new StringBuilder(0);
-        for (PositionDetail positionDetail : entity.getPositionSet()) {
-            positionId.append(positionDetail.getId()).append(",");
-            positionName.append(positionDetail.getPosition()).append(",");
-        }
+        if (null != entity.getPositionSet())
+            for (PositionDetail positionDetail : entity.getPositionSet()) {
+                positionId.append(positionDetail.getId()).append(",");
+                positionName.append(positionDetail.getPosition()).append(",");
+            }
         bo.setPosition(positionName.toString());
         bo.setPositionIds(positionId.toString());
         return bo;
@@ -128,6 +129,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public PositionDetailUserBO delete(String id) throws SerException {
         PositionDetailUser entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -162,7 +165,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (null != entity && null != entity.getPositionSet() && null != positionIds)
             for (PositionDetail detail : entity.getPositionSet())
                 for (String id : positionIds)
-                    if (detail.getPosition().equals(id))
+                    if (detail.getId().equals(id))
                         return true;
         return false;
     }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.DemandTypeAPI;
+import com.bjike.goddess.attainment.dto.DemandTypeDTO;
 import com.bjike.goddess.attainment.to.DemandTypeTO;
 import com.bjike.goddess.attainment.vo.DemandTypeVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -13,6 +14,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 调研需求类型
@@ -117,12 +120,57 @@ public class DemandTypeAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw( HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.findThaw(), DemandTypeVO.class,request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研需求类型数据传输对象
+     * @return class DemandTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(DemandTypeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.maps(dto), DemandTypeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取调研需求类型数据
+     *
+     * @param id 调研需求类型数据id
+     * @return class DemandTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.getById(id), DemandTypeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(demandTypeAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

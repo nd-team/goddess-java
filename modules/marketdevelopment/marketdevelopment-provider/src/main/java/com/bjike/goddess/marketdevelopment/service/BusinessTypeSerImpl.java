@@ -10,6 +10,7 @@ import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessType;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +31,18 @@ import java.util.List;
 @Service
 public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeDTO> implements BusinessTypeSer {
 
+    @Autowired
+    private MarPermissionSer marPermissionSer;
+
+    private static final String marketCheck = "market-check";
+
+    private static final String marketManage = "market-manage";
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO save(BusinessTypeTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         BusinessType entity = BeanTransform.copyProperties(to, BusinessType.class);
         entity.setStatus(Status.THAW);
         super.save(entity);
@@ -43,6 +52,8 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO update(BusinessTypeTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 BusinessType entity = super.findById(to.getId());
@@ -60,6 +71,8 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO congeal(BusinessTypeTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         BusinessType entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -71,6 +84,8 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO thaw(BusinessTypeTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         BusinessType entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -82,6 +97,8 @@ public class BusinessTypeSerImpl extends ServiceImpl<BusinessType, BusinessTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessTypeBO delete(BusinessTypeTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         BusinessType entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");

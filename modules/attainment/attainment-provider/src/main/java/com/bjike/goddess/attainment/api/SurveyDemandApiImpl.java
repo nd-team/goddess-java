@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyDemandBO;
+import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.service.SurveyDemandSer;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
@@ -49,5 +50,20 @@ public class SurveyDemandApiImpl implements SurveyDemandAPI {
     @Override
     public List<SurveyDemandBO> findByStatus(SurveyStatus status) throws SerException {
         return surveyDemandSer.findByStatus(status);
+    }
+
+    @Override
+    public List<SurveyDemandBO> maps(SurveyDemandDTO dto) throws SerException {
+        return surveyDemandSer.maps(dto);
+    }
+
+    @Override
+    public SurveyDemandBO getById(String id) throws SerException {
+        return surveyDemandSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return surveyDemandSer.getTotal();
     }
 }

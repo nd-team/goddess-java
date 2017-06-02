@@ -20,10 +20,13 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -63,6 +66,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     private AnnualArrangementStandardSer annualArrangementStandardSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     private static final String header = "%d年1月1日至%d年12月30日一年内您的病假天数已超过规定天数，根据公司制度您今年将不享受带薪年假。标准：";
     private static final String standard = "职员工龄%d-%d年，请病假累计%d个月以上的,";
@@ -72,6 +77,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Override
     public List<AnnualInfoBO> findByUsername(String username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
+        if (StringUtils.isBlank(username))
+            return new ArrayList<>(0);
         dto.getConditions().add(Restrict.eq("username", username));
         List<AnnualInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AnnualInfoBO.class);
@@ -80,6 +87,8 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
     @Override
     public List<AnnualInfoBO> findByUsers(String... username) throws SerException {
         AnnualInfoDTO dto = new AnnualInfoDTO();
+        if (null == username)
+            return new ArrayList<>(0);
         dto.getConditions().add(Restrict.in("username", username));
         List<AnnualInfo> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AnnualInfoBO.class);
@@ -154,8 +163,18 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
             AnnualInfo entity = new AnnualInfo();
             entity.setYear(now.getYear());
             entity.setUsername(userBO.getUsername());
-            entity.setEntryTime(LocalDate.parse("2016-01-01"));//@TODO 假数据 等员工信息入职时间
-
+            List<EntryBasicInfoVO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
+            if (null != entryBasicInfo && entryBasicInfo.size() > 0) {//没有成功获取入职日期则发送邮件及结束此次循环
+                try {
+                    entity.setEntryTime(LocalDate.parse(entryBasicInfo.get(0).getEntryTime()));
+                } catch (Exception e) {
+                    receivers.add(userBO.getId());
+                    continue;
+                }
+            } else {
+                receivers.add(userBO.getId());
+                continue;
+            }
             for (String id : detailBO.getPositionIds().split(",")) {
                 PositionDetailBO positionDetail = positionDetailAPI.findBOById(id);
                 entity.setSeniority(this.countSeniority(entity, now, positionDetail.getArrangementId()));
@@ -182,5 +201,25 @@ public class AnnualInfoSerImpl extends ServiceImpl<AnnualInfo, AnnualInfoDTO> im
             super.save(saveList);
         if (updateList.size() != 0)
             super.update(updateList);
+    }
+
+    @Override
+    public List<AnnualInfoBO> maps(AnnualInfoDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
+        return BeanTransform.copyProperties(super.findByPage(dto), AnnualInfoBO.class);
+    }
+
+    @Override
+    public AnnualInfoBO getById(String id) throws SerException {
+        AnnualInfo entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, AnnualInfoBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AnnualInfoDTO dto = new AnnualInfoDTO();
+        return super.count(dto);
     }
 }

@@ -10,7 +10,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,24 +42,21 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO update(DemandTypeTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                DemandType entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
-            } catch (Exception e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        DemandType entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandTypeBO delete(String id) throws SerException {
         DemandType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }
@@ -69,6 +65,8 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
     @Override
     public DemandTypeBO congeal(String id) throws SerException {
         DemandType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.CONGEAL);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -79,6 +77,8 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
     @Override
     public DemandTypeBO thaw(String id) throws SerException {
         DemandType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.THAW);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -91,5 +91,25 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
         List<DemandType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, DemandTypeBO.class);
+    }
+
+    @Override
+    public List<DemandTypeBO> maps(DemandTypeDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        return BeanTransform.copyProperties(super.findByPage(dto), DemandTypeBO.class);
+    }
+
+    @Override
+    public DemandTypeBO getById(String id) throws SerException {
+        DemandType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, DemandTypeBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        DemandTypeDTO dto = new DemandTypeDTO();
+        return super.count(dto);
     }
 }
