@@ -13,14 +13,12 @@ import com.bjike.goddess.regularization.bo.PerformanceScoreBO;
 import com.bjike.goddess.regularization.dto.PerformanceScoreDTO;
 import com.bjike.goddess.regularization.to.PerformanceScoreTO;
 import com.bjike.goddess.regularization.vo.PerformanceScoreVO;
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**

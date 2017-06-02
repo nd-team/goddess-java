@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
@@ -11,7 +12,9 @@ import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
+import com.bjike.goddess.regularization.to.ZjbApprovalTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -96,7 +98,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     /**
      * 更新员工转正
      *
-     * @param to 员工转正to
+     * @param to    员工转正to
      * @param model 员工转正
      * @throws SerException
      */
@@ -202,10 +204,10 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     /**
      * 决策层评价
      *
-     * @param id 员工转正唯一标识
+     * @param id                    员工转正唯一标识
      * @param decisionLevelEvaluate 决策层评价
-     * @param decisionLevelRank 决策层评分等级
-     * @param decisionLevelScore 决策层具体评分
+     * @param decisionLevelRank     决策层评分等级
+     * @param decisionLevelScore    决策层具体评分
      * @throws SerException
      */
     @Override
@@ -215,6 +217,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         model.setDecisionLevelEvaluate(decisionLevelEvaluate);
         model.setDecisionLevelRank(decisionLevelRank);
         model.setDecisionLevelScore(decisionLevelScore);
+        model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
 
@@ -226,37 +229,46 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
      */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void planModuleSupply(RegularizationTO to) throws SerException {
-        String curUsername = getCurUsername();
-        to.setPlanModule(curUsername);//设置规划莫模块负责人
-        update(to);
+    public void planModuleSupply(PlanModuleSupplyTO to) throws SerException {
+        Regularization model = super.findById(to.getId());
+        model.setAfterPost(to.getAfterPost());//转正后岗位
+        model.setAfterSkillRank(to.getAfterSkillRank());//转正技能定级
+        model.setPlanPositiveComment(to.getPlanPositiveComment());//规划模块转正意见
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
      * 预算模块补充
      *
-     * @param to 员工转正to
+     * @param id                    员工转正唯一标识
+     * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void budgetModuleSupply(RegularizationTO to) throws SerException {
-        String curUsername = getCurUsername();
-        to.setBudgetModule(curUsername);//设置预算模块负责人
-        update(to);
+    public void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException {
+        Regularization model = super.findById(id);
+        model.setBudgetPositiveComment(budgetPositiveComment);//预算模块转正意见
+        model.setModifyTime(LocalDateTime.now());
+        super.update(model);
     }
 
     /**
      * 总经办审批
      *
-     * @param to 员工转正to
+     * @param to 总经办审批to
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void zjbApproval(RegularizationTO to) throws SerException {
-        String curUsername = getCurUsername();
-        to.setGmOffice(curUsername);
-        update(to);
+    public void zjbApproval(ZjbApprovalTO to) throws SerException {
+        Regularization model = super.findById(to.getId());
+        model.setModifyTime(LocalDateTime.now());
+        model.setPositiveType(to.getPositiveType());//转正类型
+        model.setZjbAppraise(to.getZjbAppraise());//总经办评价
+        model.setPositiveDate(DateUtil.parseDate(to.getPositiveDate()));
+        super.update(model);
     }
+
 }
