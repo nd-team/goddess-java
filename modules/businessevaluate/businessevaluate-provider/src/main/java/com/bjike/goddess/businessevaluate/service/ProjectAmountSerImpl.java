@@ -38,10 +38,15 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
     @Autowired
     private ProjectCostSer projectCostSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountInfoBO findInfoById(String id) throws SerException {
+
+        getCusPermission();
+
         ProjectAmountInfoBO bo = new ProjectAmountInfoBO();
         EvaluateProjectInfo info = evaluateProjectInfoSer.findById(id);
         if(info==null){
@@ -70,6 +75,9 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountBO insertModel(ProjectAmountTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectAmount model = BeanTransform.copyProperties(to, ProjectAmount.class);
         super.save(model);
         to.setId(model.getId());
@@ -79,6 +87,9 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectAmountBO updateModel(ProjectAmountTO to) throws SerException {
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectAmount model = super.findById(to.getId());
             if (model != null) {
@@ -97,6 +108,9 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectAmountBO> pageList(ProjectAmountDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<ProjectAmount> list = super.findByPage(dto);
         List<ProjectAmountBO> boList = BeanTransform.copyProperties(list, ProjectAmountBO.class);
@@ -119,6 +133,15 @@ public class ProjectAmountSerImpl extends ServiceImpl<ProjectAmount, ProjectAmou
             }
         }
         return boList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 
 }
