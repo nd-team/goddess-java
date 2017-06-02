@@ -61,7 +61,7 @@ public class EmployeeFunctionLevelSerImpl extends ServiceImpl<EmployeeFunctionLe
         EmployeeFunctionLevel employeeFunctionLevel = BeanTransform.copyProperties(employeeFunctionLevelTO, EmployeeFunctionLevel.class, true);
         employeeFunctionLevel.setCreateTime(LocalDateTime.now());
 
-        String sql = "select is_subject from managepromotion_employeefunctionlevel where name='a' and is_subject=0 ";
+        String sql = "select is_subject from managepromotion_employeefunctionlevel where name='' and is_subject=0 ";
         String[] fields = new String[]{"subject"};
         List<EmployeeFunctionLevelBO> levelBOS = super.findBySql(sql, EmployeeFunctionLevelBO.class, fields);
 

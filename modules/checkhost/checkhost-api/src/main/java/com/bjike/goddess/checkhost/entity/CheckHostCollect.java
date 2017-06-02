@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -64,14 +65,14 @@ public class CheckHostCollect extends BaseEntity {
     /**
      * 入住时间
      */
-    @Column(name = "stayTime", nullable = false, columnDefinition = "DATETIME   COMMENT '入住时间'")
-    private LocalDateTime stayTime;
+    @Column(name = "stayTime", nullable = false, columnDefinition = "DATE   COMMENT '入住时间'")
+    private LocalDate stayTime;
 
     /**
      * 离宿时间
      */
-    @Column(name = "hostTime", nullable = false, columnDefinition = "DATETIME   COMMENT '离宿时间'")
-    private LocalDateTime hostTime;
+    @Column(name = "hostTime", nullable = false, columnDefinition = "DATE  COMMENT '离宿时间'")
+    private LocalDate hostTime;
 
     /**
      * 领用/归还钥匙
@@ -142,19 +143,19 @@ public class CheckHostCollect extends BaseEntity {
         this.stayBed = stayBed;
     }
 
-    public LocalDateTime getStayTime() {
+    public LocalDate getStayTime() {
         return stayTime;
     }
 
-    public void setStayTime(LocalDateTime stayTime) {
+    public void setStayTime(LocalDate stayTime) {
         this.stayTime = stayTime;
     }
 
-    public LocalDateTime getHostTime() {
+    public LocalDate getHostTime() {
         return hostTime;
     }
 
-    public void setHostTime(LocalDateTime hostTime) {
+    public void setHostTime(LocalDate hostTime) {
         this.hostTime = hostTime;
     }
 
