@@ -2,8 +2,6 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 员工转正业务传输对象
  *
@@ -174,7 +172,6 @@ public class RegularizationBO extends BaseBO {
      * 转正面谈信息
      */
     private String posFacialInfor;
-
 
     public String getName() {
         return name;

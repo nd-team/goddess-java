@@ -2,8 +2,6 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 工作表现计分方式设置业务传输对象
  *
@@ -34,7 +32,6 @@ public class ScoreFormulaSetBO extends BaseBO {
      * 分数范围
      */
     private String scoreRange;
-
 
     public String getRank() {
         return rank;

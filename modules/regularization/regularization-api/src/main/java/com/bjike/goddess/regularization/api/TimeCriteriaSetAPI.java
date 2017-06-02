@@ -28,6 +28,14 @@ public interface TimeCriteriaSetAPI {
     TimeCriteriaSetBO findById(String id) throws SerException;
 
     /**
+     * 计算总条数
+     *
+     * @param dto 时间条件设置dto
+     * @throws SerException
+     */
+    Long count(TimeCriteriaSetDTO dto) throws SerException;
+
+    /**
      * 分页查询时间条件设置
      *
      * @return class TimeCriteriaSetBO

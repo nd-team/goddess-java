@@ -7,6 +7,7 @@ import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.service.RegularizationSer;
+import com.bjike.goddess.regularization.to.ManagementScoreTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class RegularizationApiImpl implements RegularizationAPI {
     /**
      * 根据id查询员工转正
      *
-     * @param id 员工转正id
+     * @param id 员工转正唯一标识
      * @return class RegularizationBO
      * @throws SerException
      */
@@ -39,6 +40,17 @@ public class RegularizationApiImpl implements RegularizationAPI {
     public RegularizationBO findById(String id) throws SerException {
         Regularization model = regularizationSer.findById(id);
         return BeanTransform.copyProperties(model, RegularizationBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 员工转正dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(RegularizationDTO dto) throws SerException {
+        return regularizationSer.count(dto);
     }
 
     /**
@@ -89,35 +101,39 @@ public class RegularizationApiImpl implements RegularizationAPI {
     /**
      * 管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param to 管理层评分to
      * @throws SerException
      */
     @Override
-    public void manageScore(RegularizationTO to) throws SerException {
-        regularizationSer.manageScore(to);
+    public void manageScore(String id, ManagementScoreTO to) throws SerException {
+        regularizationSer.manageScore(id, to);
     }
 
     /**
      * 查看管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
      * @return class ManagementScoreBO
      * @throws SerException
      */
     @Override
-    public List<ManagementScoreBO> checkManageScore(RegularizationTO to) throws SerException {
-        return regularizationSer.checkManageScore(to);
+    public List<ManagementScoreBO> checkManageScore(String id) throws SerException {
+        return regularizationSer.checkManageScore(id);
     }
 
     /**
      * 决策层评价
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param decisionLevelEvaluate 决策层评价
+     * @param decisionLevelRank 决策层评分等级
+     * @param decisionLevelScore 决策层具体评分
      * @throws SerException
      */
     @Override
-    public void decisionLevelEvaluate(RegularizationTO to) throws SerException {
-        regularizationSer.decisionLevelEvaluate(to);
+    public void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException {
+        regularizationSer.decisionLevelEvaluate(id, decisionLevelEvaluate, decisionLevelRank, decisionLevelScore);
     }
 
     /**

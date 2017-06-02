@@ -40,7 +40,6 @@ public class ManagementScoreVO {
      */
     private String regularizationId;
 
-
     public String getId() {
         return id;
     }

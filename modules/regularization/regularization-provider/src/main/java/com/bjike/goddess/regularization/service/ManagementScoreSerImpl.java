@@ -10,6 +10,7 @@ import com.bjike.goddess.regularization.to.ManagementScoreTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +49,7 @@ public class ManagementScoreSerImpl extends ServiceImpl<ManagementScore, Managem
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public ManagementScoreBO save(ManagementScoreTO to) throws SerException {
         ManagementScore entity = BeanTransform.copyProperties(to, ManagementScore.class, true);
         entity = super.save(entity);
@@ -62,6 +64,7 @@ public class ManagementScoreSerImpl extends ServiceImpl<ManagementScore, Managem
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void update(ManagementScoreTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             ManagementScore model = super.findById(to.getId());
@@ -95,6 +98,7 @@ public class ManagementScoreSerImpl extends ServiceImpl<ManagementScore, Managem
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }

@@ -25,7 +25,6 @@ public class TimeCriteriaSetVO {
      */
     private String parameterValue;
 
-
     public String getId() {
         return id;
     }

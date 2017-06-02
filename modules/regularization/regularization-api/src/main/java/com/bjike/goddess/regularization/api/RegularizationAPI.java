@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
+import com.bjike.goddess.regularization.to.ManagementScoreTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
 
 import java.util.List;
@@ -22,11 +23,19 @@ public interface RegularizationAPI {
     /**
      * 根据id查询员工转正
      *
-     * @param id 员工转正id
+     * @param id 员工转正唯一标识
      * @return class RegularizationBO
      * @throws SerException
      */
     RegularizationBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 员工转正dto
+     * @throws SerException
+     */
+    Long count(RegularizationDTO dto) throws SerException;
 
     /**
      * 分页查询员工转正
@@ -61,31 +70,34 @@ public interface RegularizationAPI {
      */
     void update(RegularizationTO to) throws SerException;
 
-
     /**
      * 管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param to 管理层评分to
      * @throws SerException
      */
-    void manageScore(RegularizationTO to) throws SerException;
+    void manageScore(String id, ManagementScoreTO to) throws SerException;
 
     /**
      * 查看管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
      * @return class ManagementScoreBO
      * @throws SerException
      */
-    List<ManagementScoreBO> checkManageScore(RegularizationTO to) throws SerException;
+    List<ManagementScoreBO> checkManageScore(String id) throws SerException;
 
     /**
      * 决策层评价
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param decisionLevelEvaluate 决策层评价
+     * @param decisionLevelRank 决策层评分等级
+     * @param decisionLevelScore 决策层具体评分
      * @throws SerException
      */
-    void decisionLevelEvaluate(RegularizationTO to) throws SerException;
+    void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException;
 
     /**
      * 规划模块补充

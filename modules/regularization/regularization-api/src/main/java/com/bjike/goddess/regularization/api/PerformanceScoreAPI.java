@@ -21,11 +21,19 @@ public interface PerformanceScoreAPI {
     /**
      * 根据id查询工作表现评分
      *
-     * @param id 工作表现评分
+     * @param id 工作表现评分唯一标识
      * @return class PerformanceScoreBO
      * @throws SerException
      */
     PerformanceScoreBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 工作表现评分dto
+     * @throws SerException
+     */
+    Long count(PerformanceScoreDTO dto) throws SerException;
 
     /**
      * 分页查询工作表现评分
