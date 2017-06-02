@@ -324,6 +324,16 @@ public class TowerInsureBO extends BaseBO {
      */
     private String insureRecordId;
 
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
     public String getContractNum() {
         return contractNum;
     }
@@ -818,5 +828,21 @@ public class TowerInsureBO extends BaseBO {
 
     public void setInsureRecordId(String insureRecordId) {
         this.insureRecordId = insureRecordId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

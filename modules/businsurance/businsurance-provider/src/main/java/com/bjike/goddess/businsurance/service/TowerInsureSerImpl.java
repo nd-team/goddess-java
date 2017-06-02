@@ -69,7 +69,9 @@ public class TowerInsureSerImpl extends ServiceImpl<TowerInsure, TowerInsureDTO>
         towerInsureDTO.getSorts().add("createTime=desc");
         List<TowerInsure> list = super.findByCis(towerInsureDTO, true);
 
-        return BeanTransform.copyProperties(list, TowerInsureBO.class);
+        List<TowerInsureBO> bolist = BeanTransform.copyProperties(list, TowerInsureBO.class);
+
+        return bolist;
     }
 
     @Transactional(rollbackFor = SerException.class)

@@ -94,6 +94,31 @@ public interface DepartYearIndexSetAPI {
         return null;
     };
 
+    /**
+     * 获取所有地区
+     *
+     * @throws SerException
+     */
+    default List<String> listArea(   ) throws SerException{
+        return null;
+    };
+    /**
+     * 获取所有项目组部门
+     *
+     * @throws SerException
+     */
+    default List<String> listDepart(   ) throws SerException{
+        return null;
+    };
+    /**
+     * 获取所有员工
+     *
+     * @throws SerException
+     */
+    default List<String> listEmp(   ) throws SerException{
+        return null;
+    };
+
 
 
 
