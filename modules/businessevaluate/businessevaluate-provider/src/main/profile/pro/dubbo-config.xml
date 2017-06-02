@@ -57,8 +57,30 @@
 	<!-- 商务评估汇总API -->
 	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI" ref="businessEvaluateCollectApiImpl"/>
 
-	<!-- 用户API -->
+	<!-- 权限API -->
+
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
+
+	<dubbo:service interface="com.bjike.goddess.businessevaluate.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
+
+
+	<!-- 注册接口 -->
+
+	<!--****************组织结构api***************-->
+
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+
+	<!--****************组织结构api***************-->
 
 
 </beans>

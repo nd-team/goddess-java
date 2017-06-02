@@ -32,10 +32,15 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
 
     @Autowired
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectCostBO insertModel(ProjectCostTO to) throws SerException {
+
+        getCusPermission();
+
         ProjectCost model = BeanTransform.copyProperties(to, ProjectCost.class);
         super.save(model);
         to.setId(model.getId());
@@ -45,6 +50,9 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public ProjectCostBO updateModel(ProjectCostTO to) throws SerException {
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(to.getId())) {
             ProjectCost model = super.findById(to.getId());
             if (model != null) {
@@ -63,6 +71,9 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectCostBO> pageList(ProjectCostDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<ProjectCost> list = super.findByPage(dto);
         List<ProjectCostBO> boList = BeanTransform.copyProperties(list, ProjectCostBO.class);
@@ -77,5 +88,14 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
             }
         }
         return boList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }
