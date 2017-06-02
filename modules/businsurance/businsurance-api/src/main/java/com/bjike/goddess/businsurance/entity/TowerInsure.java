@@ -46,7 +46,7 @@ public class TowerInsure extends BaseEntity {
     /**
      * 被投保人
      */
-    @Column(name = "insureByPerson", columnDefinition = "DECIMAL(10,2)   COMMENT '被投保人'")
+    @Column(name = "insureByPerson", columnDefinition = "VARCHAR(255)   COMMENT '被投保人'")
     private String insureByPerson;
 
     /**

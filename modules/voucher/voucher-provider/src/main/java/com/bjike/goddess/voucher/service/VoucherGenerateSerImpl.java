@@ -10,6 +10,7 @@ import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -1382,4 +1383,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
     }
+
+    @Override
+    public List<PartBO> findByCondition(String condition) throws SerException {
+        String [] fields = new String[]{"money"};
+        String sql = " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
+                " secondSubject = '"+condition+"' or thirdSubject = '"+condition+"' ";
+        List<PartBO> list = super.findBySql( sql , PartBO.class,fields );
+        if( list!= null && list.size()>0 ){
+            list.get(0).setName(condition);
+        }else{
+            list = new ArrayList<>();
+            PartBO partBO = new PartBO();
+            partBO.setName(condition);
+            partBO.setMoney(0d);
+            list.add( partBO );
+        }
+        return list;
+    }
+
+
+
 }

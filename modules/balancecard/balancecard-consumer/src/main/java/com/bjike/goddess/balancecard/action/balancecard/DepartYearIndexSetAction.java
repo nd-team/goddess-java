@@ -168,6 +168,60 @@ public class DepartYearIndexSetAction {
         }
     }
 
+
+    /**
+     * 获取所有地区
+     *
+     * @des 获取所有地区
+     * @version v1
+     */
+    @GetMapping("v1/listArea")
+    public Result listArea( ) throws ActException {
+        try {
+            List<String> arealist = departYearIndexSetAPI.listArea( );
+            return ActResult.initialize(arealist);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取所有项目组部门
+     *
+     * @des 获取所有项目组部门
+     * @version v1
+     */
+    @GetMapping("v1/listDepart")
+    public Result listDepart( ) throws ActException {
+        try {
+            List<String> arealist = departYearIndexSetAPI.listDepart( );
+            return ActResult.initialize(arealist);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
+    /**
+     * 获取所有员工
+     *
+     * @des 获取所有员工
+     * @version v1
+     */
+    @GetMapping("v1/listEmp")
+    public Result listEmp( ) throws ActException {
+        try {
+            List<String> arealist = departYearIndexSetAPI.listEmp( );
+            return ActResult.initialize(arealist);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
     //TODO 导入导出
     //查看本月
     //查看某个月

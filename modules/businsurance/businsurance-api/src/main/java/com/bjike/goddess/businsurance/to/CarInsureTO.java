@@ -20,7 +20,7 @@ public class CarInsureTO extends BaseTO {
     /**
      * 投保单号
      */
-    @NotBlank(groups = CarInsureTO.TestAdd.class , message = "投保单号不能为空")
+    @NotBlank(groups = {CarInsureTO.TestAdd.class} , message = "投保单号不能为空")
     private String insureNumber;
 
     /**
@@ -31,13 +31,13 @@ public class CarInsureTO extends BaseTO {
     /**
      * 保单起始时间
      */
-    @NotBlank(groups = CarInsureTO.TestAdd.class , message = "保单起始时间不能为空,格式为年月日")
+    @NotBlank(groups = {CarInsureTO.TestAdd.class} , message = "保单起始时间不能为空,格式为年月日")
     private String startDate;
 
     /**
      * 保单结束时间
      */
-    @NotBlank(groups = CarInsureTO.TestAdd.class , message = "保单结束时间不能为空,格式为年月日")
+    @NotBlank(groups = {CarInsureTO.TestAdd.class} , message = "保单结束时间不能为空,格式为年月日")
     private String endDate;
 
     /**
