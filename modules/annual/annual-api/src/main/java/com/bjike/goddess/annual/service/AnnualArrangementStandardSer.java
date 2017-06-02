@@ -1,5 +1,6 @@
 package com.bjike.goddess.annual.service;
 
+import com.bjike.goddess.annual.bo.AnnualApplyBO;
 import com.bjike.goddess.annual.bo.AnnualArrangementStandardBO;
 import com.bjike.goddess.annual.dto.AnnualArrangementStandardDTO;
 import com.bjike.goddess.annual.entity.AnnualArrangementStandard;
@@ -34,7 +35,7 @@ public interface AnnualArrangementStandardSer extends Ser<AnnualArrangementStand
     /**
      * 根据年假标准查询年假层级标准
      *
-     * @param standard_id 年假标准id
+     * @param standardId 年假标准id
      * @return
      * @throws SerException
      */
@@ -62,6 +63,27 @@ public interface AnnualArrangementStandardSer extends Ser<AnnualArrangementStand
      * @throws SerException
      */
     default AnnualArrangementStandardBO findByArrangementStandard(String standardId, String arrangementId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取年假层级标准数据
+     *
+     * @param id 年假层级标准数据id
+     * @return
+     * @throws SerException
+     */
+    default AnnualArrangementStandardBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
         return null;
     }
 }

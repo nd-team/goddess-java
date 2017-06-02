@@ -22,7 +22,7 @@ public interface ActivityDivisionAPI {
      * 根据id查询活动分工
      *
      * @param id 活动分工唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivityDivisionBO
      * @throws SerException
      */
     ActivityDivisionBO findById(String id) throws SerException;

@@ -148,15 +148,15 @@ public class MarketServeSummaryAct {
     /**
      * 解冻市场招待邮件发送
      *
-     * @param to 市场招待邮件发送to信息
+     * @param id 市场招待邮件发送唯一标识
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/thaw")
-    public Result thaw(@Validated MarketServeSummaryTO to, BindingResult result) throws ActException {
+    @PatchMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable(value = "id") String id) throws ActException {
         try {
-            marketServeSummaryAPI.thaw(to);
+            marketServeSummaryAPI.thaw(id);
             return new ActResult("thaw success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -166,15 +166,15 @@ public class MarketServeSummaryAct {
     /**
      * 冻结市场招待邮件发送
      *
-     * @param to 市场招待邮件发送to
+     * @param id 市场招待邮件发送唯一标识
      * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/congeal")
-    public Result congeal(@Validated MarketServeSummaryTO to, BindingResult result) throws ActException {
+    @PatchMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable(value = "id") String id) throws ActException {
         try {
-            marketServeSummaryAPI.congeal(to);
+            marketServeSummaryAPI.congeal(id);
             return new ActResult("congeal success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -184,16 +184,18 @@ public class MarketServeSummaryAct {
     /**
      * 市场招待汇总
      *
-     * @param to 市场招待邮件发送to
+     * @param type 汇总类型true:按照计划汇总,false:按照实际汇总
+     * @param projectGroups 部门/项目组
+     * @param startTimeString 起始时间
+     * @param endTimeString 结束时间
      * @return class MarketServeSummaryVO
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/summarize")
-    public Result summarize(@Validated MarketServeSummaryTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/summarize")
+    public Result summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString, HttpServletRequest request) throws ActException {
         try {
-            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(to);
+            List<ServeSummaryBO> boList = marketServeSummaryAPI.summarize(type, projectGroups, startTimeString, endTimeString);
             List<MarketServeSummaryVO> voList = BeanTransform.copyProperties(boList, MarketServeSummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {

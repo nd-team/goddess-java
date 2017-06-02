@@ -12,6 +12,20 @@ import com.bjike.goddess.annual.enums.AuditType;
  * @Copy: [ com.bjike ]
  */
 public class AnnualApplyVO {
+
+    /**
+     * id
+     */
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     /**
      * 年假信息
      */

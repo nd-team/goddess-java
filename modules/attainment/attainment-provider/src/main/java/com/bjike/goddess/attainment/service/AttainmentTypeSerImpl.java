@@ -61,6 +61,8 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
     @Override
     public AttainmentTypeBO delete(String id) throws SerException {
         AttainmentType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
@@ -69,6 +71,8 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
     @Override
     public AttainmentTypeBO congeal(String id) throws SerException {
         AttainmentType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.CONGEAL);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -79,6 +83,8 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
     @Override
     public AttainmentTypeBO thaw(String id) throws SerException {
         AttainmentType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setStatus(Status.THAW);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -99,5 +105,25 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
         dto.getConditions().add(Restrict.eq("is_regular", regular));
         List<AttainmentType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AttainmentTypeBO.class);
+    }
+
+    @Override
+    public List<AttainmentTypeBO> maps(AttainmentTypeDTO dto) throws SerException {
+        dto.getSorts().add("status=asc");
+        return BeanTransform.copyProperties(super.findByPage(dto), AttainmentTypeBO.class);
+    }
+
+    @Override
+    public AttainmentTypeBO getById(String id) throws SerException {
+        AttainmentType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        AttainmentTypeDTO dto = new AttainmentTypeDTO();
+        return super.count(dto);
     }
 }

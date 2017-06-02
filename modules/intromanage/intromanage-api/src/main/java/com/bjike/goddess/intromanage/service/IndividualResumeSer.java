@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
-import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.dto.IndividualResumeDTO;
+import com.bjike.goddess.intromanage.entity.IndividualResume;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
 

@@ -1,8 +1,5 @@
 /**
- * @Author: [sunfengtao]
- * @Date: [2017-03-15 10:00]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * 活动申请信息业务接口
+ * Created by sunfengtao on 2017-04-08 05:10.
  */
 package com.bjike.goddess.recruit.action.recruit;

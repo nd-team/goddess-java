@@ -1,9 +1,11 @@
 package com.bjike.goddess.staffactivity.action.staffactivity;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -80,10 +83,10 @@ public class ActivityExecuteInfoAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ActivityExecuteInfoDTO dto) throws ActException {
+    public Result list(ActivityExecuteInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ActivityExecuteInfoBO> boList = activityExecuteInfoAPI.list(dto);
-            List<ActivityExecuteInfoVO> voList = BeanTransform.copyProperties(boList, ActivityExecuteInfoVO.class);
+            List<ActivityExecuteInfoVO> voList = BeanTransform.copyProperties(boList, ActivityExecuteInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -98,11 +101,12 @@ public class ActivityExecuteInfoAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ActivityExecuteInfoTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ActivityExecuteInfoTO to, HttpServletRequest request) throws ActException {
         try {
             ActivityExecuteInfoBO bo = activityExecuteInfoAPI.save(to);
-            ActivityExecuteInfoVO vo = BeanTransform.copyProperties(bo, ActivityExecuteInfoVO.class);
+            ActivityExecuteInfoVO vo = BeanTransform.copyProperties(bo, ActivityExecuteInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -116,6 +120,7 @@ public class ActivityExecuteInfoAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -133,8 +138,9 @@ public class ActivityExecuteInfoAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(ActivityExecuteInfoTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ActivityExecuteInfoTO to) throws ActException {
         try {
             activityExecuteInfoAPI.update(to);
             return new ActResult("edit success!");

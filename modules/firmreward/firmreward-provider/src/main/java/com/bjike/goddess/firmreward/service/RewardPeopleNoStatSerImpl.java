@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public RewardPeopleNoStatBO save(RewardPeopleNoStatTO to) throws SerException {
         RewardPeopleNoStat entity = BeanTransform.copyProperties(to, RewardPeopleNoStat.class, true);
         entity = super.save(entity);
@@ -71,6 +73,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         List<AwardDetail> list = getAwardDetailsByStatId(id);
         awardDetailSer.remove(list);
@@ -96,6 +99,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(RewardPeopleNoStatTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             RewardPeopleNoStat model = super.findById(to.getId());
@@ -128,6 +132,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void addAwardDetails(RewardPeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();//奖励人数统计id
         String[] awardRankings = to.getAwardRankings();//获奖名次
@@ -161,6 +166,7 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void updateAwardDetails(RewardPeopleNoStatTO to) throws SerException {
         String rewardPeopleNoStatId = to.getId();
         List<AwardDetail> list = getAwardDetailsByStatId(rewardPeopleNoStatId);

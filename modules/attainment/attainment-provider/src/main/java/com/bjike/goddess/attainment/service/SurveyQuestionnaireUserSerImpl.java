@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -52,9 +53,12 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireUserBO save(SurveyQuestionnaireUserTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         SurveyQuestionnaireUser entity = new SurveyQuestionnaireUser();
-        entity.setUser(userAPI.currentUser().getUsername());
+        entity.setUser(user.getUsername());
         entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
+        if (null == entity.getActualize())
+            throw new SerException("调研实施对象不存在,无法保存");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -63,6 +67,8 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
     @Override
     public SurveyQuestionnaireUserBO delete(String id) throws SerException {
         SurveyQuestionnaireUser entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }

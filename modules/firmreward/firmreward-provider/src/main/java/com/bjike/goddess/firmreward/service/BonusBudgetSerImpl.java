@@ -11,10 +11,12 @@ import com.bjike.goddess.firmreward.dto.RewardProgramRatioDTO;
 import com.bjike.goddess.firmreward.entity.BonusBudget;
 import com.bjike.goddess.firmreward.entity.RewardProgramRatio;
 import com.bjike.goddess.firmreward.to.BonusBudgetTO;
+import com.bjike.goddess.firmreward.to.RewardProgramRatiosTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public BonusBudgetBO save(BonusBudgetTO to) throws SerException {
         BonusBudget entity = BeanTransform.copyProperties(to, BonusBudget.class, true);
         entity = super.save(entity);
@@ -71,6 +74,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
         List<RewardProgramRatio> list = getRewardRatioById(id);
         rewardProgramRatioSer.remove(list);//删除子表中的数据
@@ -84,6 +88,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void update(BonusBudgetTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())) {
             BonusBudget model = super.findById(to.getId());
@@ -116,7 +121,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
-    public void addRewardProgramRatios(BonusBudgetTO to) throws SerException {
+    public void addRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
         String bonusBudgetId = to.getId();//奖金预算额度
         String[] rewardPrograms = to.getRewardPrograms();//奖励项目
         String[] focusingDegrees = to.getFocusingDegrees();//当月侧重程度
@@ -158,7 +163,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @throws SerException
      */
     @Override
-    public void updateRewardProgramRatios(BonusBudgetTO to) throws SerException {
+    public void updateRewardProgramRatios(RewardProgramRatiosTO to) throws SerException {
         List<RewardProgramRatio> list = getRatioByBudgetTo(to);
         rewardProgramRatioSer.remove(list);//删除奖励项目比例
         addRewardProgramRatios(to);//重新执行插入操作
@@ -171,7 +176,7 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      * @return
      * @throws SerException
      */
-    private List<RewardProgramRatio> getRatioByBudgetTo(BonusBudgetTO to) throws SerException {
+    private List<RewardProgramRatio> getRatioByBudgetTo(RewardProgramRatiosTO to) throws SerException {
         String bonusBudgetId = to.getId();//奖金预算id
         return getRewardRatioById(bonusBudgetId);
     }

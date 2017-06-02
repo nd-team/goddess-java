@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
+import com.bjike.goddess.intromanage.entity.FirmIntro;
 import com.bjike.goddess.intromanage.service.FirmIntroSer;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
@@ -25,6 +27,30 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
 
     @Autowired
     private FirmIntroSer firmIntroSer;
+
+    /**
+     * 根据id查询公司简介
+     *
+     * @param id 公司简介唯一标识
+     * @return class FirmIntroBO
+     * @throws SerException
+     */
+    @Override
+    public FirmIntroBO findById(String id) throws SerException {
+        FirmIntro model = firmIntroSer.findById(id);
+        return BeanTransform.copyProperties(model, FirmIntroBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 公司简介dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(FirmIntroDTO dto) throws SerException {
+        return firmIntroSer.count(dto);
+    }
 
     /**
      * 分页查询公司简介

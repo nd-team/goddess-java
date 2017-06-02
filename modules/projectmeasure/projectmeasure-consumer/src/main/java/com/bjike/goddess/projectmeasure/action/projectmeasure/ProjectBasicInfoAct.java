@@ -15,9 +15,11 @@ import com.bjike.goddess.projectmeasure.service.ProjectBasicInfoSer;
 import com.bjike.goddess.projectmeasure.to.ProjectBasicInfoTO;
 import com.bjike.goddess.projectmeasure.vo.ProjectBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -31,11 +33,49 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("projectmeasure/projectbasicinfo")
+@RequestMapping("projectbasicinfo")
 public class ProjectBasicInfoAct {
 
     @Autowired
     private ProjectBasicInfoAPI projectBasicInfoAPI;
+
+    /**
+     * 根据id查询项目基本信息
+     *
+     * @param id 项目基本信息唯一标识
+     * @return class ProjectBasicInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/projectbasicinfo/{id}")
+    public Result findById(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
+        try {
+            ProjectBasicInfoBO bo = projectBasicInfoAPI.findById(id);
+            ProjectBasicInfoVO vo = BeanTransform.copyProperties(bo, ProjectBasicInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 项目基本信息dto
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/count")
+    public Result count(@Validated ProjectBasicInfoDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = projectBasicInfoAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 分页查询项目基本信息
@@ -46,10 +86,10 @@ public class ProjectBasicInfoAct {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ProjectBasicInfoDTO dto) throws ActException {
+    public Result list(ProjectBasicInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<ProjectBasicInfoBO> boList = projectBasicInfoAPI.list(dto);
-            List<ProjectBasicInfoVO> voList = BeanTransform.copyProperties(boList, ProjectBasicInfoVO.class);
+            List<ProjectBasicInfoVO> voList = BeanTransform.copyProperties(boList, ProjectBasicInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -66,10 +106,10 @@ public class ProjectBasicInfoAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ProjectBasicInfoTO to) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ProjectBasicInfoTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ProjectBasicInfoBO bo = projectBasicInfoAPI.save(to);
-            ProjectBasicInfoVO vo = BeanTransform.copyProperties(bo, ProjectBasicInfoVO.class);
+            ProjectBasicInfoVO vo = BeanTransform.copyProperties(bo, ProjectBasicInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -103,7 +143,7 @@ public class ProjectBasicInfoAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) ProjectBasicInfoTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ProjectBasicInfoTO to, BindingResult result) throws ActException {
         try {
             projectBasicInfoAPI.update(to);
             return new ActResult("edit success!");

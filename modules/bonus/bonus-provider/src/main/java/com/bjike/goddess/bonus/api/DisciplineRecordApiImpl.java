@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.*;
+import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.service.DisciplineRecordSer;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
@@ -78,5 +79,30 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
     @Override
     public List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
         return disciplineRecordSer.findByFilter(to);
+    }
+
+    @Override
+    public List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        return disciplineRecordSer.rewardMaps(dto);
+    }
+
+    @Override
+    public List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        return disciplineRecordSer.pushMaps(dto);
+    }
+
+    @Override
+    public DisciplineRecordBO getById(String id) throws SerException {
+        return disciplineRecordSer.getById(id);
+    }
+
+    @Override
+    public Long getRewardTotal() throws SerException {
+        return disciplineRecordSer.getRewardTotal();
+    }
+
+    @Override
+    public Long getPushTotal() throws SerException {
+        return disciplineRecordSer.getPushTotal();
     }
 }

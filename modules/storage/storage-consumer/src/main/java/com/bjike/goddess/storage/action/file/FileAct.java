@@ -168,7 +168,6 @@ public class FileAct extends BaseFileAction {
     public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
-            filename = new String(filename.replaceAll(" ", "").getBytes("utf-8"), "iso8859-1");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
             return new ActResult("download success");

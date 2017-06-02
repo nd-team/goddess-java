@@ -20,6 +20,16 @@ public class ReflectBO extends BaseBO {
     private String name;
 
     /**
+     * 岗位说明书分类名称
+     */
+    private String classifyName;
+
+    /**
+     * 岗位说明书分类id
+     */
+    private String classifyId;
+
+    /**
      * 描述
      */
     private String description;
@@ -41,6 +51,22 @@ public class ReflectBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getClassifyName() {
+        return classifyName;
+    }
+
+    public void setClassifyName(String classifyName) {
+        this.classifyName = classifyName;
+    }
+
+    public String getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 
     public String getDescription() {

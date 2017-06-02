@@ -1,6 +1,7 @@
 package com.bjike.goddess.annual.action.annual;
 
 import com.bjike.goddess.annual.api.AnnualStandardAPI;
+import com.bjike.goddess.annual.dto.AnnualStandardDTO;
 import com.bjike.goddess.annual.to.AnnualStandardTO;
 import com.bjike.goddess.annual.vo.AnnualStandardVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 年假标准
@@ -118,9 +121,9 @@ public class AnnualStandardAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.findThaw(), AnnualStandardVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.findThaw(), AnnualStandardVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -137,6 +140,54 @@ public class AnnualStandardAct {
     public Result findBySeniority(Integer seniority) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.findBySeniority(seniority), AnnualStandardVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 查询列表
+     *
+     * @param dto 年假标准数据传输对象
+     * @return class AnnualStandardVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(AnnualStandardDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.maps(dto), AnnualStandardVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id获取年假标准数据
+     *
+     * @param id 年假标准数据id
+     * @return class AnnualStandardVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.getById(id), AnnualStandardVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(annualStandardAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -33,7 +33,7 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
      * 根据id查询活动方案
      *
      * @param id 活动方案唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivitySchemeBO
      * @throws SerException
      */
     @Override
@@ -100,37 +100,28 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
     }
 
     /**
-     * 上传文件
-     *
-     * @param maps 文件名，文件字节
-     * @param path 上传路径
-     * @throws SerException
-     */
-    @Override
-    public void upload(Map<String, byte[]> maps, String path) throws SerException {
-        activitySchemeSer.upload(maps, path);
-    }
-
-    /**
      * 运营商务部意见
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param yYOpinion 运营商务部意见
      * @throws SerException
      */
     @Override
-    public void yYOpinion(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.yYOpinion(to);
+    public void yYOpinion(String id, String yYOpinion) throws SerException {
+        activitySchemeSer.yYOpinion(id, yYOpinion);
     }
 
     /**
      * 总经办意见
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifSchemePass 方案是否通过
+     * @param zjbOpinion 总经办意见
      * @throws SerException
      */
     @Override
-    public void zjbOpinion(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.zjbOpinion(to);
+    public void zjbOpinion(String id, Boolean ifSchemePass, String zjbOpinion) throws SerException {
+        activitySchemeSer.zjbOpinion(id, ifSchemePass, zjbOpinion);
     }
 
     /**
@@ -139,42 +130,56 @@ public class ActivitySchemeApiImpl implements ActivitySchemeAPI {
      * @param to 活动方案to
      * @throws SerException
      */
+    /**
+     * 是否持续开展
+     *
+     * @param id 活动方案唯一标识
+     * @param ifNeedContinue 是否有必要持续开展
+     * @param reasonAndOpinion 原因及意见
+     * @throws SerException
+     */
     @Override
-    public void ifContinueLaunch(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.ifContinueLaunch(to);
+    public void ifContinueLaunch(String id, Boolean ifNeedContinue, String reasonAndOpinion) throws SerException {
+        activitySchemeSer.ifContinueLaunch(id, ifNeedContinue, reasonAndOpinion);
     }
 
     /**
      * 运营资金评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param ifTotalOutlayRational 活动总支出是否合理
+     * @param fundProposal 经费建议
      * @throws SerException
      */
     @Override
-    public void yYFundEvaluate(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.yYFundEvaluate(to);
+    public void yYFundEvaluate(String id, Boolean ifTotalOutlayRational, String fundProposal) throws SerException {
+        activitySchemeSer.yYFundEvaluate(id, ifTotalOutlayRational, fundProposal);
     }
 
     /**
      * 监督者评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案id
+     * @param ifFlowDefect 活动流程是否存在缺陷
+     * @param flowProposal 活动流程建议
      * @throws SerException
      */
     @Override
-    public void supervisorEvaluate(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.supervisorEvaluate(to);
+    public void supervisorEvaluate(String id, Boolean ifFlowDefect, String flowProposal) throws SerException {
+        activitySchemeSer.supervisorEvaluate(id, ifFlowDefect, flowProposal);
     }
 
     /**
      * 总经办评价
      *
-     * @param to 活动方案to
+     * @param id 活动方案唯一标识
+     * @param activityEffect 活动效应
+     * @param zjbEvaluate 总经办评价及建议
      * @throws SerException
      */
     @Override
-    public void zjbEvaluate(ActivitySchemeTO to) throws SerException {
-        activitySchemeSer.zjbEvaluate(to);
+    public void zjbEvaluate(String id, String activityEffect, String zjbEvaluate) throws SerException {
+        activitySchemeSer.zjbEvaluate(id, activityEffect, zjbEvaluate);
     }
 
     /**

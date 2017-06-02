@@ -38,6 +38,7 @@ dependencies {
     }
 
     compile project(":modules:annual:annual-api")
+    compile project(":modules:user:user-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

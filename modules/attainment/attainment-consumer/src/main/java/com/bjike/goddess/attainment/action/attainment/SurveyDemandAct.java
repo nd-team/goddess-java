@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.SurveyDemandAPI;
+import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
@@ -10,11 +11,14 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 调研需求
@@ -39,6 +43,7 @@ public class SurveyDemandAct {
      * @return class SurveyDemandVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) SurveyDemandTO to) throws ActException {
         try {
@@ -87,6 +92,7 @@ public class SurveyDemandAct {
      * @return class SurveyDemandVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/close/{id}")
     public Result close(@Validated(EDIT.class) CloseDemandTO to) throws ActException {
         try {
@@ -104,9 +110,55 @@ public class SurveyDemandAct {
      * @version v1
      */
     @GetMapping("v1/findByStatus")
-    public Result findByStatus(SurveyStatus status) throws ActException {
+    public Result findByStatus(SurveyStatus status, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.findByStatus(status), SurveyDemandVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.findByStatus(status), SurveyDemandVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 调研需求数据传输对象
+     * @return class SurveyDemandVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(SurveyDemandDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.maps(dto), SurveyDemandVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取调研需求数据
+     *
+     * @param id 调研需求数据id
+     * @return class SurveyDemandVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.getById(id), SurveyDemandVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(surveyDemandAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

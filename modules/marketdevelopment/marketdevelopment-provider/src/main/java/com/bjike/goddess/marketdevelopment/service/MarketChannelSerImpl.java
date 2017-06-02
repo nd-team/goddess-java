@@ -9,6 +9,7 @@ import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +30,20 @@ import java.util.List;
 @Service
 public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChannelDTO> implements MarketChannelSer {
 
+    @Autowired
+    private MarPermissionSer marPermissionSer;
+
+    private static final String marketCheck = "market-check";
+
+    private static final String marketManage = "market-manage";
+
+    private static final String channelManage = "channel-manage";
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO save(MarketChannelTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+            throw new SerException("您的帐号没有权限");
         MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, MarketChannelBO.class);
@@ -40,6 +52,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO update(MarketChannelTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 MarketChannel entity = super.findById(to.getId());
@@ -57,6 +71,8 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO delete(MarketChannelTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+            throw new SerException("您的帐号没有权限");
         MarketChannel entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -87,5 +103,12 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         dto.getConditions().add(Restrict.eq("type", type));
         List<MarketChannel> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, MarketChannelBO.class);
+    }
+
+    @Override
+    public List<MarketChannel> findByPage(MarketChannelDTO dto) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage) && !marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        return super.findByPage(dto);
     }
 }

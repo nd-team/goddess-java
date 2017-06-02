@@ -19,6 +19,23 @@ import java.util.List;
 public interface WorkExperienceAPI {
 
     /**
+     * 根据id查询工作经历
+     *
+     * @param id 工作经历唯一标识
+     * @return class WorkExperienceBO
+     * @throws SerException
+     */
+    WorkExperienceBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 工作经历dto
+     * @throws SerException
+     */
+    Long count(WorkExperienceDTO dto) throws SerException;
+
+    /**
      * 分页查询工作经历
      *
      * @return class WorkExperienceBO

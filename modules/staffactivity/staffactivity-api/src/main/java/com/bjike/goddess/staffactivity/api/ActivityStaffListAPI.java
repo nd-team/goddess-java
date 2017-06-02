@@ -22,7 +22,7 @@ public interface ActivityStaffListAPI {
      * 根据id查询活动人员名单
      *
      * @param id 活动人员名单唯一标识
-     * @return class CustomerInfoBO
+     * @return class ActivityStaffListBO
      * @throws SerException
      */
     ActivityStaffListBO findById(String id) throws SerException;

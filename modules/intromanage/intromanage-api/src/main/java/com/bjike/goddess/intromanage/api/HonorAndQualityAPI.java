@@ -19,6 +19,23 @@ import java.util.List;
 public interface HonorAndQualityAPI {
 
     /**
+     * 根据id查询荣誉与资质
+     *
+     * @param id 荣誉与资质唯一标识
+     * @return class HonorAndQualityBO
+     * @throws SerException
+     */
+    HonorAndQualityBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 荣誉与资质dto
+     * @throws SerException
+     */
+    Long count(HonorAndQualityDTO dto) throws SerException;
+
+    /**
      * 分页查询荣誉与资质
      *
      * @return class HonorAndQualityBO

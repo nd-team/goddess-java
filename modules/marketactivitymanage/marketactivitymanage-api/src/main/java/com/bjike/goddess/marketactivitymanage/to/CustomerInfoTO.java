@@ -5,6 +5,9 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 /**
  * 客户信息
  *
@@ -16,30 +19,46 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class CustomerInfoTO extends BaseTO {
 
+    public interface EditCustomer{}
+
     /**
      * 客户信息编号
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "客户信息编号不能为空")
     private String clientInfoNo;
 
     /**
      * 客户姓名
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "客户姓名不能为空")
     private String clientName;
 
     /**
      * 重要性级别
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "重要性级别不能为空")
     private String importanceLevel;
-
 
     /**
      * 市场招待唯一标识
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "市场招待唯一标识不能为空")
+    @NotBlank(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "市场招待唯一标识不能为空")
     private String marketServeId;
+
+    /**
+     * 客户信息编号
+     */
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户信息编号不能为空")
+    private List<String> clientInfoNos;
+
+    /**
+     * 客户姓名
+     */
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户姓名不能为空")
+    private List<String> clientNames;
+
+    /**
+     * 客户重要性级别
+     */
+    @NotNull(groups = {ADD.class, CustomerInfoTO.EditCustomer.class}, message = "客户重要性级别不能为空")
+    private List<String> importanceLevels;
 
     public String getClientInfoNo() {
         return clientInfoNo;
@@ -72,5 +91,30 @@ public class CustomerInfoTO extends BaseTO {
     public void setMarketServeId(String marketServeId) {
         this.marketServeId = marketServeId;
     }
+
+    public List<String> getClientInfoNos() {
+        return clientInfoNos;
+    }
+
+    public void setClientInfoNos(List<String> clientInfoNos) {
+        this.clientInfoNos = clientInfoNos;
+    }
+
+    public List<String> getClientNames() {
+        return clientNames;
+    }
+
+    public void setClientNames(List<String> clientNames) {
+        this.clientNames = clientNames;
+    }
+
+    public List<String> getImportanceLevels() {
+        return importanceLevels;
+    }
+
+    public void setImportanceLevels(List<String> importanceLevels) {
+        this.importanceLevels = importanceLevels;
+    }
+
 
 }

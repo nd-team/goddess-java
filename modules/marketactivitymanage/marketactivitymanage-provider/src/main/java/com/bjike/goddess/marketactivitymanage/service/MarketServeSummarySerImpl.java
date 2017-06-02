@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.marketactivitymanage.bo.MarketServeSummaryBO;
@@ -23,9 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 市场招待汇总业务实现
@@ -52,6 +57,25 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     @Autowired
     private UserAPI userAPI;
 
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 检查权限
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        //商务模块权限
+        Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
+        if (!permissionLevel) {
+            throw new SerException("您不是商务模块人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
     /**
      * 分页查询市场招待汇总
      *
@@ -61,6 +85,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     @Override
     public List<MarketServeSummaryBO> list(MarketServeSummaryDTO dto) throws SerException {
+        checkPermission();
         List<MarketServeSummary> list = super.findByPage(dto);
         List<MarketServeSummaryBO> listBO = BeanTransform.copyProperties(list, MarketServeSummaryBO.class);
         return listBO;
@@ -74,8 +99,9 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public MarketServeSummaryBO save(MarketServeSummaryTO to) throws SerException {
-
+        checkPermission();
         String sb = getProjectGroup(to);
         String curUsername = userAPI.currentUser().getUsername();
         MarketServeSummary marketServeSummary = BeanTransform.copyProperties(to, MarketServeSummary.class, true);
@@ -89,12 +115,13 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     private String getProjectGroup(MarketServeSummaryTO to) {
-        String[] projectGroups = to.getProjectGroups();
+        String[] projectGroups = to.getProjects();
         boolean projectGroupNotEmpty = (projectGroups != null) && (projectGroups.length > 0);
         StringBuilder sb = new StringBuilder();
         if (projectGroupNotEmpty) {
-            for (int i = 0; i < projectGroups.length; i ++) {
-                if (i < projectGroups.length -1){
+
+            for (int i = 0; i < projectGroups.length; i++) {
+                if (i < projectGroups.length - 1) {
                     sb.append(projectGroups[i]).append(",");
                 } else {
                     sb.append(projectGroups[i]);
@@ -111,9 +138,10 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     public void update(MarketServeSummaryTO to) throws SerException {
-        if (StringUtils.isNotEmpty(to.getId())){
+        checkPermission();
+        if (StringUtils.isNotEmpty(to.getId())) {
             MarketServeSummary model = super.findById(to.getId());
             if (model != null) {
                 updateMarketServeSummary(to, model);
@@ -143,56 +171,67 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     }
 
     /**
-     * 冻结市场招待申请汇总
+     * 解冻市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
     @Override
-    public void thaw(MarketServeSummaryTO to) throws SerException {
-        to.setStatus(Status.THAW);
-        this.update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void thaw(String id) throws SerException {
+        checkPermission();
+        MarketServeSummary model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setStatus(Status.THAW);
+        super.update(model);
     }
 
     /**
-     * 解冻市场招待申请汇总
+     * 冻结市场招待汇总邮件发送
      *
-     * @param to 市场招待汇总to
+     * @param id 市场招待汇总邮件发送唯一标识
      * @throws SerException
      */
     @Override
-    public void congeal(MarketServeSummaryTO to) throws SerException {
-        to.setStatus(Status.CONGEAL);
-        this.update(to);
+    @Transactional(rollbackFor = SerException.class)
+    public void congeal(String id) throws SerException {
+        checkPermission();
+        MarketServeSummary model = super.findById(id);
+        model.setModifyTime(LocalDateTime.now());
+        model.setStatus(Status.CONGEAL);
+        super.update(model);
     }
 
     /**
-     * 市场招待申请汇总
+     * 市场招待汇总
      *
-     * @param to 市场招待汇总to
-     * @return class ServeSummaryBO
+     * @param type 汇总类型
+     * @param projectGroups 部门/项目组
+     * @param startTimeString 起始时间
+     * @param endTimeString 结束时间
+     * @return class MarketServeSummaryVO
      * @throws SerException
      */
     @Override
-    public List<ServeSummaryBO> summarize(MarketServeSummaryTO to) throws SerException {
-        boolean isApply = to.getType();                 //判断是市场招待申请汇总还是实际汇总
-        if (isApply) {
-            return summarizePlan(to);
+    public List<ServeSummaryBO> summarize(Boolean type, String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
+        checkPermission();
+        if (type) {
+            return summarizePlan(projectGroups, startTimeString, endTimeString);
         } else {
-            return summarizeActual(to);
+            return summarizeActual(projectGroups, startTimeString, endTimeString);
         }
     }
 
     /**
      * 市场招待记录汇总
      *
-     * @param to
+     * @param projectGroups
+     * @param startTimeString
+     * @param endTimeString
      * @return
+     * @throws SerException
      */
-    private List<ServeSummaryBO> summarizeActual(MarketServeSummaryTO to) throws SerException {
-        String[] projectGroups = to.getProjectGroups();//获取项目组
-        String startTimeString = to.getStartTime();          //开始活动时间点
-        String endTimeString = to.getEndTime();              //结束活动时间点
+    private List<ServeSummaryBO> summarizeActual(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
         LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
         LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
         LocalDateTime[] actualActivityTiming = new LocalDateTime[]{startTime, endTime};
@@ -257,7 +296,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算实际费用的总数
      *
      * @param actualActivityTiming 实际时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return
      */
     private Double countActualCharge(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -276,7 +315,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算预计参加人数
      *
      * @param actualActivityTiming 实际时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return 预计参加人数
      */
     private Integer countActualPredictAttendNo(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -295,7 +334,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算是否临时招待数目
      *
      * @param actualActivityTiming 实际时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return 是否临时招待数目
      */
     private String countActualWhetherTemporaryServe(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -314,7 +353,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算实际活动时间点的数目
      *
      * @param actualActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return　实际活动时间点的数目
      */
     private String countActualTiming(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -332,7 +371,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算实际活动数量
      *
      * @param actualActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return 实际活动数量
      */
     private String countActualActivity(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -350,7 +389,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算实际客户数量
      *
      * @param actualActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return
      */
     private String countActualClientNo(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -363,7 +402,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
             List<CustomerInfo> customerInfoList = customerInfoSer.findByCis(dto);
             StringBuffer clientName = new StringBuffer();
             for (CustomerInfo customerInfo : customerInfoList) {
-                if (StringUtils.isNoneBlank(customerInfo.getClientName())) {
+                if (StringUtils.isNotBlank(customerInfo.getClientName())) {
                     clientName.append(customerInfo.getClientName());
                     clientName.append(",");
                 }
@@ -379,7 +418,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算实际招待负责人的数量
      *
      * @param actualActivityTiming 实际活动时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return
      */
     private String countActualServePrincipalNo(LocalDateTime[] actualActivityTiming, String projectGroup) throws SerException {
@@ -416,7 +455,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 根据项目组获取某一时间段的市场招待记录数量
      *
      * @param actualActivityTiming 实际招待时间段
-     * @param projectGroup 项目组
+     * @param projectGroup         项目组
      * @return 市场招待记录
      * @throws SerException
      */
@@ -436,10 +475,10 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     private String getWhetherTemporaryServe(MarketServeRecord obj) {
         Boolean whetherTemporaryServe = obj.getWhetherTemporaryServe();
-        if (whetherTemporaryServe != null){
-            if (whetherTemporaryServe == Boolean.TRUE){
+        if (whetherTemporaryServe != null) {
+            if (whetherTemporaryServe == Boolean.TRUE) {
                 return "是";
-            }else {
+            } else {
                 return "否";
             }
         }
@@ -470,13 +509,13 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
     /**
      * 市场招待记录申请汇总
      *
-     * @param to 市场招待汇总to
+     * @param projectGroups
+     * @param startTimeString
+     * @param endTimeString
      * @return
+     * @throws SerException
      */
-    private List<ServeSummaryBO> summarizePlan(MarketServeSummaryTO to) throws SerException {
-        String[] projectGroups = to.getProjectGroups();//获取项目组
-        String startTimeString = to.getStartTime();          //开始活动时间点
-        String endTimeString = to.getEndTime();              //结束活动时间点
+    private List<ServeSummaryBO> summarizePlan(String[] projectGroups, String startTimeString, String endTimeString) throws SerException {
         LocalDateTime startTime = DateUtil.parseDateTime(startTimeString);//起始时间
         LocalDateTime endTime = DateUtil.parseDateTime(endTimeString);//结束时间
         LocalDateTime[] planActivityTiming = new LocalDateTime[]{startTime, endTime};
@@ -545,10 +584,10 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      */
     private String getWhetherTemporaryServe(MarketServeApply obj) {
         Boolean whetherTemporaryServe = obj.getWhetherTemporaryServe();
-        if (whetherTemporaryServe != null){
-            if (whetherTemporaryServe == Boolean.TRUE){
+        if (whetherTemporaryServe != null) {
+            if (whetherTemporaryServe == Boolean.TRUE) {
                 return "是";
-            }else {
+            } else {
                 return "否";
             }
         }
@@ -560,7 +599,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算预计费用的总数
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 预计费用的总数
      */
     private Double countApplyPredictCharge(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -579,7 +618,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算预计参加人数总数
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 预计参加人数总数
      */
     private Integer countApplyPredictAttendNo(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -598,7 +637,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算是否临时招待数目
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 是否临时招待数目
      */
     private String countApplyWhetherTemporaryServe(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -617,7 +656,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算计划活动时间点的数目
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 计划活动时间点的数目
      */
     private String countPlanActivityTiming(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -635,7 +674,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算计划活动数量
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 计划活动数量
      */
     private String countPlanActivity(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -653,7 +692,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算客户的数量
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 客户的数量
      */
     private String countApplyClientNo(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -664,6 +703,9 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
             CustomerInfoDTO dto = new CustomerInfoDTO();
             dto.getConditions().add(Restrict.eq("marketServeId", marketServeApplyId));
             List<CustomerInfo> customerInfoList = customerInfoSer.findByCis(dto);
+            if (CollectionUtils.isEmpty(customerInfoList)) {
+                return null;
+            }
             StringBuffer clientName = new StringBuffer();
             for (CustomerInfo customerInfo : customerInfoList) {
                 if (StringUtils.isNoneBlank(customerInfo.getClientName())) {
@@ -682,7 +724,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算招待负责人数量
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 负责人的数量
      */
     private String countApplyServePrincipalNo(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -700,7 +742,7 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
      * 计算某一项目组某一时间段地区的数量
      *
      * @param planActivityTiming 时间段
-     * @param projectGroup 项目组
+     * @param projectGroup       项目组
      * @return 地区的数量
      */
     private String countApplyAreaNo(LocalDateTime[] planActivityTiming, String projectGroup) throws SerException {
@@ -742,6 +784,9 @@ public class MarketServeSummarySerImpl extends ServiceImpl<MarketServeSummary, M
         CustomerInfoDTO dto = new CustomerInfoDTO();
         dto.getConditions().add(Restrict.eq("marketServeId", marketServeId));
         List<CustomerInfo> boList = customerInfoSer.findByCis(dto);
+        if (CollectionUtils.isEmpty(boList)) {
+            return null;
+        }
         for (CustomerInfo info : boList) {
             clientNames.append(info.getClientName()).append(",");
         }

@@ -10,7 +10,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -65,6 +64,8 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     public SurveyPlanBO save(SurveyPlanTO to) throws SerException {
         SurveyPlan entity = BeanTransform.copyProperties(to, SurveyPlan.class, true);
         entity.setDemand(demandSer.findById(to.getDemand_id()));
+        if (null == entity.getDemand())
+            throw new SerException("选择的调研需求不存在,无法保存");
         entity.setAudit(AuditType.NONE);
         super.save(entity);
         return this.transformBO(entity);
@@ -73,26 +74,24 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyPlanBO update(SurveyPlanTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                SurveyPlan entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                entity.setDemand(demandSer.findById(to.getDemand_id()));
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
-                throw new SerException("数据对象不能为空");
-            }
-
-        } else
-            throw new SerException("数据ID不能为空");
+        SurveyPlan entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        entity.setDemand(demandSer.findById(to.getDemand_id()));
+        if (null == entity.getDemand())
+            throw new SerException("选择的调研需求不存在,无法保存");
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyPlanBO delete(String id) throws SerException {
         SurveyPlan entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -107,6 +106,21 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
 
     @Override
     public SurveyPlanBO findBOById(String id) throws SerException {
-        return this.transformBO(super.findById(id));
+        SurveyPlan entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public List<SurveyPlanBO> maps(SurveyPlanDTO dto) throws SerException {
+        dto.getSorts().add("startTime=desc");
+        return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SurveyPlanDTO dto = new SurveyPlanDTO();
+        return super.count(dto);
     }
 }

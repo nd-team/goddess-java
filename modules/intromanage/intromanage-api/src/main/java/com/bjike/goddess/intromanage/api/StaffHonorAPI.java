@@ -19,6 +19,24 @@ import java.util.List;
 public interface StaffHonorAPI {
 
     /**
+     * 根据id查询员工荣誉
+     *
+     * @param id 员工荣誉唯一标识
+     * @return class StaffHonorBO
+     * @throws SerException
+     */
+    StaffHonorBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 员工荣誉dto
+     * @throws SerException
+     */
+    Long count(StaffHonorDTO dto) throws SerException;
+
+
+    /**
      * 分页查询员工荣誉
      *
      * @return class StaffHonorBO

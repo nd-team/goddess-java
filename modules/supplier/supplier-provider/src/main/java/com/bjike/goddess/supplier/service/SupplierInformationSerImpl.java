@@ -42,10 +42,16 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     private RewardSituationSer rewardSituationSer;
     @Autowired
     private EnterpriseQualificationSer enterpriseQualificationSer;
+    @Autowired
+    private SupPermissionSer supPermissionSer;
+
+    private static final String idFlag = "supplier-01";
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO save(SupplierInformationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierInformation entity = BeanTransform.copyProperties(to, SupplierInformation.class);
         entity.setExecution(this.countExecution(entity));
         entity.setSerialNumber(this.createNumber());
@@ -100,6 +106,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO update(SupplierInformationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 SupplierInformation entity = super.findById(to.getId());
@@ -119,11 +127,15 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierInformationBO updateDetail(SupplierInformationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         return this.update(to);
     }
 
     @Override
     public List<SupplierInformationBO> findOrderName() throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierInformationDTO dto = new SupplierInformationDTO();
         dto.getSorts().add("name");
         List<SupplierInformation> list = super.findByCis(dto);
@@ -132,6 +144,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 
     @Override
     public SupplierInformationBO delete(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierInformation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -150,6 +164,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 
     @Override
     public List<SupplierInformationBO> maps(SupplierInformationDTO dto) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("serialNumber=desc");
         List<SupplierInformation> list = super.findByPage(dto);
         if (null != list && list.size() > 0)
@@ -160,6 +176,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
 
     @Override
     public SupplierInformationBO getById(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierInformation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");

@@ -5,59 +5,51 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+
 
 /**
  * 编号设计信息
  *
- * @Author: [dengjunren]
- * @Date: [17-3-8 上午9:26]
- * @Description: []
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-05-31 09:49 ]
+ * @Description: [ 编号设计信息 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @Entity
 @Table(name = "organize_design_number_info")
 public class DesignNumberInfo extends BaseEntity {
 
     /**
-     * 编号
+     * 操作对象
      */
-    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(24) COMMENT '编号'")
+    @Column(name = "serialNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '操作对象'")
     private String serialNumber;
 
     /**
-     * 分类
+     * 编号信息类型
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '分类'")
-    private String classify;
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '编号信息类型'")
+    private String type;
 
     /**
-     * 名称
+     * 举例名称
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '名称'")
-    private String name;
+    @Column(name = "illustrate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '举例名称'")
+    private String illustrate;
 
     /**
-     * 描述
+     * 举例编号
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '描述'")
+    @Column(name = "illustrateNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '举例编号'")
+    private String illustrateNumber;
+
+    /**
+     * 编号信息生成说明
+     */
+    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '编号信息生成说明'")
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    @Column(columnDefinition = "DATETIME COMMENT '创建时间'", nullable = false)
-    private LocalDateTime createTime;
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 
     public String getSerialNumber() {
         return serialNumber;
@@ -67,20 +59,28 @@ public class DesignNumberInfo extends BaseEntity {
         this.serialNumber = serialNumber;
     }
 
-    public String getClassify() {
-        return classify;
+    public String getType() {
+        return type;
     }
 
-    public void setClassify(String classify) {
-        this.classify = classify;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getIllustrate() {
+        return illustrate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIllustrate(String illustrate) {
+        this.illustrate = illustrate;
+    }
+
+    public String getIllustrateNumber() {
+        return illustrateNumber;
+    }
+
+    public void setIllustrateNumber(String illustrateNumber) {
+        this.illustrateNumber = illustrateNumber;
     }
 
     public String getDescription() {

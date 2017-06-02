@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.StaffRewardBO;
 import com.bjike.goddess.intromanage.dto.StaffRewardDTO;
+import com.bjike.goddess.intromanage.entity.StaffReward;
 import com.bjike.goddess.intromanage.service.StaffRewardSer;
 import com.bjike.goddess.intromanage.to.StaffRewardTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,30 @@ public class StaffRewardApiImpl implements StaffRewardAPI {
 
     @Autowired
     private StaffRewardSer staffRewardSer;
+
+    /**
+     * 根据id查询员工奖励
+     *
+     * @param id 员工奖励唯一标识
+     * @return class StaffRewardBO
+     * @throws SerException
+     */
+    @Override
+    public StaffRewardBO findById(String id) throws SerException {
+        StaffReward model = staffRewardSer.findById(id);
+        return BeanTransform.copyProperties(model, StaffRewardBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 员工奖励dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(StaffRewardDTO dto) throws SerException {
+        return staffRewardSer.count(dto);
+    }
 
     /**
      * 分页查询员工奖励

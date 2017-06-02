@@ -155,7 +155,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
      */
     @Override
     public List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.eq("ifPayment", Boolean.FALSE));
+        dto.getConditions().add(Restrict.eq("ifPayment", Boolean.TRUE));
         List<MaterialBuy> list = super.findByCis(dto);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();

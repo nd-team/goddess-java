@@ -18,6 +18,7 @@ public class PositionWorkDetailBO extends BaseBO {
      */
     private String instructionId;
 
+
     /**
      * 编号
      */

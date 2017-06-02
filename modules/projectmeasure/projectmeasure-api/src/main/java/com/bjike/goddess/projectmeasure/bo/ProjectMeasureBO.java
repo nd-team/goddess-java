@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectmeasure.bo;
 
+import java.io.Serializable;
+
 /**
  * 项目测算汇总
  *
@@ -9,7 +11,7 @@ package com.bjike.goddess.projectmeasure.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ProjectMeasureBO {
+public class ProjectMeasureBO implements Serializable {
     /**
      * 地区
      */

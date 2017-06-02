@@ -118,8 +118,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InternalContactsBO update(InternalContactsTO to) throws SerException {
-        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class), contacts = super.findById(to.getId());
-        entity.setCreateTime(contacts.getCreateTime());
+        InternalContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(Status.THAW);
         super.update(entity);
@@ -130,6 +132,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public InternalContactsBO delete(InternalContactsTO to) throws SerException {
         InternalContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -185,5 +189,19 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 //错误邮箱抛出继续
             }
         }
+    }
+
+    @Override
+    public InternalContactsBO getById(String id) throws SerException {
+        InternalContacts entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        InternalContactsDTO dto = new InternalContactsDTO();
+        return super.count(dto);
     }
 }

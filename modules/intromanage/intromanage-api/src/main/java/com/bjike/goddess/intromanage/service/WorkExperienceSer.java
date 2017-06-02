@@ -3,8 +3,8 @@ package com.bjike.goddess.intromanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.intromanage.bo.WorkExperienceBO;
-import com.bjike.goddess.intromanage.entity.WorkExperience;
 import com.bjike.goddess.intromanage.dto.WorkExperienceDTO;
+import com.bjike.goddess.intromanage.entity.WorkExperience;
 import com.bjike.goddess.intromanage.to.WorkExperienceTO;
 
 import java.util.List;

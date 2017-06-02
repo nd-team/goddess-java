@@ -78,7 +78,7 @@ public class DisciplineRecord extends BaseEntity {
     /**
      * 奖励或处罚
      */
-    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '奖励或处罚'", insertable = false)
+    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '奖励或处罚'")
     private Boolean status;
 
 

@@ -236,6 +236,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         conditions.add(Restrict.eq("username", accountNumber));
         conditions.add(Restrict.or("phone", accountNumber));
         conditions.add(Restrict.or("email", accountNumber));
+        conditions.add(Restrict.or("employeeNumber", accountNumber));
         User user = super.findOne(dto);
         UserBO userBO = BeanTransform.copyProperties(user, UserBO.class);
         return userBO;
@@ -252,7 +253,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             super.update(user);
             //更新session及缓存
             UserBO currentUser = currentUser(token);
-            if(currentUser.getId().equals(user.getId())){
+            if (currentUser.getId().equals(user.getId())) {
                 LoginUser loginUser = new LoginUser();
                 BeanUtils.copyProperties(user, loginUser);
                 redis.appendToMap(UserCommon.LOGIN_USER, token, JSON.toJSONString(loginUser));
@@ -262,10 +263,9 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         } else {
             throw new SerException("notLogin");
         }
-
     }
 
-    @Override
+        @Override
     public List<UserBO> findByGroup(String... groups) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.in("group.id", groups));

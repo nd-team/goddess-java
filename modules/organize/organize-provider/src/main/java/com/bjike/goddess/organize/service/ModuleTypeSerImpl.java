@@ -68,7 +68,7 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
         PositionDetailDTO dto = new PositionDetailDTO();
         dto.getConditions().add(Restrict.eq("module.id", id));
         if (positionDetailSer.findByCis(dto).size() > 0)
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ModuleTypeBO.class);
     }
@@ -76,6 +76,8 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
     @Override
     public ModuleTypeBO congeal(String id) throws SerException {
         ModuleType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return BeanTransform.copyProperties(entity, ModuleTypeBO.class);
@@ -84,6 +86,8 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
     @Override
     public ModuleTypeBO thaw(String id) throws SerException {
         ModuleType entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
         entity.setStatus(Status.THAW);
         super.update(entity);
         return BeanTransform.copyProperties(entity, ModuleTypeBO.class);

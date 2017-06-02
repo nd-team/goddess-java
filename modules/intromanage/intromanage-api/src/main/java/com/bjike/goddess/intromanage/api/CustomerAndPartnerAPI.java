@@ -19,6 +19,23 @@ import java.util.List;
 public interface CustomerAndPartnerAPI {
 
     /**
+     * 根据id查询客户及合作伙伴
+     *
+     * @param id 客户及合作伙伴唯一标识
+     * @return class CustomerAndPartnerBO
+     * @throws SerException
+     */
+    CustomerAndPartnerBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 客户及合作伙伴dto
+     * @throws SerException
+     */
+    Long count(CustomerAndPartnerDTO dto) throws SerException;
+
+    /**
      * 分页查询客户及合作伙伴
      *
      * @return class CustomerAndPartnerBO

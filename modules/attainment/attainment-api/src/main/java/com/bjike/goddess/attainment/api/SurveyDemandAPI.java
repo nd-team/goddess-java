@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyDemandBO;
+import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.CloseDemandTO;
 import com.bjike.goddess.attainment.to.SurveyDemandTO;
@@ -74,4 +75,35 @@ public interface SurveyDemandAPI {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研需求数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyDemandBO> maps(SurveyDemandDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取调研需求数据
+     *
+     * @param id 调研需求数据id
+     * @return
+     * @throws SerException
+     */
+    default SurveyDemandBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

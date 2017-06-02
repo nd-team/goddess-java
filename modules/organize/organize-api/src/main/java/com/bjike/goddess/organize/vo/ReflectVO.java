@@ -13,10 +13,21 @@ import com.bjike.goddess.common.api.type.Status;
  */
 public class ReflectVO {
 
+
     /**
      * 名称
      */
     private String name;
+
+    /**
+     * 岗位说明书分类名称
+     */
+    private String classifyName;
+
+    /**
+     * 岗位说明书分类id
+     */
+    private String classifyId;
 
     /**
      * 描述
@@ -33,7 +44,6 @@ public class ReflectVO {
      * 使用状态
      */
     private Status status;
-
     /**
      * id
      */
@@ -53,6 +63,22 @@ public class ReflectVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getClassifyName() {
+        return classifyName;
+    }
+
+    public void setClassifyName(String classifyName) {
+        this.classifyName = classifyName;
+    }
+
+    public String getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 
     public String getDescription() {

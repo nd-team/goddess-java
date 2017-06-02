@@ -2,7 +2,9 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
+import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
@@ -69,5 +71,27 @@ public interface ExternalContactsSer extends Ser<ExternalContacts, ExternalConta
     default List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 根据id获取外部通讯录数据
+     *
+     * @param id 外部通讯录数据id
+     * @return
+     * @throws SerException
+     */
+    default ExternalContactsBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 
 }

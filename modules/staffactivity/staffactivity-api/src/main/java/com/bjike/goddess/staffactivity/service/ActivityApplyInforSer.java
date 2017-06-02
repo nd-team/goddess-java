@@ -58,18 +58,20 @@ public interface ActivityApplyInforSer extends Ser<ActivityApplyInfor, ActivityA
     /**
      * 参与该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param area 地区
      * @throws SerException
      */
-    void joinActivity(ActivityApplyInforTO to) throws SerException;
+    void joinActivity(String id, String area) throws SerException;
 
     /**
      * 退出该活动
      *
-     * @param to 活动申请信息to
+     * @param id 活动申请信息唯一标识
+     * @param abandonReason 放弃参与活动原因
      * @throws SerException
      */
-    void exitActivity(ActivityApplyInforTO to) throws SerException;
+    void exitActivity(String id, String abandonReason) throws SerException;
 
     /**
      * 查看活动人员名单

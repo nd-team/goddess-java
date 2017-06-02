@@ -61,7 +61,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setModuleId(moduleType.getId());
         bo.setModuleName(moduleType.getModule());
         bo.setCurrent(positionDetailUserSer.findByPosition(entity.getId()).size() + "人");
-        bo.setShowNumber(String.format("%s-%s-%s", department.getShowNumber(), arrangement.getSerialNumber(), entity.getSerialNumber()));
+        bo.setShowNumber(String.format("%s-%s%s%s", department.getShowNumber(), arrangement.getSerialNumber(), department.getHierarchyNumber(), entity.getSerialNumber()));
         return bo;
     }
 
@@ -187,8 +187,10 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         PositionDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (!entity.getSerialNumber().equals(to.getSerialNumber()) || !entity.getPosition().equals(to.getPosition()))
-            this.checkUnique(to);
+        if (!entity.getSerialNumber().equals(to.getSerialNumber()) && this.findByNumber(to.getSerialNumber()) != null)
+            throw new SerException("编号已存在,无法保存");
+        if (!entity.getPosition().equals(to.getPosition()) && this.findByPosition(to.getPosition()) != null)
+            throw new SerException("岗位已存在,无法保存");
         BeanTransform.copyProperties(to, entity, true);
         entity.setDepartment(departmentDetailSer.findById(to.getDepartmentId()));
         if (null == entity.getDepartment())
@@ -212,7 +214,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         try {
             super.remove(entity);
         } catch (SerException e) {
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         }
         return this.transformationToBO(entity);
     }
@@ -264,5 +266,27 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         for (PositionDetail entity : list)
             bos.add(new OpinionBO(entity.getId(), entity.getPosition()));
         return bos;
+    }
+
+    @Override
+    public PositionDetailBO findByNumber(String serialNumber) throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("serialNumber", serialNumber));
+        PositionDetail entity = super.findOne(dto);
+        if (null == entity)
+            return null;
+        else
+            return this.transformationToBO(entity);
+    }
+
+    @Override
+    public PositionDetailBO findByPosition(String position) throws SerException {
+        PositionDetailDTO dto = new PositionDetailDTO();
+        dto.getConditions().add(Restrict.eq("position", position));
+        PositionDetail entity = super.findOne(dto);
+        if (null == entity)
+            return null;
+        else
+            return this.transformationToBO(entity);
     }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.bonus.api;
 
 import com.bjike.goddess.bonus.bo.*;
+import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -137,6 +138,60 @@ public interface DisciplineRecordAPI {
      * @throws SerException
      */
     default List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 奖励列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 处罚列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取奖罚记录
+     *
+     * @param id 奖罚记录数据id
+     * @return
+     * @throws SerException
+     */
+    default DisciplineRecordBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取奖励总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getRewardTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取处罚总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getPushTotal() throws SerException {
         return null;
     }
 

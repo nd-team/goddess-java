@@ -24,5 +24,9 @@
     <dubbo:reference interface="com.bjike.goddess.supplier.api.RewardSituationAPI" id="rewardSituationApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.supplier.api.SupplierTypeAPI" id="supplierTypeApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.supplier.api.SupplierInformationAPI" id="supplierInformationApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.supplier.api.SupPermissionAPI" id="supPermissionApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.supplier.api.SupPermissionOperateAPI"
+                     id="supPermissionOperateApiImpl"/>
+    <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
 
 </beans>

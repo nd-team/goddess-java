@@ -29,5 +29,6 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.OtherContactsAPI"
                      id="otherContactsApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.QQGroupAPI" id="qQGroupApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>
