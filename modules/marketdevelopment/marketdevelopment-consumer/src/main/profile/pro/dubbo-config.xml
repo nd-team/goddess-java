@@ -28,6 +28,10 @@
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.WeekPlanAPI" id="weekPlanApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.YearPlanAPI" id="yearPlanApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.DayPlanAPI" id="dayPlanApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarPermissionAPI" id="marPermissionApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarPermissionOperateAPI"
+                     id="marPermissionOperateApiImpl"/>
 
+    <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
 
 </beans>

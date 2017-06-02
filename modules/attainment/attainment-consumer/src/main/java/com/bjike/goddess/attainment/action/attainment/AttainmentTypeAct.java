@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.action.attainment;
 
 import com.bjike.goddess.attainment.api.AttainmentTypeAPI;
+import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
 import com.bjike.goddess.attainment.vo.AttainmentTypeVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -13,6 +14,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 调研类型
@@ -117,9 +120,9 @@ public class AttainmentTypeAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(attainmentTypeAPI.findThaw(), AttainmentTypeVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(attainmentTypeAPI.findThaw(), AttainmentTypeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -141,4 +144,50 @@ public class AttainmentTypeAct {
         }
     }
 
+
+    /**
+     * 列表
+     *
+     * @param dto 调研类型数据传输对象
+     * @return class AttainmentTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/maps")
+    public Result maps(AttainmentTypeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(attainmentTypeAPI.maps(dto), AttainmentTypeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取调研类型数据
+     *
+     * @param id 调研类型数据id
+     * @return class AttainmentTypeVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(attainmentTypeAPI.getById(id), AttainmentTypeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(attainmentTypeAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

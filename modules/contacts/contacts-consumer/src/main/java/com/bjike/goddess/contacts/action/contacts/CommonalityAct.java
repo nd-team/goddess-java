@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 公共邮箱管理
  *
@@ -119,9 +121,9 @@ public class CommonalityAct {
      * @version v1
      */
     @GetMapping("v1/findThaw")
-    public Result findThaw() throws ActException {
+    public Result findThaw(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findThaw(), CommonalityVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findThaw(), CommonalityVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -151,9 +153,40 @@ public class CommonalityAct {
      * @version v1
      */
     @GetMapping("v1/findByDepartment")
-    public Result findByDepartment(String department) throws ActException {
+    public Result findByDepartment(String department,HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findByDepartment(department), CommonalityVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.findByDepartment(department), CommonalityVO.class,request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id获取公共邮箱数据
+     *
+     * @param id 公共邮箱数据id
+     * @return class CommonalityVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.getById(id), CommonalityVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(commonalityAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

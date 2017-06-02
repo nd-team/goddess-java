@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class SurveyPlanAuditAct {
      * @return class SurveyPlanAuditVO
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/update")
     public Result update(@Validated(EDIT.class) SurveyPlanAuditTO to) throws ActException {
         try {

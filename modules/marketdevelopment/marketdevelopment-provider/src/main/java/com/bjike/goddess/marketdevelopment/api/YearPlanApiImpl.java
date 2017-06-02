@@ -1,19 +1,15 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
-import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.service.YearPlanSer;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 年计划业务接口实现
@@ -57,19 +53,17 @@ public class YearPlanApiImpl implements YearPlanAPI {
 
     @Override
     public YearPlanBO getById(String id) throws SerException {
-        return BeanTransform.copyProperties(yearPlanSer.findById(id), YearPlanBO.class);
+        return yearPlanSer.getById(id);
     }
 
     @Override
     public List<YearPlanBO> maps(YearPlanDTO dto) throws SerException {
-        return BeanTransform.copyProperties(yearPlanSer.findByPage(dto).stream()
-                .sorted(Comparator.comparing(YearPlan::getYear).reversed())
-                .collect(Collectors.toList()), YearPlanBO.class);
+        return yearPlanSer.maps(dto);
     }
 
     @Override
     public Integer getTotal() throws SerException {
-        return yearPlanSer.findAll().size();
+        return yearPlanSer.getTotal();
     }
 
     @Override

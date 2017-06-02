@@ -39,10 +39,14 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
 
     @Autowired
     private ProjectCostSer projectCostSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EvaluateProjectInfoBO addModel(EvaluateProjectInfoTO to) throws SerException {
+
+        getCusPermission();
 
         EvaluateProjectInfo model = BeanTransform.copyProperties(to, EvaluateProjectInfo.class, true);
         if (to.getYears() != null && to.getMonths() != null && to.getDays() != null) {
@@ -65,6 +69,9 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public EvaluateProjectInfoBO editModel(EvaluateProjectInfoTO to) throws SerException {
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(to.getId())) {
             EvaluateProjectInfo model = super.findById(to.getId());
             if (model != null) {
@@ -96,6 +103,9 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<EvaluateProjectInfoBO> pageList(EvaluateProjectInfoDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<EvaluateProjectInfo> list = super.findByPage(dto);
 
@@ -105,6 +115,9 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectProfitRateBO> profitPageList(EvaluateProjectInfoDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<EvaluateProjectInfo> list = super.findByPage(dto);
         List<ProjectProfitRateBO> boList = new ArrayList<ProjectProfitRateBO>();
@@ -157,6 +170,8 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
     @Transactional(rollbackFor = SerException.class)
     public List<ProjectProfitRateBO> profitScope() throws SerException {
 
+        getCusPermission();
+
         List<EvaluateProjectInfo> list = super.findAll();
         List<ProjectProfitRateBO> boList = new ArrayList<ProjectProfitRateBO>();
         for (EvaluateProjectInfo model : list) {
@@ -193,13 +208,19 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
 
     @Override
     public List<EvaluateProjectInfoBO> findAllArea() throws SerException {
-        String sql = "select distinct area ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
+
+        getCusPermission();
+
+        String sql = "select distinct area from businessevaluate_evaluateprojectinfo where 0 = 0 ";
         List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"area"});
         return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
     }
 
     @Override
     public List<EvaluateProjectInfoBO> findAllProject() throws SerException {
+
+        getCusPermission();
+
         String sql = "select distinct project ,1 from businessevaluate_evaluateprojectinfo where 0 = 0 ";
         List<EvaluateProjectInfo> list = super.findBySql(sql, EvaluateProjectInfo.class, new String[]{"project"});
         return BeanTransform.copyProperties(list,EvaluateProjectInfoBO.class);
@@ -222,5 +243,14 @@ public class EvaluateProjectInfoSerImpl extends ServiceImpl<EvaluateProjectInfo,
             returnBoList.add(new ProjectProfitRateBO("最高", bo2.getArea(), bo2.getProject(), bo2.getStartTime(), bo2.getEndTime(), bo2.getProjectProfitRate()));
         }
         return returnBoList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }

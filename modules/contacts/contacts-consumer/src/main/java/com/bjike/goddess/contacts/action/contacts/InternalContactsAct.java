@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 内部通讯录
  *
@@ -87,9 +89,9 @@ public class InternalContactsAct {
      * @version v1
      */
     @GetMapping("v1/findEmail")
-    public Result findEmailNotNull() throws ActException {
+    public Result findEmailNotNull(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.findEmailNotNull(), InternalContactsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.findEmailNotNull(), InternalContactsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -103,9 +105,9 @@ public class InternalContactsAct {
      * @version v1
      */
     @GetMapping("v1/findByUser")
-    public Result findByUser(String user_id) throws ActException {
+    public Result findByUser(String user_id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.findByUser(user_id), InternalContactsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.findByUser(user_id), InternalContactsVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -119,9 +121,40 @@ public class InternalContactsAct {
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(InternalContactsDTO dto) throws ActException {
+    public Result maps(InternalContactsDTO dto, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.maps(dto), InternalContactsVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.maps(dto), InternalContactsVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id获取内部通讯录数据
+     *
+     * @param id 内部通讯录数据id
+     * @return class InternalContactsVO
+     * @version v1
+     */
+    @GetMapping("v1/findById/{id}")
+    public Result getById(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(internalContactsAPI.getById(id), InternalContactsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(internalContactsAPI.getTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

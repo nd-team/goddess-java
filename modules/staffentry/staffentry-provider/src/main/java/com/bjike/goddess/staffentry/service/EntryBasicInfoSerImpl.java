@@ -38,6 +38,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+//    @Autowired
+//    private MessageAPI messageAPI;
 
 
     /**
@@ -140,6 +142,8 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
 
                 List<String> emails = new ArrayList<>(0);
                 //TODO: tanghaixiang 2017-03-10 未做邮件发送邮箱
+//                MessageTO messageTO = new MessageTO();
+//                messageTO.setTitle("入职通告" );
                 //emails.add(internals.get(0).getEmail());
                 StringBuffer content = new StringBuffer("");
                 content.append(" 员工编号：" + entryBasicInfoTO.getEmployeeID())
@@ -153,11 +157,12 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
                         .append(" 入职项目组:" + entryBasicInfoTO.getProjectGroup())
                         .append(" 入职岗位:" + entryBasicInfoTO.getPosition())
                 ;
+//                messageTO.setContent( content.toString() );
 //                Email email = new Email("入职通告", content.toString());
 //                email.initEmailInfo("培训信息通知邮件内容", emails );
 
                 try {
-//                    EmailUtil.SendMail(email);
+//                    messageAPI.send(messageTO);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

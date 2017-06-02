@@ -39,8 +39,10 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QQGroupBO update(QQGroupTO to) throws SerException {
-        QQGroup entity = BeanTransform.copyProperties(to, QQGroup.class), group = super.findById(to.getId());
-        entity.setCreateTime(group.getCreateTime());
+        QQGroup entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.isStatus(Boolean.TRUE);
         super.update(entity);
@@ -51,6 +53,8 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
     @Override
     public QQGroupBO delete(QQGroupTO to) throws SerException {
         QQGroup entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
     }
@@ -58,9 +62,11 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public QQGroupBO close(QQGroupTO to) throws SerException {
-        QQGroup entity = BeanTransform.copyProperties(to, QQGroup.class);
+        QQGroup entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         entity.isStatus(Boolean.FALSE);
-        super.save(entity);
+        super.update(entity);
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
     }
 
@@ -69,5 +75,19 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
         dto.getSorts().add("status=asc");
         List<QQGroup> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, QQGroupBO.class);
+    }
+
+    @Override
+    public QQGroupBO getById(String id) throws SerException {
+        QQGroup entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, QQGroupBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        QQGroupDTO dto = new QQGroupDTO();
+        return super.count(dto);
     }
 }

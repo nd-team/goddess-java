@@ -38,8 +38,8 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO save(ExternalContactsTO to) throws SerException {
-        ExternalContacts entity = BeanTransform.copyProperties(to, ExternalContacts.class, true);
         UserBO user = userAPI.currentUser();
+        ExternalContacts entity = BeanTransform.copyProperties(to, ExternalContacts.class, true);
         entity.setWriter(user.getUsername());
         entity.setWriteNumber(user.getEmployeeNumber());
         entity.setWriteTime(LocalDateTime.now());
@@ -50,10 +50,12 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ExternalContactsBO update(ExternalContactsTO to) throws SerException {
-        ExternalContacts entity = BeanTransform.copyProperties(to, ExternalContacts.class, true), contacts = super.findById(to.getId());
-        entity.setCreateTime(contacts.getCreateTime());
-        entity.setModifyTime(LocalDateTime.now());
         UserBO user = userAPI.currentUser();
+        ExternalContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
         entity.setWriter(user.getUsername());
         entity.setWriteNumber(user.getEmployeeNumber());
         entity.setWriteTime(LocalDateTime.now());
@@ -65,6 +67,8 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public ExternalContactsBO delete(ExternalContactsTO to) throws SerException {
         ExternalContacts entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ExternalContactsBO.class);
     }
@@ -82,5 +86,19 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         dto.getSorts().add("writeTime=desc");
         List<ExternalContacts> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, ExternalContactsBO.class);
+    }
+
+    @Override
+    public ExternalContactsBO getById(String id) throws SerException {
+        ExternalContacts entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, ExternalContactsBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        ExternalContactsDTO dto = new ExternalContactsDTO();
+        return super.count(dto);
     }
 }

@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +49,17 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     private ProblemDisposeSer problemDisposeSer;
     @Autowired
     private ProjectCostSer projectCostSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public BusinessEvaluateCollectBO insertModel(BusinessEvaluateCollectTO to) throws SerException {
-
+        String token = RpcTransmit.getUserToken();
+        getCusPermission();
         BusinessEvaluateCollect model = BeanTransform.copyProperties(to, BusinessEvaluateCollect.class, true);
-        model.setOperateUser(userAPI.currentUser().getUsername());
+        model.setOperateUser(userAPI.currentUser(token).getUsername());
         super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, BusinessEvaluateCollectBO.class);
@@ -63,12 +68,16 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public BusinessEvaluateCollectBO updateModel(BusinessEvaluateCollectTO to) throws SerException {
+        String token = RpcTransmit.getUserToken();
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(to.getId())) {
             BusinessEvaluateCollect model = super.findById(to.getId());
             if (model != null) {
                 BeanTransform.copyProperties(to, model, true);
                 model.setModifyTime(LocalDateTime.now());
-                model.setOperateUser(userAPI.currentUser().getUsername());
+                model.setOperateUser(userAPI.currentUser(token).getUsername());
                 super.update(model);
             } else {
                 throw new SerException("更新对象不能为空");
@@ -82,6 +91,8 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
+
+        getCusPermission();
 
         if (!StringUtils.isEmpty(id)) {
             BusinessEvaluateCollect model = super.findById(id);
@@ -101,6 +112,9 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void breakFreeze(String id) throws SerException {
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(id)) {
             BusinessEvaluateCollect model = super.findById(id);
             if (model != null) {
@@ -119,12 +133,15 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<BusinessEvaluateCollectBO> pageList(BusinessEvaluateCollectDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<BusinessEvaluateCollect> list = super.findByPage(dto);
 
         List<BusinessEvaluateCollectBO> boList = BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
 
-        for(BusinessEvaluateCollectBO bo : boList){
+        for (BusinessEvaluateCollectBO bo : boList) {
             EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectId());
             if (info != null) {
                 bo.setProject(info.getProject());
@@ -137,6 +154,8 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<EvaluateCollectTotalBO> collectTotal(String area, String project) throws SerException {
+
+        getCusPermission();
 
         EvaluateProjectInfoDTO dto = new EvaluateProjectInfoDTO();
         dto.getSorts().add("createTime=desc");
@@ -221,8 +240,8 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
             Integer totalItem = boList.stream().filter(p -> null != p.getItemCount()).mapToInt(p -> p.getItemCount()).sum();
             Integer totalLongtern = boList.stream().filter(p -> null != p.getLongtermCount()).mapToInt(p -> p.getLongtermCount()).sum();
 
-            EvaluateCollectTotalBO totalBO =new EvaluateCollectTotalBO("合计",null,totalProblemCount,totalLongtern,
-                    totalItem,totalAgency,totalCost,totalFee,totalTaxes,totalManageFee,totalProfit,totalAmount);
+            EvaluateCollectTotalBO totalBO = new EvaluateCollectTotalBO("合计", null, totalProblemCount, totalLongtern,
+                    totalItem, totalAgency, totalCost, totalFee, totalTaxes, totalManageFee, totalProfit, totalAmount);
 
             boList.add(totalBO);
         }
@@ -238,9 +257,9 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         if (list != null && !list.isEmpty()) {
             Double cost = 0.0;
             for (ProjectCost model : list) {
-                if(model.getAnother()!=null){
+                if (model.getAnother() != null) {
                     cost = cost + model.getServiceCost() + model.getEntertainCost() + model.getCommission() + model.getAnother();
-                }else{
+                } else {
                     cost = cost + model.getServiceCost() + model.getEntertainCost() + model.getCommission();
                 }
 
@@ -262,5 +281,12 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
         return problemSize;
     }
 
+    public void getCusPermission() throws SerException {
 
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
+    }
 }

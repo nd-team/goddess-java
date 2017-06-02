@@ -75,4 +75,25 @@ public interface QQGroupSer extends Ser<QQGroup, QQGroupDTO> {
         return null;
     }
 
+    /**
+     * 根据id获取QQ群数据
+     *
+     * @param id QQ群数据id
+     * @return
+     * @throws SerException
+     */
+    default QQGroupBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

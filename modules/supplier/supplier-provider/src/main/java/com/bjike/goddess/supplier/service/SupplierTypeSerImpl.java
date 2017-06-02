@@ -10,6 +10,7 @@ import com.bjike.goddess.supplier.dto.SupplierTypeDTO;
 import com.bjike.goddess.supplier.entity.SupplierType;
 import com.bjike.goddess.supplier.to.SupplierTypeTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,10 @@ import java.util.List;
 @CacheConfig(cacheNames = "supplierSerCache")
 @Service
 public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeDTO> implements SupplierTypeSer {
+    @Autowired
+    private SupPermissionSer supPermissionSer;
+
+    private static final String idFlag = "supplier-01";
 
     @Override
     public List<SupplierTypeBO> findStatus() throws SerException {
@@ -42,6 +47,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO save(SupplierTypeTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierType entity = BeanTransform.copyProperties(to, SupplierType.class);
         entity.setStatus(Status.THAW);
         super.save(entity);
@@ -51,6 +58,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO update(SupplierTypeTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 SupplierType entity = super.findById(to.getId());
@@ -68,6 +77,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO delete(SupplierTypeTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierType entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -78,6 +89,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO congeal(SupplierTypeTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierType entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -89,6 +102,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SupplierTypeBO thaw(SupplierTypeTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierType entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -99,6 +114,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
 
     @Override
     public List<SupplierTypeBO> maps(SupplierTypeDTO dto) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         dto.getSorts().add("status=asc");
         List<SupplierType> list = super.findByPage(dto);
         if (null != list && list.size() > 0)
@@ -109,6 +126,8 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
 
     @Override
     public SupplierTypeBO getById(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         SupplierType entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");

@@ -85,4 +85,26 @@ public interface AnnualApplyAPI {
         return null;
     }
 
+
+    /**
+     * 根据id获取年假申请数据
+     *
+     * @param id 年假申请数据id
+     * @return
+     * @throws SerException
+     */
+    default AnnualApplyBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
 }

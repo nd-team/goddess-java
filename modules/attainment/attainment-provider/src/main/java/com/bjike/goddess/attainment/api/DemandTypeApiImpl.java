@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.DemandTypeBO;
+import com.bjike.goddess.attainment.dto.DemandTypeDTO;
 import com.bjike.goddess.attainment.service.DemandTypeSer;
 import com.bjike.goddess.attainment.to.DemandTypeTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -54,4 +55,18 @@ public class DemandTypeApiImpl implements DemandTypeAPI {
         return demandTypeSer.findThaw();
     }
 
+    @Override
+    public List<DemandTypeBO> maps(DemandTypeDTO dto) throws SerException {
+        return demandTypeSer.maps(dto);
+    }
+
+    @Override
+    public DemandTypeBO getById(String id) throws SerException {
+        return demandTypeSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return demandTypeSer.getTotal();
+    }
 }

@@ -32,10 +32,14 @@ public class DemandCostSerImpl extends ServiceImpl<DemandCost, DemandCostDTO> im
 
     @Autowired
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DemandCostBO addModel(DemandCostTO to) throws SerException {
+
+        getCusPermission();
 
         DemandCost model = BeanTransform.copyProperties(to, DemandCost.class);
         super.save(model);
@@ -46,6 +50,8 @@ public class DemandCostSerImpl extends ServiceImpl<DemandCost, DemandCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DemandCostBO editModel(DemandCostTO to) throws SerException {
+
+        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             DemandCost model = super.findById(to.getId());
@@ -65,6 +71,9 @@ public class DemandCostSerImpl extends ServiceImpl<DemandCost, DemandCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<DemandCostBO> pageList(DemandCostDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<DemandCost> list = super.findByPage(dto);
         List<DemandCostBO> boList = BeanTransform.copyProperties(list, DemandCostBO.class);
@@ -79,5 +88,14 @@ public class DemandCostSerImpl extends ServiceImpl<DemandCost, DemandCostDTO> im
             }
         }
         return boList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }

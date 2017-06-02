@@ -45,10 +45,9 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
     @Override
     public InstructionClassifyBO save(InstructionClassifyTO to) throws SerException {
         InstructionClassify classify = BeanTransform.copyProperties(to, InstructionClassify.class);
-        classify.setCreateTime(LocalDateTime.now());
         classify.setStatus(Status.THAW);
         super.save(classify);
-        return BeanTransform.copyProperties(classify, InstructionClassifyBO.class, true);
+        return BeanTransform.copyProperties(classify, InstructionClassifyBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -71,7 +70,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
         if (entity == null)
             throw new SerException("数据对象不能为空");
         if (positionInstructionSer.findByClassify(id).size() > 0)
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
     }

@@ -85,7 +85,7 @@ public class AngleSerImpl extends ServiceImpl<Angle, AngleDTO> implements AngleS
         if (null == angle)
             throw new SerException("数据对象不存在");
         if (positionInstructionSer.findByAngle(id).size() > 0)
-            throw new SerException("存在依赖关系无法删除");
+            throw new SerException("此处已被引用,无法删除");
         super.remove(angle);
         return BeanTransform.copyProperties(angle, AngleBO.class);
     }

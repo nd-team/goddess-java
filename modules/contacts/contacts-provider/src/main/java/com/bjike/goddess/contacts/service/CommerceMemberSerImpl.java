@@ -38,8 +38,10 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CommerceMemberBO update(CommerceMemberTO to) throws SerException {
-        CommerceMember entity = BeanTransform.copyProperties(to, CommerceMember.class), member = super.findById(to.getId());
-        entity.setCreateTime(member.getCreateTime());
+        CommerceMember entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, CommerceMemberBO.class);
@@ -49,6 +51,8 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
     @Override
     public CommerceMemberBO delete(CommerceMemberTO to) throws SerException {
         CommerceMember entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, CommerceMemberBO.class);
     }
@@ -57,5 +61,19 @@ public class CommerceMemberSerImpl extends ServiceImpl<CommerceMember, CommerceM
     public List<CommerceMemberBO> maps(CommerceMemberDTO dto) throws SerException {
         List<CommerceMember> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, CommerceMemberBO.class);
+    }
+
+    @Override
+    public CommerceMemberBO getById(String id) throws SerException {
+        CommerceMember entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        return BeanTransform.copyProperties(entity, CommerceMemberBO.class);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        CommerceMemberDTO dto = new CommerceMemberDTO();
+        return super.count(dto);
     }
 }
