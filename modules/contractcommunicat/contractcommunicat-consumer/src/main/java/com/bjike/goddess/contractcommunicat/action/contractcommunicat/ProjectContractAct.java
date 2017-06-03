@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractcommunicat.action.contractcommunicat;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -22,6 +23,7 @@ import com.bjike.goddess.contractcommunicat.vo.ProjectContractColelctVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectContractVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +79,15 @@ public class ProjectContractAct extends BaseFileAction {
     @GetMapping("v1/count")
     public Result count(ProjectContractDTO dto) throws ActException {
         try {
+            if (!StringUtils.isEmpty(dto.getCommunicateUser())) {
+                dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
+            }
+            if (!StringUtils.isEmpty(dto.getCommunicateObj())) {
+                dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
+            }
+            if (dto.getCommunicateResult() != null) {
+                dto.getConditions().add(Restrict.eq("projectResult", dto.getCommunicateResult()));
+            }
             Long count = projectContractAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
