@@ -162,7 +162,7 @@ public class IndividualResumeAct {
      */
     @LoginAuth
     @PostMapping("v1/setIndividualDisplayField")
-    public Result setIndividualDisplayField(String[] username, IndividualDisplayFieldTO to) throws ActException {
+    public Result setIndividualDisplayField(String[] username, @Validated(value = {ADD.class}) IndividualDisplayFieldTO to, BindingResult result) throws ActException {
         try {
             individualResumeAPI.setIndividualDisplayField(username, to);
             return new ActResult("setIndividualDisplayField success!");
