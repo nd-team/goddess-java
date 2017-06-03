@@ -17,7 +17,7 @@ public class MarketCollectBO implements Serializable {
     private Object fourth;
     private Object has;
     private Object notHas;
-    private Object social;
+    private Object fresh;
     private Object old;
     private String area;
 
@@ -101,12 +101,12 @@ public class MarketCollectBO implements Serializable {
         this.notHas = notHas;
     }
 
-    public Object getSocial() {
-        return social;
+    public Object getFresh() {
+        return fresh;
     }
 
-    public void setSocial(Object social) {
-        this.social = social;
+    public void setFresh(Object fresh) {
+        this.fresh = fresh;
     }
 
     public Object getOld() {

@@ -1,6 +1,8 @@
 package com.bjike.goddess.checkhost.service;
 
+import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.bo.HostApplyBO;
+import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
 import com.bjike.goddess.checkhost.to.HostApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HostApplySer extends Ser<HostApply, HostApplyDTO> {
+    /**
+     * 离宿申请列表总条数
+     */
+    default Long countHostApply(HostApplyDTO hostApplyDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个离宿申请
+     *
+     * @return class HostApplyBO
+     */
+    default HostApplyBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取离宿申请
      *

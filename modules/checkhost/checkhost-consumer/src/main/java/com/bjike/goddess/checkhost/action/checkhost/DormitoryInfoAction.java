@@ -5,15 +5,19 @@ import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
 import com.bjike.goddess.checkhost.vo.DormitoryInfoVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -30,20 +34,53 @@ import java.util.List;
 public class DormitoryInfoAction {
     @Autowired
     private DormitoryInfoAPI dormitoryInfoAPI;
+    /**
+     * 宿舍信息管理列表总条数
+     *
+     * @param dormitoryInfoDTO 宿舍信息管理dto
+     * @des 获取所有宿舍信息管理总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DormitoryInfoDTO dormitoryInfoDTO) throws ActException {
+        try {
+            Long count = dormitoryInfoAPI.countDormitoryInfo(dormitoryInfoDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 一个宿舍信息管理
+     *
+     * @param id
+     * @return class DormitoryInfoVO
+     * @des 获取一个宿舍信息管理
+     * @version v1
+     */
+    @GetMapping("v1/dormitory/{id}")
+    public Result dormitory(@PathVariable String id) throws ActException {
+        try {
+            DormitoryInfoBO dormitoryInfoBO = dormitoryInfoAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(dormitoryInfoBO, DormitoryInfoVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
-     * 获取宿舍信息
+     * 宿舍信息列表
      *
      * @param dormitoryInfoDTO 宿舍信息dto
      * @return class DormitoryInfoVO
      * @des 获取所有宿舍信息
      * @version v1
      */
-    @GetMapping("v1/listDormitoryInfo")
-    public Result findListDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(DormitoryInfoDTO dormitoryInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<DormitoryInfoVO> dormitoryInfoVOS = BeanTransform.copyProperties
-                    (dormitoryInfoAPI.findListDormitoryInfo(dormitoryInfoDTO),DormitoryInfoVO.class);
+                    (dormitoryInfoAPI.findListDormitoryInfo(dormitoryInfoDTO),DormitoryInfoVO.class,request);
             return ActResult.initialize(dormitoryInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,7 +96,7 @@ public class DormitoryInfoAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addDormitoryInfo(@Validated DormitoryInfoTO dormitoryInfoTO) throws ActException {
+    public Result add(@Validated(ADD.class) DormitoryInfoTO dormitoryInfoTO, BindingResult bindingResult) throws ActException {
         try {
             DormitoryInfoBO dormitoryInfoBO = dormitoryInfoAPI.insertDormitoryInfo(dormitoryInfoTO);
             return ActResult.initialize(dormitoryInfoBO);
@@ -77,7 +114,7 @@ public class DormitoryInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editDormitoryInfo(@Validated DormitoryInfoTO dormitoryInfoTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) DormitoryInfoTO dormitoryInfoTO,BindingResult bindingResult) throws ActException {
         try {
             DormitoryInfoBO dormitoryInfoBO = dormitoryInfoAPI.editDormitoryInfo(dormitoryInfoTO);
             return ActResult.initialize(dormitoryInfoBO);
@@ -94,7 +131,7 @@ public class DormitoryInfoAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeDormitoryInfo(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             dormitoryInfoAPI.removeDormitoryInfo(id);
             return new ActResult("delete success");

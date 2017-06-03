@@ -1,20 +1,11 @@
 package com.bjike.goddess.checkhost.vo;
 
-/**
- * 汇总表表现层对象
- *
- * @Author: [ xiazhili ]
- * @Date: [ 2017-04-11 05:13 ]
- * @Description: [ 汇总表表现层对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
- */
-public class CheckHostCollectVO {
+import com.bjike.goddess.common.api.bo.BaseBO;
 
-    /**
-     * id
-     */
-    private String id;
+/**
+ * Created by ike on 17-6-2.
+ */
+public class CollectNameVO {
     /**
      * 姓名
      */
@@ -24,11 +15,6 @@ public class CheckHostCollectVO {
      * 员工编号
      */
     private String num;
-
-    /**
-     * 岗位
-     */
-    private String jobs;
 
     /**
      * 地区
@@ -43,12 +29,8 @@ public class CheckHostCollectVO {
     /**
      * 入住宿舍
      */
-    private String stayDormitory;
+    private String address;
 
-    /**
-     * 入住床位
-     */
-    private Integer stayBed;
 
     /**
      * 入住时间
@@ -61,23 +43,14 @@ public class CheckHostCollectVO {
     private String hostTime;
 
     /**
-     * 领用/归还钥匙
+     * 是否领用钥匙
      */
-    private String chiave;
+    private String receiveKey;
 
     /**
-     * 领用/归还床上用品
+     * 是否领用床上用品
      */
-    private String bedding;
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String bed;
 
     public String getName() {
         return name;
@@ -93,14 +66,6 @@ public class CheckHostCollectVO {
 
     public void setNum(String num) {
         this.num = num;
-    }
-
-    public String getJobs() {
-        return jobs;
-    }
-
-    public void setJobs(String jobs) {
-        this.jobs = jobs;
     }
 
     public String getArea() {
@@ -119,20 +84,12 @@ public class CheckHostCollectVO {
         this.projectGroup = projectGroup;
     }
 
-    public String getStayDormitory() {
-        return stayDormitory;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStayDormitory(String stayDormitory) {
-        this.stayDormitory = stayDormitory;
-    }
-
-    public Integer getStayBed() {
-        return stayBed;
-    }
-
-    public void setStayBed(Integer stayBed) {
-        this.stayBed = stayBed;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getStayTime() {
@@ -151,19 +108,19 @@ public class CheckHostCollectVO {
         this.hostTime = hostTime;
     }
 
-    public String getChiave() {
-        return chiave;
+    public String getReceiveKey() {
+        return receiveKey;
     }
 
-    public void setChiave(String chiave) {
-        this.chiave = chiave;
+    public void setReceiveKey(String receiveKey) {
+        this.receiveKey = receiveKey;
     }
 
-    public String getBedding() {
-        return bedding;
+    public String getBed() {
+        return bed;
     }
 
-    public void setBedding(String bedding) {
-        this.bedding = bedding;
+    public void setBed(String bed) {
+        this.bed = bed;
     }
 }
