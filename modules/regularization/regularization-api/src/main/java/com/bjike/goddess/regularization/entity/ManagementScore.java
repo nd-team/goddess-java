@@ -2,7 +2,9 @@ package com.bjike.goddess.regularization.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -36,6 +38,9 @@ public class ManagementScore extends BaseEntity {
     @Column(name = "scoreGrade", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '评分等级'")
     private String scoreGrade;
 
+    /**
+     * 具体分数
+     */
     @Column(name = "specificScore", nullable = false, columnDefinition = "INT(11) COMMENT '具体分数'")
     private Integer specificScore;
 

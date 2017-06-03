@@ -58,7 +58,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
      */
     @Override
     public List<SingleProjectSingleUIBO> list(SingleProjectSingleUIDTO dto) throws SerException {
-//        checkPermission();
+        checkPermission();
         List<SingleProjectSingleUI> list = super.findByPage(dto);
         List<SingleProjectSingleUIBO> listBO = BeanTransform.copyProperties(list, SingleProjectSingleUIBO.class);
         return listBO;
@@ -74,7 +74,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public SingleProjectSingleUIBO save(SingleProjectSingleUITO to) throws SerException {
-//        checkPermission();
+        checkPermission();
         SingleProjectSingleUI entity = BeanTransform.copyProperties(to, SingleProjectSingleUI.class, true);
         entity.setProjectCategory(ProjectCategory.SINGLE_SINGLE);
         entity = super.save(entity);
@@ -91,7 +91,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(SingleProjectSingleUITO to) throws SerException {
-//        checkPermission();
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             SingleProjectSingleUI model = super.findById(to.getId());
             if (model != null) {
@@ -127,7 +127,7 @@ public class SingleProjectSingleUISerImpl extends ServiceImpl<SingleProjectSingl
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-//        checkPermission();
+        checkPermission();
         super.remove(id);
     }
 }

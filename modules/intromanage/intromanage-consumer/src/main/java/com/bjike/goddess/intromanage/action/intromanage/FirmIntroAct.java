@@ -1,6 +1,7 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -45,6 +46,7 @@ public class FirmIntroAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/firmintro/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -63,6 +65,7 @@ public class FirmIntroAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated FirmIntroDTO dto, BindingResult result) throws ActException {
         try {
@@ -81,8 +84,9 @@ public class FirmIntroAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
-    public Result list(FirmIntroDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(@Validated FirmIntroDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<FirmIntroBO> boList = firmIntroAPI.list(dto);
             List<FirmIntroVO> voList = BeanTransform.copyProperties(boList, FirmIntroVO.class, request);
@@ -102,7 +106,7 @@ public class FirmIntroAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) FirmIntroTO to, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) FirmIntroTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             FirmIntroBO bo = firmIntroAPI.save(to);
             FirmIntroVO vo = BeanTransform.copyProperties(bo, FirmIntroVO.class, request);
@@ -139,7 +143,7 @@ public class FirmIntroAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(FirmIntroTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) FirmIntroTO to, BindingResult result) throws ActException {
         try {
             firmIntroAPI.update(to);
             return new ActResult("edit success!");

@@ -2,8 +2,6 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 工作表现评分业务传输对象
  *
@@ -24,7 +22,6 @@ public class PerformanceScoreBO extends BaseBO {
      * 评分内容
      */
     private String scoreContent;
-
 
     public String getPostHierarchy() {
         return postHierarchy;

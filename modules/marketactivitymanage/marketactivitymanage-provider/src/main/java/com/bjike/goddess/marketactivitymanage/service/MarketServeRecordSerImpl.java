@@ -20,8 +20,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -144,7 +142,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
 
         if ((clientInfoNos != null) && (clientInfoNos.size() > 0)) {
             int clientSize = clientInfoNos.size();
-            for (int i = 0; i < clientSize; i ++) {
+            for (int i = 0; i < clientSize; i++) {
                 CustomerInfoTO customerInfoTO = new CustomerInfoTO();
                 customerInfoTO.setClientInfoNo(clientInfoNos.get(i));
                 customerInfoTO.setClientName(clientNames.get(i));
@@ -177,7 +175,7 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
     /**
      * 资金模块意见
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                市场招待记录唯一标识
      * @param fundModuleOpinion 资金模块意见
      * @throws SerException
      */
@@ -187,14 +185,14 @@ public class MarketServeRecordSerImpl extends ServiceImpl<MarketServeRecord, Mar
         checkPermission();
         MarketServeRecord model = super.findById(id);
         model.setModifyTime(LocalDateTime.now());
-        model.setYyFundModule(fundModuleOpinion);
+        model.setFundModuleOpinion(fundModuleOpinion);
         super.update(model);
     }
 
     /**
      * 决策层审核意见
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                    市场招待记录唯一标识
      * @param executiveAuditOpinion 决策层审核意见
      * @throws SerException
      */

@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.action.regularization;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,13 +12,12 @@ import com.bjike.goddess.regularization.bo.ScoreFormulaSetBO;
 import com.bjike.goddess.regularization.dto.ScoreFormulaSetDTO;
 import com.bjike.goddess.regularization.to.ScoreFormulaSetTO;
 import com.bjike.goddess.regularization.vo.ScoreFormulaSetVO;
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,26 +31,61 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("scoreformulaset")
-@DefaultProperties
 public class ScoreFormulaSetAct {
 
     @Autowired
     private ScoreFormulaSetAPI scoreFormulaSetAPI;
 
     /**
-     * 分页查询工作表现计分方式设置
+     * 根据id查询工作表现计分方式设置
+     *
+     * @param id 工作表现计分方式设置唯一标识
+     * @return class ScoreFormulaSetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/scoreformulaset/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            ScoreFormulaSetBO bo = scoreFormulaSetAPI.findById(id);
+            ScoreFormulaSetVO vo = BeanTransform.copyProperties(bo, ScoreFormulaSetVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
      *
      * @param dto 工作表现计分方式设置dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated ScoreFormulaSetDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = scoreFormulaSetAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 分页查询工作表现计分方式设置
+     *
+     * @param dto    工作表现计分方式设置dto
      * @param result
      * @return class ScoreFormulaSetVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated ScoreFormulaSetDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated ScoreFormulaSetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<ScoreFormulaSetBO> boList = scoreFormulaSetAPI.list(dto);
-            List<ScoreFormulaSetVO> voList = BeanTransform.copyProperties(boList, ScoreFormulaSetVO.class);
+            List<ScoreFormulaSetVO> voList = BeanTransform.copyProperties(boList, ScoreFormulaSetVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -60,17 +95,17 @@ public class ScoreFormulaSetAct {
     /**
      * 添加工作表现计分方式设置
      *
-     * @param to 工作表现计分方式设置to
+     * @param to     工作表现计分方式设置to
      * @param result
      * @return class ScoreFormulaSetVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) ScoreFormulaSetTO to, BindingResult result) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) ScoreFormulaSetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ScoreFormulaSetBO bo = scoreFormulaSetAPI.save(to);
-            ScoreFormulaSetVO vo = BeanTransform.copyProperties(bo, ScoreFormulaSetVO.class);
+            ScoreFormulaSetVO vo = BeanTransform.copyProperties(bo, ScoreFormulaSetVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -97,13 +132,13 @@ public class ScoreFormulaSetAct {
     /**
      * 编辑工作表现计分方式设置
      *
-     * @param to 工作表现计分方式设置to
+     * @param to     工作表现计分方式设置to
      * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated ScoreFormulaSetTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) ScoreFormulaSetTO to, BindingResult result) throws ActException {
         try {
             scoreFormulaSetAPI.update(to);
             return new ActResult("edit success!");

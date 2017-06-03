@@ -35,7 +35,6 @@ public class ScoreFormulaSetVO {
      */
     private String scoreRange;
 
-
     public String getId() {
         return id;
     }

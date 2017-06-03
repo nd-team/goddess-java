@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.action.regularization;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,15 +10,14 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.api.TimeCriteriaSetAPI;
 import com.bjike.goddess.regularization.bo.TimeCriteriaSetBO;
 import com.bjike.goddess.regularization.dto.TimeCriteriaSetDTO;
-import com.bjike.goddess.regularization.entity.TimeCriteriaSet;
 import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 import com.bjike.goddess.regularization.vo.TimeCriteriaSetVO;
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,26 +31,60 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("timecriteriaset")
-@DefaultProperties
 public class TimeCriteriaSetAct {
 
     @Autowired
     private TimeCriteriaSetAPI timeCriteriaSetAPI;
 
     /**
-     * 分页查询时间条件设置
+     * 根据id查询时间条件设置
+     *
+     * @param id 时间条件设置唯一标识
+     * @return class TimeCriteriaSetVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/timecriteriaset/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            TimeCriteriaSetBO bo = timeCriteriaSetAPI.findById(id);
+            TimeCriteriaSetVO vo = BeanTransform.copyProperties(bo, TimeCriteriaSetVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
      *
      * @param dto 时间条件设置dto
-     * @param result
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated TimeCriteriaSetDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = timeCriteriaSetAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 分页查询时间条件设置
+     *
+     * @param dto    时间条件设置dto
      * @return class TimeCriteriaSetVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated TimeCriteriaSetDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated TimeCriteriaSetDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<TimeCriteriaSetBO> boList = timeCriteriaSetAPI.list(dto);
-            List<TimeCriteriaSetVO> voList = BeanTransform.copyProperties(boList, TimeCriteriaSetVO.class);
+            List<TimeCriteriaSetVO> voList = BeanTransform.copyProperties(boList, TimeCriteriaSetVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -60,17 +94,16 @@ public class TimeCriteriaSetAct {
     /**
      * 添加时间条件设置
      *
-     * @param to 时间条件设置to
-     * @param result
+     * @param to     时间条件设置to
      * @return class PerformanceScoreVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) TimeCriteriaSetTO to, BindingResult result) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) TimeCriteriaSetTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             TimeCriteriaSetBO bo = timeCriteriaSetAPI.save(to);
-            TimeCriteriaSetVO vo = BeanTransform.copyProperties(bo, TimeCriteriaSetVO.class);
+            TimeCriteriaSetVO vo = BeanTransform.copyProperties(bo, TimeCriteriaSetVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -97,13 +130,12 @@ public class TimeCriteriaSetAct {
     /**
      * 编辑时间条件设置
      *
-     * @param to 时间条件设置to
-     * @param result
+     * @param to     时间条件设置to
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated TimeCriteriaSetTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) TimeCriteriaSetTO to, BindingResult result) throws ActException {
         try {
             timeCriteriaSetAPI.update(to);
             return new ActResult("edit success!");

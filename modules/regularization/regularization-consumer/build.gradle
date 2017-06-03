@@ -1,3 +1,4 @@
+apply from: '../../../config.gradle'
 buildscript {
     repositories {
         mavenCentral()
@@ -6,7 +7,6 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
-
 apply plugin: 'org.springframework.boot'
 jar {
     String buildDir = project.buildDir
@@ -16,6 +16,7 @@ jar {
                 "Class-Path": new File(buildDir + '/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }
+
 }
 
 task copyJars(type: Copy) {
@@ -32,6 +33,7 @@ sourceSets {
         }
     }
 }
+
 dependencies {
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'

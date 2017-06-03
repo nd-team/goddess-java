@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.action.regularization;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,17 +11,18 @@ import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
+import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
+import com.bjike.goddess.regularization.to.ZjbApprovalTO;
 import com.bjike.goddess.regularization.vo.ManagementScoreVO;
 import com.bjike.goddess.regularization.vo.RegularizationVO;
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,26 +36,60 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("regularization")
-@DefaultProperties
 public class RegularizationAct {
 
     @Autowired
     private RegularizationAPI regularizationAPI;
 
     /**
+     * 根据id查询员工转正
+     *
+     * @param id 员工转正唯一标识
+     * @return class RegularizationVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/regularization/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            RegularizationBO bo = regularizationAPI.findById(id);
+            RegularizationVO vo = BeanTransform.copyProperties(bo, RegularizationVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 计算总数量
+     *
+     * @param dto 员工转正dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated RegularizationDTO dto, BindingResult result) throws ActException {
+        try {
+            Long count = regularizationAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 分页查询员工转正
      *
      * @param dto 员工转正dto
-     * @param result
      * @return class RegularizationVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated RegularizationDTO dto, BindingResult result) throws ActException {
+    public Result list(@Validated RegularizationDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<RegularizationBO> boList = regularizationAPI.list(dto);
-            List<RegularizationVO> voList = BeanTransform.copyProperties(boList, RegularizationVO.class);
+            List<RegularizationVO> voList = BeanTransform.copyProperties(boList, RegularizationVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -64,16 +100,15 @@ public class RegularizationAct {
      * 添加员工转正
      *
      * @param to 员工转正to
-     * @param result
      * @return class RegularizationVO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RegularizationTO to, BindingResult result) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RegularizationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             RegularizationBO bo = regularizationAPI.save(to);
-            RegularizationVO vo = BeanTransform.copyProperties(bo, RegularizationVO.class);
+            RegularizationVO vo = BeanTransform.copyProperties(bo, RegularizationVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -88,7 +123,7 @@ public class RegularizationAct {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable(value = "id") String id) throws ActException {
         try {
             regularizationAPI.remove(id);
             return new ActResult("delete success!");
@@ -101,12 +136,11 @@ public class RegularizationAct {
      * 编辑员工转正
      *
      * @param to 员工转正to
-     * @param result
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) RegularizationTO to, BindingResult result) throws ActException {
         try {
             regularizationAPI.update(to);
             return new ActResult("edit success!");
@@ -118,15 +152,15 @@ public class RegularizationAct {
     /**
      * 管理层评分
      *
-     * @param to 员工转正to
-     * @param result
+     * @param id 员工转正唯一标识
+     * @param to 管理层评分to
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/manageScore")
-    public Result manageScore(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    @PutMapping("v1/manageScore/{id}")
+    public Result manageScore(@PathVariable(value = "id") String id, @Validated(value = {ManagementScoreTO.IManagementScore.class}) ManagementScoreTO to, BindingResult result) throws ActException {
         try {
-            regularizationAPI.manageScore(to);
+            regularizationAPI.manageScore(id, to);
             return new ActResult("manageScore success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -136,16 +170,14 @@ public class RegularizationAct {
     /**
      * 查看管理层评分
      *
-     * @param to 员工转正to
-     * @param result
+     * @param id 员工转正唯一标识
      * @return class ManagementScoreVO
      * @throws ActException
-     * @version v1
      */
-    @GetMapping("v1/checkManageScore")
-    public Result checkManageScore(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    @GetMapping("v1/checkManageScore/{id}")
+    public Result checkManageScore(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
-            List<ManagementScoreBO> boList = regularizationAPI.checkManageScore(to);
+            List<ManagementScoreBO> boList = regularizationAPI.checkManageScore(id);
             List<ManagementScoreVO> voList = BeanTransform.copyProperties(boList, ManagementScoreVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
@@ -156,15 +188,17 @@ public class RegularizationAct {
     /**
      * 决策层评价
      *
-     * @param to 员工转正to
-     * @param result
+     * @param id                    员工转正唯一标识
+     * @param decisionLevelEvaluate 决策层评价
+     * @param decisionLevelRank     决策层评分等级
+     * @param decisionLevelScore    决策层具体评分
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/decisionLevelEvaluate")
-    public Result decisionLevelEvaluate(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    @PutMapping("v1/decisionLevelEvaluate/{id}")
+    public Result decisionLevelEvaluate(@PathVariable(value = "id") String id, @RequestParam(value = "decisionLevelEvaluate") String decisionLevelEvaluate, @RequestParam(value = "decisionLevelRank") String decisionLevelRank, @RequestParam(value = "decisionLevelScore") Integer decisionLevelScore) throws ActException {
         try {
-            regularizationAPI.decisionLevelEvaluate(to);
+            regularizationAPI.decisionLevelEvaluate(id, decisionLevelEvaluate, decisionLevelRank, decisionLevelScore);
             return new ActResult("decisionLevelEvaluate success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -174,13 +208,12 @@ public class RegularizationAct {
     /**
      * 规划模块补充
      *
-     * @param to 员工转正to
-     * @param result
+     * @param to 规划模块补充to
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/planModuleSupply")
-    public Result planModuleSupply(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    public Result planModuleSupply(@Validated(value = {PlanModuleSupplyTO.PlanModuleSupply.class}) PlanModuleSupplyTO to, BindingResult result) throws ActException {
         try {
             regularizationAPI.planModuleSupply(to);
             return new ActResult("planModuleSupply success!");
@@ -192,15 +225,14 @@ public class RegularizationAct {
     /**
      * 预算模块补充
      *
-     * @param to 员工转正to
-     * @param result
+     * @param id 员工转正唯一标识
+     * @param budgetPositiveComment 预算模块转正意见
      * @throws ActException
-     * @version v1
      */
     @PutMapping("v1/budgetModuleSupply")
-    public Result budgetModuleSupply(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    public Result budgetModuleSupply(@PathVariable(value = "id") String id, @RequestParam(value = "budgetPositiveComment") String budgetPositiveComment) throws ActException {
         try {
-            regularizationAPI.budgetModuleSupply(to);
+            regularizationAPI.budgetModuleSupply(id, budgetPositiveComment);
             return new ActResult("budgetModuleSupply success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -210,13 +242,12 @@ public class RegularizationAct {
     /**
      * 总经办审批
      *
-     * @param to 员工转正to
-     * @param result
+     * @param to 总经办审批to
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/zjbApproval")
-    public Result zjbApproval(@Validated RegularizationTO to, BindingResult result) throws ActException {
+    public Result zjbApproval(@Validated(value = {ZjbApprovalTO.ZjbApproval.class}) ZjbApprovalTO to, BindingResult result) throws ActException {
         try {
             regularizationAPI.zjbApproval(to);
             return new ActResult("zjbApproval success!");

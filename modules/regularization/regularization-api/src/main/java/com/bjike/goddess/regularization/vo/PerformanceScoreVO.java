@@ -25,7 +25,6 @@ public class PerformanceScoreVO {
      */
     private String scoreContent;
 
-
     public String getId() {
         return id;
     }

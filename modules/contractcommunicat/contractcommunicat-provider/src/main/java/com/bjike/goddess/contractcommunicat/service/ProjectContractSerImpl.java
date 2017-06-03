@@ -86,7 +86,11 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部项目名称已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if(list.get(0).getId().equals(to.getId())){
+
+                    }else{
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -100,7 +104,11 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部编号已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if(list.get(0).getId().equals(to.getId())){
+
+                    }else{
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -113,7 +121,11 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目名称已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if(list.get(0).getId().equals(to.getId())){
+
+                    }else{
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -126,7 +138,11 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目编号已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if(list.get(0).getId().equals(to.getId())){
+
+                    }else{
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }

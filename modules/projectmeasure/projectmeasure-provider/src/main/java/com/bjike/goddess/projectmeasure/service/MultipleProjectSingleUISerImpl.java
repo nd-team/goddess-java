@@ -5,9 +5,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
-import com.bjike.goddess.projectmeasure.bo.MultipleProjectSingleUIBO;
 import com.bjike.goddess.projectmeasure.dto.MultipleProjectSingleUIDTO;
-import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.entity.MultipleProjectSingleUI;
 import com.bjike.goddess.projectmeasure.to.MultipleProjectSingleUITO;
 import com.bjike.goddess.projectmeasure.type.ProjectCategory;
@@ -45,10 +43,10 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
         String userToken = RpcTransmit.getUserToken();
         //商务模块权限
         Boolean permissionLevel = cusPermissionSer.busCusPermission("1");
-        if ( !permissionLevel) {
+        if (!permissionLevel) {
             throw new SerException("您不是商务模块人员,没有该操作权限");
         }
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
 
     }
 
@@ -60,7 +58,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
      */
     @Override
     public List<MultipleProjectSingleUIBO> list(MultipleProjectSingleUIDTO dto) throws SerException {
-//        checkPermission();
+        checkPermission();
         List<MultipleProjectSingleUI> list = super.findByPage(dto);
         List<MultipleProjectSingleUIBO> listBO = BeanTransform.copyProperties(list, MultipleProjectSingleUIBO.class);
         return listBO;
@@ -76,7 +74,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MultipleProjectSingleUIBO save(MultipleProjectSingleUITO to) throws SerException {
-//        checkPermission();
+        checkPermission();
         MultipleProjectSingleUI entity = BeanTransform.copyProperties(to, MultipleProjectSingleUI.class, true);
         entity.setProjectCategory(ProjectCategory.MULTIPLE_SINGLE);
         entity = super.save(entity);
@@ -93,7 +91,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MultipleProjectSingleUITO to) throws SerException {
-//        checkPermission();
+        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MultipleProjectSingleUI model = super.findById(to.getId());
             if (model != null) {
@@ -129,7 +127,7 @@ public class MultipleProjectSingleUISerImpl extends ServiceImpl<MultipleProjectS
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void remove(String id) throws SerException {
-//        checkPermission();
+        checkPermission();
         super.remove(id);
     }
 }
