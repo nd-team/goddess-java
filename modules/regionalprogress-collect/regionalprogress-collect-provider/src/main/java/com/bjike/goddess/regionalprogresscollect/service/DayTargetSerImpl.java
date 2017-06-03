@@ -45,6 +45,7 @@ public class DayTargetSerImpl extends ServiceImpl<DayTarget, DayTargetDTO> imple
     private DayTargetBO transformBO(DayTarget entity) throws SerException {
         DayTargetBO bo = BeanTransform.copyProperties(entity, DayTargetBO.class);
         BeanTransform.copyProperties(entity.getTarget(), bo, true);
+        bo.setId(entity.getId());
         bo.setTargetId(entity.getTarget().getId());
         return bo;
     }

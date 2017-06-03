@@ -58,12 +58,6 @@ public class MonthPlanVO {
     private Double yearCourseAccounted;
 
     /**
-     * 年任务量
-     */
-    private Double yearQuota;
-
-
-    /**
      * 月份
      */
     private MonthType month;
@@ -164,14 +158,6 @@ public class MonthPlanVO {
 
     public void setYearCourseAccounted(Double yearCourseAccounted) {
         this.yearCourseAccounted = yearCourseAccounted;
-    }
-
-    public Double getYearQuota() {
-        return yearQuota;
-    }
-
-    public void setYearQuota(Double yearQuota) {
-        this.yearQuota = yearQuota;
     }
 
     public MonthType getMonth() {

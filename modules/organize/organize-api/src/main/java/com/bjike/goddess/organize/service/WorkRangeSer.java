@@ -190,4 +190,14 @@ public interface WorkRangeSer extends Ser<WorkRange, WorkRangeDTO> {
     default WorkRangeBO open(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 获取工作范围选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
 }

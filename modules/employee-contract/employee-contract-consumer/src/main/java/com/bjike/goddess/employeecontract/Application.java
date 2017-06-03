@@ -14,7 +14,7 @@ import java.io.IOException;
  * 扫描com.bjike.goddess.common.consumer 加入过滤器引入userToken
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.employeecontract.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.archive.config"})
+@ComponentScan(basePackages = {"com.bjike.goddess.employeecontract.action", "com.bjike.goddess.common.consumer", "com.bjike.goddess.employeecontract.config"})
 @ImportResource("classpath:app.xml")
 public class Application {
     @Bean

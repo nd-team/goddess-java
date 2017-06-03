@@ -84,7 +84,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO save(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         MonthPlan entity = BeanTransform.copyProperties(to, MonthPlan.class);
         entity.setYear(yearPlanSer.findById(to.getYearId()));
@@ -99,7 +99,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO update(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
@@ -121,7 +121,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MonthPlanBO delete(MonthPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         MonthPlan entity = super.findById(to.getId());
         if (entity == null)
@@ -145,7 +145,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
     @Override
     public List<MonthPlanBO> findByYear(Integer year) throws SerException {
         String[] fields = {"id", "accounted", "courseAccounted", "leastQuota", "quota", "total", "yearId"};
-        StringBuilder sql = new StringBuilder(" SELECT m.id,m.accounted,m.courseAccounted,m.leastQuota,m.quota,m.total,m.year_id,m.yearQuota FROM marketdevelopment_month_plan AS m ");
+        StringBuilder sql = new StringBuilder(" SELECT m.id,m.accounted,m.courseAccounted,m.leastQuota,m.quota,m.total,m.year_id FROM marketdevelopment_month_plan AS m ");
         sql.append(" LEFT JOIN (SELECT id FROM marketdevelopment_year_plan WHERE year = ");
         sql.append(year);
         sql.append(") AS y ON y.id = m.year_id");
@@ -167,7 +167,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public MonthPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
+        if (!marPermissionSer.getMarPermission(marketCheck)
                 && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         try {
@@ -179,8 +179,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Override
     public List<MonthPlanBO> maps(MonthPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         return this.transformBOList(super.findByPage(dto));
     }

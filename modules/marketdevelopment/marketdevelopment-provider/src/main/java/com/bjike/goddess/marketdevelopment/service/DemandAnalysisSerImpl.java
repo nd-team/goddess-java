@@ -42,7 +42,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO save(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+        if (!marPermissionSer.getMarPermission(demandManage))
             throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = BeanTransform.copyProperties(to, DemandAnalysis.class);
         super.save(entity);
@@ -52,7 +52,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO update(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+        if (!marPermissionSer.getMarPermission(demandManage))
             throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
@@ -71,7 +71,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DemandAnalysisBO delete(DemandAnalysisTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage))
+        if (!marPermissionSer.getMarPermission(demandManage))
             throw new SerException("您的帐号没有权限");
         DemandAnalysis entity = super.findById(to.getId());
         if (entity == null)
@@ -107,7 +107,7 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
 
     @Override
     public List<DemandAnalysis> findByPage(DemandAnalysisDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(demandManage) && !marPermissionSer.getMarPermission(marketCheck))
+        if (!marPermissionSer.getMarPermission(demandManage))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }

@@ -238,4 +238,15 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         super.save(entity);
         return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<WorkRange> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for (WorkRange entity : list)
+            bos.add(new OpinionBO(entity.getId(), String.format("方向:%s 科目:%s 专业分类:%s 工作范围:%s", entity.getDirection(), entity.getProject(), entity.getClassify(), entity.getWorkRange())));
+        return bos;
+    }
 }

@@ -47,7 +47,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO save(YearPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         YearPlan entity = BeanTransform.copyProperties(to, YearPlan.class);
         super.save(entity);
@@ -57,7 +57,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO update(YearPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
@@ -76,7 +76,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public YearPlanBO delete(YearPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         YearPlan entity = super.findById(to.getId());
         if (entity == null)
@@ -119,8 +119,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
 
     @Override
     public YearPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         YearPlan entity = super.findById(id);
         if (entity == null)
@@ -130,8 +129,7 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
 
     @Override
     public List<YearPlanBO> maps(YearPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("year=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), YearPlanBO.class);

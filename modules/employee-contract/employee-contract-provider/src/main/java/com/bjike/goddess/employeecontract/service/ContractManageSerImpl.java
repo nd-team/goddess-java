@@ -3,6 +3,7 @@ package com.bjike.goddess.employeecontract.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
 import com.bjike.goddess.employeecontract.bo.ContractInfoBO;

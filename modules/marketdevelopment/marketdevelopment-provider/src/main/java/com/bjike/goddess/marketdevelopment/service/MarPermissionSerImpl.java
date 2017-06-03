@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarOperateBO;
 import com.bjike.goddess.marketdevelopment.bo.MarPermissionBO;
@@ -80,7 +81,7 @@ public class MarPermissionSerImpl extends ServiceImpl<MarPermission, MarPermissi
             //先查询操作对象
             List<String> idList = new ArrayList<>();
             MarPermissionOperateDTO cpoDTO = new MarPermissionOperateDTO();
-            cpoDTO.getConditions().add(Restrict.eq("supPermissionId", temp.getId()));
+            cpoDTO.getConditions().add(Restrict.eq("marPermissionId", temp.getId()));
             List<MarPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
             if (operateList != null && operateList.size() > 0) {
                 operateList.stream().forEach(op -> {
@@ -136,7 +137,7 @@ public class MarPermissionSerImpl extends ServiceImpl<MarPermission, MarPermissi
         //先查询操作对象
         List<String> idList = new ArrayList<>();
         MarPermissionOperateDTO cpoDTO = new MarPermissionOperateDTO();
-        cpoDTO.getConditions().add(Restrict.eq("supPermissionId", cusPermission.getId()));
+        cpoDTO.getConditions().add(Restrict.eq("marPermissionId", cusPermission.getId()));
         List<MarPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {
@@ -276,7 +277,7 @@ public class MarPermissionSerImpl extends ServiceImpl<MarPermission, MarPermissi
 
         //先删除
         MarPermissionOperateDTO cpoDTO = new MarPermissionOperateDTO();
-        cpoDTO.getConditions().add(Restrict.eq("supPermissionId", temp.getId()));
+        cpoDTO.getConditions().add(Restrict.eq("marPermissionId", temp.getId()));
         List<MarPermissionOperate> deleteList = cusPermissionOperateSer.findByCis(cpoDTO);
         if (deleteList != null && deleteList.size() > 0) {
             cusPermissionOperateSer.remove(deleteList);
@@ -295,7 +296,6 @@ public class MarPermissionSerImpl extends ServiceImpl<MarPermission, MarPermissi
 
     @Override
     public Boolean getMarPermission(String idFlag) throws SerException {
-
         //当前用户
         UserBO userBO = userAPI.currentUser();
         String userId = userBO.getId();
@@ -310,7 +310,7 @@ public class MarPermissionSerImpl extends ServiceImpl<MarPermission, MarPermissi
         //先查询获操作对象
         List<String> idList = new ArrayList<>();
         MarPermissionOperateDTO cpoDTO = new MarPermissionOperateDTO();
-        cpoDTO.getConditions().add(Restrict.eq("supPermissionId", cusPermission.getId()));
+        cpoDTO.getConditions().add(Restrict.eq("marPermissionId", cusPermission.getId()));
         List<MarPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
         if (operateList != null && operateList.size() > 0) {
             operateList.stream().forEach(op -> {

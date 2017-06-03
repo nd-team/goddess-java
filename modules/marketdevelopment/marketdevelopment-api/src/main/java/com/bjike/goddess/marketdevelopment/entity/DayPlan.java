@@ -114,7 +114,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 配合人
      */
-    @Column(name = "coordinate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '配合人'")
+    @Column(name = "coordinate", columnDefinition = "VARCHAR(255)   COMMENT '配合人'")
     private String coordinate;
 
 

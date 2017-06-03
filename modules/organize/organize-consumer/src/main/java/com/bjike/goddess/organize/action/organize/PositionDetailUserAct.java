@@ -187,6 +187,9 @@ public class PositionDetailUserAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             PositionDetailUserVO vo = BeanTransform.copyProperties(positionDetailUserAPI.findById(id), PositionDetailUserVO.class, request);
+            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(vo.getUserId());
+            if (null != bos)
+                vo.setPositionDetails(BeanTransform.copyProperties(bos, PositionDetailVO.class));
             return ActResult.initialize(this.assemble(vo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

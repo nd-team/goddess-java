@@ -66,7 +66,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO save(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         WeekPlan entity = BeanTransform.copyProperties(to, WeekPlan.class, true);
         entity.setMonth(monthPlanSer.findById(to.getMonthId()));
@@ -78,7 +78,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO update(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
@@ -97,7 +97,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
     @Transactional(rollbackFor = SerException.class)
     @Override
     public WeekPlanBO delete(WeekPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         WeekPlan entity = super.findById(to.getId());
         if (entity == null)
