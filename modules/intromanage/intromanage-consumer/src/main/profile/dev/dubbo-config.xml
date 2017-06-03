@@ -17,5 +17,6 @@
 	<!--配置的公共接口-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.intromanage.api.FirmIntroAPI" id="firmIntroApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.intromanage.api.IndividualResumeAPI" id="individualResumeApiImpl"/>
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

@@ -1,6 +1,7 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -45,6 +46,7 @@ public class IndividualResumeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/individualresume/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -63,6 +65,7 @@ public class IndividualResumeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated IndividualResumeDTO dto, BindingResult result) throws ActException {
         try {
@@ -81,8 +84,9 @@ public class IndividualResumeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
-    public Result list(IndividualResumeDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(@Validated IndividualResumeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             List<IndividualResumeBO> boList = individualResumeAPI.list(dto);
             List<IndividualResumeVO> voList = BeanTransform.copyProperties(boList, IndividualResumeVO.class, request);
@@ -102,7 +106,7 @@ public class IndividualResumeAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) IndividualResumeTO to, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) IndividualResumeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             IndividualResumeBO bo = individualResumeAPI.save(to);
             IndividualResumeVO vo = BeanTransform.copyProperties(bo, IndividualResumeVO.class, request);
@@ -139,7 +143,7 @@ public class IndividualResumeAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(IndividualResumeTO to) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) IndividualResumeTO to, BindingResult result) throws ActException {
         try {
             individualResumeAPI.update(to);
             return new ActResult("edit success!");

@@ -8,7 +8,9 @@ import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.service.RegularizationSer;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
+import com.bjike.goddess.regularization.to.ZjbApprovalTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -139,33 +141,34 @@ public class RegularizationApiImpl implements RegularizationAPI {
     /**
      * 规划模块补充
      *
-     * @param to 员工转正to
+     * @param to 规划模块补充to
      * @throws SerException
      */
     @Override
-    public void planModuleSupply(RegularizationTO to) throws SerException {
+    public void planModuleSupply(PlanModuleSupplyTO to) throws SerException {
         regularizationSer.planModuleSupply(to);
     }
 
     /**
-     * 预算模块补充
+     * 预算模块转正意见
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
     @Override
-    public void budgetModuleSupply(RegularizationTO to) throws SerException {
-        regularizationSer.budgetModuleSupply(to);
+    public void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException {
+        regularizationSer.budgetModuleSupply(id, budgetPositiveComment);
     }
 
     /**
      * 总经办审批
      *
-     * @param to 员工转正to
+     * @param to 总经办审批to
      * @throws SerException
      */
     @Override
-    public void zjbApproval(RegularizationTO to) throws SerException {
+    public void zjbApproval(ZjbApprovalTO to) throws SerException {
         regularizationSer.zjbApproval(to);
     }
 }
