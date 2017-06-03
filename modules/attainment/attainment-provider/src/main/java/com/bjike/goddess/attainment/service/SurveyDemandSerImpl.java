@@ -12,7 +12,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
-import org.apache.commons.lang3.StringUtils;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -62,10 +62,15 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyDemandBO save(SurveyDemandTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         SurveyDemand entity = BeanTransform.copyProperties(to, SurveyDemand.class, true);
         entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
+        if (null == entity.getDemand())
+            throw new SerException("调研需求类型不存在,无法保存");
         entity.setType(attainmentTypeSer.findById(to.getType_id()));
-        entity.setUsername(userAPI.currentUser().getUsername());
+        if (null == entity.getType())
+            throw new SerException("调研类型不存在,无法保存");
+        entity.setUsername(user.getUsername());
         entity.setLaunch(LocalDateTime.now());
         String scope = "";
         if (entity.getScope().equals(ScopeType.COMPANY))
@@ -82,34 +87,35 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyDemandBO update(SurveyDemandTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                SurveyDemand entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
-                entity.setType(attainmentTypeSer.findById(to.getType_id()));
-                entity.setModifyTime(LocalDateTime.now());
-                String scope = "";
-                if (entity.getScope().equals(ScopeType.COMPANY))
-                    scope = "公司";
-                else
-                    for (String name : to.getScopeNames())
-                        scope += name + ",";
-                entity.setScopeName(scope);
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        SurveyDemand entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
+        if (null == entity.getDemand())
+            throw new SerException("调研需求类型不存在,无法保存");
+        entity.setType(attainmentTypeSer.findById(to.getType_id()));
+        if (null == entity.getType())
+            throw new SerException("调研类型不存在,无法保存");
+        entity.setModifyTime(LocalDateTime.now());
+        String scope = "";
+        if (entity.getScope().equals(ScopeType.COMPANY))
+            scope = "公司";
+        else
+            for (String name : to.getScopeNames())
+                scope += name + ",";
+        entity.setScopeName(scope);
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyDemandBO delete(String id) throws SerException {
         SurveyDemand entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }
@@ -117,9 +123,12 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyDemandBO close(CloseDemandTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         SurveyDemand entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
         entity.setCloseReason(to.getCloseReason());
-        entity.setHandle(userAPI.currentUser().getUsername());
+        entity.setHandle(user.getUsername());
         return this.transformBO(entity);
     }
 
@@ -129,5 +138,24 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
         dto.getConditions().add(Restrict.eq("surveyStatus", status));
         List<SurveyDemand> list = super.findByCis(dto);
         return this.transformBOList(list);
+    }
+
+    @Override
+    public List<SurveyDemandBO> maps(SurveyDemandDTO dto) throws SerException {
+        return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public SurveyDemandBO getById(String id) throws SerException {
+        SurveyDemand entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
+        return this.transformBO(entity);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SurveyDemandDTO dto = new SurveyDemandDTO();
+        return super.count(dto);
     }
 }

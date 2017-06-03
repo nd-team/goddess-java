@@ -92,11 +92,6 @@ public class PositionInstructionBO extends BaseBO {
     private String dimensionName;
 
     /**
-     * 分类ID
-     */
-    private String classifyId;
-
-    /**
      * 分类
      */
     private String classifyName;
@@ -115,7 +110,7 @@ public class PositionInstructionBO extends BaseBO {
     /**
      * 体现类别
      */
-    private String[] reflectIds;
+    private String reflectId;
 
     /**
      * 体现类别
@@ -166,14 +161,6 @@ public class PositionInstructionBO extends BaseBO {
 
     public void setDimensionId(String dimensionId) {
         this.dimensionId = dimensionId;
-    }
-
-    public String getClassifyId() {
-        return classifyId;
-    }
-
-    public void setClassifyId(String classifyId) {
-        this.classifyId = classifyId;
     }
 
     public String getSerialNumber() {
@@ -304,12 +291,12 @@ public class PositionInstructionBO extends BaseBO {
         this.operateNames = operateNames;
     }
 
-    public String[] getReflectIds() {
-        return reflectIds;
+    public String getReflectId() {
+        return reflectId;
     }
 
-    public void setReflectIds(String[] reflectIds) {
-        this.reflectIds = reflectIds;
+    public void setReflectId(String reflectId) {
+        this.reflectId = reflectId;
     }
 
     public String getReflectNames() {

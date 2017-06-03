@@ -33,6 +33,10 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Autowired
     private SupplierInformationSer supplierInformationSer;
+    @Autowired
+    private SupPermissionSer supPermissionSer;
+
+    private static final String idFlag = "supplier-01";
 
     /**
      * 转换获奖情况传输对象
@@ -48,6 +52,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Override
     public List<RewardSituationBO> findByInformation(String info_id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         RewardSituationDTO dto = new RewardSituationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
         List<RewardSituation> list = super.findByCis(dto);
@@ -60,6 +66,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RewardSituationBO save(RewardSituationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         RewardSituation entity = BeanTransform.copyProperties(to, RewardSituation.class, true);
         entity.setInformation(supplierInformationSer.findById(to.getInformationId()));
         if (null == entity.getInformation())
@@ -71,6 +79,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RewardSituationBO update(RewardSituationTO to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isBlank(to.getId()))
             throw new SerException("数据ID不能为空");
         RewardSituation entity = super.findById(to.getId());
@@ -88,6 +98,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RewardSituationBO delete(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         RewardSituation entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不能为空");
@@ -97,6 +109,8 @@ public class RewardSituationSerImpl extends ServiceImpl<RewardSituation, RewardS
 
     @Override
     public RewardSituationBO getById(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
         RewardSituation entity = super.findById(id);
         if (null == entity)
             return null;

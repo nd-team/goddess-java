@@ -2,44 +2,42 @@ package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDateTime;
-
 /**
- * 编号设计信息传输对象
+ * 编号设计信息业务传输对象
  *
- * @Author: [dengjunren]
- * @Date: [17-3-8 上午9:26]
- * @Description: []
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-05-31 09:49 ]
+ * @Description: [ 编号设计信息业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 public class DesignNumberInfoBO extends BaseBO {
 
     /**
-     * 编号
+     * 操作对象
      */
     private String serialNumber;
 
     /**
-     * 分类
+     * 编号信息类型
      */
-    private String classify;
+    private String type;
 
     /**
-     * 名称
+     * 举例名称
      */
-    private String name;
+    private String illustrate;
 
     /**
-     * 描述
+     * 举例编号
+     */
+    private String illustrateNumber;
+
+    /**
+     * 编号信息生成说明
      */
     private String description;
 
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -49,20 +47,28 @@ public class DesignNumberInfoBO extends BaseBO {
         this.serialNumber = serialNumber;
     }
 
-    public String getClassify() {
-        return classify;
+    public String getType() {
+        return type;
     }
 
-    public void setClassify(String classify) {
-        this.classify = classify;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getIllustrate() {
+        return illustrate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIllustrate(String illustrate) {
+        this.illustrate = illustrate;
+    }
+
+    public String getIllustrateNumber() {
+        return illustrateNumber;
+    }
+
+    public void setIllustrateNumber(String illustrateNumber) {
+        this.illustrateNumber = illustrateNumber;
     }
 
     public String getDescription() {
@@ -71,13 +77,5 @@ public class DesignNumberInfoBO extends BaseBO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
     }
 }

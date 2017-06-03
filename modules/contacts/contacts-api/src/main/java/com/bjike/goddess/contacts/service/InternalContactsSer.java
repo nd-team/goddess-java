@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.contacts.bo.CommerceContactsBO;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
@@ -91,5 +92,26 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * @throws SerException
      */
     void sendEmail() throws SerException;
+
+    /**
+     * 根据id获取内部通讯录数据
+     *
+     * @param id 内部通讯录数据id
+     * @return
+     * @throws SerException
+     */
+    default InternalContactsBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 
 }

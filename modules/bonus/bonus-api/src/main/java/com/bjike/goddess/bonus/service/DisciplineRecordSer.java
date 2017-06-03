@@ -122,4 +122,56 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
         return null;
     }
 
+    /**
+     * 奖励列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 处罚列表
+     *
+     * @param dto 奖罚记录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取奖罚记录
+     *
+     * @param id 奖罚记录数据id
+     * @return
+     * @throws SerException
+     */
+    default DisciplineRecordBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取奖励总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getRewardTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取处罚总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getPushTotal() throws SerException {
+        return null;
+    }
 }

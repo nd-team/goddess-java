@@ -1,6 +1,7 @@
 package com.bjike.goddess.annual.api;
 
 import com.bjike.goddess.annual.bo.AnnualInfoBO;
+import com.bjike.goddess.annual.dto.AnnualInfoDTO;
 import com.bjike.goddess.annual.service.AnnualInfoSer;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +34,18 @@ public class AnnualInfoApiImpl implements AnnualInfoAPI {
         return annualInfoSer.findByUsers(username);
     }
 
+    @Override
+    public List<AnnualInfoBO> maps(AnnualInfoDTO dto) throws SerException {
+        return annualInfoSer.maps(dto);
+    }
+
+    @Override
+    public AnnualInfoBO getById(String id) throws SerException {
+        return annualInfoSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return annualInfoSer.getTotal();
+    }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.AttainmentWayBO;
+import com.bjike.goddess.attainment.dto.AttainmentWayDTO;
 import com.bjike.goddess.attainment.service.AttainmentWaySer;
 import com.bjike.goddess.attainment.to.AttainmentWayTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -54,4 +55,18 @@ public class AttainmentWayApiImpl implements AttainmentWayAPI {
         return attainmentWaySer.findThaw();
     }
 
+    @Override
+    public List<AttainmentWayBO> maps(AttainmentWayDTO dto) throws SerException {
+        return attainmentWaySer.maps(dto);
+    }
+
+    @Override
+    public AttainmentWayBO getById(String id) throws SerException {
+        return attainmentWaySer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return attainmentWaySer.getTotal();
+    }
 }

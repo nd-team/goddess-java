@@ -8,7 +8,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -52,6 +51,8 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
     public SurveyQuestionnaireBO save(SurveyQuestionnaireTO to) throws SerException {
         SurveyQuestionnaire entity = BeanTransform.copyProperties(to, SurveyQuestionnaire.class);
         entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        if (null == entity.getActualize())
+            throw new SerException("调研实施对象不存在,无法保存");
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -59,25 +60,24 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireBO update(SurveyQuestionnaireTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                SurveyQuestionnaire entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                entity.setActualize(surveyActualizeSer.findById(to.getId()));
-                super.update(entity);
-                return this.transformBO(entity);
-            } catch (SerException e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        SurveyQuestionnaire entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        if (null == entity.getActualize())
+            throw new SerException("调研实施对象不存在,无法保存");
+        super.update(entity);
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyQuestionnaireBO delete(String id) throws SerException {
         SurveyQuestionnaire entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         super.remove(entity);
         return this.transformBO(entity);
     }

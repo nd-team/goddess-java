@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class SurveyQuestionnaireUserAct {
      * @return class SurveyQuestionnaireUserVO
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) SurveyQuestionnaireUserTO to) throws ActException {
         try {

@@ -51,6 +51,7 @@ public interface CommerceMemberAPI {
         return null;
     }
 
+
     /**
      * 列表查询
      *
@@ -59,6 +60,27 @@ public interface CommerceMemberAPI {
      * @throws SerException
      */
     default List<CommerceMemberBO> maps(CommerceMemberDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取商务会员卡数据
+     *
+     * @param id 商务会员卡数据id
+     * @return
+     * @throws SerException
+     */
+    default CommerceMemberBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
         return null;
     }
 

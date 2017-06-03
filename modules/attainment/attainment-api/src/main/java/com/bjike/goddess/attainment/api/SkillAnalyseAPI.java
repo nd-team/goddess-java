@@ -1,8 +1,11 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
+import com.bjike.goddess.attainment.dto.SkillAnalyseDTO;
 import com.bjike.goddess.attainment.to.SkillAnalyseTO;
 import com.bjike.goddess.common.api.exception.SerException;
+
+import java.util.List;
 
 /**
  * 技能分析表业务接口
@@ -45,6 +48,38 @@ public interface SkillAnalyseAPI {
      * @throws SerException
      */
     default SkillAnalyseBO delete(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 列表
+     *
+     * @param dto 技能分析数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SkillAnalyseBO> maps(SkillAnalyseDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取技能分析数据
+     *
+     * @param id 技能分析数据id
+     * @return
+     * @throws SerException
+     */
+    default SkillAnalyseBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
         return null;
     }
 

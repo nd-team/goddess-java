@@ -45,4 +45,14 @@ public class AnnualArrangementStandardApiImpl implements AnnualArrangementStanda
     public AnnualArrangementStandardBO findByArrangementStandard(String standard_id, String arrangement_id) throws SerException {
         return annualArrangementStandardSer.findByArrangementStandard(standard_id, arrangement_id);
     }
+
+    @Override
+    public AnnualArrangementStandardBO getById(String id) throws SerException {
+        return annualArrangementStandardSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return annualArrangementStandardSer.getTotal();
+    }
 }

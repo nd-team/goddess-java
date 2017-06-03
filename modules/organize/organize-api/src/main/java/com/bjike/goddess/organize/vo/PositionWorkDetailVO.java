@@ -16,6 +16,7 @@ public class PositionWorkDetailVO {
      */
     private String instructionId;
 
+
     /**
      * 编号
      */

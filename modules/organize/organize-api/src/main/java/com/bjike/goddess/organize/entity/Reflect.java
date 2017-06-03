@@ -3,9 +3,7 @@ package com.bjike.goddess.organize.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -26,6 +24,13 @@ public class Reflect extends BaseEntity {
      */
     @Column(unique = true, nullable = false,columnDefinition = "VARCHAR(50) COMMENT '名称'")
     private String name;
+
+    /**
+     * 分类
+     */
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "classify_id", columnDefinition = "VARCHAR(36) COMMENT '分类'")
+    private InstructionClassify classify;
 
     /**
      * 描述
@@ -52,6 +57,14 @@ public class Reflect extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public InstructionClassify getClassify() {
+        return classify;
+    }
+
+    public void setClassify(InstructionClassify classify) {
+        this.classify = classify;
     }
 
     public String getDescription() {

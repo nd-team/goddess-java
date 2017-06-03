@@ -42,5 +42,6 @@
                      id="surveyQuestionnaireOptionUserApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.attainment.api.SurveyQuestionnaireUserAPI"
                      id="surveyQuestionnaireUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 
 </beans>

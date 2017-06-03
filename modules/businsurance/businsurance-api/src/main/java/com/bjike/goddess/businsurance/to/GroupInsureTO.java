@@ -20,13 +20,13 @@ public class GroupInsureTO extends BaseTO {
     /**
      * 联系人
      */
-    @NotBlank(groups = GroupInsureTO.TestAdd.class , message = "联系人不能为空")
+    @NotBlank(groups = {GroupInsureTO.TestAdd.class} , message = "联系人不能为空")
     private String contractor;
 
     /**
      * 联系电话
      */
-    @NotBlank(groups = GroupInsureTO.TestAdd.class , message = "联系电话不能为空")
+    @NotBlank(groups = {GroupInsureTO.TestAdd.class} , message = "联系电话不能为空")
     private String tel;
 
     /**

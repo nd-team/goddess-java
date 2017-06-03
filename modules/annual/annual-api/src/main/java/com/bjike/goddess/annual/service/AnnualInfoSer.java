@@ -48,4 +48,36 @@ public interface AnnualInfoSer extends Ser<AnnualInfo, AnnualInfoDTO> {
      */
     void generate() throws SerException;
 
+
+    /**
+     * 列表
+     *
+     * @param dto 年假信息数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<AnnualInfoBO> maps(AnnualInfoDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取年假信息数据
+     *
+     * @param id 年假信息数据id
+     * @return
+     * @throws SerException
+     */
+    default AnnualInfoBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

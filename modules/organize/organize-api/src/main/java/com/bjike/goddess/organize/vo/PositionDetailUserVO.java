@@ -1,6 +1,5 @@
 package com.bjike.goddess.organize.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +46,11 @@ public class PositionDetailUserVO {
      * 职位选项数据
      */
     private List<UserPositionVO> positionVo;
+
+    /**
+     * 职位信息
+     */
+    private List<PositionDetailVO> positionDetails;
 
 
     public String getId() {
@@ -103,5 +107,13 @@ public class PositionDetailUserVO {
 
     public void setPositionVo(List<UserPositionVO> positionVo) {
         this.positionVo = positionVo;
+    }
+
+    public List<PositionDetailVO> getPositionDetails() {
+        return positionDetails;
+    }
+
+    public void setPositionDetails(List<PositionDetailVO> positionDetails) {
+        this.positionDetails = positionDetails;
     }
 }

@@ -7,6 +7,8 @@ import com.bjike.goddess.attainment.to.SurveyActualizeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
+import java.util.List;
+
 /**
  * 调研实施记录业务接口
  *
@@ -62,4 +64,35 @@ public interface SurveyActualizeSer extends Ser<SurveyActualize, SurveyActualize
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研实施记录数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyActualizeBO> maps(SurveyActualizeDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取调研实施记录数据
+     *
+     * @param id 调研实施记录数据id
+     * @return
+     * @throws SerException
+     */
+    default SurveyActualizeBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

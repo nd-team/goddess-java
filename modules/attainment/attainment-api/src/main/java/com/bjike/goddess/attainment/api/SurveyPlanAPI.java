@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -72,4 +73,24 @@ public interface SurveyPlanAPI {
         return null;
     }
 
+    /**
+     * 列表
+     *
+     * @param dto 调研计划数据传输对象
+     * @return
+     * @throws SerException
+     */
+    default List<SurveyPlanBO> maps(SurveyPlanDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

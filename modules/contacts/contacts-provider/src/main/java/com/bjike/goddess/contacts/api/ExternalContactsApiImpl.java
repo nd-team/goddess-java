@@ -49,4 +49,14 @@ public class ExternalContactsApiImpl implements ExternalContactsAPI {
     public List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         return externalContactsSer.maps(dto);
     }
+
+    @Override
+    public ExternalContactsBO getById(String id) throws SerException {
+        return externalContactsSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return externalContactsSer.getTotal();
+    }
 }
