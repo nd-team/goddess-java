@@ -164,7 +164,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
         }
         if (dto.getCommunicateResult() != null) {
-            dto.getConditions().add(Restrict.like("communicateResult", dto.getCommunicateResult()));
+            dto.getConditions().add(Restrict.eq("projectResult", dto.getCommunicateResult()));
         }
 
         List<ProjectContractBO> pageList = BeanTransform.copyProperties(super.findByPage(dto), ProjectContractBO.class);
@@ -240,13 +240,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
 
     //设置汇总字段
     public List<ProjectContractCollectBO> setCollectField(List<ProjectContract> list) throws SerException {
+
+
         List<ProjectContractBO> boList = BeanTransform.copyProperties(list, ProjectContractBO.class);
 
         List<ProjectContractCollectBO> returnBoList = BeanTransform.copyProperties(list, ProjectContractCollectBO.class);
         Integer totalCooperate = 0;
         Integer totalTrail = 0;
         Integer totalAbandon = 0;
-
+        Double totalCostBudget = 0.0;
         if (returnBoList != null && !returnBoList.isEmpty()) {
             for (ProjectContractCollectBO bo : returnBoList) {
                 if (bo.getProjectResult() == CommunicateResult.COOPERATE) {
@@ -260,10 +262,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
                     totalAbandon++;
                 }
             }
+            totalCostBudget = returnBoList.stream().mapToDouble(p -> p.getCostBudget()).sum();
+        }else{
+            returnBoList = new ArrayList<ProjectContractCollectBO>();
         }
-        Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-        ProjectContractCollectBO total = new ProjectContractCollectBO("合计", null, null, null, null, totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
+
+        ProjectContractCollectBO total = new ProjectContractCollectBO("合计", null, null, null, null,
+                totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
         returnBoList.add(total);
+
         return returnBoList;
     }
 

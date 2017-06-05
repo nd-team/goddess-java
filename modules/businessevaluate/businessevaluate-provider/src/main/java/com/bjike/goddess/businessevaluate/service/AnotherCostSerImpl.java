@@ -77,16 +77,20 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
         dto.getSorts().add("createTime=desc");
         List<AnotherCost> list = super.findByPage(dto);
         List<AnotherCostBO> boList = BeanTransform.copyProperties(list, AnotherCostBO.class);
-        //设置项目信息
-        for (AnotherCostBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
-            if (info != null) {
-                bo.setArea(info.getArea());
-                bo.setProject(info.getProject());
-                bo.setStartTime(info.getStartTime().toString());
-                bo.setEndTime(info.getEndTime().toString());
+
+        if(boList!=null && !boList.isEmpty()){
+            //设置项目信息
+            for (AnotherCostBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
             }
         }
+
         return boList;
     }
 

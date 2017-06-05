@@ -49,8 +49,8 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
     private CompetitorSer competitorSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-    @Autowired
-    private MessageAPI messageAPI;
+    /*@Autowired
+    private MessageAPI messageAPI;*/
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -301,10 +301,9 @@ public class CompetitorCollectSerImpl extends ServiceImpl<CompetitorCollect, Com
 
     public void sendEmail(List<Competitor> competitorList, String[] sendUsers) throws SerException {
         MessageTO to = new MessageTO("竞争对手管理定时汇总邮件", "");
-        to.setMsgType(MsgType.OTHER);
         to.setSendType(SendType.EMAIL);
         to.setReceivers(sendUsers);
-        messageAPI.send(to);
+//        messageAPI.send(to);
     }
 
     @Override

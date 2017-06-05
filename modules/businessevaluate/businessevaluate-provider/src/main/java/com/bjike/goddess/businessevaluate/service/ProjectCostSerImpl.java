@@ -78,15 +78,19 @@ public class ProjectCostSerImpl extends ServiceImpl<ProjectCost, ProjectCostDTO>
         List<ProjectCost> list = super.findByPage(dto);
         List<ProjectCostBO> boList = BeanTransform.copyProperties(list, ProjectCostBO.class);
         //设置项目信息
-        for (ProjectCostBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
-            if (info != null) {
-                bo.setArea(info.getArea());
-                bo.setProject(info.getProject());
-                bo.setStartTime(info.getStartTime().toString());
-                bo.setEndTime(info.getEndTime().toString());
+
+        if (boList != null && !boList.isEmpty()) {
+            for (ProjectCostBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
             }
         }
+
         return boList;
     }
 

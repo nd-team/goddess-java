@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractcommunicat.action.contractcommunicat;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -52,16 +53,16 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     private FileAPI fileAPI;
 
     /**
-     * 根据id查询项目承包洽谈
+     * 根据id查询项目外包洽谈
      *
-     * @param id 项目承包洽谈id
-     * @return class ProjectContractVO
+     * @param id 项目外包洽谈id
+     * @return class ProjectOutsourcingVO
      * @version v1
      */
     @GetMapping("v1/find/{id}")
     public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            ProjectContractVO vo = BeanTransform.copyProperties(projectOutsourcingAPI.findById(id), ProjectContractVO.class, request);
+            ProjectOutsourcingVO vo = BeanTransform.copyProperties(projectOutsourcingAPI.findById(id), ProjectOutsourcingVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -77,6 +78,16 @@ public class ProjectOutsourcingAct extends BaseFileAction {
     @GetMapping("v1/count")
     public Result count(ProjectOutsourcingDTO dto) throws ActException {
         try {
+            if (dto.getCommunicateUser() != null) {
+                dto.getConditions().add(Restrict.like("communicateUser", dto.getCommunicateUser()));
+            }
+            if (dto.getCommunicateObj() != null) {
+                dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
+            }
+            if (dto.getCommunicateResult() != null) {
+                dto.getConditions().add(Restrict.eq("projectResult", dto.getCommunicateResult()));
+            }
+
             Long count = projectOutsourcingAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
