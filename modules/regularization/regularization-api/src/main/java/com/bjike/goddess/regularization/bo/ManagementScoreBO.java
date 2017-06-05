@@ -2,8 +2,6 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 管理层评分业务传输对象
  *
@@ -39,7 +37,6 @@ public class ManagementScoreBO extends BaseBO {
      * 员工转正id
      */
     private String regularizationId;
-
 
     public String getManagement() {
         return management;

@@ -1,6 +1,11 @@
 package com.bjike.goddess.regularization.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 员工转正
@@ -16,87 +21,110 @@ public class RegularizationTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 性别
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "性别不能为空")
     private String gender;
 
     /**
      * 学历
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "学历不能为空")
     private String education;
 
     /**
      * 专业
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "专业不能为空")
     private String profession;
 
     /**
      * 入职时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "入职时间不能为空")
     private String hiredate;
 
     /**
      * 员工编号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工编号不能为空")
     private String empNo;
 
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String post;
 
     /**
      * 试用期月份
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "试用期月份不能为空")
     private String probationPeriod;
 
     /**
      * 入职以来月平考勤扣分量
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "入职以来月平考勤扣分量不能为空")
     private String monthAverageDeductMark;
 
     /**
      * 奖励分数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "奖励分数不能为空")
     private Integer awardSoce;
 
     /**
      * 处罚分数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "处罚分数不能为空")
     private Integer penaltyScore;
 
     /**
      * 工作自述
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "工作自述不能为空")
     private String jobReadme;
 
     /**
      * 工作总结
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "工作总结不能为空")
     private String jobSummary;
 
     /**
      * 条件相关说明
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "条件相关说明不能为空")
     private String criteriaAttention;
 
     /**
      * 转正条件确认
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "转正条件确定不能为空")
     private Boolean posCriteriaConfirmed;
+
+    /**
+     * 转正面谈信息
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "转正面谈信息不能为空")
+    private String posFacialInfor;
 
     /**
      * 管理层评分平均分
@@ -106,6 +134,7 @@ public class RegularizationTO extends BaseTO {
     /**
      * 决策层
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "决策层不能为空")
     private String decisionLevel;
 
     /**
@@ -126,6 +155,7 @@ public class RegularizationTO extends BaseTO {
     /**
      * 规划模块
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "规划模块不能为空")
     private String planModule;
 
     /**
@@ -146,6 +176,7 @@ public class RegularizationTO extends BaseTO {
     /**
      * 预算模块
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "预算模块不能为空")
     private String budgetModule;
 
     /**
@@ -156,6 +187,7 @@ public class RegularizationTO extends BaseTO {
     /**
      * 总经办
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "总经办不能为空")
     private String gmOffice;
 
     /**
@@ -164,14 +196,14 @@ public class RegularizationTO extends BaseTO {
     private String positiveType;
 
     /**
+     * 总经办评价
+     */
+    private String zjbAppraise;
+
+    /**
      * 转正时间
      */
     private String positiveDate;
-
-    /**
-     * 转正面谈信息
-     */
-    private String posFacialInfor;
 
     /**
      * 管理层意见
@@ -427,6 +459,14 @@ public class RegularizationTO extends BaseTO {
 
     public void setPositiveType(String positiveType) {
         this.positiveType = positiveType;
+    }
+
+    public String getZjbAppraise() {
+        return zjbAppraise;
+    }
+
+    public void setZjbAppraise(String zjbAppraise) {
+        this.zjbAppraise = zjbAppraise;
     }
 
     public String getPositiveDate() {

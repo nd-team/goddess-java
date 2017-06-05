@@ -30,6 +30,14 @@ public class HostApplyApiImpl implements HostApplyAPI {
     @Autowired
     private HostApplySer hostApplySer;
     @Override
+    public Long countHostApply(HostApplyDTO hostApplyDTO) throws SerException {
+        return hostApplySer.countHostApply(hostApplyDTO);
+    }
+    @Override
+    public HostApplyBO getOne(String id) throws SerException {
+        return hostApplySer.getOne(id);
+    }
+    @Override
     public List<HostApplyBO> findListHostApply(HostApplyDTO hostApplyDTO) throws SerException {
         return hostApplySer.findListHostApply(hostApplyDTO);
     }

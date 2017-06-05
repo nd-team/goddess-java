@@ -23,127 +23,116 @@ public class CareerPlanningCustom extends BaseEntity {
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "department", columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String department;
 
     /**
-     * 入职时间String
+     * 入职时间
      */
-    @Column(name = "entryTime", nullable = false, columnDefinition = "DATE   COMMENT '入职时间String'")
+    @Column(name = "entryTime", columnDefinition = "DATE   COMMENT '入职时间'")
     private LocalDate entryTime;
 
     /**
      * 薪资上升幅度
      */
-    @Column(name = "expectedSalaryIncrease", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '薪资上升幅度'")
+    @Column(name = "expectedSalaryIncrease",  columnDefinition = "VARCHAR(255)   COMMENT '薪资上升幅度'")
     private String expectedSalaryIncrease;
 
     /**
      * 规划日期
      */
-    @Column(name = "planningDate", nullable = false, columnDefinition = "DATE   COMMENT '规划日期'")
+    @Column(name = "planningDate", columnDefinition = "DATE   COMMENT '规划日期'")
     private LocalDate planningDate;
 
     /**
      * 目前状态
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '目前状态'")
-    private Status currentState;
+    @Column( columnDefinition = "VARCHAR(255)   COMMENT '目前状态'")
+    private String currentState;
 
     /**
-     * 选择发展路径：转正
+     * 选择发展路径：
      */
-    @Column(name = "positive", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '选择发展路径：转正'")
+    @Column(name = "positive", columnDefinition = "VARCHAR(255)   COMMENT '选择发展路径：'")
     private String positive;
 
-    /**
-     * 选择发展路径：管理方面
-     */
-    @Column(name = "management", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '选择发展路径：管理方面'")
-    private String management;
-
-    /**
-     * 选择发展路径：技能方面
-     */
-    @Column(name = "skills", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '选择发展路径：技能方面'")
-    private String skills;
 
     /**
      * 此路径能力提升程度的选择
      */
-    @Column(name = "degreeAbilityAscend", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '此路径能力提升程度的选择'")
+    @Column(name = "degreeAbilityAscend",  columnDefinition = "VARCHAR(255)   COMMENT '此路径能力提升程度的选择'")
     private String degreeAbilityAscend;
 
     /**
      * 此时的权利及义务
      */
-    @Column(name = "rightsObligations", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '此时的权利及义务'")
+    @Column(name = "rightsObligations", columnDefinition = "VARCHAR(255)   COMMENT '此时的权利及义务'")
     private String rightsObligations;
 
     /**
      * 预计完成时间
      */
-    @Column(name = "expectedCompletionTime", nullable = false, columnDefinition = "DATE   COMMENT '预计完成时间'")
+    @Column(name = "expectedCompletionTime",  columnDefinition = "DATE   COMMENT '预计完成时间'")
     private LocalDate expectedCompletionTime;
 
     /**
      * 实际完成时间
      */
-    @Column(name = "actualCompletionTime", nullable = false, columnDefinition = "DATE   COMMENT '实际完成时间'")
+    @Column(name = "actualCompletionTime", columnDefinition = "DATE   COMMENT '实际完成时间'")
     private LocalDate actualCompletionTime;
 
     /**
      * 是否按时完成
      */
-    @Column(name = "is_finish", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否按时完成'", insertable = false)
+    @Column(name = "is_finish", columnDefinition = "TINYINT(2) COMMENT '是否按时完成'")
     private Boolean finish;
 
     /**
      * 期望周收益（元）
      */
-    @Column(name = "expectWeeksEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '期望周收益（元）'")
+    @Column(name = "expectWeeksEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望周收益（元）'")
     private String expectWeeksEarnings;
 
     /**
      * 期望月收益（元）
      */
-    @Column(name = "expectMonthsEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '期望月收益（元）'")
+    @Column(name = "expectMonthsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望月收益（元）'")
     private String expectMonthsEarnings;
 
     /**
      * 期望年收益（元）
      */
-    @Column(name = "expectYearsEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '期望年收益（元）'")
+    @Column(name = "expectYearsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '期望年收益（元）'")
     private String expectYearsEarnings;
 
     /**
      * 实际周收益（元）
      */
-    @Column(name = "actualWeeksEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际周收益（元）'")
+    @Column(name = "actualWeeksEarnings", columnDefinition = "VARCHAR(255)   COMMENT '实际周收益（元）'")
     private String actualWeeksEarnings;
 
     /**
      * 实际月收益（元）
      */
-    @Column(name = "actualMonthsEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际月收益（元）'")
+    @Column(name = "actualMonthsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '实际月收益（元）'")
     private String actualMonthsEarnings;
 
     /**
      * 实际年收益（元）
      */
-    @Column(name = "actualYearsEarnings", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际年收益（元）'")
+    @Column(name = "actualYearsEarnings", columnDefinition = "VARCHAR(255)   COMMENT '实际年收益（元）'")
     private String actualYearsEarnings;
 
     private String notUpStandard; //未达标项内容
@@ -199,11 +188,11 @@ public class CareerPlanningCustom extends BaseEntity {
         this.planningDate = planningDate;
     }
 
-    public Status getCurrentState() {
+    public String getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(Status currentState) {
+    public void setCurrentState(String currentState) {
         this.currentState = currentState;
     }
 
@@ -213,22 +202,6 @@ public class CareerPlanningCustom extends BaseEntity {
 
     public void setPositive(String positive) {
         this.positive = positive;
-    }
-
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
     }
 
     public String getDegreeAbilityAscend() {

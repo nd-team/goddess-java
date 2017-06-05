@@ -32,10 +32,14 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
 
     @Autowired
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public LabourCostBO insertModel(LabourCostTO to) throws SerException {
+
+        getCusPermission();
 
         LabourCost model = BeanTransform.copyProperties(to, LabourCost.class, true);
         super.save(model);
@@ -46,6 +50,8 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public LabourCostBO updateModel(LabourCostTO to) throws SerException {
+
+        getCusPermission();
 
         if (!StringUtils.isEmpty(to.getId())) {
             LabourCost model = super.findById(to.getId());
@@ -65,20 +71,35 @@ public class LabourCostSerImpl extends ServiceImpl<LabourCost, LabourCostDTO> im
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<LabourCostBO> pageList(LabourCostDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<LabourCost> list = super.findByPage(dto);
         List<LabourCostBO> boList = BeanTransform.copyProperties(list, LabourCostBO.class);
         //设置项目信息
-        for (LabourCostBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
-            if (info != null) {
-                bo.setArea(info.getArea());
-                bo.setProject(info.getProject());
-                bo.setStartTime(info.getStartTime().toString());
-                bo.setEndTime(info.getEndTime().toString());
+        if (boList != null && !boList.isEmpty()) {
+            for (LabourCostBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
             }
         }
+
         return boList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 
 }

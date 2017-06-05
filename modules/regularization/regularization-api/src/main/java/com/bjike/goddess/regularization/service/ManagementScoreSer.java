@@ -3,8 +3,8 @@ package com.bjike.goddess.regularization.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.regularization.bo.ManagementScoreBO;
-import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.dto.ManagementScoreDTO;
+import com.bjike.goddess.regularization.entity.ManagementScore;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
 
 import java.util.List;

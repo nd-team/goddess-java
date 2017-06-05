@@ -2,7 +2,9 @@ package com.bjike.goddess.regularization.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 
@@ -130,7 +132,7 @@ public class Regularization extends BaseEntity {
     /**
      * 决策层
      */
-    @Column(name = "decisionLevel", columnDefinition = "VARCHAR(255) COMMENT '决策层'")
+    @Column(name = "decisionLevel", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '决策层'")
     private String decisionLevel;
 
     /**
@@ -154,7 +156,7 @@ public class Regularization extends BaseEntity {
     /**
      * 规划模块
      */
-    @Column(name = "planModule", columnDefinition = "VARCHAR(255) COMMENT '规划模块'")
+    @Column(name = "planModule", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '规划模块'")
     private String planModule;
 
     /**
@@ -178,7 +180,7 @@ public class Regularization extends BaseEntity {
     /**
      * 预算模块
      */
-    @Column(name = "budgetModule", columnDefinition = "VARCHAR(255) COMMENT '预算模块'")
+    @Column(name = "budgetModule", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '预算模块'")
     private String budgetModule;
 
     /**
@@ -190,7 +192,7 @@ public class Regularization extends BaseEntity {
     /**
      * 总经办
      */
-    @Column(name = "gmOffice", columnDefinition = "VARCHAR(255) COMMENT '总经办'")
+    @Column(name = "gmOffice", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '总经办'")
     private String gmOffice;
 
     /**
@@ -198,6 +200,12 @@ public class Regularization extends BaseEntity {
      */
     @Column(name = "positiveType", columnDefinition = "VARCHAR(255) COMMENT '转正类型'")
     private String positiveType;
+
+    /**
+     * 总经办评价
+     */
+    @Column(name = "zjbAppraise", columnDefinition = "VARCHAR(255) COMMENT '总经办评价'")
+    private String zjbAppraise;
 
     /**
      * 转正时间
@@ -456,6 +464,18 @@ public class Regularization extends BaseEntity {
         return positiveDate;
     }
 
+    public String getZjbAppraise() {
+        return zjbAppraise;
+    }
+
+    public void setZjbAppraise(String zjbAppraise) {
+        this.zjbAppraise = zjbAppraise;
+    }
+
+    public void setPosFacialInfor(String posFacialInfor) {
+        this.posFacialInfor = posFacialInfor;
+    }
+
     public void setPositiveDate(LocalDate positiveDate) {
         this.positiveDate = positiveDate;
     }
@@ -464,7 +484,4 @@ public class Regularization extends BaseEntity {
         return posFacialInfor;
     }
 
-    public void setPosFacialInfor(String posFacialInfor) {
-        this.posFacialInfor = posFacialInfor;
-    }
 }

@@ -6,7 +6,10 @@ import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.entity.Regularization;
+import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
+import com.bjike.goddess.regularization.to.ZjbApprovalTO;
 
 import java.util.List;
 
@@ -54,54 +57,58 @@ public interface RegularizationSer extends Ser<Regularization, RegularizationDTO
      */
     void update(RegularizationTO to) throws SerException;
 
-
     /**
      * 管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param to 管理层评分to
      * @throws SerException
      */
-    void manageScore(RegularizationTO to) throws SerException;
+    void manageScore(String id, ManagementScoreTO to) throws SerException;
 
     /**
      * 查看管理层评分
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
      * @return class ManagementScoreBO
      * @throws SerException
      */
-    List<ManagementScoreBO> checkManageScore(RegularizationTO to) throws SerException;
+    List<ManagementScoreBO> checkManageScore(String id) throws SerException;
 
     /**
      * 决策层评价
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param decisionLevelEvaluate 决策层评价
+     * @param decisionLevelRank 决策层评分等级
+     * @param decisionLevelScore 决策层具体评分
      * @throws SerException
      */
-    void decisionLevelEvaluate(RegularizationTO to) throws SerException;
+    void decisionLevelEvaluate(String id, String decisionLevelEvaluate, String decisionLevelRank, Integer decisionLevelScore) throws SerException;
 
     /**
      * 规划模块补充
      *
-     * @param to 员工转正to
+     * @param to 规划模块补充to
      * @throws SerException
      */
-    void planModuleSupply(RegularizationTO to) throws SerException;
+    void planModuleSupply(PlanModuleSupplyTO to) throws SerException;
 
     /**
      * 预算模块补充
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
-    void budgetModuleSupply(RegularizationTO to) throws SerException;
+    void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException;
 
     /**
      * 总经办审批
      *
-     * @param to 员工转正to
+     * @param to 总经办审批to
      * @throws SerException
      */
-    void zjbApproval(RegularizationTO to) throws SerException;
+    void zjbApproval(ZjbApprovalTO to) throws SerException;
 
 }

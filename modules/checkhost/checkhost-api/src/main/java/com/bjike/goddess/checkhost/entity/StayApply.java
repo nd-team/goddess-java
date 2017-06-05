@@ -22,55 +22,55 @@ public class StayApply extends BaseEntity {
     /**
      * 新入职员工姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '新入职员工姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '新入职员工姓名'")
     private String name;
 
     /**
      * 申请入住日期
      */
-    @Column(name = "stayDate", nullable = false, columnDefinition = "DATE   COMMENT '申请入住日期'")
+    @Column(name = "stayDate", columnDefinition = "DATE   COMMENT '申请入住日期'")
     private LocalDate stayDate;
 
     /**
      * 申请入住地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请入住地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '申请入住地区'")
     private String area;
 
     /**
      * 申请入住宿舍
      */
-    @Column(name = "stayDormitory", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请入住宿舍'")
+    @Column(name = "stayDormitory", columnDefinition = "VARCHAR(255)   COMMENT '申请入住宿舍'")
     private String stayDormitory;
 
     /**
      * 申请入住原因
      */
-    @Column(name = "stayCause", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '申请入住原因'")
+    @Column(name = "stayCause",  columnDefinition = "VARCHAR(255)   COMMENT '申请入住原因'")
     private String stayCause;
 
     /**
      * 住宿负责人
      */
-    @Column(name = "stayHead", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '住宿负责人'")
+    @Column(name = "stayHead", columnDefinition = "VARCHAR(255)   COMMENT '住宿负责人'")
     private String stayHead;
 
     /**
      * 福利模块负责人审核
      */
-    @Column(name = "headAudit", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '福利模块负责人审核'")
+    @Column(name = "headAudit", columnDefinition = "DECIMAL(10,2)   COMMENT '福利模块负责人审核'")
     private String headAudit;
 
     /**
      * 新员工确认入住
      */
-    @Column(name = "is_stay", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '新员工确认入住'", insertable = false)
+    @Column(name = "is_stay",  columnDefinition = "TINYINT(2)  COMMENT '新员工确认入住'")
     private Boolean stay;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

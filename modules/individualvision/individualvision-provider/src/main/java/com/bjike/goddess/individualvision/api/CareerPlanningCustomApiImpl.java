@@ -29,6 +29,15 @@ public class CareerPlanningCustomApiImpl implements CareerPlanningCustomAPI {
     @Autowired
     private CareerPlanningCustomSer careerPlanningCustomSer;
     @Override
+    public Long countCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws SerException {
+        return careerPlanningCustomSer.countCareerPlanningCustom(careerPlanningCustomDTO);
+    }
+
+    @Override
+    public CareerPlanningCustomBO getOne(String id) throws SerException {
+        return careerPlanningCustomSer.getOne(id);
+    }
+    @Override
     public List<CareerPlanningCustomBO> findListCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws SerException {
         return careerPlanningCustomSer.findListCareerPlanningCustom(careerPlanningCustomDTO);
     }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.individualvision.action.individualvision;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,9 +13,11 @@ import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
 import com.bjike.goddess.individualvision.vo.CareerPlanningCustomVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -27,23 +31,58 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("individualvision/careerplanningcustom")
+@RequestMapping("careerplanningcustom")
 public class CareerPlanningCustomAction {
     @Autowired
     private CareerPlanningCustomAPI careerPlanningCustomAPI;
     /**
-     * 获取职业规划定制
+     * 职业规划定制列表总条数
+     *
+     * @param careerPlanningCustomDTO 职业规划定制dto
+     * @des 获取所有职业规划定制
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CareerPlanningCustomDTO careerPlanningCustomDTO) throws ActException {
+        try {
+            Long count = careerPlanningCustomAPI.countCareerPlanningCustom(careerPlanningCustomDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个职业规划定制
+     *
+     * @param id
+     * @return class CareerPlanningCustomVO
+     * @des 获取一个职业规划定制
+     * @version v1
+     */
+    @GetMapping("v1/career/{id}")
+    public Result career(@PathVariable String id) throws ActException {
+        try {
+            CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.getOne(id);
+            return ActResult.initialize(BeanTransform.copyProperties(careerPlanningCustomBO, CareerPlanningCustomVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 职业规划定制列表
      *
      * @param careerPlanningCustomDTO 职业规划定制dto
      * @return class CareerPlanningCustomVO
      * @des 获取所有职业规划定制
      * @version v1
      */
-    @GetMapping("v1/listCareerPlanningCustom")
-    public Result findListCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws ActException {
+    @GetMapping("v1/list")
+    public Result list(CareerPlanningCustomDTO careerPlanningCustomDTO, HttpServletRequest request) throws ActException {
         try {
             List<CareerPlanningCustomVO> careerPlanningCustomVOS = BeanTransform.copyProperties
-                    (careerPlanningCustomAPI.findListCareerPlanningCustom(careerPlanningCustomDTO),CareerPlanningCustomVO.class);
+                    (careerPlanningCustomAPI.findListCareerPlanningCustom(careerPlanningCustomDTO),CareerPlanningCustomVO.class,request);
             return ActResult.initialize(careerPlanningCustomVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -59,7 +98,7 @@ public class CareerPlanningCustomAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result addCareerPlanningCustom(CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
+    public Result add(@Validated(ADD.class) CareerPlanningCustomTO careerPlanningCustomTO, BindingResult bindingResult) throws ActException {
         try {
             CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.insertCareerPlanningCustom(careerPlanningCustomTO);
             return ActResult.initialize(careerPlanningCustomBO);
@@ -77,7 +116,7 @@ public class CareerPlanningCustomAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result editCareerPlanningCustom(CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
+    public Result edit(@Validated(EDIT.class) CareerPlanningCustomTO careerPlanningCustomTO, BindingResult bindingResult) throws ActException {
         try {
             CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.editCareerPlanningCustom(careerPlanningCustomTO);
             return ActResult.initialize(careerPlanningCustomBO);
@@ -94,7 +133,7 @@ public class CareerPlanningCustomAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result removeCareerPlanningCustom(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             careerPlanningCustomAPI.removeCareerPlanningCustom(id);
             return new ActResult("delete success");
@@ -111,7 +150,7 @@ public class CareerPlanningCustomAction {
      * @version v1
      */
     @PostMapping("v1/send")
-    public Result sendCareerPlanningCustom(@Validated CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
+    public Result send(@Validated CareerPlanningCustomTO careerPlanningCustomTO) throws ActException {
         try {
             CareerPlanningCustomBO careerPlanningCustomBO = careerPlanningCustomAPI.sendCareerPlanningCustom(careerPlanningCustomTO);
             return ActResult.initialize(careerPlanningCustomBO);

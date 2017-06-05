@@ -30,7 +30,7 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
     /**
      * 根据id查询管理层评分
      *
-     * @param id 管理层评分id
+     * @param id 管理层评分唯一标识
      * @return class ManagementScoreBO
      * @throws SerException
      */
@@ -38,6 +38,17 @@ public class ManagementScoreApiImpl implements ManagementScoreAPI {
     public ManagementScoreBO findById(String id) throws SerException {
         ManagementScore model = managementScoreSer.findById(id);
         return BeanTransform.copyProperties(model, ManagementScoreBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 管理层评分dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ManagementScoreDTO dto) throws SerException {
+        return managementScoreSer.count(dto);
     }
 
     /**

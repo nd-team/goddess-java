@@ -19,13 +19,13 @@ public class GroupByInsurerTO extends BaseTO {
     /**
      * 被保险人姓名
      */
-    @NotBlank(groups = GroupByInsurerTO.TestAdd.class , message = "被保险人姓名不能为空")
+    @NotBlank(groups = {GroupByInsurerTO.TestAdd.class} , message = "被保险人姓名不能为空")
     private String name;
 
     /**
      * 证件号码
      */
-    @NotBlank(groups = GroupByInsurerTO.TestAdd.class , message = "证件号码不能为空")
+    @NotBlank(groups = {GroupByInsurerTO.TestAdd.class} , message = "证件号码不能为空")
     private String fileNumber;
 
     /**

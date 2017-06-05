@@ -19,9 +19,22 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DormitoryInfoSer extends Ser<DormitoryInfo, DormitoryInfoDTO> {
-
     /**
-     * 获取宿舍信息
+     * 宿舍信息管理列表总条数
+     */
+    default Long countDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个宿舍信息管理
+     *
+     * @return class DormitoryInfoBO
+     */
+    default DormitoryInfoBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 宿舍信息列表
      *
      * @param dormitoryInfoDTO 宿舍信息dto
      * @return class DormitoryInfoBO

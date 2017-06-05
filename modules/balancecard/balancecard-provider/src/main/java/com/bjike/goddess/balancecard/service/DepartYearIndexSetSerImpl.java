@@ -20,6 +20,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +36,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 部门年度指标设置业务实现
@@ -48,6 +53,10 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
 
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private DepartMonIndexSetSer departMonIndexSetSer;
     @Autowired
@@ -375,5 +384,35 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> listArea() throws SerException {
+        List<String> areaList = new ArrayList<>();
+        List<AreaBO> list = departmentDetailAPI.findArea();
+        if( list != null && list.size()>0 ){
+            areaList = list.stream().map(AreaBO::getArea).collect(Collectors.toList());
+        }
+        return areaList;
+    }
+
+    @Override
+    public List<String> listDepart() throws SerException {
+        List<String> departList = new ArrayList<>();
+        List<OpinionBO> list = departmentDetailAPI.findAllOpinion();
+        if( list != null && list.size()>0 ){
+            departList = list.stream().map(OpinionBO::getValue).collect(Collectors.toList());
+        }
+        return departList;
+    }
+
+    @Override
+    public List<String> listEmp() throws SerException {
+        List<String> empList = new ArrayList<>();
+        List<UserBO> list = positionDetailUserAPI.findUserList();
+        if( list != null && list.size()>0 ){
+            empList = list.stream().map(UserBO::getUsername).collect(Collectors.toList());
+        }
+        return empList;
     }
 }

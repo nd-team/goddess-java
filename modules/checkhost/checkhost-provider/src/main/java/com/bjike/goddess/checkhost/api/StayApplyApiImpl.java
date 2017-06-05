@@ -30,6 +30,14 @@ public class StayApplyApiImpl implements StayApplyAPI {
     @Autowired
     private StayApplySer stayApplySer;
     @Override
+    public Long countStayApply(StayApplyDTO stayApplyDTO) throws SerException {
+        return stayApplySer.countStayApply(stayApplyDTO);
+    }
+    @Override
+    public StayApplyBO getOne(String id) throws SerException {
+        return stayApplySer.getOne(id);
+    }
+    @Override
     public List<StayApplyBO> findListStayApply(StayApplyDTO stayApplyDTO) throws SerException {
         return stayApplySer.findListStayApply(stayApplyDTO);
     }

@@ -54,4 +54,13 @@ public interface CustomerInfoSer extends Ser<CustomerInfo, CustomerInfoDTO> {
      */
     void update(CustomerInfoTO to) throws SerException;
 
+    /**
+     * 根据市场活动id查找客户信息
+     *
+     * @param id 市场活动唯一标识
+     * @return class CustomerInfoBO
+     * @throws SerException
+     */
+    List<CustomerInfoBO> findByMarketServeId(String id) throws SerException;
+
 }

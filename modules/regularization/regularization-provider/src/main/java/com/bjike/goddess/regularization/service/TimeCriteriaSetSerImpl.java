@@ -10,6 +10,7 @@ import com.bjike.goddess.regularization.to.TimeCriteriaSetTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +49,7 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public TimeCriteriaSetBO save(TimeCriteriaSetTO to) throws SerException {
         TimeCriteriaSet entity = BeanTransform.copyProperties(to, TimeCriteriaSet.class, true);
         entity = super.save(entity);
@@ -62,6 +64,7 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         super.remove(id);
     }
@@ -73,6 +76,7 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
      * @throws SerException
      */
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void update(TimeCriteriaSetTO to) throws SerException {
         if (StringUtils.isNotEmpty(to.getId())){
             TimeCriteriaSet model = super.findById(to.getId());

@@ -21,103 +21,103 @@ public class DormitoryInfo extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
     private String address;
 
     /**
      * 宿舍钥匙数量（把）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙数量（把）'")
+    @Column( columnDefinition = "INT(5)   COMMENT '宿舍钥匙数量（把）'")
     private Integer keysNumber;
 
     /**
      * 宿舍钥匙分配情况
      */
-    @Column(name = "keysDistribution", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙分配情况'")
+    @Column(name = "keysDistribution", columnDefinition = "VARCHAR(255)   COMMENT '宿舍钥匙分配情况'")
     private String keysDistribution;
 
     /**
      * 宿舍负责人
      */
-    @Column(name = "head", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍负责人'")
+    @Column(name = "head", columnDefinition = "VARCHAR(255)   COMMENT '宿舍负责人'")
     private String head;
 
     /**
      * 负责人联系方式
      */
-    @Column(name = "headContact", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责人联系方式'")
+    @Column(name = "headContact", columnDefinition = "VARCHAR(255)   COMMENT '负责人联系方式'")
     private String headContact;
 
     /**
      * 宿舍床位数量（个）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍床位数量（个）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '宿舍床位数量（个）'")
     private Integer berth;
 
     /**
      * 已入住床位（个）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '已入住床位（个）'")
+    @Column( columnDefinition = "INT(5)   COMMENT '已入住床位（个）'")
     private Integer beeBerth;
 
     /**
      * 闲置床位（个）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '闲置床位（个）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '闲置床位（个）'")
     private Integer idleBerth;
 
     /**
      * 宿舍床上3件套数量(件)
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍床上3件套数量(件)'")
+    @Column(columnDefinition = "INT(5)   COMMENT '宿舍床上3件套数量(件)'")
     private Integer suit;
 
     /**
      * 已领用数量（件）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '已领用数量（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '已领用数量（件）'")
     private Integer recipientsSuit;
 
     /**
      * 闲置数量（件）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '闲置数量（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '闲置数量（件）'")
     private Integer idleSuit;
 
     /**
      * 宿舍被褥数量（件）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍被褥数量（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '宿舍被褥数量（件）'")
     private Integer bedding;
 
     /**
      * 已领用数量（件）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '已领用数量（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '已领用数量（件）'")
     private Integer recipientsBedding;
 
     /**
      * 闲置数量（件）
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '闲置数量（件）'")
+    @Column(columnDefinition = "INT(5)   COMMENT '闲置数量（件）'")
     private Integer idleBedding;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

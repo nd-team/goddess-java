@@ -48,7 +48,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     public ProjectOutsourcingBO saveProjectOutsourcing(ProjectOutsourcingTO to) throws SerException {
         getCusPermission();
 
-        isExist(to,null);
+        isExist(to, null);
         ProjectOutsourcing model = BeanTransform.copyProperties(to, ProjectOutsourcing.class, true);
         super.save(model);
         to.setId(model.getId());
@@ -88,7 +88,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部项目名称已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -102,7 +106,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部编号已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -115,7 +123,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目名称已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -128,7 +140,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目编号已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -141,7 +157,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "外包项目名称已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -154,7 +174,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             if (list != null && !list.isEmpty()) {
                 String msg = "外包项目编号已经存在!";
                 if (row == null) {
-                    throw new SerException(msg);
+                    if (list.get(0).getId().equals(to.getId())) {
+
+                    } else {
+                        throw new SerException(msg);
+                    }
                 } else {
                     throw new SerException("第" + row + "行的" + msg);
                 }
@@ -177,7 +201,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
             dto.getConditions().add(Restrict.like("communicateObj", dto.getCommunicateObj()));
         }
         if (dto.getCommunicateResult() != null) {
-            dto.getConditions().add(Restrict.like("communicateResult", dto.getCommunicateResult()));
+            dto.getConditions().add(Restrict.eq("projectResult", dto.getCommunicateResult()));
         }
 
         List<ProjectOutsourcingBO> pageList = BeanTransform.copyProperties(super.findByPage(dto), ProjectOutsourcingBO.class);
@@ -258,7 +282,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         Integer totalCooperate = 0;
         Integer totalTrail = 0;
         Integer totalAbandon = 0;
-
+        Double totalCostBudget = 0.0;
         if (returnBoList != null && !returnBoList.isEmpty()) {
             for (ProjectOutsourcingCollectBO bo : returnBoList) {
                 if (bo.getProjectResult() == CommunicateResult.COOPERATE) {
@@ -272,9 +296,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
                     totalAbandon++;
                 }
             }
+            totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
+        }else{
+            returnBoList = new ArrayList<ProjectOutsourcingCollectBO>();
         }
 
-        Double totalCostBudget = boList.stream().mapToDouble(p -> p.getCostBudget()).sum();
         ProjectOutsourcingCollectBO total = new ProjectOutsourcingCollectBO("合计", null, null, null, null, null,
                 totalCostBudget, totalCooperate.toString(), totalTrail.toString(), totalAbandon.toString());
         returnBoList.add(total);

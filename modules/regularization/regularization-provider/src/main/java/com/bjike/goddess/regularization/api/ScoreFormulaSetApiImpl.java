@@ -1,6 +1,5 @@
 package com.bjike.goddess.regularization.api;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.bo.ScoreFormulaSetBO;
@@ -31,7 +30,7 @@ public class ScoreFormulaSetApiImpl implements ScoreFormulaSetAPI {
     /**
      * 根据id查询工作表现计分方式设置
      *
-     * @param id 工作表现计分方式设置id
+     * @param id 工作表现计分方式设置唯一标识
      * @return class ScoreFormulaSetBO
      * @throws SerException
      */
@@ -39,6 +38,17 @@ public class ScoreFormulaSetApiImpl implements ScoreFormulaSetAPI {
     public ScoreFormulaSetBO findById(String id) throws SerException {
         ScoreFormulaSet model = scoreFormulaSetSer.findById(id);
         return BeanTransform.copyProperties(model, ScoreFormulaSetBO.class);
+    }
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 工作表现计分方式设置dto
+     * @throws SerException
+     */
+    @Override
+    public Long count(ScoreFormulaSetDTO dto) throws SerException {
+        return scoreFormulaSetSer.count(dto);
     }
 
     /**

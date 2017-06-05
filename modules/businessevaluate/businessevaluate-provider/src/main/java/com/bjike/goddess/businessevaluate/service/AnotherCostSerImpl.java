@@ -32,10 +32,15 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
 
     @Autowired
     private EvaluateProjectInfoSer evaluateProjectInfoSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AnotherCostBO insertModel(AnotherCostTO to) throws SerException {
+
+        getCusPermission();
+
         AnotherCost model = BeanTransform.copyProperties(to, AnotherCost.class);
         super.save(model);
         to.setId(model.getId());
@@ -45,6 +50,9 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public AnotherCostBO updateModel(AnotherCostTO to) throws SerException {
+
+        getCusPermission();
+
         if (!StringUtils.isEmpty(to.getId())) {
             AnotherCost model = super.findById(to.getId());
             if (model != null) {
@@ -63,19 +71,35 @@ public class AnotherCostSerImpl extends ServiceImpl<AnotherCost, AnotherCostDTO>
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<AnotherCostBO> pageList(AnotherCostDTO dto) throws SerException {
+
+        getCusPermission();
+
         dto.getSorts().add("createTime=desc");
         List<AnotherCost> list = super.findByPage(dto);
         List<AnotherCostBO> boList = BeanTransform.copyProperties(list, AnotherCostBO.class);
-        //设置项目信息
-        for (AnotherCostBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
-            if (info != null) {
-                bo.setArea(info.getArea());
-                bo.setProject(info.getProject());
-                bo.setStartTime(info.getStartTime().toString());
-                bo.setEndTime(info.getEndTime().toString());
+
+        if(boList!=null && !boList.isEmpty()){
+            //设置项目信息
+            for (AnotherCostBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
             }
         }
+
         return boList;
+    }
+
+    public void getCusPermission() throws SerException {
+
+        Boolean permission = cusPermissionSer.getCusPermission("1");
+
+        if (!permission) {
+            throw new SerException("该功能只有商务部可操作，您的帐号尚无权限");
+        }
     }
 }

@@ -21,11 +21,19 @@ public interface ManagementScoreAPI {
     /**
      * 根据id查询管理层评分
      *
-     * @param id 管理层评分id
+     * @param id 管理层评分唯一标识
      * @return class ManagementScoreBO
      * @throws SerException
      */
     ManagementScoreBO findById(String id) throws SerException;
+
+    /**
+     * 计算总条数
+     *
+     * @param dto 管理层评分dto
+     * @throws SerException
+     */
+    Long count(ManagementScoreDTO dto) throws SerException;
 
     /**
      * 分页查询管理层评分

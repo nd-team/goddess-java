@@ -29,6 +29,15 @@ public class IndividualVisionPlanApiImpl implements IndividualVisionPlanAPI {
     @Autowired
     private IndividualVisionPlanSer individualVisionPlanSer;
     @Override
+    public Long countIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
+        return individualVisionPlanSer.countIndividualVisionPlan(individualVisionPlanDTO);
+    }
+
+    @Override
+    public IndividualVisionPlanBO getOne(String id) throws SerException {
+        return individualVisionPlanSer.getOne(id);
+    }
+    @Override
     public List<IndividualVisionPlanBO> findListIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
         return individualVisionPlanSer.findListIndividualVisionPlan(individualVisionPlanDTO);
     }

@@ -15,13 +15,13 @@ public enum GroupUpType {
      */
     COST(0),
     /**
-     * 事项合作
+     * 费用
      */
     FEE(1),
     /**
-     * 中介合作
+     * 利润
      */
-    profit(2);
+    PROFIT(2);
 
     private int code;
 

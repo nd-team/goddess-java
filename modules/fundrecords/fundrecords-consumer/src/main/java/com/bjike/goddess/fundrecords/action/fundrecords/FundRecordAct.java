@@ -12,6 +12,9 @@ import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.to.CollectTO;
 import com.bjike.goddess.fundrecords.to.FundRecordTO;
 import com.bjike.goddess.fundrecords.vo.*;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +38,53 @@ public class FundRecordAct {
 
     @Autowired
     private FundRecordAPI fundRecordAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+
+    /**
+     * 地区列表查询
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/areas")
+    public Result allAreas(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaVO> voList = BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目组或部门列表查询
+     *
+     * @return class OpinionVO
+     * @version v1
+     */
+    @GetMapping("v1/groups")
+    public Result allGroups(HttpServletRequest request) throws ActException {
+        try {
+            List<OpinionVO> voList = BeanTransform.copyProperties(departmentDetailAPI.findThawOpinion(), OpinionVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目列表查询
+     *
+     * @return class OpinionVO
+     * @version v1
+     */
+    @GetMapping("v1/projects")
+    public Result allProjects(HttpServletRequest request){
+        //todo 尚未确定项目数据来源
+        return null;
+    }
 
     /**
      * 新增资金流水

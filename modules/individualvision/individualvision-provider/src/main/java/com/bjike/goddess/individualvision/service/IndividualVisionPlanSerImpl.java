@@ -28,8 +28,21 @@ import java.util.List;
 @CacheConfig(cacheNames = "individualvisionSerCache")
 @Service
 public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPlan, IndividualVisionPlanDTO> implements IndividualVisionPlanSer {
+    @Override
+    public Long countIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
+        Long count = super.count(individualVisionPlanDTO);
+        return count;
+    }
 
-    @Cacheable
+    @Override
+    public IndividualVisionPlanBO getOne(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        IndividualVisionPlan individualVisionPlan = super.findById(id);
+        return BeanTransform.copyProperties(individualVisionPlan,IndividualVisionPlanBO.class);
+    }
+
     @Override
     public List<IndividualVisionPlanBO> findListIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
         List<IndividualVisionPlan> individualVisionPlans = super.findByCis(individualVisionPlanDTO, true);
@@ -48,31 +61,29 @@ public class IndividualVisionPlanSerImpl extends ServiceImpl<IndividualVisionPla
     @Transactional(rollbackFor = SerException.class)
     @Override
     public IndividualVisionPlanBO editIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
-        if(!StringUtils.isEmpty(individualVisionPlanTO.getId())){
-            IndividualVisionPlan individualVisionPlan = super.findById(individualVisionPlanTO.getId());
-            BeanTransform.copyProperties(individualVisionPlanTO,individualVisionPlan,true);
-            individualVisionPlan.setModifyTime(LocalDateTime.now());
-            super.update(individualVisionPlan);
-        }else{
-            throw new SerException("更新ID不能为空!");
+        if(StringUtils.isBlank(individualVisionPlanTO.getId())){
+            throw new SerException("id不能为空");
         }
-        return BeanTransform.copyProperties(individualVisionPlanTO,IndividualVisionPlanBO.class);
+        IndividualVisionPlan individualVisionPlan = super.findById(individualVisionPlanTO.getId());
+        BeanTransform.copyProperties(individualVisionPlanTO,individualVisionPlan,true);
+        individualVisionPlan.setModifyTime(LocalDateTime.now());
+        super.update(individualVisionPlan);
+        return BeanTransform.copyProperties(individualVisionPlan,IndividualVisionPlanBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeIndividualVisionPlan(String id) throws SerException {
-        try {
-            super.remove(id);
-        } catch (SerException e) {
-            throw new SerException(e.getMessage());
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
         }
+        super.remove(id);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public IndividualVisionPlanBO auditIndividualVisionPlan(IndividualVisionPlanTO individualVisionPlanTO) throws SerException {
         IndividualVisionPlan individualVisionPlan = BeanTransform.copyProperties(individualVisionPlanTO, IndividualVisionPlan.class, true);
+        individualVisionPlan.setPositionsStatus(individualVisionPlanTO.getPositionsStatus());
         super.update(individualVisionPlan);
 
         IndividualVisionPlanBO individualVisionPlanBO = BeanTransform.copyProperties(individualVisionPlan, IndividualVisionPlanBO.class);
