@@ -164,6 +164,11 @@ public class RegularizationBO extends BaseBO {
     private String positiveType;
 
     /**
+     * 总经办评价
+     */
+    private String zjbAppraise;
+
+    /**
      * 转正时间
      */
     private String positiveDate;
@@ -411,6 +416,14 @@ public class RegularizationBO extends BaseBO {
 
     public void setPositiveType(String positiveType) {
         this.positiveType = positiveType;
+    }
+
+    public String getZjbAppraise() {
+        return zjbAppraise;
+    }
+
+    public void setZjbAppraise(String zjbAppraise) {
+        this.zjbAppraise = zjbAppraise;
     }
 
     public String getPositiveDate() {

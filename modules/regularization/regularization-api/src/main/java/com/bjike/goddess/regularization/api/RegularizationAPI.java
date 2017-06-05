@@ -5,7 +5,9 @@ import com.bjike.goddess.regularization.bo.ManagementScoreBO;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
 import com.bjike.goddess.regularization.dto.RegularizationDTO;
 import com.bjike.goddess.regularization.to.ManagementScoreTO;
+import com.bjike.goddess.regularization.to.PlanModuleSupplyTO;
 import com.bjike.goddess.regularization.to.RegularizationTO;
+import com.bjike.goddess.regularization.to.ZjbApprovalTO;
 
 import java.util.List;
 
@@ -102,24 +104,25 @@ public interface RegularizationAPI {
     /**
      * 规划模块补充
      *
-     * @param to 员工转正to
+     * @param to 规划模块补充to
      * @throws SerException
      */
-    void planModuleSupply(RegularizationTO to) throws SerException;
+    void planModuleSupply(PlanModuleSupplyTO to) throws SerException;
 
     /**
      * 预算模块补充
      *
-     * @param to 员工转正to
+     * @param id 员工转正唯一标识
+     * @param budgetPositiveComment 预算模块转正意见
      * @throws SerException
      */
-    void budgetModuleSupply(RegularizationTO to) throws SerException;
+    void budgetModuleSupply(String id, String budgetPositiveComment) throws SerException;
 
     /**
      * 总经办审批
      *
-     * @param to 员工转正to
+     * @param to 总经办审批to
      * @throws SerException
      */
-    void zjbApproval(RegularizationTO to) throws SerException;
+    void zjbApproval(ZjbApprovalTO to) throws SerException;
 }

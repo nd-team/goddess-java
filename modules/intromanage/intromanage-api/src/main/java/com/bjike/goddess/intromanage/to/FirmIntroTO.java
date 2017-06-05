@@ -1,7 +1,12 @@
 package com.bjike.goddess.intromanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.intromanage.type.DemandType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 公司简介
@@ -17,86 +22,103 @@ public class FirmIntroTO extends BaseTO {
     /**
      * 公司名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "公司名称不能为空")
     private String firmName;
 
     /**
      * 公司性质
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "公司性质不能为空")
     private String firmNature;
 
     /**
      * 注册资金
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "注册资金不能为空")
     private String registerMoney;
 
     /**
      * 注册时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "注册时间不能为空")
     private String registerDate;
 
     /**
      * 公司精神
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "公司精神不能为空")
     private String firmSpirit;
 
     /**
      * 服务意识
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "服务意识不能为空")
     private String serviceAwareness;
 
     /**
      * 公司宗旨
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "公司宗旨不能为空")
     private String firmTenet;
 
     /**
      * 人才观
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "人才观不能为空")
     private String talentView;
 
     /**
      * 经营观
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "经营观不能为空")
     private String operationView;
 
     /**
      * 质量观
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "质量观不能为空")
     private String qualityView;
 
     /**
      * 组织结构
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "组织结构不能为空")
     private String organization;
 
     /**
      * 管理模式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "管理模式不能为空")
     private String manageModel;
 
     /**
      * 服务团队介绍
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "服务团队介绍不能为空")
     private String serviceTeamIntro;
 
     /**
      * 员工数量
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工数量不能为空")
     private String staffNo;
 
     /**
      * 囊括区域
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "囊括区域不能为空")
     private String includeArea;
 
     /**
      * 一体化解决方案
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "一体化解决方案不能为空")
     private String solvingScheme;
 
     /**
      * 需求类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "需求类型不能为空")
     private DemandType demandType;
 
     //荣誉与资质
