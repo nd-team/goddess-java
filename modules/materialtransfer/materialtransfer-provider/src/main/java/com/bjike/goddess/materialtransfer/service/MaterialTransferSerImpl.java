@@ -1,13 +1,11 @@
 package com.bjike.goddess.materialtransfer.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
 import com.bjike.goddess.materialinstock.bo.MaterialInStockBO;
-import com.bjike.goddess.materialinstock.dto.MaterialInStockDTO;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialtransfer.bo.MaterialTransferBO;
 import com.bjike.goddess.materialtransfer.dto.MaterialTransferDTO;
@@ -22,7 +20,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -86,7 +83,7 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
      */
     private MaterialTransferBO setAttributes(MaterialTransferBO bo) throws SerException {
         MaterialInStockBO inStockBO = checkMaterialInStock(bo);//检验是否为空
-        String curUsername = "userAPI.currentUser().getUsername()";
+        String curUsername = userAPI.currentUser().getUsername();
         updateInStock(bo, inStockBO, curUsername);  //更新物资入库信息
         return setTransferProperties(bo, inStockBO, curUsername);
     }
@@ -238,6 +235,9 @@ public class MaterialTransferSerImpl extends ServiceImpl<MaterialTransfer, Mater
     public void wealModAudit(String id, AuditState welfareState) throws SerException {
         String curUsername = userAPI.currentUser().getUsername();
         MaterialTransfer model = super.findById(id);
+        if (model == null) {
+            throw new SerException("更新对象为空,无法更新");
+        }
         if (curUsername.equals(model.getWelfareModule())) {
             model.setWelfareState(welfareState);
             super.update(model);
