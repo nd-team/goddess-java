@@ -2,6 +2,8 @@ package com.bjike.goddess.firmreward.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 奖励项目比例
  *
@@ -13,54 +15,66 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class RewardProgramRatiosTO extends BaseTO {
 
+    public interface IRewardProgramRatio{}
+
     /**
      * 奖励项目
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖励项目不能为空")
     private String[] rewardPrograms;
 
     /**
      * 当月侧重程度
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "当月侧重程度不能为空")
     private String[] focusingDegrees;
 
     /**
      * 当月预算范围
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "当月预算范围不能为空")
     private Double[] budgetRanges;
 
     /**
      * 奖金权重
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖金权重不能为空")
     private String[] bonusWeights;
 
     /**
      * 奖金额度
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "奖金额度不能为空")
     private Double[] bonusLimits;
 
     /**
      * 荣誉衍生奖品权重
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "荣誉衍生奖品权重不能为空")
     private String[] honorWeights;
 
     /**
      * 荣誉衍生奖品额度
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "荣誉衍生奖品额度不能为空")
     private Double[] honorLimits;
 
     /**
      * 经验值
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值不能为空")
     private String[] empiricalValues;
 
     /**
      * 经验值额度
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值额度不能为空")
     private Double[] empiricalValueLimits;
 
     /**
      * 经验值换成金额
      */
+    @NotNull(groups = {RewardProgramRatiosTO.IRewardProgramRatio.class}, message = "经验值换成金额不能为空")
     private Double[] empiricalValueToMoneys;
 
     public String[] getRewardPrograms() {

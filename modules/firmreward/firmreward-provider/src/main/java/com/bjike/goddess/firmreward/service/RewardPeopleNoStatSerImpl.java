@@ -155,6 +155,8 @@ public class RewardPeopleNoStatSerImpl extends ServiceImpl<RewardPeopleNoStat, R
                 list.add(model);
             }
             awardDetailSer.save(list);
+        } else {
+          throw new SerException("奖励人数统计id为空,无法进行");
         }
 
     }

@@ -142,7 +142,7 @@ public class PrizeApplyAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(value = (EDIT.class)) PrizeApplyTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.update(to);
             return new ActResult("edit success!");
@@ -160,7 +160,7 @@ public class PrizeApplyAct {
      */
     @LoginAuth
     @PostMapping("v1/addPrizeDetails")
-    public Result addPrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
+    public Result addPrizeDetails(@Validated(value = {PrizeApplyTO.IPrizeDetail.class}) PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.addPrizeDetails(to);
             return new ActResult("addPrizeDetails success!");
@@ -178,7 +178,7 @@ public class PrizeApplyAct {
      */
     @LoginAuth
     @PostMapping("v1/updatePrizeDetails")
-    public Result updatePrizeDetails(@Validated PrizeApplyTO to, BindingResult result) throws ActException {
+    public Result updatePrizeDetails(@Validated(value = {PrizeApplyTO.IPrizeDetail.class}) PrizeApplyTO to, BindingResult result) throws ActException {
         try {
             prizeApplyAPI.updatePrizeDetails(to);
             return new ActResult("updatePrizeDetails success!");
@@ -207,60 +207,4 @@ public class PrizeApplyAct {
         }
     }
 
-    /**
-     * 员工奖励汇总
-     *
-     * @return class StaffRewardCollectVO
-     * @throws ActException
-     * @version v1
-     */
-    @LoginAuth
-    @GetMapping("v1/staffRewardCollect")
-    public Result staffRewardCollect(HttpServletRequest request) throws ActException {
-        try {
-            List<StaffRewardCollectBO> boList = prizeApplyAPI.staffRewardCollect();
-            List<StaffRewardCollectVO> voList = BeanTransform.copyProperties(boList, StaffRewardCollectVO.class, request);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 项目组奖励汇总
-     *
-     * @return class ProjectGroupRewardCollectVO
-     * @throws ActException
-     * @version v1
-     */
-    @LoginAuth
-    @GetMapping("v1/projectGroupRewardCollect")
-    public Result projectGroupRewardCollect(HttpServletRequest request) throws ActException {
-        try {
-            List<ProjectGroupRewardCollectBO> boList = prizeApplyAPI.projectGroupRewardCollect();
-            List<ProjectGroupRewardCollectVO> voList = BeanTransform.copyProperties(boList, ProjectGroupRewardCollectVO.class, request);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 地区奖励汇总
-     *
-     * @return class AreaRewardCollectVO
-     * @throws ActException
-     * @version v1
-     */
-    @LoginAuth
-    @GetMapping("v1/areaRewardCollect")
-    public Result areaRewardCollect(HttpServletRequest request) throws ActException {
-        try {
-            List<AreaRewardCollectBO> boList = prizeApplyAPI.areaRewardCollect();
-            List<AreaRewardCollectVO> voList = BeanTransform.copyProperties(boList, AreaRewardCollectVO.class, request);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 }

@@ -1,6 +1,11 @@
 package com.bjike.goddess.firmreward.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 奖金预算
@@ -16,11 +21,13 @@ public class BonusBudgetTO extends BaseTO {
     /**
      * 月份
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "月份不能为空")
     private String month;
 
     /**
      * 总预算
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "总预算不能为空")
     private Double totalBudget;
 
     /**
