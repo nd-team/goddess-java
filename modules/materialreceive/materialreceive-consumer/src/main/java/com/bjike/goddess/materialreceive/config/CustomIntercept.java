@@ -1,4 +1,4 @@
-package com.bjike.goddess.staffactivity.config;
+package com.bjike.goddess.materialreceive.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
@@ -9,7 +9,6 @@ import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

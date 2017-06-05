@@ -1,6 +1,7 @@
 package com.bjike.goddess.materialreceive.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialreceive.type.AuditState;
 
 import javax.persistence.Column;
@@ -134,8 +135,8 @@ public class MaterialReceive extends BaseEntity {
     /**
      * 审核情况
      */
-    @Column(name = "auditCase", columnDefinition = "VARCHAR(255) COMMENT '审核情况'")
-    private String auditCase;
+    @Column(name = "auditCase", columnDefinition = "TINYINT(2) COMMENT '审核情况'")
+    private AuditState auditCase;
 
     /**
      * 归还时间
@@ -146,8 +147,8 @@ public class MaterialReceive extends BaseEntity {
     /**
      * 物资状态
      */
-    @Column(name = "materialState", columnDefinition = "VARCHAR(255) COMMENT '物资状态'")
-    private String materialState;
+    @Column(name = "materialState", columnDefinition = "TINYINT(2) COMMENT '物资状态'")
+    private MaterialState materialState;
 
 
     public String getArea() {
@@ -294,11 +295,11 @@ public class MaterialReceive extends BaseEntity {
         this.ifReturn = ifReturn;
     }
 
-    public String getAuditCase() {
+    public AuditState getAuditCase() {
         return auditCase;
     }
 
-    public void setAuditCase(String auditCase) {
+    public void setAuditCase(AuditState auditCase) {
         this.auditCase = auditCase;
     }
 
@@ -310,11 +311,11 @@ public class MaterialReceive extends BaseEntity {
         this.returnTime = returnTime;
     }
 
-    public String getMaterialState() {
+    public MaterialState getMaterialState() {
         return materialState;
     }
 
-    public void setMaterialState(String materialState) {
+    public void setMaterialState(MaterialState materialState) {
         this.materialState = materialState;
     }
 }

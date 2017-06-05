@@ -43,7 +43,7 @@ public class RegularizationTO extends BaseTO {
     private String profession;
 
     /**
-     * 入职时间
+     * 入职日期
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "入职时间不能为空")
     private String hiredate;

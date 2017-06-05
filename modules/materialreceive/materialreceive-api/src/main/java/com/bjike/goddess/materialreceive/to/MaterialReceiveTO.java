@@ -5,10 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * 物资领用
@@ -26,9 +24,6 @@ public class MaterialReceiveTO extends BaseTO {
 
     public interface RECEIVEOVER {
     }//领用完成
-
-    public interface MATERIALRETURN {
-    }//物资归还
 
     /**
      * 地区
@@ -125,33 +120,9 @@ public class MaterialReceiveTO extends BaseTO {
     private String handler;
 
     /**
-     * 是否归还
-     */
-    @NotNull(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "是否归还不能为空")
-    private Boolean ifReturn;
-
-    /**
-     * 审核情况
-     */
-    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "审核情况不能为空")
-    private String auditCase;
-
-    /**
-     * 归还时间
-     */
-    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "归还时间不能为空")
-    private String returnTime;
-
-    /**
-     * 物资状态
-     */
-    @NotBlank(groups = {MaterialReceiveTO.MATERIALRETURN.class}, message = "物资状态不能为空")
-    private String materialState;
-
-    /**
      * 领用编号
      */
-    @Size(groups = {ADD.class, EDIT.class, MaterialReceiveTO.MATERIALRETURN.class}, message = "领用数量必修是大于0的整数")
+    @NotNull(groups = {ADD.class, EDIT.class, MaterialReturnTO.MATERIALRETURN.class}, message = "领用数量必修是大于0的整数")
     private String[] materialNum;
 
     public String getArea() {
@@ -280,38 +251,6 @@ public class MaterialReceiveTO extends BaseTO {
 
     public void setHandler(String handler) {
         this.handler = handler;
-    }
-
-    public Boolean getIfReturn() {
-        return ifReturn;
-    }
-
-    public void setIfReturn(Boolean ifReturn) {
-        this.ifReturn = ifReturn;
-    }
-
-    public String getAuditCase() {
-        return auditCase;
-    }
-
-    public void setAuditCase(String auditCase) {
-        this.auditCase = auditCase;
-    }
-
-    public String getReturnTime() {
-        return returnTime;
-    }
-
-    public void setReturnTime(String returnTime) {
-        this.returnTime = returnTime;
-    }
-
-    public String getMaterialState() {
-        return materialState;
-    }
-
-    public void setMaterialState(String materialState) {
-        this.materialState = materialState;
     }
 
     public String[] getMaterialNum() {
