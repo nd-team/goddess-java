@@ -3,12 +3,9 @@ package com.bjike.goddess.individualvision.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.individualvision.bo.CareerPlanningCustomBO;
-import com.bjike.goddess.individualvision.bo.IndividualVisionPlanBO;
-import com.bjike.goddess.individualvision.dto.IndividualVisionPlanDTO;
-import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.dto.CareerPlanningCustomDTO;
+import com.bjike.goddess.individualvision.entity.CareerPlanningCustom;
 import com.bjike.goddess.individualvision.to.CareerPlanningCustomTO;
-import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 
 import java.util.List;
 
@@ -22,6 +19,22 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CareerPlanningCustomSer extends Ser<CareerPlanningCustom, CareerPlanningCustomDTO> {
+
+    /**
+     * 职业规划定制列表总条数
+     */
+    default Long countCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个职业规划定制
+     *
+     * @return class CareerPlanningCustomBO
+     */
+    default CareerPlanningCustomBO getOne(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 获取职业规划定制
@@ -64,6 +77,7 @@ public interface CareerPlanningCustomSer extends Ser<CareerPlanningCustom, Caree
     default void removeCareerPlanningCustom(String id) throws SerException {
 
     }
+
     /**
      * 发送邮件
      *

@@ -18,6 +18,20 @@ import java.util.List;
  */
 public interface StayApplyAPI {
     /**
+     * 住宿申请列表总条数
+     */
+    default Long countStayApply(StayApplyDTO stayApplyDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个住宿申请
+     *
+     * @return class StayApplyBO
+     */
+    default StayApplyBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 获取住宿申请
      *
      * @param stayApplyDTO 住宿申请dto

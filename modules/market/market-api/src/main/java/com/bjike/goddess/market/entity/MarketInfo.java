@@ -112,7 +112,7 @@ public class MarketInfo extends BaseEntity {
     /**
      * 是否为有效信息(0是，1否)
      */
-    @Column(name = "is_effective", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否为有效信息(0是，1否)'")
+    @Column(name = "is_effective", columnDefinition = "TINYINT(2)  COMMENT '是否为有效信息(0是，1否)'")
     private Boolean effective;
 
     /**

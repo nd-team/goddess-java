@@ -18,6 +18,20 @@ import java.util.List;
  */
 public interface HostApplyAPI {
     /**
+     * 离宿申请列表总条数
+     */
+    default Long countHostApply(HostApplyDTO hostApplyDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个离宿申请
+     *
+     * @return class HostApplyBO
+     */
+    default HostApplyBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 获取离宿申请
      *
      * @param hostApplyDTO 离宿申请dto

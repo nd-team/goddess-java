@@ -50,22 +50,13 @@ public class CareerPlanningCustomVO {
     /**
      * 目前状态
      */
-    private Status currentState;
+    private String currentState;
 
     /**
-     * 选择发展路径：转正
+     * 选择发展路径：
      */
     private String positive;
 
-    /**
-     * 选择发展路径：管理方面
-     */
-    private String management;
-
-    /**
-     * 选择发展路径：技能方面
-     */
-    private String skills;
 
     /**
      * 此路径能力提升程度的选择
@@ -179,11 +170,11 @@ public class CareerPlanningCustomVO {
         this.planningDate = planningDate;
     }
 
-    public Status getCurrentState() {
+    public String getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(Status currentState) {
+    public void setCurrentState(String currentState) {
         this.currentState = currentState;
     }
 
@@ -195,21 +186,6 @@ public class CareerPlanningCustomVO {
         this.positive = positive;
     }
 
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
 
     public String getDegreeAbilityAscend() {
         return degreeAbilityAscend;

@@ -18,6 +18,21 @@ import java.util.List;
  */
 public interface CareerPlanningCustomAPI {
     /**
+     * 职业规划定制列表总条数
+     */
+    default Long countCareerPlanningCustom(CareerPlanningCustomDTO careerPlanningCustomDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个职业规划定制
+     *
+     * @return class CareerPlanningCustomBO
+     */
+    default CareerPlanningCustomBO getOne(String id) throws SerException {
+        return null;
+    }
+    /**
      * 获取职业规划定制
      *
      * @param careerPlanningCustomDTO 职业规划定制dto

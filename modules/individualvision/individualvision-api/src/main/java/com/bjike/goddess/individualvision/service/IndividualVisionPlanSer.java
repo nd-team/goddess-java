@@ -2,10 +2,9 @@ package com.bjike.goddess.individualvision.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.individualvision.bo.IndividualVisionPlanBO;
-import com.bjike.goddess.individualvision.entity.IndividualVisionPlan;
 import com.bjike.goddess.individualvision.dto.IndividualVisionPlanDTO;
+import com.bjike.goddess.individualvision.entity.IndividualVisionPlan;
 import com.bjike.goddess.individualvision.to.IndividualVisionPlanTO;
 
 import java.util.List;
@@ -20,6 +19,22 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface IndividualVisionPlanSer extends Ser<IndividualVisionPlan, IndividualVisionPlanDTO> {
+    /**
+     * 个人愿景计划列表总条数
+     */
+    default Long countIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个个人愿景计划
+     *
+     * @return class IndividualVisionPlanBO
+     */
+    default IndividualVisionPlanBO getOne(String id) throws SerException {
+        return null;
+    }
+
     /**
      * 获取个人愿景计划
      *
@@ -61,6 +76,7 @@ public interface IndividualVisionPlanSer extends Ser<IndividualVisionPlan, Indiv
     default void removeIndividualVisionPlan(String id) throws SerException {
 
     }
+
     /**
      * 审核
      *

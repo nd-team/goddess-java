@@ -78,15 +78,18 @@ public class DemandCostSerImpl extends ServiceImpl<DemandCost, DemandCostDTO> im
         List<DemandCost> list = super.findByPage(dto);
         List<DemandCostBO> boList = BeanTransform.copyProperties(list, DemandCostBO.class);
         //设置项目信息
-        for (DemandCostBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
-            if (info != null) {
-                bo.setArea(info.getArea());
-                bo.setProject(info.getProject());
-                bo.setStartTime(info.getStartTime().toString());
-                bo.setEndTime(info.getEndTime().toString());
+        if(boList!=null && !boList.isEmpty()){
+            for (DemandCostBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectInfoId());
+                if (info != null) {
+                    bo.setArea(info.getArea());
+                    bo.setProject(info.getProject());
+                    bo.setStartTime(info.getStartTime().toString());
+                    bo.setEndTime(info.getEndTime().toString());
+                }
             }
         }
+
         return boList;
     }
 

@@ -3,6 +3,7 @@ package com.bjike.goddess.checkhost.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -22,80 +23,80 @@ public class HostApply extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "projectGroup", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
     private String projectGroup;
 
     /**
      * 宿舍地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
+    @Column(name = "address",  columnDefinition = "VARCHAR(255)   COMMENT '宿舍地址'")
     private String address;
 
     /**
      * 员工姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '员工姓名'")
     private String name;
 
     /**
      * 员工编号
      */
-    @Column(name = "num", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name = "num", columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
     private String num;
     /**
      * 离宿原因
      */
-    @Column(name = "hostCause", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '离宿原因'")
+    @Column(name = "hostCause",  columnDefinition = "VARCHAR(255)   COMMENT '离宿原因'")
     private String hostCause;
     /**
      * 离宿时间
      */
-    @Column(name = "hostTime", nullable = false, columnDefinition = "DATETIME   COMMENT '离宿时间'")
-    private LocalDateTime hostTime;
+    @Column(name = "hostTime", columnDefinition = "DATE   COMMENT '离宿时间'")
+    private LocalDate hostTime;
 
     /**
      * 是否归还钥匙
      */
-    @Column(name = "is_returnKey", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否归还钥匙'", insertable = false)
+    @Column(name = "is_returnKey", columnDefinition = "TINYINT(2)  COMMENT '是否归还钥匙'")
     private Boolean returnKey;
     /**
      * 三件套是否收费
      */
-    @Column(name = "is_suitToll", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '三件套是否收费'", insertable = false)
+    @Column(name = "is_suitToll", columnDefinition = "TINYINT(2)  COMMENT '三件套是否收费'")
     private Boolean suitToll;
     /**
      * 收费金额
      */
-    @Column(name = "tollMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收费金额'")
+    @Column(name = "tollMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '收费金额'")
     private Double tollMoney;
     /**
      * 水电费，燃气费总额
      */
-    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '水电费，燃气费总额'")
+    @Column(name = "amount", columnDefinition = "DECIMAL(10,2)   COMMENT '水电费，燃气费总额'")
     private Double amount;
 
     /**
      * 合计总额（收费金额+水电费，燃气费总额）
      */
-    @Column(name = "totalAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '合计总额（收费金额+水电费，燃气费总额）'")
+    @Column(name = "totalAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '合计总额（收费金额+水电费，燃气费总额）'")
     private Double totalAmount;
 
     /**
      * 模块责任人审核
      */
-    @Column(name = "headAudit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '模块责任人审核'")
+    @Column(name = "headAudit", columnDefinition = "VARCHAR(255)   COMMENT '模块责任人审核'")
     private String headAudit;
 
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 
@@ -147,11 +148,11 @@ public class HostApply extends BaseEntity {
         this.hostCause = hostCause;
     }
 
-    public LocalDateTime getHostTime() {
+    public LocalDate getHostTime() {
         return hostTime;
     }
 
-    public void setHostTime(LocalDateTime hostTime) {
+    public void setHostTime(LocalDate hostTime) {
         this.hostTime = hostTime;
     }
 
