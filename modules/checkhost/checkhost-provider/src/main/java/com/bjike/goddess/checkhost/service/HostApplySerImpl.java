@@ -35,7 +35,19 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
 
     @Autowired
     private UserAPI userAPI;
-    @Cacheable
+    @Override
+    public Long countHostApply(HostApplyDTO hostApplyDTO) throws SerException {
+        Long count = super.count(hostApplyDTO);
+        return count;
+    }
+    @Override
+    public HostApplyBO getOne(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        HostApply hostApply = super.findById(id);
+        return BeanTransform.copyProperties(hostApply,HostApplyBO.class);
+    }
     @Override
     public List<HostApplyBO> findListHostApply(HostApplyDTO hostApplyDTO) throws SerException {
         List<HostApply> hostApplies = super.findByCis(hostApplyDTO, true);
@@ -68,10 +80,12 @@ public class HostApplySerImpl extends ServiceImpl<HostApply, HostApplyDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeHostApply(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
         super.remove(id);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public HostApplyBO auditHostApply(HostApplyTO hostApplyTO) throws SerException {
         hostApplyTO.setHeadAudit(userAPI.currentUser().getUsername());

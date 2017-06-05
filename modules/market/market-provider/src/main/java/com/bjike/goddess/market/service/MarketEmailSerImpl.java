@@ -129,8 +129,8 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" MAX( CASE WHEN scale=2 THEN scaleCounts END ) AS third ");
         sb.append(" FROM  (  select count(*) as scaleCounts , scale as scale,area AS area ");
         sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY scale,area ORDER BY area  )a GROUP BY area)B, ");
-        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective=0 THEN effectiveCounts  END ) AS has, ");
-        sb.append(" MAX( CASE WHEN is_effective=1 THEN  effectiveCounts END ) AS notHas ");
+        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective=0 THEN effectiveCounts  END ) AS notHas, ");
+        sb.append(" MAX( CASE WHEN is_effective=1 THEN  effectiveCounts END ) AS has ");
         sb.append(" FROM  (  select count(*) as effectiveCounts , is_effective as is_effective,area AS area ");
         sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY is_effective,area ORDER BY area  )a GROUP BY area)C, ");
         sb.append(" (  SELECT area, MAX(CASE WHEN  projectNature=0 THEN projectNatureCounts  END ) AS fresh, ");
@@ -154,8 +154,8 @@ public class MarketEmailSerImpl extends ServiceImpl<MarketEmail, MarketEmailDTO>
         sb.append(" MAX( CASE WHEN scale=2 THEN scaleCounts END ) AS third ");
         sb.append(" FROM  (  select count(*) as scaleCounts , scale as scale,area AS area ");
         sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY scale,area ORDER BY area  )a GROUP BY area)B, ");
-        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective=0 THEN effectiveCounts  END ) AS has, ");
-        sb.append(" MAX( CASE WHEN is_effective=1 THEN  effectiveCounts END ) AS notHas ");
+        sb.append(" (  SELECT area,MAX(CASE WHEN  is_effective=0 THEN effectiveCounts  END ) AS notHas, ");
+        sb.append(" MAX( CASE WHEN is_effective=1 THEN  effectiveCounts END ) AS has ");
         sb.append(" FROM  (  select count(*) as effectiveCounts , is_effective as is_effective,area AS area ");
         sb.append(" from  market_marketinfo a WHERE area in(%s)  GROUP BY is_effective,area ORDER BY area  )a GROUP BY area)C, ");
         sb.append(" (  SELECT area, MAX(CASE WHEN  projectNature=0 THEN projectNatureCounts  END ) AS fresh, ");

@@ -23,7 +23,6 @@
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.HostApplyAPI" ref="hostApplyApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.StayDaysAPI" ref="stayDaysApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.DormitoryInfoAPI" ref="dormitoryInfoApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.checkhost.api.CheckHostCollectAPI" ref="checkHostCollectApiImpl" />
 
 
 

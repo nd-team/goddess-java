@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkhost.service;
 
+import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
+    /**
+     * 员工住宿天数汇总列表总条数
+     */
+    default Long countStayDays(StayDaysDTO stayDaysDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 一个员工住宿天数汇总
+     *
+     * @return class StayDaysBO
+     */
+    default StayDaysBO getOne(String id) throws SerException {
+        return null;
+    }
     /**
      * 获取员工住宿天数汇总
      *
@@ -68,6 +83,25 @@ public interface StayDaysSer extends Ser<StayDays, StayDaysDTO> {
      * @return class StayDaysBO
      */
     default StayDaysBO auditStayDays(StayDaysTO stayDaysTO) throws SerException {
+        return null;
+    }
+    /**
+     * 汇总
+     *
+     * @param names names
+     * @return class CollectNameBO
+     * @throws SerException
+     */
+    default List<CollectNameBO> collectName(String[] names) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取名字
+     *
+     * @return class String
+     */
+    default List<String> getNames() throws SerException {
         return null;
     }
 

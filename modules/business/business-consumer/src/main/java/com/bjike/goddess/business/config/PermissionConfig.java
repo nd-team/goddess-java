@@ -21,7 +21,7 @@ import java.util.List;
 public class PermissionConfig {
     @PostConstruct
     public void init() throws IOException {
-        generatePerssion();
+       generatePerssion();
     }
 
     @Autowired

@@ -2,9 +2,12 @@ package com.bjike.goddess.checkhost.api;
 
 import com.bjike.goddess.checkhost.bo.DormitoryInfoBO;
 import com.bjike.goddess.checkhost.dto.DormitoryInfoDTO;
+import com.bjike.goddess.checkhost.entity.DormitoryInfo;
 import com.bjike.goddess.checkhost.service.DormitoryInfoSer;
 import com.bjike.goddess.checkhost.to.DormitoryInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,15 @@ public class DormitoryInfoApiImpl implements DormitoryInfoAPI {
     @Autowired
     private DormitoryInfoSer dormitoryInfoSer;
     @Override
+    public Long countDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws SerException {
+        return dormitoryInfoSer.countDormitoryInfo(dormitoryInfoDTO);
+    }
+
+    @Override
+    public DormitoryInfoBO getOne(String id) throws SerException {
+        return dormitoryInfoSer.getOne(id);
+    }
+    @Override
     public List<DormitoryInfoBO> findListDormitoryInfo(DormitoryInfoDTO dormitoryInfoDTO) throws SerException {
         return dormitoryInfoSer.findListDormitoryInfo(dormitoryInfoDTO);
     }
@@ -40,7 +52,7 @@ public class DormitoryInfoApiImpl implements DormitoryInfoAPI {
 
     @Override
     public void removeDormitoryInfo(String id) throws SerException {
-        dormitoryInfoSer.remove(id);
+        dormitoryInfoSer.removeDormitoryInfo(id);
     }
 
 

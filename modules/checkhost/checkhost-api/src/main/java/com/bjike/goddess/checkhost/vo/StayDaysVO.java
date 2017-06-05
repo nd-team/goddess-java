@@ -69,6 +69,10 @@ public class StayDaysVO {
      * 是否领用钥匙
      */
     private Boolean receiveKey;
+    /**
+     * 是否领用床上用品
+     */
+    private Boolean bed;
 
     /**
      * 离宿时间
@@ -200,6 +204,14 @@ public class StayDaysVO {
 
     public void setReceiveKey(Boolean receiveKey) {
         this.receiveKey = receiveKey;
+    }
+
+    public Boolean getBed() {
+        return bed;
+    }
+
+    public void setBed(Boolean bed) {
+        this.bed = bed;
     }
 
     public String getHostTime() {
