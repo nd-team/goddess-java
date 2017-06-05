@@ -43,6 +43,8 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     private FacilityInformationSer facilityInformationSer;
     @Autowired
     private FinanceInfoSer financeInfoSer;
+    @Autowired
+    private QualificationsHandlePlanSer qualificationsHandlePlanSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -74,6 +76,12 @@ public class QualificationsHandleSerImpl extends ServiceImpl<QualificationsHandl
     @Override
     public QualificationsHandleBO delete(String id) throws SerException {
         QualificationsHandle entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (entity.getCompanySet().size() != 0 || entity.getPersonnelSet().size() != 0
+                || entity.getFacilitySet().size() != 0 || entity.getFinanceSet().size() != 0
+                || entity.getMaterialSet().size() != 0 || qualificationsHandlePlanSer.findByHandle(id).size() != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, QualificationsHandleBO.class);
     }

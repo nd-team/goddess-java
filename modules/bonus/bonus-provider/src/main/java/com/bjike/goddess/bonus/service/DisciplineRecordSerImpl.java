@@ -55,10 +55,17 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO save(DisciplineRecordTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         DisciplineRecord entity = BeanTransform.copyProperties(to, DisciplineRecord.class, true);
         entity = this.checkEntity(entity);
         if (StringUtils.isBlank(entity.getLaunch()))
-            entity.setLaunch(userAPI.currentUser().getUsername());
+            entity.setLaunch(user.getUsername());
+        if (StringUtils.isBlank(entity.getName()))
+            entity.setName(" ");
+        if (StringUtils.isBlank(entity.getProject()))
+            entity.setProject(" ");
+        if (StringUtils.isBlank(entity.getArea()))
+            entity.setArea(" ");
         super.save(entity);
         return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
     }
@@ -98,11 +105,11 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO update(DisciplineRecordTO to) throws SerException {
+        UserBO user = userAPI.currentUser();
         if (StringUtils.isNotBlank(to.getId())) {
             DisciplineRecord entity = super.findById(to.getId());
             if (null == entity)
                 throw new SerException("数据对象不能为空");
-            UserBO user = userAPI.currentUser();
             if (!user.getUsername().equals(entity.getLaunch()))
                 throw new SerException("不要修改他人的数据");
             BeanTransform.copyProperties(to, entity, true);
@@ -116,10 +123,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public DisciplineRecordBO delete(String id) throws SerException {
-        DisciplineRecord entity = super.findById(id);
-        if (null != entity)
-            throw new SerException("数据不存在");
         UserBO user = userAPI.currentUser();
+        DisciplineRecord entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据不存在");
         if (!user.getUsername().equals(entity.getLaunch()))
             throw new SerException("不要修改他人的数据");
         super.remove(entity);
@@ -128,9 +135,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordRankBO> projectRank(CollectFilterTO to, Boolean status) throws SerException {
-        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("project=asc");
+        List<DisciplineRecord> list = this.getListByFilter(to, dto).stream()
                 .filter(d -> d.getStatus() == status)
-                .sorted(Comparator.comparing(DisciplineRecord::getProject))
                 .collect(Collectors.toList());
         List<DisciplineRecordRankBO> rankBOs = new ArrayList<>(0);
         String project = "";
@@ -166,9 +174,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordRankBO> personalRank(CollectFilterTO to, Boolean status) throws SerException {
-        List<DisciplineRecord> list = this.getListByFilter(to).stream()
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("username=asc");
+        List<DisciplineRecord> list = this.getListByFilter(to, dto).stream()
                 .filter(d -> d.getStatus() == status)
-                .sorted(Comparator.comparing(DisciplineRecord::getUsername))
                 .collect(Collectors.toList());
         List<DisciplineRecordRankBO> rankBOs = new ArrayList<>(0);
         String username = "";
@@ -203,17 +212,17 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordDetailBO> disciplineDetailCollect(CollectFilterTO to) throws SerException {
-        List<DisciplineRecord> list = this.getListByFilter(to).stream()
-                .sorted(Comparator.comparing(DisciplineRecord::getOccurrence).reversed()
-                        .thenComparing(DisciplineRecord::getUsername))
-                .collect(Collectors.toList());
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("occurrence=asc");
+        dto.getSorts().add("username=asc");
+        List<DisciplineRecord> list = this.getListByFilter(to, dto);
         List<DisciplineRecordDetailBO> detailBOs = new ArrayList<>(0);
         String occurrence = "", username = "";
         for (DisciplineRecord entity : list)
             if (!entity.getOccurrence().toLocalDate().toString().equals(occurrence) || !entity.getUsername().equals(username)) {
                 occurrence = entity.getOccurrence().toLocalDate().toString();
                 username = entity.getUsername();
-                DisciplineRecordDetailBO detail = BeanTransform.copyProperties(entity, DisciplineRecordDetailBO.class, true);
+                DisciplineRecordDetailBO detail = BeanTransform.copyProperties(entity, DisciplineRecordDetailBO.class);
                 String time = occurrence;
                 List<DisciplineRecord> pushList = list.stream()
                         .filter(d -> d.getOccurrence().toLocalDate().toString().equals(time)
@@ -237,10 +246,10 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordQuantityBO> disciplineQuantityCollect(CollectFilterTO to) throws SerException {
-        List<DisciplineRecord> list = this.getListByFilter(to).stream()
-                .sorted(Comparator.comparing(DisciplineRecord::getArea)
-                        .thenComparing(DisciplineRecord::getProject))
-                .collect(Collectors.toList());
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("area=asc");
+        dto.getSorts().add("project=asc");
+        List<DisciplineRecord> list = this.getListByFilter(to, dto);
         List<DisciplineRecordQuantityBO> quantityBOs = new ArrayList<>(0);
         String area = "", project = "";
         for (DisciplineRecord entity : list)
@@ -268,12 +277,12 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordScoreBO> disciplineScoreCollect(CollectFilterTO to) throws SerException {
-        List<DisciplineRecord> list = this.getListByFilter(to).stream()
-                .sorted(Comparator.comparing(DisciplineRecord::getArea)
-                        .thenComparing(DisciplineRecord::getProject)
-                        .thenComparing(DisciplineRecord::getUsername)
-                        .thenComparing(DisciplineRecord::getName))
-                .collect(Collectors.toList());
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("area=asc");
+        dto.getSorts().add("project=asc");
+        dto.getSorts().add("username=asc");
+        dto.getSorts().add("name=asc");
+        List<DisciplineRecord> list = this.getListByFilter(to, dto);
         List<DisciplineRecordScoreBO> scoreBOs = new ArrayList<>(0);
         String area = "", project = "", username = "", target = "";
         for (DisciplineRecord entity : list)
@@ -284,19 +293,28 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
                 username = entity.getUsername();
                 target = entity.getName();
                 DisciplineRecordScoreBO score = BeanTransform.copyProperties(entity, DisciplineRecordScoreBO.class, true);
-                List<DisciplineRecord> rewardList = list.stream()
-                        .filter(d -> d.getArea().equals(entity.getArea()) && d.getName().equals(entity.getName())
-                                && d.getProject().equals(entity.getProject()) && d.getStatus().equals(Boolean.TRUE)
-                                && d.getUsername().equals(entity.getUsername()))
-                        .collect(Collectors.toList()), pushList = list.stream()
-                        .filter(d -> d.getArea().equals(entity.getArea()) && d.getName().equals(entity.getName())
-                                && d.getProject().equals(entity.getProject()) && d.getStatus().equals(Boolean.FALSE)
-                                && d.getUsername().equals(entity.getUsername()))
-                        .collect(Collectors.toList());
-                score.setPush(pushList.size());
-                score.setPushTotal(pushList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
-                score.setReward(rewardList.size());
-                score.setRewardTotal(rewardList.stream().mapToDouble(DisciplineRecord::getBallot).sum());
+                score.setPush(0);
+                score.setPushTotal(0d);
+                score.setReward(0);
+                score.setRewardTotal(0d);
+                for (DisciplineRecord reward : list)
+                    if (entity.getArea().equals(reward.getArea()) && entity.getName().equals(reward.getName())
+                            && entity.getProject().equals(reward.getProject()) && entity.getStatus() == Boolean.TRUE
+                            && entity.getUsername().equals(reward.getUsername())) {
+                        score.setReward(score.getReward() + 1);
+                        score.setRewardTotal(score.getRewardTotal() + reward.getBallot());
+                    }
+                for (DisciplineRecord push : list)
+                    if (entity.getArea().equals(push.getArea()) && entity.getName().equals(push.getName())
+                            && entity.getProject().equals(push.getProject()) && entity.getStatus().equals(Boolean.TRUE)
+                            && entity.getUsername().equals(push.getUsername())) {
+                        score.setPush(score.getPush() + 1);
+                        score.setPushTotal(score.getPushTotal() + push.getBallot());
+                    }
+                score.setName(target);
+                score.setArea(area);
+                score.setProject(project);
+                score.setUsername(username);
                 score.setTotal(score.getPushTotal() + score.getRewardTotal());
                 scoreBOs.add(score);
             }
@@ -310,8 +328,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
      * @return
      * @throws SerException
      */
-    private List<DisciplineRecord> getListByFilter(CollectFilterTO to) throws SerException {
-        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+    private List<DisciplineRecord> getListByFilter(CollectFilterTO to, DisciplineRecordDTO dto) throws SerException {
         if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
             LocalDateTime start = LocalDateTime.parse(to.getStart(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     end = LocalDateTime.parse(to.getEnd(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -324,13 +341,14 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             dto.getConditions().add(Restrict.eq("project", to.getProject()));
         if (StringUtils.isNotBlank(to.getTarget()))
             dto.getConditions().add(Restrict.eq("name", to.getTarget()));
-        dto.getSorts().add("occurrence=desc");
         return super.findByCis(dto);
     }
 
     @Override
     public List<DisciplineRecordBO> findByFilter(CollectFilterTO to) throws SerException {
-        return BeanTransform.copyProperties(this.getListByFilter(to), DisciplineRecordBO.class);
+        DisciplineRecordDTO dto = new DisciplineRecordDTO();
+        dto.getSorts().add("occurrence=desc");
+        return BeanTransform.copyProperties(this.getListByFilter(to, dto), DisciplineRecordBO.class);
     }
 
     @Override
@@ -348,7 +366,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public DisciplineRecordBO getById(String id) throws SerException {
         DisciplineRecord entity = super.findById(id);
-        if (null != entity)
+        if (null == entity)
             throw new SerException("数据不存在");
         return BeanTransform.copyProperties(entity, DisciplineRecordBO.class);
     }

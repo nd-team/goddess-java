@@ -38,6 +38,10 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
 
     @Autowired
     private YearPlanSer yearPlanSer;
+
+    @Autowired
+    private WeekPlanSer weekPlanSer;
+
     @Autowired
     private MarPermissionSer marPermissionSer;
 
@@ -126,11 +130,9 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         MonthPlan entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (weekPlanSer.findByMonth(entity.getId()).size() != 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return this.transformBO(entity);
     }
 

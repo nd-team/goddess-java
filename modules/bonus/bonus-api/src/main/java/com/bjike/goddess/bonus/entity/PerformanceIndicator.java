@@ -77,7 +77,7 @@ public class PerformanceIndicator extends BaseEntity {
     /**
      * 系统或人工
      */
-    @Column(name = "is_difference", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '系统或人工'", insertable = false)
+    @Column(name = "is_difference", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '系统或人工'")
     private Boolean difference;
 
     /**

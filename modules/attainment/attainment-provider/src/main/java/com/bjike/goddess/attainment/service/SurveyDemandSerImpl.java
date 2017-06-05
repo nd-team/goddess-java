@@ -41,6 +41,8 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     private AttainmentTypeSer attainmentTypeSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private SurveyPlanSer surveyPlanSer;
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
@@ -116,6 +118,8 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
         SurveyDemand entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        if (surveyPlanSer.findByDemand(entity.getId()).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

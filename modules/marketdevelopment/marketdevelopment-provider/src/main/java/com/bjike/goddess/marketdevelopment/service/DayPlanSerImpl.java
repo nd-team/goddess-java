@@ -8,7 +8,6 @@ import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.DayPlan;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -49,12 +48,24 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
-        List<DayPlanBO> list = this.findByDate(to.getTime());
-        if (null == list)
-            list = new ArrayList<>(0);
-        entity.setSerialNumber(String.format("%d%d%d-%d", entity.getTime().getYear(), entity.getTime().getMonthValue(), entity.getTime().getDayOfMonth(), list.size() + 1));
+        entity.setSerialNumber(this.createNumber(entity.getTime()));
         super.save(entity);
         return BeanTransform.copyProperties(entity, DayPlanBO.class);
+    }
+
+    private String createNumber(LocalDate time) throws SerException {
+        List<DayPlanBO> list = this.findByDate(time.toString());
+        if (null == list)
+            list = new ArrayList<>(0);
+        StringBuilder serial = new StringBuilder();
+        serial.append(time.getYear());
+        if (time.getMonthValue() < 10)
+            serial.append(0);
+        serial.append(time.getMonthValue());
+        if (time.getDayOfMonth() < 10)
+            serial.append(0);
+        serial.append(time.getDayOfMonth()).append("-").append(list.size() + 1);
+        return serial.toString();
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -62,18 +73,15 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     public DayPlanBO update(DayPlanTO to) throws SerException {
         if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                DayPlan entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, DayPlanBO.class);
-            } catch (Exception e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        DayPlan entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setTime(LocalDate.parse(to.getTime()));
+        entity.setSerialNumber(this.createNumber(entity.getTime()));
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, DayPlanBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

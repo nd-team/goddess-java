@@ -3,11 +3,12 @@ package com.bjike.goddess.qualifications.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.FacilityInformationBO;
 import com.bjike.goddess.qualifications.dto.FacilityInformationDTO;
 import com.bjike.goddess.qualifications.entity.FacilityInformation;
+import com.bjike.goddess.qualifications.entity.QualificationsHandle;
 import com.bjike.goddess.qualifications.to.FacilityInformationTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,9 @@ import java.util.List;
 @Service
 public class FacilityInformationSerImpl extends ServiceImpl<FacilityInformation, FacilityInformationDTO> implements FacilityInformationSer {
 
+    @Autowired
+    private QualificationsHandleSer qualificationsHandleSer;
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public FacilityInformationBO save(FacilityInformationTO to) throws SerException {
@@ -39,8 +43,10 @@ public class FacilityInformationSerImpl extends ServiceImpl<FacilityInformation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public FacilityInformationBO update(FacilityInformationTO to) throws SerException {
-        FacilityInformation entity = BeanTransform.copyProperties(to, FacilityInformation.class), facility = super.findById(to.getId());
-        entity.setCreateTime(facility.getCreateTime());
+        FacilityInformation entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, FacilityInformationBO.class);
@@ -50,7 +56,12 @@ public class FacilityInformationSerImpl extends ServiceImpl<FacilityInformation,
     @Override
     public FacilityInformationBO delete(String id) throws SerException {
         FacilityInformation entity = super.findById(id);
-        super.remove(entity);
+        if(null == entity)
+            throw new SerException("该数据不存在");
+        List<QualificationsHandle> list = qualificationsHandleSer.findAll();
+        for (QualificationsHandle handle : list)
+            if (handle.getFacilitySet().stream().filter(m -> m.getId().equals(id)).count() != 0)
+                throw new SerException("存在依赖关系,无法删除");super.remove(entity);
         return BeanTransform.copyProperties(entity, FacilityInformationBO.class);
     }
 

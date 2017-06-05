@@ -1,6 +1,7 @@
 package com.bjike.goddess.attainment.service;
 
 import com.bjike.goddess.attainment.bo.SurveyPlanBO;
+import com.bjike.goddess.attainment.dto.SurveyActualizeDTO;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
 import com.bjike.goddess.attainment.entity.SurveyDemand;
 import com.bjike.goddess.attainment.entity.SurveyPlan;
@@ -34,6 +35,12 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
 
     @Autowired
     private SurveyDemandSer demandSer;
+    @Autowired
+    private SurveyActualizeSer surveyActualizeSer;
+    @Autowired
+    private SurveyAnalyseSer surveyAnalyseSer;
+    @Autowired
+    private SurveyPlanAuditSer surveyPlanAuditSer;
 
     private SurveyPlanBO transformBO(SurveyPlan entity) throws SerException {
         SurveyPlanBO bo = BeanTransform.copyProperties(entity, SurveyPlanBO.class);
@@ -92,6 +99,10 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         SurveyPlan entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        SurveyActualizeDTO dto = new SurveyActualizeDTO();
+        dto.getConditions().add(Restrict.eq("plan.id", entity.getId()));
+        if (surveyActualizeSer.findByCis(dto).size() != 0 || surveyAnalyseSer.findByPlan(entity.getId()).size() != 0 || surveyPlanAuditSer.findByPlan(entity.getId()).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

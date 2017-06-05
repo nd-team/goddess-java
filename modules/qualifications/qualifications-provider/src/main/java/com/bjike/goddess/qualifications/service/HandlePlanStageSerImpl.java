@@ -33,12 +33,16 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
 
     @Autowired
     private QualificationsHandlePlanSer handlePlanSer;
+    @Autowired
+    private HandlePlanImplementSer handlePlanImplementSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HandlePlanStageBO save(HandlePlanStageTO to) throws SerException {
         HandlePlanStage entity = BeanTransform.copyProperties(to, HandlePlanStage.class, true);
         entity.setPlan(handlePlanSer.findById(to.getPlanId()));
+        if (entity.getPlan() == null)
+            throw new SerException("办理计划不存在,无法保存");
         super.save(entity);
         return BeanTransform.copyProperties(entity, HandlePlanStageBO.class);
     }
@@ -46,10 +50,14 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HandlePlanStageBO update(HandlePlanStageTO to) throws SerException {
-        HandlePlanStage entity = BeanTransform.copyProperties(to, HandlePlanStage.class, true), stage = super.findById(to.getId());
-        entity.setCreateTime(stage.getCreateTime());
+        HandlePlanStage entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setPlan(handlePlanSer.findById(to.getPlanId()));
+        if (entity.getPlan() == null)
+            throw new SerException("办理计划不存在,无法保存");
         super.update(entity);
         return BeanTransform.copyProperties(entity, HandlePlanStageBO.class);
     }
@@ -58,6 +66,10 @@ public class HandlePlanStageSerImpl extends ServiceImpl<HandlePlanStage, HandleP
     @Override
     public HandlePlanStageBO delete(String id) throws SerException {
         HandlePlanStage entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        if (handlePlanImplementSer.findByStage(id).size() != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, HandlePlanStageBO.class);
     }

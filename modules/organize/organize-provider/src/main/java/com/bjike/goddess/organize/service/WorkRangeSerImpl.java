@@ -151,11 +151,9 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         WorkRange entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (entity.getDepartments().size() != 0)
             throw new SerException("此处已被引用,无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }
 

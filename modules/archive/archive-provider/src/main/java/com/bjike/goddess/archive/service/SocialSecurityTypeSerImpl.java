@@ -1,6 +1,7 @@
 package com.bjike.goddess.archive.service;
 
 import com.bjike.goddess.archive.bo.SocialSecurityTypeBO;
+import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
 import com.bjike.goddess.archive.dto.SocialSecurityTypeDTO;
 import com.bjike.goddess.archive.entity.SocialSecurityType;
 import com.bjike.goddess.archive.to.SocialSecurityTypeTO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "archiveSerCache")
 @Service
 public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, SocialSecurityTypeDTO> implements SocialSecurityTypeSer {
+
+    @Autowired
+    private PersonnelQualificationSer personnelQualificationSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -61,6 +66,10 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
         SocialSecurityType entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
+        PersonnelQualificationDTO dto = new PersonnelQualificationDTO();
+        dto.getConditions().add(Restrict.eq("social.id", entity.getId()));
+        if (personnelQualificationSer.findByCis(dto).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
     }

@@ -71,6 +71,8 @@ public class QualificationsInfoSerImpl extends ServiceImpl<QualificationsInfo, Q
     @Override
     public QualificationsInfoBO delete(String id) throws SerException {
         QualificationsInfo entity = super.findById(id);
+        if(null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, QualificationsInfoBO.class);
     }

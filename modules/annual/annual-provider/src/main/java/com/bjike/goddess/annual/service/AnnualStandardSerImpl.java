@@ -9,6 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "annualSerCache")
 @Service
 public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualStandardDTO> implements AnnualStandardSer {
+
+    @Autowired
+    private AnnualArrangementStandardSer annualArrangementStandardSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -62,6 +66,8 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
         AnnualStandard entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据不存在");
+        if (annualArrangementStandardSer.findByStandard(entity.getId()).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }

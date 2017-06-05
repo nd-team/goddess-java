@@ -32,6 +32,10 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
 
     @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private SurveyQuestionnaireSer surveyQuestionnaireSer;
+    @Autowired
+    private SurveyQuestionnaireUserSer surveyQuestionnaireUserSer;
 
     private SurveyActualizeBO transformBO(SurveyActualize entity) throws SerException {
         SurveyActualizeBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyActualizeBO.class);
@@ -84,6 +88,8 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         SurveyActualize entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        if (surveyQuestionnaireSer.findByActualize(entity.getId()).size() != 0 || surveyQuestionnaireUserSer.findByActualize(entity.getId()).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

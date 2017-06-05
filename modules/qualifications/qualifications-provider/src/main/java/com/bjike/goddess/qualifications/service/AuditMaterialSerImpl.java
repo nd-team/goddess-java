@@ -6,7 +6,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.dto.AuditMaterialDTO;
 import com.bjike.goddess.qualifications.entity.AuditMaterial;
+import com.bjike.goddess.qualifications.entity.QualificationsHandle;
 import com.bjike.goddess.qualifications.to.AuditMaterialTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ import java.util.List;
 @Service
 public class AuditMaterialSerImpl extends ServiceImpl<AuditMaterial, AuditMaterialDTO> implements AuditMaterialSer {
 
+    @Autowired
+    private QualificationsHandleSer qualificationsHandleSer;
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AuditMaterialBO save(AuditMaterialTO to) throws SerException {
@@ -38,8 +43,10 @@ public class AuditMaterialSerImpl extends ServiceImpl<AuditMaterial, AuditMateri
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AuditMaterialBO update(AuditMaterialTO to) throws SerException {
-        AuditMaterial entity = BeanTransform.copyProperties(to, AuditMaterial.class), material = super.findById(to.getId());
-        entity.setCreateTime(material.getCreateTime());
+        AuditMaterial entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, AuditMaterialBO.class);
@@ -49,6 +56,12 @@ public class AuditMaterialSerImpl extends ServiceImpl<AuditMaterial, AuditMateri
     @Override
     public AuditMaterialBO delete(String id) throws SerException {
         AuditMaterial entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        List<QualificationsHandle> list = qualificationsHandleSer.findAll();
+        for (QualificationsHandle handle : list)
+            if (handle.getMaterialSet().stream().filter(m -> m.getId().equals(id)).count() != 0)
+                throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AuditMaterialBO.class);
     }

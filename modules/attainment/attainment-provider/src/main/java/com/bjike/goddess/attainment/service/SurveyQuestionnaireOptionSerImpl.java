@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireOptionBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireOptionDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOption;
+import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOptionUser;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireOptionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -29,6 +30,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "attainmentSerCache")
 @Service
 public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestionnaireOption, SurveyQuestionnaireOptionDTO> implements SurveyQuestionnaireOptionSer {
+
+    @Autowired
+    private SurveyQuestionnaireOptionUserSer surveyQuestionnaireOptionUserSer;
 
     @Autowired
     private SurveyQuestionnaireSer surveyQuestionnaireSer;
@@ -79,6 +83,8 @@ public class SurveyQuestionnaireOptionSerImpl extends ServiceImpl<SurveyQuestion
         SurveyQuestionnaireOption entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        if(surveyQuestionnaireOptionUserSer.findByOption(entity.getId()).size()!=0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

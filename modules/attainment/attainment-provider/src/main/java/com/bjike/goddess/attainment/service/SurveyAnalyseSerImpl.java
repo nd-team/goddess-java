@@ -1,6 +1,5 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
 import com.bjike.goddess.attainment.entity.SkillAnalyse;
@@ -90,12 +89,12 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         SurveyAnalyseDTO dto = new SurveyAnalyseDTO();
         dto.getConditions().add(Restrict.eq("plan.id", plan_id));
         List<SurveyAnalyse> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list, SkillAnalyseBO.class);
+        return this.transformBOList(list);
     }
 
     @Override
     public List<SurveyAnalyseBO> maps(SurveyAnalyseDTO dto) throws SerException {
-        return BeanTransform.copyProperties(super.findByPage(dto), SkillAnalyseBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override
@@ -103,7 +102,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         SurveyAnalyse entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        return this.transformBO(entity);
     }
 
     @Override

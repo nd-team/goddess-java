@@ -71,6 +71,8 @@ public class HandlePlanImplementSerImpl extends ServiceImpl<HandlePlanImplement,
     @Override
     public HandlePlanImplementBO delete(String id) throws SerException {
         HandlePlanImplement entity = super.findById(id);
+        if(null == entity)
+            throw new SerException("该数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, HandlePlanImplementBO.class);
     }

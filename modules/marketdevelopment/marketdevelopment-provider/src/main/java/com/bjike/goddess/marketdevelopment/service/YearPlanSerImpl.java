@@ -36,6 +36,9 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Autowired
     private MarPermissionSer marPermissionSer;
 
+    @Autowired
+    private MonthPlanSer monthPlanSer;
+
     private static final String marketCheck = "market-check";
 
     private static final String marketManage = "market-manage";
@@ -81,11 +84,9 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
         YearPlan entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (monthPlanSer.findByYearID(entity.getId()).size() != 0)
             throw new SerException("存在依赖关系无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, YearPlanBO.class);
     }
 

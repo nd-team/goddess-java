@@ -7,9 +7,11 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.coststandard.bo.CostStandardBO;
 import com.bjike.goddess.coststandard.bo.CostStandardOpinionBO;
+import com.bjike.goddess.coststandard.dto.CostStandardContrastDTO;
 import com.bjike.goddess.coststandard.dto.CostStandardDTO;
 import com.bjike.goddess.coststandard.entity.CostStandard;
 import com.bjike.goddess.coststandard.to.CostStandardTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "coststandardSerCache")
 @Service
 public class CostStandardSerImpl extends ServiceImpl<CostStandard, CostStandardDTO> implements CostStandardSer {
+
+    @Autowired
+    private CostStandardContrastSer costStandardContrastSer;
 
     @Override
     public CostStandardBO save(CostStandardTO to) throws SerException {
@@ -56,6 +61,10 @@ public class CostStandardSerImpl extends ServiceImpl<CostStandard, CostStandardD
         CostStandard entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        CostStandardContrastDTO dto = new CostStandardContrastDTO();
+        dto.getConditions().add(Restrict.eq("standard.id", entity.getId()));
+        if (costStandardContrastSer.findByCis(dto).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, CostStandardBO.class);
     }

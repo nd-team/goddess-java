@@ -166,6 +166,8 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             throw new SerException("不能删除他人的轮换申请");
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (coverRotationOpinionSer.getTotal(id) != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

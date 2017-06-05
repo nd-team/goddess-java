@@ -40,6 +40,9 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Autowired
     private HierarchySer hierarchySer;
 
+    @Autowired
+    private PositionDetailSer positionDetailSer;
+
     private DepartmentDetailBO transformationToBO(DepartmentDetail entity) throws SerException {
         DepartmentDetailBO bo = BeanTransform.copyProperties(entity, DepartmentDetailBO.class);
         bo.setHierarchyId(entity.getHierarchy().getId());
@@ -163,14 +166,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetail entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (workRangeSer.findByDepartment(id).size() > 0)
+        if (workRangeSer.findByDepartment(id).size() > 0 || positionDetailSer.findByDepartment(id).size() != 0)
             throw new SerException("此处已被引用,无法删除");
-        try {
-            super.remove(entity);
-        } catch (Exception e) {
-            throw new SerException("存在依赖关系无法删除");
-        }
-        return null;
+        super.remove(entity);
+        return this.transformationToBO(entity);
     }
 
     @Override

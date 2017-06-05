@@ -6,7 +6,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.bo.FinanceInfoBO;
 import com.bjike.goddess.qualifications.dto.FinanceInfoDTO;
 import com.bjike.goddess.qualifications.entity.FinanceInfo;
+import com.bjike.goddess.qualifications.entity.QualificationsHandle;
 import com.bjike.goddess.qualifications.to.FinanceInfoTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ import java.util.List;
 @Service
 public class FinanceInfoSerImpl extends ServiceImpl<FinanceInfo, FinanceInfoDTO> implements FinanceInfoSer {
 
+    @Autowired
+    private QualificationsHandleSer qualificationsHandleSer;
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public FinanceInfoBO save(FinanceInfoTO to) throws SerException {
@@ -38,8 +43,10 @@ public class FinanceInfoSerImpl extends ServiceImpl<FinanceInfo, FinanceInfoDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public FinanceInfoBO update(FinanceInfoTO to) throws SerException {
-        FinanceInfo entity = BeanTransform.copyProperties(to, FinanceInfo.class), finance = super.findById(to.getId());
-        entity.setCreateTime(finance.getCreateTime());
+        FinanceInfo entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, FinanceInfoBO.class);
@@ -48,6 +55,12 @@ public class FinanceInfoSerImpl extends ServiceImpl<FinanceInfo, FinanceInfoDTO>
     @Override
     public FinanceInfoBO delete(String id) throws SerException {
         FinanceInfo entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        List<QualificationsHandle> list = qualificationsHandleSer.findAll();
+        for (QualificationsHandle handle : list)
+            if (handle.getFinanceSet().stream().filter(m -> m.getId().equals(id)).count() != 0)
+                throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, FinanceInfoBO.class);
     }

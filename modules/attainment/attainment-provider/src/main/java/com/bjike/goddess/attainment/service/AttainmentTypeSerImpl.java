@@ -2,6 +2,7 @@ package com.bjike.goddess.attainment.service;
 
 import com.bjike.goddess.attainment.bo.AttainmentTypeBO;
 import com.bjike.goddess.attainment.dto.AttainmentTypeDTO;
+import com.bjike.goddess.attainment.dto.SurveyDemandDTO;
 import com.bjike.goddess.attainment.entity.AttainmentType;
 import com.bjike.goddess.attainment.to.AttainmentTypeTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -10,6 +11,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "attainmentSerCache")
 @Service
 public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, AttainmentTypeDTO> implements AttainmentTypeSer {
+
+    @Autowired
+    private SurveyDemandSer surveyDemandSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -63,6 +68,10 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
         AttainmentType entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        SurveyDemandDTO dto = new SurveyDemandDTO();
+        dto.getConditions().add(Restrict.eq("type.id", entity.getId()));
+        if (surveyDemandSer.findByCis(dto).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
     }
