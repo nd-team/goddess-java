@@ -19,13 +19,13 @@ import javax.validation.constraints.NotNull;
 public class RewardIndicatorTO extends BaseTO {
 
     /**
-     * 奖励开放时间
+     * 奖励开放日期
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励开放时间不能为空")
     private String prizeOpeningTime;
 
     /**
-     * 奖励结束时间
+     * 奖励结束日期
      */
     private String prizeEndTime;
 
@@ -84,7 +84,7 @@ public class RewardIndicatorTO extends BaseTO {
     private String prizeObject;
 
     /**
-     * 颁奖时间
+     * 颁奖日期
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "颁奖时间不能为空")
     private String awardTime;

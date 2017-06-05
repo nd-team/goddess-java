@@ -28,7 +28,7 @@ public class RewardIndicator extends BaseEntity {
     /**
      * 奖励结束时间
      */
-    @Column(name = "prizeEndTime", nullable = false, columnDefinition = "DATE COMMENT '奖励结束时间'")
+    @Column(name = "prizeEndTime", columnDefinition = "DATE COMMENT '奖励结束时间'")
     private LocalDate prizeEndTime;
 
     /**

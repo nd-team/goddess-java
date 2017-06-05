@@ -46,7 +46,7 @@ public class PrizeApplyAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/bonusbudget/{id}")
+    @GetMapping("v1/prizeapply/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             PrizeApplyBO bo = prizeApplyAPI.findById(id);
@@ -196,8 +196,8 @@ public class PrizeApplyAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/checkPrizeDetails")
-    public Result checkPrizeDetails(String applyId, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/checkPrizeDetails/{id}")
+    public Result checkPrizeDetails(@PathVariable(value = "id") String applyId, HttpServletRequest request) throws ActException {
         try {
             List<PrizeDetailBO> boList = prizeApplyAPI.checkPrizeDetails(applyId);
             List<PrizeDetailVO> voList = BeanTransform.copyProperties(boList, PrizeDetailVO.class);

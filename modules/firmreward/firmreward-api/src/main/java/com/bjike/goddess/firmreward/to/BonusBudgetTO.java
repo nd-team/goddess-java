@@ -33,6 +33,7 @@ public class BonusBudgetTO extends BaseTO {
     /**
      * 奖金:经验值
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖金:经验值不能为空")
     private String ratio;
 
     /**

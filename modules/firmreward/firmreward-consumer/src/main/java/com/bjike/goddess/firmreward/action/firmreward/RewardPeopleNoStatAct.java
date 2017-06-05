@@ -48,7 +48,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/bonusbudget/{id}")
+    @GetMapping("v1/rewardpeoplenostat/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.findById(id);
