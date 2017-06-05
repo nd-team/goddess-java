@@ -20,13 +20,13 @@ public class Credential extends BaseEntity {
 	/**
 	 * 证书名称
 	 */
-	@Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '证书名称'")
+	@Column( columnDefinition = "VARCHAR(255) COMMENT '证书名称'")
 	private String name;
 
 	/**
 	 * 获得证书时间
 	 */
-	@Column(columnDefinition = "DATE COMMENT '获得证书时间'",nullable = false )
+	@Column(columnDefinition = "DATE COMMENT '获得证书时间'" )
 	private LocalDate obtainTime;
 
 
