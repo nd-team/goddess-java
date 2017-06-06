@@ -33,7 +33,7 @@ public class IndividualVisionPlanBO extends BaseBO {
     private String department;
 
     /**
-     * 入职时间String
+     * 入职时间
      */
     private String entryTime;
 
@@ -50,22 +50,13 @@ public class IndividualVisionPlanBO extends BaseBO {
     /**
      * 目前状态
      */
-    private Status currentState;
+    private String currentState;
 
     /**
-     * 选择发展路径：转正
+     * 选择发展路径：
      */
     private String positive;
 
-    /**
-     * 选择发展路径：管理方面
-     */
-    private String management;
-
-    /**
-     * 选择发展路径：技能方面
-     */
-    private String skills;
 
     /**
      * 期望此能力的提升程度
@@ -90,7 +81,7 @@ public class IndividualVisionPlanBO extends BaseBO {
     /**
      * 期望此时的职位状态
      */
-    private Status positionsStatus;
+    private String positionsStatus;
 
     /**
      * 期望周收益（元）
@@ -156,11 +147,11 @@ public class IndividualVisionPlanBO extends BaseBO {
         this.planningDate = planningDate;
     }
 
-    public Status getCurrentState() {
+    public String getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(Status currentState) {
+    public void setCurrentState(String currentState) {
         this.currentState = currentState;
     }
 
@@ -172,21 +163,6 @@ public class IndividualVisionPlanBO extends BaseBO {
         this.positive = positive;
     }
 
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
 
     public String getDegreeAbilityAscend() {
         return degreeAbilityAscend;
@@ -220,11 +196,11 @@ public class IndividualVisionPlanBO extends BaseBO {
         this.expectedCompletionTime = expectedCompletionTime;
     }
 
-    public Status getPositionsStatus() {
+    public String getPositionsStatus() {
         return positionsStatus;
     }
 
-    public void setPositionsStatus(Status positionsStatus) {
+    public void setPositionsStatus(String positionsStatus) {
         this.positionsStatus = positionsStatus;
     }
 

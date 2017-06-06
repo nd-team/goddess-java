@@ -141,10 +141,12 @@ public class BusinessEvaluateCollectSerImpl extends ServiceImpl<BusinessEvaluate
 
         List<BusinessEvaluateCollectBO> boList = BeanTransform.copyProperties(list, BusinessEvaluateCollectBO.class);
 
-        for (BusinessEvaluateCollectBO bo : boList) {
-            EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectId());
-            if (info != null) {
-                bo.setProject(info.getProject());
+        if(boList!=null && !boList.isEmpty()){
+            for (BusinessEvaluateCollectBO bo : boList) {
+                EvaluateProjectInfo info = evaluateProjectInfoSer.findById(bo.getProjectId());
+                if (info != null) {
+                    bo.setProject(info.getProject());
+                }
             }
         }
 

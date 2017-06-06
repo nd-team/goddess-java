@@ -19,6 +19,22 @@ import java.util.List;
  */
 public interface IndividualVisionPlanAPI {
     /**
+     * 个人愿景计划列表总条数
+     */
+    default Long countIndividualVisionPlan(IndividualVisionPlanDTO individualVisionPlanDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个个人愿景计划
+     *
+     * @return class IndividualVisionPlanBO
+     */
+    default IndividualVisionPlanBO getOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
      * 获取个人愿景计划
      *
      * @param individualVisionPlanDTO 个人愿景计划dto

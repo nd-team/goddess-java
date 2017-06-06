@@ -2,14 +2,12 @@ package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
-import com.bjike.goddess.bidding.enums.BiddingType;
-import com.bjike.goddess.bidding.enums.BusinessType;
+import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
-import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -166,14 +164,14 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT * from ");
         sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN biddingType=0 THEN biddingTypeCounts END ) AS invite, ");
+        sb.append(" max(CASE WHEN biddingType=1 THEN biddingTypeCounts END ) AS openly FROM ");
         sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
         sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
+        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
+        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
+        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
         sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
         sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
         sb.append(" WHERE A.cities=B.cities)C ");
@@ -181,14 +179,14 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         sb.append(" SELECT '合计' as area ,sum(invite) AS invite,sum(openly) AS openly,sum(mobile) AS mobile, ");
         sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
         sb.append(" (SELECT A.*,B.mobile,B.soft,B.system,B.plan FROM ");
-        sb.append(" (SELECT cities,max(CASE WHEN biddingType='1' THEN biddingTypeCounts END ) AS invite, ");
-        sb.append(" max(CASE WHEN biddingType='2' THEN biddingTypeCounts END ) AS openly FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN biddingType=0 THEN biddingTypeCounts END ) AS invite, ");
+        sb.append(" max(CASE WHEN biddingType=1 THEN biddingTypeCounts END ) AS openly FROM ");
         sb.append(" (select count(*) AS biddingTypeCounts,biddingType AS biddingType,cities as cities ");
         sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY biddingType,cities ORDER BY cities )a GROUP BY cities)A, ");
-        sb.append(" (SELECT cities,max(CASE WHEN businessType='1' THEN businessTypeCounts END )AS mobile, ");
-        sb.append(" max(CASE WHEN businessType='2' THEN businessTypeCounts END )AS soft, ");
-        sb.append(" max(CASE WHEN businessType='3' THEN businessTypeCounts END )AS system, ");
-        sb.append(" max(CASE WHEN businessType='4' THEN businessTypeCounts END )AS plan FROM ");
+        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
+        sb.append(" max(CASE WHEN businessType=1 THEN businessTypeCounts END )AS soft, ");
+        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS system, ");
+        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS plan FROM ");
         sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
         sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)B ");
         sb.append(" WHERE A.cities=B.cities)C ");

@@ -82,7 +82,7 @@ public class ProjectOutsourcingBO extends BaseBO {
     /**
      * 洽谈内容
      */
-    private String communicatContent;
+    private String communicateContent;
 
     /**
      * 费用预算
@@ -213,12 +213,12 @@ public class ProjectOutsourcingBO extends BaseBO {
         this.communicateAddress = communicateAddress;
     }
 
-    public String getCommunicatContent() {
-        return communicatContent;
+    public String getCommunicateContent() {
+        return communicateContent;
     }
 
-    public void setCommunicatContent(String communicatContent) {
-        this.communicatContent = communicatContent;
+    public void setCommunicateContent(String communicateContent) {
+        this.communicateContent = communicateContent;
     }
 
     public Double getCostBudget() {

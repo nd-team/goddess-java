@@ -33,7 +33,19 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
 
     @Autowired
     private UserAPI userAPI;
-    @Cacheable
+    @Override
+    public Long countStayApply(StayApplyDTO stayApplyDTO) throws SerException {
+        Long count = super.count(stayApplyDTO);
+        return count;
+    }
+    @Override
+    public StayApplyBO getOne(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        StayApply stayApply = super.findById(id);
+        return BeanTransform.copyProperties(stayApply,StayApplyBO.class);
+    }
     @Override
     public List<StayApplyBO> findListStayApply(StayApplyDTO stayApplyDTO) throws SerException {
         List<StayApply> stayApplies = super.findByCis(stayApplyDTO,true);
@@ -66,10 +78,12 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeStayApply(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
         super.remove(id);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
     public StayApplyBO auditStayApply(StayApplyTO stayApplyTO) throws SerException {
         stayApplyTO.setHeadAudit(userAPI.currentUser().getUsername());

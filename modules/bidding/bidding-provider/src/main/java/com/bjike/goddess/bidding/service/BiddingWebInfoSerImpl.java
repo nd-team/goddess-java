@@ -77,10 +77,10 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
             throw new SerException("id不能为空");
         }
         BiddingWebInfo biddingWebInfo = super.findById(biddingWebInfoTO.getId());
-        BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfo.class, true);
+        BeanTransform.copyProperties(biddingWebInfoTO, biddingWebInfo, true);
         biddingWebInfo.setModifyTime(LocalDateTime.now());
         super.update(biddingWebInfo);
-        return BeanTransform.copyProperties(biddingWebInfoTO, BiddingWebInfoBO.class);
+        return BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override

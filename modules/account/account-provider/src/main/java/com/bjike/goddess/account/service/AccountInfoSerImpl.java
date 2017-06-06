@@ -49,20 +49,20 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
     }
     @Override
     public List<AccountInfoBO> findListAccountInfo(AccountInfoDTO accountInfoDTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//        if ( !permission) {
+//            throw new SerException("您的帐号没有权限");
+//        }
         List<AccountInfo> accountInfos = super.findByCis(accountInfoDTO,true);
         return BeanTransform.copyProperties(accountInfos,AccountInfoBO.class);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AccountInfoBO insertAccountInfo(AccountInfoTO accountInfoTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//        if ( !permission) {
+//            throw new SerException("您不是财务人员，没有权限");
+//        }
         AccountInfo accountInfo = BeanTransform.copyProperties(accountInfoTO,AccountInfo.class,true);
         accountInfo.setCreateTime(LocalDateTime.now());
         super.save(accountInfo);
@@ -71,10 +71,10 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AccountInfoBO editAccountInfo(AccountInfoTO accountInfoTO) throws SerException {
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//        if ( !permission) {
+//            throw new SerException("您不是财务人员，没有权限");
+//        }
         if(!StringUtils.isEmpty(accountInfoTO.getId())){
             AccountInfo accountInfo = super.findById(accountInfoTO.getId());
             BeanTransform.copyProperties(accountInfoTO,accountInfo,true);
@@ -89,10 +89,10 @@ public class AccountInfoSerImpl extends ServiceImpl<AccountInfo, AccountInfoDTO>
     @Override
     public void removeAccountInfo(String id) throws SerException {
 
-        Boolean permission = cusPermissionSer.getCusPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是财务人员，没有权限");
-        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//        if ( !permission) {
+//            throw new SerException("您不是财务人员，没有权限");
+//        }
         if(StringUtils.isBlank(id)){
             throw new SerException("id不能为空");
         }

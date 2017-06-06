@@ -1,7 +1,10 @@
 package com.bjike.goddess.individualvision.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 个人愿景计划
@@ -17,52 +20,50 @@ public class IndividualVisionPlanTO extends BaseTO {
     /**
      * 姓名
      */
+    @NotBlank(message = "姓名不能为空",groups = {ADD.class, EDIT.class})
     private String name;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 部门
      */
+    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
     private String department;
 
     /**
-     * 入职时间String
+     * 入职时间
      */
+    @NotBlank(message = "入职时间不能为空",groups = {ADD.class, EDIT.class})
     private String entryTime;
 
     /**
      * 期望薪资上升幅度
      */
+    @NotBlank(message = "期望薪资上升幅度不能为空",groups = {ADD.class, EDIT.class})
     private String expectedSalaryIncrease;
 
     /**
      * 规划日期
      */
+    @NotBlank(message = "规划日期不能为空",groups = {ADD.class, EDIT.class})
     private String planningDate;
 
     /**
      * 目前状态
      */
-    private Status currentState;
+    @NotBlank(message = "目前状态不能为空",groups = {ADD.class, EDIT.class})
+    private String currentState;
 
     /**
-     * 选择发展路径：转正
+     * 选择发展路径：
      */
+    @NotBlank(message = "选择发展路径：不能为空",groups = {ADD.class, EDIT.class})
     private String positive;
-
-    /**
-     * 选择发展路径：管理方面
-     */
-    private String management;
-
-    /**
-     * 选择发展路径：技能方面
-     */
-    private String skills;
 
     /**
      * 期望此能力的提升程度
@@ -87,7 +88,7 @@ public class IndividualVisionPlanTO extends BaseTO {
     /**
      * 期望此时的职位状态
      */
-    private Status positionsStatus;
+    private String positionsStatus;
 
     /**
      * 期望周收益（元）
@@ -153,11 +154,11 @@ public class IndividualVisionPlanTO extends BaseTO {
         this.planningDate = planningDate;
     }
 
-    public Status getCurrentState() {
+    public String getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(Status currentState) {
+    public void setCurrentState(String currentState) {
         this.currentState = currentState;
     }
 
@@ -169,21 +170,6 @@ public class IndividualVisionPlanTO extends BaseTO {
         this.positive = positive;
     }
 
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
 
     public String getDegreeAbilityAscend() {
         return degreeAbilityAscend;
@@ -217,11 +203,11 @@ public class IndividualVisionPlanTO extends BaseTO {
         this.expectedCompletionTime = expectedCompletionTime;
     }
 
-    public Status getPositionsStatus() {
+    public String getPositionsStatus() {
         return positionsStatus;
     }
 
-    public void setPositionsStatus(Status positionsStatus) {
+    public void setPositionsStatus(String positionsStatus) {
         this.positionsStatus = positionsStatus;
     }
 
