@@ -20,25 +20,25 @@ public class WorkExperience  extends BaseEntity {
 	/**
 	 * 开始时间
 	 */
-	@Column(nullable = false,columnDefinition = "DATE COMMENT '开始时间'")
+	@Column( columnDefinition = "DATE COMMENT '开始时间'")
 	private LocalDate startTime;
 
 	/**
 	 * 结束时间
 	 */
-	@Column(nullable = false,columnDefinition = "DATE COMMENT '结束时间'")
+	@Column( columnDefinition = "DATE COMMENT '结束时间'")
 	private LocalDate endTime;
 
 	/**
 	 * 公司名称
 	 */
-	@Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '公司名称'")
+	@Column( columnDefinition = "VARCHAR(255) COMMENT '公司名称'")
 	private String firm;
 
 	/**
 	 * 工作描述
 	 */
-	@Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '工作描述'")
+	@Column( columnDefinition = "VARCHAR(255) COMMENT '工作描述'")
 	private String jobDescription;
 
 	/**

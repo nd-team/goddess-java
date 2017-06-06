@@ -31,6 +31,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
         actResult.setMsg(e.getMessage());
+        e.printStackTrace();
         if (e instanceof ActException || e instanceof HystrixBadRequestException) {
             actResult.setCode(1);
             httpServletResponse.setStatus(SUCCESS_STATUS);

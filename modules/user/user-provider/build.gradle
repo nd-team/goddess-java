@@ -35,5 +35,4 @@ dependencies {
     }
     compile group: 'commons-codec', name: 'commons-codec', version: "$codec_version"
     compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
-
 }
