@@ -19,50 +19,6 @@ public class DataTypeUtils {
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    /**
-     * 数据库类型转换
-     *
-     * @param obj
-     * @return
-     */
-    private Object convertDataType(Object obj) {
-        if (null != obj) {
-            String simpleName = obj.getClass().getSimpleName();
-            String val = obj.toString();
-            switch (simpleName) {
-                case "String":
-                    obj = val;
-                    break;
-                case "Double":
-                    obj = Double.parseDouble(val);
-                    break;
-                case "Float":
-                    obj = Float.parseFloat(val);
-                    break;
-                case "BigInteger":
-                    obj = Integer.parseInt(val);
-                    break;
-                case "BigDecimal":
-                    obj = Double.parseDouble(val);
-                    break;
-                case "Integer":
-                    obj = Integer.parseInt(val);
-                    break;
-                case "LocalDateTime":
-                    obj = LocalDateTime.parse(val);
-                    break;
-                case "LocalDate":
-                    obj = LocalDateTime.parse(val, DATE);
-                    break;
-                case "LocalTime":
-                    obj = LocalDateTime.parse(val, TIME);
-                    break;
-
-            }
-        }
-        return obj;
-    }
-
 
     /**
      * 数据库类型转换

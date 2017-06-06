@@ -65,7 +65,8 @@ public class Restrict implements Serializable {
     public static Condition isNotNull(String filed) {
         return new Condition(filed, null, RestrictionType.ISNOTNULL);
     }
-    public static Condition notIn(String field,Object[] values) {
+
+    public static Condition notIn(String field, Object[] values) {
         return new Condition(field, values, RestrictionType.NOTIN);
     }
 
