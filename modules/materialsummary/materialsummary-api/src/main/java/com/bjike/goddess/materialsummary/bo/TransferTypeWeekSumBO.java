@@ -27,7 +27,7 @@ public class TransferTypeWeekSumBO extends BaseBO {
     /**
      * 物资类型
      */
-    private MaterialState materialState;
+    private String deviceType;
 
     /**
      * 地区
@@ -70,12 +70,12 @@ public class TransferTypeWeekSumBO extends BaseBO {
         this.sumEndTime = sumEndTime;
     }
 
-    public MaterialState getMaterialState() {
-        return materialState;
+    public String getDeviceType() {
+        return deviceType;
     }
 
-    public void setMaterialState(MaterialState materialState) {
-        this.materialState = materialState;
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     public String getArea() {
