@@ -256,7 +256,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             throw new SerException(e.getMessage());
         }
 
-
         /**
          * 插入家庭成员
          */
@@ -287,11 +286,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             for (int i = 0; i < countTitle; i++) {
                 FamilyMember temp = new FamilyMember();
                 temp.setTitle(familyMemberTO.getTitles().get(i));
-                temp.setName(familyMemberTO.getNames().get(i));
-                temp.setAge(familyMemberTO.getAges().get(i));
-                temp.setUnit(familyMemberTO.getUnits().get(i));
-                temp.setPosition(familyMemberTO.getPositions().get(i));
-                temp.setPhone(familyMemberTO.getPhones().get(i));
+                temp.setName(null != familyMemberTO.getNames() ?familyMemberTO.getNames().get(i):"");
+                temp.setAge(null != familyMemberTO.getAges() ?(null == familyMemberTO.getAges().get(i)?0:familyMemberTO.getAges().get(i)):0);
+                temp.setUnit(null != familyMemberTO.getUnits() ?familyMemberTO.getUnits().get(i):"");
+                temp.setPosition(null != familyMemberTO.getPositions() ?familyMemberTO.getPositions().get(i):"");
+                temp.setPhone(null != familyMemberTO.getPhones() ?familyMemberTO.getPhones().get(i):"");
                 temp.setEntryRegister(entryRegister);
 
                 familyMembers.add(temp);
@@ -309,8 +308,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = studyExperienceTO.getStudyStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 StudyExperience temp = new StudyExperience();
-                temp.setStartTime(LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                temp.setEndTime(null == studyExperienceTO.getStudyEndTimes() ? null:LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                temp.setStartTime(StringUtils.isBlank(studyExperienceTO.getStudyStartTimes().get(i)) ? null:LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                temp.setEndTime(null == studyExperienceTO.getStudyEndTimes() ? null:(StringUtils.isBlank(studyExperienceTO.getStudyEndTimes().get(i)) ? null:LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
                 temp.setSchool(null == studyExperienceTO.getSchools()? "":studyExperienceTO.getSchools().get(i));
                 temp.setCertificate(null == studyExperienceTO.getCertificates()? "":studyExperienceTO.getCertificates().get(i));
                 temp.setEntryRegister(entryRegister);
@@ -330,8 +329,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = workExperienceTO.getWorkStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 WorkExperience temp = new WorkExperience();
-                temp.setStartTime(LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i),formater));
-                temp.setEndTime(null == workExperienceTO.getWorkEndTimes()?null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i),formater));
+                temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
+                temp.setEndTime(null == workExperienceTO.getWorkEndTimes() ? null:(StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater)));
                 temp.setFirm(null == workExperienceTO.getFirms()?"":workExperienceTO.getFirms().get(i));
                 temp.setJobDescription(null == workExperienceTO.getJobDescriptions()?"":workExperienceTO.getJobDescriptions().get(i));
                 temp.setEntryRegister(entryRegister);

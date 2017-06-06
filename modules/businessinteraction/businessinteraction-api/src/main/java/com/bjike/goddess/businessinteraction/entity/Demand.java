@@ -33,7 +33,7 @@ public class Demand extends BaseEntity {
     /**
      * 需求者职能
      */
-    @Column(name = "work",  columnDefinition = "VARCHAR(255)   COMMENT '需求者职能'")
+    @Column(name = "work",  columnDefinition = "TEXT   COMMENT '需求者职能'")
     private String work;
 
     /**
