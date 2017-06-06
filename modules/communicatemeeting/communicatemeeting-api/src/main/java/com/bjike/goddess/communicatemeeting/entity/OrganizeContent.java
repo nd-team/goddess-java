@@ -91,6 +91,7 @@ public class OrganizeContent extends BaseEntity {
     @Column(name = "meetingArea", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会议地点'")
     private String meetingArea;
 
+
     /**
      * 会议编号
      */
