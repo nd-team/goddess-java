@@ -89,7 +89,7 @@ public class PerformanceIndicatorAct {
      * @return class PerformanceIndicatorVO
      * @version v1
      */
-    @PatchMapping("v1/start/{id}")
+    @PutMapping("v1/start/{id}")
     public Result start(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.start(id), PerformanceIndicatorVO.class));
@@ -105,7 +105,7 @@ public class PerformanceIndicatorAct {
      * @return class PerformanceIndicatorVO
      * @version v1
      */
-    @PatchMapping("v1/close/{id}")
+    @PutMapping("v1/close/{id}")
     public Result close(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(performanceIndicatorAPI.close(id), PerformanceIndicatorVO.class));

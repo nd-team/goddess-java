@@ -90,7 +90,7 @@ public class BusinessCourseAct {
      * @return class BusinessCourseVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(BusinessCourseTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.congeal(to), BusinessCourseVO.class, request));
@@ -106,7 +106,7 @@ public class BusinessCourseAct {
      * @return class BusinessCourseVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(BusinessCourseTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessCourseAPI.thaw(to), BusinessCourseVO.class, request));

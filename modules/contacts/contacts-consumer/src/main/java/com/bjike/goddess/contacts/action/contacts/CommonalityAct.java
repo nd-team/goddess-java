@@ -89,7 +89,7 @@ public class CommonalityAct {
      * @return class CommonalityVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(CommonalityTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.congeal(to), CommonalityVO.class));
@@ -105,7 +105,7 @@ public class CommonalityAct {
      * @return class CommonalityVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(CommonalityTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commonalityAPI.thaw(to), CommonalityVO.class));

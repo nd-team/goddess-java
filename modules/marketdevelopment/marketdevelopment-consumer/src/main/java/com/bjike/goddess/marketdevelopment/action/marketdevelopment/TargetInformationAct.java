@@ -10,7 +10,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.TargetInformationAPI;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
+import com.bjike.goddess.marketdevelopment.vo.AreaVO;
 import com.bjike.goddess.marketdevelopment.vo.TargetInformationVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,8 @@ public class TargetInformationAct {
     @Autowired
     private TargetInformationAPI targetInformationAPI;
 
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 列表
@@ -189,6 +193,21 @@ public class TargetInformationAct {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(targetInformationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

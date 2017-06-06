@@ -118,7 +118,7 @@ public class ContractManageAction extends BaseFileAction {
      * @return class ContractInfoVO
      * @version v1
      */
-    @PatchMapping("v1/affirm/{id}")
+    @PutMapping("v1/affirm/{id}")
     public Result affirm(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.affirm(id), ContractInfoVO.class, request));

@@ -88,7 +88,7 @@ public class OperateAct {
      * @return class OperateVO
      * @version v1
      */
-    @PatchMapping("v1/close/{id}")
+    @PutMapping("v1/close/{id}")
     public Result close(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(operateAPI.close(id), OperateVO.class, request));
@@ -104,7 +104,7 @@ public class OperateAct {
      * @return class OperateVO
      * @version v1
      */
-    @PatchMapping("v1/open/{id}")
+    @PutMapping("v1/open/{id}")
     public Result open(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(operateAPI.open(id), OperateVO.class, request));

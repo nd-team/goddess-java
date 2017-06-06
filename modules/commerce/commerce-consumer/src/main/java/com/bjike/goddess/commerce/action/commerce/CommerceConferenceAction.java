@@ -82,7 +82,7 @@ public class CommerceConferenceAction extends BaseFileAction {
      * @return class CommerceConferenceVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(commerceConferenceAPI.congeal(id), CommerceConferenceVO.class));

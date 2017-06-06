@@ -89,7 +89,7 @@ public class AnnualStandardAct {
      * @return class AnnualStandardVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(AnnualStandardTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.congeal(to), AnnualStandardVO.class));
@@ -105,7 +105,7 @@ public class AnnualStandardAct {
      * @return class AnnualStandardVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(AnnualStandardTO to) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(annualStandardAPI.thaw(to), AnnualStandardVO.class));

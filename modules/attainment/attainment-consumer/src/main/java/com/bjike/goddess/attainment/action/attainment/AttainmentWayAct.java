@@ -88,7 +88,7 @@ public class AttainmentWayAct {
      * @return class AttainmentWayVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(attainmentWayAPI.congeal(id), AttainmentWayVO.class));
@@ -104,7 +104,7 @@ public class AttainmentWayAct {
      * @return class AttainmentWayVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(attainmentWayAPI.thaw(id), AttainmentWayVO.class));

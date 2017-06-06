@@ -94,7 +94,7 @@ public class AngleAct {
      * @return class AngleVO
      * @version v1
      */
-    @PatchMapping("v1/close/{id}")
+    @PutMapping("v1/close/{id}")
     public Result close(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(angleAPI.close(id), AngleVO.class, request));
@@ -110,7 +110,7 @@ public class AngleAct {
      * @return class AngleVO
      * @version v1
      */
-    @PatchMapping("v1/open/{id}")
+    @PutMapping ("v1/open/{id}")
     public Result open(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(angleAPI.open(id), AngleVO.class, request));

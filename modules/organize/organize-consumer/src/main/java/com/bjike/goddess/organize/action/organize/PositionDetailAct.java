@@ -219,7 +219,7 @@ public class PositionDetailAct {
      * @return class PositionDetailVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.congeal(id), PositionDetailVO.class, request));
@@ -235,7 +235,7 @@ public class PositionDetailAct {
      * @return class PositionDetailVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(positionDetailAPI.thaw(id), PositionDetailVO.class, request));

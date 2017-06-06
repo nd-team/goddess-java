@@ -90,7 +90,7 @@ public class ContractNatureAction {
      * @return class ContractNatureVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.congeal(id), ContractNatureVO.class, request));
@@ -106,7 +106,7 @@ public class ContractNatureAction {
      * @return class ContractNatureVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractNatureAPI.thaw(id), ContractNatureVO.class, request));
