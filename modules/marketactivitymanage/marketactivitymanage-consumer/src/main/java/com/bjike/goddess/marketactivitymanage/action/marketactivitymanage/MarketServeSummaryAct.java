@@ -153,7 +153,7 @@ public class MarketServeSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable(value = "id") String id) throws ActException {
         try {
             marketServeSummaryAPI.thaw(id);
@@ -171,7 +171,7 @@ public class MarketServeSummaryAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable(value = "id") String id) throws ActException {
         try {
             marketServeSummaryAPI.congeal(id);

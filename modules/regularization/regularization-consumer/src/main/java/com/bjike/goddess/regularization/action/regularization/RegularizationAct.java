@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
@@ -49,6 +50,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/regularization/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -67,6 +69,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated RegularizationDTO dto, BindingResult result) throws ActException {
         try {
@@ -85,6 +88,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(@Validated RegularizationDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -104,6 +108,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(value = {ADD.class}) RegularizationTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -122,6 +127,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable(value = "id") String id) throws ActException {
         try {
@@ -139,6 +145,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(value = {EDIT.class}) RegularizationTO to, BindingResult result) throws ActException {
         try {
@@ -157,6 +164,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/manageScore/{id}")
     public Result manageScore(@PathVariable(value = "id") String id, @Validated(value = {ManagementScoreTO.IManagementScore.class}) ManagementScoreTO to, BindingResult result) throws ActException {
         try {
@@ -174,6 +182,7 @@ public class RegularizationAct {
      * @return class ManagementScoreVO
      * @throws ActException
      */
+    @LoginAuth
     @GetMapping("v1/checkManageScore/{id}")
     public Result checkManageScore(@PathVariable(value = "id") String id, HttpServletRequest request) throws ActException {
         try {
@@ -212,6 +221,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/planModuleSupply")
     public Result planModuleSupply(@Validated(value = {PlanModuleSupplyTO.PlanModuleSupply.class}) PlanModuleSupplyTO to, BindingResult result) throws ActException {
         try {
@@ -229,7 +239,8 @@ public class RegularizationAct {
      * @param budgetPositiveComment 预算模块转正意见
      * @throws ActException
      */
-    @PutMapping("v1/budgetModuleSupply")
+    @LoginAuth
+    @PutMapping("v1/budgetModuleSupply/{id}")
     public Result budgetModuleSupply(@PathVariable(value = "id") String id, @RequestParam(value = "budgetPositiveComment") String budgetPositiveComment) throws ActException {
         try {
             regularizationAPI.budgetModuleSupply(id, budgetPositiveComment);
@@ -246,6 +257,7 @@ public class RegularizationAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/zjbApproval")
     public Result zjbApproval(@Validated(value = {ZjbApprovalTO.ZjbApproval.class}) ZjbApprovalTO to, BindingResult result) throws ActException {
         try {
