@@ -1,6 +1,7 @@
 package com.bjike.goddess.secure.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.secure.enums.CartStatus;
 
 /**
  * 社保卡基本信息业务传输对象
@@ -26,7 +27,7 @@ public class SecureCartBO extends BaseBO {
     /**
      * 社保卡管理分类
      */
-    private String cart;
+    private CartStatus cartStatus;
 
     /**
      * 地区
@@ -89,12 +90,12 @@ public class SecureCartBO extends BaseBO {
         this.employeeId = employeeId;
     }
 
-    public String getCart() {
-        return cart;
+    public CartStatus getCartStatus() {
+        return cartStatus;
     }
 
-    public void setCart(String cart) {
-        this.cart = cart;
+    public void setCartStatus(CartStatus cartStatus) {
+        this.cartStatus = cartStatus;
     }
 
     public String getArrival() {

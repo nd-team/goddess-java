@@ -101,21 +101,21 @@ public class PayDetailTO extends BaseTO {
      * 参保承担总费用
      */
     @NotNull(groups = {ADD.class, EDIT.class},message = "参保承担总费用不能为空")
-    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担总费用必须大于等于0")
+    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担总费用必须大于等于0",inclusive = false)
     private Double total;
 
     /**
      * 参保承担费用/公司
      */
     @NotNull(groups = {ADD.class, EDIT.class},message = "参保承担费用/公司不能为空")
-    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担费用/公司必须大于等于0")
+    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担费用/公司必须大于等于0",inclusive = false)
     private Double totalCompany;
 
     /**
      * 参保承担费用/个人
      */
     @NotNull(groups = {ADD.class, EDIT.class},message = "参保承担费用/个人不能为空")
-    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担费用/个人必须大于等于0")
+    @DecimalMin(value = "0.00",groups ={ADD.class, EDIT.class},message = "参保承担费用/个人必须大于等于0",inclusive = false)
     private Double totalPerson;
 
 

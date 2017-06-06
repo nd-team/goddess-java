@@ -224,6 +224,8 @@ public class DesginSerImpl extends ServiceImpl<Desgin, DesginDTO> implements Des
         entity = BeanTransform.copyProperties(to, Desgin.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setPlanJobStatus(PlanJobStatus.NORMAL);
+        entity.setPlanTimeStatus(PlanTimeStatus.NORMAL);
         super.update(entity);
     }
 }

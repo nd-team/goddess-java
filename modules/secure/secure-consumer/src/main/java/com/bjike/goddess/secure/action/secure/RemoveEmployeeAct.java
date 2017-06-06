@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.RemoveEmployeeAPI;
@@ -62,6 +63,7 @@ public class RemoveEmployeeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) RemoveEmployeeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -79,6 +81,7 @@ public class RemoveEmployeeAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -111,14 +114,15 @@ public class RemoveEmployeeAct {
     /**
      * 确认减员
      *
-     * @param to 减员信息
+     * @param id 减员信息id
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/confirm")
-    public Result confirm(RemoveEmployeeTO to) throws ActException {
+    public Result confirm(@PathVariable String id) throws ActException {
         try {
-            removeEmployeeAPI.confirm(to);
+            removeEmployeeAPI.confirmRemove(id);
             return new ActResult("确认减员成功!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -128,19 +132,34 @@ public class RemoveEmployeeAct {
     /**
      * 通过姓名和员工编号查找
      *
-     * @param to      减员信息
-     * @param request 请求对象
+     * @param removeName  减员信息
+     * @param employeeNum 员工编号
+     * @param request     请求对象
      * @return class RemoveEmployeeVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findByNameAndId")
-    public Result findByNameAndId(RemoveEmployeeTO to, HttpServletRequest request) throws ActException {
+    public Result findByNameAndId(@PathVariable String removeName, @PathVariable String employeeNum, HttpServletRequest request) throws ActException {
         try {
-            String[] removeName = new String[]{to.getRemoveName()};
-            String[] employeeId = new String[]{to.getEmployeeId()};
-            RemoveEmployeeBO bo = removeEmployeeAPI.findByNameAndId(removeName, employeeId);
+            RemoveEmployeeBO bo = removeEmployeeAPI.findByNameAndId(removeName, employeeNum);
             return ActResult.initialize(BeanTransform.copyProperties(bo, RemoveEmployeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(RemoveEmployeeDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(removeEmployeeAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

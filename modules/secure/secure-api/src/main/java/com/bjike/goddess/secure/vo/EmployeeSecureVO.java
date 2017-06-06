@@ -28,7 +28,7 @@ public class EmployeeSecureVO {
     /**
      * 地区
      */
-    private String arrival;
+    private String city;
 
     /**
      * 项目组
@@ -38,7 +38,7 @@ public class EmployeeSecureVO {
     /**
      * 参保单位
      */
-    private String secureDepartment;
+    private String company;
 
     /**
      * 身份证号码
@@ -48,7 +48,7 @@ public class EmployeeSecureVO {
     /**
      * 身份证籍贯
      */
-    private String idArrival;
+    private String born;
 
     /**
      * 联系方式
@@ -78,7 +78,7 @@ public class EmployeeSecureVO {
     /**
      * 参保户口
      */
-    private String secureBorn;
+    private String bornLocal;
 
     /**
      * 参保时间
@@ -88,7 +88,7 @@ public class EmployeeSecureVO {
     /**
      * 参保类型
      */
-    private String secureType;
+    private String type;
 
     /**
      * 购买方式
@@ -98,7 +98,7 @@ public class EmployeeSecureVO {
     /**
      * 已参保年限
      */
-    private Double time;
+    private String insuredYear;
 
     /**
      * 运营商务部意见
@@ -119,7 +119,6 @@ public class EmployeeSecureVO {
      * 备注
      */
     private String description;
-
 
     public String getId() {
         return id;
@@ -145,28 +144,28 @@ public class EmployeeSecureVO {
         this.employeeNum = employeeNum;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getCity() {
+        return city;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getGroup() {
+    public String getTeam() {
         return team;
     }
 
-    public void setGroup(String team) {
+    public void setTeam(String team) {
         this.team = team;
     }
 
-    public String getSecureDepartment() {
-        return secureDepartment;
+    public String getCompany() {
+        return company;
     }
 
-    public void setSecureDepartment(String secureDepartment) {
-        this.secureDepartment = secureDepartment;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getIdCart() {
@@ -177,12 +176,12 @@ public class EmployeeSecureVO {
         this.idCart = idCart;
     }
 
-    public String getIdArrival() {
-        return idArrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setIdArrival(String idArrival) {
-        this.idArrival = idArrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {
@@ -225,12 +224,12 @@ public class EmployeeSecureVO {
         this.beforeTime = beforeTime;
     }
 
-    public String getSecureBorn() {
-        return secureBorn;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setSecureBorn(String secureBorn) {
-        this.secureBorn = secureBorn;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
     public String getSecureTime() {
@@ -241,12 +240,12 @@ public class EmployeeSecureVO {
         this.secureTime = secureTime;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -257,12 +256,12 @@ public class EmployeeSecureVO {
         this.payType = payType;
     }
 
-    public Double getTime() {
-        return time;
+    public String getInsuredYear() {
+        return insuredYear;
     }
 
-    public void setTime(Double time) {
-        this.time = time;
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getBusinessAdvice() {

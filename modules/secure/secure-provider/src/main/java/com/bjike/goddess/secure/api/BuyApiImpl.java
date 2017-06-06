@@ -48,4 +48,9 @@ public class BuyApiImpl implements BuyAPI {
     public BuyBO save(BuyTO to) throws SerException {
         return buySer.save(to);
     }
+
+    @Override
+    public Long count(BuyDTO dto) throws SerException {
+        return buySer.count(dto);
+    }
 }

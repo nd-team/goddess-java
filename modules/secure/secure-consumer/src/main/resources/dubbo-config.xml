@@ -28,5 +28,5 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.RemoveEmployeeAPI" id="removeEmployeeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
 
-	<dubbo:reference validation="true" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" id="dimissionInfoApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 </beans>

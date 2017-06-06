@@ -71,4 +71,13 @@ public interface BuyAPI {
     default BuyBO save(BuyTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(BuyDTO dto) throws SerException;
 }

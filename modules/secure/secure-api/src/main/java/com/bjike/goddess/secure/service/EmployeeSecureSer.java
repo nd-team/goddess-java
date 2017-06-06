@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
-import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
+import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
 
 import java.util.List;
@@ -75,15 +75,14 @@ public interface EmployeeSecureSer extends Ser<EmployeeSecure, EmployeeSecureDTO
     }
 
     /**
-     * 通过sql查找
+     * 通过员工编号和姓名查找
      *
-     * @param employeeId 员工编号
-     * @return class EmployeeSecureBO
+     * @param name 姓名
+     * @param num  员工编号
+     * @return
      * @throws SerException
      */
-    default List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
-        return null;
-    }
+    EmployeeSecureBO findBySql(String name, String num) throws SerException;
 
     /**
      * 更新社保状态为减员
@@ -93,4 +92,13 @@ public interface EmployeeSecureSer extends Ser<EmployeeSecure, EmployeeSecureDTO
      */
     default void remove(EmployeeSecureTO to) throws SerException {
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(EmployeeSecureDTO dto) throws SerException;
 }

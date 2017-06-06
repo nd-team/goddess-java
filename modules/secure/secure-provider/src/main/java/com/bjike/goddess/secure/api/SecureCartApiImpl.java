@@ -25,11 +25,6 @@ public class SecureCartApiImpl implements SecureCartAPI {
     private SecureCartSer secureCartSer;
 
     @Override
-    public void save() throws SerException {
-       secureCartSer.save();
-    }
-
-    @Override
     public void edit(SecureCartTO to) throws SerException {
         secureCartSer.edit(to);
     }
@@ -47,5 +42,25 @@ public class SecureCartApiImpl implements SecureCartAPI {
     @Override
     public void delete(String id) throws SerException {
         secureCartSer.delete(id);
+    }
+
+    @Override
+    public void send() throws SerException {
+        secureCartSer.send();
+    }
+
+    @Override
+    public Long count(SecureCartDTO dto) throws SerException {
+        return secureCartSer.count(dto);
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        secureCartSer.quartz();
+    }
+
+    @Override
+    public SecureCartBO save(SecureCartTO to) throws SerException {
+        return secureCartSer.save(to);
     }
 }
