@@ -5,6 +5,7 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.service.AddEmployeeSer;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
+import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +35,6 @@ public class AddEmployeeApiImpl implements AddEmployeeAPI {
         return addEmployeeSer.findByID(id);
     }
 
-    @Override
-    public AddEmployeeBO edit(AddEmployeeTO to) throws SerException {
-        return addEmployeeSer.edit(to);
-    }
 
     @Override
     public AddEmployeeBO delete(String id) throws SerException {
@@ -52,5 +49,30 @@ public class AddEmployeeApiImpl implements AddEmployeeAPI {
     @Override
     public List<AddEmployeeBO> findAll() throws SerException {
         return addEmployeeSer.findALL();
+    }
+
+    @Override
+    public void edit(AddEmployeeTO to) throws SerException {
+        addEmployeeSer.edit(to);
+    }
+
+    @Override
+    public void commerceAudit(AddEmployeeTO to) throws SerException {
+        addEmployeeSer.commerceAudit(to);
+    }
+
+    @Override
+    public void managerConfirmAdd(String id) throws SerException {
+        addEmployeeSer.managerConfirmAdd(id);
+    }
+
+    @Override
+    public void confirmAdd(String id) throws SerException {
+        addEmployeeSer.confirmAdd(id);
+    }
+
+    @Override
+    public Long count(AddEmployeeDTO dto) throws SerException {
+        return addEmployeeSer.count(dto);
     }
 }

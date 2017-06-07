@@ -159,7 +159,7 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/joinActivity/{id}")
+    @PutMapping("v1/joinActivity/{id}")
     public Result joinActivity(@PathVariable(value = "id") String id, @RequestParam(value = "area") String area) throws ActException {
         try {
             activityApplyInforAPI.joinActivity(id, area);
@@ -178,7 +178,7 @@ public class ActivityApplyInforAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/exitActivity/{id}")
+    @PutMapping("v1/exitActivity/{id}")
     public Result exitActivity(@PathVariable(value = "id") String id, @RequestParam(value = "abandonReason") String abandonReason) throws ActException {
         try {
             activityApplyInforAPI.exitActivity(id, abandonReason);

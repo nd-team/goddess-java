@@ -20,10 +20,11 @@ public interface SecureCartAPI {
     /**
      * 添加
      *
+     * @param to
+     * @return
      * @throws SerException
      */
-    default void save() throws SerException {
-    }
+    SecureCartBO save(SecureCartTO to) throws SerException;
 
     /**
      * 编辑
@@ -64,4 +65,27 @@ public interface SecureCartAPI {
      */
     default void delete(String id) throws SerException {
     }
+
+    /**
+     * 定时方法，定时查看今天是否为16号
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
+
+    /**
+     * 查找总条数
+     *
+     * @param dto dto
+     * @return
+     * @throws SerException
+     */
+    Long count(SecureCartDTO dto) throws SerException;
+
+    /**
+     * 启动定时方法
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
 }

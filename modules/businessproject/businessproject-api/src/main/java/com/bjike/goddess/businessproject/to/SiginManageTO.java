@@ -82,7 +82,7 @@ public class SiginManageTO extends BaseTO {
     private String endProjectTime;
 
     /**
-     * 签订状态(已签订/未签订)
+     * 签订状态(已签订/未签订) xx
      */
     @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空(已签订/未签订)")
     private String siginStatus;
@@ -94,7 +94,7 @@ public class SiginManageTO extends BaseTO {
     private ContractProperty contractProperty;
 
     /**
-     * 立项情况
+     * 立项情况 xx
      */
     @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
     private String makeProject;
@@ -123,22 +123,22 @@ public class SiginManageTO extends BaseTO {
     private String remark;
 
     /**
-     * 总经办
+     * 总经办 xx
      */
     private String manager;
 
     /**
-     * 审核意见
+     * 审核意见 xx
      */
     private String auditAdvice;
 
     /**
-     * 创建时间
+     * 创建时间 xx
      */
     private String createTime;
 
     /**
-     * 修改时间
+     * 修改时间 xx
      */
     private String modifyTime;
 

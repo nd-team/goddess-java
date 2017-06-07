@@ -1,6 +1,11 @@
 package com.bjike.goddess.firmreward.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 奖励指标
@@ -14,78 +19,92 @@ import com.bjike.goddess.common.api.to.BaseTO;
 public class RewardIndicatorTO extends BaseTO {
 
     /**
-     * 奖励开放时间
+     * 奖励开放日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励开放时间不能为空")
     private String prizeOpeningTime;
 
     /**
-     * 奖励结束时间
+     * 奖励结束日期
      */
     private String prizeEndTime;
 
     /**
      * 奖励频率
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励频率不能为空")
     private String prizeFrequency;
 
     /**
      * 奖励项目
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励项目不能为空")
     private String prizeItem;
 
     /**
      * 参与对象
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "参与对象不能为空")
     private String participator;
 
     /**
      * 指标名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "指标名称不能为空")
     private String nameOfIndex;
 
     /**
      * 考核方式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "考核方式不能为空")
     private String evaluationMode;
 
     /**
      * 目标值
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "目标值不能为空")
     private String targetValue;
 
     /**
      * 指标来源
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "指标来源不能为空")
     private String indexSource;
 
     /**
      * 设定排名总人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "设定排名总人数不能为空")
     private Integer totalNumber;
 
     /**
      * 奖励对象
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励对象不能为空")
     private String prizeObject;
 
     /**
-     * 颁奖时间
+     * 颁奖日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "颁奖时间不能为空")
     private String awardTime;
 
     /**
      * 奖励方式
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励方式不能为空")
     private String rewardRule;
 
     /**
      * 预算额度
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "预算额度不能为空")
     private Double budgetLimit;
 
     /**
      * 特殊处理
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "特殊处理不能为空")
     private String specialHandling;
 
     /**

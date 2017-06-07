@@ -33,12 +33,12 @@ public class BuyVO {
     /**
      * 参保户口
      */
-    private String born;
+    private String bornLocal;
 
     /**
      * 参保类型
      */
-    private String secureType;
+    private String type;
 
     /**
      * 购买方式
@@ -48,13 +48,12 @@ public class BuyVO {
     /**
      * 社保状态
      */
-    private String secureStatus;
+    private String status;
 
     /**
      * 审批状态
      */
     private boolean examine;
-
 
     public String getId() {
         return id;
@@ -88,20 +87,20 @@ public class BuyVO {
         this.city = city;
     }
 
-    public String getBorn() {
-        return born;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setBorn(String born) {
-        this.born = born;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -112,15 +111,15 @@ public class BuyVO {
         this.payType = payType;
     }
 
-    public String getSecureStatus() {
-        return secureStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSecureStatus(String secureStatus) {
-        this.secureStatus = secureStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public boolean getExamine() {
+    public boolean isExamine() {
         return examine;
     }
 

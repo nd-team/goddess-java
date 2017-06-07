@@ -1,8 +1,12 @@
 package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.secure.enums.Pay;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -63,7 +67,7 @@ public class AttachedEnd extends BaseEntity {
     /**
      * 担保人在司岗位
      */
-    @Column(name = "assureJob", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '担保人在司岗位'")
+    @Column(name = "assureJob", columnDefinition = "VARCHAR(255)   COMMENT '担保人在司岗位'")
     private String assureJob;
 
     /**
@@ -75,32 +79,32 @@ public class AttachedEnd extends BaseEntity {
     /**
      * 担保人联系电话
      */
-    @Column(name = "assureTel", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '担保人联系电话'")
+    @Column(name = "assureTel", columnDefinition = "VARCHAR(255)   COMMENT '担保人联系电话'")
     private String assureTel;
 
     /**
      * 挂靠开始时间
      */
-    @Column(name = "startTime", nullable = false, columnDefinition = "DATETIME   COMMENT '挂靠开始时间'")
-    private String startTime;
+    @Column(name = "startTime", columnDefinition = "DATE  COMMENT '挂靠开始时间'")
+    private LocalDate startTime;
 
     /**
      * 挂靠结束时间
      */
-    @Column(name = "endTime", nullable = false, columnDefinition = "DATETIME   COMMENT '挂靠结束时间'")
-    private String endTime;
+    @Column(name = "endTime", columnDefinition = "DATE  COMMENT '挂靠结束时间'")
+    private LocalDate endTime;
 
     /**
      * 挂靠的公司
      */
-    @Column(name = "company", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '挂靠的公司'")
+    @Column(name = "company", columnDefinition = "VARCHAR(255)   COMMENT '挂靠的公司'")
     private String company;
 
     /**
      * 审批意见
      */
-    @Column(name = "advice", columnDefinition = "TINYINT(1)  COMMENT '审批意见'")
-    private boolean advice;
+    @Column(name = "advice", columnDefinition = "VARCHAR(255)  COMMENT '审批意见'")
+    private String advice;
 
     /**
      * 挂靠的缴费金
@@ -111,14 +115,26 @@ public class AttachedEnd extends BaseEntity {
     /**
      * 金额的支付类型
      */
-    @Column(name = "paid", columnDefinition = "VARCHAR(255)   COMMENT '金额的支付类型'")
-    private String paid;
+    @Column(name = "pay", columnDefinition = "TINYINT(2)  COMMENT '金额的支付类型'")
+    private Pay pay;
 
     /**
-     * 参保记录
+     * 前参保地市
      */
-    @Column(name = "record", columnDefinition = "VARCHAR(255)   COMMENT '参保记录'")
-    private String record;
+    @Column(name = "beforeCity", columnDefinition = "VARCHAR(255)   COMMENT '前参保地市'")
+    private String beforeCity;
+
+    /**
+     * 前参保时间
+     */
+    @Column(name = "beforeTime", columnDefinition = "DATE   COMMENT '前参保时间'")
+    private LocalDate beforeTime;
+
+    /**
+     * 已参保年限
+     */
+    @Column(name = "insuredYear", columnDefinition = "VARCHAR(255)   COMMENT '已参保年限'")
+    private String insuredYear;
 
     /**
      * 备注
@@ -212,19 +228,19 @@ public class AttachedEnd extends BaseEntity {
         this.assureTel = assureTel;
     }
 
-    public String getStartTime() {
+    public LocalDate getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDate startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalDate getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDate endTime) {
         this.endTime = endTime;
     }
 
@@ -236,11 +252,11 @@ public class AttachedEnd extends BaseEntity {
         this.company = company;
     }
 
-    public boolean isAdvice() {
+    public String getAdvice() {
         return advice;
     }
 
-    public void setAdvice(boolean advice) {
+    public void setAdvice(String advice) {
         this.advice = advice;
     }
 
@@ -252,20 +268,36 @@ public class AttachedEnd extends BaseEntity {
         this.money = money;
     }
 
-    public String getPaid() {
-        return paid;
+    public Pay getPay() {
+        return pay;
     }
 
-    public void setPaid(String paid) {
-        this.paid = paid;
+    public void setPay(Pay pay) {
+        this.pay = pay;
     }
 
-    public String getRecord() {
-        return record;
+    public String getBeforeCity() {
+        return beforeCity;
     }
 
-    public void setRecord(String record) {
-        this.record = record;
+    public void setBeforeCity(String beforeCity) {
+        this.beforeCity = beforeCity;
+    }
+
+    public LocalDate getBeforeTime() {
+        return beforeTime;
+    }
+
+    public void setBeforeTime(LocalDate beforeTime) {
+        this.beforeTime = beforeTime;
+    }
+
+    public String getInsuredYear() {
+        return insuredYear;
+    }
+
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getDecription() {

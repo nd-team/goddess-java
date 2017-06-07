@@ -1,6 +1,11 @@
 package com.bjike.goddess.firmreward.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 奖品申请
@@ -13,29 +18,36 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class PrizeApplyTO extends BaseTO {
 
+    public interface IPrizeDetail{}
+
     /**
      * 奖励项目名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励项目名称不能为空")
     private String awardItemName;
 
     /**
      * 员工姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工姓名不能为空")
     private String staffName;
 
     /**
      * 项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目组不能为空")
     private String projectTeam;
 
     /**
      * 获奖等级
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "获奖等级不能为空")
     private String awardGrade;
 
     /**
      * 奖品注意事项
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖品注意事项不能为空")
     private String awardNotes;
 
     /**
@@ -56,21 +68,25 @@ public class PrizeApplyTO extends BaseTO {
     /**
      * 奖品明细
      */
+    @NotNull(groups = {PrizeApplyTO.IPrizeDetail.class}, message = "奖品明细不能为空")
     private String[] prizeDetails;
 
     /**
      * 奖品购置途径
      */
+    @NotNull(groups = {PrizeApplyTO.IPrizeDetail.class}, message = "奖品购置途径不能为空")
     private String[] prizeBuyWays;
 
     /**
      * 奖品发放形式
      */
+    @NotNull(groups = {PrizeApplyTO.IPrizeDetail.class}, message = "奖品发放形式不能为空")
     private String[] prizeIssueForms;
 
     /**
      * 颁奖时间
      */
+    @NotNull(groups = {PrizeApplyTO.IPrizeDetail.class}, message = "颁奖时间不能为空")
     private String[] awardTimes;
 
 

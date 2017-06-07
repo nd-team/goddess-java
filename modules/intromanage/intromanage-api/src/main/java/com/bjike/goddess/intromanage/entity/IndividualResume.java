@@ -76,7 +76,7 @@ public class IndividualResume extends BaseEntity {
     /**
      * 是否购买社保
      */
-    @Column(name = "whetherSocialSecurity", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '是否购买社保'", insertable = false)
+    @Column(name = "whetherSocialSecurity", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '是否购买社保'")
     private Boolean whetherSocialSecurity;
 
     /**

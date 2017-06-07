@@ -3,21 +3,21 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
 import com.bjike.goddess.secure.dto.RemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.entity.RemoveEmployee;
+import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,8 +36,6 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     private EmployeeSecureSer employeeSecureSer;
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private UserDetailAPI userDetailAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -52,10 +50,9 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     public RemoveEmployeeBO edit(RemoveEmployeeTO to) throws SerException {
         RemoveEmployee removeEmployee = super.findById(to.getId());
         LocalDateTime a = removeEmployee.getCreateTime();
-        LocalDateTime b = removeEmployee.getModifyTime();
         removeEmployee = BeanTransform.copyProperties(to, RemoveEmployee.class);
         removeEmployee.setCreateTime(a);
-        removeEmployee.setModifyTime(b);
+        removeEmployee.setModifyTime(LocalDateTime.now());
         super.update(removeEmployee);
         return BeanTransform.copyProperties(removeEmployee, RemoveEmployeeBO.class);
     }
@@ -80,17 +77,26 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     }
 
     @Override
-    public RemoveEmployeeBO findByNameAndId(String[] removeName, String[] employeeId) throws SerException {
-        List<String> names = Arrays.asList(removeName);
-        List<String> emploeeIds = Arrays.asList(employeeId);
+    public RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException {
+        String[] names = new String[]{removeName};
         List<RemoveEmployeeBO> list = null;
-        for (int i = 0; i < names.size() && i < emploeeIds.size(); i++) {
-            String[] fields = new String[]{"countCompany", "countCity", "removeType", "company", "removeCity", "quantityName", "secureTime", "removeCount", "description"};
-            String sql = "select countCompany,countCity,removeType,company,removeCity,quantityName,secureTime,removeCount,description from " +
-                    "secure_removeemployee where removeName='" + names.get(i) + "' and employeeId='" + emploeeIds.get(i) + "'";
-            list = this.findBySql(sql, RemoveEmployeeBO.class, fields);
+        if ((removeName != null) && (employeeId != null) && (StringUtils.isNotBlank(employeeId))) {
+            String[] ids = new String[]{employeeId};
+            for (int i = 0; i < names.length; i++) {
+                String[] fields = new String[]{"id", "removeName", "employeeId", "countCompany", "countCity", "removeType", "company", "removeCity", "quantityName", "secureTime", "removeCount", "description", "confirmRemove"};
+                String sql = "select id,removeName,employeeId,countCompany,countCity,removeType,company,removeCity,quantityName,secureTime,removeCount,description,confirmRemove from " +
+                        "secure_removeemployee where removeName='" + names[i] + "' and employeeId='" + ids[i] + "'";
+                list = this.findBySql(sql, RemoveEmployeeBO.class, fields);
+            }
+        } else {
+            for (int i = 0; i < names.length; i++) {
+                String[] fields = new String[]{"id", "removeName", "countCompany", "countCity", "removeType", "company", "removeCity", "quantityName", "secureTime", "removeCount", "description", "confirmRemove"};
+                String sql = "select id,removeName,countCompany,countCity,removeType,company,removeCity,quantityName,secureTime,removeCount,description,confirmRemove from " +
+                        "secure_removeemployee where removeName='" + names[i] + "'";
+                list = this.findBySql(sql, RemoveEmployeeBO.class, fields);
+            }
         }
-        if (list.size() > 0) {
+        if ((list != null) && (!list.isEmpty())) {
             return list.get(0);
         } else {
             return null;
@@ -98,26 +104,25 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     }
 
     @Override
-    public void confirm(RemoveEmployeeTO to) throws SerException {
-        if (userDetailAPI.findByUserId(userAPI.currentUser().getId()).getDepartmentName().equals("运营商务部")) {
-            RemoveEmployee removeEmployee = super.findById(to.getId());
-            to.setConfirmRemove(true);
-            super.update(removeEmployee);
-            EmployeeSecure employeeSecure = new EmployeeSecure();
-            BeanUtils.copyProperties(removeEmployee, employeeSecure);
-            employeeSecure.setName(removeEmployee.getRemoveName());
-            employeeSecure.setEmployeeNum(removeEmployee.getEmployeeId());
-            employeeSecure.setDescription(removeEmployee.getDescription());
-            employeeSecure.setBeforeCity(removeEmployee.getRemoveCity());
-            employeeSecure.setStatus("已减员成功");
-            employeeSecureSer.save(employeeSecure);
-            //        String[] employeeIds=new String[]{to.getEmployeeId()};
-            //        List<EmployeeSecureBO> list=employeeSecureSer.findBySql(employeeIds);
-            //        for (EmployeeSecureBO bo:list){
-            //            EmployeeSecureTO employeeSecureTO=new EmployeeSecureTO();
-            //            BeanUtils.copyProperties(bo,employeeSecureTO);
-            //            employeeSecureSer.remove(employeeSecureTO);
-            //        }
+    @Transactional(rollbackFor = SerException.class)
+    public void confirmRemove(String id) throws SerException {
+        RemoveEmployee removeEmployee = super.findById(id);
+        removeEmployee.setConfirmRemove(true);
+        removeEmployee.setModifyTime(LocalDateTime.now());
+        super.update(removeEmployee);
+        //todo:发邮件通知运营商务部
+        EmployeeSecure entity = findByNumAndName(removeEmployee.getEmployeeId(), removeEmployee.getRemoveName());
+        if (entity != null) {
+//            EmployeeSecure employeeSecure = new EmployeeSecure();
+//            BeanUtils.copyProperties(removeEmployee, employeeSecure);
+//            employeeSecure.setName(removeEmployee.getRemoveName());
+//            employeeSecure.setEmployeeNum(removeEmployee.getEmployeeId());
+//            employeeSecure.setStatus("已减员成功");
+//            employeeSecureSer.save(employeeSecure);
+            EmployeeSecureBO bo = employeeSecureSer.findByID(entity.getId());
+            EmployeeSecureTO employeeSecureTO = BeanTransform.copyProperties(bo, EmployeeSecureTO.class);
+            employeeSecureTO.setStatus("已减员成功");
+            employeeSecureSer.edit(employeeSecureTO);
         }
     }
 
@@ -125,5 +130,43 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     public List<RemoveEmployeeBO> findALL() throws SerException {
         List<RemoveEmployee> list = super.findAll();
         return BeanTransform.copyProperties(list, RemoveEmployeeBO.class);
+    }
+
+    @Override
+    public Long count(RemoveEmployeeDTO dto) throws SerException {
+        return super.count(dto);
+    }
+
+    /**
+     * 通过员工编号和姓名查找员工社保信息
+     *
+     * @param employeeNum 员工编号
+     * @param name        姓名
+     * @return
+     * @throws SerException
+     */
+    private EmployeeSecure findByNumAndName(String employeeNum, String name) throws SerException {
+        String[] names = new String[]{name};
+        List<EmployeeSecure> list = null;
+        if ((employeeNum != null) && (name != null) && (StringUtils.isNotBlank(employeeNum))) {
+            String[] nums = new String[]{employeeNum};
+            for (int i = 0; i < names.length; i++) {
+                String sql = "select id from secure_employeesecure " +
+                        "where employeeNum='" + nums[i] + "' AND name='" + names[i] + "'";
+                String[] fileds = new String[]{"id"};
+                list = super.findBySql(sql, EmployeeSecure.class, fileds);
+            }
+        } else if ((employeeNum == null) || (StringUtils.isBlank(employeeNum))) {
+            for (int i = 0; i < names.length; i++) {
+                String sql = "select id from secure_employeesecure " +
+                        "where name='" + names[i] + "'";
+                String[] fileds = new String[]{"id"};
+                list = super.findBySql(sql, EmployeeSecure.class, fileds);
+            }
+        }
+        if ((list != null) && (!list.isEmpty())) {
+            return list.get(0);
+        }
+        return null;
     }
 }

@@ -31,11 +31,6 @@ public class AttachedApiImpl implements AttachedAPI {
     }
 
     @Override
-    public AttachedBO exameAndComplete(AttachedTO to) throws SerException {
-        return attachedSer.exameAndComplete(to);
-    }
-
-    @Override
     public AttachedBO delete(String id) throws SerException {
         return attachedSer.delete(id);
     }
@@ -56,7 +51,27 @@ public class AttachedApiImpl implements AttachedAPI {
     }
 
     @Override
-    public AttachedBO update(AttachedTO to) throws SerException {
-        return attachedSer.update(to);
+    public void pass(String id) throws SerException {
+        attachedSer.pass(id);
+    }
+
+    @Override
+    public void notPass(String id) throws SerException {
+        attachedSer.notPass(id);
+    }
+
+    @Override
+    public AttachedBO complete(AttachedTO to) throws SerException {
+        return attachedSer.complete(to);
+    }
+
+    @Override
+    public Long count(AttachedDTO dto) throws SerException {
+        return attachedSer.count(dto);
+    }
+
+    @Override
+    public AttachedBO edit(AttachedTO to) throws SerException {
+        return attachedSer.edit(to);
     }
 }

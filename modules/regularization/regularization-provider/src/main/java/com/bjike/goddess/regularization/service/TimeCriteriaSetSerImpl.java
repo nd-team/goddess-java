@@ -1,5 +1,6 @@
 package com.bjike.goddess.regularization.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,10 +53,27 @@ public class TimeCriteriaSetSerImpl extends ServiceImpl<TimeCriteriaSet, TimeCri
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public TimeCriteriaSetBO save(TimeCriteriaSetTO to) throws SerException {
+        checkParameterNameUnique(to);
         TimeCriteriaSet entity = BeanTransform.copyProperties(to, TimeCriteriaSet.class, true);
         entity = super.save(entity);
         TimeCriteriaSetBO bo = BeanTransform.copyProperties(entity, TimeCriteriaSetBO.class);
         return bo;
+    }
+
+    /**
+     * 校验参数名称是否唯一
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkParameterNameUnique(TimeCriteriaSetTO to) throws SerException {
+        String parameterName = to.getParameterName();
+        TimeCriteriaSetDTO dto = new TimeCriteriaSetDTO();
+        dto.getConditions().add(Restrict.eq("parameterName", parameterName));
+        List<TimeCriteriaSet> list = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(list)) {
+            throw new SerException("参数名称必须唯一,已经存在相同的参数名称,请直接在原有基础上编辑.");
+        }
     }
 
     /**

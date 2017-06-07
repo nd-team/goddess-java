@@ -5,24 +5,20 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.AttachedAPI;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
-import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.to.AttachedTO;
 import com.bjike.goddess.secure.vo.AttachedVO;
-import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
-import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -48,6 +44,7 @@ public class AttachedAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -59,17 +56,36 @@ public class AttachedAct {
     }
 
     /**
-     * 审批和补全信息
+     * 补全信息
      *
      * @param to 挂靠信息
      * @return class AttachedVO
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/exameAndComplete/{id}")
-    public Result exameAndComplete(@Validated({EDIT.class}) AttachedTO to, BindingResult result,HttpServletRequest request) throws ActException {
+    @LoginAuth
+    @PutMapping("v1/complete")
+    public Result complete(@Validated({AttachedTO.complete.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            AttachedBO bo = attachedAPI.exameAndComplete(to);
+            AttachedBO bo = attachedAPI.complete(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, AttachedVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to 挂靠信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) AttachedTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            AttachedBO bo = attachedAPI.edit(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AttachedVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -83,6 +99,7 @@ public class AttachedAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -124,6 +141,58 @@ public class AttachedAct {
         try {
             AttachedBO bo = attachedAPI.findByID(id);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AttachedVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 审核通过
+     *
+     * @param id 挂靠id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PatchMapping("v1/pass/{id}")
+    public Result pass(@PathVariable String id) throws ActException {
+        try {
+            attachedAPI.pass(id);
+            return new ActResult("审核通过");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 审核不通过
+     *
+     * @param id 挂靠id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PatchMapping("v1/notPass/{id}")
+    public Result notPass(@PathVariable String id) throws ActException {
+        try {
+            attachedAPI.notPass(id);
+            return new ActResult("审核不通过");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AttachedDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(attachedAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

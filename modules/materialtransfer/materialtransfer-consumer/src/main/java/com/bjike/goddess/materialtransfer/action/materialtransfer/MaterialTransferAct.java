@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialtransfer.api.MaterialTransferAPI;
@@ -46,6 +47,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/materialtransfer/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -64,6 +66,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/count")
     public Result count(@Validated MaterialTransferDTO dto, BindingResult bindingResult) throws ActException {
         try {
@@ -82,6 +85,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(@Validated MaterialTransferDTO dto, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
@@ -101,6 +105,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) MaterialTransferTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -119,6 +124,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -136,6 +142,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) MaterialTransferTO to, BindingResult result) throws ActException {
         try {
@@ -154,6 +161,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/pmAudit/{id}")
     public Result pmAudit(@PathVariable String id, @RequestParam(value = "pmAuditState") AuditState pmAuditState) throws ActException {
         try {
@@ -172,6 +180,7 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/wealModAudit/{id}")
     public Result wealModAudit(@PathVariable String id, @RequestParam(value = "welfareState") AuditState welfareState) throws ActException {
         try {
@@ -192,11 +201,9 @@ public class MaterialTransferAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PatchMapping("v1/wealModConfirm/{id}")
-    public Result wealModConfirm(@PathVariable(value = "id") String id,
-                                 @RequestParam(value = "recipient") String recipient,
-                                 @RequestParam(value = "confirmDeploy") Boolean confirmDeploy,
-                                 @RequestParam(value = "finishDeployTime") String finishDeployTime) throws ActException {
+    public Result wealModConfirm(@PathVariable(value = "id") String id, @RequestParam(value = "recipient") String recipient, @RequestParam(value = "confirmDeploy") Boolean confirmDeploy, @RequestParam(value = "finishDeployTime") String finishDeployTime) throws ActException {
         try {
             materialTransferAPI.wealModConfirm(id, recipient, confirmDeploy, finishDeployTime);
             return new ActResult("wealModConfirm success!");

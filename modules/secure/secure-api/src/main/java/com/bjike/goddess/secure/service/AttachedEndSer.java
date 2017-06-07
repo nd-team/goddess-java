@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.AttachedEndBO;
-import com.bjike.goddess.secure.entity.AttachedEnd;
 import com.bjike.goddess.secure.dto.AttachedEndDTO;
+import com.bjike.goddess.secure.entity.AttachedEnd;
 import com.bjike.goddess.secure.to.AttachedEndTO;
 
 import java.util.List;
@@ -22,10 +22,11 @@ public interface AttachedEndSer extends Ser<AttachedEnd, AttachedEndDTO> {
     /**
      * 添加
      *
+     * @param to 挂靠到期信息
+     * @return
      * @throws SerException
      */
-    default void save() throws SerException {
-    }
+    AttachedEndBO save(AttachedEndTO to) throws SerException;
 
     /**
      * 是否继续挂靠
@@ -70,4 +71,27 @@ public interface AttachedEndSer extends Ser<AttachedEnd, AttachedEndDTO> {
     default AttachedEndBO delete(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 定时方法，定时查找挂靠即将到期的人员
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
+
+    /**
+     * 启动定时方法
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AttachedEndDTO dto) throws SerException;
 }

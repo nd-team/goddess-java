@@ -178,6 +178,9 @@ public class BonusBudgetSerImpl extends ServiceImpl<BonusBudget, BonusBudgetDTO>
      */
     private List<RewardProgramRatio> getRatioByBudgetTo(RewardProgramRatiosTO to) throws SerException {
         String bonusBudgetId = to.getId();//奖金预算id
+        if (StringUtils.isBlank(bonusBudgetId)) {
+            throw new SerException("奖金预算唯一标识为空,无法执行查询");
+        }
         return getRewardRatioById(bonusBudgetId);
     }
 

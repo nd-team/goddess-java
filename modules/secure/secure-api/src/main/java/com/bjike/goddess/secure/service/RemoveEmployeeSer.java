@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.RemoveEmployeeBO;
-import com.bjike.goddess.secure.entity.RemoveEmployee;
 import com.bjike.goddess.secure.dto.RemoveEmployeeDTO;
+import com.bjike.goddess.secure.entity.RemoveEmployee;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 
 import java.util.List;
@@ -77,23 +77,20 @@ public interface RemoveEmployeeSer extends Ser<RemoveEmployee, RemoveEmployeeDTO
     /**
      * 通过姓名和员工编号查找
      *
-     * @param removeName 姓名数组
-     * @param employeeId 员工编号数组
+     * @param removeName 姓名
+     * @param employeeId 员工编号
      * @return class RemoveEmployeeBO
      * @throws SerException
      */
-    default RemoveEmployeeBO findByNameAndId(String[] removeName, String[] employeeId) throws SerException {
-        return null;
-    }
+    RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException;
 
     /**
      * 确认减员
      *
-     * @param to 减员名单信息
+     * @param id 减员名单信息id
      * @throws SerException
      */
-    default void confirm(RemoveEmployeeTO to) throws SerException {
-    }
+    void confirmRemove(String id) throws SerException;
 
     /**
      * 查找全部
@@ -104,4 +101,12 @@ public interface RemoveEmployeeSer extends Ser<RemoveEmployee, RemoveEmployeeDTO
     default List<RemoveEmployeeBO> findALL() throws SerException {
         return null;
     }
+
+    /**
+     * 查找总条数
+     *
+     * @param dto dto
+     * @throws SerException
+     */
+    Long count(RemoveEmployeeDTO dto) throws SerException;
 }

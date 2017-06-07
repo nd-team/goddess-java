@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -68,5 +69,15 @@ public class SiginManageApiImpl implements SiginManageAPI {
     @Override
     public List<String> listArea() throws SerException {
         return siginManageSer.listArea();
+    }
+
+    @Override
+    public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
+        return siginManageSer.importExcel( siginManageTO );
+    }
+
+    @Override
+    public byte[] exportExcel(SiginManageDTO dto) throws SerException {
+        return siginManageSer.exportExcel( dto );
     }
 }

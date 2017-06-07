@@ -162,7 +162,7 @@ public class FirmIntroAct {
      */
     @LoginAuth
     @PostMapping("v1/setFirmDisplayField")
-    public Result setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws ActException {
+    public Result setFirmDisplayField(String[] username, @Validated(value = {ADD.class}) FirmDisplayFieldTO to, BindingResult result) throws ActException {
         try {
             firmIntroAPI.setFirmDisplayField(username, to);
             return new ActResult("setFirmDisplayField success!");

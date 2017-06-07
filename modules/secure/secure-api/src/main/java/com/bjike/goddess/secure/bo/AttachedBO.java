@@ -1,8 +1,11 @@
 package com.bjike.goddess.secure.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.secure.enums.Pay;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 
 /**
  * 挂靠业务传输对象
@@ -93,12 +96,22 @@ public class AttachedBO extends BaseBO {
     /**
      * 金额的支付类型
      */
-    private String paid;
+    private Pay pay;
 
     /**
-     * 参保记录
+     * 前参保地市
      */
-    private String record;
+    private String beforeCity;
+
+    /**
+     * 前参保时间
+     */
+    private String beforeTime;
+
+    /**
+     * 已参保年限
+     */
+    private String insuredYear;
 
     /**
      * 备注
@@ -226,20 +239,36 @@ public class AttachedBO extends BaseBO {
         this.money = money;
     }
 
-    public String getPaid() {
-        return paid;
+    public Pay getPay() {
+        return pay;
     }
 
-    public void setPaid(String paid) {
-        this.paid = paid;
+    public void setPay(Pay pay) {
+        this.pay = pay;
     }
 
-    public String getRecord() {
-        return record;
+    public String getBeforeCity() {
+        return beforeCity;
     }
 
-    public void setRecord(String record) {
-        this.record = record;
+    public void setBeforeCity(String beforeCity) {
+        this.beforeCity = beforeCity;
+    }
+
+    public String getBeforeTime() {
+        return beforeTime;
+    }
+
+    public void setBeforeTime(String beforeTime) {
+        this.beforeTime = beforeTime;
+    }
+
+    public String getInsuredYear() {
+        return insuredYear;
+    }
+
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getDecription() {

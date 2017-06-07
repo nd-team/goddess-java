@@ -1,8 +1,11 @@
 package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.secure.enums.CartStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -33,8 +36,8 @@ public class SecureCart extends BaseEntity {
     /**
      * 社保卡管理分类
      */
-    @Column(name = "cart", columnDefinition = "VARCHAR(255)   COMMENT '社保卡管理分类'")
-    private String cart;
+    @Column(name = "cartStatus", columnDefinition = "VARCHAR(255)   COMMENT '社保卡管理分类'")
+    private CartStatus cartStatus;
 
     /**
      * 地区
@@ -84,13 +87,6 @@ public class SecureCart extends BaseEntity {
     @Column(name = "reason", columnDefinition = "VARCHAR(255)   COMMENT '曾补办原因明细'")
     private String reason;
 
-    /**
-     * 员工社保信息
-     */
-    @OneToOne(fetch = FetchType.EAGER/**, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}**/)
-    @JoinColumn(name = "employeeSecure_id", nullable = false, unique = true, columnDefinition = "VARCHAR(36)   COMMENT '员工社保信息'")
-    private EmployeeSecure employeeSecure;
-
     public String getName() {
         return name;
     }
@@ -107,12 +103,12 @@ public class SecureCart extends BaseEntity {
         this.employeeId = employeeId;
     }
 
-    public String getCart() {
-        return cart;
+    public CartStatus getCartStatus() {
+        return cartStatus;
     }
 
-    public void setCart(String cart) {
-        this.cart = cart;
+    public void setCartStatus(CartStatus cartStatus) {
+        this.cartStatus = cartStatus;
     }
 
     public String getArrival() {
@@ -177,13 +173,5 @@ public class SecureCart extends BaseEntity {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public EmployeeSecure getEmployeeSecure() {
-        return employeeSecure;
-    }
-
-    public void setEmployeeSecure(EmployeeSecure employeeSecure) {
-        this.employeeSecure = employeeSecure;
     }
 }

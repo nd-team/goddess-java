@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.EmployeeSecureAPI;
@@ -17,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -64,6 +64,7 @@ public class EmployeeSecureAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(EDIT.class) EmployeeSecureTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -107,6 +108,23 @@ public class EmployeeSecureAct {
             return new ActResult("delete SUCCESS!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(EmployeeSecureDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(employeeSecureAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+
         }
     }
 }

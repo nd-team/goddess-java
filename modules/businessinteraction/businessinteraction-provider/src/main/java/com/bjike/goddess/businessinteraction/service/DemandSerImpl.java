@@ -39,11 +39,16 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
 
     @Override
     public Long countInter(DemandDTO demandDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
 
+        if( StringUtils.isNotBlank( demandDTO.getName())){
+            demandDTO.getConditions().add(Restrict.like("name",demandDTO.getName()));
+        }
         Long count =  super.count(demandDTO);
         return count;
     }
@@ -63,12 +68,16 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
     
     @Override
     public List<DemandBO> listDemand(DemandDTO demandDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
 
-
+        if( StringUtils.isNotBlank( demandDTO.getName())){
+            demandDTO.getConditions().add(Restrict.like("name",demandDTO.getName()));
+        }
         List<Demand> list = super.findByCis(demandDTO, true);
 
         return BeanTransform.copyProperties(list, DemandBO.class );

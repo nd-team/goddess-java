@@ -25,8 +25,8 @@ public class AttachedEndApiImpl implements AttachedEndAPI {
     private AttachedEndSer attachedEndSer;
 
     @Override
-    public void save() throws SerException {
-        attachedEndSer.save();
+    public AttachedEndBO save(AttachedEndTO to) throws SerException {
+        return attachedEndSer.save(to);
     }
 
     @Override
@@ -47,5 +47,20 @@ public class AttachedEndApiImpl implements AttachedEndAPI {
     @Override
     public AttachedEndBO delete(String id) throws SerException {
         return attachedEndSer.delete(id);
+    }
+
+    @Override
+    public void send() throws SerException {
+        attachedEndSer.send();
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        attachedEndSer.quartz();
+    }
+
+    @Override
+    public Long count(AttachedEndDTO dto) throws SerException {
+        return attachedEndSer.count(dto);
     }
 }

@@ -75,16 +75,16 @@ public interface EmployeeSecureAPI {
         return null;
     }
 
-    /**
-     * 通过sql查找
-     *
-     * @param employeeId 员工编号
-     * @return class EmployeeSecureBO
-     * @throws SerException
-     */
-    default List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
-        return null;
-    }
+//    /**
+//     * 通过sql查找
+//     *
+//     * @param employeeId 员工编号
+//     * @return class EmployeeSecureBO
+//     * @throws SerException
+//     */
+//    default List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
+//        return null;
+//    }
 
     /**
      * 更新社保状态为减员
@@ -94,4 +94,13 @@ public interface EmployeeSecureAPI {
      */
     default void remove(EmployeeSecureTO to) throws SerException {
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(EmployeeSecureDTO dto) throws SerException;
 }

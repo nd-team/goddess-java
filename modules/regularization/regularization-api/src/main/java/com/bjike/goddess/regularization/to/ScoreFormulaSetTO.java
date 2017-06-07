@@ -36,12 +36,6 @@ public class ScoreFormulaSetTO extends BaseTO {
     @NotNull(groups = {ADD.class, EDIT.class}, message = "最高分数不能为空")
     private Integer highestScore;
 
-    /**
-     * 分数范围
-     */
-    private String scoreRange;
-
-
     public String getRank() {
         return rank;
     }
@@ -66,11 +60,4 @@ public class ScoreFormulaSetTO extends BaseTO {
         this.highestScore = highestScore;
     }
 
-    public String getScoreRange() {
-        return scoreRange;
-    }
-
-    public void setScoreRange(String scoreRange) {
-        this.scoreRange = scoreRange;
-    }
 }

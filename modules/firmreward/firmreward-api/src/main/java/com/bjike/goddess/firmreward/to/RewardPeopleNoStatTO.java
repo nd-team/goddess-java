@@ -1,6 +1,11 @@
 package com.bjike.goddess.firmreward.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 奖励人数统计
@@ -13,49 +18,61 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class RewardPeopleNoStatTO extends BaseTO {
 
+    public interface IAwardDetail {
+    }
+
     /**
      * 月份
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "月份不能为空")
     private String month;
 
     /**
      * 奖励项目
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "奖励项目不能为空")
     private String awardProgram;
 
     /**
      * 排名人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "排名人数不能为空")
     private Integer rankingPeopleNo;
 
     /**
      * 获奖人数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "获奖人数不能为空")
     private Integer awardPersonNo;
 
     /**
      * 获奖名次
      */
+    @NotNull(groups = {RewardPeopleNoStatTO.IAwardDetail.class}, message = "获奖名次不能为空")
     private String[] awardRankings;
 
     /**
      * 获奖人姓名
      */
+    @NotNull(groups = {RewardPeopleNoStatTO.IAwardDetail.class}, message = "获奖人姓名不能为空")
     private String[] prizewinners;
 
     /**
      * 奖金额度
      */
+    @NotNull(groups = {RewardPeopleNoStatTO.IAwardDetail.class}, message = "奖金额度不能为空")
     private Double[] bonusLimits;
 
     /**
      * 经验值额度
      */
+    @NotNull(groups = {RewardPeopleNoStatTO.IAwardDetail.class}, message = "经验值额度不能为空")
     private Double[] empiricalValueLimits;
 
     /**
      * 荣誉衍生奖品额度
      */
+    @NotNull(groups = {RewardPeopleNoStatTO.IAwardDetail.class}, message = "经验值额度不能为空")
     private Double[] honorAwardLimits;
 
 

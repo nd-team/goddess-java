@@ -179,7 +179,7 @@ public class DeviceRepairAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/pmAudit/{id}")
+    @PutMapping("v1/pmAudit/{id}")
     public Result pmAudit(@PathVariable String id, @RequestParam(value = "pmAuditState") AuditState pmAuditState) throws ActException {
         try {
             deviceRepairAPI.pmAudit(id, pmAuditState);
@@ -197,7 +197,7 @@ public class DeviceRepairAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/deviceScrap/{id}")
+    @PutMapping("v1/deviceScrap/{id}")
     public Result deviceScrap(@PathVariable String id, @RequestParam(value = "deviceIssue") String deviceIssue) throws ActException {
         try {
             deviceRepairAPI.deviceScrap(id, deviceIssue);

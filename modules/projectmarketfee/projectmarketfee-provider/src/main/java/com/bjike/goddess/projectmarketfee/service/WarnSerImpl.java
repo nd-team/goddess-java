@@ -48,6 +48,7 @@ public class WarnSerImpl extends ServiceImpl<Warn, WarnDTO> implements WarnSer {
 
     @Override
     public List<WarnBO> list(WarnDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         List<Warn> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, WarnBO.class);
     }

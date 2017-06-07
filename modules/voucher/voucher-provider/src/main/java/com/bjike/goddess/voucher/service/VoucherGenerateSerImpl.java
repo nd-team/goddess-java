@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
@@ -134,6 +135,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("一级科目条数必须为两条");
         }
         //处理多个一级科目
+
         UserBO userBO = userAPI.currentUser();
         List<String> first = voucherGenerateTO.getFirstSubjects();
         List<String> second = voucherGenerateTO.getSecondSubjects();
@@ -241,22 +243,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("id不能为空");
         }
         VoucherGenerate voucherGenerate = super.findById(id);
-        Double borrow = voucherGenerate.getBorrowMoney();
-        Double loan = voucherGenerate.getLoanMoney();
+        if( voucherGenerate != null ){
 
-        String totalId = voucherGenerate.getTotalId();
-        VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
-        voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
-        voucherTotal.setCreateTime(LocalDateTime.now());
-        voucherTotalSer.update(voucherTotal);
-        super.remove(id);
+            Double borrow = voucherGenerate.getBorrowMoney();
+            Double loan = voucherGenerate.getLoanMoney();
 
-        //删掉合计
-        VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
-        vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
-        List<VoucherGenerate> list = super.findByCis(vgDTO);
-        if (list == null) {
-            voucherTotalSer.remove(totalId);
+            String totalId = voucherGenerate.getTotalId();
+            VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
+            voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
+            voucherTotal.setCreateTime(LocalDateTime.now());
+            voucherTotalSer.update(voucherTotal);
+            super.remove(id);
+
+            //删掉合计
+            VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
+            vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
+            List<VoucherGenerate> list = super.findByCis(vgDTO);
+            if (list == null) {
+                voucherTotalSer.remove(totalId);
+            }
         }
     }
 

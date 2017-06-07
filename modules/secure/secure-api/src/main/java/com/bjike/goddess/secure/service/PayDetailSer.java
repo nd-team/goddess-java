@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.PayDetailBO;
-import com.bjike.goddess.secure.entity.PayDetail;
 import com.bjike.goddess.secure.dto.PayDetailDTO;
+import com.bjike.goddess.secure.entity.PayDetail;
 import com.bjike.goddess.secure.to.PayDetailTO;
 
 import java.util.List;
@@ -70,4 +70,13 @@ public interface PayDetailSer extends Ser<PayDetail, PayDetailDTO> {
     default void delete(String id) throws SerException {
 
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(PayDetailDTO dto) throws SerException;
 }

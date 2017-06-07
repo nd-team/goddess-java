@@ -94,6 +94,9 @@ public class DeviceRepairSerImpl extends ServiceImpl<DeviceRepair, DeviceRepairD
     private MaterialInStockBO updateMaterialInStockBO(DeviceRepairTO to) throws SerException {
         String materialCoding = to.getMaterialCoding();//获取物资编号
         MaterialInStockBO inStockBO = materialInStockAPI.findByMaterialCoding(materialCoding);
+        if (inStockBO == null) {
+            throw new SerException("该物资编号不存在,无法申请维修.");
+        }
         MaterialInStockTO inStockTO = BeanTransform.copyProperties(inStockBO, MaterialInStockTO.class);
         inStockTO.setMaterialState(REPAIRING);//设置物资状态
         materialInStockAPI.update(inStockTO);

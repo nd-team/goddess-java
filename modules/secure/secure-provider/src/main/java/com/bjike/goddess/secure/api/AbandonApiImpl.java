@@ -53,4 +53,9 @@ public class AbandonApiImpl implements AbandonAPI {
     public List<AbandonBO> findALL() throws SerException {
         return abandonSer.findALL();
     }
+
+    @Override
+    public Long count(AbandonDTO dto) throws SerException {
+        return abandonSer.count(dto);
+    }
 }

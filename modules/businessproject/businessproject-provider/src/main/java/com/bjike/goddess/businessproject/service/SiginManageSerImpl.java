@@ -2,6 +2,10 @@ package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
+import com.bjike.goddess.businessproject.enums.BusinessCooperate;
+import com.bjike.goddess.businessproject.enums.BusinessType;
+import com.bjike.goddess.businessproject.enums.ContractProperty;
+import com.bjike.goddess.businessproject.excel.SiginManageExport;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,6 +14,9 @@ import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +27,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -216,5 +224,42 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
 
         return areaList;
+    }
+
+    @Override
+    public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
+
+        List<SiginManage> siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class,true);
+        siginManage.stream().forEach(str->{
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+        super.save( siginManage );
+
+        SiginManageBO siginManageBO = BeanTransform.copyProperties(new SiginManage() , SiginManageBO.class);
+        return siginManageBO;
+    }
+
+    @Override
+    public byte[] exportExcel(SiginManageDTO dto) throws SerException {
+//        getCusPermission();
+
+        if (!StringUtils.isNotBlank(dto.getInnerProject())) {
+            dto.getConditions().add(Restrict.eq("innerProject", dto.getInnerProject()));
+        }
+
+        List<SiginManage> list = super.findByCis(dto);
+
+        List<SiginManageExport> siginManageExports =new ArrayList<>();
+        list.stream().forEach(str->{
+            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class,"businessType","businessCooperate","contractProperty");
+            excel.setBusinessType( BusinessType.exportStrConvert(str.getBusinessType()));
+            excel.setBusinessCooperate(BusinessCooperate.exportStrConvert(str.getBusinessCooperate()));
+            excel.setContractProperty(ContractProperty.exportStrConvert( str.getContractProperty()));
+            siginManageExports.add( excel );
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, excel);
+        return bytes;
     }
 }

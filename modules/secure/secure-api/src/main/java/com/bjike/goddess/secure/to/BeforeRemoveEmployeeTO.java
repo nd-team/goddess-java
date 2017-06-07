@@ -1,9 +1,11 @@
 package com.bjike.goddess.secure.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -24,39 +26,39 @@ public class BeforeRemoveEmployeeTO extends BaseTO {
     /**
      * 当前各公司参保总人数
      */
-    @NotNull(groups = {ADD.class}, message = "当前各公司参保总人数不能为空")
-    @Min(value = 0, groups = {ADD.class}, message = "当前各公司参保总人数必须大于等于0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "当前各公司参保总人数不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "当前各公司参保总人数必须大于等于0")
     private Integer countCompany;
 
     /**
      * 当前各地市总参保人员
      */
-    @NotNull(groups = {ADD.class}, message = "当前各地市总参保人员不能为空")
-    @Min(value = 0, groups = {ADD.class}, message = "当前各地市总参保人员必须大于等于0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "当前各地市总参保人员不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "当前各地市总参保人员必须大于等于0")
     private Integer countCity;
 
     /**
      * 减员类型
      */
-    @NotBlank(groups = {ADD.class}, message = "减员类型不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "减员类型不能为空")
     private String removeType;
 
     /**
      * 公司名称
      */
-    @NotBlank(groups = {ADD.class}, message = "公司名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "公司名称不能为空")
     private String company;
 
     /**
      * 减员的人员姓名
      */
-    @NotBlank(groups = {ADD.class}, message = "减员的人员姓名不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "减员的人员姓名不能为空")
     private String removeName;
 
     /**
      * 减员的人员当前参保地市
      */
-    @NotBlank(groups = {ADD.class}, message = "减员的人员当前参保地市不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "减员的人员当前参保地市不能为空")
     private String removeCity;
 
     /**
@@ -72,20 +74,20 @@ public class BeforeRemoveEmployeeTO extends BaseTO {
     /**
      * 需减员总人数
      */
-    @NotNull(groups = {ADD.class}, message = "需减员总人数不能为空")
-    @Min(value = 0, groups = {ADD.class}, message = "需减员总人数必须大于等于0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "需减员总人数不能为空")
+    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "需减员总人数必须大于等于0")
     private Integer removeCount;
 
     /**
      * 备注
      */
-    @NotBlank(groups = {ADD.class}, message = "备注不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "备注不能为空")
     private String description;
 
     /**
      * 员工编号
      */
-    @NotBlank(groups = {ADD.class}, message = "员工编号不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工编号不能为空")
     private String employeeId;
 
     /**

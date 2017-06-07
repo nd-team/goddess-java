@@ -3,12 +3,15 @@ package com.bjike.goddess.materialreceive.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.materialinstock.api.MaterialInStockAPI;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialinstock.type.UseState;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
+import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -159,7 +162,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialReceive model = super.findById(to.getId());
             if (model != null) {
-                updateUseState(model, UseState.INSTOCK);//更新物资使用装填
+                updateUseState(model, UseState.INSTOCK);//更新物资使用状态
                 setReceive(to);
                 updateMaterialReceive(to, model);
             } else {
@@ -248,14 +251,27 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 物资归还
      *
-     * @param to 物资领用to
+     * @param to 物资归还to
      * @throws SerException
      */
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void materialReturn(MaterialReceiveTO to) throws SerException {
+    public void materialReturn(MaterialReturnTO to) throws SerException {
         setUseStateToInStock(to);//更新使用状态为在库
-        update(to);
+        String id = to.getId();
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("物资归还id为空,无法执行归还操作");
+        }
+        MaterialReceive model = super.findById(id);
+        Boolean ifReturn = to.getIfReturn();//是否归还
+        MaterialState materialState = to.getMaterialState();//物资状态
+        String returnTime = to.getReturnTime();//归还时间
+        AuditState auditCase = to.getAuditCase();//审核情况
+        model.setIfReturn(ifReturn);
+        model.setMaterialState(materialState);
+        model.setReturnTime(DateUtil.parseDateTime(returnTime));
+        model.setAuditCase(auditCase);
+        super.update(model);
     }
 
     /**
@@ -264,7 +280,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
      * @param to 物资领用to
      * @throws SerException
      */
-    private void setUseStateToInStock(MaterialReceiveTO to) throws SerException {
+    private void setUseStateToInStock(MaterialReturnTO to) throws SerException {
         String[] materialNum = to.getMaterialNum();//获取归还的物资编号
         materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
     }
