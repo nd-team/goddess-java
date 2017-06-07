@@ -161,10 +161,10 @@ public class ProblemHandlingResultAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/search")
-    public Result search(ProblemHandlingResultDTO problemHandlingResultDTO, HttpServletRequest httpServletRequest) throws ActException {
+    public Result search(ProblemHandlingResultDTO problemHandlingResultDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemHandlingResultVO> problemHandlingResultVOS = BeanTransform.copyProperties(
-                    problemHandlingResultAPI.searchProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class, true);
+                    problemHandlingResultAPI.searchProblemHandlingResult(problemHandlingResultDTO), ProblemHandlingResultVO.class, request);
             return ActResult.initialize(problemHandlingResultVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

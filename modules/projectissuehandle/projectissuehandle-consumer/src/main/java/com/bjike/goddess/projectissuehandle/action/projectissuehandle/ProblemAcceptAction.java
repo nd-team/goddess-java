@@ -160,10 +160,10 @@ public class ProblemAcceptAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/search")
-    public Result search(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest httpServletRequest) throws ActException {
+    public Result search(ProblemAcceptDTO problemAcceptDTO, HttpServletRequest request) throws ActException {
         try {
             List<ProblemAcceptVO> problemAcceptVOS = BeanTransform.copyProperties
-                    (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class);
+                    (problemAcceptAPI.searchProblemAccept(problemAcceptDTO), ProblemAcceptVO.class,request);
             return ActResult.initialize(problemAcceptVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

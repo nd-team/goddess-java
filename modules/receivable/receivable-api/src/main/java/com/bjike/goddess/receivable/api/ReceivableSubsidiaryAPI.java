@@ -5,6 +5,7 @@ import com.bjike.goddess.receivable.bo.*;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
+import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 
 import java.util.List;
@@ -109,6 +110,16 @@ public interface ReceivableSubsidiaryAPI {
      */
     default void editTime(ReceivableSubsidiary receivableSubsidiary, String auditStatusStr, String countStatusStr, String billStatusStr, String planStatusStr)throws SerException{
 
+    }
+    /**
+     * 结算进度
+     *
+     * @param to 结算进度数据to
+     * @return class receivableSubsidiaryBO
+     * @throws SerException
+     */
+    default ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
+        return null;
     }
 
     /**

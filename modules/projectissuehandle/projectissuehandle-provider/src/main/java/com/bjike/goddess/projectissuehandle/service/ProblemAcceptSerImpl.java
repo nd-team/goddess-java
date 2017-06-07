@@ -118,13 +118,13 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
          * 内部项目名称
          */
         if (StringUtils.isNotBlank(problemAcceptDTO.getInternalProjectName())) {
-            problemAcceptDTO.getConditions().add(Restrict.eq("internalProjectName", problemAcceptDTO.getInternalProjectName()));
+            problemAcceptDTO.getConditions().add(Restrict.like("internalProjectName", problemAcceptDTO.getInternalProjectName()));
         }
         /**
          * 工程类型
          */
         if (StringUtils.isNotBlank(problemAcceptDTO.getProjectType())) {
-            problemAcceptDTO.getConditions().add(Restrict.eq("projectType", problemAcceptDTO.getProjectType()));
+            problemAcceptDTO.getConditions().add(Restrict.like("projectType", problemAcceptDTO.getProjectType()));
         }
         List<ProblemAccept> problemAccepts = super.findByCis(problemAcceptDTO, true);
         List<ProblemAcceptBO> problemAcceptBOS = BeanTransform.copyProperties(problemAccepts, ProblemAcceptBO.class);
