@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -98,5 +99,24 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     default List<String> listArea( ) throws  SerException {
         return null;
     }
+
+
+    /**
+     *  导入
+     * @param siginManageTO 合同签订与立项信息
+     * @return class SiginManageBO
+     */
+    default SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException { return null;}
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(SiginManageDTO dto ) throws SerException;
+
+
+
+
 
 }

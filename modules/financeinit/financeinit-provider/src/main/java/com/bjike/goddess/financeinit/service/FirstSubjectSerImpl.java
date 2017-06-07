@@ -5,10 +5,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.bo.FirstSubjectBO;
+import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.financeinit.dto.FirstSubjectDTO;
+import com.bjike.goddess.financeinit.entity.Category;
 import com.bjike.goddess.financeinit.entity.FirstSubject;
 import com.bjike.goddess.financeinit.to.FirstSubjectTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,9 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectDTO> implements FirstSubjectSer {
+
+    @Autowired
+    private CategorySer categorySer;
 
     @Override
     public Long countFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
@@ -100,6 +106,20 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteFirstSubject(String id) throws SerException {
+        if(StringUtils.isBlank(id)){
+            throw new SerException("id不能为空");
+        }
+        FirstSubject firstSubject = super.findById( id);
+        if( firstSubject == null ){
+            throw new SerException("删除的该对象不存在,删除失败");
+        }
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.getConditions().add(Restrict.eq("firstSubject.id", firstSubject.getId()));
+        List<Category> categoryList = categorySer.findByCis( categoryDTO );
+        if( categoryList != null && categoryList.size()>0 ){
+            categorySer.remove( categoryList );
+        }
         super.remove( id );
     }
 

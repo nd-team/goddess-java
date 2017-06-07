@@ -1,146 +1,127 @@
-package com.bjike.goddess.businessproject.to;
+package com.bjike.goddess.businessproject.excel;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
+import com.bjike.goddess.businessproject.enums.*;
+import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
-import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 /**
- * 商务项目合同签订与立项管理
+ * 合同签订与立项
  *
  * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-20T20:13:56.348 ]
- * @Description: [ 商务项目合同签订与立项管理 ]
+ * @Date: [ 2017-05-19 09:11 ]
+ * @Description: [ 合同签订与立项 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SiginManageTO extends BaseTO {
+public class SiginManageExcel extends BaseTO {
 
-    public interface TestAdd{}
 
     /**
      * 业务类型
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "业务类型不能为空")
+    @ExcelHeader(name = "业务类型",notNull = true)
     private BusinessType businessType;
 
     /**
      * 业务方向科目
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "业务方向科目不能为空")
+    @ExcelHeader(name = "业务方向科目",notNull = true)
     private String businessSubject;
 
     /**
      * 合作方式
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合作方式不能为空")
+    @ExcelHeader(name = "合作方式",notNull = true)
     private BusinessCooperate businessCooperate;
 
     /**
      * 外部项目名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "外部项目名称不能为空")
+    @ExcelHeader(name = "外部项目名称",notNull = true)
     private String outerProject;
 
     /**
      * 甲方公司名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "甲方公司名称不能为空")
+    @ExcelHeader(name = "甲方公司名称",notNull = true)
     private String firstCompany;
 
     /**
      * 乙方公司名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "乙方公司名称不能为空")
+    @ExcelHeader(name = "乙方公司名称",notNull = true)
     private String secondCompany;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "地区不能为空")
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 合同金额
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同金额不能为空,且为数字")
+    @ExcelHeader(name = "合同金额",notNull = true)
     private Double money;
 
     /**
      * 开工时间
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "开工时间不能为空,格式为年月日")
-    private String startProjectTime;
+    @ExcelHeader(name = "开工时间",notNull = true)
+    private LocalDate startProjectTime;
 
     /**
      * 完工时间
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "完工时间不能为空,格式为年月日")
-    private String endProjectTime;
+    @ExcelHeader(name = "完工时间",notNull = true)
+    private LocalDate endProjectTime;
 
     /**
-     * 签订状态(已签订/未签订) xx
+     * 签订状态(已签订/未签订)
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空(已签订/未签订)")
-    private String siginStatus;
+    @ExcelHeader(name = "签订状态",notNull = true)
+    private SiginStatus siginStatus;
 
     /**
      * 合同属性
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同属性不能为空")
+    @ExcelHeader(name = "合同属性",notNull = true)
     private ContractProperty contractProperty;
 
     /**
-     * 立项情况 xx
+     * 立项情况
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
-    private String makeProject;
+    @ExcelHeader(name = "立项情况",notNull = true)
+    private MakeProjectStatus makeProject;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "内部项目名称不能为空")
+    @ExcelHeader(name = "内部项目名称",notNull = true)
     private String innerProject;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目组不能为空")
+    @ExcelHeader(name = "项目组",notNull = true)
     private String projectGroup;
 
     /**
      * 项目负责人
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目负责人不能为空")
+    @ExcelHeader(name = "项目负责人",notNull = true)
     private String projectCharge;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注" )
     private String remark;
-
-    /**
-     * 总经办 xx
-     */
-    private String manager;
-
-    /**
-     * 审核意见 xx
-     */
-    private String auditAdvice;
-
-    /**
-     * 创建时间 xx
-     */
-    private String createTime;
-
-    /**
-     * 修改时间 xx
-     */
-    private String modifyTime;
 
 
     public BusinessType getBusinessType() {
@@ -207,27 +188,27 @@ public class SiginManageTO extends BaseTO {
         this.money = money;
     }
 
-    public String getStartProjectTime() {
+    public LocalDate getStartProjectTime() {
         return startProjectTime;
     }
 
-    public void setStartProjectTime(String startProjectTime) {
+    public void setStartProjectTime(LocalDate startProjectTime) {
         this.startProjectTime = startProjectTime;
     }
 
-    public String getEndProjectTime() {
+    public LocalDate getEndProjectTime() {
         return endProjectTime;
     }
 
-    public void setEndProjectTime(String endProjectTime) {
+    public void setEndProjectTime(LocalDate endProjectTime) {
         this.endProjectTime = endProjectTime;
     }
 
-    public String getSiginStatus() {
+    public SiginStatus getSiginStatus() {
         return siginStatus;
     }
 
-    public void setSiginStatus(String siginStatus) {
+    public void setSiginStatus(SiginStatus siginStatus) {
         this.siginStatus = siginStatus;
     }
 
@@ -239,11 +220,11 @@ public class SiginManageTO extends BaseTO {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeProjectStatus getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeProjectStatus makeProject) {
         this.makeProject = makeProject;
     }
 
@@ -277,37 +258,5 @@ public class SiginManageTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getManager() {
-        return manager;
-    }
-
-    public void setManager(String manager) {
-        this.manager = manager;
-    }
-
-    public String getAuditAdvice() {
-        return auditAdvice;
-    }
-
-    public void setAuditAdvice(String auditAdvice) {
-        this.auditAdvice = auditAdvice;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

@@ -1,120 +1,99 @@
-package com.bjike.goddess.businessproject.to;
+package com.bjike.goddess.businessproject.excel;
 
 import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 商务项目合同签订与立项管理
+ * 商务项目合同签订与立项导出
  *
  * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-20T20:13:56.348 ]
- * @Description: [ 商务项目合同签订与立项管理 ]
+ * @Date: [ 2017-03-20T20:13:56.346 ]
+ * @Description: [ 商务项目合同签订与立项导出 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SiginManageTO extends BaseTO {
-
-    public interface TestAdd{}
+public class SiginManageExport extends BaseBO {
 
     /**
      * 业务类型
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "业务类型不能为空")
-    private BusinessType businessType;
+    private String businessType;
 
     /**
      * 业务方向科目
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "业务方向科目不能为空")
     private String businessSubject;
 
     /**
      * 合作方式
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合作方式不能为空")
-    private BusinessCooperate businessCooperate;
+    private String businessCooperate;
 
     /**
      * 外部项目名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "外部项目名称不能为空")
     private String outerProject;
 
     /**
      * 甲方公司名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "甲方公司名称不能为空")
     private String firstCompany;
 
     /**
      * 乙方公司名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "乙方公司名称不能为空")
     private String secondCompany;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "地区不能为空")
     private String area;
 
     /**
      * 合同金额
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同金额不能为空,且为数字")
     private Double money;
 
     /**
      * 开工时间
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "开工时间不能为空,格式为年月日")
     private String startProjectTime;
 
     /**
      * 完工时间
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "完工时间不能为空,格式为年月日")
     private String endProjectTime;
 
     /**
-     * 签订状态(已签订/未签订) xx
+     * 签订状态
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "签订状态不能为空(已签订/未签订)")
     private String siginStatus;
 
     /**
      * 合同属性
      */
-    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "合同属性不能为空")
-    private ContractProperty contractProperty;
+    private String contractProperty;
 
     /**
-     * 立项情况 xx
+     * 立项情况
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
     private String makeProject;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "内部项目名称不能为空")
     private String innerProject;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目组不能为空")
     private String projectGroup;
 
     /**
      * 项目负责人
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "项目负责人不能为空")
     private String projectCharge;
 
     /**
@@ -123,31 +102,22 @@ public class SiginManageTO extends BaseTO {
     private String remark;
 
     /**
-     * 总经办 xx
+     * 总经办
      */
     private String manager;
 
     /**
-     * 审核意见 xx
+     * 审核意见
      */
     private String auditAdvice;
 
-    /**
-     * 创建时间 xx
-     */
-    private String createTime;
-
-    /**
-     * 修改时间 xx
-     */
-    private String modifyTime;
 
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(BusinessType businessType) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
 
@@ -159,11 +129,11 @@ public class SiginManageTO extends BaseTO {
         this.businessSubject = businessSubject;
     }
 
-    public BusinessCooperate getBusinessCooperate() {
+    public String getBusinessCooperate() {
         return businessCooperate;
     }
 
-    public void setBusinessCooperate(BusinessCooperate businessCooperate) {
+    public void setBusinessCooperate(String businessCooperate) {
         this.businessCooperate = businessCooperate;
     }
 
@@ -231,11 +201,11 @@ public class SiginManageTO extends BaseTO {
         this.siginStatus = siginStatus;
     }
 
-    public ContractProperty getContractProperty() {
+    public String getContractProperty() {
         return contractProperty;
     }
 
-    public void setContractProperty(ContractProperty contractProperty) {
+    public void setContractProperty(String contractProperty) {
         this.contractProperty = contractProperty;
     }
 
@@ -295,19 +265,4 @@ public class SiginManageTO extends BaseTO {
         this.auditAdvice = auditAdvice;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }
