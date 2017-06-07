@@ -104,7 +104,7 @@ public class RewardIndicatorAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RewardIndicatorTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RewardIndicatorTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             RewardIndicatorBO bo = rewardIndicatorAPI.save(to);
             RewardIndicatorVO vo = BeanTransform.copyProperties(bo, RewardIndicatorVO.class, request);

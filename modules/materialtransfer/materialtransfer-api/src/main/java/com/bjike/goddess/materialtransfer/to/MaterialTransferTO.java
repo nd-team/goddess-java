@@ -78,7 +78,6 @@ public class MaterialTransferTO extends BaseTO {
     /**
      * 申请日期
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "申请日期不能为空")
     private String applyDate;
 
     /**

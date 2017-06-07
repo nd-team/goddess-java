@@ -1,6 +1,11 @@
 package com.bjike.goddess.intromanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 个人简介
@@ -16,51 +21,61 @@ public class IndividualResumeTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 部门/项目组
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "部门/项目组不能为空")
     private String department;
 
     /**
      * 姓名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "姓名不能为空")
     private String name;
 
     /**
      * 员工编号
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "员工编号不能为空")
     private String employeeId;
 
     /**
      * 岗位
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "岗位不能为空")
     private String post;
 
     /**
      * 工作邮箱
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "工作邮箱不能为空")
     private String eMsil;
 
     /**
      * 入职日期
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "入职日期不能为空")
     private String entryDate;
 
     /**
      * 在职时间(月)
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "在职时间(月)不能为空")
     private String tenancyDuration;
 
     /**
      * 转正时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "转正时间不能为空")
     private String positiveTime;
 
     /**
      * 是否购买社保
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否购买社保不能为空")
     private Boolean whetherSocialSecurity;
 
     /**

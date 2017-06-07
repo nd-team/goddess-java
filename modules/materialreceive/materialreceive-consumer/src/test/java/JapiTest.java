@@ -22,7 +22,8 @@ public class JapiTest {
 		JapiClient.setActionReletivePath("com/bjike/goddess/materialreceive/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/materialreceive/materialreceive-api",
-				"common/common-api"
+				"common/common-api",
+				"modules/materialinstock/materialinstock-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
 		IProject project = ProjectImpl.init();

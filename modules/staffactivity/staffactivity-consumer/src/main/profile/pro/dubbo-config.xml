@@ -21,6 +21,7 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.ActivityExecuteInfoAPI" id="activityExecuteInfoApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffactivity.api.ActivitySchemeAPI" id="activitySchemeApiImpl"/>
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
 

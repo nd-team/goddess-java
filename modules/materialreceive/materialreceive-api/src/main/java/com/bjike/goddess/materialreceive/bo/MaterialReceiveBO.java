@@ -1,6 +1,7 @@
 package com.bjike.goddess.materialreceive.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialreceive.type.AuditState;
 
 /**
@@ -107,7 +108,7 @@ public class MaterialReceiveBO extends BaseBO {
     /**
      * 审核情况
      */
-    private String auditCase;
+    private AuditState auditCase;
 
     /**
      * 归还时间
@@ -117,7 +118,7 @@ public class MaterialReceiveBO extends BaseBO {
     /**
      * 物资状态
      */
-    private String materialState;
+    private MaterialState materialState;
 
 
     public String getArea() {
@@ -264,11 +265,11 @@ public class MaterialReceiveBO extends BaseBO {
         this.ifReturn = ifReturn;
     }
 
-    public String getAuditCase() {
+    public AuditState getAuditCase() {
         return auditCase;
     }
 
-    public void setAuditCase(String auditCase) {
+    public void setAuditCase(AuditState auditCase) {
         this.auditCase = auditCase;
     }
 
@@ -280,11 +281,11 @@ public class MaterialReceiveBO extends BaseBO {
         this.returnTime = returnTime;
     }
 
-    public String getMaterialState() {
+    public MaterialState getMaterialState() {
         return materialState;
     }
 
-    public void setMaterialState(String materialState) {
+    public void setMaterialState(MaterialState materialState) {
         this.materialState = materialState;
     }
 }

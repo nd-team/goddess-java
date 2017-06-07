@@ -6,6 +6,7 @@ import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
+import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 
 import java.util.List;
@@ -75,9 +76,9 @@ public interface MaterialReceiveSer extends Ser<MaterialReceive, MaterialReceive
     /**
      * 物资归还
      *
-     * @param to 物资领用to
+     * @param to 物资归还to
      * @throws SerException
      */
-    void materialReturn(MaterialReceiveTO to) throws SerException;
+    void materialReturn(MaterialReturnTO to) throws SerException;
 
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.materialreceive.api.MaterialReceiveAPI;
 import com.bjike.goddess.materialreceive.bo.MaterialReceiveBO;
 import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
+import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import com.bjike.goddess.materialreceive.vo.MaterialReceiveVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,12 +185,12 @@ public class MaterialReceiveAct {
     /**
      * 物资领用后归还
      *
-     * @param to 物资领用to
+     * @param to 物资归还to
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/materialreturn")
-    public Result materialReturn(@Validated(MaterialReceiveTO.MATERIALRETURN.class) MaterialReceiveTO to, BindingResult result) throws ActException {
+    public Result materialReturn(@Validated(MaterialReturnTO.MATERIALRETURN.class) MaterialReturnTO to, BindingResult result) throws ActException {
         try {
             materialReceiveAPI.materialReturn(to);
             return new ActResult("materialreturn success!");

@@ -29,7 +29,7 @@ public class ZjbApprovalTO extends BaseTO {
     private String zjbAppraise;
 
     /**
-     * 转正时间
+     * 转正日期
      */
     @NotBlank(groups = {ZjbApprovalTO.ZjbApproval.class}, message = "转正时间不能为空")
     private String positiveDate;

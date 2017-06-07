@@ -58,6 +58,35 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Autowired
     private UserAPI userAPI;
 
+
+    /**
+     * 根据id查询公司简介
+     *
+     * @param id 公司简介唯一标识
+     * @return class FirmIntro
+     * @throws SerException
+     */
+    @Override
+    public FirmIntro findById(String id) throws SerException {
+        FirmIntro firmIntro = super.findById(id);
+        UserBO userBO = userAPI.currentUser();
+        String currentUsername = userBO.getUsername();//获取当前用户姓名
+        List<FirmDisplayUser> users = firmDisplayUserSer.findAll();
+        for (FirmDisplayUser model : users) {
+            String usernames = model.getUsernames();
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) >= 0);
+            if (containsUsername) {
+                String firmDisplayId = model.getDisplayId();
+                FirmDisplayField firmDisplayField = firmDisplayFieldSer.findById(firmDisplayId);
+                //设置需要显示的字段
+                checkShowFields(firmDisplayField, firmIntro);
+                break;
+            }
+        }
+
+        return firmIntro;
+    }
+
     /**
      * 分页查询公司简介
      *
@@ -72,63 +101,13 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         List<FirmDisplayUser> users = firmDisplayUserSer.findAll();
         for (FirmDisplayUser model : users) {
             String usernames = model.getUsernames();
-            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) > 0);
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) >= 0);
             if (containsUsername) {
                 String firmDisplayId = model.getDisplayId();
                 FirmDisplayField firmDisplayField = firmDisplayFieldSer.findById(firmDisplayId);
                 //设置需要显示的字段
                 for (FirmIntro firmIntro : list) {
-                    if (firmDisplayField.getIfShowFirmName() != Boolean.TRUE) {
-                        firmIntro.setFirmName(null);
-                    }
-                    if (firmDisplayField.getIfShowFirmNature() != Boolean.TRUE) {
-                        firmIntro.setFirmNature(null);
-                    }
-                    if (firmDisplayField.getIfShowRegisterMoney() != Boolean.TRUE) {
-                        firmIntro.setRegisterMoney(null);
-                    }
-                    if (firmDisplayField.getIfShowRegisterDate() != Boolean.TRUE) {
-                        firmIntro.setRegisterDate(null);
-                    }
-                    if (firmDisplayField.getIfShowFirmSpirit() != Boolean.TRUE) {
-                        firmIntro.setFirmSpirit(null);
-                    }
-                    if (firmDisplayField.getIfShowServiceAwareness() != Boolean.TRUE) {
-                        firmIntro.setServiceAwareness(null);
-                    }
-                    if (firmDisplayField.getIfShowFirmTenet() != Boolean.TRUE) {
-                        firmIntro.setFirmTenet(null);
-                    }
-                    if (firmDisplayField.getIfShowTalentView() != Boolean.TRUE) {
-                        firmIntro.setTalentView(null);
-                    }
-                    if (firmDisplayField.getIfShowOperationView() != Boolean.TRUE) {
-                        firmIntro.setOperationView(null);
-                    }
-                    if (firmDisplayField.getIfShowQualityView() != Boolean.TRUE) {
-                        firmIntro.setQualityView(null);
-                    }
-                    if (firmDisplayField.getIfShowOrganization() != Boolean.TRUE) {
-                        firmIntro.setOrganization(null);
-                    }
-                    if (firmDisplayField.getIfShowManageModel() != Boolean.TRUE) {
-                        firmIntro.setManageModel(null);
-                    }
-                    if (firmDisplayField.getIfShowServiceTeamIntro() != Boolean.TRUE) {
-                        firmIntro.setServiceTeamIntro(null);
-                    }
-                    if (firmDisplayField.getIfShowStaffNo() != Boolean.TRUE) {
-                        firmIntro.setStaffNo(null);
-                    }
-                    if (firmDisplayField.getIfShowIncludeArea() != Boolean.TRUE) {
-                        firmIntro.setIncludeArea(null);
-                    }
-                    if (firmDisplayField.getIfShowSolvingScheme() != Boolean.TRUE) {
-                        firmIntro.setSolvingScheme(null);
-                    }
-                    if (firmDisplayField.getIfShowDemandType() != Boolean.TRUE) {
-                        firmIntro.setDemandType(null);
-                    }
+                    checkShowFields(firmDisplayField, firmIntro);
                 }
                 break;
             }
@@ -139,6 +118,66 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     }
 
     /**
+     * 检查是否显示字段
+     *
+     * @param firmDisplayField 公司是否显示字段
+     * @param firmIntro 公司简介信息
+     */
+    private void checkShowFields(FirmDisplayField firmDisplayField, FirmIntro firmIntro) {
+        if (firmDisplayField.getIfShowFirmName() != Boolean.TRUE) {
+            firmIntro.setFirmName(null);
+        }
+        if (firmDisplayField.getIfShowFirmNature() != Boolean.TRUE) {
+            firmIntro.setFirmNature(null);
+        }
+        if (firmDisplayField.getIfShowRegisterMoney() != Boolean.TRUE) {
+            firmIntro.setRegisterMoney(null);
+        }
+        if (firmDisplayField.getIfShowRegisterDate() != Boolean.TRUE) {
+            firmIntro.setRegisterDate(null);
+        }
+        if (firmDisplayField.getIfShowFirmSpirit() != Boolean.TRUE) {
+            firmIntro.setFirmSpirit(null);
+        }
+        if (firmDisplayField.getIfShowServiceAwareness() != Boolean.TRUE) {
+            firmIntro.setServiceAwareness(null);
+        }
+        if (firmDisplayField.getIfShowFirmTenet() != Boolean.TRUE) {
+            firmIntro.setFirmTenet(null);
+        }
+        if (firmDisplayField.getIfShowTalentView() != Boolean.TRUE) {
+            firmIntro.setTalentView(null);
+        }
+        if (firmDisplayField.getIfShowOperationView() != Boolean.TRUE) {
+            firmIntro.setOperationView(null);
+        }
+        if (firmDisplayField.getIfShowQualityView() != Boolean.TRUE) {
+            firmIntro.setQualityView(null);
+        }
+        if (firmDisplayField.getIfShowOrganization() != Boolean.TRUE) {
+            firmIntro.setOrganization(null);
+        }
+        if (firmDisplayField.getIfShowManageModel() != Boolean.TRUE) {
+            firmIntro.setManageModel(null);
+        }
+        if (firmDisplayField.getIfShowServiceTeamIntro() != Boolean.TRUE) {
+            firmIntro.setServiceTeamIntro(null);
+        }
+        if (firmDisplayField.getIfShowStaffNo() != Boolean.TRUE) {
+            firmIntro.setStaffNo(null);
+        }
+        if (firmDisplayField.getIfShowIncludeArea() != Boolean.TRUE) {
+            firmIntro.setIncludeArea(null);
+        }
+        if (firmDisplayField.getIfShowSolvingScheme() != Boolean.TRUE) {
+            firmIntro.setSolvingScheme(null);
+        }
+        if (firmDisplayField.getIfShowDemandType() != Boolean.TRUE) {
+            firmIntro.setDemandType(null);
+        }
+    }
+
+    /**
      * 保存公司简介
      *
      * @param to 公司简介to
@@ -146,7 +185,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public FirmIntroBO save(FirmIntroTO to) throws SerException {
         FirmIntro entity = BeanTransform.copyProperties(to, FirmIntro.class, true);
         entity = super.save(entity);
@@ -193,6 +232,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
                 model.setHeadOfficeContact(headOfficeContactes[i]);
                 model.setBranchAddress(branchAddresses[i]);
                 model.setBranchPhone(branchPhones[i]);
+                model.setFirmId(firmId);
                 list.add(model);
             }
             communicationPathSer.save(list);
@@ -314,7 +354,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void update(FirmIntroTO to) throws SerException {
         String firmId = to.getId();
         if (StringUtils.isNotEmpty(firmId)) {
@@ -430,7 +470,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void remove(String id) throws SerException {
         removeSubObj(id);//删除所有子对象
         super.remove(id);//删除公司简介
@@ -444,7 +484,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
      * @throws SerException
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {SerException.class})
     public void setFirmDisplayField(String[] username, FirmDisplayFieldTO to) throws SerException {
         Boolean usernameIsNotEmpty = (username != null) && (username.length > 0);
         if (usernameIsNotEmpty) {
