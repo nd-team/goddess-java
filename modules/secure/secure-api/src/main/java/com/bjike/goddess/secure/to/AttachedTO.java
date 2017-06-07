@@ -3,6 +3,7 @@ package com.bjike.goddess.secure.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.secure.enums.Pay;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
@@ -18,114 +19,125 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class AttachedTO extends BaseTO {
+    public interface complete {//补全信息
+    }
 
     /**
      * 挂靠人姓名
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠人姓名不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "挂靠人姓名不能为空")
     private String attachedName;
 
     /**
      * 挂靠原因
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠原因不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "挂靠原因不能为空")
     private String reason;
 
     /**
      * 挂靠城市
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠城市不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "挂靠城市不能为空")
     private String city;
 
     /**
      * 挂靠人目前居住地
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠人目前居住地不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "挂靠人目前居住地不能为空")
     private String attachedArrival;
 
     /**
      * 挂靠时长
      */
-    @NotNull(groups = {ADD.class},message = "挂靠时长不能为空")
-    @DecimalMin(value = "0.00",groups = {ADD.class},message = "挂靠时长必须大于0")
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "挂靠时长不能为空")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "挂靠时长必须大于0", inclusive = false)
     private Double time;
 
     /**
      * 担保人姓名
      */
-    @NotBlank(groups = {ADD.class},message = "担保人姓名不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "担保人姓名不能为空")
     private String assureName;
 
     /**
      * 挂靠人与担保人关系
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠人与担保人关系不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "挂靠人与担保人关系不能为空")
     private String reverse;
 
     /**
      * 担保人在司岗位
      */
-    @NotBlank(groups = {ADD.class},message = "担保人在司岗位不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人在司岗位不能为空")
     private String assureJob;
 
     /**
      * 担保人所属地区
      */
-    @NotBlank(groups = {ADD.class},message = "担保人所属地区不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人所属地区不能为空")
     private String assureArrival;
 
     /**
      * 担保人联系电话
      */
-    @NotBlank(groups = {ADD.class},message = "担保人联系电话不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "担保人联系电话不能为空")
     private String assureTel;
 
     /**
      * 挂靠开始时间
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠开始时间不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠开始时间不能为空")
     private String startTime;
 
     /**
      * 挂靠结束时间
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠结束时间不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠结束时间不能为空")
     private String endTime;
 
     /**
      * 挂靠的公司
      */
-    @NotBlank(groups = {ADD.class},message = "挂靠的公司不能为空")
+    @NotBlank(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的公司不能为空")
     private String company;
 
     /**
      * 审批意见
      */
-    @NotNull(groups = {EDIT.class},message = "审批意见不能为空")
+    @NotNull(groups = {EDIT.class}, message = "审批意见不能为空")
     private boolean advice;
 
     /**
      * 挂靠的缴费金
      */
-    @NotNull(groups = {EDIT.class},message = "挂靠的缴费金不能为空")
-    @DecimalMin(value = "0.00",groups = {EDIT.class},message = "挂靠的缴费金必须大于0")
+    @NotNull(groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的缴费金不能为空")
+    @DecimalMin(value = "0.00", groups = {AttachedTO.complete.class, EDIT.class}, message = "挂靠的缴费金必须大于0", inclusive = false)
     private Double money;
 
     /**
      * 金额的支付类型
      */
-    @NotBlank(groups = {EDIT.class},message = "金额的支付类型不能为空")
-    private String paid;
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "金额的支付类型不能为空")
+    private Pay pay;
 
     /**
-     * 参保记录
+     * 前参保地市
      */
-    private String record;
+    private String beforeCity;
+
+    /**
+     * 前参保时间
+     */
+    private String beforeTime;
+
+    /**
+     * 已参保年限
+     */
+    private String insuredYear;
 
     /**
      * 备注
      */
-    @NotBlank(groups = {EDIT.class},message = "备注不能为空")
     private String decription;
 
 
@@ -249,20 +261,36 @@ public class AttachedTO extends BaseTO {
         this.money = money;
     }
 
-    public String getPaid() {
-        return paid;
+    public Pay getPay() {
+        return pay;
     }
 
-    public void setPaid(String paid) {
-        this.paid = paid;
+    public void setPay(Pay pay) {
+        this.pay = pay;
     }
 
-    public String getRecord() {
-        return record;
+    public String getBeforeCity() {
+        return beforeCity;
     }
 
-    public void setRecord(String record) {
-        this.record = record;
+    public void setBeforeCity(String beforeCity) {
+        this.beforeCity = beforeCity;
+    }
+
+    public String getBeforeTime() {
+        return beforeTime;
+    }
+
+    public void setBeforeTime(String beforeTime) {
+        this.beforeTime = beforeTime;
+    }
+
+    public String getInsuredYear() {
+        return insuredYear;
+    }
+
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getDecription() {

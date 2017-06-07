@@ -1,5 +1,7 @@
 package com.bjike.goddess.secure.vo;
 
+import com.bjike.goddess.secure.enums.CartStatus;
+
 /**
  * 社保卡基本信息表现层对象
  *
@@ -28,7 +30,7 @@ public class SecureCartVO {
     /**
      * 社保卡管理分类
      */
-    private String cart;
+    private CartStatus cartStatus;
 
     /**
      * 地区
@@ -95,12 +97,12 @@ public class SecureCartVO {
         this.employeeId = employeeId;
     }
 
-    public String getCart() {
-        return cart;
+    public CartStatus getCartStatus() {
+        return cartStatus;
     }
 
-    public void setCart(String cart) {
-        this.cart = cart;
+    public void setCartStatus(CartStatus cartStatus) {
+        this.cartStatus = cartStatus;
     }
 
     public String getArrival() {

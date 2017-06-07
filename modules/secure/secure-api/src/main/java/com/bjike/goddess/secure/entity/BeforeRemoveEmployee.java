@@ -81,7 +81,7 @@ public class BeforeRemoveEmployee extends BaseEntity {
     /**
      * 员工编号
      */
-    @Column(name="employeeId",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name="employeeId",nullable = false,columnDefinition = "VARCHAR(36)   COMMENT '员工编号'")
     private String employeeId;
 
     /**

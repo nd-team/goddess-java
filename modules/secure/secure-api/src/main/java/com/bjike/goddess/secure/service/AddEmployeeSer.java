@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.AddEmployeeBO;
-import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
+import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 
 import java.util.List;
@@ -42,17 +42,6 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
     }
 
     /**
-     * 编辑
-     *
-     * @param to 社保增员信息
-     * @return class AddEmployeeBO
-     * @throws SerException
-     */
-    default AddEmployeeBO edit(AddEmployeeTO to) throws SerException {
-        return null;
-    }
-
-    /**
      * 删除
      *
      * @param id 社保增员信息名单的id
@@ -60,17 +49,6 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
      * @throws SerException
      */
     default AddEmployeeBO delete(String id) throws SerException {
-        return null;
-    }
-
-    /**
-     * 添加
-     *
-     * @param to 社保增员信息
-     * @return class AddEmployeeBO
-     * @throws SerException
-     */
-    default AddEmployeeBO save(AddEmployeeTO to) throws SerException {
         return null;
     }
 
@@ -83,4 +61,54 @@ public interface AddEmployeeSer extends Ser<AddEmployee, AddEmployeeDTO> {
     default List<AddEmployeeBO> findALL() throws SerException {
         return null;
     }
+
+    /**
+     * 编辑
+     *
+     * @param to 社保增员信息
+     * @throws SerException
+     */
+    void edit(AddEmployeeTO to) throws SerException;
+
+    /**
+     * 运营商务部审核
+     *
+     * @param to to
+     * @throws SerException
+     */
+    void commerceAudit(AddEmployeeTO to) throws SerException;
+
+    /**
+     * 总经办确认新增
+     *
+     * @param id
+     * @throws SerException
+     */
+    void managerConfirmAdd(String id) throws SerException;
+
+    /**
+     * 社保管理负责人确认增员
+     *
+     * @param id
+     * @throws SerException
+     */
+    void confirmAdd(String id) throws SerException;
+
+    /**
+     * 查找总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AddEmployeeDTO dto) throws SerException;
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    AddEmployeeBO save(AddEmployeeTO to) throws SerException;
 }

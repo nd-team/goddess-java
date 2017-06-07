@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class OutEmployeeSerImpl extends ServiceImpl<OutEmployee, OutEmployeeDTO>
         OutEmployee outEmployee = super.findById(to.getId());
         outEmployee.setIsAgain(to.getIsAgain());
         outEmployee.setAdvice(to.getAdvice());
+        outEmployee.setModifyTime(LocalDateTime.now());
         super.update(outEmployee);
         return BeanTransform.copyProperties(outEmployee, OutEmployeeBO.class);
     }
@@ -47,33 +49,33 @@ public class OutEmployeeSerImpl extends ServiceImpl<OutEmployee, OutEmployeeDTO>
         return null;
     }
 
-    @Override
-    @Transactional(rollbackFor = {SerException.class})
-    public List<OutEmployeeBO> find(OutEmployeeDTO dto) throws SerException {
-        List<DismissionEmployeeBO> list1 = beforeRemoveEmployeeSer.all();
-        List<OutEmployee> all = findAll();
-        for (DismissionEmployeeBO d : list1) {
-            if (all.size() != 0) {
-                for (OutEmployee o : all) {
-                    if (!(o.getDimissionId().equals(d.getDimissionId()))) {
-                        OutEmployee outEmployee = new OutEmployee();
-                        outEmployee.setDimissionId(d.getDimissionId());
-                        outEmployee.setName(d.getName());
-                        outEmployee.setEndTime(d.getEndTime());
-                        super.save(outEmployee);
-                    }
-                }
-            } else {
-                OutEmployee outEmployee = new OutEmployee();
-                outEmployee.setDimissionId(d.getDimissionId());
-                outEmployee.setName(d.getName());
-                outEmployee.setEndTime(d.getEndTime());
-                super.save(outEmployee);
-            }
-        }
-        List<OutEmployee> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, OutEmployeeBO.class);
-    }
+//    @Override
+//    @Transactional(rollbackFor = {SerException.class})
+//    public List<OutEmployeeBO> find(OutEmployeeDTO dto) throws SerException {
+//        List<DismissionEmployeeBO> list1 = beforeRemoveEmployeeSer.all();
+//        List<OutEmployee> all = findAll();
+//        for (DismissionEmployeeBO d : list1) {
+//            if (all.size() != 0) {
+//                for (OutEmployee o : all) {
+//                    if (!(o.getDimissionId().equals(d.getDimissionId()))) {
+//                        OutEmployee outEmployee = new OutEmployee();
+//                        outEmployee.setDimissionId(d.getDimissionId());
+//                        outEmployee.setName(d.getName());
+//                        outEmployee.setEndTime(d.getEndTime());
+//                        super.save(outEmployee);
+//                    }
+//                }
+//            } else {
+//                OutEmployee outEmployee = new OutEmployee();
+//                outEmployee.setDimissionId(d.getDimissionId());
+//                outEmployee.setName(d.getName());
+//                outEmployee.setEndTime(d.getEndTime());
+//                super.save(outEmployee);
+//            }
+//        }
+//        List<OutEmployee> list = super.findByCis(dto, true);
+//        return BeanTransform.copyProperties(list, OutEmployeeBO.class);
+//    }
 
     @Override
     public OutEmployeeBO findByID(String id) throws SerException {
