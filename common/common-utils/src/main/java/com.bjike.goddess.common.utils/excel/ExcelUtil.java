@@ -94,6 +94,158 @@ public class ExcelUtil {
     }
 
     /**
+     * tanghaixiang 上传的表格含有合并单元格
+     * <p>
+     * excel文件流转换成实体类
+     *
+     * @param is    文件流
+     * @param clazz 转换类 该类必须要有@ExcelTitle注解作为表头
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> mergeExcelToClazz(InputStream is, Class clazz, Excel excel) {
+        XSSFWorkbook wb = null;
+        try {
+            List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
+            List<ExcelHeader> headers = getExcelHeaders(fields, null);
+            List<T> objects = new ArrayList<>();
+            wb = new XSSFWorkbook(is); // 创建一个工作execl文档
+            XSSFSheet sheet = wb.getSheetAt(0);
+            validateHeader(headers, sheet.getRow(excel.getHeaderStartRow()));
+            int rowSize = sheet.getLastRowNum(); //总行数
+            for (int i = 0; i < rowSize; i++) {
+                int rowIndex = excel.getContentStartRow() + i;
+                XSSFRow row = sheet.getRow(rowIndex);
+                int sheetMergeCount = sheet.getNumMergedRegions();
+                if (null != row) {
+                    int cellSize = row.getLastCellNum();//总列数
+                    if (cellSize > 0) {
+                        Object obj = clazz.newInstance();
+
+                        List<Object> vs = new ArrayList<>();
+                        for (int j = 0; j < cellSize; j++) {
+                            ExcelHeader eh = headers.get(j);
+                            String cellVal = "";
+                            //判断是否是合并的单元格
+                            Boolean flag = isMergedRegion(sheet, rowIndex, j);
+                            if (flag) {
+                                //说明是合并的单元格  j为列
+                                cellVal = getMergedRegionValue(sheet, rowIndex, j,eh);
+                            } else {
+                                cellVal = getCellValue(row.getCell(j), eh);
+                            }
+                            Object val = convertValue(cellVal, eh, fields);
+                            if (eh.notNull() && null == val) {
+                                throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
+                            } else if (null != val) {
+//                                mer = cellVal;
+                                setFieldValue(obj, eh.name(), val, fields);
+                            }
+                            vs.add(cellVal);
+                        }
+                        objects.add((T) obj);
+                    }
+                }
+
+            }
+            return objects;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * tanghaixiang
+     * 获取合并单元格的值
+     *
+     * @param sheet
+     * @param row
+     * @param column
+     * @return
+     */
+    public static String getMergedRegionValue(Sheet sheet, int row, int column , ExcelHeader eh) {
+
+        int sheetMergeCount = sheet.getNumMergedRegions();
+
+        for (int i = 0; i < sheetMergeCount; i++) {
+            CellRangeAddress ca = sheet.getMergedRegion(i);
+            int firstColumn = ca.getFirstColumn();
+            int lastColumn = ca.getLastColumn();
+            int firstRow = ca.getFirstRow();
+            int lastRow = ca.getLastRow();
+
+            if (row >= firstRow && row <= lastRow) {
+
+                if (column >= firstColumn && column <= lastColumn) {
+                    Row fRow = sheet.getRow(firstRow);
+                    Cell fCell = fRow.getCell(firstColumn);
+                    return getCellValue(fCell, eh);
+//                    return getCellValue(fCell);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * tanghaixiang
+     * 获取单元格的值
+     *
+     * @param cell
+     * @return
+     */
+    public static String getCellValue(Cell cell) {
+        if (cell == null)
+            return "";
+
+        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+
+            return cell.getStringCellValue();
+
+        } else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+
+            return String.valueOf(cell.getBooleanCellValue());
+
+        } else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+
+            return cell.getCellFormula();
+
+        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            return String.valueOf(cell.getNumericCellValue());
+        }
+        return "";
+    }
+
+    /**
+     * tanghaixiang
+     * 判断指定的单元格是否是合并单元格
+     *
+     * @param sheet  工作表
+     * @param row    行下标
+     * @param column 列下标
+     * @return
+     */
+    public static boolean isMergedRegion(Sheet sheet, int row, int column) {
+        int sheetMergeCount = sheet.getNumMergedRegions();
+        for (int i = 0; i < sheetMergeCount; i++) {
+            CellRangeAddress range = sheet.getMergedRegion(i);
+            int firstColumn = range.getFirstColumn();
+            int lastColumn = range.getLastColumn();
+            int firstRow = range.getFirstRow();
+            int lastRow = range.getLastRow();
+            if (row >= firstRow && row <= lastRow) {
+                if (column >= firstColumn && column <= lastColumn) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * 实体类转换成excel流
      *
      * @param objects 转换类 任意类属性作为表头
@@ -397,7 +549,7 @@ public class ExcelUtil {
             if (value.equals(f.getName())) {
                 try {
                     return f.getAnnotation(ExcelValue.class).name();
-                }catch (Exception e){
+                } catch (Exception e) {
                     throw new RuntimeException("枚举未添加Excel注解");
                 }
 

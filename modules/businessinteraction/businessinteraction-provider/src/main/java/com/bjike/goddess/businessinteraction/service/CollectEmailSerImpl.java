@@ -60,7 +60,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
@@ -84,7 +86,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     @Cacheable
     @Override
     public List<CollectEmailBO> listCollectEmail(CollectEmailDTO collectEmailDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
