@@ -2,6 +2,7 @@ package com.bjike.goddess.materialsummary.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 
 /**
  * 维修状态月汇总业务传输对象
