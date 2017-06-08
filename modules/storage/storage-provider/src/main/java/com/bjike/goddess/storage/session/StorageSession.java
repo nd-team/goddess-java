@@ -20,7 +20,7 @@ public class StorageSession {
     private static Logger logger = LoggerFactory.getLogger(StorageSession.class);
 
     private static final LoadingCache<String, LoginUser> STORAGE_SESSION = CacheBuilder.newBuilder()
-            .expireAfterWrite(7, TimeUnit.DAYS)
+            .expireAfterWrite(30, TimeUnit.DAYS)
             .maximumSize(1000)
             .removalListener(new RemovalListener<String, LoginUser>() {
                 @Override
