@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -197,11 +198,16 @@ public class CollectEmailAction {
      * @des 商务邮件汇总签订合同与预订
      * @version v1
      */
+
     @GetMapping("v1/collectSign")
     public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
+        List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
+        if( areas == null || areas.length<= 0 ){
+            return ActResult.initialize(collectEmailVOList);
+        }
         try {
-            List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
+             collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCollectEmail(areas), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
@@ -220,8 +226,12 @@ public class CollectEmailAction {
     @GetMapping("v1/collectBaseInfo")
     public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] firstCompany = collectEmailDTO.getFirstCompany();
+        List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
+        if( firstCompany == null || firstCompany.length<= 0 ){
+            return ActResult.initialize(collectEmailVOList);
+        }
         try {
-            List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
+            collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectBaseInfoEmail(firstCompany), CollectEmailVO.class);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {

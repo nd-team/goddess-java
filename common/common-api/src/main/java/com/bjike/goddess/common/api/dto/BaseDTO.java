@@ -1,7 +1,10 @@
 package com.bjike.goddess.common.api.dto;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +27,11 @@ public abstract class BaseDTO extends PageDTO implements Serializable {
      * 类搜索条件
      */
     protected List<Condition> conditions = new ArrayList<Condition>(0);
+    /** js传递前encodeURI(url)
+     * 类搜索条件Json {"field":"name","restrict":"EQ","value":"liguiqin"}
+     * 多条件Json [{"field":"name","restrict":"EQ","value":"liguiqin"},{"field":"name","restrict":"IN","value":["liguiqin1","liguiqin2"]}]
+     */
+    protected String conditionsJson;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -44,4 +52,23 @@ public abstract class BaseDTO extends PageDTO implements Serializable {
     public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
+
+    public String getConditionsJson() {
+        return conditionsJson;
+    }
+
+    public void setConditionsJson(String conditionsJson) {
+        if (null != conditionsJson) {
+            try {
+                if (conditionsJson.indexOf("[{") != -1 && conditionsJson.lastIndexOf("}]") != -1) {
+                    conditions = JSON.parseArray(conditionsJson, Condition.class);
+                } else {
+                    conditions = Arrays.asList(JSON.parseObject(conditionsJson, Condition.class));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("条件json转换错误");
+            }
+        }
+    }
+
 }

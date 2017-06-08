@@ -18,9 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 项目基本信息业务实现
@@ -171,5 +172,27 @@ public class ProjectBasicInfoSerImpl extends ServiceImpl<ProjectBasicInfo, Proje
         dto.getConditions().add(Restrict.eq("projectName", projectName));
         List<ProjectCostStatus> list = projectCostStatusSer.findByCis(dto);
         projectCostStatusSer.remove(list);//批量删除项目费用情况
+    }
+
+    /**
+     * 查询所有的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllProjectNames() throws SerException {
+        List<ProjectBasicInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (ProjectBasicInfo model : list) {
+            String projectName = model.getProjectName();
+            if (StringUtils.isNotBlank(model.getProjectName())) {
+                set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

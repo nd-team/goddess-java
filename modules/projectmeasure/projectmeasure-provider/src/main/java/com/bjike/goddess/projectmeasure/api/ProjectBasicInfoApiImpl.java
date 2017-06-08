@@ -95,4 +95,15 @@ public class ProjectBasicInfoApiImpl implements ProjectBasicInfoAPI {
     public void update(ProjectBasicInfoTO to) throws SerException {
         projectBasicInfoSer.update(to);
     }
+
+    /**
+     * 查询所有项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllProjectNames() throws SerException {
+        return projectBasicInfoSer.findAllProjectNames();
+    }
 }

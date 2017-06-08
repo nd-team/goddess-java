@@ -485,8 +485,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @throws SerException
      */
     public List<CollectEmailBO> calcuteBaseInfoCount(List<String> firstCompanys,List<Integer> busType, List<Integer> cooperStatus,
-                                                  List<Integer> distribute, List<String> signConditions,
-                                                  List<CollectEmailBO> collectEmailBOList) throws SerException {
+                                                     List<Integer> distribute, List<String> signConditions,
+                                                     List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer companyStr = new StringBuffer("");
         for(String type : firstCompanys){
             companyStr.append( "'"+type+"',");
@@ -583,9 +583,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @throws SerException
      */
     public List<CollectEmailBO> calcuteSiginCount(List<String> areas,List<Integer> busType, List<Integer> cooperStatus,
-                                             List<Integer> distribute, List<String> makeProjects,
-                                             List<String> signConditions,
-                                             List<CollectEmailBO> collectEmailBOList) throws SerException {
+                                                  List<Integer> distribute, List<String> makeProjects,
+                                                  List<String> signConditions,
+                                                  List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer areaStr = new StringBuffer("");
         for(String type : areas){
             areaStr.append( "'"+type+"',");
@@ -828,6 +828,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         });
         return mapList;
     }
+
 
 
 }
