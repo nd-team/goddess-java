@@ -5,13 +5,14 @@ import com.bjike.goddess.materialsummary.dto.WarrantyStateMonthSumDTO;
 import com.bjike.goddess.materialsummary.entity.WarrantyStateMonthSum;
 
 /**
-* 保修状态月汇总持久化接口, 继承基类可使用ｊｐａ命名查询
-* @Author:			[ sunfengtao ]
-* @Date:			[  2017-05-22 02:15 ]
-* @Description:	[ 保修状态月汇总持久化接口, 继承基类可使用ｊｐａ命名查询 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public interface WarrantyStateMonthSumRep extends JpaRep<WarrantyStateMonthSum ,WarrantyStateMonthSumDTO> { 
+ * 保修状态月汇总持久化接口, 继承基类可使用ｊｐａ命名查询
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-05-22 02:15 ]
+ * @Description: [ 保修状态月汇总持久化接口, 继承基类可使用ｊｐａ命名查询 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface WarrantyStateMonthSumRep extends JpaRep<WarrantyStateMonthSum, WarrantyStateMonthSumDTO> {
 
- }
+}

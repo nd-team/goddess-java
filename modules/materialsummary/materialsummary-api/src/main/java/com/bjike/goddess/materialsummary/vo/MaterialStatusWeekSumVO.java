@@ -1,113 +1,133 @@
 package com.bjike.goddess.materialsummary.vo;
 
-/**
-* 物资状态周汇总表现层对象
-* @Author:			[ sunfengtao ]
-* @Date:			[  2017-05-22 11:21 ]
-* @Description:	[ 物资状态周汇总表现层对象 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class MaterialStatusWeekSumVO { 
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.materialinstock.type.MaterialState;
 
 /**
-* id
-*/
- private String  id; 
-/**
-* 汇总起始时间
-*/
- private LocalDateTime  sumStartTime; 
+ * 物资状态周汇总表现层对象
+ *
+ * @Author: [ sunfengtao ]
+ * @Date: [ 2017-05-22 11:21 ]
+ * @Description: [ 物资状态周汇总表现层对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class MaterialStatusWeekSumVO {
 
-/**
-* 汇总结束时间
-*/
- private LocalDateTime  sumEndTime; 
+    /**
+     * id
+     */
+    private String id;
+    /**
+     * 汇总起始时间
+     */
+    private String sumStartTime;
 
-/**
-* 物资状态
-*/
- private MaterialState  instockState; 
+    /**
+     * 汇总结束时间
+     */
+    private String sumEndTime;
 
-/**
-* 物资分类
-*/
- private String  deviceType; 
+    /**
+     * 物资状态
+     */
+    private MaterialState instockState;
 
-/**
-* 地区
-*/
- private String  area; 
+    /**
+     * 物资分类
+     */
+    private String deviceType;
 
-/**
-* 部门(项目组)
-*/
- private String  projectGroup; 
+    /**
+     * 地区
+     */
+    private String area;
 
-/**
-* 总数量
-*/
- private Integer  totalQty; 
+    /**
+     * 部门(项目组)
+     */
+    private String projectGroup;
 
-/**
-* 状态
-*/
- private Status  status; 
+    /**
+     * 总数量
+     */
+    private Integer totalQty;
+
+    /**
+     * 状态
+     */
+    private Status status;
 
 
+    public String getId() {
+        return id;
+    }
 
- public String getId () { 
- return id;
- } 
- public void setId (String id ) { 
- this.id = id ; 
- } 
- public LocalDateTime getSumStartTime () { 
- return sumStartTime;
- } 
- public void setSumStartTime (LocalDateTime sumStartTime ) { 
- this.sumStartTime = sumStartTime ; 
- } 
- public LocalDateTime getSumEndTime () { 
- return sumEndTime;
- } 
- public void setSumEndTime (LocalDateTime sumEndTime ) { 
- this.sumEndTime = sumEndTime ; 
- } 
- public MaterialState getInstockState () { 
- return instockState;
- } 
- public void setInstockState (MaterialState instockState ) { 
- this.instockState = instockState ; 
- } 
- public String getDeviceType () { 
- return deviceType;
- } 
- public void setDeviceType (String deviceType ) { 
- this.deviceType = deviceType ; 
- } 
- public String getArea () { 
- return area;
- } 
- public void setArea (String area ) { 
- this.area = area ; 
- } 
- public String getProjectGroup () { 
- return projectGroup;
- } 
- public void setProjectGroup (String projectGroup ) { 
- this.projectGroup = projectGroup ; 
- } 
- public Integer getTotalQty () { 
- return totalQty;
- } 
- public void setTotalQty (Integer totalQty ) { 
- this.totalQty = totalQty ; 
- } 
- public Status getStatus () { 
- return status;
- } 
- public void setStatus (Status status ) { 
- this.status = status ; 
- } 
- }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSumStartTime() {
+        return sumStartTime;
+    }
+
+    public void setSumStartTime(String sumStartTime) {
+        this.sumStartTime = sumStartTime;
+    }
+
+    public String getSumEndTime() {
+        return sumEndTime;
+    }
+
+    public void setSumEndTime(String sumEndTime) {
+        this.sumEndTime = sumEndTime;
+    }
+
+    public MaterialState getInstockState() {
+        return instockState;
+    }
+
+    public void setInstockState(MaterialState instockState) {
+        this.instockState = instockState;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public Integer getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(Integer totalQty) {
+        this.totalQty = totalQty;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+}

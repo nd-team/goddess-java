@@ -115,6 +115,17 @@ public class SiginManageAction extends BaseFileAction {
         }
     }
 
+//    @GetMapping("v1/list")
+//    public Result findListSiginManage1(SiginManageDTO siginManageDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+//        try {
+//            List<SiginManageBO> list = siginManageAPI.listSiginManage(null);
+//
+//            return ActResult.initialize(siginManageVOList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 添加项目签订与立项
      *
@@ -212,17 +223,17 @@ public class SiginManageAction extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @param fileInfo 文件信息
      * @des 审核项目签订与立项
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/uploadFile")
-    public Result uploadFile(HttpServletRequest request, @Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult bindingResult) throws ActException {
+    public Result uploadFile(HttpServletRequest request, BindingResult bindingResult) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            List<InputStream> inputStreams = getInputStreams(request);
+            String path = "/businessproject";
+            List<InputStream> inputStreams = getInputStreams(request,path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
         } catch (SerException e) {

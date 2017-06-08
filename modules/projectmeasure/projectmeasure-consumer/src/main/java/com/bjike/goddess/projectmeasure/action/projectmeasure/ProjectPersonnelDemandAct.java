@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.api.ProjectPersonnelDemandAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectPersonnelDemandBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectPersonnelDemandDTO;
@@ -19,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -37,6 +37,9 @@ public class ProjectPersonnelDemandAct {
 
     @Autowired
     private ProjectPersonnelDemandAPI projectPersonnelDemandAPI;
+
+    @Autowired
+    private ProjectBasicInfoAPI projectBasicInfoAPI;
 
     /**
      * 根据id查询项目人员需求
@@ -147,6 +150,23 @@ public class ProjectPersonnelDemandAct {
         try {
             projectPersonnelDemandAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/findAllProjectNames")
+    public Result findAllProjectNames() throws ActException {
+        try {
+            List<String> list = projectBasicInfoAPI.findAllProjectNames();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

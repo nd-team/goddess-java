@@ -244,7 +244,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     public byte[] exportExcel(SiginManageDTO dto) throws SerException {
 //        getCusPermission();
 
-        if (!StringUtils.isNotBlank(dto.getInnerProject())) {
+        if (StringUtils.isNotBlank(dto.getInnerProject())) {
             dto.getConditions().add(Restrict.eq("innerProject", dto.getInnerProject()));
         }
 

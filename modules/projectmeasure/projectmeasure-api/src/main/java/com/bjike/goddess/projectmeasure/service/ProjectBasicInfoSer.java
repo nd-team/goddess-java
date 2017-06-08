@@ -53,4 +53,12 @@ public interface ProjectBasicInfoSer extends Ser<ProjectBasicInfo, ProjectBasicI
      */
     void update(ProjectBasicInfoTO to) throws SerException;
 
+    /**
+     * 查询所有的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> findAllProjectNames() throws SerException;
+
 }
