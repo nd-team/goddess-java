@@ -457,6 +457,27 @@ public interface VoucherGenerateAPI {
     List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException;
 
     /**
+     * 地区分析
+     *
+     * @return 地区分析结果
+     */
+    List<VoucherGenerateBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
+
+    /**
+     * 项目组分析
+     *
+     * @return 地区分析结果
+     */
+    List<VoucherGenerateBO> groupAnalyze(Integer year, Integer month, String group) throws SerException;
+
+    /**
+     * 项目分析
+     *
+     * @return 地区分析结果
+     */
+    List<VoucherGenerateBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
+
+    /**
      * chenjunhao
      * 查询所有一级科目为销售费用的记录
      * @return class VoucherGenerateBO
