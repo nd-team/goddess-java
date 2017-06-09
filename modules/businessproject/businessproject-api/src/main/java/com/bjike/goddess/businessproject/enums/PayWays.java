@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 支付方式
  *
@@ -13,18 +15,22 @@ public enum PayWays {
     /**
      * 现金
      */
+    @ExcelValue(name = "现金")
     CASH(0),
     /**
      * 银行汇兑
      */
+    @ExcelValue(name = "银行汇兑")
     BANK(1),
     /**
      * 电汇
      */
+    @ExcelValue(name = "电汇")
     ELECTRIC(2),
     /**
      * 转账
      */
+    @ExcelValue(name = "转账")
     TRANSFERACCOUNTS(3);
 
     private int code;

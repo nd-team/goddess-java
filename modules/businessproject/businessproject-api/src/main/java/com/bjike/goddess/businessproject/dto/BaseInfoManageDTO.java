@@ -70,6 +70,19 @@ public class BaseInfoManageDTO extends BaseDTO {
      */
     private String fileCondition;
 
+    /**
+     * 内部项目名称数组
+     */
+    private String[] innerProjects;
+
+    public String[] getInnerProjects() {
+        return innerProjects;
+    }
+
+    public void setInnerProjects(String[] innerProjects) {
+        this.innerProjects = innerProjects;
+    }
+
     public BusinessType getBusinessType() {
         return businessType;
     }

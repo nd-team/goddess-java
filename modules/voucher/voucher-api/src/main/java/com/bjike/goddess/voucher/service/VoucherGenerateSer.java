@@ -477,4 +477,30 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+    /**
+     * 地区分析
+     * @param year 年份
+     * @param month 月份
+     * @param area 地区
+     * @return 分页结果集
+     */
+    List<VoucherGenerateBO> areaAnalyze(Integer year, Integer month, String area) throws SerException;
+
+    /**
+     * 项目组分析
+     * @param year 年份
+     * @param month 月份
+     * @param group 地区
+     * @return 分页结果集
+     */
+    List<VoucherGenerateBO> groupAnalyze(Integer year, Integer month, String group) throws SerException;
+
+    /**
+     * 项目分析
+     * @param year 年份
+     * @param month 月份
+     * @param project 地区
+     * @return 分页结果集
+     */
+    List<VoucherGenerateBO> projectAnalyze(Integer year, Integer month, String project) throws SerException;
 }

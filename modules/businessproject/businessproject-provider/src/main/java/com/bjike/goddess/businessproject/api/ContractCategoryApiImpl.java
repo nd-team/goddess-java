@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
+import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.service.ContractCategorySer;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同类型业务接口实现
@@ -53,5 +55,20 @@ public class ContractCategoryApiImpl implements ContractCategoryAPI {
     @Override
     public void deleteContractCategory(String id) throws SerException {
         contractCategorySer.deleteContractCategory(id);
+    }
+
+    @Override
+    public Set<String> allContractNames() throws SerException {
+        return contractCategorySer.allContractNames();
+    }
+
+    @Override
+    public byte[] exportExcel(ContractCategoryDTO dto) throws SerException {
+        return contractCategorySer.exportExcel(dto);
+    }
+
+    @Override
+    public void leadExcel(List<ContractCategoryExcel> toList) throws SerException {
+        contractCategorySer.leadExcel(toList);
     }
 }

@@ -55,6 +55,19 @@ public class DispatchSheetDTO extends BaseDTO {
      */
     private String dispatchNum;
 
+    /**
+     * 内部项目名称数组
+     */
+    private String[] innerProjects;
+
+    public String[] getInnerProjects() {
+        return innerProjects;
+    }
+
+    public void setInnerProjects(String[] innerProjects) {
+        this.innerProjects = innerProjects;
+    }
+
     public String getBusinessType() {
         return businessType;
     }

@@ -27,7 +27,7 @@ public final class UserSession {
     }
 
     private static final LoadingCache<String, LoginUser> USER_SESSION = CacheBuilder.newBuilder()
-            .expireAfterWrite(1, TimeUnit.DAYS)
+            .expireAfterWrite(30, TimeUnit.DAYS)
             .maximumSize(1000)
             .removalListener(new RemovalListener<String, LoginUser>() {
                 @Override

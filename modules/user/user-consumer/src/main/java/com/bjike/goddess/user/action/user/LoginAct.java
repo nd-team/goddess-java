@@ -64,8 +64,8 @@ public class LoginAct {
      * @version v1
      */
 
-    @PostMapping("v1/sign-out/{token}")
-    public Result signOut(@RequestParam String token) throws ActException {
+    @GetMapping("v1/sign-out/{token}")
+    public Result signOut( @PathVariable String token) throws ActException {
         try {
 
             Boolean result = userLoginAPI.signOut(token);

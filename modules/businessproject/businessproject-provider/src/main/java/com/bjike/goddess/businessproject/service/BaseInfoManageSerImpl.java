@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
 import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.utils.ChineseConvert;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -12,17 +13,20 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,9 +48,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     /**
      * 核对查看权限（部门级别）
      */
-    private void checkSeeIdentity() throws SerException{
+    private void checkSeeIdentity() throws SerException {
         Boolean flag = cusPermissionSer.getCusPermission("1");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是相应部门的人员，不可以查看");
         }
     }
@@ -54,34 +58,34 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException{
+    private void checkAddIdentity() throws SerException {
         Boolean flag = cusPermissionSer.busCusPermission("2");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是岗位的人员，不可以操作");
         }
     }
 
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
-        searchCondition( baseInfoManageDTO);
-        Long count = super.count( baseInfoManageDTO );
+        searchCondition(baseInfoManageDTO);
+        Long count = super.count(baseInfoManageDTO);
         return count;
     }
 
     @Override
     public BaseInfoManageBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
         BaseInfoManage baseInfoManage = super.findById(id);
-        return BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class );
+        return BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class);
     }
 
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         checkSeeIdentity();
 
-        searchCondition( baseInfoManageDTO);
+        searchCondition(baseInfoManageDTO);
         List<BaseInfoManage> list = super.findByPage(baseInfoManageDTO);
         List<BaseInfoManageBO> baseInfoManageBOList = BeanTransform.copyProperties(list, BaseInfoManageBO.class);
         return baseInfoManageBOList;
@@ -93,19 +97,19 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         checkAddIdentity();
 
         //签订年份
-        String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime())?"0000":baseInfoManageTO.getSiginTime().substring(0, 4);
-        baseInfoManageTO.setSiginYear( tempTime );
+        String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime()) ? "0000" : baseInfoManageTO.getSiginTime().substring(0, 4);
+        baseInfoManageTO.setSiginYear(tempTime);
         //生成合同档案编号
         generateContractNum(baseInfoManageTO);
         //生成内部项目编码
         generateInnerProjectNum(baseInfoManageTO);
 
-        BaseInfoManage baseInfoManage = BeanTransform.copyProperties( baseInfoManageTO,BaseInfoManage.class,true);
+        BaseInfoManage baseInfoManage = BeanTransform.copyProperties(baseInfoManageTO, BaseInfoManage.class, true);
         baseInfoManage.setCreateTime(LocalDateTime.now());
 
-        super.save( baseInfoManage );
+        super.save(baseInfoManage);
 
-        BaseInfoManageBO bo = BeanTransform.copyProperties( baseInfoManage ,BaseInfoManageBO.class);
+        BaseInfoManageBO bo = BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class);
         return bo;
     }
 
@@ -114,14 +118,14 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     public BaseInfoManageBO editBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
         checkAddIdentity();
 
-        BaseInfoManage temp = super.findById( baseInfoManageTO.getId());
+        BaseInfoManage temp = super.findById(baseInfoManageTO.getId());
 
-        BaseInfoManage baseInfoManage =  BeanTransform.copyProperties( baseInfoManageTO, BaseInfoManage.class,true);
-        BeanUtils.copyProperties( baseInfoManage , temp ,"id","createTime");
+        BaseInfoManage baseInfoManage = BeanTransform.copyProperties(baseInfoManageTO, BaseInfoManage.class, true);
+        BeanUtils.copyProperties(baseInfoManage, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());
-        super.update( temp );
+        super.update(temp);
 
-        BaseInfoManageBO bo = BeanTransform.copyProperties(temp,BaseInfoManageBO.class);
+        BaseInfoManageBO bo = BeanTransform.copyProperties(temp, BaseInfoManageBO.class);
         return bo;
     }
 
@@ -130,7 +134,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     public void deleteBaseInfoManage(String id) throws SerException {
         checkAddIdentity();
 
-        super.remove( id );
+        super.remove(id);
     }
 
 
@@ -138,13 +142,13 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         BaseInfoManage baseInfoManage = new BaseInfoManage();
 
-        if( StringUtils.isNotBlank( innerProjectNum)){
+        if (StringUtils.isNotBlank(innerProjectNum)) {
             BaseInfoManageDTO dto = new BaseInfoManageDTO();
-            dto.getConditions().add(Restrict.eq("innerProjectNum",innerProjectNum));
-            baseInfoManage = super.findOne( dto );
+            dto.getConditions().add(Restrict.eq("innerProjectNum", innerProjectNum));
+            baseInfoManage = super.findOne(dto);
         }
 
-        BaseInfoManageBO bo = BeanTransform.copyProperties( baseInfoManage,BaseInfoManageBO.class);
+        BaseInfoManageBO bo = BeanTransform.copyProperties(baseInfoManage, BaseInfoManageBO.class);
         return bo;
     }
 
@@ -153,68 +157,68 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         /**
          * 业务类型
          */
-        if(baseInfoManageDTO.getBusinessType() != null ){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("businessType",baseInfoManageDTO.getBusinessType()));
+        if (baseInfoManageDTO.getBusinessType() != null) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("businessType", baseInfoManageDTO.getBusinessType()));
         }
         /**
          * 业务方向科目
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getBusinessSubject())){
-            baseInfoManageDTO.getConditions().add(Restrict.like("businessSubject",baseInfoManageDTO.getBusinessSubject()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getBusinessSubject())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("businessSubject", baseInfoManageDTO.getBusinessSubject()));
         }
         /**
          * 合作方式
          */
-        if(baseInfoManageDTO.getBusinessCooperate() != null ){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("businessCooperate",baseInfoManageDTO.getBusinessCooperate()));
+        if (baseInfoManageDTO.getBusinessCooperate() != null) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("businessCooperate", baseInfoManageDTO.getBusinessCooperate()));
         }
         /**
          * 甲方公司
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getFirstCompany())){
-            baseInfoManageDTO.getConditions().add(Restrict.like("firstCompany",baseInfoManageDTO.getFirstCompany()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getFirstCompany())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("firstCompany", baseInfoManageDTO.getFirstCompany()));
         }
         /**
          * 乙方公司
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getSecondCompany())){
-            baseInfoManageDTO.getConditions().add(Restrict.like("secondCompany",baseInfoManageDTO.getSecondCompany()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getSecondCompany())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("secondCompany", baseInfoManageDTO.getSecondCompany()));
         }
         /**
          * 地区
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getArea())){
-            baseInfoManageDTO.getConditions().add(Restrict.like("area",baseInfoManageDTO.getArea()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getArea())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("area", baseInfoManageDTO.getArea()));
         }
         /**
          * 合同属性
          */
-        if(baseInfoManageDTO.getContractProperty() != null ){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("contractProperty",baseInfoManageDTO.getContractProperty()));
+        if (baseInfoManageDTO.getContractProperty() != null) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("contractProperty", baseInfoManageDTO.getContractProperty()));
         }
         /**
          * 支付方式
          */
-        if(baseInfoManageDTO.getPayWays() != null  ){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("payWays",baseInfoManageDTO.getPayWays()));
+        if (baseInfoManageDTO.getPayWays() != null) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("payWays", baseInfoManageDTO.getPayWays()));
         }
         /**
          * 客户名称
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getCustomerName())){
-            baseInfoManageDTO.getConditions().add(Restrict.like("customerName",baseInfoManageDTO.getCustomerName()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getCustomerName())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("customerName", baseInfoManageDTO.getCustomerName()));
         }
         /**
          *  签订年份
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getSiginYear())){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("siginYear",baseInfoManageDTO.getSiginYear()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getSiginYear())) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("siginYear", baseInfoManageDTO.getSiginYear()));
         }
         /**
          *  合同是否已归档
          */
-        if(StringUtils.isNotBlank(baseInfoManageDTO.getFileCondition())){
-            baseInfoManageDTO.getConditions().add(Restrict.eq("fileCondition",baseInfoManageDTO.getFileCondition()));
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getFileCondition())) {
+            baseInfoManageDTO.getConditions().add(Restrict.eq("fileCondition", baseInfoManageDTO.getFileCondition()));
         }
 
     }
@@ -222,10 +226,10 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Override
     public List<String> listFirstCompany() throws SerException {
         String[] fields = new String[]{"firstCompany"};
-        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select firstCompany from businessproject_baseinfomanage group by firstCompany order by firstCompany asc ", BaseInfoManageBO.class, fields);
+        List<BaseInfoManageBO> baseInfoManageBOS = super.findBySql("select firstCompany from businessproject_baseinfomanage group by firstCompany order by firstCompany asc ", BaseInfoManageBO.class, fields);
 
-        List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getFirstCompany)
-                .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim())) ).distinct().collect(Collectors.toList());
+        List<String> firstCompanyList = baseInfoManageBOS.stream().map(BaseInfoManageBO::getFirstCompany)
+                .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim()))).distinct().collect(Collectors.toList());
 
 
         return firstCompanyList;
@@ -234,13 +238,66 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Override
     public List<String> getInnerNum() throws SerException {
         String[] fields = new String[]{"innerProjectNum"};
-        List<BaseInfoManageBO> baseInfoManageBOS =super.findBySql("select innerProjectNum from businessproject_baseinfomanage group by innerProjectNum order by area asc ", BaseInfoManageBO.class, fields);
+        List<BaseInfoManageBO> baseInfoManageBOS = super.findBySql("select innerProjectNum from businessproject_baseinfomanage group by innerProjectNum order by area asc ", BaseInfoManageBO.class, fields);
 
-        List<String> firstCompanyList  = baseInfoManageBOS.stream().map(BaseInfoManageBO::getInnerProjectNum)
-                .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim())) ).distinct().collect(Collectors.toList());
+        List<String> firstCompanyList = baseInfoManageBOS.stream().map(BaseInfoManageBO::getInnerProjectNum)
+                .filter(firstCompany -> (firstCompany != null || !"".equals(firstCompany.trim()))).distinct().collect(Collectors.toList());
 
 
         return firstCompanyList;
+    }
+
+    @Override
+    public Set<String> allInnerProjects() throws SerException {
+        List<BaseInfoManage> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (BaseInfoManage b : list) {
+            set.add(b.getInnerProject());
+        }
+        return set;
+    }
+
+    @Override
+    public byte[] exportExcel(BaseInfoManageDTO dto) throws SerException {
+        String[] innerProjects = dto.getInnerProjects();
+        List<BaseInfoManageExcel> toList = new ArrayList<BaseInfoManageExcel>();
+        if ((innerProjects != null) && (innerProjects.length > 0)) {
+            List<BaseInfoManage> list = super.findByCis(dto);
+            for (String s : innerProjects) {
+                if (StringUtils.isNotBlank(s)) {
+                    for (BaseInfoManage b : list) {
+                        if (s.equals(b.getInnerProject())) {
+                            BaseInfoManageExcel excel = new BaseInfoManageExcel();
+                            BeanUtils.copyProperties(b, excel);
+                            toList.add(excel);
+                        }
+                    }
+                }
+            }
+        } else {
+            List<BaseInfoManage> list = super.findByCis(dto);
+            for (BaseInfoManage b : list) {
+                BaseInfoManageExcel excel = new BaseInfoManageExcel();
+                BeanUtils.copyProperties(b, excel);
+                toList.add(excel);
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadExcel(List<BaseInfoManageTO> toList) throws SerException {
+        for (BaseInfoManageTO to : toList) {
+            BaseInfoManage baseInfoManage = new BaseInfoManage();
+            BeanUtils.copyProperties(to, baseInfoManage);
+            baseInfoManage.setSiginTime(DateUtil.parseDate(to.getSiginTime()));
+            baseInfoManage.setStartProjectTime(DateUtil.parseDate(to.getStartProjectTime()));
+            baseInfoManage.setEndProjectTime(DateUtil.parseDate(to.getEndProjectTime()));
+            super.save(baseInfoManage);
+        }
     }
 
     //生成合同档案编号
@@ -273,7 +330,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
                 break;
         }
 
-        String partyBChinese ="";
+        String partyBChinese = "";
         switch (partyB) {
             case "北京艾佳总公司":
                 partyBChinese = "BJAJ";
@@ -339,14 +396,14 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
         String area = StringUtils.isBlank(baseInfoManageTO.getArea()) ? "" : baseInfoManageTO.getArea();
         //合同数
-        String contractNum = getInnerProjectCountByArea( area);
+        String contractNum = getInnerProjectCountByArea(area);
 
         //设置合同编号  格式：  JMTX20160001
         StringBuffer tempCode = new StringBuffer();
 
-        area = StringUtils.isBlank(baseInfoManageTO.getArea()) ? "":ChineseConvert.getTargetNumber(area,area.length());
-        if( area.length()>=2){
-            area = area.substring(0,2);
+        area = StringUtils.isBlank(baseInfoManageTO.getArea()) ? "" : ChineseConvert.getTargetNumber(area, area.length());
+        if (area.length() >= 2) {
+            area = area.substring(0, 2);
         }
 
         tempCode.append(area)

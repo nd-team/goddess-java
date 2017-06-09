@@ -12,7 +12,6 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
  * @Copy: [com.bjike]
  */
 public enum MakeProjectStatus {
-
     /**
      * 已立项
      */
@@ -33,8 +32,5 @@ public enum MakeProjectStatus {
     public int getCode() {
         return this.code;
     }
-
-
 }
-
 
