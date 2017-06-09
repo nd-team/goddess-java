@@ -106,5 +106,4 @@ public class GroupAct {
             throw new ActException(e.getMessage());
         }
     }
-
 }

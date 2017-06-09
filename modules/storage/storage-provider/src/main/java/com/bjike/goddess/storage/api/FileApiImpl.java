@@ -34,8 +34,8 @@ public class FileApiImpl implements FileAPI {
     }
 
     @Override
-    public void upload(List<InputStream> inputStreams) throws SerException {
-        fileSer.upload(inputStreams);
+    public List<FileBO> upload(List<InputStream> inputStreams) throws SerException {
+        return fileSer.upload(inputStreams);
     }
 
     @Override
