@@ -3,6 +3,7 @@ package com.bjike.goddess.businessproject.api;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.service.SiginManageSer;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Autowired
     private SiginManageSer siginManageSer;
+
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return siginManageSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
@@ -79,5 +87,10 @@ public class SiginManageApiImpl implements SiginManageAPI {
     @Override
     public byte[] exportExcel(SiginManageDTO dto) throws SerException {
         return siginManageSer.exportExcel( dto );
+    }
+
+    @Override
+    public List<String> listInnerProject() throws SerException {
+        return siginManageSer.listInnerProject();
     }
 }

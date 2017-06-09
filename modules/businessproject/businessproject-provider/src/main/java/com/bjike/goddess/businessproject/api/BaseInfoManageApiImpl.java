@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.service.BaseInfoManageSer;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,12 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
 
     @Autowired
     private BaseInfoManageSer baseInfoManageSer;
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return baseInfoManageSer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {

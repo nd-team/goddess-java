@@ -833,5 +833,4 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
 
-
 }
