@@ -41,5 +41,10 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 
+    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+    <dubbo:reference  validation="true" id="userSetPermissionOperateApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+    <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
 
 </beans>

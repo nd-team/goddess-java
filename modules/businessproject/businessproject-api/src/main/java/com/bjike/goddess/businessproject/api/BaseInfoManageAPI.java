@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -19,6 +20,15 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface BaseInfoManageAPI {
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 基本信息列表总条数

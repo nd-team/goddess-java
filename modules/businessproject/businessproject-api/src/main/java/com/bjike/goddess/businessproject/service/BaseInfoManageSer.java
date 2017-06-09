@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +22,14 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO> {
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**

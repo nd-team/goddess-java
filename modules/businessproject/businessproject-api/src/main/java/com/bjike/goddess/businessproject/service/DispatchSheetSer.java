@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +22,14 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 派工单信息列表总条数

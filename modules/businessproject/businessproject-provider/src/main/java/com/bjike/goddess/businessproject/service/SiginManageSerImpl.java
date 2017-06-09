@@ -6,7 +6,9 @@ import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
+import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.SiginManageExport;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -16,6 +18,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,9 +27,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,8 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -69,6 +72,72 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         }
     }
 
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+
     @Override
     public Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         searchCondition(siginManageDTO);
@@ -87,7 +156,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
 
         searchCondition(siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);
@@ -129,12 +198,14 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         checkAddIdentity();
 
         SiginManage temp = super.findById(siginManageTO.getId());
+
         try {
             DateUtil.parseDate(siginManageTO.getStartProjectTime());
             DateUtil.parseDate(siginManageTO.getEndProjectTime());
         } catch (Exception e) {
             throw new SerException("输入的日期格式不对");
         }
+
         SiginManage siginManage = BeanTransform.copyProperties(siginManageTO, SiginManage.class, true);
         BeanUtils.copyProperties(siginManage, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());
@@ -274,5 +345,17 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> listInnerProject() throws SerException {
+        String[] fields = new String[]{"innerProject"};
+        List<SiginManageBO> siginManageBOS = super.findBySql("select innerProject from businessproject_siginmanage group by innerProject order by innerProject asc ", SiginManageBO.class, fields);
+
+        List<String> innerProjectList = siginManageBOS.stream().map(SiginManageBO::getInnerProject)
+                .filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
+
+
+        return innerProjectList;
     }
 }

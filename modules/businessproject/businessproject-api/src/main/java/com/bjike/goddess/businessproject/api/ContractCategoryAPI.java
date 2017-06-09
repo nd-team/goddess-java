@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -19,6 +20,14 @@ import java.util.Set;
  * @Copy: [ com.bjike ]
  */
 public interface ContractCategoryAPI {
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 项目合同类型列表总条数
