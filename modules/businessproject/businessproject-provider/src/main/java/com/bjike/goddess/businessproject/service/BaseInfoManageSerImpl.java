@@ -65,6 +65,19 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         }
     }
 
+    /**
+     * 时间格式（年月日）
+     */
+    private void checkDate(BaseInfoManageTO baseInfoManageTO) throws SerException {
+        try {
+            DateUtil.parseDate(baseInfoManageTO.getSiginTime());
+            DateUtil.parseDate(baseInfoManageTO.getStartProjectTime());
+            DateUtil.parseDate(baseInfoManageTO.getEndProjectTime());
+        } catch (Exception e) {
+            throw new SerException("输入的日期格式不对");
+        }
+    }
+
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         searchCondition(baseInfoManageDTO);
@@ -91,10 +104,19 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         return baseInfoManageBOList;
     }
 
+    public static void main(String[] args) {
+        ;
+        System.out.println(StringUtils.isNumeric("1230.0"));
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
         checkAddIdentity();
+        checkDate(baseInfoManageTO);
+//        if(StringUtils.isNumeric(baseInfoManageTO.getMoney())){
+//
+//        }
 
         //签订年份
         String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime()) ? "0000" : baseInfoManageTO.getSiginTime().substring(0, 4);
@@ -120,6 +142,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
         BaseInfoManage temp = super.findById(baseInfoManageTO.getId());
 
+        checkDate(baseInfoManageTO);
         BaseInfoManage baseInfoManage = BeanTransform.copyProperties(baseInfoManageTO, BaseInfoManage.class, true);
         BeanUtils.copyProperties(baseInfoManage, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());

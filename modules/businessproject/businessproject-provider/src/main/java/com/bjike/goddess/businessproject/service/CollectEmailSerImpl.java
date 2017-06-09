@@ -117,6 +117,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置发送间隔
+        if(null == collectEmail.getCollectSendUnit()){
+            throw new SerException("发送单位不能为空");
+        }
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
         collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
