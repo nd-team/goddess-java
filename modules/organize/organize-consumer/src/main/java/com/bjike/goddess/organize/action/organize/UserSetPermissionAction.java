@@ -86,7 +86,7 @@ public class UserSetPermissionAction {
      * 一个总设置权限
      *
      * @param id 总设置权限信息id
-     * @return class CusPermissionVO
+     * @return class UserSetPermissionVO
      * @des 根据id获取所有总设置权限信息
      * @version v1
      */
@@ -114,7 +114,7 @@ public class UserSetPermissionAction {
      * 获取类型下对象
      *
      * @param id 总设置权限信息id
-     * @return class CusPermissionVO
+     * @return class UserSetPermissionVO
      * @des 根据id获取所有总设置权限获取类型下对象
      * @version v1
      */
@@ -133,7 +133,7 @@ public class UserSetPermissionAction {
      *
      * @param cusPermissionDTO 总设置权限信息dto
      * @param request      前端过滤参数
-     * @return class CusPermissionVO
+     * @return class UserSetPermissionVO
      * @des 获取所有总设置权限信息
      * @version v1
      */
@@ -165,7 +165,7 @@ public class UserSetPermissionAction {
      * 编辑总设置权限
      *
      * @param cusPermissionTO 总设置权限基本信息数据bo
-     * @return class CusPermissionVO
+     * @return class UserSetPermissionVO
      * @des 编辑总设置权限
      * @version v1
      */
