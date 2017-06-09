@@ -66,6 +66,7 @@ public class MaterialAnalyzeWeeklyAct {
     @GetMapping("v1/count")
     public Result count(@Validated MaterialAnalyzeDTO dto, BindingResult result) throws ActException {
         try {
+            dto.getConditions().add(Restrict.eq("inventoryType", 1));
             Long count = materialAnalyzeAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
@@ -83,7 +84,7 @@ public class MaterialAnalyzeWeeklyAct {
     @GetMapping("v1/list")
     public Result list(@Validated MaterialAnalyzeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("inventoryType", InventoryType.WEEKLY_INVENTORY));
+            dto.getConditions().add(Restrict.eq("inventoryType", 1));
             List<MaterialAnalyzeBO> boList = materialAnalyzeAPI.list(dto);
             List<MaterialAnalyzeVO> voList = BeanTransform.copyProperties(boList, MaterialAnalyzeVO.class, request);
             return ActResult.initialize(voList);
