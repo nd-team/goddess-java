@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.service.DispatchSheetSer;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
 
     @Autowired
     private DispatchSheetSer dispatchSheetSer;
+
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dispatchSheetSer.guidePermission( guidePermissionTO );
+    }
+
 
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {

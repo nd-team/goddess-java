@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.service.ContractCategorySer;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,13 @@ public class ContractCategoryApiImpl implements ContractCategoryAPI {
 
     @Autowired
     private ContractCategorySer contractCategorySer;
+
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return contractCategorySer.guidePermission( guidePermissionTO );
+    }
 
     @Override
     public Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {

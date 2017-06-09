@@ -3,11 +3,14 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
+import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -25,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 /**
  * 商务项目派工单信息管理业务实现
@@ -55,12 +59,30 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException {
+    private void checkAddIdentity() throws SerException{
         Boolean flag = cusPermissionSer.busCusPermission("2");
         if (!flag) {
             throw new SerException("您不是岗位的人员，不可以操作");
         }
     }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */private Boolean guideSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        return flag;
+    }
+
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        return flag;
+    }
+
     /**
      * 日期格式(年月日)
      */
@@ -74,6 +96,56 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         }
     }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {

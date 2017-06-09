@@ -3,11 +3,13 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.entity.ContractCategory;
+import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
-import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -19,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同类型业务实现
@@ -55,6 +60,74 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
         if (!flag) {
             throw new SerException("您不是岗位的人员，不可以操作");
         }
+    }
+
+    /**
+     * 导航蓝核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        return flag;
+    }
+
+
+    /**
+     * 导航蓝核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        return flag;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
     }
 
 

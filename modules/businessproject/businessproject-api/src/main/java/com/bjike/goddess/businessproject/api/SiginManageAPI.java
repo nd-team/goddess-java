@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -18,6 +19,15 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SiginManageAPI {
+
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 签订与立项列表总条数
@@ -106,6 +116,7 @@ public interface SiginManageAPI {
         return null;
     }
 
+
     /**
      * 导入
      *
@@ -123,4 +134,13 @@ public interface SiginManageAPI {
      */
     byte[] exportExcel(SiginManageDTO dto ) throws SerException;
 
+
+    /**
+     * 获取所有内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> listInnerProject() throws SerException {
+        return null;
+    }
 }
