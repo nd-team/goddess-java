@@ -141,6 +141,11 @@ public class DispatchSheetBO extends BaseBO {
     private String remark;
 
     /**
+     * 临时合同编号
+     */
+    private String tempContractNum;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -349,6 +354,14 @@ public class DispatchSheetBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTempContractNum() {
+        return tempContractNum;
+    }
+
+    public void setTempContractNum(String tempContractNum) {
+        this.tempContractNum = tempContractNum;
     }
 
     public String getCreateTime() {

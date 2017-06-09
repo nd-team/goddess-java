@@ -3,6 +3,8 @@ package com.bjike.goddess.businessproject.bo;
 import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import javax.persistence.Column;
+
 /**
  * 商务项目合同基本信息管理业务传输对象
  *
@@ -178,6 +180,11 @@ public class BaseInfoManageBO extends BaseBO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 临时合同编号
+     */
+    private String tempContractNum;
 
     /**
      * 创建时间
@@ -452,6 +459,14 @@ public class BaseInfoManageBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTempContractNum() {
+        return tempContractNum;
+    }
+
+    public void setTempContractNum(String tempContractNum) {
+        this.tempContractNum = tempContractNum;
     }
 
     public String getCreateTime() {

@@ -8,6 +8,7 @@ import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.service.ReceivableSubsidiarySer;
+import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,10 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
     public void input() throws SerException {
         receivableSubsidiarySer.input();
 
+    }
+    @Override
+    public ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
+        return receivableSubsidiarySer.progress(to);
     }
     @Override
     public List<String> getArea() throws SerException {

@@ -61,6 +61,18 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
             throw new SerException("您不是岗位的人员，不可以操作");
         }
     }
+    /**
+     * 日期格式(年月日)
+     */
+    private void checkDate(DispatchSheetTO dispatchSheetTO) throws SerException {
+        try {
+            DateUtil.parseDate(dispatchSheetTO.getSiginTime());
+            DateUtil.parseDate(dispatchSheetTO.getStartProjectTime());
+            DateUtil.parseDate(dispatchSheetTO.getEndProjectTime());
+        } catch (Exception e) {
+            throw new SerException("输入的日期格式有误");
+        }
+    }
 
 
     @Override
@@ -94,7 +106,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public DispatchSheetBO addDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
         checkAddIdentity();
-
+        checkDate(dispatchSheetTO);
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
         dispatchSheet.setCreateTime(LocalDateTime.now());
         super.save(dispatchSheet);
@@ -111,6 +123,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
         DispatchSheet temp = super.findById(dispatchSheetTO.getId());
 
+        checkDate(dispatchSheetTO);
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
         BeanUtils.copyProperties(dispatchSheet, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());

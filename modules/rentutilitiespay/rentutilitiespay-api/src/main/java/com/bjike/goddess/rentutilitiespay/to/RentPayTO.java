@@ -172,19 +172,19 @@ public class RentPayTO extends BaseTO {
     /**
      * 电费初期数目
      */
-    @NotBlank(message = "电费初期数目不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "电费初期数目不能为空",groups = {ADD.class, EDIT.class})
     private Double energyBeginNum;
 
     /**
      * 电费计价金额（元/吨）
      */
-    @NotBlank(message = "电费计价金额（元/吨）不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "电费计价金额（元/吨）不能为空",groups = {ADD.class, EDIT.class})
     private Double energyValuationMoney;
 
     /**
      * 电费期末数目
      */
-    @NotBlank(message = "电费期末数目不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "电费期末数目不能为空",groups = {ADD.class, EDIT.class})
     private Double energyEndNum;
 
     /**

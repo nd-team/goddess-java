@@ -113,10 +113,10 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
          * 竞争公司
          */
         if(StringUtils.isNotBlank(bidOpeningInfoDTO.getCompetitive())){
-            bidOpeningInfoDTO.getConditions().add(Restrict.eq("competitive", bidOpeningInfoDTO.getCompetitive()));
+            bidOpeningInfoDTO.getConditions().add(Restrict.like("competitive", bidOpeningInfoDTO.getCompetitive()));
         }
         List<BidOpeningInfo> bidOpeningInfos = super.findByCis(bidOpeningInfoDTO,true);
-        List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class,true);
+        List<BidOpeningInfoBO> bidOpeningInfoBOS = BeanTransform.copyProperties(bidOpeningInfos,BidOpeningInfoBO.class);
         return bidOpeningInfoBOS;
     }
 
