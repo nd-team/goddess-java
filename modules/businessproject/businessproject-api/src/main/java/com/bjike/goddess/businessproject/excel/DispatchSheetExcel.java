@@ -1,160 +1,167 @@
-package com.bjike.goddess.businessproject.bo;
+package com.bjike.goddess.businessproject.excel;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
-import javax.persistence.Column;
+import java.time.LocalDate;
 
 /**
- * 商务项目派工单信息管理业务传输对象
- *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-21 10:06 ]
- * @Description: [ 商务项目派工单信息管理业务传输对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [yewenbo]
+ * @Date: [2017-06-08 14:52]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-public class DispatchSheetBO extends BaseBO {
-
+public class DispatchSheetExcel extends BaseTO {
     /**
      * 内部项目编号
      */
+    @ExcelHeader(name = "内部项目编号", notNull = true)
     private String innerProjectNum;
 
     /**
      * 业务类型
      */
+    @ExcelHeader(name = "业务类型", notNull = true)
     private String businessType;
 
     /**
      * 业务方向科目
      */
+    @ExcelHeader(name = "业务方向科目", notNull = true)
     private String businessSubject;
 
     /**
      * 合同外部项目名称
      */
+    @ExcelHeader(name = "合同外部项目名称", notNull = true)
     private String outerProject;
 
     /**
      * 合同外部项目编号
      */
+    @ExcelHeader(name = "合同外部项目编号", notNull = true)
     private String outProjectNum;
 
     /**
      * 对应销售合同编号
      */
+    @ExcelHeader(name = "对应销售合同编号", notNull = true)
     private String saleContractNum;
 
     /**
      * 合作方式
      */
+    @ExcelHeader(name = "合作方式", notNull = true)
     private String businessCooperate;
 
     /**
      * 内部项目名称
      */
+    @ExcelHeader(name = "内部项目名称", notNull = true)
     private String innerProject;
 
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区", notNull = true)
     private String area;
 
     /**
      * 所属项目组
      */
+    @ExcelHeader(name = "所属项目组", notNull = true)
     private String projectGroup;
 
     /**
      * 签订时间
      */
-    private String siginTime;
+    @ExcelHeader(name = "签订时间", notNull = true)
+    private LocalDate siginTime;
 
     /**
      * 项目负责人
      */
+    @ExcelHeader(name = "项目负责人", notNull = true)
     private String projectCharge;
 
     /**
      * 派工单名称
      */
+    @ExcelHeader(name = "派工单名称", notNull = true)
     private String dispatchProject;
 
     /**
      * 派工单编号
      */
+    @ExcelHeader(name = "派工单编号", notNull = true)
     private String dispatchNum;
 
     /**
      * 总包单位名称
      */
+    @ExcelHeader(name = "总包单位名称", notNull = true)
     private String majorCompany;
 
     /**
      * 分包单位名称
      */
+    @ExcelHeader(name = "分包单位名称", notNull = true)
     private String subCompany;
 
     /**
      * 客户名称
      */
+    @ExcelHeader(name = "客户名称", notNull = true)
     private String customerName;
 
     /**
      * 派工内容
      */
+    @ExcelHeader(name = "派工内容", notNull = true)
     private String dispatchText;
 
     /**
      * 开工日期
      */
-    private String startProjectTime;
+    @ExcelHeader(name = "开工日期", notNull = true)
+    private LocalDate startProjectTime;
 
     /**
      * 完工日期
      */
-    private String endProjectTime;
+    @ExcelHeader(name = "完工日期", notNull = true)
+    private LocalDate endProjectTime;
 
     /**
      * 派工金额
      */
+    @ExcelHeader(name = "派工金额", notNull = true)
     private Double money;
 
     /**
      * 是否完工
      */
+    @ExcelHeader(name = "是否完工", notNull = true)
     private String completeProject;
 
     /**
      * 合同是否已归档
      */
+    @ExcelHeader(name = "合同是否已归档", notNull = true)
     private String fileCondition;
 
     /**
      * 合同归档数量
      */
+    @ExcelHeader(name = "合同归档数量", notNull = true)
     private Double fileCount;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注", notNull = true)
     private String remark;
-
-    /**
-     * 临时合同编号
-     */
-    private String tempContractNum;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
-
 
     public String getInnerProjectNum() {
         return innerProjectNum;
@@ -236,11 +243,11 @@ public class DispatchSheetBO extends BaseBO {
         this.projectGroup = projectGroup;
     }
 
-    public String getSiginTime() {
+    public LocalDate getSiginTime() {
         return siginTime;
     }
 
-    public void setSiginTime(String siginTime) {
+    public void setSiginTime(LocalDate siginTime) {
         this.siginTime = siginTime;
     }
 
@@ -300,19 +307,19 @@ public class DispatchSheetBO extends BaseBO {
         this.dispatchText = dispatchText;
     }
 
-    public String getStartProjectTime() {
+    public LocalDate getStartProjectTime() {
         return startProjectTime;
     }
 
-    public void setStartProjectTime(String startProjectTime) {
+    public void setStartProjectTime(LocalDate startProjectTime) {
         this.startProjectTime = startProjectTime;
     }
 
-    public String getEndProjectTime() {
+    public LocalDate getEndProjectTime() {
         return endProjectTime;
     }
 
-    public void setEndProjectTime(String endProjectTime) {
+    public void setEndProjectTime(LocalDate endProjectTime) {
         this.endProjectTime = endProjectTime;
     }
 
@@ -354,29 +361,5 @@ public class DispatchSheetBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getTempContractNum() {
-        return tempContractNum;
-    }
-
-    public void setTempContractNum(String tempContractNum) {
-        this.tempContractNum = tempContractNum;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

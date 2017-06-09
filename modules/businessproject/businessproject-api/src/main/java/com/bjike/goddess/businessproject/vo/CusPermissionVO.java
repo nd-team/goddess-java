@@ -14,7 +14,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class CusPermissionVO {
-
     /**
      * id
      */

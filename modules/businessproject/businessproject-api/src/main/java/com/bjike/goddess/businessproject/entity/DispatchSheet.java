@@ -169,6 +169,12 @@ public class DispatchSheet extends BaseEntity {
     @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    /**
+     * 临时合同编号
+     */
+    @Column(name = "tempContractNum", columnDefinition = "VARCHAR(255)   COMMENT '临时合同编号'")
+    private String tempContractNum;
+
 
     public String getInnerProjectNum() {
         return innerProjectNum;
@@ -370,5 +376,11 @@ public class DispatchSheet extends BaseEntity {
         this.remark = remark;
     }
 
+    public String getTempContractNum() {
+        return tempContractNum;
+    }
 
+    public void setTempContractNum(String tempContractNum) {
+        this.tempContractNum = tempContractNum;
+    }
 }

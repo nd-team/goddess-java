@@ -1,235 +1,218 @@
-package com.bjike.goddess.businessproject.to;
+package com.bjike.goddess.businessproject.excel;
 
 import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
-import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 /**
- * 商务项目合同基本信息管理
+ * 商务项目合同基本信息管理excel
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-20T20:34:51.344 ]
- * @Description: [ 商务项目合同基本信息管理 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [chenjunhao]
+ * @Date: [2017-06-08 14:36]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-public class BaseInfoManageTO extends BaseTO {
-
-    public interface TestAdd{}
-    public interface TestEdit{}
-
+public class BaseInfoManageExcel extends BaseTO {
     /**
      * 合同档案编号
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestEdit.class} , message = "合同档案编号不能为空" )
+    @ExcelHeader(name = "合同档案编号", notNull = true)
     private String contractNum;
 
     /**
      * 业务类型
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务类型不能为空" )
+    @ExcelHeader(name = "业务类型", notNull = true)
     private BusinessType businessType;
 
     /**
      * 业务方向科目
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "业务方向科目不能为空" )
+    @ExcelHeader(name = "业务方向科目", notNull = true)
     private String businessSubject;
 
     /**
      * 合同外部项目名称
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同外部项目名称不能为空" )
+    @ExcelHeader(name = "合同外部项目名称", notNull = true)
     private String outerProject;
 
     /**
      * 合同外部项目编号
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同外部项目编号不能为空" )
+    @ExcelHeader(name = "合同外部项目编号", notNull = true)
     private String outProjectNum;
 
     /**
      * 对应销售合同编号
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "对应销售合同编号不能为空" )
+    @ExcelHeader(name = "对应销售合同编号", notNull = true)
     private String saleContractNum;
 
     /**
      * 合作方式
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合作方式不能为空" )
+    @ExcelHeader(name = "合作方式", notNull = true)
     private BusinessCooperate businessCooperate;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "内部项目名称不能为空" )
+    @ExcelHeader(name = "内部项目名称", notNull = true)
     private String innerProject;
 
     /**
      * 内部项目编号
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestEdit.class} , message = "内部项目编号不能为空" )
+    @ExcelHeader(name = "内部项目编号", notNull = true)
     private String innerProjectNum;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "地区不能为空" )
+    @ExcelHeader(name = "地区", notNull = true)
     private String area;
 
     /**
      * 所属项目组
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "所属项目组不能为空" )
+    @ExcelHeader(name = "所属项目组", notNull = true)
     private String projectGroup;
 
     /**
      * 签订年份
      */
+    @ExcelHeader(name = "签订年份", notNull = true)
     private String siginYear;
 
     /**
-     * 签订时间(格式年月日)
+     * 签订时间
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "签订时间(格式年月日)不能为空" )
-    private String siginTime;
+    @ExcelHeader(name = "签订时间", notNull = true)
+    private LocalDate siginTime;
 
     /**
      * 合同金额
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同金额不能为空,且为数字" )
+    @ExcelHeader(name = "合同金额", notNull = true)
     private Double money;
 
     /**
-     * 开工时间(格式年月日)
+     * 开工时间
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "开工时间(格式年月日)不能为空" )
-    private String startProjectTime;
+    @ExcelHeader(name = "开工时间", notNull = true)
+    private LocalDate startProjectTime;
 
     /**
-     * 完工时间(格式年月日)
+     * 完工时间
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "完工时间(格式年月日)不能为空" )
-    private String endProjectTime;
+    @ExcelHeader(name = "完工时间", notNull = true)
+    private LocalDate endProjectTime;
 
     /**
      * 合同期限
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同期限不能为空" )
+    @ExcelHeader(name = "合同期限", notNull = true)
     private String contractRang;
 
     /**
      * 甲方公司名称
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方公司名称不能为空" )
+    @ExcelHeader(name = "甲方公司名称", notNull = true)
     private String firstCompany;
 
     /**
      * 甲方联系人
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方联系人不能为空" )
+    @ExcelHeader(name = "甲方联系人", notNull = true)
     private String firstRelation;
 
     /**
      * 甲方联系人电话
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "甲方联系人电话不能为空" )
+    @ExcelHeader(name = "甲方联系人电话", notNull = true)
     private String firstTel;
 
     /**
      * 乙方公司名称
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "乙方公司名称不能为空" )
+    @ExcelHeader(name = "乙方公司名称", notNull = true)
     private String secondCompany;
 
     /**
      * 项目负责人
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "项目负责人不能为空" )
+    @ExcelHeader(name = "项目负责人", notNull = true)
     private String projectCharge;
 
     /**
      * 项目负责人电话
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "项目负责人电话不能为空" )
+    @ExcelHeader(name = "项目负责人电话", notNull = true)
     private String projectChargeTel;
 
     /**
      * 客户名称
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "客户名称不能为空" )
+    @ExcelHeader(name = "客户名称", notNull = true)
     private String customerName;
 
     /**
      * 合同内容
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同内容不能为空" )
+    @ExcelHeader(name = "合同内容", notNull = true)
     private String contractText;
 
     /**
      * 税率
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "税率不能为空,且为数字" )
+    @ExcelHeader(name = "税率", notNull = true)
     private Double rate;
 
     /**
      * 合同属性
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同属性不能为空" )
+    @ExcelHeader(name = "合同属性", notNull = true)
     private ContractProperty contractProperty;
 
     /**
      * 支付方式
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "支付方式不能为空" )
+    @ExcelHeader(name = "支付方式", notNull = true)
     private PayWays payWays;
 
     /**
      * 付款比例
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "付款比例不能为空" )
+    @ExcelHeader(name = "付款比例", notNull = true)
     private String payRate;
 
     /**
      * 结算费用来源
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "结算费用来源不能为空" )
+    @ExcelHeader(name = "结算费用来源", notNull = true)
     private PayFeeOrigin payFeeOrigin;
 
     /**
-     * 合同是否已归档(已归档/未归档)
+     * 合同是否已归档
      */
-    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同是否已归档不能为空" )
+    @ExcelHeader(name = "合同是否已归档", notNull = true)
     private String fileCondition;
 
     /**
      * 合同归档数量
      */
-    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同归档数量不能为空,且为数字" )
+    @ExcelHeader(name = "合同归档数量", notNull = true)
     private Double fileCount;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注", notNull = true)
     private String remark;
-
-    /**
-     * 临时合同编号
-     */
-    private String tempContractNum;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
-
 
     public String getContractNum() {
         return contractNum;
@@ -327,11 +310,11 @@ public class BaseInfoManageTO extends BaseTO {
         this.siginYear = siginYear;
     }
 
-    public String getSiginTime() {
+    public LocalDate getSiginTime() {
         return siginTime;
     }
 
-    public void setSiginTime(String siginTime) {
+    public void setSiginTime(LocalDate siginTime) {
         this.siginTime = siginTime;
     }
 
@@ -343,19 +326,19 @@ public class BaseInfoManageTO extends BaseTO {
         this.money = money;
     }
 
-    public String getStartProjectTime() {
+    public LocalDate getStartProjectTime() {
         return startProjectTime;
     }
 
-    public void setStartProjectTime(String startProjectTime) {
+    public void setStartProjectTime(LocalDate startProjectTime) {
         this.startProjectTime = startProjectTime;
     }
 
-    public String getEndProjectTime() {
+    public LocalDate getEndProjectTime() {
         return endProjectTime;
     }
 
-    public void setEndProjectTime(String endProjectTime) {
+    public void setEndProjectTime(LocalDate endProjectTime) {
         this.endProjectTime = endProjectTime;
     }
 
@@ -493,29 +476,5 @@ public class BaseInfoManageTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getTempContractNum() {
-        return tempContractNum;
-    }
-
-    public void setTempContractNum(String tempContractNum) {
-        this.tempContractNum = tempContractNum;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

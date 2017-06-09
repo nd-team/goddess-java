@@ -118,13 +118,13 @@ public class InvolvedProcessingTaskSerImpl extends ServiceImpl<InvolvedProcessin
          * 内部项目名称
          */
         if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getInternalProjectName())){
-            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("internalProjectName",involvedProcessingTaskDTO.getInternalProjectName()));
+            involvedProcessingTaskDTO.getConditions().add(Restrict.like("internalProjectName",involvedProcessingTaskDTO.getInternalProjectName()));
         }
         /**
          * 处理人员
          */
         if(StringUtils.isNotBlank(involvedProcessingTaskDTO.getHandler())){
-            involvedProcessingTaskDTO.getConditions().add(Restrict.eq("handler",involvedProcessingTaskDTO.getHandler()));
+            involvedProcessingTaskDTO.getConditions().add(Restrict.like("handler",involvedProcessingTaskDTO.getHandler()));
         }
         List<InvolvedProcessingTask> involvedProcessingTasks = super.findByCis(involvedProcessingTaskDTO,true);
         List<InvolvedProcessingTaskBO> involvedProcessingTaskBOS = BeanTransform.copyProperties(involvedProcessingTasks,InvolvedProcessingTaskBO.class);

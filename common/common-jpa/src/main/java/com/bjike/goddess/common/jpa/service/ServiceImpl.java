@@ -298,6 +298,9 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         if (null != obj) {
             String val = obj.toString();
             switch (type) {
+                case "int":
+                    obj = Integer.parseInt(val);
+                    break;
                 case "Float":
                     obj = Float.parseFloat(val);
                     break;

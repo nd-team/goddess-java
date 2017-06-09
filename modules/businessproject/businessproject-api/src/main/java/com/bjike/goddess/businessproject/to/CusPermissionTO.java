@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusPermissionTO extends BaseTO {
+public class CusPermissionTO extends BaseTO{
 
 
     /**
