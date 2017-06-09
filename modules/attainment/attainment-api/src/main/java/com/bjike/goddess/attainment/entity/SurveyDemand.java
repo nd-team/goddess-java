@@ -68,7 +68,7 @@ public class SurveyDemand extends BaseEntity {
     /**
      * 岗位
      */
-    @Column(name = "gradation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "gradation", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String gradation;
 
     /**

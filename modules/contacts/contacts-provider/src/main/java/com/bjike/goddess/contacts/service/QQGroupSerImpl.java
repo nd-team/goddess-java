@@ -32,6 +32,8 @@ public class QQGroupSerImpl extends ServiceImpl<QQGroup, QQGroupDTO> implements 
     public QQGroupBO save(QQGroupTO to) throws SerException {
         QQGroup entity = BeanTransform.copyProperties(to, QQGroup.class);
         entity.isStatus(Boolean.TRUE);
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
         return BeanTransform.copyProperties(entity, QQGroupBO.class);
     }

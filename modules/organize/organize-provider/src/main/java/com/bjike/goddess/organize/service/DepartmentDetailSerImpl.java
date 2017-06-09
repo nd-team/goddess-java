@@ -166,7 +166,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetail entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (workRangeSer.findByDepartment(id).size() > 0 || positionDetailSer.findByDepartment(id).size() != 0)
+        if (workRangeSer.findByDepartment(id).size() != 0 || positionDetailSer.findByDepartment(id).size() != 0)
             throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
         return this.transformationToBO(entity);

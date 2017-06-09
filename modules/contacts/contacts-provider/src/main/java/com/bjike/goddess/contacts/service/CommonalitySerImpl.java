@@ -9,6 +9,7 @@ import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.dto.CommonalityDTO;
 import com.bjike.goddess.contacts.entity.Commonality;
 import com.bjike.goddess.contacts.to.CommonalityTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,8 +101,10 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
 
     @Override
     public CommonalityBO findByDepartment(String department) throws SerException {
+        if (StringUtils.isBlank(department))
+            return null;
         CommonalityDTO dto = new CommonalityDTO();
-        dto.getConditions().add(Restrict.eq("department_id", department));
+        dto.getConditions().add(Restrict.eq("departmentId", department));
         Commonality entity = super.findOne(dto);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
     }

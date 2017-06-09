@@ -54,17 +54,12 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     }
 
     private String createNumber(LocalDate time) throws SerException {
+        String day = time.toString().replaceAll("-", "");
         List<DayPlanBO> list = this.findByDate(time.toString());
         if (null == list)
             list = new ArrayList<>(0);
         StringBuilder serial = new StringBuilder();
-        serial.append(time.getYear());
-        if (time.getMonthValue() < 10)
-            serial.append(0);
-        serial.append(time.getMonthValue());
-        if (time.getDayOfMonth() < 10)
-            serial.append(0);
-        serial.append(time.getDayOfMonth()).append("-").append(list.size() + 1);
+        serial.append(day).append("-").append(list.size() + 1);
         return serial.toString();
     }
 
@@ -74,14 +69,17 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
         if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         DayPlan entity = super.findById(to.getId());
-        if (null == entity)
+        if (null != entity) {
+            BeanTransform.copyProperties(to, entity, true);
+            entity.setTime(LocalDate.parse(to.getTime()));
+            entity.setSerialNumber(this.createNumber(entity.getTime()));
+            entity.setModifyTime(LocalDateTime.now());
+            super.update(entity);
+            return BeanTransform.copyProperties(entity, DayPlanBO.class);
+        } else {
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
-        entity.setTime(LocalDate.parse(to.getTime()));
-        entity.setSerialNumber(this.createNumber(entity.getTime()));
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, DayPlanBO.class);
+        }
+
     }
 
     @Transactional(rollbackFor = SerException.class)

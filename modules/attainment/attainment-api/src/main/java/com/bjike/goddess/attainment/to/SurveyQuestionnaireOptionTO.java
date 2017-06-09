@@ -21,7 +21,7 @@ public class SurveyQuestionnaireOptionTO extends BaseTO {
      * 问题id
      */
     @NotNull(message = "问题id不能为空", groups = {ADD.class, EDIT.class})
-    private String questionnaire_id;
+    private String questionnaireId;
 
     /**
      * 选项
@@ -35,12 +35,12 @@ public class SurveyQuestionnaireOptionTO extends BaseTO {
     private Integer ballot;
 
 
-    public String getQuestionnaire_id() {
-        return questionnaire_id;
+    public String getQuestionnaireId() {
+        return questionnaireId;
     }
 
-    public void setQuestionnaire_id(String questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+    public void setQuestionnaireId(String questionnaireId) {
+        this.questionnaireId = questionnaireId;
     }
 
     public String getContent() {

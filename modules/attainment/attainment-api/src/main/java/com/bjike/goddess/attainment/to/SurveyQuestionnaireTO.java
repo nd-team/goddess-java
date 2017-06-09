@@ -21,7 +21,7 @@ public class SurveyQuestionnaireTO extends BaseTO {
      * 调研实施id
      */
     @NotNull(message = "调研实施id不能为空", groups = {ADD.class, EDIT.class})
-    private String actualize_id;
+    private String actualizeId;
 
     /**
      * 问题
@@ -42,12 +42,12 @@ public class SurveyQuestionnaireTO extends BaseTO {
     private Integer num;
 
 
-    public String getActualize_id() {
-        return actualize_id;
+    public String getActualizeId() {
+        return actualizeId;
     }
 
-    public void setActualize_id(String actualize_id) {
-        this.actualize_id = actualize_id;
+    public void setActualizeId(String actualizeId) {
+        this.actualizeId = actualizeId;
     }
 
     public String getQuestionnaire() {

@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:attainment:attainment-api")
+    compile project(":modules:organize:organize-api")
     compile project(":modules:user:user-api")
     compile project(":common:common-utils")
 }

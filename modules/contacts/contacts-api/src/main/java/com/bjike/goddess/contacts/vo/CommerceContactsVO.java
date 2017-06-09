@@ -17,9 +17,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class CommerceContactsVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 客户信息编号
      */
-    @NotBlank(message = "客户信息编号不能为空")
     private String customerNum;
 
     /**
@@ -107,6 +111,13 @@ public class CommerceContactsVO {
      */
     private String workRight;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCustomerNum() {
         return customerNum;

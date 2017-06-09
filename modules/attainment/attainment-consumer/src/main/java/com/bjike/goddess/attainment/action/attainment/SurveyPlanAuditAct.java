@@ -3,7 +3,7 @@ package com.bjike.goddess.attainment.action.attainment;
 import com.bjike.goddess.attainment.api.SurveyPlanAuditAPI;
 import com.bjike.goddess.attainment.to.SurveyPlanAuditTO;
 import com.bjike.goddess.attainment.vo.SurveyPlanAuditVO;
-import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -11,6 +11,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class SurveyPlanAuditAct {
      */
     @LoginAuth
     @PutMapping("v1/update")
-    public Result update(@Validated(EDIT.class) SurveyPlanAuditTO to) throws ActException {
+    public Result update(@Validated(ADD.class) SurveyPlanAuditTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyPlanAuditAPI.update(to), SurveyPlanAuditVO.class));
         } catch (SerException e) {
@@ -66,14 +67,14 @@ public class SurveyPlanAuditAct {
     /**
      * 根据调研计划查询审核数据
      *
-     * @param plan_id 调研计划数据id
+     * @param id 调研计划数据id
      * @return class SurveyPlanAuditVO
      * @version v1
      */
-    @GetMapping("v1/findByPlan/{plan_id}")
-    public Result findByPlan(@PathVariable String plan_id) throws ActException {
+    @GetMapping("v1/findByPlan/{id}")
+    public Result findByPlan(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyPlanAuditAPI.findByPlan(plan_id), SurveyPlanAuditVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyPlanAuditAPI.findByPlan(id), SurveyPlanAuditVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

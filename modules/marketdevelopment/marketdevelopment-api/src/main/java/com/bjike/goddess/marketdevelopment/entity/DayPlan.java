@@ -30,7 +30,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '时间'")
+    @Column(name = "time", nullable = false, columnDefinition = "DATE  COMMENT '时间'")
     private LocalDate time;
 
     /**

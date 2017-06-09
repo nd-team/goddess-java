@@ -15,6 +15,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class SurveyDemandAct {
      */
     @LoginAuth
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyDemandTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyDemandTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.save(to), SurveyDemandVO.class));
         } catch (SerException e) {
@@ -61,7 +62,7 @@ public class SurveyDemandAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SurveyDemandTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SurveyDemandTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyDemandAPI.update(to), SurveyDemandVO.class));
         } catch (SerException e) {

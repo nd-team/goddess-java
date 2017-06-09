@@ -45,7 +45,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     private SurveyPlanBO transformBO(SurveyPlan entity) throws SerException {
         SurveyPlanBO bo = BeanTransform.copyProperties(entity, SurveyPlanBO.class);
         SurveyDemand demand = entity.getDemand();
-        bo.setDemand_id(demand.getId());
+        bo.setDemandId(demand.getId());
         bo.setDemandName(demand.getDemand().getType());
         bo.setPurpose(demand.getPurpose());
         bo.setScope(demand.getScope());
@@ -70,7 +70,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     @Override
     public SurveyPlanBO save(SurveyPlanTO to) throws SerException {
         SurveyPlan entity = BeanTransform.copyProperties(to, SurveyPlan.class, true);
-        entity.setDemand(demandSer.findById(to.getDemand_id()));
+        entity.setDemand(demandSer.findById(to.getDemandId()));
         if (null == entity.getDemand())
             throw new SerException("选择的调研需求不存在,无法保存");
         entity.setAudit(AuditType.NONE);
@@ -86,7 +86,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setDemand(demandSer.findById(to.getDemand_id()));
+        entity.setDemand(demandSer.findById(to.getDemandId()));
         if (null == entity.getDemand())
             throw new SerException("选择的调研需求不存在,无法保存");
         super.update(entity);

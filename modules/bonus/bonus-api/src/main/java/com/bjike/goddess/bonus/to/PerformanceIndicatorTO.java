@@ -30,9 +30,9 @@ public class PerformanceIndicatorTO extends BaseTO {
     private String type;
 
     /**
-     * 项目名称
+     * 指标名称
      */
-    @NotNull(message = "项目名称不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "指标名称不能为空", groups = {ADD.class, EDIT.class})
     private String name;
 
     /**

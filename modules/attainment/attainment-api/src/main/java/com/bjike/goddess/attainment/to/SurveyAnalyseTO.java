@@ -21,7 +21,7 @@ public class SurveyAnalyseTO extends BaseTO {
      * 调研计划id
      */
     @NotNull(message = "调研计划id不能为空", groups = {ADD.class, EDIT.class})
-    private String plan_id;
+    private String planId;
 
     /**
      * 分析人
@@ -45,12 +45,12 @@ public class SurveyAnalyseTO extends BaseTO {
     private String remark;
 
 
-    public String getPlan_id() {
-        return plan_id;
+    public String getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(String plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(String planId) {
+        this.planId = planId;
     }
 
     public String getAssayer() {

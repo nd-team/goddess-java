@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 
@@ -154,6 +153,7 @@ public interface DepartmentDetailAPI {
 
     /**
      * 查询所有地区
+     *
      * @return
      * @throws SerException
      */
@@ -163,6 +163,7 @@ public interface DepartmentDetailAPI {
 
     /**
      * 根据地区查询
+     *
      * @param area
      * @return
      * @throws SerException

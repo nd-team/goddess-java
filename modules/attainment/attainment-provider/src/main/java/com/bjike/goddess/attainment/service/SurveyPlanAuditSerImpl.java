@@ -10,6 +10,8 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -42,10 +44,12 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
     private UserDetailAPI userDetailAPI;
     @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private SurveyPlanAuditBO transformBO(SurveyPlanAudit entity) throws SerException {
-        SurveyPlanAuditBO bo = BeanTransform.copyProperties(entity, SurveyPlanAudit.class);
-        bo.setPlan_id(entity.getPlan().getId());
+        SurveyPlanAuditBO bo = BeanTransform.copyProperties(entity, SurveyPlanAuditBO.class);
+        bo.setPlanId(entity.getPlan().getId());
         return bo;
     }
 
@@ -61,23 +65,27 @@ public class SurveyPlanAuditSerImpl extends ServiceImpl<SurveyPlanAudit, SurveyP
     public SurveyPlanAuditBO update(SurveyPlanAuditTO to) throws SerException {
         UserBO user = userAPI.currentUser();
         UserDetailBO userDetail = userDetailAPI.findByUserId(user.getId());
-        SurveyPlanAuditBO auditBO = this.findByUserPlan(to.getPlan_id(), user.getUsername());
+        PositionDetailUserBO detailUserBO = positionDetailUserAPI.findOneByUser(user.getId());
+        SurveyPlanAuditBO auditBO = this.findByUserPlan(to.getPlanId(), user.getUsername());
         SurveyPlanAudit entity;
-        SurveyPlan plan = surveyPlanSer.findById(to.getPlan_id());
+        SurveyPlan plan = surveyPlanSer.findById(to.getPlanId());
         if (null == plan)
             throw new SerException("研究计划不能为空");
         if (null == auditBO) {
             entity = BeanTransform.copyProperties(to, SurveyPlanAudit.class, true);
             entity.setAuditor(user.getUsername());
             entity.setAuditTime(LocalDateTime.now());
-            entity.setPosition(userDetail.getPositionName());
-            entity.setDepartment(userDetail.getDepartmentName());
+            if (null != detailUserBO)
+                entity.setPosition(detailUserBO.getPosition());
+            if (null != userDetail)
+                entity.setDepartment(userDetail.getDepartmentName());
             entity.setPlan(plan);
             super.save(entity);
         } else {
-            entity = BeanTransform.copyProperties(auditBO, SurveyPlanAudit.class, true);
+            entity = super.findById(auditBO.getId());
+            BeanTransform.copyProperties(to, entity, true);
             entity.setPlan(plan);
-            entity.setAuditTime(LocalDateTime.now());
+            entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
         }
         if (entity.isPass())

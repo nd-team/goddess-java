@@ -70,7 +70,7 @@ public class CommerceContacts extends BaseEntity {
     /**
      * 客户级别
      */
-    @Column(name = "customerLevel_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
+    @Column(name = "customerLevel_id", columnDefinition = "VARCHAR(36)   COMMENT '客户级别'")
     private String customerLevel;
 
     /**

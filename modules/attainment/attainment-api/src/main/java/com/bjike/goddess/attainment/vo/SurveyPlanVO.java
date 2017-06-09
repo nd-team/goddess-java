@@ -26,7 +26,7 @@ public class SurveyPlanVO {
     /**
      * 需求ID
      */
-    private String demand_id;
+    private String demandId;
 
     /**
      * 调研类型
@@ -109,12 +109,12 @@ public class SurveyPlanVO {
         this.serialNumber = serialNumber;
     }
 
-    public String getDemand_id() {
-        return demand_id;
+    public String getDemandId() {
+        return demandId;
     }
 
-    public void setDemand_id(String demand_id) {
-        this.demand_id = demand_id;
+    public void setDemandId(String demandId) {
+        this.demandId = demandId;
     }
 
     public String getTypeName() {

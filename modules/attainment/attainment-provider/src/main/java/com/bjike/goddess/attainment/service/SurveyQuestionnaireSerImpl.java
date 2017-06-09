@@ -39,7 +39,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
 
     private SurveyQuestionnaireBO transformBO(SurveyQuestionnaire entity) {
         SurveyQuestionnaireBO bo = BeanTransform.copyProperties(entity, SurveyQuestionnaireBO.class);
-        bo.setActualize_id(entity.getActualize().getId());
+        bo.setActualizeId(entity.getActualize().getId());
         return bo;
     }
 
@@ -54,7 +54,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
     @Override
     public SurveyQuestionnaireBO save(SurveyQuestionnaireTO to) throws SerException {
         SurveyQuestionnaire entity = BeanTransform.copyProperties(to, SurveyQuestionnaire.class);
-        entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         if (null == entity.getActualize())
             throw new SerException("调研实施对象不存在,无法保存");
         super.save(entity);
@@ -69,7 +69,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         if (null == entity.getActualize())
             throw new SerException("调研实施对象不存在,无法保存");
         super.update(entity);

@@ -31,7 +31,7 @@ public class SurveyQuestionnaireOptionUserTO extends BaseTO {
      * 选择选项id
      */
     @NotNull(message = "选择选项id不能为空", groups = {ADD.class, EDIT.class})
-    private String option_id;
+    private String optionId;
 
 
     public String getTableName() {
@@ -50,11 +50,11 @@ public class SurveyQuestionnaireOptionUserTO extends BaseTO {
         this.user = user;
     }
 
-    public String getOption_id() {
-        return option_id;
+    public String getOptionId() {
+        return optionId;
     }
 
-    public void setOption_id(String option_id) {
-        this.option_id = option_id;
+    public void setOptionId(String optionId) {
+        this.optionId = optionId;
     }
 }

@@ -26,7 +26,7 @@ public class PerformanceIndicatorVO {
     private String type;
 
     /**
-     * 项目名称
+     * 指标名称
      */
     private String name;
 

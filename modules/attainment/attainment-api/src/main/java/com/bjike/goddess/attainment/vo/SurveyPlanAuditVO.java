@@ -19,7 +19,7 @@ public class SurveyPlanAuditVO {
     /**
      * 调研计划
      */
-    private String plan_id;
+    private String planId;
 
     /**
      * 审核人
@@ -60,12 +60,12 @@ public class SurveyPlanAuditVO {
         this.id = id;
     }
 
-    public String getPlan_id() {
-        return plan_id;
+    public String getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(String plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(String planId) {
+        this.planId = planId;
     }
 
     public String getAuditor() {

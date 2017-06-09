@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class SurveyActualizeAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyActualizeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyActualizeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyActualizeAPI.save(to), SurveyActualizeVO.class));
         } catch (SerException e) {
@@ -57,7 +58,7 @@ public class SurveyActualizeAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SurveyActualizeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SurveyActualizeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyActualizeAPI.update(to), SurveyActualizeVO.class));
         } catch (SerException e) {

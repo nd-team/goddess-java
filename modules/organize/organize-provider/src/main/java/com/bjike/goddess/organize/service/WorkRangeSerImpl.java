@@ -69,10 +69,11 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
         StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");
-        sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
-        sql.append(departmentId).append("' GROUP BY range_id) AS de ");
-        sql.append(" ON wr.id = de.range_id ");
+        sql.append(" WHERE wr.id IN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
+        sql.append(departmentId).append("' GROUP BY range_id)");
         List<WorkRange> list = super.findBySql(sql.toString(), WorkRange.class, fields);
+        if (list.size() == 0)
+            return new ArrayList<>(0);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 

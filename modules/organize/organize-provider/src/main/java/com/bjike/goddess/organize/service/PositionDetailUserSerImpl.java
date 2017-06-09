@@ -64,7 +64,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     private List<PositionDetailUserBO> transformBOList(Collection<PositionDetailUser> list) throws SerException {
-        List<PositionDetailUserBO> bos = new ArrayList<>(list.size());
+        List<PositionDetailUserBO> bos = new ArrayList<>(0);
         for (PositionDetailUser entity : list)
             bos.add(this.transformBO(entity));
         return bos;

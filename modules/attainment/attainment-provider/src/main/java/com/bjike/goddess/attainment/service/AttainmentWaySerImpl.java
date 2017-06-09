@@ -10,7 +10,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +34,10 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
     @Override
     public AttainmentWayBO save(AttainmentWayTO to) throws SerException {
         AttainmentWay entity = BeanTransform.copyProperties(to, AttainmentWay.class);
+        AttainmentWayDTO dto = new AttainmentWayDTO();
+        dto.getConditions().add(Restrict.eq("type", to.getType()));
+        if (super.count(dto) != 0)
+            throw new SerException(to.getType() + ":已存在");
         entity.setStatus(Status.THAW);
         super.save(entity);
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
@@ -43,19 +46,20 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
     @Transactional(rollbackFor = SerException.class)
     @Override
     public AttainmentWayBO update(AttainmentWayTO to) throws SerException {
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                AttainmentWay entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
-            } catch (Exception e) {
-                throw new SerException("数据对象不能为空");
-            }
+        AttainmentWay entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        if (!to.getType().equals(entity.getType())) {
+            AttainmentWayDTO dto = new AttainmentWayDTO();
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+            if (super.count(dto) != 0)
+                throw new SerException(to.getType() + ":已存在");
+        }
+        BeanTransform.copyProperties(to, entity, true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
 
-        } else
-            throw new SerException("数据ID不能为空");
     }
 
     @Transactional(rollbackFor = SerException.class)

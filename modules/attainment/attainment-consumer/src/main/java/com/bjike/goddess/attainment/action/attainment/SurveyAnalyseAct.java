@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class SurveyAnalyseAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyAnalyseTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyAnalyseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(analyseAPI.save(to), SurveyAnalyseVO.class));
         } catch (SerException e) {
@@ -57,7 +58,7 @@ public class SurveyAnalyseAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SurveyAnalyseTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SurveyAnalyseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(analyseAPI.update(to), SurveyAnalyseVO.class));
         } catch (SerException e) {
@@ -84,14 +85,14 @@ public class SurveyAnalyseAct {
     /**
      * 根据调研计划查询调研分析
      *
-     * @param plan_id 调研计划数据id
+     * @param id 调研计划数据id
      * @return class SurveyAnalyseVO
      * @version v1
      */
-    @GetMapping("v1/findByPlan/{plan_id}")
-    public Result findByPlan(@PathVariable String plan_id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findByPlan/{id}")
+    public Result findByPlan(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(analyseAPI.findByPlan(plan_id), SurveyAnalyseVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(analyseAPI.findByPlan(id), SurveyAnalyseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

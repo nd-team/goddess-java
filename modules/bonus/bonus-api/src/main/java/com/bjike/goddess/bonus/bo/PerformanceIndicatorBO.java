@@ -24,7 +24,7 @@ public class PerformanceIndicatorBO extends BaseBO {
     private String type;
 
     /**
-     * 项目名称
+     * 指标名称
      */
     private String name;
 

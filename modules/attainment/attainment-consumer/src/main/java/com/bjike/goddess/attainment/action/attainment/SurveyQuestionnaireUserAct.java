@@ -66,14 +66,14 @@ public class SurveyQuestionnaireUserAct {
     /**
      * 根据实施记录查询问卷调查历史记录
      *
-     * @param actualize_id 实施记录数据id
+     * @param id 实施记录数据id
      * @return class SurveyQuestionnaireUserVO
      * @version v1
      */
-    @GetMapping("v1/findByActualize/{actualize_id}")
-    public Result findByActualize(@PathVariable String actualize_id) throws ActException {
+    @GetMapping("v1/findByActualize/{id}")
+    public Result findByActualize(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireUserAPI.findByActualize(actualize_id), SurveyQuestionnaireUserVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireUserAPI.findByActualize(id), SurveyQuestionnaireUserVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

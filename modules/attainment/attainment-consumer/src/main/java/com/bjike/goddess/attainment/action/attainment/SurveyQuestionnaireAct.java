@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class SurveyQuestionnaireAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyQuestionnaireTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyQuestionnaireTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireAPI.save(to), SurveyQuestionnaireVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class SurveyQuestionnaireAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SurveyQuestionnaireTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SurveyQuestionnaireTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireAPI.update(to), SurveyQuestionnaireVO.class));
         } catch (SerException e) {
@@ -81,14 +82,14 @@ public class SurveyQuestionnaireAct {
     /**
      * 根据调研实施查询调研问题
      *
-     * @param actualize_id 调研实施id
+     * @param id 调研实施id
      * @return class SurveyQuestionnaireVO
      * @version v1
      */
-    @GetMapping("v1/findByActualize/{actualize_id}")
-    public Result findByActualize(@PathVariable String actualize_id) throws ActException {
+    @GetMapping("v1/findByActualize/{id}")
+    public Result findByActualize(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireAPI.findByActualize(actualize_id), SurveyQuestionnaireVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireAPI.findByActualize(id), SurveyQuestionnaireVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

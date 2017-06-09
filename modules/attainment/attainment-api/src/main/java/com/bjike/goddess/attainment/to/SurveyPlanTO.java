@@ -28,7 +28,7 @@ public class SurveyPlanTO extends BaseTO {
      * 需求id
      */
     @NotNull(message = "需求id不能为空", groups = {ADD.class, EDIT.class})
-    private String demand_id;
+    private String demandId;
 
     /**
      * 调研计划开始时间
@@ -67,12 +67,12 @@ public class SurveyPlanTO extends BaseTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getDemand_id() {
-        return demand_id;
+    public String getDemandId() {
+        return demandId;
     }
 
-    public void setDemand_id(String demand_id) {
-        this.demand_id = demand_id;
+    public void setDemandId(String demandId) {
+        this.demandId = demandId;
     }
 
     public String getStartTime() {

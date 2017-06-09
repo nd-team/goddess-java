@@ -46,9 +46,9 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
 
     private SurveyDemandBO transformBO(SurveyDemand entity) throws SerException {
         SurveyDemandBO bo = BeanTransform.copyProperties(entity, SurveyDemandBO.class);
-        bo.setDemand_id(entity.getDemand().getId());
+        bo.setDemandId(entity.getDemand().getId());
         bo.setDemandName(entity.getDemand().getType());
-        bo.setType_id(entity.getType().getId());
+        bo.setTypeId(entity.getType().getId());
         bo.setTypeName(entity.getType().getType());
         return bo;
     }
@@ -66,10 +66,10 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
     public SurveyDemandBO save(SurveyDemandTO to) throws SerException {
         UserBO user = userAPI.currentUser();
         SurveyDemand entity = BeanTransform.copyProperties(to, SurveyDemand.class, true);
-        entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
+        entity.setDemand(demandTypeSer.findById(to.getDemandId()));
         if (null == entity.getDemand())
             throw new SerException("调研需求类型不存在,无法保存");
-        entity.setType(attainmentTypeSer.findById(to.getType_id()));
+        entity.setType(attainmentTypeSer.findById(to.getTypeId()));
         if (null == entity.getType())
             throw new SerException("调研类型不存在,无法保存");
         entity.setUsername(user.getUsername());
@@ -94,10 +94,10 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setDemand(demandTypeSer.findById(to.getDemand_id()));
+        entity.setDemand(demandTypeSer.findById(to.getDemandId()));
         if (null == entity.getDemand())
             throw new SerException("调研需求类型不存在,无法保存");
-        entity.setType(attainmentTypeSer.findById(to.getType_id()));
+        entity.setType(attainmentTypeSer.findById(to.getTypeId()));
         if (null == entity.getType())
             throw new SerException("调研类型不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
@@ -138,8 +138,10 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
 
     @Override
     public List<SurveyDemandBO> findByStatus(SurveyStatus status) throws SerException {
+        if (null == status)
+            return new ArrayList<>(0);
         SurveyDemandDTO dto = new SurveyDemandDTO();
-        dto.getConditions().add(Restrict.eq("surveyStatus", status));
+        dto.getConditions().add(Restrict.eq("surveyStatus", status.getValue()));
         List<SurveyDemand> list = super.findByCis(dto);
         return this.transformBOList(list);
     }

@@ -151,11 +151,6 @@ public class PositionDetailUserAct {
     public Result maps(PositionDetailUserDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<PositionDetailUserVO> vos = BeanTransform.copyProperties(positionDetailUserAPI.maps(dto), PositionDetailUserVO.class, request);
-            for (PositionDetailUserVO vo : vos) {
-                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(vo.getUserId());
-                if (positionDetailBOs != null)
-                    vo.setPositionVo(BeanTransform.copyProperties(positionDetailBOs, PositionDetailVO.class));
-            }
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

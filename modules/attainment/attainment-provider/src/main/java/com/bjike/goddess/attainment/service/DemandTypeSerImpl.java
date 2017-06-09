@@ -53,7 +53,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+        return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

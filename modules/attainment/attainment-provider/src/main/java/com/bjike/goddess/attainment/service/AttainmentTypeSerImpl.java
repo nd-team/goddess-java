@@ -111,7 +111,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
     @Override
     public List<AttainmentTypeBO> findRegular(Boolean regular) throws SerException {
         AttainmentTypeDTO dto = new AttainmentTypeDTO();
-        dto.getConditions().add(Restrict.eq("is_regular", regular));
+        dto.getConditions().add(Restrict.eq("regular", !regular));
         List<AttainmentType> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, AttainmentTypeBO.class);
     }

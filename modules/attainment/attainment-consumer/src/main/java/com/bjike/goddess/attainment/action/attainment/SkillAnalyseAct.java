@@ -13,6 +13,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class SkillAnalyseAct {
      */
     @LoginAuth
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SkillAnalyseTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SkillAnalyseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(skillAnalyseAPI.save(to), SkillAnalyseVO.class));
         } catch (SerException e) {
@@ -60,7 +61,7 @@ public class SkillAnalyseAct {
      */
     @LoginAuth
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SkillAnalyseTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SkillAnalyseTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(skillAnalyseAPI.update(to), SkillAnalyseVO.class));
         } catch (SerException e) {
