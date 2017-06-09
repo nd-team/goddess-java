@@ -1,11 +1,9 @@
 package com.bjike.goddess.common.consumer.interceptor.login;
 
 import com.alibaba.fastjson.JSON;
-import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 
 /**
  * 登录安全拦截(仅检测是否有携带token,用token获取用户的时候再进行token有无效判定)
@@ -25,26 +22,24 @@ import java.lang.reflect.Method;
  * @Copy: [com.bjike]
  */
 public class StorageIntercept extends HandlerInterceptorAdapter {
-    public StorageIntercept(StorageUserAPI storageUserAPI) {
+    public StorageIntercept(StorageUserAPI storageUserAPI, String account, String password, String moduleName) {
         this.storageUserAPI = storageUserAPI;
+        this.moduleName = moduleName;
+        this.account = account;
+        this.password = password;
     }
 
     private StorageUserAPI storageUserAPI;
+    private String account;
+    private String password;
+    private String moduleName;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            validatePath(request, response);
-            return validateLogin(request, response);
-        }
-        Method method = ((HandlerMethod) handler).getMethod();
-        Class<?> clazz = method.getDeclaringClass();
-        //该类或者方法上是否有登录安全认证注解
-        if (clazz.isAnnotationPresent(StorageAuth.class) || method.isAnnotationPresent(StorageAuth.class)) {
-            validatePath(request, response);
-            return validateLogin(request, response);
-        }
-
+        validatePath(request, response);
+        String userToken = request.getHeader("userToken");
+        String token = storageUserAPI.getStorageToken(account, password, moduleName,userToken);
+        request.setAttribute("storageToken", token);
         return true;
     }
 
@@ -72,45 +67,4 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     }
 
-
-    private boolean validateLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Object obj = request.getParameter(RpcCommon.STORAGE_TOKEN);
-
-        String token = null;
-        if (null != obj) {
-            token = obj.toString();
-        } else {
-            obj = request.getAttribute(RpcCommon.STORAGE_TOKEN);
-            token = (obj != null ? obj.toString() : null);
-        }
-        try {
-            if (StringUtils.isNotBlank(token) && null != storageUserAPI.getCurrentUser(token)) {
-                return true;
-            } else {
-                handlerNotHasLogin(response, "用户未登录！");
-                return false;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-
-    }
-
-    /**
-     * 未登录处理
-     *
-     * @param response
-     * @throws IOException
-     */
-    private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
-        PrintWriter out = response.getWriter();
-        out.flush();
-        response.setContentType("text/html; charset=UTF-8"); //转码
-        response.setStatus(200);
-        ActResult result = new ActResult();
-        result.setMsg(msg);
-        result.setCode(403);
-        out.println(JSON.toJSONString(result));
-    }
 }

@@ -25,19 +25,16 @@ import java.util.List;
 public class CustomIntercept implements Interceptor {
     @Autowired
     private StorageUserAPI storageUserAPI;
-    @Autowired
-    private UserAPI userAPI;
-
-
     @Override
     public List<HIInfo> customerInterceptors() {
-
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI), "**/");
-        HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**/register/**");
+        String username ="ike";
+        String password ="123456";
+        String moduleName ="message";
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI,username,password,moduleName), "/**");
 
         /**
          * 暂时不加权限
          */
-        return Arrays.asList(loginInfo, storageInfo);
+        return Arrays.asList(storageInfo);
     }
 }

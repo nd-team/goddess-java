@@ -3,6 +3,7 @@ package com.bjike.goddess.common.consumer.action;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -175,6 +176,9 @@ public abstract class BaseFileAction {
         List<MultipartFile> multipartFiles = getMultipartFile(request);
         List<InputStream> inputStreams = null;
         String token = request.getParameter("storageToken");
+        if(StringUtils.isBlank(token)){
+            token = request.getAttribute("storageToken").toString();
+        }
         if (null != multipartFiles) {
             inputStreams = new ArrayList<>(multipartFiles.size() * 2);
             try {

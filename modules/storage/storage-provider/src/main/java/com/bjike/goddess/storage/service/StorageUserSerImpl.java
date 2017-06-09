@@ -3,10 +3,8 @@ package com.bjike.goddess.storage.service;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.token.TokenUtil;
 import com.bjike.goddess.redis.client.RedisClient;
@@ -22,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 存储模块用户业务实现
@@ -41,6 +40,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     @Autowired
     private UserAPI userAPI;
 
+    @Transactional
     @Override
     public StorageUserBO register(StorageUserTO storageUserTO) throws SerException {
         String sysNO = userAPI.currentSysNO(storageUserTO.getUserToken());
@@ -130,5 +130,32 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     @Override
     public String getCurrentSysNO(String storageToken) throws SerException {
         return this.getCurrentUser(storageToken).getSystemNO();
+    }
+
+    @Transactional
+    @Override
+    public String getStorageToken(String account, String password, String moduleName,String userToken) throws SerException {
+        String token = StorageSession.getToken(account);
+        if (null != token) {
+            return token;
+        } else {
+            StorageUserDTO dto = new StorageUserDTO();
+            dto.getConditions().add(Restrict.eq("account", account));
+            StorageUser user = super.findOne(dto);
+            if (null != user) {
+                token = login(user);
+            } else {
+                StorageUserTO to = new StorageUserTO();
+                to.setAccount(account);
+                to.setModuleName(moduleName);
+                to.setPassword(password);
+                to.setUserToken(userToken);
+                StorageUserBO bo = register(to);
+                user = new StorageUser();
+                BeanTransform.copyProperties(bo, user,true);
+                token = login(user);
+            }
+        }
+        return token;
     }
 }
