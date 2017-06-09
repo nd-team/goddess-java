@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 合作方式
  *
@@ -13,18 +15,22 @@ public enum BusinessCooperate {
     /**
      * 租赁合同
      */
+    @ExcelValue(name = "租赁合同")
     RENTCONTRACT(0),
     /**
      * 承包的项目合同
      */
+    @ExcelValue(name = "承包的项目合同")
     CHARCONTRACT(1),
     /**
      * 分包项目合同
      */
+    @ExcelValue(name = "分包项目合同")
     DISTRIBUTECONTRACT(2),
     /**
      * 销售合同
      */
+    @ExcelValue(name = "销售合同")
     SALECONTRACT(3);
 
     private int code;
@@ -87,4 +93,22 @@ public enum BusinessCooperate {
         }
         return name;
     }
+
+    public static String exportStrConvert(BusinessCooperate businessCooperate) {
+        String name = "";
+        if (businessCooperate.equals(BusinessCooperate.RENTCONTRACT)) {
+            name = "租赁合同";
+        }
+        if (businessCooperate.equals(BusinessCooperate.CHARCONTRACT)) {
+            name = "承包的项目合同";
+        }
+        if (businessCooperate.equals(BusinessCooperate.DISTRIBUTECONTRACT)) {
+            name = "分包项目合同";
+        }
+        if (businessCooperate.equals(BusinessCooperate.SALECONTRACT)) {
+            name = "销售合同";
+        }
+        return name;
+    }
+
 }

@@ -8,6 +8,7 @@ import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.enums.AuditStatus;
+import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -365,6 +366,27 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
 
     }
 
+
+    @Override
+    public ReceivableSubsidiaryBO progress(ProgressTO to) throws SerException {
+        ReceivableSubsidiary receivableSubsidiary = super.findById(to.getId());
+        String a = StringUtils.substring(to.getGroup(),0,1);
+        //StringUtils.substring("结算进度A","结算进度A".length()-1))
+        if(a.equals("A")){
+            receivableSubsidiary.setProgressA(to.getProgress());
+        }else if (a.equals("B")){
+            receivableSubsidiary.setProgressB(to.getProgress());
+        }else if (a.equals("C")){
+            receivableSubsidiary.setProgressC(to.getProgress());
+        }else if (a.equals("D")){
+            receivableSubsidiary.setProgressD(to.getProgress());
+        }
+
+        super.update(receivableSubsidiary);
+        return BeanTransform.copyProperties(receivableSubsidiary,ReceivableSubsidiaryBO.class);
+    }
+
+
     @Override
     public List<String> getArea() throws SerException {
         String[] fields = new String[]{"area"};
@@ -532,45 +554,6 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         ReceivableSubsidiary receivableSubsidiaries = super.findById(id);
         List<ReceivableSubsidiaryBO> receivableSubsidiaryBOS = BeanTransform.copyProperties(receivableSubsidiaries,ReceivableSubsidiaryBO.class);*/
         return collectAreaDetailBOS;
-    }
-
-    public static void main(String[] args) {
-        String[] area = new String[]{};
-        String areaStr = StringUtils.join(area, ",");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(" select a.area,a.innerName,a.taskPrice,a.pactSize,a.finishTime, ");
-        sb.append(" a.checkTime ,a.auditTime,a.countTime,a.billTime,a.planTime,a.accountTime, ");
-        sb.append(" a.accountMoney,a.managementFee,a.taxes,a.afterTax,b.name,a.is_flow,a.id as remark, ");
-        sb.append(" a.taskNum,a.pactNum,a.pactMoney,a.taskMoney,a.finishNum,a.finishMoney,a.unfinishNum,a.unfinishMoney, ");
-        sb.append(" a.payTax,a.undeal,a.penalty,a.realCountNum,a.realCountMoney,a.moreNum, ");
-        sb.append(" a.moreMoney,a.is_frame,a.is_pact,a.is_pay ");
-        sb.append(" from receivable_receivablesubsidiary a ,receivable_contractor b ");
-        sb.append(" where a.contractor_id = b.id and a.area in (%s) ");
-        sb.append(" union ");
-        sb.append(" select '合计' as area,null as innerName, ");
-        sb.append(" sum(taskPrice) as taskPrice,sum(pactSize) as pactSize, ");
-        sb.append(" null as finishTime,null as checkTime, null as auditTime, ");
-        sb.append(" null as countTime,null as billTime,null as planTime, ");
-        sb.append(" null as accountTime,sum(accountMoney)as accountMoney, ");
-        sb.append(" sum(managementFee)as managementFee,sum(taxes)as taxes , ");
-        sb.append(" sum(afterTax) as afterTax,null as name,null as is_flow,null as remark, ");
-        sb.append(" null as taskNum,null as pactNum,null as pactMoney,null as taskMoney, ");
-        sb.append(" null as finishNum,null as finishMoney,null as unfinishNum,null as remark, ");
-        sb.append(" null as payTax,null as undeal,null as penalty,null as realCountNum, ");
-        sb.append(" null as realCountMoney,null as moreNum,null as moreMoney,null as is_frame, ");
-        sb.append(" null as is_pact,null as is_pay ");
-        sb.append(" from (select a.area,a.innerName,a.taskPrice,a.pactSize, ");
-        sb.append(" a.finishTime,a.checkTime ,a.auditTime,a.countTime,a.billTime, ");
-        sb.append(" a.planTime,a.accountTime,a.accountMoney,a.managementFee,a.taxes,a.afterTax,b.name,a.is_flow,a.id as remark, ");
-        sb.append(" a.taskNum,a.pactNum,a.pactMoney,a.taskMoney,a.finishNum,a.finishMoney,a.unfinishNum,a.unfinishMoney, ");
-        sb.append(" a.payTax,a.undeal,a.penalty,a.realCountNum,a.realCountMoney,a.moreNum, ");
-        sb.append(" a.moreMoney,a.is_frame,a.is_pact,a.is_pay ");
-        sb.append(" from receivable_receivablesubsidiary a ,receivable_contractor b ");
-        sb.append(" where a.contractor_id = b.id and a.area in (%s) )c ");
-        String sql = sb.toString();
-        sql = String.format(sql, areaStr);
-        System.out.println(sql);
     }
 
     @Override

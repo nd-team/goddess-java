@@ -111,27 +111,27 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
          * 网站名称
          */
         if(StringUtils.isNotBlank(biddingInfoDTO.getWebName())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("webName",biddingInfoDTO.getWebName()));
+            biddingInfoDTO.getConditions().add(Restrict.like("webName",biddingInfoDTO.getWebName()));
         }
         /**
          * 网址
          */
         if(StringUtils.isNotBlank(biddingInfoDTO.getUrl())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("url", biddingInfoDTO.getUrl()));
+            biddingInfoDTO.getConditions().add(Restrict.like("url", biddingInfoDTO.getUrl()));
         }
         /**
          * 省份
          */
 
         if(StringUtils.isNotBlank(biddingInfoDTO.getProvinces())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("provinces", biddingInfoDTO.getProvinces()));
+            biddingInfoDTO.getConditions().add(Restrict.like("provinces", biddingInfoDTO.getProvinces()));
 
         }
         /**
          * 地市
          */
         if(StringUtils.isNotBlank(biddingInfoDTO.getCities())){
-            biddingInfoDTO.getConditions().add(Restrict.eq("cities", biddingInfoDTO.getCities()));
+            biddingInfoDTO.getConditions().add(Restrict.like("cities", biddingInfoDTO.getCities()));
 
         }
         List<BiddingInfo> biddingInfos = super.findByCis(biddingInfoDTO,true);

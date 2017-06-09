@@ -96,10 +96,37 @@ public class AddEmployeeBO extends BaseBO {
     private String payType;
 
     /**
-     * 参保记录
+     * 前参保公司
      */
-    private String record;
+    private String beforeCompany;
 
+    /**
+     * 前参保地市
+     */
+    private String beforeCity;
+
+    /**
+     * 已参保年限
+     */
+    private String insuredYear;
+
+    /**
+     * 运营商务部意见
+     */
+    private String businessAdvice;
+
+    /**
+     * 增员时间
+     */
+    private String secureTime;
+
+    public String getBusinessAdvice() {
+        return businessAdvice;
+    }
+
+    public void setBusinessAdvice(String businessAdvice) {
+        this.businessAdvice = businessAdvice;
+    }
 
     public String getName() {
         return name;
@@ -123,14 +150,6 @@ public class AddEmployeeBO extends BaseBO {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getGroup() {
-        return team;
-    }
-
-    public void setGroup(String team) {
-        this.team = team;
     }
 
     public String getJob() {
@@ -229,11 +248,43 @@ public class AddEmployeeBO extends BaseBO {
         this.payType = payType;
     }
 
-    public String getRecord() {
-        return record;
+    public String getTeam() {
+        return team;
     }
 
-    public void setRecord(String record) {
-        this.record = record;
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getBeforeCompany() {
+        return beforeCompany;
+    }
+
+    public void setBeforeCompany(String beforeCompany) {
+        this.beforeCompany = beforeCompany;
+    }
+
+    public String getBeforeCity() {
+        return beforeCity;
+    }
+
+    public void setBeforeCity(String beforeCity) {
+        this.beforeCity = beforeCity;
+    }
+
+    public String getInsuredYear() {
+        return insuredYear;
+    }
+
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
+    }
+
+    public String getSecureTime() {
+        return secureTime;
+    }
+
+    public void setSecureTime(String secureTime) {
+        this.secureTime = secureTime;
     }
 }

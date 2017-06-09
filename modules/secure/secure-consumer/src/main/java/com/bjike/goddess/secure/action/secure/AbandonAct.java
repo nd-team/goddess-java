@@ -1,10 +1,11 @@
 package com.bjike.goddess.secure.action.secure;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.AbandonAPI;
@@ -18,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -75,6 +75,25 @@ public class AbandonAct {
     }
 
     /**
+     * 添加
+     *
+     * @param to 放弃信息
+     * @return class AbandonVO
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/save")
+    public Result save(@Validated({ADD.class}) AbandonTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            AbandonBO bo = abandonAPI.save(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, AbandonVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 编辑
      *
      * @param to      放弃名单信息
@@ -83,8 +102,9 @@ public class AbandonAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) AbandonTO to, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) AbandonTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             AbandonBO bo = abandonAPI.edit(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AbandonVO.class, request));
@@ -100,11 +120,28 @@ public class AbandonAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             abandonAPI.delete(id);
             return new ActResult("delete SUCCESS!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(AbandonDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(abandonAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

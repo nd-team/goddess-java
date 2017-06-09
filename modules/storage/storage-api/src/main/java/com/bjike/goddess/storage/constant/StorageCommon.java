@@ -11,7 +11,7 @@ public class StorageCommon {
     public static final String LOGIN_USER = "loginUser";
 
     /**
-     * redis登录失效时间 7天
+     * redis登录失效时间 30天
      */
-    public static final Integer LOGIN_TIMEOUT = 60 * 60 * 24 * 7;
+    public static final Integer LOGIN_TIMEOUT = 60 * 60 * 24 * 30;
 }

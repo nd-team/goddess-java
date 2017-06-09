@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
@@ -134,6 +135,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("一级科目条数必须为两条");
         }
         //处理多个一级科目
+
         UserBO userBO = userAPI.currentUser();
         List<String> first = voucherGenerateTO.getFirstSubjects();
         List<String> second = voucherGenerateTO.getSecondSubjects();
@@ -241,22 +243,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("id不能为空");
         }
         VoucherGenerate voucherGenerate = super.findById(id);
-        Double borrow = voucherGenerate.getBorrowMoney();
-        Double loan = voucherGenerate.getLoanMoney();
+        if( voucherGenerate != null ){
 
-        String totalId = voucherGenerate.getTotalId();
-        VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
-        voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
-        voucherTotal.setCreateTime(LocalDateTime.now());
-        voucherTotalSer.update(voucherTotal);
-        super.remove(id);
+            Double borrow = voucherGenerate.getBorrowMoney();
+            Double loan = voucherGenerate.getLoanMoney();
 
-        //删掉合计
-        VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
-        vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
-        List<VoucherGenerate> list = super.findByCis(vgDTO);
-        if (list == null) {
-            voucherTotalSer.remove(totalId);
+            String totalId = voucherGenerate.getTotalId();
+            VoucherTotal voucherTotal = voucherTotalSer.findById(totalId);
+            voucherTotal.setMoney(voucherTotal.getMoney() - borrow - loan);
+            voucherTotal.setCreateTime(LocalDateTime.now());
+            voucherTotalSer.update(voucherTotal);
+            super.remove(id);
+
+            //删掉合计
+            VoucherGenerateDTO vgDTO = new VoucherGenerateDTO();
+            vgDTO.getConditions().add(Restrict.eq("totalId", totalId));
+            List<VoucherGenerate> list = super.findByCis(vgDTO);
+            if (list == null) {
+                voucherTotalSer.remove(totalId);
+            }
         }
     }
 
@@ -1134,40 +1139,40 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<VoucherGenerateBO> ctReArea(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
 
-            String area = voucherGenerateDTO.getArea();
+        String area = voucherGenerateDTO.getArea();
 
-            String[] field = new String[]{"area", "borrowMoney", "loanMoney"};
-            StringBuffer sql = new StringBuffer("");
-            List<VoucherGenerate> list = new ArrayList<>();
-            //若没有选一级、二级、三级科目，表头是：(地区/借方金额/贷方金额)
-            if (StringUtils.isBlank(area)) {
-                sql.append(" select area , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
-                        .append(" from voucher_vouchergenerate where 1=1  ");
-                if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
-                        && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
-                    sql.append(" and voucherDate between '" + voucherGenerateDTO.getStartTime() + "' and '" + voucherGenerateDTO.getEndTime() + "' ");
-                }
-                sql.append(" group by area ");
-
-                list = super.findBySql(sql.toString(), VoucherGenerate.class, field);
-            } else if (StringUtils.isNotBlank(area)) {
-                //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
-                field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                        "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-                sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
-                        .append(" , voucherDate , area , projectGroup , projectName ")
-                        .append(" from voucher_vouchergenerate where area = '" + area + "'  ");
-
-                if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
-                        && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
-                    sql.append(" and voucherDate between '" + voucherGenerateDTO.getStartTime() + "' and '" + voucherGenerateDTO.getEndTime() + "' ");
-
-                }
-                list = super.findBySql(sql.toString(), VoucherGenerate.class, field);
-            } else {
-                throw new SerException("请正确填写数据");
+        String[] field = new String[]{"area", "borrowMoney", "loanMoney"};
+        StringBuffer sql = new StringBuffer("");
+        List<VoucherGenerate> list = new ArrayList<>();
+        //若没有选一级、二级、三级科目，表头是：(地区/借方金额/贷方金额)
+        if (StringUtils.isBlank(area)) {
+            sql.append(" select area , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+                    .append(" from voucher_vouchergenerate where 1=1  ");
+            if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
+                    && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
+                sql.append(" and voucherDate between '" + voucherGenerateDTO.getStartTime() + "' and '" + voucherGenerateDTO.getEndTime() + "' ");
             }
-            return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+            sql.append(" group by area ");
+
+            list = super.findBySql(sql.toString(), VoucherGenerate.class, field);
+        } else if (StringUtils.isNotBlank(area)) {
+            //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
+            field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
+                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" from voucher_vouchergenerate where area = '" + area + "'  ");
+
+            if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
+                    && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
+                sql.append(" and voucherDate between '" + voucherGenerateDTO.getStartTime() + "' and '" + voucherGenerateDTO.getEndTime() + "' ");
+
+            }
+            list = super.findBySql(sql.toString(), VoucherGenerate.class, field);
+        } else {
+            throw new SerException("请正确填写数据");
+        }
+        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
     }
 
     @Override
@@ -1386,22 +1391,72 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<PartBO> findByCondition(String condition) throws SerException {
-        String [] fields = new String[]{"money"};
+        String[] fields = new String[]{"money"};
         String sql = " select sum(borrowMoney+loanMoney) as money from voucher_vouchergenerate where " +
-                " secondSubject = '"+condition+"' or thirdSubject = '"+condition+"' ";
-        List<PartBO> list = super.findBySql( sql , PartBO.class,fields );
-        if( list!= null && list.size()>0 ){
+                " secondSubject = '" + condition + "' or thirdSubject = '" + condition + "' ";
+        List<PartBO> list = super.findBySql(sql, PartBO.class, fields);
+        if (list != null && list.size() > 0) {
             list.get(0).setName(condition);
-        }else{
+        } else {
             list = new ArrayList<>();
             PartBO partBO = new PartBO();
             partBO.setName(condition);
             partBO.setMoney(0d);
-            list.add( partBO );
+            list.add(partBO);
         }
         return list;
     }
 
+    //Jason
+    @Override
+    public List<VoucherGenerateBO> areaAnalyze(Integer year, Integer month, String area) throws SerException {
+        //查询记账凭证数据sql
+        StringBuilder sql = new StringBuilder();
+        String voucherSql = "select id, area,borrowmoney,loanmoney from voucher_vouchergenerate where " +
+                " (firstSubject='银行存款' or firstSubject='库存现金') and year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+        sql.append(voucherSql);
+        if (StringUtils.isNotEmpty(area)) {
+            sql.append(" and area = '" + area + "'");
+        }
+        String[] fileds = new String[]{"id", "area", "borrowMoney", "loanMoney"};
+        List<VoucherGenerateBO> boList = super.findBySql(sql.toString(), VoucherGenerateBO.class, fileds);
+        return boList;
+    }
+
+    //Jason
+    @Override
+    public List<VoucherGenerateBO> groupAnalyze(Integer year, Integer month, String projectGroup) throws SerException {
+        //查询记账凭证数据sql
+        StringBuilder sql = new StringBuilder();
+        String voucherSql = "select projectGroup,borrowmoney,loanmoney from voucher_vouchergenerate where " +
+                " (firstSubject='银行存款' or firstSubject='库存现金') and year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+        sql.append(voucherSql);
+        if (StringUtils.isNotEmpty(projectGroup)) {
+            sql.append(" and projectGroup = '" + projectGroup + "'");
+        }
+        String[] fileds = new String[]{"projectGroup", "borrowMoney", "loanMoney"};
+        List<VoucherGenerateBO> boList = super.findBySql(sql.toString(), VoucherGenerateBO.class, fileds);
+        return boList;
+    }
+
+    //Jason
+    @Override
+    public List<VoucherGenerateBO> projectAnalyze(Integer year, Integer month, String projectName) throws SerException {
+        //查询记账凭证数据sql
+        StringBuilder sql = new StringBuilder();
+        String voucherSql = "select projectName,borrowmoney,loanmoney from voucher_vouchergenerate where " +
+                " (firstSubject='银行存款' or firstSubject='库存现金') and year(voucherDate) = "
+                + year + " and month(voucherDate) = " + month;
+        sql.append(voucherSql);
+        if (StringUtils.isNotEmpty(projectName)) {
+            sql.append(" and projectName = '" + projectName + "'");
+        }
+        String[] fileds = new String[]{"projectName", "borrowMoney", "loanMoney"};
+        List<VoucherGenerateBO> boList = super.findBySql(sql.toString(), VoucherGenerateBO.class, fileds);
+        return boList;
+    }
 
 
 }

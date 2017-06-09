@@ -40,17 +40,6 @@ public interface AddEmployeeAPI {
     }
 
     /**
-     * 编辑
-     *
-     * @param to 社保增员信息
-     * @return class AddEmployeeBO
-     * @throws SerException
-     */
-    default AddEmployeeBO edit(AddEmployeeTO to) throws SerException {
-        return null;
-    }
-
-    /**
      * 删除
      *
      * @param id 社保增员信息名单的id
@@ -64,13 +53,11 @@ public interface AddEmployeeAPI {
     /**
      * 添加
      *
-     * @param to 社保增员信息
-     * @return class AddEmployeeBO
+     * @param to
+     * @return
      * @throws SerException
      */
-    default AddEmployeeBO save(AddEmployeeTO to) throws SerException {
-        return null;
-    }
+    AddEmployeeBO save(AddEmployeeTO to) throws SerException;
 
     /**
      * 查找全部
@@ -81,4 +68,45 @@ public interface AddEmployeeAPI {
     default List<AddEmployeeBO> findAll() throws SerException {
         return null;
     }
+
+    /**
+     * 编辑
+     *
+     * @param to 社保增员信息
+     * @throws SerException
+     */
+    void edit(AddEmployeeTO to) throws SerException;
+
+    /**
+     * 运营商务部审核
+     *
+     * @param to to
+     * @throws SerException
+     */
+    void commerceAudit(AddEmployeeTO to) throws SerException;
+
+    /**
+     * 总经办确认新增
+     *
+     * @param id
+     * @throws SerException
+     */
+    void managerConfirmAdd(String id) throws SerException;
+
+    /**
+     * 社保管理负责人确认增员
+     *
+     * @param id
+     * @throws SerException
+     */
+    void confirmAdd(String id) throws SerException;
+
+    /**
+     * 查找总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AddEmployeeDTO dto) throws SerException;
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 业务类型
  *
@@ -13,18 +15,22 @@ public enum BusinessType {
     /**
      * 移动通信类
      */
+    @ExcelValue(name = "移动通信类")
     MOBILECOMMUNICATION(0),
     /**
      * 软件开发类
      */
+    @ExcelValue(name = "软件开发类")
     SOFTDEVELOP(1),
     /**
      * 智能系统集成类
      */
+    @ExcelValue(name = "智能系统集成类")
     INTELLIGENCESYSTEM(2),
     /**
      * 广告策划营销类
      */
+    @ExcelValue(name = "广告策划营销类")
     ADVERT(3);
 
     private int code;
@@ -84,6 +90,23 @@ public enum BusinessType {
         }
         if (BusinessType.ADVERT.equals(businessType)) {
             name = "AM";
+        }
+        return name;
+    }
+
+    public static String exportStrConvert(BusinessType businessType) {
+        String name = "";
+        if (businessType.equals(BusinessType.MOBILECOMMUNICATION)) {
+            name = "移动通信类";
+        }
+        if (businessType.equals(BusinessType.SOFTDEVELOP)) {
+            name = "软件开发类";
+        }
+        if (businessType.equals(BusinessType.INTELLIGENCESYSTEM)) {
+            name = "智能系统集成类";
+        }
+        if (businessType.equals(BusinessType.ADVERT)) {
+            name = "广告策划营销类";
         }
         return name;
     }

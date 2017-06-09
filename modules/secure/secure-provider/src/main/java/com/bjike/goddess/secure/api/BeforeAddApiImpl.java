@@ -30,11 +30,6 @@ public class BeforeAddApiImpl implements BeforeAddAPI {
     }
 
     @Override
-    public BeforeAddBO completeAndConfirm(BeforeAddTO to) throws SerException {
-        return beforeAddSer.completeAndConfirm(to);
-    }
-
-    @Override
     public BeforeAddBO delete(String id) throws SerException {
         return beforeAddSer.delete(id);
     }
@@ -47,5 +42,35 @@ public class BeforeAddApiImpl implements BeforeAddAPI {
     @Override
     public BeforeAddBO findByID(String id) throws SerException {
         return beforeAddSer.findByID(id);
+    }
+
+    @Override
+    public void send() throws SerException {
+        beforeAddSer.send();
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        beforeAddSer.quartz();
+    }
+
+    @Override
+    public BeforeAddBO complete(BeforeAddTO to) throws SerException {
+        return beforeAddSer.complete(to);
+    }
+
+    @Override
+    public void add(String id) throws SerException {
+        beforeAddSer.add(id);
+    }
+
+    @Override
+    public Long count(BeforeAddDTO dto) throws SerException {
+        return beforeAddSer.count(dto);
+    }
+
+    @Override
+    public void edit(BeforeAddTO to) throws SerException {
+        beforeAddSer.edit(to);
     }
 }

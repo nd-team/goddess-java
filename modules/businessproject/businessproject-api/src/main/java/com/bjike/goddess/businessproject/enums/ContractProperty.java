@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 合同属性
  *
@@ -14,10 +16,12 @@ public enum ContractProperty {
     /**
      * 框架合同
      */
+    @ExcelValue(name = "框架合同")
     FRAMECONTRACT(0),
     /**
      * 单次合同
      */
+    @ExcelValue(name = "单次合同")
     SINGLECONTRACT(1);
 
     private int code;
@@ -47,6 +51,16 @@ public enum ContractProperty {
             name = "框架合同";
         }
         if (code == ContractProperty.SINGLECONTRACT.getCode()) {
+            name = "单次合同";
+        }
+        return name;
+    }
+    public static String exportStrConvert(ContractProperty contractProperty) {
+        String name = "";
+        if (contractProperty.equals(ContractProperty.FRAMECONTRACT)) {
+            name = "框架合同";
+        }
+        if (contractProperty.equals( ContractProperty.SINGLECONTRACT)) {
             name = "单次合同";
         }
         return name;

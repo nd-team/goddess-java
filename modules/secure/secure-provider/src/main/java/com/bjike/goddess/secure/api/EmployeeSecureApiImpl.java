@@ -29,10 +29,10 @@ public class EmployeeSecureApiImpl implements EmployeeSecureAPI {
         return employeeSecureSer.save(to);
     }
 
-    @Override
-    public List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
-        return employeeSecureSer.findBySql(employeeId);
-    }
+//    @Override
+//    public List<EmployeeSecureBO> findBySql(String[] employeeId) throws SerException {
+//        return employeeSecureSer.findBySql(employeeId);
+//    }
 
     @Override
     public void remove(EmployeeSecureTO to) throws SerException {
@@ -57,5 +57,10 @@ public class EmployeeSecureApiImpl implements EmployeeSecureAPI {
     @Override
     public EmployeeSecureBO delete(String id) throws SerException {
         return employeeSecureSer.delete(id);
+    }
+
+    @Override
+    public Long count(EmployeeSecureDTO dto) throws SerException {
+        return employeeSecureSer.count(dto);
     }
 }

@@ -48,4 +48,9 @@ public class PayDetailApiImpl implements PayDetailAPI {
     public void delete(String id) throws SerException {
         payDetailSer.delete(id);
     }
+
+    @Override
+    public Long count(PayDetailDTO dto) throws SerException {
+        return payDetailSer.count(dto);
+    }
 }

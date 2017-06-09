@@ -9,6 +9,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
+//		JapiClient.delete(true);
 		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/secure/secure-consumer");//主项目位置
@@ -16,9 +17,11 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/secure/secure-api",
 				"common/common-api",
-				"modules/dimission-api",
-				"modules/message-api",
-				"modules/user-api"
+				"modules/dimission/dimission-api",
+				"modules/message/message-api",
+				"modules/quartz/quartz-api",
+				"modules/regularization/regularization-api",
+				"modules/user/user-api"
 		});
 		JapiClient.setFlushServer(true);
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

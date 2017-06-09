@@ -2,7 +2,10 @@ package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -33,8 +36,8 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "arrival", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
-    private String arrival;
+    @Column(name = "city", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String city;
 
     /**
      * 项目组
@@ -45,8 +48,8 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 参保单位
      */
-    @Column(name = "secureDepartment", columnDefinition = "VARCHAR(255)   COMMENT '参保单位'")
-    private String secureDepartment;
+    @Column(name = "company", columnDefinition = "VARCHAR(255)   COMMENT '参保单位'")
+    private String company;
 
     /**
      * 身份证号码
@@ -57,8 +60,8 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 身份证籍贯
      */
-    @Column(name = "idArrival", columnDefinition = "VARCHAR(255)   COMMENT '身份证籍贯'")
-    private String idArrival;
+    @Column(name = "born", columnDefinition = "VARCHAR(255)   COMMENT '身份证籍贯'")
+    private String born;
 
     /**
      * 联系方式
@@ -69,14 +72,14 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 入职时间
      */
-    @Column(name = "startTime", columnDefinition = "DATETIME   COMMENT '入职时间'")
-    private String startTime;
+    @Column(name = "startTime", columnDefinition = "DATE   COMMENT '入职时间'")
+    private LocalDate startTime;
 
     /**
      * 转正时间
      */
-    @Column(name = "officialTime", columnDefinition = "DATETIME   COMMENT '转正时间'")
-    private String officialTime;
+    @Column(name = "officialTime", columnDefinition = "DATE   COMMENT '转正时间'")
+    private LocalDate officialTime;
 
     /**
      * 前购买社保地市
@@ -87,26 +90,26 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 前地市参保时间
      */
-    @Column(name = "beforeTime", columnDefinition = "DATETIME   COMMENT '前地市参保时间'")
-    private String beforeTime;
+    @Column(name = "beforeTime", columnDefinition = "DATE   COMMENT '前地市参保时间'")
+    private LocalDate beforeTime;
 
     /**
      * 参保户口
      */
-    @Column(name = "secureBorn", columnDefinition = "VARCHAR(255)   COMMENT '参保户口'")
-    private String secureBorn;
+    @Column(name = "bornLocal", columnDefinition = "VARCHAR(255)   COMMENT '参保户口'")
+    private String bornLocal;
 
     /**
      * 参保时间
      */
-    @Column(name = "secureTime", columnDefinition = "DATETIME   COMMENT '参保时间'")
-    private String secureTime;
+    @Column(name = "secureTime", columnDefinition = "DATE   COMMENT '参保时间'")
+    private LocalDate secureTime;
 
     /**
      * 参保类型
      */
-    @Column(name = "secureType", columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
-    private String secureType;
+    @Column(name = "type", columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
+    private String type;
 
     /**
      * 购买方式
@@ -117,8 +120,8 @@ public class EmployeeSecure extends BaseEntity {
     /**
      * 已参保年限
      */
-    @Column(name = "time", columnDefinition = "DECIMAL(10,2)   COMMENT '已参保年限'")
-    private Double time;
+    @Column(name = "insuredYear", columnDefinition = "VARCHAR(255)   COMMENT '已参保年限'")
+    private String insuredYear;
 
     /**
      * 运营商务部意见
@@ -144,12 +147,6 @@ public class EmployeeSecure extends BaseEntity {
     @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String description;
 
-    /**
-     * 社保卡信息
-     */
-    @OneToOne(mappedBy = "employeeSecure", fetch = FetchType.EAGER/**, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}**/)
-    private SecureCart secureCart;
-
     public String getName() {
         return name;
     }
@@ -166,12 +163,12 @@ public class EmployeeSecure extends BaseEntity {
         this.employeeNum = employeeNum;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getCity() {
+        return city;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getTeam() {
@@ -182,12 +179,12 @@ public class EmployeeSecure extends BaseEntity {
         this.team = team;
     }
 
-    public String getSecureDepartment() {
-        return secureDepartment;
+    public String getCompany() {
+        return company;
     }
 
-    public void setSecureDepartment(String secureDepartment) {
-        this.secureDepartment = secureDepartment;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getIdCart() {
@@ -198,12 +195,12 @@ public class EmployeeSecure extends BaseEntity {
         this.idCart = idCart;
     }
 
-    public String getIdArrival() {
-        return idArrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setIdArrival(String idArrival) {
-        this.idArrival = idArrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {
@@ -214,19 +211,19 @@ public class EmployeeSecure extends BaseEntity {
         this.tel = tel;
     }
 
-    public String getStartTime() {
+    public LocalDate getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDate startTime) {
         this.startTime = startTime;
     }
 
-    public String getOfficialTime() {
+    public LocalDate getOfficialTime() {
         return officialTime;
     }
 
-    public void setOfficialTime(String officialTime) {
+    public void setOfficialTime(LocalDate officialTime) {
         this.officialTime = officialTime;
     }
 
@@ -238,36 +235,36 @@ public class EmployeeSecure extends BaseEntity {
         this.beforeCity = beforeCity;
     }
 
-    public String getBeforeTime() {
+    public LocalDate getBeforeTime() {
         return beforeTime;
     }
 
-    public void setBeforeTime(String beforeTime) {
+    public void setBeforeTime(LocalDate beforeTime) {
         this.beforeTime = beforeTime;
     }
 
-    public String getSecureBorn() {
-        return secureBorn;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setSecureBorn(String secureBorn) {
-        this.secureBorn = secureBorn;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
-    public String getSecureTime() {
+    public LocalDate getSecureTime() {
         return secureTime;
     }
 
-    public void setSecureTime(String secureTime) {
+    public void setSecureTime(LocalDate secureTime) {
         this.secureTime = secureTime;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -278,12 +275,12 @@ public class EmployeeSecure extends BaseEntity {
         this.payType = payType;
     }
 
-    public Double getTime() {
-        return time;
+    public String getInsuredYear() {
+        return insuredYear;
     }
 
-    public void setTime(Double time) {
-        this.time = time;
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getBusinessAdvice() {
@@ -316,13 +313,5 @@ public class EmployeeSecure extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public SecureCart getSecureCart() {
-        return secureCart;
-    }
-
-    public void setSecureCart(SecureCart secureCart) {
-        this.secureCart = secureCart;
     }
 }

@@ -68,4 +68,13 @@ public interface PayDetailAPI {
     default void delete(String id) throws SerException {
 
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(PayDetailDTO dto) throws SerException;
 }

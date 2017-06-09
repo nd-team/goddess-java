@@ -3,7 +3,6 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
-import com.bjike.goddess.secure.bo.DismissionEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.entity.BeforeRemoveEmployee;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
@@ -28,17 +27,6 @@ public interface BeforeRemoveEmployeeSer extends Ser<BeforeRemoveEmployee, Befor
      * @throws SerException
      */
     default BeforeRemoveEmployeeBO save(BeforeRemoveEmployeeTO to) throws SerException {
-        return null;
-    }
-
-    /**
-     * 审核
-     *
-     * @param to 减员前信息
-     * @return class BeforeRemoveEmployeeBO
-     * @throws SerException
-     */
-    default BeforeRemoveEmployeeBO exam(BeforeRemoveEmployeeTO to) throws SerException {
         return null;
     }
 
@@ -76,12 +64,41 @@ public interface BeforeRemoveEmployeeSer extends Ser<BeforeRemoveEmployee, Befor
     }
 
     /**
-     * 获取所有离职员工
+     * 定时方法，轮询查询离职员工
      *
-     * @return class DismissionEmployeeBO
      * @throws SerException
      */
-    default List<DismissionEmployeeBO> all() throws SerException {
-        return null;
-    }
+    void send() throws SerException;
+
+    /**
+     * 启动定时方法
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 减员
+     *
+     * @param id 减员前id
+     * @throws SerException
+     */
+    void remove(String id) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(BeforeRemoveEmployeeDTO dto) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(BeforeRemoveEmployeeTO to) throws SerException;
 }

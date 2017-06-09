@@ -44,10 +44,9 @@ public class PayDetailSerImpl extends ServiceImpl<PayDetail, PayDetailDTO> imple
     public void edit(PayDetailTO to) throws SerException {
         PayDetail payDetail = super.findById(to.getId());
         LocalDateTime a = payDetail.getCreateTime();
-        LocalDateTime b = payDetail.getModifyTime();
         payDetail = BeanTransform.copyProperties(to, PayDetail.class);
         payDetail.setCreateTime(a);
-        payDetail.setModifyTime(b);
+        payDetail.setModifyTime(LocalDateTime.now());
         super.update(payDetail);
     }
 
@@ -67,5 +66,10 @@ public class PayDetailSerImpl extends ServiceImpl<PayDetail, PayDetailDTO> imple
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
         super.remove(id);
+    }
+
+    @Override
+    public Long count(PayDetailDTO dto) throws SerException {
+        return super.count(dto);
     }
 }

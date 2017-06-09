@@ -1,13 +1,8 @@
 package com.bjike.goddess.secure.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * 员工社保基本信息
@@ -23,130 +18,128 @@ public class EmployeeSecureTO extends BaseTO {
     /**
      * 姓名
      */
-    @NotBlank(groups = {EDIT.class}, message = "姓名不能为空")
+    @NotBlank(groups = {EDIT.class},message = "姓名不能为空")
     private String name;
 
     /**
      * 员工编号
      */
-    @NotBlank(groups = {EDIT.class}, message = "员工编号不能为空")
+    @NotBlank(groups = {EDIT.class},message = "员工编号不能为空")
     private String employeeNum;
 
     /**
      * 地区
      */
-    @NotBlank(groups = {EDIT.class}, message = "地区不能为空")
-    private String arrival;
+    @NotBlank(groups = {EDIT.class},message = "地区不能为空")
+    private String city;
 
     /**
      * 项目组
      */
-    @NotBlank(groups = {EDIT.class}, message = "项目组不能为空")
-    private String group1;
+    @NotBlank(groups = {EDIT.class},message = "项目组不能为空")
+    private String team;
 
     /**
      * 参保单位
      */
-    @NotBlank(groups = {EDIT.class}, message = "参保单位不能为空")
-    private String secureDepartment;
+    @NotBlank(groups = {EDIT.class},message = "参保单位不能为空")
+    private String company;
 
     /**
      * 身份证号码
      */
-    @NotBlank(groups = {EDIT.class}, message = "身份证号码不能为空")
+    @NotBlank(groups = {EDIT.class},message = "身份证号码不能为空")
     private String idCart;
 
     /**
      * 身份证籍贯
      */
-    @NotBlank(groups = {EDIT.class}, message = "身份证籍贯不能为空")
-    private String idArrival;
+    @NotBlank(groups = {EDIT.class},message = "身份证籍贯不能为空")
+    private String born;
 
     /**
      * 联系方式
      */
-    @NotBlank(groups = {EDIT.class}, message = "联系方式不能为空")
+    @NotBlank(groups = {EDIT.class},message = "联系方式不能为空")
     private String tel;
 
     /**
      * 入职时间
      */
-    @NotBlank(groups = {EDIT.class}, message = "入职时间不能为空")
+    @NotBlank(groups = {EDIT.class},message = "入职时间不能为空")
     private String startTime;
 
     /**
      * 转正时间
      */
-    @NotBlank(groups = {EDIT.class}, message = "转正时间不能为空")
+    @NotBlank(groups = {EDIT.class},message = "转正时间不能为空")
     private String officialTime;
 
     /**
      * 前购买社保地市
      */
-    @NotBlank(groups = {EDIT.class}, message = "前购买社保地市不能为空")
+    @NotBlank(groups = {EDIT.class},message = "前购买社保地市不能为空")
     private String beforeCity;
 
     /**
      * 前地市参保时间
      */
-    @NotBlank(groups = {EDIT.class}, message = "前地市参保时间不能为空")
+    @NotBlank(groups = {EDIT.class},message = "前地市参保时间不能为空")
     private String beforeTime;
 
     /**
      * 参保户口
      */
-    @NotBlank(groups = {EDIT.class}, message = "参保户口不能为空")
-    private String secureBorn;
+    @NotBlank(groups = {EDIT.class},message = "参保户口不能为空")
+    private String bornLocal;
 
     /**
      * 参保时间
      */
-    @NotBlank(groups = {EDIT.class}, message = "参保时间不能为空")
+    @NotBlank(groups = {EDIT.class},message = "参保时间不能为空")
     private String secureTime;
 
     /**
      * 参保类型
      */
-    @NotBlank(groups = {EDIT.class}, message = "参保类型不能为空")
-    private String secureType;
+    @NotBlank(groups = {EDIT.class},message = "参保类型不能为空")
+    private String type;
 
     /**
      * 购买方式
      */
-    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
+    @NotBlank(groups = {EDIT.class},message = "购买方式不能为空")
     private String payType;
 
     /**
      * 已参保年限
      */
-    @NotNull(groups = {EDIT.class}, message = "已参保年限不能为空")
-    @DecimalMin(value = "0.00", groups = {EDIT.class}, message = "已参保年限必须大于等于0")
-    private Double time;
+    @NotBlank(groups = {EDIT.class},message = "已参保年限不能为空")
+    private String insuredYear;
 
     /**
      * 运营商务部意见
      */
-    @NotBlank(groups = {EDIT.class}, message = "运营商务部意见不能为空")
+    @NotBlank(groups = {EDIT.class},message = "运营商务部意见不能为空")
     private String businessAdvice;
 
     /**
      * 总经办意见
      */
-    @NotBlank(groups = {EDIT.class}, message = "总经办意见不能为空")
+    @NotBlank(groups = {EDIT.class},message = "总经办意见不能为空")
     private String managerAdvice;
 
     /**
      * 社保状态
      */
-    @NotBlank(groups = {EDIT.class}, message = "社保状态不能为空")
+    @NotBlank(groups = {EDIT.class},message = "社保状态不能为空")
     private String status;
 
     /**
      * 备注
      */
-    @NotBlank(groups = {EDIT.class}, message = "备注不能为空")
+    @NotBlank(groups = {EDIT.class},message = "备注不能为空")
     private String description;
-
 
     public String getName() {
         return name;
@@ -164,28 +157,28 @@ public class EmployeeSecureTO extends BaseTO {
         this.employeeNum = employeeNum;
     }
 
-    public String getArrival() {
-        return arrival;
+    public String getCity() {
+        return city;
     }
 
-    public void setArrival(String arrival) {
-        this.arrival = arrival;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getGroup() {
-        return group1;
+    public String getTeam() {
+        return team;
     }
 
-    public void setGroup(String group1) {
-        this.group1 = group1;
+    public void setTeam(String team) {
+        this.team = team;
     }
 
-    public String getSecureDepartment() {
-        return secureDepartment;
+    public String getCompany() {
+        return company;
     }
 
-    public void setSecureDepartment(String secureDepartment) {
-        this.secureDepartment = secureDepartment;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getIdCart() {
@@ -196,12 +189,12 @@ public class EmployeeSecureTO extends BaseTO {
         this.idCart = idCart;
     }
 
-    public String getIdArrival() {
-        return idArrival;
+    public String getBorn() {
+        return born;
     }
 
-    public void setIdArrival(String idArrival) {
-        this.idArrival = idArrival;
+    public void setBorn(String born) {
+        this.born = born;
     }
 
     public String getTel() {
@@ -244,12 +237,12 @@ public class EmployeeSecureTO extends BaseTO {
         this.beforeTime = beforeTime;
     }
 
-    public String getSecureBorn() {
-        return secureBorn;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setSecureBorn(String secureBorn) {
-        this.secureBorn = secureBorn;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
     public String getSecureTime() {
@@ -260,12 +253,12 @@ public class EmployeeSecureTO extends BaseTO {
         this.secureTime = secureTime;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -276,12 +269,12 @@ public class EmployeeSecureTO extends BaseTO {
         this.payType = payType;
     }
 
-    public Double getTime() {
-        return time;
+    public String getInsuredYear() {
+        return insuredYear;
     }
 
-    public void setTime(Double time) {
-        this.time = time;
+    public void setInsuredYear(String insuredYear) {
+        this.insuredYear = insuredYear;
     }
 
     public String getBusinessAdvice() {

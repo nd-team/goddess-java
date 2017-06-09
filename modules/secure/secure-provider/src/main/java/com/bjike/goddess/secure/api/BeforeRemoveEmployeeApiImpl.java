@@ -2,7 +2,6 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.BeforeRemoveEmployeeBO;
-import com.bjike.goddess.secure.bo.DismissionEmployeeBO;
 import com.bjike.goddess.secure.dto.BeforeRemoveEmployeeDTO;
 import com.bjike.goddess.secure.service.BeforeRemoveEmployeeSer;
 import com.bjike.goddess.secure.to.BeforeRemoveEmployeeTO;
@@ -30,10 +29,6 @@ public class BeforeRemoveEmployeeApiImpl implements BeforeRemoveEmployeeAPI {
         return beforeRemoveEmployeeSer.save(to);
     }
 
-    @Override
-    public BeforeRemoveEmployeeBO exam(BeforeRemoveEmployeeTO to) throws SerException {
-        return beforeRemoveEmployeeSer.exam(to);
-    }
 
     @Override
     public List<BeforeRemoveEmployeeBO> find(BeforeRemoveEmployeeDTO dto) throws SerException {
@@ -51,7 +46,27 @@ public class BeforeRemoveEmployeeApiImpl implements BeforeRemoveEmployeeAPI {
     }
 
     @Override
-    public List<DismissionEmployeeBO> all() throws SerException {
-        return beforeRemoveEmployeeSer.all();
+    public void send() throws SerException {
+        beforeRemoveEmployeeSer.send();
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        beforeRemoveEmployeeSer.quartz();
+    }
+
+    @Override
+    public Long count(BeforeRemoveEmployeeDTO dto) throws SerException {
+       return beforeRemoveEmployeeSer.count(dto);
+    }
+
+    @Override
+    public void remove(String id) throws SerException {
+        beforeRemoveEmployeeSer.remove(id);
+    }
+
+    @Override
+    public void edit(BeforeRemoveEmployeeTO to) throws SerException {
+        beforeRemoveEmployeeSer.edit(to);
     }
 }

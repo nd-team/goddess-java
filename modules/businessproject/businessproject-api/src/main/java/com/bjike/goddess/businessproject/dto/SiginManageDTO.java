@@ -57,6 +57,11 @@ public class SiginManageDTO extends BaseDTO {
      */
     private String makeProject;
 
+    /**
+     * 内部项目名称
+     */
+    private String innerProject;
+
     public BusinessType getBusinessType() {
         return businessType;
     }
@@ -119,5 +124,13 @@ public class SiginManageDTO extends BaseDTO {
 
     public void setMakeProject(String makeProject) {
         this.makeProject = makeProject;
+    }
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
     }
 }

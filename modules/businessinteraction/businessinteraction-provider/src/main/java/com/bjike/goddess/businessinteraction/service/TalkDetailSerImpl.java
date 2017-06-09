@@ -43,7 +43,9 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
 
     @Override
     public Long countInter(TalkDetailDTO talkDetailDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
@@ -64,7 +66,9 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     
     @Override
     public List<TalkDetailBO> listTalkDetail(TalkDetailDTO talkDetailDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }

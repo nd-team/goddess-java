@@ -4,23 +4,20 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
-import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.BuyAPI;
 import com.bjike.goddess.secure.bo.BuyBO;
 import com.bjike.goddess.secure.dto.BuyDTO;
-import com.bjike.goddess.secure.entity.Buy;
 import com.bjike.goddess.secure.to.BuyTO;
 import com.bjike.goddess.secure.vo.BuyVO;
-import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -39,7 +36,7 @@ public class BuyAct {
     private BuyAPI buyAPI;
 
     /**
-     * 编辑和审核
+     * 编辑
      *
      * @param to      购买社保人员信息
      * @param request 请求对象
@@ -47,8 +44,9 @@ public class BuyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit( @Validated({EDIT.class}) BuyTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) BuyTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             BuyBO bo = buyAPI.edit(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BuyVO.class, request));
@@ -64,6 +62,7 @@ public class BuyAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -107,6 +106,22 @@ public class BuyAct {
         try {
             BuyBO bo = buyAPI.findByID(id);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BuyVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(BuyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(buyAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

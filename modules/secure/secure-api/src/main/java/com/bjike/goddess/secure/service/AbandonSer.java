@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.AbandonBO;
-import com.bjike.goddess.secure.entity.Abandon;
 import com.bjike.goddess.secure.dto.AbandonDTO;
+import com.bjike.goddess.secure.entity.Abandon;
 import com.bjike.goddess.secure.to.AbandonTO;
 
 import java.util.List;
@@ -83,4 +83,13 @@ public interface AbandonSer extends Ser<Abandon, AbandonDTO> {
     default List<AbandonBO> findALL() throws SerException {
         return null;
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AbandonDTO dto) throws SerException;
 }

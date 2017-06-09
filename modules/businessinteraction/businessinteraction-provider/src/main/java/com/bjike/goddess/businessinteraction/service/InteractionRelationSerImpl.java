@@ -43,7 +43,9 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Override
     public Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }
@@ -69,7 +71,9 @@ public class InteractionRelationSerImpl extends ServiceImpl<InteractionRelation,
 
     @Override
     public List<InteractionRelationBO> listInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         Boolean permissionLevel = cusPermissionSer.getCusPermission("1");
+        RpcTransmit.transmitUserToken( userToken);
         if ( !permissionLevel) {
             throw new SerException("您的帐号没有权限");
         }

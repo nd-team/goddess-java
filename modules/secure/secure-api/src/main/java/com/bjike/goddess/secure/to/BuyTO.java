@@ -4,8 +4,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 购买社保人员
  *
@@ -20,51 +18,49 @@ public class BuyTO extends BaseTO {
     /**
      * 姓名
      */
-//    @NotBlank(groups = {EDIT.class},message = "姓名不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
     private String name;
 
     /**
      * 参保公司
      */
-//    @NotBlank(groups = {EDIT.class},message = "参保公司不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
     private String company;
 
     /**
      * 参保地市
      */
-//    @NotBlank(groups = {EDIT.class},message = "参保地市不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
     private String city;
 
     /**
      * 参保户口
      */
-//    @NotBlank(groups = {EDIT.class},message = "参保户口不能为空")
-    private String born;
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
+    private String bornLocal;
 
     /**
      * 参保类型
      */
-//    @NotBlank(groups = {EDIT.class},message = "参保类型不能为空")
-    private String secureType;
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
+    private String type;
 
     /**
      * 购买方式
      */
-//    @NotBlank(groups = {EDIT.class},message = "购买方式不能为空")
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
     private String payType;
 
     /**
      * 社保状态
      */
-//    @NotBlank(groups = {EDIT.class},message = "社保状态不能为空")
-    private String secureStatus;
+    @NotBlank(groups = {EDIT.class}, message = "购买方式不能为空")
+    private String status;
 
     /**
      * 审批状态
      */
-//    @NotNull(groups = {EDIT.class},message = "审批状态不能为空")
     private boolean examine;
-
 
     public String getName() {
         return name;
@@ -90,20 +86,20 @@ public class BuyTO extends BaseTO {
         this.city = city;
     }
 
-    public String getBorn() {
-        return born;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setBorn(String born) {
-        this.born = born;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -114,15 +110,15 @@ public class BuyTO extends BaseTO {
         this.payType = payType;
     }
 
-    public String getSecureStatus() {
-        return secureStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSecureStatus(String secureStatus) {
-        this.secureStatus = secureStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public boolean getExamine() {
+    public boolean isExamine() {
         return examine;
     }
 

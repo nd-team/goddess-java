@@ -4,7 +4,6 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -32,8 +31,8 @@ public class RemoveEmployeeTO extends BaseTO {
     /**
      * 当前各地市总参保人员
      */
-    @NotNull(groups = {EDIT.class}, message = "当前各公司参保总人数不能为空")
-    @Min(value = 0, groups = {EDIT.class}, message = "当前各公司参保总人数必须大于等于0")
+    @NotNull(groups = {EDIT.class}, message = "当前各地市总参保人员不能为空")
+    @Min(value = 0, groups = {EDIT.class}, message = "当前各地市总参保人员必须大于等于0")
     private Integer countCity;
 
     /**

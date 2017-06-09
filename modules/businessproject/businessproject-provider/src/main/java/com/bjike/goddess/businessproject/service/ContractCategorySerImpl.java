@@ -1,22 +1,25 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
-import com.bjike.goddess.businessproject.to.ContractCategoryTO;
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.entity.ContractCategory;
+import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
+import com.bjike.goddess.businessproject.to.ContractCategoryTO;
+import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 商务项目合同类型业务实现
@@ -37,9 +40,9 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     /**
      * 核对查看权限（部门级别）
      */
-    private void checkSeeIdentity() throws SerException{
+    private void checkSeeIdentity() throws SerException {
         Boolean flag = cusPermissionSer.getCusPermission("1");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是相应部门的人员，不可以查看");
         }
     }
@@ -47,27 +50,27 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException{
+    private void checkAddIdentity() throws SerException {
         Boolean flag = cusPermissionSer.busCusPermission("2");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是岗位的人员，不可以操作");
         }
     }
 
 
-
     @Override
     public Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
-        Long count = super.count( contractCategoryDTO );
+        Long count = super.count(contractCategoryDTO);
         return count;
     }
+
     @Override
     public ContractCategoryBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
         ContractCategory contractCategory = super.findById(id);
-        return BeanTransform.copyProperties(contractCategory, ContractCategoryBO.class );
+        return BeanTransform.copyProperties(contractCategory, ContractCategoryBO.class);
     }
 
     @Override
@@ -84,11 +87,11 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     public ContractCategoryBO addContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
         checkAddIdentity();
 
-        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
+        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO, ContractCategory.class, true);
         contractCategory.setCreateTime(LocalDateTime.now());
 
-        super.save( contractCategory );
-        ContractCategoryBO bo = BeanTransform.copyProperties( contractCategory , ContractCategoryBO.class);
+        super.save(contractCategory);
+        ContractCategoryBO bo = BeanTransform.copyProperties(contractCategory, ContractCategoryBO.class);
         return bo;
     }
 
@@ -97,14 +100,14 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     public ContractCategoryBO editContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
         checkAddIdentity();
 
-        ContractCategory temp = super.findById( contractCategoryTO.getId());
+        ContractCategory temp = super.findById(contractCategoryTO.getId());
 
-        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO,ContractCategory.class,true);
-        BeanUtils.copyProperties( contractCategory , temp, "id","createTime");
+        ContractCategory contractCategory = BeanTransform.copyProperties(contractCategoryTO, ContractCategory.class, true);
+        BeanUtils.copyProperties(contractCategory, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());
 
-        super.update( temp );
-        ContractCategoryBO bo = BeanTransform.copyProperties( temp , ContractCategoryBO.class);
+        super.update(temp);
+        ContractCategoryBO bo = BeanTransform.copyProperties(temp, ContractCategoryBO.class);
         return bo;
     }
 
@@ -114,5 +117,55 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
         checkAddIdentity();
 
         super.remove(id);
+    }
+
+    @Override
+    public Set<String> allContractNames() throws SerException {
+        List<ContractCategory> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (ContractCategory c : list) {
+            set.add(c.getContractName());
+        }
+        return set;
+    }
+
+    @Override
+    public byte[] exportExcel(ContractCategoryDTO dto) throws SerException {
+        String[] contractNames = dto.getContractNames();
+        List<ContractCategoryExcel> toList = new ArrayList<ContractCategoryExcel>();
+        if ((contractNames != null) && (contractNames.length>0)) {
+            List<ContractCategory> list = super.findByCis(dto);
+            for (String s : contractNames) {
+                if (StringUtils.isNotBlank(s)) {
+                    for (ContractCategory c : list) {
+                        if (s.equals(c.getContractName())) {
+                            ContractCategoryExcel excel = new ContractCategoryExcel();
+                            BeanUtils.copyProperties(c, excel);
+                            toList.add(excel);
+                        }
+                    }
+                }
+            }
+        } else {
+            List<ContractCategory> list = super.findByCis(dto);
+            for (ContractCategory c : list) {
+                ContractCategoryExcel excel = new ContractCategoryExcel();
+                BeanUtils.copyProperties(c, excel);
+                toList.add(excel);
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadExcel(List<ContractCategoryExcel> toList) throws SerException {
+        for (ContractCategoryExcel to : toList) {
+            ContractCategory contractCategory = new ContractCategory();
+            BeanUtils.copyProperties(to, contractCategory);
+            super.save(contractCategory);
+        }
     }
 }

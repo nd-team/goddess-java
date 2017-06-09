@@ -20,4 +20,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.ProjectMonthAPI" id="projectMonthApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.ProjectWeekAPI" id="projectWeekApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.budget.api.WarnAPI" id="warnApiImpl"/>
+
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 </beans>

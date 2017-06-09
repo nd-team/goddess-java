@@ -2,7 +2,9 @@ package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -27,26 +29,26 @@ public class Buy extends BaseEntity {
     /**
      * 参保公司
      */
-    @Column(name = "company",  columnDefinition = "VARCHAR(255)   COMMENT '参保公司'")
+    @Column(name = "company", columnDefinition = "VARCHAR(255)   COMMENT '参保公司'")
     private String company;
 
     /**
      * 参保地市
      */
-    @Column(name = "city",  columnDefinition = "VARCHAR(255)   COMMENT '参保地市'")
+    @Column(name = "city", columnDefinition = "VARCHAR(255)   COMMENT '参保地市'")
     private String city;
 
     /**
      * 参保户口
      */
-    @Column(name = "born", columnDefinition = "VARCHAR(255)   COMMENT '参保户口'")
-    private String born;
+    @Column(name = "bornLocal", columnDefinition = "VARCHAR(255)   COMMENT '参保户口'")
+    private String bornLocal;
 
     /**
      * 参保类型
      */
-    @Column(name = "secureType",  columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
-    private String secureType;
+    @Column(name = "type", columnDefinition = "VARCHAR(255)   COMMENT '参保类型'")
+    private String type;
 
     /**
      * 购买方式
@@ -57,15 +59,14 @@ public class Buy extends BaseEntity {
     /**
      * 社保状态
      */
-    @Column(name = "secureStatus",  columnDefinition = "VARCHAR(255)   COMMENT '社保状态'")
-    private String secureStatus;
+    @Column(name = "status", columnDefinition = "VARCHAR(255)   COMMENT '社保状态'")
+    private String status;
 
     /**
      * 审批状态
      */
-    @Column(name = "examine",  columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '审批状态'")
+    @Column(name = "examine", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '审批状态'")
     private boolean examine;
-
 
     public String getName() {
         return name;
@@ -91,20 +92,20 @@ public class Buy extends BaseEntity {
         this.city = city;
     }
 
-    public String getBorn() {
-        return born;
+    public String getBornLocal() {
+        return bornLocal;
     }
 
-    public void setBorn(String born) {
-        this.born = born;
+    public void setBornLocal(String bornLocal) {
+        this.bornLocal = bornLocal;
     }
 
-    public String getSecureType() {
-        return secureType;
+    public String getType() {
+        return type;
     }
 
-    public void setSecureType(String secureType) {
-        this.secureType = secureType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPayType() {
@@ -115,15 +116,15 @@ public class Buy extends BaseEntity {
         this.payType = payType;
     }
 
-    public String getSecureStatus() {
-        return secureStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSecureStatus(String secureStatus) {
-        this.secureStatus = secureStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public boolean getExamine() {
+    public boolean isExamine() {
         return examine;
     }
 

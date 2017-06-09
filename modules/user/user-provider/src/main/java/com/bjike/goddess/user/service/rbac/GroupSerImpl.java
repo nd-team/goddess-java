@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.bo.rbac.GroupBO;
 import com.bjike.goddess.user.dto.rbac.GroupDTO;
@@ -62,19 +61,24 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         }
 
         Group department = super.findById(id);
-        Group parent = department.getParent();
-        if (null != parent) {
-            children = getChild(parent.getId());
-            parent.setHasChild(children.size() != 0);
-            super.update(parent);
+        if (null != department) {
+            Group parent = department.getParent();
+            if (null != parent) {
+                children = getChild(parent.getId());
+                parent.setHasChild(children.size() != 0);
+                super.update(parent);
+            }
+            super.remove(id);
+        } else {
+            throw new SerException("该记录不存在");
         }
-        super.remove(id);
+
     }
 
     @Transactional
     @Override
     public GroupBO save(GroupTO groupTO) throws SerException {
-        String sysNO= userSer.currentSysNO();
+        String sysNO = userSer.currentSysNO();
         Group group = BeanTransform.copyProperties(groupTO, Group.class, true);
         group.setSystemNO(sysNO);
 
