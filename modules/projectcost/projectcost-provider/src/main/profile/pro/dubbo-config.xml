@@ -28,5 +28,7 @@
     否则不需要配置-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.otherexpenses.api.OtherExpensesAPI"
                      id="otherExpensesApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl" />
+
 
 </beans>
