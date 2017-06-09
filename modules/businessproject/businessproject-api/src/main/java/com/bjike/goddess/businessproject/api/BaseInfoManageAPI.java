@@ -2,10 +2,12 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同基本信息管理业务接口
@@ -89,5 +91,30 @@ public interface BaseInfoManageAPI {
         return null;
     }
 
+    /**
+     * 查找所有内部项目名称
+     * chenjunhao
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allInnerProjects() throws SerException;
 
+    /**
+     * 导出excel
+     * chenjunhao
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(BaseInfoManageDTO dto) throws SerException;
+
+    /**
+     * 导入excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<BaseInfoManageTO> toList) throws SerException;
 }

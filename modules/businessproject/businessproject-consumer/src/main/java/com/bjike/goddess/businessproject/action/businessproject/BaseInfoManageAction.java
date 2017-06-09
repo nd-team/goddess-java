@@ -3,22 +3,33 @@ package com.bjike.goddess.businessproject.action.businessproject;
 import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
+import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.vo.BaseInfoManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,10 +43,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("baseinfomanage")
-public class BaseInfoManageAction {
+public class BaseInfoManageAction extends BaseFileAction {
 
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 列表总条数
@@ -191,9 +204,9 @@ public class BaseInfoManageAction {
      * @version v1
      */
     @GetMapping("v1/listCompany")
-    public Result listCompany(  ) throws ActException {
+    public Result listCompany() throws ActException {
         try {
-            List<String> list = baseInfoManageAPI.listFirstCompany( );
+            List<String> list = baseInfoManageAPI.listFirstCompany();
 
             return ActResult.initialize(list);
         } catch (SerException e) {
@@ -201,5 +214,127 @@ public class BaseInfoManageAction {
         }
     }
 
+    /**
+     * 上传附件
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile")
+    public Result uploadFile(HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+//            String path = "/businessproject";
+            List<InputStream> inputStreams = getInputStreams(request);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 文件附件列表
+     *
+     * @param fileInfo 文件信息
+     * @version v1
+     */
+    @GetMapping("v1/listFile")
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileInfo 文件信息
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+        try {
+            //该文件的路径
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 查找所有内部项目名称
+     * chenjunhao
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allInnerProjects")
+    public Result allInnerProjects() throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.allInnerProjects());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导入Excel
+     * chenjunhao
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/leadExcel")
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<BaseInfoManageExcel> toList = ExcelUtil.excelToClazz(is, BaseInfoManageExcel.class, excel);
+            List<BaseInfoManageTO> tos=new ArrayList<BaseInfoManageTO>();
+            for (BaseInfoManageExcel to:toList){
+                BaseInfoManageTO baseInfoManageTO=BeanTransform.copyProperties(to,BaseInfoManageTO.class);;
+                baseInfoManageTO.setSiginTime(String.valueOf(to.getSiginTime()));
+                baseInfoManageTO.setStartProjectTime(String.valueOf(to.getStartProjectTime()));
+                baseInfoManageTO.setEndProjectTime(String.valueOf(to.getEndProjectTime()));
+                tos.add(baseInfoManageTO);
+            }
+            baseInfoManageAPI.leadExcel(tos);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出Excel
+     * chenjunhao
+     *
+     * @param dto 商务项目合同基本信息管理信息
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(BaseInfoManageDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务项目合同基本信息管理.xlsx";
+            super.writeOutFile(response, baseInfoManageAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 }

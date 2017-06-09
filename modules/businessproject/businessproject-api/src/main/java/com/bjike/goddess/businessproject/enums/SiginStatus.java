@@ -3,16 +3,13 @@ package com.bjike.goddess.businessproject.enums;
 import com.bjike.goddess.common.utils.excel.ExcelValue;
 
 /**
- * 签订状态
- *
- * @Author: [tanghaixiang]
- * @Date: [2017-03-20 19:57]
- * @Description: [签订状态]
+ * @Author: [yewenbo]
+ * @Date: [2017-06-08 10:00]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
 public enum SiginStatus {
-
     /**
      * 已签订
      */
@@ -36,5 +33,4 @@ public enum SiginStatus {
 
 
 }
-
 
