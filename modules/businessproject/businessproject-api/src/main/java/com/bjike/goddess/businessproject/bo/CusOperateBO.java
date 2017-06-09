@@ -11,8 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CusOperateBO extends BaseBO {
-
+public class CusOperateBO extends BaseBO{
 
     /**
      * 操作对象
