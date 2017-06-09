@@ -9,11 +9,11 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * 物资领用
+ * 物资领用归还登记
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用 ]
+ * @Description: [ 物资领用归还登记 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

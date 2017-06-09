@@ -53,4 +53,11 @@ public interface DeviceTypeSer extends Ser<DeviceType, DeviceTypeDTO> {
      */
     void update(DeviceTypeTO to) throws SerException;
 
+    /**
+     * 查询所有设备名称
+     *
+     * @throws SerException
+     */
+    List<String> findAllDeviceNames() throws SerException;
+
 }

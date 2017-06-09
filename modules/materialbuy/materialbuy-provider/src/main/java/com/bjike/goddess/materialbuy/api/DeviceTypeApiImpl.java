@@ -84,4 +84,14 @@ public class DeviceTypeApiImpl implements DeviceTypeAPI {
     public void update(DeviceTypeTO to) throws SerException {
         deviceTypeSer.update(to);
     }
+
+    /**
+     * 查询所有设备名称
+     *
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllDeviceNames() throws SerException {
+        return deviceTypeSer.findAllDeviceNames();
+    }
 }

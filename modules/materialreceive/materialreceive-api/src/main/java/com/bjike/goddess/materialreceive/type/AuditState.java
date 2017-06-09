@@ -1,6 +1,8 @@
 package com.bjike.goddess.materialreceive.type;
 
 /**
+ * 审核状态
+ *
  * @Author: [sunfengtao]
  * @Date: [2017-04-25 08:46]
  * @Description: [ ]

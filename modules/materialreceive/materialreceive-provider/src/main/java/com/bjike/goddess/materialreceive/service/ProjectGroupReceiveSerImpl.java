@@ -19,11 +19,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 项目组领用归还业务实现
+ * 项目组领用归还登记业务实现
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:52 ]
- * @Description: [ 项目组领用归还业务实现 ]
+ * @Description: [ 项目组领用归还登记业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -35,7 +35,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     private MaterialInStockAPI materialInStockAPI;
 
     /**
-     * 分页查询项目组领用归还
+     * 分页查询项目组领用归还登记
      *
      * @return class ProjectGroupReceiveBO
      * @throws SerException
@@ -48,9 +48,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     }
 
     /**
-     * 保存项目组领用归还
+     * 保存项目组领用归还登记
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @return class ProjectGroupReceiveBO
      * @throws SerException
      */
@@ -83,7 +83,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     /**
      * 保存对象
      *
-     * @param to           项目组领用归还to
+     * @param to           项目组领用归还登记to
      * @param quantity     领用物品数量
      * @param materialNoSb 领用物品编号
      * @return
@@ -116,9 +116,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     }
 
     /**
-     * 根据id删除项目组领用归还
+     * 根据id删除项目组领用归还登记
      *
-     * @param id 项目组领用归还唯一标识
+     * @param id 项目组领用归还登记唯一标识
      * @throws SerException
      */
     @Override
@@ -130,7 +130,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     /**
      * 归还物资
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @throws SerException
      */
     @Override
@@ -142,7 +142,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
             throw new SerException("要归还的物资编号为空,无法归还物资.");
         materialInStockAPI.updateUseState(materialNum, UseState.INSTOCK);
 
-        update(to);//更新项目组领用归还
+        update(to);//更新项目组领用归还登记
     }
 
     /**
@@ -158,9 +158,9 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     }
 
     /**
-     * 更新更新项目组领用归还
+     * 更新更新项目组领用归还登记
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @throws SerException
      */
     @Override
@@ -229,7 +229,7 @@ public class ProjectGroupReceiveSerImpl extends ServiceImpl<ProjectGroupReceive,
     }
 
     /**
-     * 更新项目组领用归还
+     * 更新项目组领用归还登记
      *
      * @param to
      * @param model

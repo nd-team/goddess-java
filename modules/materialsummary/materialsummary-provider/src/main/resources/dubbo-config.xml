@@ -71,4 +71,9 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateWeekSumAPI" ref="warrantyStateWeekSumApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialsummary.api.WarrantyStateYearSumAPI" ref="warrantyStateYearSumApiImpl"></dubbo:service>
 
+	<!--引用其他模块的API-->
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.materialbuy.api.DeviceTypeAPI" />
+	<dubbo:reference validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference validation="true" id="materialBuyApiImpl" interface="com.bjike.goddess.materialbuy.api.MaterialBuyAPI"></dubbo:reference>
+
 </beans>

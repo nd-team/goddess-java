@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 物资归还to
+ *
  * @Author: [sunfengtao]
  * @Date: [2017-06-05 16:59]
  * @Description: [ ]

@@ -4,11 +4,11 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialreceive.type.AuditState;
 
 /**
- * 物资领用表现层对象
+ * 物资领用归还登记表现层对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用表现层对象 ]
+ * @Description: [ 物资领用归还登记表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

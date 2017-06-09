@@ -2,6 +2,7 @@ package com.bjike.goddess.materialbuy.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
@@ -131,4 +132,16 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     public List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException {
         return materialBuySer.findWaitPay(dto);
     }
+
+    /**
+     * 地区购买情况汇总
+     *
+     * @return class AreaBuyStatusDayCollectBO
+     * @throws SerException
+     */
+    @Override
+    public List<AreaBuyStatusDayCollectBO> areaBuyStatusDaySum() throws SerException {
+        return materialBuySer.areaBuyStatusDaySum();
+    }
+
 }

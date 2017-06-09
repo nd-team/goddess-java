@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialcheck.api.MaterialAnalyzeAPI;
@@ -23,30 +24,29 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 物资分析-周盘
+ * 物资分析周盘
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-05-08 04:18 ]
- * @Description: [ 物资分析-周盘 ]
+ * @Description: [ 物资分析周盘 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialanalyze_weekly")
+@RequestMapping("materialanalyzeWeekly")
 public class MaterialAnalyzeWeeklyAct {
     
     @Autowired
     private MaterialAnalyzeAPI materialAnalyzeAPI;
 
     /**
-     * 根据id查询物资分析-周盘
+     * 根据id查询物资分析周盘
      *
-     * @param id 物资分析-周盘唯一标识
+     * @param id 物资分析周盘唯一标识
      * @return class MaterialAnalyzeVO
-     * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/devicerepair/{id}")
+    @GetMapping("v1/materialanalyzeWeekly/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialAnalyzeBO bo = materialAnalyzeAPI.findById(id);
@@ -60,8 +60,7 @@ public class MaterialAnalyzeWeeklyAct {
     /**
      * 计算总数量
      *
-     * @param dto 物资分析-周盘dto
-     * @throws ActException
+     * @param dto 物资分析周盘dto
      * @version v1
      */
     @GetMapping("v1/count")
@@ -77,9 +76,8 @@ public class MaterialAnalyzeWeeklyAct {
     /**
      * 获取列表
      *
-     * @param dto 物资分析-周盘dto
+     * @param dto 物资分析周盘dto
      * @return class MaterialAnalyzeVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
@@ -95,17 +93,16 @@ public class MaterialAnalyzeWeeklyAct {
     }
 
     /**
-     * 添加物资分析-周盘
+     * 添加物资分析周盘
      *
-     * @param to 物资分析-周盘to信息
+     * @param to 物资分析周盘to信息
      * @return class MaterialAnalyzeVO
-     * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) MaterialAnalyzeTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) MaterialAnalyzeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            to.setInventoryType(InventoryType.WEEKLY_INVENTORY);
             MaterialAnalyzeBO bo = materialAnalyzeAPI.save(to);
             MaterialAnalyzeVO vo = BeanTransform.copyProperties(bo, MaterialAnalyzeVO.class, request);
             return ActResult.initialize(vo);
@@ -115,12 +112,12 @@ public class MaterialAnalyzeWeeklyAct {
     }
 
     /**
-     * 根据id删除物资分析-周盘
+     * 根据id删除物资分析周盘
      *
-     * @param id 物资分析-周盘唯一标识
-     * @throws ActException
+     * @param id 物资分析周盘唯一标识
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -132,14 +129,14 @@ public class MaterialAnalyzeWeeklyAct {
     }
 
     /**
-     * 编辑物资分析-周盘
+     * 编辑物资分析周盘
      *
-     * @param to 物资分析-周盘to信息
-     * @throws ActException
+     * @param to 物资分析周盘to信息
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) MaterialAnalyzeTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) MaterialAnalyzeTO to, BindingResult result) throws ActException {
         try {
             materialAnalyzeAPI.update(to);
             return new ActResult("edit success!");

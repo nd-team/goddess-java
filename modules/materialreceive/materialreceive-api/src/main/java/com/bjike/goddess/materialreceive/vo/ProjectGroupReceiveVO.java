@@ -1,11 +1,11 @@
 package com.bjike.goddess.materialreceive.vo;
 
 /**
- * 项目组领用归还表现层对象
+ * 项目组领用归还登记表现层对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:52 ]
- * @Description: [ 项目组领用归还表现层对象 ]
+ * @Description: [ 项目组领用归还登记表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

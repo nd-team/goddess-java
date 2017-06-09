@@ -14,6 +14,8 @@
 	<dubbo:consumer check="false" timeout="15000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+
 	<!--配置暴露的公共接口-->
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusDaySumAPI" id="areaBuyStatusDaySumApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialsummary.api.AreaBuyStatusMonthSumAPI" id="areaBuyStatusMonthSumApiImpl"></dubbo:reference>

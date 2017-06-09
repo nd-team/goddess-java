@@ -114,6 +114,7 @@ public class AreaBuyStatusDaySumSerImpl extends ServiceImpl<AreaBuyStatusDaySum,
     @Override
     @Transactional(rollbackFor = SerException.class)
     public List<AreaBuyStatusDaySumBO> summary() throws SerException {
+
         return null;
     }
 

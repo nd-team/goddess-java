@@ -99,7 +99,7 @@ public class TimeCriteriaSetAct {
      * 添加时间条件设置
      *
      * @param to     时间条件设置to
-     * @return class PerformanceScoreVO
+     * @return class TimeCriteriaSetVO
      * @throws ActException
      * @version v1
      */
