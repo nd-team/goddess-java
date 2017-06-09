@@ -28,16 +28,6 @@ public interface BeforeAddAPI {
         return null;
     }
 
-    /**
-     * 补全信息和确认是否购买
-     *
-     * @param to 增员前信息
-     * @return class BeforeAddBO
-     * @throws SerException
-     */
-    default BeforeAddBO completeAndConfirm(BeforeAddTO to) throws SerException {
-        return null;
-    }
 
     /**
      * 删除
@@ -71,4 +61,52 @@ public interface BeforeAddAPI {
     default BeforeAddBO findByID(String id) throws SerException {
         return null;
     }
+
+    /**
+     * 定时方法，查找新转正员工，通知福利模块
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
+
+    /**
+     * 启动定时方法
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 补全信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    BeforeAddBO complete(BeforeAddTO to) throws SerException;
+
+    /**
+     * 新增社保
+     *
+     * @param id id
+     * @throws SerException
+     */
+    void add(String id) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(BeforeAddDTO dto) throws SerException;
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    void edit(BeforeAddTO to) throws SerException;
 }

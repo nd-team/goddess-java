@@ -1,12 +1,14 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -19,6 +21,17 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
+
+
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 签订与立项列表总条数
@@ -98,5 +111,32 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     default List<String> listArea( ) throws  SerException {
         return null;
     }
+
+
+    /**
+     *  导入
+     * @param siginManageTO 合同签订与立项信息
+     * @return class SiginManageBO
+     */
+    default SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException { return null;}
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(SiginManageDTO dto ) throws SerException;
+
+
+    /**
+     * 获取所有内部项目名称
+     *
+     * @return class String
+     */
+    default List<String> listInnerProject() throws SerException {
+        return null;
+    }
+
+
 
 }

@@ -156,7 +156,7 @@ public class MaterialInventoryWeeklyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/operatorStatus/{id}")
+    @PutMapping("v1/operatorStatus/{id}")
     public Result operatorConfirm(@PathVariable String id, @RequestParam(value = "operatorStatus") String operatorStatus) throws ActException {
         try {
             materialInventoryAPI.operatorConfirm(id, operatorStatus);
@@ -174,7 +174,7 @@ public class MaterialInventoryWeeklyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/accountModuleConfirm/{id}")
+    @PutMapping("v1/accountModuleConfirm/{id}")
     public Result accountModuleConfirm(@PathVariable final String id, @RequestParam(value = "accountStatus") String accountStatus) throws ActException {
         try {
             materialInventoryAPI.accountModuleConfirm(id, accountStatus);
@@ -192,7 +192,7 @@ public class MaterialInventoryWeeklyAct {
      * @throws ActException
      * @version v1
      */
-    @PatchMapping
+    @PutMapping
     public Result zjbConfirm(@PathVariable String id, @RequestParam(value = "zjbStatus") String zjbStatus) throws ActException {
         try {
             materialInventoryAPI.zjbConfirm(id, zjbStatus);

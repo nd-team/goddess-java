@@ -36,7 +36,7 @@ public class BidOpeningInfo extends BaseEntity {
     /**
      * 开标时间
      */
-    @Column(name = "bidOpeningTime", columnDefinition = "DATETIME   COMMENT '开标时间String'")
+    @Column(name = "bidOpeningTime", columnDefinition = "DATETIME   COMMENT '开标时间'")
     private LocalDateTime bidOpeningTime;
     /**
      * 开标地点

@@ -8,4 +8,6 @@ dependencies {
     }
     compile group: 'org.mengyun', name: 'tcc-transaction-api', version: "$tcc_version"
     compile group: 'com.fasterxml', name: 'classmate', version: "$classmate_version"
+    compile group: 'com.alibaba', name: 'fastjson', version: "$fastjson_version"
+
 }

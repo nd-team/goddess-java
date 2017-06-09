@@ -165,7 +165,7 @@ public class MarketServeRecordAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/fundmodule/{id}")
+    @PutMapping("v1/fundmodule/{id}")
     public Result fundModuleOpinion(@PathVariable(value = "id") String id, @RequestParam(value = "fundModuleOpinion") String fundModuleOpinion) throws ActException {
         try {
             marketServeRecordAPI.fundModuleOpinion(id, fundModuleOpinion);
@@ -184,7 +184,7 @@ public class MarketServeRecordAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/executive/{id}")
+    @PutMapping("v1/executive/{id}")
     public Result executiveOpinion(@PathVariable String id, @RequestParam(value = "executiveAuditOpinion") AuditType executiveAuditOpinion) throws ActException {
         try {
             marketServeRecordAPI.executiveOpinion(id, executiveAuditOpinion);

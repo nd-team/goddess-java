@@ -81,4 +81,13 @@ public interface AbandonAPI {
     default List<AbandonBO> findALL() throws SerException {
         return null;
     }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AbandonDTO dto) throws SerException;
 }

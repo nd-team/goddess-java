@@ -7,6 +7,7 @@ import com.bjike.goddess.materialreceive.dto.MaterialReceiveDTO;
 import com.bjike.goddess.materialreceive.entity.MaterialReceive;
 import com.bjike.goddess.materialreceive.service.MaterialReceiveSer;
 import com.bjike.goddess.materialreceive.to.MaterialReceiveTO;
+import com.bjike.goddess.materialreceive.to.MaterialReturnTO;
 import com.bjike.goddess.materialreceive.type.AuditState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,11 +125,11 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     /**
      * 物资归还
      *
-     * @param to 物资领用to
+     * @param to 物资归还to
      * @throws SerException
      */
     @Override
-    public void materialReturn(MaterialReceiveTO to) throws SerException {
+    public void materialReturn(MaterialReturnTO to) throws SerException {
         materialReceiveSer.materialReturn(to);
     }
 }

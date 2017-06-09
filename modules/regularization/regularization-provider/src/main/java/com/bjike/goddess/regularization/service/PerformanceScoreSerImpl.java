@@ -1,5 +1,6 @@
 package com.bjike.goddess.regularization.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,10 +54,27 @@ public class PerformanceScoreSerImpl extends ServiceImpl<PerformanceScore, Perfo
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public PerformanceScoreBO save(PerformanceScoreTO to) throws SerException {
+        checkPostHierarchyUnique(to);
         PerformanceScore entity = BeanTransform.copyProperties(to, PerformanceScore.class, true);
         entity = super.save(entity);
         PerformanceScoreBO bo = BeanTransform.copyProperties(entity, PerformanceScoreBO.class);
         return bo;
+    }
+
+    /**
+     * 校验数据库中是否存在相同的岗位层级
+     *
+     * @param to
+     * @throws SerException
+     */
+    private void checkPostHierarchyUnique(PerformanceScoreTO to) throws SerException {
+        String postHierarchy = to.getPostHierarchy();
+        PerformanceScoreDTO dto = new PerformanceScoreDTO();
+        dto.getConditions().add(Restrict.eq("postHierarchy", postHierarchy));
+        List<PerformanceScore> list = super.findByCis(dto);
+        if (!CollectionUtils.isEmpty(list)) {
+            throw new SerException("岗位层级必须唯一,无法进行该操作,请直接在原有基础上编辑.");
+        }
     }
 
     /**

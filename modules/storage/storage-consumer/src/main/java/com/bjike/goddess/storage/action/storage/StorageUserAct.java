@@ -14,10 +14,7 @@ import com.bjike.goddess.storage.vo.StorageUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -77,8 +74,8 @@ public class StorageUserAct {
      * @param token 登录存储用户storageToken
      * @version v1
      */
-    @PostMapping("v1/sign-out/{token}")
-    public Result signOut(@RequestParam String token) throws ActException {
+    @GetMapping("v1/sign-out/{token}")
+    public Result signOut(@PathVariable String token) throws ActException {
         try {
             Boolean result = storageUserAPI.signOut(token);
             return ActResult.initialize(result);

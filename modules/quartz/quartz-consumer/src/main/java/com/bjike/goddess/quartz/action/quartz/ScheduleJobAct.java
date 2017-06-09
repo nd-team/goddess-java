@@ -123,7 +123,7 @@ public class ScheduleJobAct {
      * @param enable 开启：true，关闭：false
      * @version v1
      */
-    @PatchMapping("v1/enable/{id}/{enable}")
+    @PutMapping("v1/enable/{id}/{enable}")
     public Result enable(@PathVariable String id, @PathVariable boolean enable) throws ActException {
         try {
             scheduleJobAPI.enable(id, enable);

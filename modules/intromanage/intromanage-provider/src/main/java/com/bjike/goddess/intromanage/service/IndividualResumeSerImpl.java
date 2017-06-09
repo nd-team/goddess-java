@@ -59,6 +59,37 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private UserAPI userAPI;
 
     /**
+     * 根据id查询个人简介
+     *
+     * @param id 个人简介唯一标识
+     * @return class IndividualResume
+     * @throws SerException
+     */
+    @Override
+    public IndividualResume findById(String id) throws SerException {
+        IndividualResume individualResume = super.findById(id);
+        if (individualResume == null) {
+            return null;
+        }
+        UserBO userBO = userAPI.currentUser();
+        String currentUsername = userBO.getUsername();//获取当前用户姓名
+        List<IndividualDisplayUser> users = individualDisplayUserSer.findAll();
+        for (IndividualDisplayUser model : users) {
+            String usernames = model.getUsernames();
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) >= 0);
+            if (containsUsername) {
+                String individualDisplayId = model.getDisplayId();
+                IndividualDisplayField individualDisplayField = individualDisplayFieldSer.findById(individualDisplayId);
+                //设置需要显示的字段
+                checkShowFields(individualDisplayField, individualResume);
+                break;
+            }
+        }
+
+        return individualResume;
+    }
+
+    /**
      * 分页查询个人简介
      *
      * @return class IndividualResumeBO
@@ -72,129 +103,139 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         List<IndividualDisplayUser> users = individualDisplayUserSer.findAll();
         for (IndividualDisplayUser model : users) {
             String usernames = model.getUsernames();
-            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) > 0);
+            boolean containsUsername = StringUtils.isNotBlank(usernames) && (usernames.indexOf(currentUsername) >= 0);
             if (containsUsername) {
                 String individualDisplayId = model.getDisplayId();
                 IndividualDisplayField individualDisplayField = individualDisplayFieldSer.findById(individualDisplayId);
                 //设置需要显示的字段
                 for (IndividualResume individualResume : list) {
-                    if (individualDisplayField.getIfShowArea() != Boolean.TRUE) {
-                        individualResume.setArea(null);
-                    }
-                    if (individualDisplayField.getIfShowDepartment() != Boolean.TRUE) {
-                        individualResume.setDepartment(null);
-                    }
-                    if (individualDisplayField.getIfShowName() != Boolean.TRUE) {
-                        individualResume.setName(null);
-                    }
-                    if (individualDisplayField.getIfShowEmployeeId() != Boolean.TRUE) {
-                        individualResume.setEmployeeId(null);
-                    }
-                    if (individualDisplayField.getIfShowPost() != Boolean.TRUE) {
-                        individualResume.setPost(null);
-                    }
-                    if (individualDisplayField.getIfShowEmsil() != Boolean.TRUE) {
-                        individualResume.setEMsil(null);
-                    }
-                    if (individualDisplayField.getIfShowEntryDate() != Boolean.TRUE) {
-                        individualResume.setEntryDate(null);
-                    }
-                    if (individualDisplayField.getIfShowTenancyDuration() != Boolean.TRUE) {
-                        individualResume.setTenancyDuration(null);
-                    }
-                    if (individualDisplayField.getIfShowPositiveTime() != Boolean.TRUE) {
-                        individualResume.setPositiveTime(null);
-                    }
-                    if (individualDisplayField.getIfShowWhetherSocialSecurity() != Boolean.TRUE) {
-                        individualResume.setWhetherSocialSecurity(null);
-                    }
-                    if (individualDisplayField.getIfShowBuySocialSecurityTime() != Boolean.TRUE) {
-                        individualResume.setBuySocialSecurityTime(null);
-                    }
-                    if (individualDisplayField.getIfShowSkillRank() != Boolean.TRUE) {
-                        individualResume.setSkillRank(null);
-                    }
-                    if (individualDisplayField.getIfShowManageGrade() != Boolean.TRUE) {
-                        individualResume.setManageGrade(null);
-                    }
-                    if (individualDisplayField.getIfShowItemCommission() != Boolean.TRUE) {
-                        individualResume.setItemCommission(null);
-                    }
-                    if (individualDisplayField.getIfShowManageCommission() != Boolean.TRUE) {
-                        individualResume.setManageCommission(null);
-                    }
-                    if (individualDisplayField.getIfShowAwardScore() != Boolean.TRUE) {
-                        individualResume.setAwardScore(null);
-                    }
-                    if (individualDisplayField.getIfShowPenaltyScore() != Boolean.TRUE) {
-                        individualResume.setPenaltyScore(null);
-                    }
-                    if (individualDisplayField.getIfShowEmpiricalValue() != Boolean.TRUE) {
-                        individualResume.setEmpiricalValue(null);
-                    }
-                    if (individualDisplayField.getIfShowSubsidyAmount() != Boolean.TRUE) {
-                        individualResume.setSubsidyAmount(null);
-                    }
-                    if (individualDisplayField.getIfShowAnnualLeave() != Boolean.TRUE) {
-                        individualResume.setAnnualLeave(null);
-                    }
-                    if (individualDisplayField.getIfShowIndividualVision() != Boolean.TRUE) {
-                        individualResume.setIndividualVision(null);
-                    }
-                    if (individualDisplayField.getIfShowPicture() != Boolean.TRUE) {
-                        individualResume.setPicture(null);
-                    }
-                    if (individualDisplayField.getIfShowHobbies() != Boolean.TRUE) {
-                        individualResume.setHobbies(null);
-                    }
-                    if (individualDisplayField.getIfShowPersonalEmail() != Boolean.TRUE) {
-                        individualResume.setPersonalEmail(null);
-                    }
-                    if (individualDisplayField.getIfShowDateOfBirth() != Boolean.TRUE) {
-                        individualResume.setDateOfBirth(null);
-                    }
-                    if (individualDisplayField.getIfShowQqNumber() != Boolean.TRUE) {
-                        individualResume.setQqNumber(null);
-                    }
-                    if (individualDisplayField.getIfShowWechatId() != Boolean.TRUE) {
-                        individualResume.setWechatId(null);
-                    }
-                    if (individualDisplayField.getIfShowMobile() != Boolean.TRUE) {
-                        individualResume.setMobile(null);
-                    }
-                    if (individualDisplayField.getIfShowEmergencyContact() != Boolean.TRUE) {
-                        individualResume.setEmergencyContact(null);
-                    }
-                    if (individualDisplayField.getIfShowEmergencyContactPhone() != Boolean.TRUE) {
-                        individualResume.setEmergencyContactPhone(null);
-                    }
-                    if (individualDisplayField.getIfShowEducation() != Boolean.TRUE) {
-                        individualResume.setEducation(null);
-                    }
-                    if (individualDisplayField.getIfShowSpecialty() != Boolean.TRUE) {
-                        individualResume.setSpecialty(null);
-                    }
-                    if (individualDisplayField.getIfShowAcademy() != Boolean.TRUE) {
-                        individualResume.setAcademy(null);
-                    }
-                    if (individualDisplayField.getIfShowGraduationTime() != Boolean.TRUE) {
-                        individualResume.setGraduationTime(null);
-                    }
-                    if (individualDisplayField.getIfShowNowResidence() != Boolean.TRUE) {
-                        individualResume.setNowResidence(null);
-                    }
-                    if (individualDisplayField.getIfShowRegisteredAddress() != Boolean.TRUE) {
-                        individualResume.setRegisteredAddress(null);
-                    }
-                    if (individualDisplayField.getIfShowWorkExperience() != Boolean.TRUE) {
-                        individualResume.setWorkExperience(null);
-                    }
+                    checkShowFields(individualDisplayField, individualResume);
                 }
                 break;
             }
         }
-        List<IndividualResumeBO> boList = BeanTransform.copyProperties(list, IndividualResume.class, true);
+        List<IndividualResumeBO> boList = BeanTransform.copyProperties(list, IndividualResumeBO.class);
         return boList;
+    }
+
+    /**
+     * 校验是否显示字段
+     *
+     * @param individualDisplayField 个人简介显示字段
+     * @param individualResume 个人简介
+     */
+    private void checkShowFields(IndividualDisplayField individualDisplayField, IndividualResume individualResume) {
+        if (individualDisplayField.getIfShowArea() != Boolean.TRUE) {
+            individualResume.setArea(null);
+        }
+        if (individualDisplayField.getIfShowDepartment() != Boolean.TRUE) {
+            individualResume.setDepartment(null);
+        }
+        if (individualDisplayField.getIfShowName() != Boolean.TRUE) {
+            individualResume.setName(null);
+        }
+        if (individualDisplayField.getIfShowEmployeeId() != Boolean.TRUE) {
+            individualResume.setEmployeeId(null);
+        }
+        if (individualDisplayField.getIfShowPost() != Boolean.TRUE) {
+            individualResume.setPost(null);
+        }
+        if (individualDisplayField.getIfShowEmsil() != Boolean.TRUE) {
+            individualResume.setEMsil(null);
+        }
+        if (individualDisplayField.getIfShowEntryDate() != Boolean.TRUE) {
+            individualResume.setEntryDate(null);
+        }
+        if (individualDisplayField.getIfShowTenancyDuration() != Boolean.TRUE) {
+            individualResume.setTenancyDuration(null);
+        }
+        if (individualDisplayField.getIfShowPositiveTime() != Boolean.TRUE) {
+            individualResume.setPositiveTime(null);
+        }
+        if (individualDisplayField.getIfShowWhetherSocialSecurity() != Boolean.TRUE) {
+            individualResume.setWhetherSocialSecurity(null);
+        }
+        if (individualDisplayField.getIfShowBuySocialSecurityTime() != Boolean.TRUE) {
+            individualResume.setBuySocialSecurityTime(null);
+        }
+        if (individualDisplayField.getIfShowSkillRank() != Boolean.TRUE) {
+            individualResume.setSkillRank(null);
+        }
+        if (individualDisplayField.getIfShowManageGrade() != Boolean.TRUE) {
+            individualResume.setManageGrade(null);
+        }
+        if (individualDisplayField.getIfShowItemCommission() != Boolean.TRUE) {
+            individualResume.setItemCommission(null);
+        }
+        if (individualDisplayField.getIfShowManageCommission() != Boolean.TRUE) {
+            individualResume.setManageCommission(null);
+        }
+        if (individualDisplayField.getIfShowAwardScore() != Boolean.TRUE) {
+            individualResume.setAwardScore(null);
+        }
+        if (individualDisplayField.getIfShowPenaltyScore() != Boolean.TRUE) {
+            individualResume.setPenaltyScore(null);
+        }
+        if (individualDisplayField.getIfShowEmpiricalValue() != Boolean.TRUE) {
+            individualResume.setEmpiricalValue(null);
+        }
+        if (individualDisplayField.getIfShowSubsidyAmount() != Boolean.TRUE) {
+            individualResume.setSubsidyAmount(null);
+        }
+        if (individualDisplayField.getIfShowAnnualLeave() != Boolean.TRUE) {
+            individualResume.setAnnualLeave(null);
+        }
+        if (individualDisplayField.getIfShowIndividualVision() != Boolean.TRUE) {
+            individualResume.setIndividualVision(null);
+        }
+        if (individualDisplayField.getIfShowPicture() != Boolean.TRUE) {
+            individualResume.setPicture(null);
+        }
+        if (individualDisplayField.getIfShowHobbies() != Boolean.TRUE) {
+            individualResume.setHobbies(null);
+        }
+        if (individualDisplayField.getIfShowPersonalEmail() != Boolean.TRUE) {
+            individualResume.setPersonalEmail(null);
+        }
+        if (individualDisplayField.getIfShowDateOfBirth() != Boolean.TRUE) {
+            individualResume.setDateOfBirth(null);
+        }
+        if (individualDisplayField.getIfShowQqNumber() != Boolean.TRUE) {
+            individualResume.setQqNumber(null);
+        }
+        if (individualDisplayField.getIfShowWechatId() != Boolean.TRUE) {
+            individualResume.setWechatId(null);
+        }
+        if (individualDisplayField.getIfShowMobile() != Boolean.TRUE) {
+            individualResume.setMobile(null);
+        }
+        if (individualDisplayField.getIfShowEmergencyContact() != Boolean.TRUE) {
+            individualResume.setEmergencyContact(null);
+        }
+        if (individualDisplayField.getIfShowEmergencyContactPhone() != Boolean.TRUE) {
+            individualResume.setEmergencyContactPhone(null);
+        }
+        if (individualDisplayField.getIfShowEducation() != Boolean.TRUE) {
+            individualResume.setEducation(null);
+        }
+        if (individualDisplayField.getIfShowSpecialty() != Boolean.TRUE) {
+            individualResume.setSpecialty(null);
+        }
+        if (individualDisplayField.getIfShowAcademy() != Boolean.TRUE) {
+            individualResume.setAcademy(null);
+        }
+        if (individualDisplayField.getIfShowGraduationTime() != Boolean.TRUE) {
+            individualResume.setGraduationTime(null);
+        }
+        if (individualDisplayField.getIfShowNowResidence() != Boolean.TRUE) {
+            individualResume.setNowResidence(null);
+        }
+        if (individualDisplayField.getIfShowRegisteredAddress() != Boolean.TRUE) {
+            individualResume.setRegisteredAddress(null);
+        }
+        if (individualDisplayField.getIfShowWorkExperience() != Boolean.TRUE) {
+            individualResume.setWorkExperience(null);
+        }
     }
 
     /**

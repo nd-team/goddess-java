@@ -24,6 +24,11 @@ public class FirmIntroVO {
     private String firmId;
 
     /**
+     * 公司名称
+     */
+    private String firmName;
+
+    /**
      * 公司性质
      */
     private String firmNature;
@@ -117,6 +122,14 @@ public class FirmIntroVO {
 
     public void setFirmId(String firmId) {
         this.firmId = firmId;
+    }
+
+    public String getFirmName() {
+        return firmName;
+    }
+
+    public void setFirmName(String firmName) {
+        this.firmName = firmName;
     }
 
     public String getFirmNature() {

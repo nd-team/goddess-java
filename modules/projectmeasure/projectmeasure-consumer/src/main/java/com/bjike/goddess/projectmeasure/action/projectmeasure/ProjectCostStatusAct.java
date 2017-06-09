@@ -8,9 +8,11 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.api.ProjectCostStatusAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectCostStatusBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectCostStatusDTO;
+import com.bjike.goddess.projectmeasure.entity.ProjectBasicInfo;
 import com.bjike.goddess.projectmeasure.to.ProjectCostStatusTO;
 import com.bjike.goddess.projectmeasure.vo.ProjectCostStatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class ProjectCostStatusAct {
 
     @Autowired
     private ProjectCostStatusAPI projectCostStatusAPI;
+
+    @Autowired
+    private ProjectBasicInfoAPI projectBasicInfoAPI;
 
     /**
      * 根据id查询项目费用情况
@@ -146,6 +151,23 @@ public class ProjectCostStatusAct {
         try {
             projectCostStatusAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/findAllProjectNames")
+    public Result findAllProjectNames() throws ActException {
+        try {
+            List<String> list = projectBasicInfoAPI.findAllProjectNames();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

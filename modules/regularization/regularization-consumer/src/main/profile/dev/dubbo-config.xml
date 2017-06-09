@@ -19,5 +19,6 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.ScoreFormulaSetAPI" id="scoreFormulaSetApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.regularization.api.TimeCriteriaSetAPI" id="timeCriteriaSetApiImpl"/>
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 
 </beans>

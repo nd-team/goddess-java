@@ -16,4 +16,6 @@
 
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialreceive.api.MaterialReceiveAPI" id="materialReceiveApiImpl"></dubbo:reference>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.materialreceive.api.ProjectGroupReceiveAPI" id="projectGroupReceiveApiImpl"></dubbo:reference>
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
 </beans>

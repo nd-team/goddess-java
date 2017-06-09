@@ -73,6 +73,7 @@ public class OrganizeContentSerImpl extends ServiceImpl<OrganizeContent, Organiz
         String host = entity.getHost();
         entity = BeanTransform.copyProperties(to, OrganizeContent.class, true);
         entity.setCreateTime(a);
+        entity.setMeetingType("交流会");
         entity.setOrganization(name);
         entity.setHost(host);
         entity.setMeetingNumber(number);

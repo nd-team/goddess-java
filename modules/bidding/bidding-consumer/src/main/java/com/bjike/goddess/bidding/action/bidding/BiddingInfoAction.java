@@ -159,7 +159,7 @@ public class BiddingInfoAction {
     public Result search(BiddingInfoDTO biddingInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<BiddingInfoVO> biddingInfoVOS = BeanTransform.copyProperties(
-                    biddingInfoAPI.searchBiddingInfo(biddingInfoDTO), BiddingInfoVO.class);
+                    biddingInfoAPI.searchBiddingInfo(biddingInfoDTO), BiddingInfoVO.class,request);
             return ActResult.initialize(biddingInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

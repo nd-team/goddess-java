@@ -19,15 +19,10 @@ public class ManagementScoreTO extends BaseTO {
     public interface IManagementScore{}
 
     /**
-     * 管理层
-     */
-    private String management;
-
-    /**
      * 管理层意见
      */
     @NotBlank(groups = {ManagementScoreTO.IManagementScore.class}, message = "管理层意见不能为空")
-    private String opinion;
+        private String opinion;
 
     /**
      * 评分等级
@@ -40,14 +35,6 @@ public class ManagementScoreTO extends BaseTO {
      */
     @NotNull(groups = {ManagementScoreTO.IManagementScore.class}, message = "具体分数不能为空")
     private Integer specificScore;
-
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
 
     public String getOpinion() {
         return opinion;

@@ -117,6 +117,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置发送间隔
+        if(null == collectEmail.getCollectSendUnit()){
+            throw new SerException("发送单位不能为空");
+        }
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
         collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
@@ -485,8 +488,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @throws SerException
      */
     public List<CollectEmailBO> calcuteBaseInfoCount(List<String> firstCompanys,List<Integer> busType, List<Integer> cooperStatus,
-                                                  List<Integer> distribute, List<String> signConditions,
-                                                  List<CollectEmailBO> collectEmailBOList) throws SerException {
+                                                     List<Integer> distribute, List<String> signConditions,
+                                                     List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer companyStr = new StringBuffer("");
         for(String type : firstCompanys){
             companyStr.append( "'"+type+"',");
@@ -583,9 +586,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @throws SerException
      */
     public List<CollectEmailBO> calcuteSiginCount(List<String> areas,List<Integer> busType, List<Integer> cooperStatus,
-                                             List<Integer> distribute, List<String> makeProjects,
-                                             List<String> signConditions,
-                                             List<CollectEmailBO> collectEmailBOList) throws SerException {
+                                                  List<Integer> distribute, List<String> makeProjects,
+                                                  List<String> signConditions,
+                                                  List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer areaStr = new StringBuffer("");
         for(String type : areas){
             areaStr.append( "'"+type+"',");

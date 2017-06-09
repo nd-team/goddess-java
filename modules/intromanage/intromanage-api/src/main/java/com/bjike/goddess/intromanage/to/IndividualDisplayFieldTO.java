@@ -1,6 +1,10 @@
 package com.bjike.goddess.intromanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 个人简介显示字段
@@ -16,186 +20,223 @@ public class IndividualDisplayFieldTO extends BaseTO {
     /**
      * 是否显示地区
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示地区不能为空")
     private Boolean ifShowArea;
 
     /**
      * 是否显示部门/项目组
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示部门/项目组不能为空")
     private Boolean ifShowDepartment;
 
     /**
      * 是否显示姓名
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示姓名不能为空")
     private Boolean ifShowName;
 
     /**
      * 是否显示员工编号
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示员工编号不能为空")
     private Boolean ifShowEmployeeId;
 
     /**
      * 是否显示岗位
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示岗位不能为空")
     private Boolean ifShowPost;
 
     /**
      * 是否显示工作邮箱
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示工作邮箱不能为空")
     private Boolean ifShowEmsil;
 
     /**
      * 是否显示入职日期
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示入职日期不能为空")
     private Boolean ifShowEntryDate;
 
     /**
      * 是否显示在职日期
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示在职日期不能为空")
     private Boolean ifShowTenancyDuration;
 
     /**
      * 是否显示转正时间
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示转正时间不能为空")
     private Boolean ifShowPositiveTime;
 
     /**
      * 是否显示是否购买社保
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示是否购买社保不能为空")
     private Boolean ifShowWhetherSocialSecurity;
 
     /**
      * 是否显示社保购买时间
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示社保购买时间不能为空")
     private Boolean ifShowBuySocialSecurityTime;
 
     /**
      * 是否显示技能等级
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示技能等级不能为空")
     private Boolean ifShowSkillRank;
 
     /**
      * 是否显示管理等级
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示管理等级不能为空")
     private Boolean ifShowManageGrade;
 
     /**
      * 是否显示项目提成
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示项目提成不能为空")
     private Boolean ifShowItemCommission;
 
     /**
      * 是否显示管理提成
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示管理提成不能为空")
     private Boolean ifShowManageCommission;
 
     /**
      * 是否显示奖励分数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示奖励分数不能为空")
     private Boolean ifShowAwardScore;
 
     /**
      * 是否显示处罚分数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示处罚分数不能为空")
     private Boolean ifShowPenaltyScore;
 
     /**
      * 是否显示经验值
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示经验值不能为空")
     private Boolean ifShowEmpiricalValue;
 
     /**
      * 是否显示补助额度
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示补助额度不能为空")
     private Boolean ifShowSubsidyAmount;
 
     /**
      * 是否显示年假天数
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示年假天数不能为空")
     private Boolean ifShowAnnualLeave;
 
     /**
      * 是否显示个人愿景
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示个人愿景不能为空")
     private Boolean ifShowIndividualVision;
 
     /**
      * 是否显示照片
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示照片不能为空")
     private Boolean ifShowPicture;
 
     /**
      * 是否显示兴趣爱好
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示兴趣爱好不能为空")
     private Boolean ifShowHobbies;
 
     /**
      * 是否显示个人邮箱
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示个人邮箱不能为空")
     private Boolean ifShowPersonalEmail;
 
     /**
      * 是否显示出生年月
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示出生年月不能为空")
     private Boolean ifShowDateOfBirth;
 
     /**
      * 是否显示QQ号
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示QQ号不能为空")
     private Boolean ifShowQqNumber;
 
     /**
      * 是否显示微信号
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示微信号不能为空")
     private Boolean ifShowWechatId;
 
     /**
      * 是否显示手机号
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示手机号不能为空")
     private Boolean ifShowMobile;
 
     /**
      * 是否显示紧急联系人
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示紧急联系人不能为空")
     private Boolean ifShowEmergencyContact;
 
     /**
      * 是否显示紧急联系人手机号
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示紧急联系人手机号不能为空")
     private Boolean ifShowEmergencyContactPhone;
 
     /**
      * 是否显示学历
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示学历不能为空")
     private Boolean ifShowEducation;
 
     /**
      * 是否显示专业
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示专业不能为空")
     private Boolean ifShowSpecialty;
 
     /**
      * 是否显示专业学校
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示专业学校不能为空")
     private Boolean ifShowAcademy;
 
     /**
      * 是否显示毕业时间
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示毕业时间不能为空")
     private Boolean ifShowGraduationTime;
 
     /**
      * 是否显示现居住地
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示现居住地不能为空")
     private Boolean ifShowNowResidence;
 
     /**
      * 是否显示户口地址
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示户口地址不能为空")
     private Boolean ifShowRegisteredAddress;
 
     /**
      * 是否显示工作年限
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示工作年限不能为空")
     private Boolean ifShowWorkExperience;
 
 

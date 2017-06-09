@@ -10,6 +10,4 @@ package com.bjike.goddess.businessproject.api;
  * @Copy: [ com.bjike ]
  */
 public interface CusPermissionOperateAPI {
-
-
 }

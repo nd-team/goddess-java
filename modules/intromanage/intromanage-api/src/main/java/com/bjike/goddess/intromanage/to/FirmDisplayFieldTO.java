@@ -1,6 +1,10 @@
 package com.bjike.goddess.intromanage.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 公司简介显示字段
@@ -16,86 +20,103 @@ public class FirmDisplayFieldTO extends BaseTO {
     /**
      * 是否显示公司名称
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示公司名称不能为空")
     private Boolean ifShowFirmName;
 
     /**
      * 是否显示公司性质
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示公司性质不能为空")
     private Boolean ifShowFirmNature;
 
     /**
      * 是否显示注册资金
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示注册资金不能为空")
     private Boolean ifShowRegisterMoney;
 
     /**
      * 是否显示注册时间
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示注册时间不能为空")
     private Boolean ifShowRegisterDate;
 
     /**
      * 是否显示公司精神
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示公司精神不能为空")
     private Boolean ifShowFirmSpirit;
 
     /**
      * 是否显示服务意识
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示服务意识不能为空")
     private Boolean ifShowServiceAwareness;
 
     /**
      * 是否显示公司宗旨
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示公司宗旨不能为空")
     private Boolean ifShowFirmTenet;
 
     /**
      * 是否显示人才观
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示人才观不能为空")
     private Boolean ifShowTalentView;
 
     /**
      * 是否显示经营观
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示经营观不能为空")
     private Boolean ifShowOperationView;
 
     /**
      * 是否显示质量观
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示质量观不能为空")
     private Boolean ifShowQualityView;
 
     /**
      * 是否显示组织结构
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示组织结构不能为空")
     private Boolean ifShowOrganization;
 
     /**
      * 是否显示管理模式
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示管理模式不能为空")
     private Boolean ifShowManageModel;
 
     /**
      * 是否显示服务团队介绍
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示服务团队介绍不能为空")
     private Boolean ifShowServiceTeamIntro;
 
     /**
      * 是否显示员工数量
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示员工数量不能为空")
     private Boolean ifShowStaffNo;
 
     /**
      * 是否显示囊括区域
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示囊括区域不能为空")
     private Boolean ifShowIncludeArea;
 
     /**
      * 是否显示一体化解决方案
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示一体化解决方案不能为空")
     private Boolean ifShowSolvingScheme;
 
     /**
      * 是否显示需求类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否显示需求类型不能为空")
     private Boolean ifShowDemandType;
 
 

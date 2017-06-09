@@ -1,13 +1,16 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.ContractCategoryBO;
+import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
+import com.bjike.goddess.businessproject.entity.ContractCategory;
+import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.businessproject.entity.ContractCategory;
-import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同类型业务接口
@@ -20,9 +23,17 @@ import java.util.List;
  */
 public interface ContractCategorySer extends Ser<ContractCategory, ContractCategoryDTO> {
 
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+
     /**
      * 项目合同类型列表总条数
-     *
      */
     default Long countContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
         return null;
@@ -30,33 +41,79 @@ public interface ContractCategorySer extends Ser<ContractCategory, ContractCateg
 
     /**
      * 根据id获取项目合同类型列表
+     *
      * @return class ContractCategoryBO
      */
-    default ContractCategoryBO getOneById(String id) throws SerException {return null;}
+    default ContractCategoryBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
      * 合同类型列表
+     *
      * @return class ContractCategoryBO
      */
-    default List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param contractCategoryTO 合同类型
-     * @return class ContractCategoryBO
-     */
-    default ContractCategoryBO addContractCategory(ContractCategoryTO contractCategoryTO) throws SerException { return null;}
+    default List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param contractCategoryTO 合同类型
      * @return class ContractCategoryBO
      */
-    default ContractCategoryBO editContractCategory(ContractCategoryTO contractCategoryTO) throws SerException { return null;}
+    default ContractCategoryBO addContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param contractCategoryTO 合同类型
+     * @return class ContractCategoryBO
+     */
+    default ContractCategoryBO editContractCategory(ContractCategoryTO contractCategoryTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除
+     *
      * @param id id
      */
-    default void deleteContractCategory(String id ) throws SerException {return;};
+    default void deleteContractCategory(String id) throws SerException {
+        return;
+    }
+
+    ;
+
+    /**
+     * chenjunhao
+     * 查找所有合同类型名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> allContractNames() throws SerException;
+
+    /**
+     * chenjunhao
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ContractCategoryDTO dto) throws SerException;
+
+    /**
+     * chenjunhao
+     * 导入excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadExcel(List<ContractCategoryExcel> toList) throws SerException;
 }

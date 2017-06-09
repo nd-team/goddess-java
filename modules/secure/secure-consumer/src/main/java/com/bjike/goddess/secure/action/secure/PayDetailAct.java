@@ -1,9 +1,11 @@
 package com.bjike.goddess.secure.action.secure;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.PayDetailAPI;
@@ -17,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -44,8 +45,9 @@ public class PayDetailAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/save")
-    public Result save(PayDetailTO to, HttpServletRequest request) throws ActException {
+    public Result save(@Validated({ADD.class}) PayDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             PayDetailBO bo = payDetailAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, PayDetailVO.class, request));
@@ -61,6 +63,7 @@ public class PayDetailAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) PayDetailTO to, BindingResult result) throws ActException {
         try {
@@ -78,6 +81,7 @@ public class PayDetailAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -121,6 +125,22 @@ public class PayDetailAct {
         try {
             PayDetailBO bo = payDetailAPI.findByID(id);
             return ActResult.initialize(BeanTransform.copyProperties(bo, PayDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(PayDetailDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(payDetailAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

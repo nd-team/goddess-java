@@ -115,23 +115,24 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
          * 内部项目名称
          */
         if (StringUtils.isNotBlank(problemHandlingResultDTO.getInternalProjectName())) {
-            problemHandlingResultDTO.getConditions().add(Restrict.eq("internalProjectName", problemHandlingResultDTO.getInternalProjectName()));
+            problemHandlingResultDTO.getConditions().add(Restrict.like("internalProjectName", problemHandlingResultDTO.getInternalProjectName()));
         }
         /**
          * 工程类型
          */
         if (StringUtils.isNotBlank(problemHandlingResultDTO.getProjectType())) {
-            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectType", problemHandlingResultDTO.getProjectType()));
+            problemHandlingResultDTO.getConditions().add(Restrict.like("projectType", problemHandlingResultDTO.getProjectType()));
         }
         /**
          * 问题对象
          */
+        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProblemObject())) {
+            problemHandlingResultDTO.getConditions().add(Restrict.like("problemObject", problemHandlingResultDTO.getProblemObject()));
+        }
         /*if(problemHandlingResultDTO.getProblemObject()!=null){
             problemHandlingResultDTO.getConditions().add(Restrict.eq("problemObject", problemHandlingResultDTO.getProblemObject()));
         }*/
-        if (StringUtils.isNotBlank(problemHandlingResultDTO.getProblemObject())) {
-            problemHandlingResultDTO.getConditions().add(Restrict.eq("projectObject", problemHandlingResultDTO.getProblemObject()));
-        }
+
 
         List<ProblemHandlingResult> problemHandlingResultList = super.findByCis(problemHandlingResultDTO);
 

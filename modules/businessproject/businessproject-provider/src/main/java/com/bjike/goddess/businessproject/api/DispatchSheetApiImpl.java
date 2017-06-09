@@ -2,13 +2,16 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
+import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.service.DispatchSheetSer;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目派工单信息管理业务接口实现
@@ -24,6 +27,14 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
 
     @Autowired
     private DispatchSheetSer dispatchSheetSer;
+
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dispatchSheetSer.guidePermission( guidePermissionTO );
+    }
+
 
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
@@ -68,5 +79,20 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     @Override
     public List<String> listDispatchName() throws SerException {
         return dispatchSheetSer.listDispatchName();
+    }
+
+    @Override
+    public Set<String> allInnerProjects() throws SerException {
+        return dispatchSheetSer.allInnerProjects();
+    }
+
+    @Override
+    public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
+        return dispatchSheetSer.exportExcel(dto);
+    }
+
+    @Override
+    public void leadExcel(List<DispatchSheetTO> toList) throws SerException {
+        dispatchSheetSer.leadExcel(toList);
     }
 }

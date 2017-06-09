@@ -1,6 +1,7 @@
 package com.bjike.goddess.firmreward.action.firmreward;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -47,7 +48,7 @@ public class RewardPeopleNoStatAct {
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/bonusbudget/{id}")
+    @GetMapping("v1/rewardpeoplenostat/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.findById(id);
@@ -106,7 +107,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) RewardPeopleNoStatTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) RewardPeopleNoStatTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             RewardPeopleNoStatBO bo = rewardPeopleNoStatAPI.save(to);
             RewardPeopleNoStatVO vo = BeanTransform.copyProperties(bo, RewardPeopleNoStatVO.class, request);
@@ -143,7 +144,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.update(to);
             return new ActResult("edit success!");
@@ -161,7 +162,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PostMapping("v1/addAwardDetails")
-    public Result addAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result addAwardDetails(@Validated(value = {RewardPeopleNoStatTO.IAwardDetail.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.addAwardDetails(to);
             return new ActResult("addAwardDetails success!");
@@ -179,7 +180,7 @@ public class RewardPeopleNoStatAct {
      */
     @LoginAuth
     @PostMapping("v1/updateAwardDetails")
-    public Result updateAwardDetails(@Validated RewardPeopleNoStatTO to, BindingResult result) throws ActException {
+    public Result updateAwardDetails(@Validated(value = {RewardPeopleNoStatTO.IAwardDetail.class}) RewardPeopleNoStatTO to, BindingResult result) throws ActException {
         try {
             rewardPeopleNoStatAPI.updateAwardDetails(to);
             return new ActResult("updateAwardDetails success!");

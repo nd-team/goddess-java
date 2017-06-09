@@ -3,6 +3,7 @@ package com.bjike.goddess.secure.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -44,8 +45,8 @@ public class BeforeAdd extends BaseEntity {
     /**
      * 需增员时间
      */
-    @Column(name = "addTime", columnDefinition = "DATETIME   COMMENT '需增员时间'")
-    private String addTime;
+    @Column(name = "addTime", columnDefinition = "DATE   COMMENT '需增员时间'")
+    private LocalDate addTime;
 
     /**
      * 需参保时长
@@ -127,11 +128,11 @@ public class BeforeAdd extends BaseEntity {
         this.arrivalDescrption = arrivalDescrption;
     }
 
-    public String getAddTime() {
+    public LocalDate getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(String addTime) {
+    public void setAddTime(LocalDate addTime) {
         this.addTime = addTime;
     }
 

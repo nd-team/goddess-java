@@ -3,8 +3,8 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.AttachedBO;
-import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.dto.AttachedDTO;
+import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.to.AttachedTO;
 
 import java.util.List;
@@ -31,17 +31,6 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
         return null;
     }
 
-    /**
-     * 审核和补全信息
-     *
-     * @param to 挂靠信息
-     * @return class AttachedBO
-     * @throws SerException
-     * @version v1
-     */
-    default AttachedBO exameAndComplete(AttachedTO to) throws SerException {
-        return null;
-    }
 
     /**
      * 删除记录
@@ -88,13 +77,45 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
     }
 
     /**
-     * 更新
+     * 编辑
      *
      * @param to 挂靠信息
      * @return class AttachedBO
      * @throws SerException
      */
-    default AttachedBO update(AttachedTO to) throws SerException {
-        return null;
-    }
+    AttachedBO edit(AttachedTO to) throws SerException;
+
+    /**
+     * 通过
+     *
+     * @param id id
+     * @throws SerException
+     */
+    void pass(String id) throws SerException;
+
+    /**
+     * 不通过
+     *
+     * @param id
+     * @throws SerException
+     */
+    void notPass(String id) throws SerException;
+
+    /**
+     * 补全信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    AttachedBO complete(AttachedTO to) throws SerException;
+
+    /**
+     * 查找总记录数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(AttachedDTO dto) throws SerException;
 }

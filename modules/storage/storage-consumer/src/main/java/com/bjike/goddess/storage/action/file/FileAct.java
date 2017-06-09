@@ -8,6 +8,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
@@ -90,8 +91,8 @@ public class FileAct extends BaseFileAction {
     public Result upload(HttpServletRequest request, @Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
             List<InputStream> inputStreams = getInputStreams(request);
-            fileAPI.upload(inputStreams);
-            return new ActResult("upload success");
+            List<FileBO> fileBOS = fileAPI.upload(inputStreams);
+            return new ActResult("upload success",BeanTransform.copyProperties(fileBOS,FileVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

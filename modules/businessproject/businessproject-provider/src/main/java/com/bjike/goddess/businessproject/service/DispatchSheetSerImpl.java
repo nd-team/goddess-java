@@ -1,24 +1,34 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
+import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
+import com.bjike.goddess.businessproject.entity.DispatchSheet;
+import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
-import com.bjike.goddess.businessproject.entity.DispatchSheet;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 
 /**
  * 商务项目派工单信息管理业务实现
@@ -39,9 +49,9 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     /**
      * 核对查看权限（部门级别）
      */
-    private void checkSeeIdentity() throws SerException{
+    private void checkSeeIdentity() throws SerException {
         Boolean flag = cusPermissionSer.getCusPermission("1");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是相应部门的人员，不可以查看");
         }
     }
@@ -51,33 +61,114 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
      */
     private void checkAddIdentity() throws SerException{
         Boolean flag = cusPermissionSer.busCusPermission("2");
-        if( !flag ){
+        if (!flag) {
             throw new SerException("您不是岗位的人员，不可以操作");
         }
     }
 
 
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */private Boolean guideSeeIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.busCusPermission("2");
+        return flag;
+    }
+
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException{
+        Boolean flag = cusPermissionSer.getCusPermission("1");
+        return flag;
+    }
+
+    /**
+     * 日期格式(年月日)
+     */
+    private void checkDate(DispatchSheetTO dispatchSheetTO) throws SerException {
+        try {
+            DateUtil.parseDate(dispatchSheetTO.getSiginTime());
+            DateUtil.parseDate(dispatchSheetTO.getStartProjectTime());
+            DateUtil.parseDate(dispatchSheetTO.getEndProjectTime());
+        } catch (Exception e) {
+            throw new SerException("输入的日期格式有误");
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
-        searchCondition( dispatchSheetDTO);
+        searchCondition(dispatchSheetDTO);
 
-        Long count = super.count( dispatchSheetDTO );
+        Long count = super.count(dispatchSheetDTO);
         return count;
     }
 
     @Override
     public DispatchSheetBO getOneById(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
         DispatchSheet dispatchSheet = super.findById(id);
-        return BeanTransform.copyProperties(dispatchSheet, DispatchSheetBO.class );
+        return BeanTransform.copyProperties(dispatchSheet, DispatchSheetBO.class);
     }
+
     @Override
     public List<DispatchSheetBO> listDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
         checkSeeIdentity();
 
-        searchCondition( dispatchSheetDTO);
+        searchCondition(dispatchSheetDTO);
         List<DispatchSheet> list = super.findByPage(dispatchSheetDTO);
         List<DispatchSheetBO> dispatchSheetBOList = BeanTransform.copyProperties(list, DispatchSheetBO.class);
         return dispatchSheetBOList;
@@ -87,7 +178,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public DispatchSheetBO addDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
         checkAddIdentity();
-
+        checkDate(dispatchSheetTO);
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
         dispatchSheet.setCreateTime(LocalDateTime.now());
         super.save(dispatchSheet);
@@ -102,10 +193,11 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     public DispatchSheetBO editDispatchSheet(DispatchSheetTO dispatchSheetTO) throws SerException {
         checkAddIdentity();
 
-        DispatchSheet temp = super.findById( dispatchSheetTO.getId());
+        DispatchSheet temp = super.findById(dispatchSheetTO.getId());
 
+        checkDate(dispatchSheetTO);
         DispatchSheet dispatchSheet = BeanTransform.copyProperties(dispatchSheetTO, DispatchSheet.class, true);
-        BeanUtils.copyProperties( dispatchSheet , temp ,"id","createTime");
+        BeanUtils.copyProperties(dispatchSheet, temp, "id", "createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
@@ -178,10 +270,10 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listArea() throws SerException {
         String[] fields = new String[]{"area"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select area from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList = super.findBySql("select area from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
-        List<String> areaList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getArea)
-                .filter(area -> (area != null || !"".equals(area.trim())) ).distinct().collect(Collectors.toList());
+        List<String> areaList = dispatchSheetBOList.stream().map(DispatchSheetBO::getArea)
+                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
 
         return areaList;
@@ -190,12 +282,74 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<String> listDispatchName() throws SerException {
         String[] fields = new String[]{"dispatchProject"};
-        List<DispatchSheetBO> dispatchSheetBOList =super.findBySql("select dispatchProject from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
+        List<DispatchSheetBO> dispatchSheetBOList = super.findBySql("select dispatchProject from businessproject_dispatchsheet order by area asc ", DispatchSheetBO.class, fields);
 
-        List<String> dispatchProjectList  = dispatchSheetBOList.stream().map(DispatchSheetBO::getDispatchProject)
-                .filter(str -> (str != null || !"".equals(str.trim())) ).distinct().collect(Collectors.toList());
+        List<String> dispatchProjectList = dispatchSheetBOList.stream().map(DispatchSheetBO::getDispatchProject)
+                .filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
 
 
         return dispatchProjectList;
+    }
+
+    @Override
+    public Set<String> allInnerProjects() throws SerException {
+        List<DispatchSheet> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (DispatchSheet b : list) {
+            set.add(b.getInnerProject());
+        }
+        return set;
+    }
+
+    @Override
+    public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
+        String[] innerProjects = dto.getInnerProjects();
+        List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();
+        if ((innerProjects != null) && (innerProjects.length > 0)) {
+            List<DispatchSheet> list = super.findByCis(dto);
+            for (String s : innerProjects) {
+                if (StringUtils.isNotBlank(s)) {
+                    for (DispatchSheet b : list) {
+                        if (s.equals(b.getInnerProject())) {
+                            DispatchSheetExcel excel = new DispatchSheetExcel();
+                            BeanUtils.copyProperties(b, excel);
+                            toList.add(excel);
+                        }
+                    }
+                }
+            }
+        } else {
+            List<DispatchSheet> list = super.findByCis(dto);
+            for (DispatchSheet b : list) {
+                DispatchSheetExcel excel = new DispatchSheetExcel();
+                BeanUtils.copyProperties(b, excel);
+                toList.add(excel);
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadExcel(List<DispatchSheetTO> toList) throws SerException {
+        for (DispatchSheetTO to : toList) {
+            DispatchSheet baseInfoManage = new DispatchSheet();
+            BeanUtils.copyProperties(to, baseInfoManage);
+            baseInfoManage.setSiginTime(DateUtil.parseDate(to.getSiginTime()));
+            baseInfoManage.setStartProjectTime(DateUtil.parseDate(to.getStartProjectTime()));
+            baseInfoManage.setEndProjectTime(DateUtil.parseDate(to.getEndProjectTime()));
+            String completeProject = baseInfoManage.getCompleteProject();
+            String fileCondition = baseInfoManage.getFileCondition();
+            String innerProjectNum = baseInfoManage.getInnerProjectNum();
+            if ((!"已完工".equals(completeProject)) && (!"未完工".equals(completeProject))) {
+                throw new SerException("是否完工只能为未完工或已完工");
+            }
+            if ((!"未归档".equals(fileCondition)) && (!"已归档".equals(fileCondition))) {
+                throw new SerException("合同是否已归档只能为未归档或已归档");
+            }
+            super.save(baseInfoManage);
+        }
     }
 }

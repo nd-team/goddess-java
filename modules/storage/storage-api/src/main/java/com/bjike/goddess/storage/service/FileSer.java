@@ -36,7 +36,8 @@ public interface FileSer extends Ser<File, FileDTO> {
      *
      * @param inputStreams 上传文件，文件信息流
      */
-    default void upload(List<InputStream> inputStreams) throws SerException {
+    default List<FileBO> upload(List<InputStream> inputStreams) throws SerException {
+        return null;
     }
 
 

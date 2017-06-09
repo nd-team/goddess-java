@@ -17,7 +17,8 @@ public class JapiTest {
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/projectmarketfee/projectmarketfee-api",
                 "common/common-api",
-                "modules/voucher/voucher-api"
+                "modules/voucher/voucher-api",
+                "modules/user/user-api"
         });
         JapiClient.setFlushServer(true);
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

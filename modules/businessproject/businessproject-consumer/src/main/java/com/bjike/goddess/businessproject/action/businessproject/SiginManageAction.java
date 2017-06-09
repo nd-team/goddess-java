@@ -3,21 +3,38 @@ package com.bjike.goddess.businessproject.action.businessproject;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
+import com.bjike.goddess.businessproject.enums.MakeProjectStatus;
+import com.bjike.goddess.businessproject.enums.SiginStatus;
+import com.bjike.goddess.businessproject.excel.SiginManageExcel;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.businessproject.vo.SiginManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.DataTypeUtils;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +49,60 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("siginmanage")
-public class SiginManageAction {
+public class SiginManageAction extends BaseFileAction {
 
     @Autowired
     private SiginManageAPI siginManageAPI;
+    @Autowired
+    private FileAPI fileAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+
+    /**
+     * 模块设置导航权限
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission( ) throws ActException {
+        try {
+
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission( );
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = siginManageAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 列表总条数
@@ -58,8 +125,8 @@ public class SiginManageAction {
      * 一个签订与立项
      *
      * @param id 项目签订与立项id
+     * @return class SiginManageVO
      * @des 根据id获取项目签订与立项
-     * @return  class SiginManageVO
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -82,16 +149,16 @@ public class SiginManageAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findListSiginManage(SiginManageDTO siginManageDTO,BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result findListSiginManage(SiginManageDTO siginManageDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<SiginManageBO> list = siginManageAPI.listSiginManage(siginManageDTO);
-            List<SiginManageVO> siginManageVOList =new ArrayList<>();
-            list.stream().forEach(str->{
-                SiginManageVO vo = BeanTransform.copyProperties(str, SiginManageVO.class,"businessType","businessCooperate","contractProperty");
-                vo.setBusinessType( str.getBusinessType());
+            List<SiginManageVO> siginManageVOList = new ArrayList<>();
+            list.stream().forEach(str -> {
+                SiginManageVO vo = BeanTransform.copyProperties(str, SiginManageVO.class, "businessType", "businessCooperate", "contractProperty");
+                vo.setBusinessType(str.getBusinessType());
                 vo.setBusinessCooperate(str.getBusinessCooperate());
-                vo.setContractProperty( str.getContractProperty());
-                siginManageVOList.add( vo );
+                vo.setContractProperty(str.getContractProperty());
+                siginManageVOList.add(vo);
             });
 
             return ActResult.initialize(siginManageVOList);
@@ -99,6 +166,7 @@ public class SiginManageAction {
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 添加项目签订与立项
@@ -129,7 +197,7 @@ public class SiginManageAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editSiginManage(@Validated(SiginManageTO.TestAdd.class) SiginManageTO siginManageTO , BindingResult bindingResult) throws ActException {
+    public Result editSiginManage(@Validated(SiginManageTO.TestAdd.class) SiginManageTO siginManageTO, BindingResult bindingResult) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.editSiginManage(siginManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class));
@@ -167,7 +235,7 @@ public class SiginManageAction {
      */
     @LoginAuth
     @PostMapping("v1/audit")
-    public Result auditSiginManage( SiginManageTO siginManageTO , BindingResult bindingResult) throws ActException {
+    public Result auditSiginManage(SiginManageTO siginManageTO, BindingResult bindingResult) throws ActException {
         try {
             SiginManageBO siginManageBO1 = siginManageAPI.auditSiginManage(siginManageTO);
             return ActResult.initialize(BeanTransform.copyProperties(siginManageBO1, SiginManageVO.class, true));
@@ -183,15 +251,199 @@ public class SiginManageAction {
      * @version v1
      */
     @GetMapping("v1/listArea")
-    public Result listArea(  ) throws ActException {
+    public Result listArea() throws ActException {
         try {
-            List<String> list = siginManageAPI.listArea( );
+            List<String> list = siginManageAPI.listArea();
 
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 上传附件
+     *
+     * @des 审核项目签订与立项
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadFile")
+    public Result uploadFile(HttpServletRequest request, @Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult bindingResult) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            List<InputStream> inputStreams = getInputStreams(request);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件附件列表
+     *
+     * @param fileInfo 文件信息
+     * @version v1
+     */
+    @GetMapping("v1/listFile")
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /businessproject/id/....
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileInfo 文件信息
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+        try {
+            //该文件的路径
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<SiginManageExcel> tos = ExcelUtil.excelToClazz(is, SiginManageExcel.class, excel);
+            List<SiginManageTO> tocs = new ArrayList<>();
+            for(SiginManageExcel str :tos ){
+                SiginManageTO siginManageTO = BeanTransform.copyProperties(str, SiginManageTO.class, "startProjectTime", "endProjectTime",
+                        "siginStatus", "makeProject", "manager", "auditAdvice");
+                siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
+                siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
+                siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
+                siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
+                siginManageTO.setManager("") ;
+                siginManageTO.setAuditAdvice( "" );
+                tocs.add(siginManageTO);
+            }
+            //注意序列化
+            siginManageAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    private String convertSiginStatus(SiginStatus siginStatus) throws ActException {
+        String status = "";
+        switch (siginStatus) {
+            case HASSIGN:
+                status = "已签订";
+                break;
+            case HASNOSIGN:
+                status = "未签订";
+                break;
+            default:
+                throw new ActException("签订状态填写不正确,导入失败,正确填写方式（已签订/未签订）");
+        }
+        return status;
+    }
+    private String convertMakeProject(MakeProjectStatus makeProjectStatus) throws ActException {
+        String status = "";
+        switch (makeProjectStatus) {
+            case  SIGN:
+                status = "已立项";
+                break;
+            case NOSIGN:
+                status = "未立项";
+                break;
+            default:
+                throw new ActException("立项情况填写不正确,导入失败,正确填写方式（已立项/未立项）");
+        }
+        return status;
+    }
+
+
+
+
+    /**
+     * 导出excel
+     *
+     * @param dto 项目签订与立项
+     * @des 导出项目签订与立项
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/export")
+    public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目签订与立项.xlsx";
+            super.writeOutFile(response, siginManageAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
+     * 获取所有内部项目名称
+     *
+     * @des 获取所有内部项目名称
+     * @version v1
+     */
+    @GetMapping("v1/listInnerProject")
+    public Result listInnerProject() throws ActException {
+        try {
+            List<String> list = siginManageAPI.listInnerProject();
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+//    /**
+//     * 下载模板
+//     *
+//     * @param dto 项目签订与立项
+//     * @des 下载模板项目签订与立项
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/export")
+//    public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
+//        try {
+//            String fileName = "项目签订与立项.xlsx";
+//            super.writeOutFile(response, siginManageAPI.exportExcel(dto), fileName);
+//            return new ActResult("导出成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        } catch (IOException e1) {
+//            throw new ActException(e1.getMessage());
+//        }
+//    }
 
 
 }

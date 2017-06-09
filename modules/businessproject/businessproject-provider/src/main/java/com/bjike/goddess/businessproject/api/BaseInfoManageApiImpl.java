@@ -2,13 +2,16 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.service.BaseInfoManageSer;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同基本信息管理业务接口实现
@@ -25,9 +28,15 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Autowired
     private BaseInfoManageSer baseInfoManageSer;
 
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return baseInfoManageSer.guidePermission( guidePermissionTO );
+    }
+
     @Override
     public Long countBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
-        return baseInfoManageSer.countBaseInfoManage( baseInfoManageDTO);
+        return baseInfoManageSer.countBaseInfoManage(baseInfoManageDTO);
     }
 
     @Override
@@ -57,7 +66,7 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
 
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
-        return baseInfoManageSer.getInfoByInnerProjectNum( innerProjectNum);
+        return baseInfoManageSer.getInfoByInnerProjectNum(innerProjectNum);
     }
 
     @Override
@@ -73,5 +82,20 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Override
     public List<String> getInnerNum() throws SerException {
         return baseInfoManageSer.getInnerNum();
+    }
+
+    @Override
+    public Set<String> allInnerProjects() throws SerException {
+        return baseInfoManageSer.allInnerProjects();
+    }
+
+    @Override
+    public byte[] exportExcel(BaseInfoManageDTO dto) throws SerException {
+        return baseInfoManageSer.exportExcel(dto);
+    }
+
+    @Override
+    public void leadExcel(List<BaseInfoManageTO> toList) throws SerException {
+        baseInfoManageSer.leadExcel(toList);
     }
 }

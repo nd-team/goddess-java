@@ -23,7 +23,7 @@ public class PerformanceScore extends BaseEntity {
     /**
      * 岗位层级
      */
-    @Column(name = "postHierarchy", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '岗位层级'")
+    @Column(name = "postHierarchy", nullable = false, unique = true, columnDefinition = "VARCHAR(255) COMMENT '岗位层级'")
     private String postHierarchy;
 
     /**

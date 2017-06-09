@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 结算费用来源
  *
@@ -13,14 +15,17 @@ public enum PayFeeOrigin {
     /**
      * 预付
      */
+    @ExcelValue(name = "预付")
     PREPAY(0),
     /**
      * 背靠背
      */
+    @ExcelValue(name = "背靠背")
     BACKTOBACK(1),
     /**
      * 垫付
      */
+    @ExcelValue(name = "垫付")
     ADVANCE(2);
 
     private int code;

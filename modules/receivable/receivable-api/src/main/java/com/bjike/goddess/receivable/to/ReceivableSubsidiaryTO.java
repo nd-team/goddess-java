@@ -130,25 +130,21 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 签字审批时间
      */
-    @NotBlank(message = "签字审批时间不能为空")
     private String auditTime;
 
     /**
      * 结算审批时间
      */
-    @NotBlank(message = "结算审批时间不能为空")
     private String countTime;
 
     /**
      * 发票审核时间
      */
-    @NotBlank(message = "发票审核时间不能为空")
     private String billTime;
 
     /**
      * 预计支付时间
      */
-    @NotBlank(message = "预计支付时间不能为空")
     private String planTime;
 
     /**
@@ -159,7 +155,6 @@ public class ReceivableSubsidiaryTO extends BaseTO {
     /**
      * 到账时间
      */
-    @NotBlank(message = "到账时间不能为空")
     private String accountTime;
 
     /**

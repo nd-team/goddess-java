@@ -157,12 +157,12 @@ public class BonusBudgetAct {
     /**
      * 添加奖励项目比例
      *
-     * @param to 奖金预算to
+     * @param to 奖励项目比例to
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/addRewardProgramRatios")
-    public Result addRewardProgramRatios(@Validated RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result addRewardProgramRatios(@Validated(value = {RewardProgramRatiosTO.IRewardProgramRatio.class}) RewardProgramRatiosTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.addRewardProgramRatios(to);
             return new ActResult("addRewardProgramRatios success!");
@@ -180,7 +180,7 @@ public class BonusBudgetAct {
      */
     @LoginAuth
     @PostMapping("v1/updateRewardProgramRatios")
-    public Result updateRewardProgramRatios(@Validated RewardProgramRatiosTO to, BindingResult result) throws ActException {
+    public Result updateRewardProgramRatios(@Validated(RewardProgramRatiosTO.IRewardProgramRatio.class) RewardProgramRatiosTO to, BindingResult result) throws ActException {
         try {
             bonusBudgetAPI.updateRewardProgramRatios(to);
             return new ActResult("updateRewardProgramRatios success!");

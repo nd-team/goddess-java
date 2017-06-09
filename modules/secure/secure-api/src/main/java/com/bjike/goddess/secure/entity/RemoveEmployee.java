@@ -2,7 +2,9 @@ package com.bjike.goddess.secure.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -21,37 +23,37 @@ public class RemoveEmployee extends BaseEntity {
     /**
      * 当前各公司参保总人数
      */
-    @Column(name = "countCompany", nullable = false, columnDefinition = "INT(11)   COMMENT '当前各公司参保总人数'")
+    @Column(name = "countCompany", columnDefinition = "INT(11)   COMMENT '当前各公司参保总人数'")
     private Integer countCompany;
 
     /**
      * 当前各地市总参保人员
      */
-    @Column(name = "countCity", nullable = false, columnDefinition = "INT(11)   COMMENT '当前各地市总参保人员'")
+    @Column(name = "countCity", columnDefinition = "INT(11)   COMMENT '当前各地市总参保人员'")
     private Integer countCity;
 
     /**
      * 减员类型
      */
-    @Column(name = "removeType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '减员类型'")
+    @Column(name = "removeType", columnDefinition = "VARCHAR(255)   COMMENT '减员类型'")
     private String removeType;
 
     /**
      * 公司名称
      */
-    @Column(name = "company", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
+    @Column(name = "company", columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
     private String company;
 
     /**
      * 减员的人员姓名
      */
-    @Column(name = "removeName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '减员的人员姓名'")
+    @Column(name = "removeName", columnDefinition = "VARCHAR(255)   COMMENT '减员的人员姓名'")
     private String removeName;
 
     /**
      * 减员的人员当前参保地市
      */
-    @Column(name = "removeCity", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '减员的人员当前参保地市'")
+    @Column(name = "removeCity", columnDefinition = "VARCHAR(255)   COMMENT '减员的人员当前参保地市'")
     private String removeCity;
 
     /**
@@ -63,31 +65,31 @@ public class RemoveEmployee extends BaseEntity {
     /**
      * 需参保时长
      */
-    @Column(name = "secureTime",columnDefinition = "DECIMAL(10,2)   COMMENT '需参保时长'")
+    @Column(name = "secureTime", columnDefinition = "DECIMAL(10,2)   COMMENT '需参保时长'")
     private Double secureTime;
 
     /**
      * 需减员总人数
      */
-    @Column(name = "removeCount", nullable = false, columnDefinition = "INT(11)  COMMENT '需减员总人数'")
+    @Column(name = "removeCount", columnDefinition = "INT(11)  COMMENT '需减员总人数'")
     private Integer removeCount;
 
     /**
      * 备注
      */
-    @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "description", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String description;
 
     /**
      * 员工编号
      */
-    @Column(name="employeeId",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    @Column(name = "employeeId", columnDefinition = "VARCHAR(36)   COMMENT '员工编号'")
     private String employeeId;
 
     /**
      * 确认是否减员
      */
-    @Column(name="confirmRemove",columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '确认是否减员'")
+    @Column(name = "confirmRemove", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '确认是否减员'")
     private boolean confirmRemove;
 
 

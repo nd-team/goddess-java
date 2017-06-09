@@ -50,17 +50,22 @@ public class RemoveEmployeeApiImpl implements RemoveEmployeeAPI {
     }
 
     @Override
-    public RemoveEmployeeBO findByNameAndId(String[] removeName, String[] employeeId) throws SerException {
+    public List<RemoveEmployeeBO> findALL() throws SerException {
+        return removeEmployeeSer.findALL();
+    }
+
+    @Override
+    public RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException {
         return removeEmployeeSer.findByNameAndId(removeName, employeeId);
     }
 
     @Override
-    public void confirm(RemoveEmployeeTO to) throws SerException {
-        removeEmployeeSer.confirm(to);
+    public void confirmRemove(String id) throws SerException {
+        removeEmployeeSer.confirmRemove(id);
     }
 
     @Override
-    public List<RemoveEmployeeBO> findALL() throws SerException {
-        return removeEmployeeSer.findALL();
+    public Long count(RemoveEmployeeDTO dto) throws SerException {
+        return removeEmployeeSer.count(dto);
     }
 }

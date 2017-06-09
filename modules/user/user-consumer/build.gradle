@@ -50,6 +50,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web"){
         exclude group: 'com.fasterxml.jackson.core'
     }
+
 }
 
 

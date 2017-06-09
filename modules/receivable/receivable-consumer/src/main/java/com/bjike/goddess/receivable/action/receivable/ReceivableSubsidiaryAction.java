@@ -18,6 +18,7 @@ import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
 import com.bjike.goddess.receivable.entity.Contractor;
 import com.bjike.goddess.receivable.entity.ReceivableSubsidiary;
 import com.bjike.goddess.receivable.to.ContractorTO;
+import com.bjike.goddess.receivable.to.ProgressTO;
 import com.bjike.goddess.receivable.to.ReceivableSubsidiaryTO;
 import com.bjike.goddess.receivable.vo.*;
 import org.hibernate.validator.constraints.NotBlank;
@@ -206,6 +207,23 @@ public class ReceivableSubsidiaryAction {
             throw new ActException(e.getMessage());
         }
 
+    }
+    /**
+     * 结算进度
+     *
+     * @param to 结算进度数据to
+     * @return class ReceivableSubsidiaryVO
+     * @des 结算进度
+     * @version v1
+     */
+    @PostMapping("v1/progress")
+    public Result progress(@Validated ProgressTO to, BindingResult bindingResult) throws ActException {
+        try {
+            ReceivableSubsidiaryBO receivableSubsidiaryBO = receivableSubsidiaryAPI.progress(to);
+            return ActResult.initialize(receivableSubsidiaryBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
     /**
      * 获取地区
