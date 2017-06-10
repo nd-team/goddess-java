@@ -16,7 +16,7 @@ public class SurveyQuestionnaireBO extends BaseBO {
     /**
      * 调研实施id
      */
-    private String actualize_id;
+    private String actualizeId;
 
     /**
      * 问题
@@ -33,12 +33,12 @@ public class SurveyQuestionnaireBO extends BaseBO {
      */
     private Integer num;
 
-    public String getActualize_id() {
-        return actualize_id;
+    public String getActualizeId() {
+        return actualizeId;
     }
 
-    public void setActualize_id(String actualize_id) {
-        this.actualize_id = actualize_id;
+    public void setActualizeId(String actualizeId) {
+        this.actualizeId = actualizeId;
     }
 
     public String getQuestionnaire() {

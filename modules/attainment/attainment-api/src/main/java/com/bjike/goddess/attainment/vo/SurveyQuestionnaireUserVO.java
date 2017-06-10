@@ -15,10 +15,17 @@ public class SurveyQuestionnaireUserVO {
      * id
      */
     private String id;
+
     /**
-     * 问卷id
+     * 调研实施id
      */
-    private String questionnaire_id;
+    private String actualizeId;
+
+    /**
+     * 问卷
+     */
+    private String questionnaireName;
+
 
     /**
      * 用户
@@ -34,12 +41,20 @@ public class SurveyQuestionnaireUserVO {
         this.id = id;
     }
 
-    public String getQuestionnaire_id() {
-        return questionnaire_id;
+    public String getActualizeId() {
+        return actualizeId;
     }
 
-    public void setQuestionnaire_id(String questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+    public void setActualizeId(String actualizeId) {
+        this.actualizeId = actualizeId;
+    }
+
+    public String getQuestionnaireName() {
+        return questionnaireName;
+    }
+
+    public void setQuestionnaireName(String questionnaireName) {
+        this.questionnaireName = questionnaireName;
     }
 
     public String getUser() {

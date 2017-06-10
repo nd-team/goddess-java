@@ -11,6 +11,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class SurveyQuestionnaireOptionAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyQuestionnaireOptionTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyQuestionnaireOptionTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionAPI.save(to), SurveyQuestionnaireOptionVO.class));
         } catch (SerException e) {
@@ -54,7 +55,7 @@ public class SurveyQuestionnaireOptionAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SurveyQuestionnaireOptionTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) SurveyQuestionnaireOptionTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionAPI.update(to), SurveyQuestionnaireOptionVO.class));
         } catch (SerException e) {
@@ -81,14 +82,14 @@ public class SurveyQuestionnaireOptionAct {
     /**
      * 根据调研问题查询选项
      *
-     * @param questionnaire_id 调研问题id
+     * @param id 调研问题id
      * @return class SurveyQuestionnaireOptionVO
      * @version v1
      */
     @GetMapping("v1/findByQuestion")
-    public Result findByQuestion(String questionnaire_id) throws ActException {
+    public Result findByQuestion(String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionAPI.findByQuestion(questionnaire_id), SurveyQuestionnaireOptionVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionAPI.findByQuestion(id), SurveyQuestionnaireOptionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

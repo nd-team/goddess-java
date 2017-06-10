@@ -52,7 +52,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO update(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+        if (!marPermissionSer.getMarPermission(channelManage))
             throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
@@ -71,7 +71,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO delete(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+        if (!marPermissionSer.getMarPermission(channelManage))
             throw new SerException("您的帐号没有权限");
         MarketChannel entity = super.findById(to.getId());
         if (entity == null)
@@ -107,7 +107,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
 
     @Override
     public List<MarketChannel> findByPage(MarketChannelDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage) && !marPermissionSer.getMarPermission(marketCheck))
+        if (!marPermissionSer.getMarPermission(channelManage))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }

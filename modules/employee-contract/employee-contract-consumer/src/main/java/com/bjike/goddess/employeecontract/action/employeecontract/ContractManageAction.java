@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.employeecontract.api.ContractManageAPI;
@@ -63,7 +64,7 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 修改详细信息
+     * 修改详细信息(查看详细编辑)
      *
      * @param to 合同管理传输对象
      * @return class ContractManageVO
@@ -79,7 +80,7 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 修改合同信息
+     * 修改合同管理
      *
      * @param to 合同信息传输对象
      * @return class ContractInfoVO
@@ -95,7 +96,7 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 修改员工合同信息
+     * 修改员工合同信息详细
      *
      * @param to 人员合同信息传输对象
      * @return class ContractPersonalVO
@@ -117,7 +118,7 @@ public class ContractManageAction extends BaseFileAction {
      * @return class ContractInfoVO
      * @version v1
      */
-    @PatchMapping("v1/affirm/{id}")
+    @PutMapping("v1/affirm/{id}")
     public Result affirm(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(contractManageAPI.affirm(id), ContractInfoVO.class, request));
@@ -159,12 +160,13 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 人员合同信息列表
+     * 员工合同信息详细列表
      *
      * @param dto 合同管理数据传输对象
      * @return class ContractPersonalVO
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/personal/maps")
     public Result personalMaps(ContractManageDTO dto, HttpServletRequest request) throws ActException {
         try {
@@ -175,12 +177,13 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 合同信息管理列表
+     * 合同管理列表
      *
      * @param dto 合同管理数据传输对象
      * @return class ContractInfoVO
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/info/maps")
     public Result infoMaps(ContractManageDTO dto, HttpServletRequest request) throws ActException {
         try {
@@ -191,10 +194,11 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 获取人员合同信息列表总条数
+     * 获取员工合同信息详细列表总条数
      *
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/personal/getTotal")
     public Result getPersonalTotal() throws ActException {
         try {
@@ -205,10 +209,11 @@ public class ContractManageAction extends BaseFileAction {
     }
 
     /**
-     * 获取合同信息列表总条数
+     * 获取合同管理列表总条数
      *
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/info/getTotal")
     public Result getInfoTotal() throws ActException {
         try {

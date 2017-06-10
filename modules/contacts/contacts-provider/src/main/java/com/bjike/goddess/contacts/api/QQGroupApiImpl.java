@@ -49,4 +49,14 @@ public class QQGroupApiImpl implements QQGroupAPI {
     public List<QQGroupBO> maps(QQGroupDTO dto) throws SerException {
         return qqGroupSer.maps(dto);
     }
+
+    @Override
+    public QQGroupBO getById(String id) throws SerException {
+        return qqGroupSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return qqGroupSer.getTotal();
+    }
 }

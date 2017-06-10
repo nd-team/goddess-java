@@ -33,9 +33,9 @@ public class PerformanceIndicator extends BaseEntity {
     private String type;
 
     /**
-     * 项目名称
+     * 指标名称
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标名称'")
     private String name;
 
     /**
@@ -77,13 +77,13 @@ public class PerformanceIndicator extends BaseEntity {
     /**
      * 系统或人工
      */
-    @Column(name = "is_difference", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '系统或人工'", insertable = false)
+    @Column(name = "is_difference", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '系统或人工'")
     private Boolean difference;
 
     /**
      * 状态
      */
-    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态'", insertable = false)
+    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '状态'")
     private Boolean status;
 
 

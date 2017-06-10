@@ -90,7 +90,7 @@ public class EnclosureTypeAct {
      * @return class EnclosureTypeVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enclosureTypeAPI.congeal(id), EnclosureTypeVO.class));
@@ -106,7 +106,7 @@ public class EnclosureTypeAct {
      * @return class EnclosureTypeVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(enclosureTypeAPI.thaw(id), EnclosureTypeVO.class));

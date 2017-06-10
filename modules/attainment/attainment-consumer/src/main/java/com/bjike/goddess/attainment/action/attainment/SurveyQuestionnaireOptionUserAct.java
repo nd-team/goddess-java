@@ -11,6 +11,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class SurveyQuestionnaireOptionUserAct {
      */
     @LoginAuth
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SurveyQuestionnaireOptionUserTO to) throws ActException {
+    public Result save(@Validated(ADD.class) SurveyQuestionnaireOptionUserTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(surveyQuestionnaireOptionUserAPI.save(to), SurveyQuestionnaireOptionUserVO.class));
         } catch (SerException e) {

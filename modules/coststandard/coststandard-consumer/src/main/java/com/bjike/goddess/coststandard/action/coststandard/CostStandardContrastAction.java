@@ -90,7 +90,7 @@ public class CostStandardContrastAction {
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
-    public Result getById(String id) throws ActException {
+    public Result getById(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(costStandardContrastAPI.getById(id), CostStandardContrastVO.class));
         } catch (SerException e) {

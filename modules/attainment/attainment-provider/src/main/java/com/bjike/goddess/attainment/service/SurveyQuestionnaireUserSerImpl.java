@@ -54,7 +54,7 @@ public class SurveyQuestionnaireUserSerImpl extends ServiceImpl<SurveyQuestionna
     @Override
     public SurveyQuestionnaireUserBO save(SurveyQuestionnaireUserTO to) throws SerException {
         UserBO user = userAPI.currentUser();
-        SurveyQuestionnaireUser entity = new SurveyQuestionnaireUser();
+        SurveyQuestionnaireUser entity = BeanTransform.copyProperties(to, SurveyQuestionnaireUser.class);
         entity.setUser(user.getUsername());
         entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         if (null == entity.getActualize())

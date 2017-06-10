@@ -30,7 +30,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '时间'")
+    @Column(name = "time", nullable = false, columnDefinition = "DATE  COMMENT '时间'")
     private LocalDate time;
 
     /**
@@ -114,7 +114,7 @@ public class DayPlan extends BaseEntity {
     /**
      * 配合人
      */
-    @Column(name = "coordinate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '配合人'")
+    @Column(name = "coordinate", columnDefinition = "VARCHAR(255)   COMMENT '配合人'")
     private String coordinate;
 
 

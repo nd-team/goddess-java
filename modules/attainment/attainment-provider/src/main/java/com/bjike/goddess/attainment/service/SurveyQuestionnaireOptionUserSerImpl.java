@@ -39,7 +39,7 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
 
     private SurveyQuestionnaireOptionUserBO transformBO(SurveyQuestionnaireOptionUser entity) {
         SurveyQuestionnaireOptionUserBO bo = BeanTransform.copyProperties(entity, SurveyQuestionnaireOptionUserBO.class);
-        bo.setOption_id(entity.getOption().getId());
+        bo.setOptionId(entity.getOption().getId());
         bo.setOptionName(entity.getOption().getContent());
         return bo;
     }
@@ -56,7 +56,7 @@ public class SurveyQuestionnaireOptionUserSerImpl extends ServiceImpl<SurveyQues
     public SurveyQuestionnaireOptionUserBO save(SurveyQuestionnaireOptionUserTO to) throws SerException {
         UserBO user = userAPI.currentUser();
         SurveyQuestionnaireOptionUser entity = new SurveyQuestionnaireOptionUser();
-        SurveyQuestionnaireOption option = optionSer.findById(to.getOption_id());
+        SurveyQuestionnaireOption option = optionSer.findById(to.getOptionId());
         if (null == option)
             throw new SerException("选项对象不存在,无法保存");
         entity.setUser(user.getUsername());

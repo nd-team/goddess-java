@@ -3,6 +3,7 @@ package com.bjike.goddess.attainment.service;
 import com.bjike.goddess.attainment.bo.SurveyQuestionnaireBO;
 import com.bjike.goddess.attainment.dto.SurveyQuestionnaireDTO;
 import com.bjike.goddess.attainment.entity.SurveyQuestionnaire;
+import com.bjike.goddess.attainment.entity.SurveyQuestionnaireOption;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -33,9 +34,12 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
     @Autowired
     private SurveyActualizeSer surveyActualizeSer;
 
+    @Autowired
+    private SurveyQuestionnaireOptionSer surveyQuestionnaireOptionSer;
+
     private SurveyQuestionnaireBO transformBO(SurveyQuestionnaire entity) {
         SurveyQuestionnaireBO bo = BeanTransform.copyProperties(entity, SurveyQuestionnaireBO.class);
-        bo.setActualize_id(entity.getActualize().getId());
+        bo.setActualizeId(entity.getActualize().getId());
         return bo;
     }
 
@@ -50,7 +54,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
     @Override
     public SurveyQuestionnaireBO save(SurveyQuestionnaireTO to) throws SerException {
         SurveyQuestionnaire entity = BeanTransform.copyProperties(to, SurveyQuestionnaire.class);
-        entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         if (null == entity.getActualize())
             throw new SerException("调研实施对象不存在,无法保存");
         super.save(entity);
@@ -65,7 +69,7 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
-        entity.setActualize(surveyActualizeSer.findById(to.getId()));
+        entity.setActualize(surveyActualizeSer.findById(to.getActualizeId()));
         if (null == entity.getActualize())
             throw new SerException("调研实施对象不存在,无法保存");
         super.update(entity);
@@ -78,6 +82,8 @@ public class SurveyQuestionnaireSerImpl extends ServiceImpl<SurveyQuestionnaire,
         SurveyQuestionnaire entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        if(surveyQuestionnaireOptionSer.findByQuestion(entity.getId()).size()!=0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

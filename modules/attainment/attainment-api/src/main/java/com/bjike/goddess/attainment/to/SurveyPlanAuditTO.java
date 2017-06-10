@@ -21,7 +21,7 @@ public class SurveyPlanAuditTO extends BaseTO {
      * 调研计划
      */
     @NotNull(message = "调研计划不能为空", groups = {ADD.class, EDIT.class})
-    private String plan_id;
+    private String planId;
 
     /**
      * 审核人
@@ -56,12 +56,12 @@ public class SurveyPlanAuditTO extends BaseTO {
     private String auditTime;
 
 
-    public String getPlan_id() {
-        return plan_id;
+    public String getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(String plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(String planId) {
+        this.planId = planId;
     }
 
     public String getAuditor() {

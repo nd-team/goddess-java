@@ -44,4 +44,14 @@ public class OtherContactsApiImpl implements OtherContactsAPI {
     public List<OtherContactsBO> maps(OtherContactsDTO dto) throws SerException {
         return otherContactsSer.maps(dto);
     }
+
+    @Override
+    public OtherContactsBO getById(String id) throws SerException {
+        return otherContactsSer.getById(id);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return otherContactsSer.getTotal();
+    }
 }

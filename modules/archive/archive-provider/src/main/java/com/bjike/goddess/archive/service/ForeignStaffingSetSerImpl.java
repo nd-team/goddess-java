@@ -1,6 +1,7 @@
 package com.bjike.goddess.archive.service;
 
 import com.bjike.goddess.archive.bo.ForeignStaffingSetBO;
+import com.bjike.goddess.archive.dto.ForeignStaffingDTO;
 import com.bjike.goddess.archive.dto.ForeignStaffingSetDTO;
 import com.bjike.goddess.archive.entity.ForeignStaffingSet;
 import com.bjike.goddess.archive.to.ForeignStaffingSetTO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "archiveSerCache")
 @Service
 public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, ForeignStaffingSetDTO> implements ForeignStaffingSetSer {
+
+    @Autowired
+    private ForeignStaffingSer foreignStaffingSer;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -61,6 +66,10 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
         ForeignStaffingSet entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
+        ForeignStaffingDTO dto = new ForeignStaffingDTO();
+        dto.getConditions().add(Restrict.eq("type.id", entity.getId()));
+        if (foreignStaffingSer.findByCis(dto).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
     }

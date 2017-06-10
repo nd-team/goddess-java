@@ -6,7 +6,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.bo.PersonnelInformationBO;
 import com.bjike.goddess.qualifications.dto.PersonnelInformationDTO;
 import com.bjike.goddess.qualifications.entity.PersonnelInformation;
+import com.bjike.goddess.qualifications.entity.QualificationsHandle;
 import com.bjike.goddess.qualifications.to.PersonnelInformationTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,9 @@ import java.util.List;
 @Service
 public class PersonnelInformationSerImpl extends ServiceImpl<PersonnelInformation, PersonnelInformationDTO> implements PersonnelInformationSer {
 
+    @Autowired
+    private QualificationsHandleSer qualificationsHandleSer;
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PersonnelInformationBO save(PersonnelInformationTO to) throws SerException {
@@ -38,8 +43,10 @@ public class PersonnelInformationSerImpl extends ServiceImpl<PersonnelInformatio
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PersonnelInformationBO update(PersonnelInformationTO to) throws SerException {
-        PersonnelInformation entity = BeanTransform.copyProperties(to, PersonnelInformation.class), personnel = super.findById(to.getId());
-        entity.setCreateTime(personnel.getCreateTime());
+        PersonnelInformation entity = super.findById(to.getId());
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return BeanTransform.copyProperties(entity, PersonnelInformationBO.class);
@@ -49,6 +56,12 @@ public class PersonnelInformationSerImpl extends ServiceImpl<PersonnelInformatio
     @Override
     public PersonnelInformationBO delete(String id) throws SerException {
         PersonnelInformation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("该数据不存在");
+        List<QualificationsHandle> list = qualificationsHandleSer.findAll();
+        for (QualificationsHandle handle : list)
+            if (handle.getPersonnelSet().stream().filter(m -> m.getId().equals(id)).count() != 0)
+                throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, PersonnelInformationBO.class);
     }

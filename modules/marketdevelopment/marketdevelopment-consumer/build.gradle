@@ -39,7 +39,7 @@ dependencies {
 
     compile project(":modules:marketdevelopment:marketdevelopment-api")
     compile project(":modules:user:user-api")
-
+    compile project(":modules:organize:organize-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }

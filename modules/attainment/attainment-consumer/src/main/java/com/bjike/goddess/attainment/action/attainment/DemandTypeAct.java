@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class DemandTypeAct {
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) DemandTypeTO to) throws ActException {
+    public Result save(@Validated(ADD.class) DemandTypeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.save(to), DemandTypeVO.class));
         } catch (SerException e) {
@@ -57,7 +58,7 @@ public class DemandTypeAct {
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) DemandTypeTO to) throws ActException {
+    public Result update(@Validated(EDIT.class) DemandTypeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.update(to), DemandTypeVO.class));
         } catch (SerException e) {
@@ -88,7 +89,7 @@ public class DemandTypeAct {
      * @return class DemandTypeVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.congeal(id), DemandTypeVO.class));
@@ -104,7 +105,7 @@ public class DemandTypeAct {
      * @return class DemandTypeVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(demandTypeAPI.thaw(id), DemandTypeVO.class));

@@ -91,7 +91,7 @@ public class BusinessTypeAct {
      * @return class BusinessTypeVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.congeal(to), BusinessTypeVO.class, request));
@@ -107,7 +107,7 @@ public class BusinessTypeAct {
      * @return class BusinessTypeVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(BusinessTypeTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(businessTypeAPI.thaw(to), BusinessTypeVO.class, request));

@@ -8,6 +8,7 @@ import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
 import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
 import com.bjike.goddess.employeecontract.bo.ContractManageBO;
 import com.bjike.goddess.employeecontract.bo.ContractPersonalBO;
+import com.bjike.goddess.employeecontract.dto.ContractChangeDTO;
 import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
 import com.bjike.goddess.employeecontract.entity.ContractChange;
 import com.bjike.goddess.employeecontract.entity.ContractManage;
@@ -167,6 +168,10 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         ContractManage entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不存在");
+        ContractChangeDTO dto = new ContractChangeDTO();
+        dto.getConditions().add(Restrict.eq("contract.id", entity.getId()));
+        if (contractChangeSer.findByCis(dto).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

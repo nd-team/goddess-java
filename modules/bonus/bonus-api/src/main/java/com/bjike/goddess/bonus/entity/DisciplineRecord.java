@@ -30,19 +30,19 @@ public class DisciplineRecord extends BaseEntity {
     /**
      * 地区
      */
-    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255) DEFAULT ' '  COMMENT '地区'")
     private String area;
 
     /**
      * 项目组
      */
-    @Column(name = "project", columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    @Column(name = "project", columnDefinition = "VARCHAR(255)  DEFAULT ' ' COMMENT '项目组'")
     private String project;
 
     /**
      * 姓名
      */
-    @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column(name = "username", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ' '  COMMENT '姓名'")
     private String username;
 
     /**
@@ -54,7 +54,7 @@ public class DisciplineRecord extends BaseEntity {
     /**
      * 指标名称
      */
-    @Column(name = "name", columnDefinition = "VARCHAR(255)   COMMENT '指标名称'")
+    @Column(name = "name", columnDefinition = "VARCHAR(255)  DEFAULT ' '  COMMENT '指标名称'")
     private String name;
 
     /**

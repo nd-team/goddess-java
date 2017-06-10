@@ -88,7 +88,7 @@ public class ReflectAct {
      * @return class ReflectVO
      * @version v1
      */
-    @PatchMapping("v1/close/{id}")
+    @PutMapping("v1/close/{id}")
     public Result close(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(reflectAPI.close(id), ReflectVO.class, request));
@@ -104,7 +104,7 @@ public class ReflectAct {
      * @return class ReflectVO
      * @version v1
      */
-    @PatchMapping("v1/open/{id}")
+    @PutMapping("v1/open/{id}")
     public Result open(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(reflectAPI.open(id), ReflectVO.class, request));

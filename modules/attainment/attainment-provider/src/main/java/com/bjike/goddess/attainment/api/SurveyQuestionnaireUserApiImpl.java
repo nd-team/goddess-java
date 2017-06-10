@@ -4,6 +4,7 @@ import com.bjike.goddess.attainment.bo.SurveyQuestionnaireUserBO;
 import com.bjike.goddess.attainment.service.SurveyQuestionnaireUserSer;
 import com.bjike.goddess.attainment.to.SurveyQuestionnaireUserTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,8 @@ import java.util.List;
 @Service("surveyQuestionnaireUserApiImpl")
 public class SurveyQuestionnaireUserApiImpl implements SurveyQuestionnaireUserAPI {
 
-    private SurveyQuestionnaireUserSer surveyQuestionnaireUserSer;
+    @Autowired
+     private SurveyQuestionnaireUserSer surveyQuestionnaireUserSer;
 
     @Override
     public SurveyQuestionnaireUserBO save(SurveyQuestionnaireUserTO to) throws SerException {

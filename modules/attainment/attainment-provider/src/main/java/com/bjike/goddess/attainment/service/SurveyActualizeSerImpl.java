@@ -32,14 +32,18 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
 
     @Autowired
     private SurveyPlanSer surveyPlanSer;
+    @Autowired
+    private SurveyQuestionnaireSer surveyQuestionnaireSer;
+    @Autowired
+    private SurveyQuestionnaireUserSer surveyQuestionnaireUserSer;
 
     private SurveyActualizeBO transformBO(SurveyActualize entity) throws SerException {
         SurveyActualizeBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyActualizeBO.class);
-        bo.setPlan_id(entity.getPlan().getId());
+        bo.setPlanId(entity.getPlan().getId());
         bo.setStart(bo.getStartTime());
         bo.setEnd(bo.getEndTime());
         bo.setFinish(bo.getFinishTime());
-        BeanTransform.copyProperties(entity, bo, true);
+        bo = BeanTransform.copyProperties(entity, SurveyActualizeBO.class);
         return bo;
     }
 
@@ -54,7 +58,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
     @Override
     public SurveyActualizeBO save(SurveyActualizeTO to) throws SerException {
         SurveyActualize entity = BeanTransform.copyProperties(to, SurveyActualize.class, true);
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         entity.setStartTime(LocalDateTime.now());
@@ -70,7 +74,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         if (null == entity)
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
@@ -84,6 +88,8 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         SurveyActualize entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
+        if (surveyQuestionnaireSer.findByActualize(entity.getId()).size() != 0 || surveyQuestionnaireUserSer.findByActualize(entity.getId()).size() != 0)
+            throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

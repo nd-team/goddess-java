@@ -23,7 +23,7 @@ public class SurveyQuestionnaireOptionVO {
     /**
      * 问题ID
      */
-    private String questionnaire_id;
+    private String questionnaireId;
 
     /**
      * 选项
@@ -52,12 +52,12 @@ public class SurveyQuestionnaireOptionVO {
         this.questionnaireName = questionnaireName;
     }
 
-    public String getQuestionnaire_id() {
-        return questionnaire_id;
+    public String getQuestionnaireId() {
+        return questionnaireId;
     }
 
-    public void setQuestionnaire_id(String questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+    public void setQuestionnaireId(String questionnaireId) {
+        this.questionnaireId = questionnaireId;
     }
 
     public String getContent() {

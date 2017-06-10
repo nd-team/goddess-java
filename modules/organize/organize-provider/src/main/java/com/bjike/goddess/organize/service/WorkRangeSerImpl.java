@@ -69,10 +69,11 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         String[] fields = {"id", "createTime", "classify", "direction", "node", "project", "workRange"};
         StringBuilder sql = new StringBuilder("SELECT wr.id,wr.createTime,wr.classify,wr.direction,wr.node,wr.project,wr.workRange FROM ");
         sql.append(" organize_work_range AS wr ");
-        sql.append(" LEFT JOIN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
-        sql.append(departmentId).append("' GROUP BY range_id) AS de ");
-        sql.append(" ON wr.id = de.range_id ");
+        sql.append(" WHERE wr.id IN ").append(" (SELECT range_id FROM organize_work_range_department WHERE department_id = '");
+        sql.append(departmentId).append("' GROUP BY range_id)");
         List<WorkRange> list = super.findBySql(sql.toString(), WorkRange.class, fields);
+        if (list.size() == 0)
+            return new ArrayList<>(0);
         return BeanTransform.copyProperties(list, WorkRangeBO.class);
     }
 
@@ -151,11 +152,9 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         WorkRange entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (entity.getDepartments().size() != 0)
             throw new SerException("此处已被引用,无法删除");
-        }
+        super.remove(entity);
         return BeanTransform.copyProperties(entity, WorkRangeBO.class);
     }
 
@@ -237,5 +236,16 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         entity.setStatus(Status.THAW);
         super.save(entity);
         return BeanTransform.copyProperties(entity, WorkRangeBO.class);
+    }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        List<WorkRange> list = super.findByCis(dto);
+        List<OpinionBO> bos = new ArrayList<>(0);
+        for (WorkRange entity : list)
+            bos.add(new OpinionBO(entity.getId(), String.format("方向:%s 科目:%s 专业分类:%s 工作范围:%s", entity.getDirection(), entity.getProject(), entity.getClassify(), entity.getWorkRange())));
+        return bos;
     }
 }

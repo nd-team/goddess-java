@@ -5,11 +5,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.regionalprogresscollect.bo.ReferenceTargetBO;
+import com.bjike.goddess.regionalprogresscollect.dto.DayTargetDTO;
+import com.bjike.goddess.regionalprogresscollect.dto.MonthTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.dto.ReferenceTargetDTO;
+import com.bjike.goddess.regionalprogresscollect.dto.WeekTargetDTO;
 import com.bjike.goddess.regionalprogresscollect.entity.ReferenceTarget;
 import com.bjike.goddess.regionalprogresscollect.to.FindTO;
 import com.bjike.goddess.regionalprogresscollect.to.ReferenceTargetTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,13 @@ import java.util.List;
 @CacheConfig(cacheNames = "regionalprogresscollectSerCache")
 @Service
 public class ReferenceTargetSerImpl extends ServiceImpl<ReferenceTarget, ReferenceTargetDTO> implements ReferenceTargetSer {
+
+    @Autowired
+    private DayTargetSer dayTargetSer;
+    @Autowired
+    private MonthTargetSer monthTargetSer;
+    @Autowired
+    private WeekTargetSer weekTargetSer;
 
     @Override
     public ReferenceTargetBO save(ReferenceTargetTO to) throws SerException {
@@ -77,6 +88,15 @@ public class ReferenceTargetSerImpl extends ServiceImpl<ReferenceTarget, Referen
         ReferenceTarget entity = super.findById(id);
         if (null == entity)
             throw new SerException("概数据不存在");
+        DayTargetDTO dayTargetDTO = new DayTargetDTO();
+        dayTargetDTO.getConditions().add(Restrict.eq("target.id", id));
+        WeekTargetDTO weekTargetDTO = new WeekTargetDTO();
+        weekTargetDTO.getConditions().add(Restrict.eq("target.id", id));
+        MonthTargetDTO monthTargetDTO = new MonthTargetDTO();
+        monthTargetDTO.getConditions().add(Restrict.eq("target.id", id));
+        if (dayTargetSer.count(dayTargetDTO) != 0 || weekTargetSer.count(weekTargetDTO) != 0
+                || monthTargetSer.count(monthTargetDTO) != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ReferenceTargetBO.class);
     }

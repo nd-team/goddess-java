@@ -51,7 +51,7 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketResearchBO update(MarketResearchTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(researchManage))
+        if (!marPermissionSer.getMarPermission(researchManage))
             throw new SerException("您的帐号没有权限");
         try {
             MarketResearch entity = super.findById(to.getId());
@@ -67,7 +67,7 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketResearchBO delete(MarketResearchTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(researchManage))
+        if (!marPermissionSer.getMarPermission(researchManage))
             throw new SerException("您的帐号没有权限");
         MarketResearch entity = super.findById(to.getId());
         if (entity == null)
@@ -103,7 +103,7 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
 
     @Override
     public List<MarketResearch> findByPage(MarketResearchDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(researchManage) && !marPermissionSer.getMarPermission(marketCheck))
+        if (!marPermissionSer.getMarPermission(researchManage))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }

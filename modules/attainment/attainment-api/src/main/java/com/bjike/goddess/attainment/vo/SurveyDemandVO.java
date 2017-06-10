@@ -27,7 +27,7 @@ public class SurveyDemandVO {
     /**
      * 调研类型id
      */
-    private String type_id;
+    private String typeId;
 
     /**
      * 调研需求类型
@@ -42,7 +42,7 @@ public class SurveyDemandVO {
     /**
      * 调研需求类型id
      */
-    private String demand_id;
+    private String demandId;
 
     /**
      * 调研主题
@@ -115,12 +115,12 @@ public class SurveyDemandVO {
         this.typeName = typeName;
     }
 
-    public String getType_id() {
-        return type_id;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
     public String getDemandName() {
@@ -139,12 +139,12 @@ public class SurveyDemandVO {
         this.regular = regular;
     }
 
-    public String getDemand_id() {
-        return demand_id;
+    public String getDemandId() {
+        return demandId;
     }
 
-    public void setDemand_id(String demand_id) {
-        this.demand_id = demand_id;
+    public void setDemandId(String demandId) {
+        this.demandId = demandId;
     }
 
     public String getTheme() {

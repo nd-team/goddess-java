@@ -101,7 +101,7 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
 
     @Override
     public List<MarketMeasure> findByPage(MarketMeasureDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck))
+        if (!marPermissionSer.getMarPermission(marketCheck))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
     }

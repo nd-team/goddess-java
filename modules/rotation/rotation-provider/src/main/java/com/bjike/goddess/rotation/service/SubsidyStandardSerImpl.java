@@ -6,10 +6,14 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.bo.SubsidyStandardBO;
+import com.bjike.goddess.rotation.dto.CoverRotationDTO;
+import com.bjike.goddess.rotation.dto.RecommendRotationDTO;
+import com.bjike.goddess.rotation.dto.RotationStatisticsDTO;
 import com.bjike.goddess.rotation.dto.SubsidyStandardDTO;
 import com.bjike.goddess.rotation.entity.SubsidyStandard;
 import com.bjike.goddess.rotation.to.SubsidyStandardTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,13 @@ import java.util.List;
 @CacheConfig(cacheNames = "rotationSerCache")
 @Service
 public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, SubsidyStandardDTO> implements SubsidyStandardSer {
+
+    @Autowired
+    private CoverRotationSer coverRotationSer;
+    @Autowired
+    private RecommendRotationSer recommendRotationSer;
+    @Autowired
+    private RotationStatisticsSer rotationStatisticsSer;
 
     @Override
     public SubsidyStandardBO save(SubsidyStandardTO to) throws SerException {
@@ -57,6 +68,22 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         SubsidyStandard entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
+        CoverRotationDTO coverRotationApplyDTO = new CoverRotationDTO();
+        coverRotationApplyDTO.getConditions().add(Restrict.eq("applyLevel.id", id));
+        CoverRotationDTO coverRotationDTO = new CoverRotationDTO();
+        coverRotationDTO.getConditions().add(Restrict.eq("rotationLevel.id", id));
+
+        RecommendRotationDTO recommendRotationApplyDTO = new RecommendRotationDTO();
+        recommendRotationApplyDTO.getConditions().add(Restrict.eq("applyLevel.id", id));
+        RecommendRotationDTO recommendRotationDTO = new RecommendRotationDTO();
+        recommendRotationDTO.getConditions().add(Restrict.eq("rotationLevel.id", id));
+
+        RotationStatisticsDTO rotationStatisticsDTO = new RotationStatisticsDTO();
+        recommendRotationDTO.getConditions().add(Restrict.eq("arrangement.id", id));
+        if (coverRotationSer.count(coverRotationDTO) != 0 || coverRotationSer.count(coverRotationApplyDTO) != 0
+                || recommendRotationSer.count(recommendRotationDTO) != 0 || recommendRotationSer.count(recommendRotationApplyDTO) != 0
+                || rotationStatisticsSer.count(rotationStatisticsDTO) != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }

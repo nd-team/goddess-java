@@ -91,7 +91,7 @@ public class LaborRelationAct {
      * @return class LaborRelationVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.congeal(id), LaborRelationVO.class));
@@ -107,7 +107,7 @@ public class LaborRelationAct {
      * @return class LaborRelationVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(laborRelationAPI.thaw(id), LaborRelationVO.class));

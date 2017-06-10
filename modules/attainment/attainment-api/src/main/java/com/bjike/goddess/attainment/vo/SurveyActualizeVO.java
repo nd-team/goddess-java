@@ -22,7 +22,7 @@ public class SurveyActualizeVO {
     /**
      * 调研计划id
      */
-    private String plan_id;
+    private String planId;
 
     /**
      * 编号
@@ -37,7 +37,7 @@ public class SurveyActualizeVO {
     /**
      * 需求ID
      */
-    private String demand_id;
+    private String demandId;
 
     /**
      * 调研类型
@@ -113,12 +113,12 @@ public class SurveyActualizeVO {
         this.id = id;
     }
 
-    public String getPlan_id() {
-        return plan_id;
+    public String getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(String plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(String planId) {
+        this.planId = planId;
     }
 
     public String getSerialNumber() {
@@ -137,12 +137,12 @@ public class SurveyActualizeVO {
         this.username = username;
     }
 
-    public String getDemand_id() {
-        return demand_id;
+    public String getDemandId() {
+        return demandId;
     }
 
-    public void setDemand_id(String demand_id) {
-        this.demand_id = demand_id;
+    public void setDemandId(String demandId) {
+        this.demandId = demandId;
     }
 
     public String getTypeName() {

@@ -110,6 +110,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public InternalContactsBO save(InternalContactsTO to) throws SerException {
         InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
+        InternalContactsDTO dto = new InternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("userId", to.getUserId()));
+        if (super.count(dto) != 0)
+            throw new SerException("该用户数据已存在");
         entity.setStatus(Status.THAW);
         super.save(entity);
         return this.transformBO(entity);
@@ -121,6 +125,12 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         InternalContacts entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (!to.getUserId().equals(entity.getUserId())) {
+            InternalContactsDTO dto = new InternalContactsDTO();
+            dto.getConditions().add(Restrict.eq("userId", to.getUserId()));
+            if (super.count(dto) != 0)
+                throw new SerException("该用户数据已存在");
+        }
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(Status.THAW);
@@ -148,8 +158,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Override
     public InternalContactsBO findByUser(String user_id) throws SerException {
+        if (StringUtils.isBlank(user_id))
+            return null;
         InternalContactsDTO dto = new InternalContactsDTO();
-        dto.getConditions().add(Restrict.eq("user_id", user_id));
+        dto.getConditions().add(Restrict.eq("userId", user_id));
         InternalContacts entity = super.findOne(dto);
         return this.transformBO(entity);
     }

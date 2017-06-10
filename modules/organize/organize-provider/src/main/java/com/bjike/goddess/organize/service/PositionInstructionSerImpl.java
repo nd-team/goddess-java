@@ -72,7 +72,8 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setAngleName(entity.getAngle().getName());
         bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        bo.setClassifyName(entity.getReflect().getClassify().getName());
+        if (null != entity.getReflect().getClassify())
+            bo.setClassifyName(entity.getReflect().getClassify().getName());
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
         for (Operate operate : entity.getOperates())

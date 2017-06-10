@@ -170,7 +170,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 
     @Override
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck))
+        if (!marPermissionSer.getMarPermission(marketCheck))
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("typeId=desc");
         return this.transformBOList(super.findByPage(dto));

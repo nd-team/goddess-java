@@ -32,6 +32,8 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
 
     @Autowired
     private QualificationsHandleSer handleSer;
+    @Autowired
+    private HandlePlanStageSer handlePlanStageSer;
 
     @Transactional(rollbackFor = SerException.class)
 
@@ -79,6 +81,8 @@ public class QualificationsHandlePlanSerImpl extends ServiceImpl<QualificationsH
         QualificationsHandlePlan entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
+        if (handlePlanStageSer.findByPlan(id).size() != 0)
+            throw new SerException("存在依赖关系,无法删除");
         super.remove(entity);
         return this.transformBO(entity);
     }

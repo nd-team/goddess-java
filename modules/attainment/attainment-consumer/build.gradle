@@ -1,11 +1,11 @@
-buildscript { 
- repositories { 
+buildscript {
+ repositories {
  mavenCentral()
  }
  dependencies {
  classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
  }
- } 
+ }
 
 apply plugin: 'org.springframework.boot'
 jar {

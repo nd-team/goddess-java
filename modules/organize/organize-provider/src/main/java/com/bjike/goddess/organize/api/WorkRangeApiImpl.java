@@ -117,4 +117,9 @@ public class WorkRangeApiImpl implements WorkRangeAPI {
     public WorkRangeBO open(String id) throws SerException {
         return workRangeSer.open(id);
     }
+
+    @Override
+    public List<OpinionBO> findThawOpinion() throws SerException {
+        return workRangeSer.findThawOpinion();
+    }
 }

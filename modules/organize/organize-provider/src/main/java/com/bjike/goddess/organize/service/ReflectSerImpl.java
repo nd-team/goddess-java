@@ -135,7 +135,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
     @Override
     public List<ReflectBO> maps(ReflectDTO dto) throws SerException {
         dto.getSorts().add("status=asc");
-        return BeanTransform.copyProperties(super.findByPage(dto), ReflectBO.class);
+        return this.transformList(super.findByPage(dto));
     }
 
     @Override

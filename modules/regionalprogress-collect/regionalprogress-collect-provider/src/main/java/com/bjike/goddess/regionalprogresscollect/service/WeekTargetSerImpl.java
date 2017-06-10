@@ -44,6 +44,7 @@ public class WeekTargetSerImpl extends ServiceImpl<WeekTarget, WeekTargetDTO> im
     private WeekTargetBO transformBO(WeekTarget entity) throws SerException {
         WeekTargetBO bo = BeanTransform.copyProperties(entity, WeekTargetBO.class);
         BeanTransform.copyProperties(entity.getTarget(), bo, true);
+        bo.setId(entity.getId());
         bo.setTargetId(entity.getTarget().getId());
         return bo;
     }

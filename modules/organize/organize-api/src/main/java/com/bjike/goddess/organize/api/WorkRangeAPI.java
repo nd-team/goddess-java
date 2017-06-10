@@ -211,4 +211,14 @@ public interface WorkRangeAPI {
         return null;
     }
 
+    /**
+     * 获取工作范围选项
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<OpinionBO> findThawOpinion() throws SerException {
+        return null;
+    }
+
 }

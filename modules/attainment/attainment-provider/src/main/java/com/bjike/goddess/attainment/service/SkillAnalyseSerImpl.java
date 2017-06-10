@@ -42,6 +42,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
         SkillAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
         entity.setWriter(user.getUsername());
         entity.setWriterTime(LocalDateTime.now());
+        super.save(entity);
         return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
     }
 
@@ -59,7 +60,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
                     entity.setWriterTime(LocalDateTime.now());
                 }
                 super.update(entity);
-                return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
+                return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
             } catch (SerException e) {
                 throw new SerException("数据对象不能为空");
             }

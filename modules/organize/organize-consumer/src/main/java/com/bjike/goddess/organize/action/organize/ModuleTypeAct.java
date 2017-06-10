@@ -91,7 +91,7 @@ public class ModuleTypeAct {
      * @return class ModuleTypeVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.congeal(id), ModuleTypeVO.class, request));
@@ -107,7 +107,7 @@ public class ModuleTypeAct {
      * @return class ModuleTypeVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(moduleTypeAPI.thaw(id), ModuleTypeVO.class, request));

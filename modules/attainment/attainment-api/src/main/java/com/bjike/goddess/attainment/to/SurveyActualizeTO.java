@@ -22,7 +22,7 @@ public class SurveyActualizeTO extends BaseTO {
      * 调研计划id
      */
     @NotNull(message = "调研计划id不能为空", groups = {ADD.class, EDIT.class})
-    private String plan_id;
+    private String planId;
 
     /**
      * 调研实际开始时间
@@ -55,12 +55,12 @@ public class SurveyActualizeTO extends BaseTO {
     private String remark;
 
 
-    public String getPlan_id() {
-        return plan_id;
+    public String getPlanId() {
+        return planId;
     }
 
-    public void setPlan_id(String plan_id) {
-        this.plan_id = plan_id;
+    public void setPlanId(String planId) {
+        this.planId = planId;
     }
 
     public String getStartTime() {

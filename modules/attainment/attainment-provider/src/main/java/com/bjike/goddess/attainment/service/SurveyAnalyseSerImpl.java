@@ -1,9 +1,7 @@
 package com.bjike.goddess.attainment.service;
 
-import com.bjike.goddess.attainment.bo.SkillAnalyseBO;
 import com.bjike.goddess.attainment.bo.SurveyAnalyseBO;
 import com.bjike.goddess.attainment.dto.SurveyAnalyseDTO;
-import com.bjike.goddess.attainment.entity.SkillAnalyse;
 import com.bjike.goddess.attainment.entity.SurveyAnalyse;
 import com.bjike.goddess.attainment.to.SurveyAnalyseTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -37,7 +35,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
 
     private SurveyAnalyseBO transformBO(SurveyAnalyse entity) throws SerException {
         SurveyAnalyseBO bo = BeanTransform.copyProperties(surveyPlanSer.findBOById(entity.getPlan().getId()), SurveyAnalyseBO.class);
-        bo.setPlan_id(entity.getPlan().getId());
+        bo.setPlanId(entity.getPlan().getId());
         BeanTransform.copyProperties(entity, bo, true);
         return bo;
     }
@@ -52,8 +50,8 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SurveyAnalyseBO save(SurveyAnalyseTO to) throws SerException {
-        SurveyAnalyse entity = BeanTransform.copyProperties(to, SkillAnalyse.class, true);
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        SurveyAnalyse entity = BeanTransform.copyProperties(to, SurveyAnalyse.class);
+        entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         super.save(entity);
@@ -67,7 +65,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         if (null == entity)
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
-        entity.setPlan(surveyPlanSer.findById(to.getPlan_id()));
+        entity.setPlan(surveyPlanSer.findById(to.getPlanId()));
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
@@ -90,12 +88,12 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         SurveyAnalyseDTO dto = new SurveyAnalyseDTO();
         dto.getConditions().add(Restrict.eq("plan.id", plan_id));
         List<SurveyAnalyse> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list, SkillAnalyseBO.class);
+        return this.transformBOList(list);
     }
 
     @Override
     public List<SurveyAnalyseBO> maps(SurveyAnalyseDTO dto) throws SerException {
-        return BeanTransform.copyProperties(super.findByPage(dto), SkillAnalyseBO.class);
+        return this.transformBOList(super.findByPage(dto));
     }
 
     @Override
@@ -103,7 +101,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         SurveyAnalyse entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据不存在");
-        return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
+        return this.transformBO(entity);
     }
 
     @Override

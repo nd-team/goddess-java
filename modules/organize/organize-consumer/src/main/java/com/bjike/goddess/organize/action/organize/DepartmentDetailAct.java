@@ -155,7 +155,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.congeal(id), DepartmentDetailVO.class, request));
@@ -171,7 +171,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.thaw(id), DepartmentDetailVO.class, request));

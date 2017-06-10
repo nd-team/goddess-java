@@ -56,7 +56,7 @@ public class PerformanceIndicatorSerImpl extends ServiceImpl<PerformanceIndicato
     @Override
     public PerformanceIndicatorBO delete(String id) throws SerException {
         PerformanceIndicator entity = super.findById(id);
-        if (null != entity)
+        if (null == entity)
             throw new SerException("数据不存在");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, PerformanceIndicatorBO.class);
@@ -65,7 +65,7 @@ public class PerformanceIndicatorSerImpl extends ServiceImpl<PerformanceIndicato
     @Override
     public PerformanceIndicatorBO start(String id) throws SerException {
         PerformanceIndicator entity = super.findById(id);
-        if (null != entity)
+        if (null == entity)
             throw new SerException("数据不存在");
         entity.setStatus(Boolean.TRUE);
         super.update(entity);
@@ -75,17 +75,17 @@ public class PerformanceIndicatorSerImpl extends ServiceImpl<PerformanceIndicato
     @Override
     public PerformanceIndicatorBO close(String id) throws SerException {
         PerformanceIndicator entity = super.findById(id);
-        if (null != entity)
+        if (null == entity)
             throw new SerException("数据不存在");
         entity.setStatus(Boolean.FALSE);
-        super.remove(entity);
+        super.update(entity);
         return BeanTransform.copyProperties(entity, PerformanceIndicatorBO.class);
     }
 
     @Override
     public List<PerformanceIndicatorBO> findByStatus(Boolean status) throws SerException {
         PerformanceIndicatorDTO dto = new PerformanceIndicatorDTO();
-        dto.getConditions().add(Restrict.eq(STATUS, status));
+        dto.getConditions().add(Restrict.eq("status", false));
         List<PerformanceIndicator> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, PerformanceIndicatorBO.class);
     }

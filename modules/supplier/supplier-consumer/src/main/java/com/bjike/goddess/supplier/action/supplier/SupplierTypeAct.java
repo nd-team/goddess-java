@@ -105,7 +105,7 @@ public class SupplierTypeAct {
      * @return class SupplierTypeVO
      * @version v1
      */
-    @PatchMapping("v1/congeal/{id}")
+    @PutMapping("v1/congeal/{id}")
     public Result congeal(SupplierTypeTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.congeal(to), SupplierTypeVO.class, request));
@@ -121,7 +121,7 @@ public class SupplierTypeAct {
      * @return class SupplierTypeVO
      * @version v1
      */
-    @PatchMapping("v1/thaw/{id}")
+    @PutMapping("v1/thaw/{id}")
     public Result thaw(SupplierTypeTO to, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(supplierTypeAPI.thaw(to), SupplierTypeVO.class, request));

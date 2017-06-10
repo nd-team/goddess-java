@@ -45,6 +45,8 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     private ModuleTypeSer moduleTypeSer;
     @Autowired
     private PositionDetailUserSer positionDetailUserSer;
+    @Autowired
+    private PositionInstructionSer positionInstructionSer;
 
     private PositionDetailBO transformationToBO(PositionDetail entity) throws SerException {
         PositionDetailBO bo = BeanTransform.copyProperties(entity, PositionDetailBO.class);
@@ -211,11 +213,9 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         PositionDetail entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
+        if (positionInstructionSer.findByPosition(id).size() != 0 || positionDetailUserSer.findByPosition(id).size() != 0)
             throw new SerException("此处已被引用,无法删除");
-        }
+        super.remove(entity);
         return this.transformationToBO(entity);
     }
 

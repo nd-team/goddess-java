@@ -44,6 +44,7 @@ public class MonthTargetSerImpl extends ServiceImpl<MonthTarget, MonthTargetDTO>
     private MonthTargetBO transformBO(MonthTarget entity) throws SerException {
         MonthTargetBO bo = BeanTransform.copyProperties(entity, MonthTargetBO.class);
         BeanTransform.copyProperties(entity.getTarget(), bo, true);
+        bo.setId(entity.getId());
         bo.setTargetId(entity.getTarget().getId());
         return bo;
     }

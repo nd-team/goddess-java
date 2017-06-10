@@ -324,5 +324,19 @@ public class WorkRangeAct {
         }
     }
 
+    /**
+     * 获取工作范围选项
+     *
+     * @return class OpinionVO
+     * @version v1
+     */
+    @GetMapping("v1/findThawOpinion")
+    public Result findThawOpinion() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(workRangeAPI.findThawOpinion(), OpinionVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -8,7 +8,6 @@ import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.DayPlan;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,36 +45,47 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO save(DayPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         DayPlan entity = BeanTransform.copyProperties(to, DayPlan.class, true);
+        entity.setSerialNumber(this.createNumber(entity.getTime()));
         super.save(entity);
         return BeanTransform.copyProperties(entity, DayPlanBO.class);
+    }
+
+    private String createNumber(LocalDate time) throws SerException {
+        String day = time.toString().replaceAll("-", "");
+        List<DayPlanBO> list = this.findByDate(time.toString());
+        if (null == list)
+            list = new ArrayList<>(0);
+        StringBuilder serial = new StringBuilder();
+        serial.append(day).append("-").append(list.size() + 1);
+        return serial.toString();
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO update(DayPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
-        if (StringUtils.isNotBlank(to.getId())) {
-            try {
-                DayPlan entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
-                entity.setModifyTime(LocalDateTime.now());
-                super.update(entity);
-                return BeanTransform.copyProperties(entity, DayPlanBO.class);
-            } catch (Exception e) {
-                throw new SerException("数据对象不能为空");
-            }
-        } else
-            throw new SerException("数据ID不能为空");
+        DayPlan entity = super.findById(to.getId());
+        if (null != entity) {
+            BeanTransform.copyProperties(to, entity, true);
+            entity.setTime(LocalDate.parse(to.getTime()));
+            entity.setSerialNumber(this.createNumber(entity.getTime()));
+            entity.setModifyTime(LocalDateTime.now());
+            super.update(entity);
+            return BeanTransform.copyProperties(entity, DayPlanBO.class);
+        } else {
+            throw new SerException("数据对象不能为空");
+        }
+
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DayPlanBO delete(DayPlanTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(planManage))
+        if (!marPermissionSer.getMarPermission(planManage))
             throw new SerException("您的帐号没有权限");
         DayPlan entity = super.findById(to.getId());
         if (entity == null)
@@ -104,8 +115,7 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
 
     @Override
     public List<DayPlanBO> maps(DayPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("time=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), DayPlanBO.class);

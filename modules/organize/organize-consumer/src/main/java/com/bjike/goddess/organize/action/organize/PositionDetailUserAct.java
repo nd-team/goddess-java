@@ -151,11 +151,6 @@ public class PositionDetailUserAct {
     public Result maps(PositionDetailUserDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<PositionDetailUserVO> vos = BeanTransform.copyProperties(positionDetailUserAPI.maps(dto), PositionDetailUserVO.class, request);
-            for (PositionDetailUserVO vo : vos) {
-                List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(vo.getUserId());
-                if (positionDetailBOs != null)
-                    vo.setPositionVo(BeanTransform.copyProperties(positionDetailBOs, PositionDetailVO.class));
-            }
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -187,6 +182,9 @@ public class PositionDetailUserAct {
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             PositionDetailUserVO vo = BeanTransform.copyProperties(positionDetailUserAPI.findById(id), PositionDetailUserVO.class, request);
+            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(vo.getUserId());
+            if (null != bos)
+                vo.setPositionDetails(BeanTransform.copyProperties(bos, PositionDetailVO.class));
             return ActResult.initialize(this.assemble(vo));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

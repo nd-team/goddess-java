@@ -86,7 +86,7 @@ public class InstructionClassifyAct {
      * @return class InstructionClassifyVO
      * @version v1
      */
-    @PatchMapping("v1/close/{id}")
+    @PutMapping("v1/close/{id}")
     public Result close(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(instructionClassifyAPI.close(id), InstructionClassifyVO.class));
@@ -102,7 +102,7 @@ public class InstructionClassifyAct {
      * @return class InstructionClassifyVO
      * @version v1
      */
-    @PatchMapping("v1/open/{id}")
+    @PutMapping("v1/open/{id}")
     public Result open(@PathVariable String id) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(instructionClassifyAPI.open(id), InstructionClassifyVO.class));

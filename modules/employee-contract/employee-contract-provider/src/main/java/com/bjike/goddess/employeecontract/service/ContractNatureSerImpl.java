@@ -6,10 +6,12 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.employeecontract.bo.ContractNatureBO;
+import com.bjike.goddess.employeecontract.dto.ContractManageDTO;
 import com.bjike.goddess.employeecontract.dto.ContractNatureDTO;
 import com.bjike.goddess.employeecontract.entity.ContractNature;
 import com.bjike.goddess.employeecontract.to.ContractNatureTO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ import java.util.List;
 @CacheConfig(cacheNames = "employeecontractSerCache")
 @Service
 public class ContractNatureSerImpl extends ServiceImpl<ContractNature, ContractNatureDTO> implements ContractNatureSer {
+
+    @Autowired
+    private ContractManageSer contractManageSer;
 
     @Override
     public ContractNatureBO save(ContractNatureTO to) throws SerException {
@@ -57,6 +62,10 @@ public class ContractNatureSerImpl extends ServiceImpl<ContractNature, ContractN
         ContractNature entity = super.findById(id);
         if (null == entity)
             throw new SerException("数据对象不存在");
+        ContractManageDTO dto = new ContractManageDTO();
+        dto.getConditions().add(Restrict.eq("nature.id",entity.getId()));
+       if(contractManageSer.findByCis(dto).size()!=0)
+           throw new SerException("存在依赖关系无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, ContractNatureBO.class);
     }

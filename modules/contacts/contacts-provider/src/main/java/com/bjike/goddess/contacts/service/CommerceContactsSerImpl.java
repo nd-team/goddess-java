@@ -1,5 +1,6 @@
 package com.bjike.goddess.contacts.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -36,6 +37,10 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Override
     public CommerceContactsBO save(CommerceContactsTO to) throws SerException {
         CommerceContacts entity = BeanTransform.copyProperties(to, CommerceContacts.class);
+        CommerceContactsDTO dto = new CommerceContactsDTO();
+        dto.getConditions().add(Restrict.eq("customerNum", to.getCustomerNum()));
+        if (super.count(dto) != 0)
+            throw new SerException(to.getCustomerNum() + ":该编号以已存在");
         super.save(entity);
         return BeanTransform.copyProperties(entity, CommerceContactsBO.class);
     }
@@ -46,6 +51,12 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         CommerceContacts entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("该数据不村在");
+        if (!to.getCustomerNum().equals(entity.getCustomerNum())) {
+            CommerceContactsDTO dto = new CommerceContactsDTO();
+            dto.getConditions().add(Restrict.eq("customerNum", to.getCustomerNum()));
+            if (super.count(dto) != 0)
+                throw new SerException(to.getCustomerNum() + ":该编号以已存在");
+        }
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
