@@ -34,7 +34,7 @@ public class RecruitProTO extends BaseTO {
     /**
      * 套餐名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "招聘网站不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "套餐名称不能为空")
     private String name;
 
     /**
