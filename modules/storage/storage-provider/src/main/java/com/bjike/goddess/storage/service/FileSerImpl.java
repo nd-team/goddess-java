@@ -70,7 +70,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
             if (count >= 2) {
                 count /= 2;
             }
-            java.io.File[] files = new java.io.File[count];
+            List<java.io.File> files = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 FileInfo fileInfo = this.getFileInfo(inputStreams.get(infoCount));
                 String storageToken = fileInfo.getStorageToken();
@@ -103,11 +103,11 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                         super.update(myFile);
                     }
                 }
-                files[count - 1] = file;
+                files.add(file) ;
                 infoCount += 2;
                 fileCount += 2;
             }
-            return getFileBo(files, module, sysNO, PathCommon.ROOT_PATH);
+            return getFileBo(files.toArray(new java.io.File[count]), module, sysNO, PathCommon.ROOT_PATH);
         } catch (Exception e) {
             e.printStackTrace();
             throw new SerException(e.getMessage());
