@@ -29,4 +29,5 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" id="reportAddressInforApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.TemplateManageAPI" id="templateManageApiImpl"/>
 
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 </beans>

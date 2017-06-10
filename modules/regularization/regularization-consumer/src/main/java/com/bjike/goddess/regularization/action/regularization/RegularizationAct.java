@@ -47,7 +47,6 @@ public class RegularizationAct {
      *
      * @param id 员工转正唯一标识
      * @return class RegularizationVO
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -66,7 +65,6 @@ public class RegularizationAct {
      * 计算总数量
      *
      * @param dto 员工转正dto
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -85,7 +83,6 @@ public class RegularizationAct {
      *
      * @param dto 员工转正dto
      * @return class RegularizationVO
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -105,7 +102,6 @@ public class RegularizationAct {
      *
      * @param to 员工转正to
      * @return class RegularizationVO
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -124,7 +120,6 @@ public class RegularizationAct {
      * 根据id删除员工转正
      *
      * @param id 员工转正唯一标识
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -142,7 +137,6 @@ public class RegularizationAct {
      * 编辑员工转正
      *
      * @param to 员工转正to
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -161,7 +155,6 @@ public class RegularizationAct {
      *
      * @param id 员工转正唯一标识
      * @param to 管理层评分to
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -180,7 +173,7 @@ public class RegularizationAct {
      *
      * @param id 员工转正唯一标识
      * @return class ManagementScoreVO
-     * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @GetMapping("v1/checkManageScore/{id}")
@@ -201,7 +194,6 @@ public class RegularizationAct {
      * @param decisionLevelEvaluate 决策层评价
      * @param decisionLevelRank     决策层评分等级
      * @param decisionLevelScore    决策层具体评分
-     * @throws ActException
      * @version v1
      */
     @PutMapping("v1/decisionLevelEvaluate/{id}")
@@ -218,7 +210,6 @@ public class RegularizationAct {
      * 规划模块补充
      *
      * @param to 规划模块补充to
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -237,7 +228,7 @@ public class RegularizationAct {
      *
      * @param id 员工转正唯一标识
      * @param budgetPositiveComment 预算模块转正意见
-     * @throws ActException
+     * @version v1
      */
     @LoginAuth
     @PutMapping("v1/budgetModuleSupply/{id}")
@@ -254,7 +245,6 @@ public class RegularizationAct {
      * 总经办审批
      *
      * @param to 总经办审批to
-     * @throws ActException
      * @version v1
      */
     @LoginAuth

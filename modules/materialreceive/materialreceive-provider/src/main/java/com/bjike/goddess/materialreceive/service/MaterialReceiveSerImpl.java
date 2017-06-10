@@ -24,11 +24,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 物资领用业务实现
+ * 物资领用归还登记业务实现
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用业务实现 ]
+ * @Description: [ 物资领用归还登记业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -44,7 +44,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
 
 
     /**
-     * 分页查询物资领用
+     * 分页查询物资领用归还登记
      *
      * @return class MaterialReceiveBO
      * @throws SerException
@@ -57,9 +57,9 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 保存物资领用
+     * 保存物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @return class MaterialReceiveBO
      * @throws SerException
      */
@@ -71,7 +71,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 保存物资领用
+     * 保存物资领用归还登记
      *
      * @param to
      * @param quantity
@@ -102,9 +102,9 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 设置物资领用中的物资编号
+     * 设置物资领用归还登记中的物资编号
      *
-     * @param to          物资领用to
+     * @param to          物资领用归还登记to
      * @param materialNum 物资编号
      * @return
      */
@@ -139,9 +139,9 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 根据id删除物资领用
+     * 根据id删除物资领用归还登记
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @throws SerException
      */
     @Override
@@ -151,9 +151,9 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 更新物资领用
+     * 更新物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws SerException
      */
     @Override
@@ -187,10 +187,10 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     }
 
     /**
-     * 更新物资领用
+     * 更新物资领用归还登记
      *
-     * @param to    物资领用to
-     * @param model 物资领用
+     * @param to    物资领用归还登记to
+     * @param model 物资领用归还登记
      * @throws SerException
      */
     private void updateMaterialReceive(MaterialReceiveTO to, MaterialReceive model) throws SerException {
@@ -202,7 +202,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 审核
      *
-     * @param id           物资领用唯一标识
+     * @param id           物资领用归还登记唯一标识
      * @param auditState   审核状态
      * @param auditOpinion 审核意见
      * @throws SerException
@@ -229,7 +229,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 领用成功
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws SerException
      */
     @Override
@@ -277,7 +277,7 @@ public class MaterialReceiveSerImpl extends ServiceImpl<MaterialReceive, Materia
     /**
      * 更新用户状态为在库
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws SerException
      */
     private void setUseStateToInStock(MaterialReturnTO to) throws SerException {

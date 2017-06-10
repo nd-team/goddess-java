@@ -21,4 +21,7 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.MaterialBuyAPI" ref="materialBuyApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.materialbuy.api.TempMatterDemandAPI" ref="tempMatterDemandApiImpl"></dubbo:service>
 
+	<!--引用其他模块的API-->
+	<dubbo:reference validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+
 </beans>

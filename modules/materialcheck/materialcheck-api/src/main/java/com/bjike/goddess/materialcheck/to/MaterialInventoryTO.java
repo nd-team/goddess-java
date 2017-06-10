@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.materialcheck.type.InventoryType;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 物资盘点
  *
@@ -138,6 +140,7 @@ public class MaterialInventoryTO extends BaseTO {
     /**
      * 盘点类型
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "盘点类型不能为空")
     private InventoryType inventoryType;
 
 

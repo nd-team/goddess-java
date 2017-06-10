@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 
 
 /**
- * 项目组领用归还
+ * 项目组领用归还登记
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:52 ]
- * @Description: [ 项目组领用归还 ]
+ * @Description: [ 项目组领用归还登记 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

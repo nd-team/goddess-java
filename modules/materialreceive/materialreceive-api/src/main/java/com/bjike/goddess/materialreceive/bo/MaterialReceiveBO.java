@@ -5,11 +5,11 @@ import com.bjike.goddess.materialinstock.type.MaterialState;
 import com.bjike.goddess.materialreceive.type.AuditState;
 
 /**
- * 物资领用业务传输对象
+ * 物资领用归还登记业务传输对象
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用业务传输对象 ]
+ * @Description: [ 物资领用归还登记业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

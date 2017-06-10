@@ -10,9 +10,10 @@ import com.bjike.goddess.materialbuy.to.DeviceTypeTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 /**
  * 设备类型业务实现
@@ -97,6 +98,28 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
         BeanTransform.copyProperties(to, model, true);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
+    }
+
+    /**
+     * 查询所有设备名称
+     *
+     * @throws SerException
+     */
+    @Override
+    public List<String> findAllDeviceNames() throws SerException {
+        List<DeviceType> list = super.findAll();
+
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>(0);
+        for (DeviceType deviceType : list) {
+            if (StringUtils.isNotBlank(deviceType.getType())) {
+                set.add(deviceType.getType());
+            }
+        }
+
+        return new ArrayList<>(set);
     }
 
 }
