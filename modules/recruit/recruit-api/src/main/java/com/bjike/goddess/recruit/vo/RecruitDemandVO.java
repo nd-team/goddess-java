@@ -14,6 +14,11 @@ import com.bjike.goddess.recruit.type.AuditType;
 public class RecruitDemandVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 招聘地区
      */
     private String recruitArea;
@@ -87,6 +92,14 @@ public class RecruitDemandVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public RecruitDemandVO(){}
 

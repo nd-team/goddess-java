@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class RecruitPlanVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 招聘地区
      */
     private String recruitArea;
@@ -92,6 +97,14 @@ public class RecruitPlanVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getRecruitArea() {
         return recruitArea;
