@@ -75,8 +75,10 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (autoLogin) {
+
             String userToken = request.getHeader(RpcCommon.USER_TOKEN);
             String token = storageUserAPI.getStorageToken(account, password, moduleName, userToken);
+            request.setAttribute(RpcCommon.STORAGE_TOKEN, token);
             RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
         } else {
             if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
