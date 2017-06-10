@@ -18,6 +18,22 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 public class BaseInfoManageDTO extends BaseDTO {
 
     /**
+     * 合同外部项目编号
+     */
+    private String outProjectNum;
+
+    /**
+     * 内部项目名称
+     */
+    private String innerProject;
+
+
+    /**
+     * 对应销售合同编号
+     */
+    private String saleContractNum;
+
+    /**
      * 业务类型
      */
     private BusinessType businessType;
@@ -74,6 +90,30 @@ public class BaseInfoManageDTO extends BaseDTO {
      * 内部项目名称数组
      */
     private String[] innerProjects;
+
+    public String getOutProjectNum() {
+        return outProjectNum;
+    }
+
+    public void setOutProjectNum(String outProjectNum) {
+        this.outProjectNum = outProjectNum;
+    }
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
+
+    public String getSaleContractNum() {
+        return saleContractNum;
+    }
+
+    public void setSaleContractNum(String saleContractNum) {
+        this.saleContractNum = saleContractNum;
+    }
 
     public String[] getInnerProjects() {
         return innerProjects;
