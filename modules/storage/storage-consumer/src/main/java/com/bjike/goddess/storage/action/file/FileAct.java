@@ -1,6 +1,7 @@
 package com.bjike.goddess.storage.action.file;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -254,8 +255,12 @@ public class FileAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 获取storageToken
+     * @param fileInfo
+     */
     private void handlerToken(FileInfo fileInfo) {
-        fileInfo.setStorageToken(RpcContext.getContext().getAttachment("storageToken"));
+        fileInfo.setStorageToken(RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN));
 
     }
 
