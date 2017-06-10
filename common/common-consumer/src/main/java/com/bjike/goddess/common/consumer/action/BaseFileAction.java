@@ -1,6 +1,8 @@
 package com.bjike.goddess.common.consumer.action;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -175,9 +177,9 @@ public abstract class BaseFileAction {
     private List<InputStream> initInputStreams(HttpServletRequest request, String path) throws SerException {
         List<MultipartFile> multipartFiles = getMultipartFile(request);
         List<InputStream> inputStreams = null;
-        String token = request.getParameter("storageToken");
+        String token = request.getParameter(RpcCommon.STORAGE_TOKEN);
         if(StringUtils.isBlank(token)){
-            token = request.getAttribute("storageToken").toString();
+            token = RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN);
         }
         if (null != multipartFiles) {
             inputStreams = new ArrayList<>(multipartFiles.size() * 2);

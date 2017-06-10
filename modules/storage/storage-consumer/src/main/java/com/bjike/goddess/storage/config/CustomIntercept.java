@@ -26,11 +26,17 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
+        /**
+         * 自动登录
+         */
         String username = "ike";
         String password = "123456";
         String moduleName = "storage";
         HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, username, password, moduleName), "/**");
-
+        /**
+         * 直接访问须手动登录
+         */
+       // HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, false), "/**");
         /**
          * 暂时不加权限
          */
