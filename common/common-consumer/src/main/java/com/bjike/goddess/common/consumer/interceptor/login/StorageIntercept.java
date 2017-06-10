@@ -1,6 +1,8 @@
 package com.bjike.goddess.common.consumer.interceptor.login;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -37,9 +39,9 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         validatePath(request, response);
-        String userToken = request.getHeader("userToken");
+        String userToken = request.getHeader(RpcCommon.USER_TOKEN);
         String token = storageUserAPI.getStorageToken(account, password, moduleName,userToken);
-        request.setAttribute("storageToken", token);
+        RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
         return true;
     }
 

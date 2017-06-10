@@ -1,5 +1,6 @@
 package com.bjike.goddess.storage.action.file;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -9,7 +10,6 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
-import com.bjike.goddess.storage.constant.StorageCommon;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -51,10 +49,10 @@ public class FileAct extends BaseFileAction {
      * @throws ActException
      */
     @GetMapping("v1/preview")
-    public Result preview(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result preview(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
         String url = null;
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             byte[] bytes = fileAPI.download(fileInfo);
             url = previewUrl(bytes, fileInfo.getFileName());
             return ActResult.initialize(url);
@@ -74,9 +72,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -91,12 +89,12 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result,HttpServletRequest request ) throws ActException {
+    public Result upload(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             List<InputStream> inputStreams = getInputStreams(request);
             List<FileBO> fileBOS = fileAPI.upload(inputStreams);
-            return new ActResult("upload success",BeanTransform.copyProperties(fileBOS,FileVO.class));
+            return new ActResult("upload success", BeanTransform.copyProperties(fileBOS, FileVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -111,9 +109,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exists")
-    public Result exists(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result exists(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             if (fileAPI.existsFile(fileInfo)) {
                 return new ActResult(filename + " is exists!");
@@ -134,8 +132,8 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/mkdir")
-    public Result mkdir(@Validated({FileInfo.COMMON.class, FileInfo.MKDIR.class}) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws SerException {
-        handlerToken(request,fileInfo);
+    public Result mkdir(@Validated({FileInfo.COMMON.class, FileInfo.MKDIR.class}) FileInfo fileInfo, BindingResult result) throws SerException {
+        handlerToken(fileInfo);
         fileAPI.mkDir(fileInfo);
         return new ActResult("mkDir success");
     }
@@ -147,8 +145,8 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delFile(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws SerException {
-        handlerToken(request,fileInfo);
+    public Result delFile(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result) throws SerException {
+        handlerToken(fileInfo);
         fileAPI.delFile(fileInfo);
         return new ActResult("delFile success");
     }
@@ -161,8 +159,8 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/rename")
-    public Result rename(@Validated({FileInfo.COMMON.class, FileInfo.RENAME.class}) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws SerException {
-        handlerToken(request,fileInfo);
+    public Result rename(@Validated({FileInfo.COMMON.class, FileInfo.RENAME.class}) FileInfo fileInfo, BindingResult result) throws SerException {
+        handlerToken(fileInfo);
         fileAPI.rename(fileInfo);
         return new ActResult("rename success");
     }
@@ -174,9 +172,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/download")
-    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
@@ -194,9 +192,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/move")
-    public Result move(@Validated({FileInfo.MOVE.class, FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result move(@Validated({FileInfo.MOVE.class, FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             Boolean rs = fileAPI.move(fileInfo);
             return ActResult.initialize(rs);
         } catch (Exception e) {
@@ -212,9 +210,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/recycle")
-    public Result recycle(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result recycle(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             fileAPI.recycle(fileInfo);
             return new ActResult("recycle success!");
         } catch (Exception e) {
@@ -229,9 +227,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/restore")
-    public Result restore(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result restore(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             fileAPI.restore(fileInfo);
             return new ActResult("restore success!");
         } catch (Exception e) {
@@ -246,9 +244,9 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/recycle-list")
-    public Result recycleList(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result,HttpServletRequest request) throws ActException {
+    public Result recycleList(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result) throws ActException {
         try {
-            handlerToken(request,fileInfo);
+            handlerToken(fileInfo);
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.recycleList(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -256,8 +254,8 @@ public class FileAct extends BaseFileAction {
         }
     }
 
-    private void handlerToken(HttpServletRequest request,FileInfo fileInfo){
-        fileInfo.setStorageToken(request.getAttribute("storageToken").toString());
+    private void handlerToken(FileInfo fileInfo) {
+        fileInfo.setStorageToken(RpcContext.getContext().getAttachment("storageToken"));
 
     }
 

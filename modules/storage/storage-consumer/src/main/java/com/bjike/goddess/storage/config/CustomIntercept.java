@@ -2,10 +2,8 @@ package com.bjike.goddess.storage.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;
-import com.bjike.goddess.common.consumer.interceptor.login.LoginIntercept;
 import com.bjike.goddess.common.consumer.interceptor.login.StorageIntercept;
 import com.bjike.goddess.storage.api.StorageUserAPI;
-import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +23,13 @@ import java.util.List;
 public class CustomIntercept implements Interceptor {
     @Autowired
     private StorageUserAPI storageUserAPI;
+
     @Override
     public List<HIInfo> customerInterceptors() {
-        String username ="ike";
-        String password ="123456";
-        String moduleName ="message";
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI,username,password,moduleName), "/**");
+        String username = "ike";
+        String password = "123456";
+        String moduleName = "storage";
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, username, password, moduleName), "/**");
 
         /**
          * 暂时不加权限
