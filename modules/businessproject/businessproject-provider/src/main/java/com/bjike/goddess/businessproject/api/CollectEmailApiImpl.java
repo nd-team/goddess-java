@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.bo.CollectEmailBO;
 import com.bjike.goddess.businessproject.dto.CollectEmailDTO;
 import com.bjike.goddess.businessproject.service.CollectEmailSer;
 import com.bjike.goddess.businessproject.to.CollectEmailTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,12 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     @Autowired
     private CollectEmailSer collectEmailSer;
 
+
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return collectEmailSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long counts(CollectEmailDTO collectEmailDTO) throws SerException {
         return collectEmailSer.counts(collectEmailDTO);

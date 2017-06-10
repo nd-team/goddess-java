@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
@@ -14,6 +15,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.bean.DataTypeUtils;
@@ -55,6 +57,7 @@ public class SiginManageAction extends BaseFileAction {
     private SiginManageAPI siginManageAPI;
     @Autowired
     private FileAPI fileAPI;
+
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
@@ -394,7 +397,7 @@ public class SiginManageAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/export")
+    @GetMapping("v1/export")
     public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "项目签订与立项.xlsx";

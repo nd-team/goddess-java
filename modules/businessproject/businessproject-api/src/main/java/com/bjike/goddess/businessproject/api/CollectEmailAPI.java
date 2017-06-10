@@ -3,6 +3,7 @@ package com.bjike.goddess.businessproject.api;
 import com.bjike.goddess.businessproject.bo.CollectEmailBO;
 import com.bjike.goddess.businessproject.dto.CollectEmailDTO;
 import com.bjike.goddess.businessproject.to.CollectEmailTO;
+import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,14 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CollectEmailAPI {
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 总条数
