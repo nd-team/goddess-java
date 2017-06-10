@@ -103,7 +103,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                         super.update(myFile);
                     }
                 }
-                files[count-1] = file;
+                files[count - 1] = file;
                 infoCount += 2;
                 fileCount += 2;
             }
@@ -361,20 +361,25 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
         String realPath = null;
         String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
         String sysNO = storageUserAPI.getCurrentSysNO(storageToken); //网盘登录用户
-        if (path.equals("/")) {
-            path = "";
-        }
-        if (!"admin".equals(module)) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(PathCommon.ROOT_PATH);
-            sb.append(PathCommon.SEPARATOR);
-            sb.append(sysNO);
-            sb.append(PathCommon.SEPARATOR);
-            sb.append(module);
-            sb.append(path);
-            realPath = sb.toString();
+        if (StringUtils.isNotBlank(path)) {
+            if (path.equals("/")) {
+                path = "";
+            }
+            if (!"admin".equals(module)) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(PathCommon.ROOT_PATH);
+                sb.append(PathCommon.SEPARATOR);
+                sb.append(sysNO);
+                sb.append(PathCommon.SEPARATOR);
+                sb.append(module);
+                sb.append(path);
+                realPath = sb.toString();
+            } else {
+                realPath = PathCommon.ROOT_PATH + path;
+            }
+
         } else {
-            realPath = PathCommon.ROOT_PATH + path;
+            throw new SerException("path 不能为空!");
         }
 
         return realPath;

@@ -38,25 +38,13 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        validatePath(request, response);
         String userToken = request.getHeader(RpcCommon.USER_TOKEN);
         String token = storageUserAPI.getStorageToken(account, password, moduleName,userToken);
         RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
         return true;
     }
 
-    private void validatePath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (StringUtils.isBlank(request.getParameter("path"))) {
-            PrintWriter out = response.getWriter();
-            out.flush();
-            response.setContentType("text/html; charset=UTF-8"); //转码
-            response.setStatus(200);
-            ActResult result = new ActResult();
-            result.setMsg("path 不能为空!");
-            result.setCode(1);
-            out.println(JSON.toJSONString(result));
-        }
-    }
+
 
 
     @Override
