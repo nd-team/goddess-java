@@ -87,6 +87,18 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         return flag;
     }
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee && flagAdd ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
@@ -159,6 +171,12 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
                 break;
             case DOWNLOAD:
                 flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
                 break;
             default:
                 flag = true;

@@ -16,6 +16,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -51,7 +52,7 @@ public class ContractCategoryAction extends BaseFileAction {
 
 
     /**
-     * 导航权限
+     * 功能导航权限
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1

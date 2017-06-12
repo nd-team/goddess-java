@@ -41,34 +41,13 @@ public class CollectEmailAction {
     @Autowired
     private CollectEmailAPI collectEmailAPI;
 
-    @Autowired
-    private UserSetPermissionAPI userSetPermissionAPI;
 
 
-    /**
-     * 模块设置导航权限
-     * @throws ActException
-     * @version v1
-     */
-    @LoginAuth
-    @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission( ) throws ActException {
-        try {
 
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission( );
-            if(! isHasPermission ){
-                //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
-            }
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
-     * 导航权限
+     * 功能导航权限
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1

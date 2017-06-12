@@ -27,6 +27,10 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     private CollectEmailSer collectEmailSer;
 
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return collectEmailSer.sonPermission();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {

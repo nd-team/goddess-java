@@ -1,5 +1,6 @@
 package com.bjike.goddess.common.utils.excel;
 
+import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.bean.DataTypeUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
@@ -12,6 +13,7 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.rmi.ServerException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +38,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> excelToClazz(File file, Class clazz, Excel excel) {
+    public static <T> List<T> excelToClazz(File file, Class clazz, Excel excel) throws ActException{
         try {
             InputStream is = new FileInputStream(file);
             return excelToClazz(is, clazz, excel);
@@ -54,7 +56,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> excelToClazz(InputStream is, Class clazz, Excel excel) {
+    public static <T> List<T> excelToClazz(InputStream is, Class clazz, Excel excel) throws ActException{
         XSSFWorkbook wb = null;
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
@@ -76,7 +78,7 @@ public class ExcelUtil {
                             String cellVal = getCellValue(row.getCell(j), eh);
                             Object val = convertValue(cellVal, eh, fields);
                             if (eh.notNull() && null == val) {
-                                throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
+                                throw new ActException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
                             } else if (null != val) {
                                 setFieldValue(obj, eh.name(), val, fields);
                             }
@@ -87,7 +89,9 @@ public class ExcelUtil {
 
             }
             return objects;
-        } catch (Exception e) {
+        }catch (ActException ae){
+            throw ae;
+        }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
@@ -103,7 +107,7 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> mergeExcelToClazz(InputStream is, Class clazz, Excel excel) {
+    public static <T> List<T> mergeExcelToClazz(InputStream is, Class clazz, Excel excel)  throws ActException{
         XSSFWorkbook wb = null;
         try {
             List<Field> fields = ClazzUtils.getFields(clazz);// 类上所有字段信息
@@ -136,7 +140,7 @@ public class ExcelUtil {
                             }
                             Object val = convertValue(cellVal, eh, fields);
                             if (eh.notNull() && null == val) {
-                                throw new RuntimeException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
+                                throw new ActException(rowIndex + " 行,列[" + eh.name() + "]不能为空!");
                             } else if (null != val) {
 //                                mer = cellVal;
                                 setFieldValue(obj, eh.name(), val, fields);
@@ -149,6 +153,8 @@ public class ExcelUtil {
 
             }
             return objects;
+        }catch (ActException ae){
+            throw ae;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -164,7 +170,7 @@ public class ExcelUtil {
      * @param column
      * @return
      */
-    public static String getMergedRegionValue(Sheet sheet, int row, int column , ExcelHeader eh) {
+    public static String getMergedRegionValue(Sheet sheet, int row, int column , ExcelHeader eh)throws ActException {
 
         int sheetMergeCount = sheet.getNumMergedRegions();
 
@@ -373,7 +379,7 @@ public class ExcelUtil {
      * @param fields
      * @return
      */
-    private static Object convertValue(String val, ExcelHeader eh, List<Field> fields) {
+    private static Object convertValue(String val, ExcelHeader eh, List<Field> fields) throws ActException {
         Object value = null;
         if (StringUtils.isBlank(val)) {
             return value;
@@ -385,7 +391,7 @@ public class ExcelUtil {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("请检查列【" + eh.name() + "】类型");
+            throw new ActException("请检查列【" + eh.name() + "】类型");
         }
         return value;
     }
@@ -396,7 +402,7 @@ public class ExcelUtil {
      * @param cell
      * @return
      */
-    private static String getCellValue(Cell cell, ExcelHeader eh) {
+    private static String getCellValue(Cell cell, ExcelHeader eh) throws ActException{
         String val = null;
         try {
             if (null != cell) {
@@ -439,7 +445,7 @@ public class ExcelUtil {
                 return val;
             }
         } catch (Exception e) {
-            throw new RuntimeException("请检查列【" + eh.name() + "】类型");
+            throw new ActException("请检查列【" + eh.name() + "】类型");
         }
 
     }
@@ -450,7 +456,7 @@ public class ExcelUtil {
      * @param excelHeaders 表头
      * @param row
      */
-    private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) {
+    private static void validateHeader(List<ExcelHeader> excelHeaders, XSSFRow row) throws ActException{
         int cellSize = excelHeaders.size();
         int maxSize = row.getLastCellNum();
         for (int i = 0; i < cellSize; i++) {
@@ -460,14 +466,14 @@ public class ExcelUtil {
                 try {
                     title = cell.getStringCellValue();
                 } catch (Exception e) {
-                    throw new RuntimeException("excel表头数据类型只能为文本类型!");
+                    throw new ActException("excel表头数据类型只能为文本类型!");
                 }
                 String sysTitle = excelHeaders.get(i).name();
                 if (!title.equals(sysTitle)) {
-                    throw new RuntimeException("[" + title + "]列与系统设置的列[" + sysTitle + "]不匹配");
+                    throw new ActException("[" + title + "]列与系统设置的列[" + sysTitle + "]不匹配");
                 }
             } else {
-                throw new RuntimeException("缺少该列[" + excelHeaders.get(i).name() + "]");
+                throw new ActException("缺少该列[" + excelHeaders.get(i).name() + "]");
             }
         }
     }
@@ -542,7 +548,7 @@ public class ExcelUtil {
      * @return
      */
 
-    private static String fieldToEnum(Field field, Object val) {
+    private static String fieldToEnum(Field field, Object val) throws ActException {
         Field[] enumFields = field.getType().getFields();
         String value = val.toString();
         for (Field f : enumFields) {
@@ -550,7 +556,7 @@ public class ExcelUtil {
                 try {
                     return f.getAnnotation(ExcelValue.class).name();
                 } catch (Exception e) {
-                    throw new RuntimeException("枚举未添加Excel注解");
+                    throw new ActException("枚举未添加Excel注解");
                 }
 
             }
@@ -566,7 +572,7 @@ public class ExcelUtil {
      * @param obj
      * @param val
      */
-    private static void enumToField(Field field, Object obj, Object val) {
+    private static void enumToField(Field field, Object obj, Object val)throws ActException {
         String value = val.toString();
         try {
             Field[] enumFields = field.getType().getFields();
@@ -576,7 +582,7 @@ public class ExcelUtil {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new ActException(e.getMessage());
         }
 
     }

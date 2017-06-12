@@ -28,6 +28,10 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Autowired
     private BaseInfoManageSer baseInfoManageSer;
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return baseInfoManageSer.sonPermission();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {

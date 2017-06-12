@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
  * @Copy: [com.bjike]
  */
 public enum BusinessType {
+
     /**
      * 移动通信类
      */
