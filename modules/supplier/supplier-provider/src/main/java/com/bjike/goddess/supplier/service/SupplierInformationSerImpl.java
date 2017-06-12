@@ -1,8 +1,12 @@
 package com.bjike.goddess.supplier.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectTitleBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.entity.SupplierInformation;
@@ -16,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 供应商基本信息业务实现
@@ -46,6 +48,8 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     private SupPermissionSer supPermissionSer;
 
     private static final String idFlag = "supplier-01";
+
+    private static final String format = "%s供应商数量";
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -182,5 +186,78 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         if (null == entity)
             throw new SerException("数据对象不能为空");
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
+    }
+
+    @Override
+    public void changeEnclosure(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
+        SupplierInformation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        entity.isEnclosure(Boolean.TRUE);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public List<SupplierInfoCollectBO> collect(String... area) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
+        List<SupplierInfoCollectBO> collectBOs = new ArrayList<>(0);
+        SupplierInformationDTO dto = new SupplierInformationDTO();
+        if (area != null && area.length != 0) {
+            dto.getConditions().add(Restrict.in("area", area));
+        }
+        dto.getSorts().add("area=asc");
+        List<SupplierInformation> list = super.findByCis(dto);
+        List<EnterpriseQualificationBO> qualificationBOs = new ArrayList<>(0);
+        List<SupplierInfoCollectTitleBO> totalList = new ArrayList<>(0);
+        List<String> typeList = new ArrayList<>(0), qualificationList = new ArrayList<>(0);
+        String tempArea = "", qualification = "";
+        for (SupplierInformation entity : list) {
+            qualificationBOs.addAll(enterpriseQualificationSer.findByInformation(entity.getId()));
+            if (typeList.stream().filter(s -> s.equals(entity.getType())).count() == 0)
+                typeList.add(entity.getType());
+            if (!tempArea.equals(entity.getArea())) {
+                SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
+                bo.setArea(entity.getArea());
+                bo.setTitleBOs(new HashSet<>(0));
+                collectBOs.add(bo);
+            }
+        }
+        for (EnterpriseQualificationBO bo : qualificationBOs.stream()
+                .sorted(Comparator.comparing(EnterpriseQualificationBO::getAptitude))
+                .collect(Collectors.toList())) {
+            if (!qualification.equals(bo.getAptitude()))
+                qualificationList.add(bo.getAptitude());
+        }
+        for (SupplierInfoCollectBO bo : collectBOs) {
+            this.countCollect(bo,
+                    enterpriseQualificationSer.findByInformationIds(list.stream()
+                            .filter(s -> s.getArea().equals(bo.getArea()))
+                            .map(SupplierInformation::getId).collect(Collectors.toList()).toArray(new String[0])),
+                    list.stream().filter(s -> s.getArea().equals(bo.getArea())).collect(Collectors.toList()),
+                    typeList, qualificationList);
+            totalList.addAll(bo.getTitleBOs());
+        }
+        SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
+        bo.setArea("合计");
+        bo.setTitleBOs(new HashSet<>(0));
+        this.countCollect(bo, qualificationBOs, list, typeList, qualificationList);
+        collectBOs.add(bo);
+        return collectBOs;
+    }
+
+    private void countCollect(SupplierInfoCollectBO bo, List<EnterpriseQualificationBO> count, List<SupplierInformation> list,
+                              List<String> typeList, List<String> qualificationList) throws SerException {
+        for (String type : typeList) {
+            Long number = list.stream().filter(s -> s.getType().equals(type)).count();
+            bo.getTitleBOs().add(new SupplierInfoCollectTitleBO(number.intValue(), String.format(format, type)));
+        }
+        for (String q : qualificationList) {
+            Long number = count.stream().filter(e -> e.getAptitude().equals(q)).count();
+            bo.getTitleBOs().add(new SupplierInfoCollectTitleBO(number.intValue(), String.format(format, q)));
+        }
     }
 }

@@ -40,6 +40,7 @@ public class SurveyAnalyseAct {
      * @param to 调研分析传输对象
      * @return class SurveyAnalyseVO
      * @version v1
+     * @des 需求文档中与调研计划的调研分析为同一接口
      */
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) SurveyAnalyseTO to, BindingResult result) throws ActException {

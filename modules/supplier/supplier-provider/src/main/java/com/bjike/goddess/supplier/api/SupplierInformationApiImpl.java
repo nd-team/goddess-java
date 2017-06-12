@@ -1,6 +1,7 @@
 package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.service.SupplierInformationSer;
@@ -64,5 +65,15 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     public Long getTotal() throws SerException {
         SupplierInformationDTO dto = new SupplierInformationDTO();
         return supplierInformationSer.count(dto);
+    }
+
+    @Override
+    public void changeEnclosure(String id) throws SerException {
+        supplierInformationSer.changeEnclosure(id);
+    }
+
+    @Override
+    public List<SupplierInfoCollectBO> collect(String... area) throws SerException {
+        return supplierInformationSer.collect(area);
     }
 }

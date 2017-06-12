@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 技能分析表
+ * 技能调研分析表
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 11:45 ]
- * @Description: [ 技能分析表 ]
+ * @Description: [ 技能调研分析表 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -38,7 +38,7 @@ public class SkillAnalyseAct {
     /**
      * 保存
      *
-     * @param to 技能分析传输对象
+     * @param to 技能调研分析传输对象
      * @return class SkillAnalyseVO
      * @version v1
      */
@@ -55,7 +55,7 @@ public class SkillAnalyseAct {
     /**
      * 修改
      *
-     * @param to 技能分析传输对象
+     * @param to 技能调研分析传输对象
      * @return class SkillAnalyseVO
      * @version v1
      */
@@ -72,7 +72,7 @@ public class SkillAnalyseAct {
     /**
      * 删除
      *
-     * @param id 技能分析数据ID
+     * @param id 技能调研分析数据ID
      * @return class SkillAnalyseVO
      * @version v1
      */

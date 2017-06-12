@@ -5,11 +5,17 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.supplier.api.SupplierInformationAPI;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
+import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
+import com.bjike.goddess.supplier.vo.SupplierInfoCollectTitleVO;
+import com.bjike.goddess.supplier.vo.SupplierInfoCollectVO;
 import com.bjike.goddess.supplier.vo.SupplierInformationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -17,6 +23,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * 供应商基本信息
@@ -29,10 +38,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("supplierinformation")
-public class SupplierInformationAct {
+public class SupplierInformationAct extends BaseFileAction {
 
     @Autowired
     private SupplierInformationAPI supplierInformationAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 保存供应商基本信息数据
@@ -147,6 +158,32 @@ public class SupplierInformationAct {
     }
 
     /**
+     * 汇总
+     *
+     * @param area 汇总地区
+     * @return class SupplierInfoCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(String... area) throws ActException {
+        try {
+            List<SupplierInfoCollectBO> bos = supplierInformationAPI.collect(area);
+            List<SupplierInfoCollectVO> vos = new ArrayList<>(0);
+            for (SupplierInfoCollectBO bo : bos) {
+                SupplierInfoCollectVO vo = new SupplierInfoCollectVO();
+                vo.setArea(bo.getArea());
+                vo.setTitleVOs(new HashSet<>(0));
+                if (bo.getTitleBOs() != null && bo.getTitleBOs().size() != 0)
+                    vo.getTitleVOs().addAll(BeanTransform.copyProperties(bo.getTitleBOs(), SupplierInfoCollectTitleVO.class));
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取总条数
      *
      * @version v1
@@ -160,5 +197,24 @@ public class SupplierInformationAct {
         }
     }
 
-
+    /**
+     * 上传附件
+     *
+     * @param request 上传请求
+     * @param id      供应商信息id
+     * @return class Result
+     * @version v1
+     */
+    @PostMapping("v1/uploadEnclosure/{id}")
+    public Result uploadEnclosure(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            SupplierInformationBO bo = supplierInformationAPI.getById(id);
+            String path = "/" + bo.getSerialNumber();
+            fileAPI.upload(this.getInputStreams(request, path));
+            supplierInformationAPI.changeEnclosure(id);
+            return new ActResult("上传成功");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

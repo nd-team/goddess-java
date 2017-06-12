@@ -1,6 +1,7 @@
 package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
@@ -100,6 +101,26 @@ public interface SupplierInformationAPI {
      * @throws SerException
      */
     default Long getTotal() throws SerException{
+        return null;
+    }
+
+
+    /**
+     * 修改营业执照附件状态
+     *
+     * @param id 供应商信息id
+     * @throws SerException
+     */
+    void changeEnclosure(String id) throws SerException;
+
+    /**
+     * 汇总
+     *
+     * @param area 汇总地区
+     * @return
+     * @throws SerException
+     */
+    default List<SupplierInfoCollectBO> collect(String... area) throws SerException {
         return null;
     }
 

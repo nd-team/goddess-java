@@ -117,4 +117,17 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         else
             return this.transformBO(entity);
     }
+
+    @Override
+    public List<EnterpriseQualificationBO> findByInformationIds(String... ids) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
+        EnterpriseQualificationDTO dto = new EnterpriseQualificationDTO();
+        dto.getConditions().add(Restrict.in("information.id", ids));
+        List<EnterpriseQualification> list = super.findByCis(dto);
+        List<EnterpriseQualificationBO> bos = new ArrayList<>(0);
+        for (EnterpriseQualification entity : list)
+            bos.add(this.transformBO(entity));
+        return bos;
+    }
 }

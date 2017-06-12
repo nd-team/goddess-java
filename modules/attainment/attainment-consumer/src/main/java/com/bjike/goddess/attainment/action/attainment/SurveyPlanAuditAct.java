@@ -32,7 +32,7 @@ public class SurveyPlanAuditAct {
     private SurveyPlanAuditAPI surveyPlanAuditAPI;
 
     /**
-     * 更新
+     * 审核
      *
      * @param to 调研计划审核传输对象
      * @return class SurveyPlanAuditVO
@@ -65,7 +65,7 @@ public class SurveyPlanAuditAct {
     }
 
     /**
-     * 根据调研计划查询审核数据
+     * 调研计划查看审核数据
      *
      * @param id 调研计划数据id
      * @return class SurveyPlanAuditVO

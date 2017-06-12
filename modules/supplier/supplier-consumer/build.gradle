@@ -39,6 +39,7 @@ dependencies {
 
     compile project(":modules:supplier:supplier-api")
     compile project(":modules:user:user-api")
+    compile project(":modules:storage:storage-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
 }
