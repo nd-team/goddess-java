@@ -90,7 +90,7 @@ public class RemoveEmployee extends BaseEntity {
      * 确认是否减员
      */
     @Column(name = "confirmRemove", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '确认是否减员'")
-    private boolean confirmRemove;
+    private Boolean confirmRemove;
 
 
     public String getEmployeeId() {
@@ -101,11 +101,11 @@ public class RemoveEmployee extends BaseEntity {
         this.employeeId = employeeId;
     }
 
-    public boolean getConfirmRemoveemove() {
+    public Boolean getConfirmRemoveemove() {
         return confirmRemove;
     }
 
-    public void setConfirmRemove(boolean confirmRemove) {
+    public void setConfirmRemove(Boolean confirmRemove) {
         this.confirmRemove = confirmRemove;
     }
 

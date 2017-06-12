@@ -75,7 +75,7 @@ public class RemoveEmployeeVO {
     /**
      * 确认是否减员
      */
-    private boolean confirmRemove;
+    private Boolean confirmRemove;
 
     public String getEmployeeId() {
         return employeeId;
@@ -85,11 +85,11 @@ public class RemoveEmployeeVO {
         this.employeeId = employeeId;
     }
 
-    public boolean getConfirmRemove() {
+    public Boolean getConfirmRemove() {
         return confirmRemove;
     }
 
-    public void setConfirmRemove(boolean confirmRemove) {
+    public void setConfirmRemove(Boolean confirmRemove) {
         this.confirmRemove = confirmRemove;
     }
 

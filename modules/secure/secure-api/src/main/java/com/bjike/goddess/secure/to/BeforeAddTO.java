@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -54,7 +55,8 @@ public class BeforeAddTO extends BaseTO {
     /**
      * 需参保时长
      */
-    @NotBlank(groups = {EDIT.class}, message = "需参保时长不能为空")
+    @NotNull(groups = {EDIT.class}, message = "需参保时长不能为空")
+    @DecimalMin(value = "0.00", groups = {EDIT.class}, message = "需参保时长不能小于0", inclusive = false)
     private Double time;
 
     /**
@@ -98,7 +100,7 @@ public class BeforeAddTO extends BaseTO {
     /**
      * 是否增员
      */
-    private boolean increase;
+    private Boolean increase;
 
 
     public String getIntelligence() {
@@ -197,11 +199,11 @@ public class BeforeAddTO extends BaseTO {
         this.description = description;
     }
 
-    public boolean getIncrease() {
+    public Boolean getIncrease() {
         return increase;
     }
 
-    public void setIncrease(boolean increase) {
+    public void setIncrease(Boolean increase) {
         this.increase = increase;
     }
 }

@@ -86,7 +86,7 @@ public class AttachedBO extends BaseBO {
     /**
      * 审批意见
      */
-    private boolean advice;
+    private String advice;
 
     /**
      * 挂靠的缴费金
@@ -223,11 +223,11 @@ public class AttachedBO extends BaseBO {
         this.company = company;
     }
 
-    public boolean getAdvice() {
+    public String getAdvice() {
         return advice;
     }
 
-    public void setAdvice(boolean advice) {
+    public void setAdvice(String advice) {
         this.advice = advice;
     }
 

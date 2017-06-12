@@ -8,8 +8,6 @@ import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.quartz.api.ScheduleJobAPI;
 import com.bjike.goddess.quartz.api.ScheduleJobGroupAPI;
-import com.bjike.goddess.quartz.bo.ScheduleJobGroupBO;
-import com.bjike.goddess.quartz.to.ScheduleJobGroupTO;
 import com.bjike.goddess.quartz.to.ScheduleJobTO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.regularization.bo.RegularizationBO;
@@ -18,6 +16,7 @@ import com.bjike.goddess.secure.bo.BeforeAddBO;
 import com.bjike.goddess.secure.dto.BeforeAddDTO;
 import com.bjike.goddess.secure.entity.BeforeAdd;
 import com.bjike.goddess.secure.to.BeforeAddTO;
+import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -52,23 +51,21 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     private ScheduleJobAPI scheduleJobAPI;
     @Autowired
     private ScheduleJobGroupAPI scheduleJobGroupAPI;
+    @Autowired
+    private UserAPI userAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void quartz() throws SerException {
-        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
-        scheduleJobGroupTO.setName("定时获取新转正员工工作组");
-        scheduleJobGroupTO.setEnable(true);
-        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
         ScheduleJobTO scheduleJobTO = new ScheduleJobTO();
         scheduleJobTO.setClazz("com.bjike.goddess.secure.api.BeforeAddAPI");
         scheduleJobTO.setName("定时获取新转正员工");
         scheduleJobTO.setMethod("send");
-        scheduleJobTO.setExpression("0 */12 * * * ");   //每12个小时执行一次
+        scheduleJobTO.setExpression("0 0 */12 * * ?");   //每12个小时执行一次
         scheduleJobTO.setDescription("获取新转正员工，并通知福利模块这些员工可购买社保");
         scheduleJobTO.setEnable(true);
         scheduleJobTO.setAddress("localhost:51101");
-        scheduleJobTO.setScheduleJobGroupId(scheduleJobGroupBO.getId());
+        scheduleJobTO.setScheduleJobGroupId("eb33c9b6-ed33-4596-be70-b3eb6aa81f1d");
         scheduleJobAPI.add(scheduleJobTO);
     }
 
@@ -78,7 +75,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
         BeforeAdd canAdd = BeanTransform.copyProperties(to, BeforeAdd.class, true);
         canAdd = super.save(canAdd);
         MessageTO messageTO = new MessageTO("xxx", "sadasd");
-   //     messageAPI.send(messageTO);
+        //     messageAPI.send(messageTO);
         return BeanTransform.copyProperties(canAdd, BeforeAddBO.class);
     }
 
@@ -86,14 +83,14 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Transactional(rollbackFor = {SerException.class})
     public BeforeAddBO complete(BeforeAddTO to) throws SerException {
         BeforeAdd canAdd = super.findById(to.getId());
-        if (canAdd==null){
+        if (canAdd == null) {
             throw new SerException("该对象不存在");
         }
         canAdd.setName(to.getName());
-        LocalDate time=null;
+        LocalDate time = null;
         try {
-            time=DateUtil.parseDate(to.getAddTime());
-        }catch (Exception e){
+            time = DateUtil.parseDate(to.getAddTime());
+        } catch (Exception e) {
             throw new SerException("日期格式错误");
         }
         canAdd.setAddTime(time);
@@ -111,7 +108,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Transactional(rollbackFor = {SerException.class})
     public void edit(BeforeAddTO to) throws SerException {
         BeforeAdd canAdd = super.findById(to.getId());
-        if (canAdd==null){
+        if (canAdd == null) {
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = canAdd.getCreateTime();
@@ -160,13 +157,15 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
         messageTO.setTitle("有转正员工可购买社保");
         boolean b = false;
         StringBuilder sb = new StringBuilder();
-        for (RegularizationBO bo : boList) {
-            if (StringUtils.isNotBlank(bo.getPositiveDate())) {
-                if (now == DateUtil.parseDate(bo.getPositiveDate())) {
-                    b = true;
-                    String name = bo.getName();
-                    String empNo = bo.getEmpNo();
-                    sb.append("员工编号为:" + empNo + "的" + name + "，");
+        if ((boList != null) && (!boList.isEmpty())) {
+            for (RegularizationBO bo : boList) {
+                if (StringUtils.isNotBlank(bo.getPositiveDate())) {
+                    if (now == DateUtil.parseDate(bo.getPositiveDate())) {
+                        b = true;
+                        String name = bo.getName();
+                        String empNo = bo.getEmpNo();
+                        sb.append("员工编号为:" + empNo + "的" + name + "，");
+                    }
                 }
             }
         }
@@ -181,4 +180,12 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     public Long count(BeforeAddDTO dto) throws SerException {
         return super.count(dto);
     }
+
+//    private String getJobGroupId() throws SerException{
+//        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
+//        scheduleJobGroupTO.setName("定时获取新转正员工工作组");
+//        scheduleJobGroupTO.setEnable(true);
+//        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
+//        return scheduleJobGroupBO.getId();
+//    }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -90,8 +92,15 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = employeeSecure.getCreateTime();
-        employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class);
+        employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class,true);
         employeeSecure.setCreateTime(a);
+        LocalDate time=null;
+        try {
+            time= DateUtil.parseDate(to.getStartTime());
+        }catch (Exception e){
+            throw new SerException("日期格式不正确");
+        }
+        employeeSecure.setStartTime(time);
         employeeSecure.setModifyTime(LocalDateTime.now());
         super.update(employeeSecure);
         return BeanTransform.copyProperties(employeeSecure, EmployeeSecureBO.class);
@@ -135,13 +144,13 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
             String[] nums = new String[]{num};
             for (int i = 0; i < names.length; i++) {
                 String[] fields = new String[]{"id", "status"};
-                String sql = "select id,status from secure_employee_secure where employeeNum='" + nums[i] + "' and name='" + names[i] + "'";
+                String sql = "select id,status from secure_employeesecure where employeeNum='" + nums[i] + "' and name='" + names[i] + "'";
                 list = this.findBySql(sql, EmployeeSecureBO.class, fields);
             }
         } else if ((num == null) || (StringUtils.isBlank(num))) {
             for (int i = 0; i < names.length; i++) {
                 String[] fields = new String[]{"id", "status"};
-                String sql = "select id,status from secure_employee_secure where name='" + names[i] + "'";
+                String sql = "select id,status from secure_employeesecure where name='" + names[i] + "'";
                 list = this.findBySql(sql, EmployeeSecureBO.class, fields);
             }
         }

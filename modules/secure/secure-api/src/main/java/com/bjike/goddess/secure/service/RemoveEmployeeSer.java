@@ -77,12 +77,11 @@ public interface RemoveEmployeeSer extends Ser<RemoveEmployee, RemoveEmployeeDTO
     /**
      * 通过姓名和员工编号查找
      *
-     * @param removeName 姓名
-     * @param employeeId 员工编号
+     * @param to 减员名单信息
      * @return class RemoveEmployeeBO
      * @throws SerException
      */
-    RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException;
+    RemoveEmployeeBO findByNameAndId(RemoveEmployeeTO to) throws SerException;
 
     /**
      * 确认减员

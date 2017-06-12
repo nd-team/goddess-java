@@ -30,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("remove-employee")
+@RequestMapping("removeemployee")
 public class RemoveEmployeeAct {
     @Autowired
     private RemoveEmployeeAPI removeEmployeeAPI;
@@ -101,7 +101,7 @@ public class RemoveEmployeeAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/remove-employee/{id}")
+    @GetMapping("v1/removeemployee/{id}")
     public Result findByID(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             RemoveEmployeeBO removeEmployeeBO = removeEmployeeAPI.findByID(id);
@@ -119,7 +119,7 @@ public class RemoveEmployeeAct {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/confirm")
+    @PatchMapping("v1/confirm/{id}")
     public Result confirm(@PathVariable String id) throws ActException {
         try {
             removeEmployeeAPI.confirmRemove(id);
@@ -132,17 +132,16 @@ public class RemoveEmployeeAct {
     /**
      * 通过姓名和员工编号查找
      *
-     * @param removeName  减员信息
-     * @param employeeNum 员工编号
-     * @param request     请求对象
+     * @param to      减员名单信息
+     * @param request 请求对象
      * @return class RemoveEmployeeVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/findByNameAndId")
-    public Result findByNameAndId(@PathVariable String removeName, @PathVariable String employeeNum, HttpServletRequest request) throws ActException {
+    public Result findByNameAndId(@Validated(RemoveEmployeeTO.search.class) RemoveEmployeeTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            RemoveEmployeeBO bo = removeEmployeeAPI.findByNameAndId(removeName, employeeNum);
+            RemoveEmployeeBO bo = removeEmployeeAPI.findByNameAndId(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, RemoveEmployeeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

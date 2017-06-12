@@ -201,8 +201,10 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         for (AddEmployee a : list) {
             BuyDTO dto = new BuyDTO();
             dto.getConditions().add(Restrict.eq("name", a.getName()));
-            BuyBO bo = buySer.findByDTO(dto).get(0);
-            boList.add(bo);
+            List<BuyBO> buyBOs = buySer.findByDTO(dto);
+            if (buyBOs != null && !buyBOs.isEmpty()) {
+                boList.add(buyBOs.get(0));
+            }
         }
         //boList为本月所有社保所需表-购买社保人员名单
     }

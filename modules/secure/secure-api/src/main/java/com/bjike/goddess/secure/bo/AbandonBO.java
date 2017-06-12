@@ -38,7 +38,7 @@ public class AbandonBO extends BaseBO {
     /**
      * 是否签署协议
      */
-    private boolean sign;
+    private Boolean sign;
 
 
     public String getName() {
@@ -73,11 +73,11 @@ public class AbandonBO extends BaseBO {
         this.reason = reason;
     }
 
-    public boolean getSign() {
+    public Boolean getSign() {
         return sign;
     }
 
-    public void setSign(boolean sign) {
+    public void setSign(Boolean sign) {
         this.sign = sign;
     }
 }

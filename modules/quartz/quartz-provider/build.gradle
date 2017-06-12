@@ -30,6 +30,7 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:quartz:quartz-api")
     compile project(":modules:user:user-api")
+    compile project(":modules:secure:secure-api")
     compile project(":common:common-utils")
 }
 

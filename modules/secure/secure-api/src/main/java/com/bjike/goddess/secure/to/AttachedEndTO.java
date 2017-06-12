@@ -132,7 +132,7 @@ public class AttachedEndTO extends BaseTO {
      * 是否继续挂靠
      */
     @NotNull(groups = {EDIT.class},message = "是否继续挂靠不能为空")
-    private boolean isAttachedAgin;
+    private Boolean isAttachedAgin;
 
 
     public String getReason() {
@@ -279,11 +279,11 @@ public class AttachedEndTO extends BaseTO {
         this.decription = decription;
     }
 
-    public boolean getIsAttachedAgin() {
+    public Boolean getIsAttachedAgin() {
         return isAttachedAgin;
     }
 
-    public void setIsAttachedAgin(boolean isAttachedAgin) {
+    public void setIsAttachedAgin(Boolean isAttachedAgin) {
         this.isAttachedAgin = isAttachedAgin;
     }
 }

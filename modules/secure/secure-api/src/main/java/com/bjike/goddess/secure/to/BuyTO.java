@@ -60,7 +60,7 @@ public class BuyTO extends BaseTO {
     /**
      * 审批状态
      */
-    private boolean examine;
+    private Boolean examine;
 
     public String getName() {
         return name;
@@ -118,11 +118,11 @@ public class BuyTO extends BaseTO {
         this.status = status;
     }
 
-    public boolean isExamine() {
+    public Boolean isExamine() {
         return examine;
     }
 
-    public void setExamine(boolean examine) {
+    public void setExamine(Boolean examine) {
         this.examine = examine;
     }
 }

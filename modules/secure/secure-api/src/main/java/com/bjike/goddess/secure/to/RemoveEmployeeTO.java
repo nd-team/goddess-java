@@ -17,9 +17,9 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class RemoveEmployeeTO extends BaseTO {
-//    public interface AUDIT {
-//        //校验审核
-//    }
+    public interface search {
+        //搜索
+    }
 
     /**
      * 当前各公司参保总人数
@@ -50,7 +50,7 @@ public class RemoveEmployeeTO extends BaseTO {
     /**
      * 减员的人员姓名
      */
-    @NotBlank(groups = {EDIT.class}, message = "减员的人员姓名不能为空")
+    @NotBlank(groups = {RemoveEmployeeTO.search.class, EDIT.class}, message = "减员的人员姓名不能为空")
     private String removeName;
 
     /**
@@ -92,7 +92,7 @@ public class RemoveEmployeeTO extends BaseTO {
      * 确认是否减员
      */
 //    @NotNull(groups = {AUDIT.class}, message = "确认是否减员不能为空")
-    private boolean confirmRemove;
+    private Boolean confirmRemove;
 
     public String getEmployeeId() {
         return employeeId;
@@ -102,11 +102,11 @@ public class RemoveEmployeeTO extends BaseTO {
         this.employeeId = employeeId;
     }
 
-    public boolean getConfirmRemove() {
+    public Boolean getConfirmRemove() {
         return confirmRemove;
     }
 
-    public void setConfirmRemove(boolean confirmRemove) {
+    public void setConfirmRemove(Boolean confirmRemove) {
         this.confirmRemove = confirmRemove;
     }
 

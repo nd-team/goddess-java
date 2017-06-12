@@ -73,7 +73,7 @@ public class BeforeRemoveEmployeeBO extends BaseBO {
     /**
      * 是否减员
      */
-    private boolean isRemove;
+    private Boolean isRemove;
 
 
     public Integer getCountCompany() {
@@ -164,11 +164,11 @@ public class BeforeRemoveEmployeeBO extends BaseBO {
         this.description = description;
     }
 
-    public boolean getIs_remove() {
+    public Boolean getIs_remove() {
         return isRemove;
     }
 
-    public void setIs_remove(boolean isRemove) {
+    public void setIs_remove(Boolean isRemove) {
         this.isRemove = isRemove;
     }
 }
