@@ -65,21 +65,27 @@ public class SiginManageAction extends BaseFileAction {
 
     /**
      * 模块设置导航权限
+     *
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission( ) throws ActException {
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
         try {
-
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission( );
-            if(! isHasPermission ){
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
             }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,16 +94,17 @@ public class SiginManageAction extends BaseFileAction {
 
     /**
      * 下拉导航权限
+     *
      * @throws ActException
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/sonPermission")
-    public Result sonPermission( ) throws ActException {
+    public Result sonPermission() throws ActException {
         try {
 
-            List<SonPermissionObject> hasPermissionList = siginManageAPI.sonPermission( );
-            return new ActResult(0,"有权限",hasPermissionList );
+            List<SonPermissionObject> hasPermissionList = siginManageAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
 
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -106,6 +113,7 @@ public class SiginManageAction extends BaseFileAction {
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -115,11 +123,11 @@ public class SiginManageAction extends BaseFileAction {
         try {
 
             Boolean isHasPermission = siginManageAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -293,12 +301,12 @@ public class SiginManageAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/uploadFile/{id}")
-    public Result uploadFile(@PathVariable String id , HttpServletRequest request ) throws ActException {
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String paths = "/businessproject/siginmanage/"+id;
-            List<InputStream> inputStreams = getInputStreams(request,paths);
+            String paths = "/businessproject/siginmanage/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
         } catch (SerException e) {
@@ -318,11 +326,11 @@ public class SiginManageAction extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /businessproject/id/....
-            String path = "/businessproject/siginmanage/"+id;
+            String path = "/businessproject/siginmanage/" + id;
             FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath( path );
-            Object storageToken =  request.getAttribute("storageToken");
-            fileInfo.setStorageToken( storageToken.toString() );
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -337,15 +345,15 @@ public class SiginManageAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/downloadFile")
-    public Result download( @RequestParam String path  , HttpServletRequest request ,HttpServletResponse response ) throws ActException {
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
 
 
             //该文件的路径
-            Object storageToken =  request.getAttribute("storageToken");
+            Object storageToken = request.getAttribute("storageToken");
             FileInfo fileInfo = new FileInfo();
-            fileInfo.setPath( path );
-            fileInfo.setStorageToken( storageToken.toString() );
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
@@ -359,16 +367,13 @@ public class SiginManageAction extends BaseFileAction {
     /**
      * 删除文件或文件夹
      *
-     * @param path 文件信息路径
+     * @param paths 多文件信息路径
      * @version v1
      */
     @DeleteMapping("v1/deleteFile")
-    public Result delFile(@RequestParam String path , HttpServletRequest request) throws SerException {
-        Object storageToken =  request.getAttribute("storageToken");
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setPath( path );
-        fileInfo.setStorageToken( storageToken.toString() );
-        fileAPI.delFile(fileInfo);
+    public Result delFile(@RequestParam String[] paths, HttpServletRequest request) throws SerException {
+        Object storageToken = request.getAttribute("storageToken");
+        fileAPI.delFile(storageToken.toString(),paths);
         return new ActResult("delFile success");
     }
 
@@ -387,15 +392,15 @@ public class SiginManageAction extends BaseFileAction {
             Excel excel = new Excel(0, 1);
             List<SiginManageExcel> tos = ExcelUtil.excelToClazz(is, SiginManageExcel.class, excel);
             List<SiginManageTO> tocs = new ArrayList<>();
-            for(SiginManageExcel str :tos ){
+            for (SiginManageExcel str : tos) {
                 SiginManageTO siginManageTO = BeanTransform.copyProperties(str, SiginManageTO.class, "startProjectTime", "endProjectTime",
                         "siginStatus", "makeProject", "manager", "auditAdvice");
                 siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
                 siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
                 siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
                 siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
-                siginManageTO.setManager("") ;
-                siginManageTO.setAuditAdvice( "" );
+                siginManageTO.setManager("");
+                siginManageTO.setAuditAdvice("");
                 tocs.add(siginManageTO);
             }
             //注意序列化
@@ -408,7 +413,7 @@ public class SiginManageAction extends BaseFileAction {
 
     private String convertSiginStatus(SiginStatus siginStatus) throws ActException {
         String status = "";
-        if( null == siginStatus ){
+        if (null == siginStatus) {
             throw new ActException("签订状态填写不正确,导入失败,正确填写方式（已签订/未签订）");
         }
         switch (siginStatus) {
@@ -423,13 +428,14 @@ public class SiginManageAction extends BaseFileAction {
         }
         return status;
     }
+
     private String convertMakeProject(MakeProjectStatus makeProjectStatus) throws ActException {
         String status = "";
-        if( null == makeProjectStatus ){
+        if (null == makeProjectStatus) {
             throw new ActException("立项情况填写不正确,导入失败,正确填写方式（已立项/未立项）");
         }
         switch (makeProjectStatus) {
-            case  SIGN:
+            case SIGN:
                 status = "已立项";
                 break;
             case NOSIGN:
@@ -440,8 +446,6 @@ public class SiginManageAction extends BaseFileAction {
         }
         return status;
     }
-
-
 
 
     /**

@@ -204,17 +204,17 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         }
         list.add(obj);
 
-        Boolean flagSeeSet = userSetPermissionAPI.checkSetPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("cuspermission");
-        obj.setDescribesion("设置");
-        if (flagSeeSet) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
+//        Boolean flagSeeSet = userSetPermissionAPI.checkSetPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("cuspermission");
+//        obj.setDescribesion("设置");
+//        if (flagSeeSet) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
 
         return list;
     }

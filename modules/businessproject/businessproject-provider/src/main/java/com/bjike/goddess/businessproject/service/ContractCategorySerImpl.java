@@ -107,7 +107,7 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken( userToken );
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee && flagAdd ){
+        if( flagSee || flagAdd ){
             return true;
         }else{
             return false;
