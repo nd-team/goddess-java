@@ -3,8 +3,6 @@ package com.bjike.goddess.storage.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.storage.enums.FileType;
 
-import java.time.LocalDateTime;
-
 /**
  * 文件存储业务传输对象
  *
@@ -35,26 +33,26 @@ public class FileBO extends BaseBO {
      * 文件大小
      */
     private String size;
+    /**
+     * 文件长度
+     */
+    private Long length;
 
     /**
      * 是否为目录
      */
     private Boolean dir;
 
-    /**
-     * 父目录
-     */
-    private String parentPath;
 
     /**
      * 创建时间
      */
     private String createTime;
-
     /**
-     * 更新时间
+     * 父目录
      */
-    private String modifyTime;
+    private String parentPath;
+
 
     /**
      * 大图
@@ -65,11 +63,6 @@ public class FileBO extends BaseBO {
      * 小图
      */
     private String minPicture;
-    /**
-     * 所属模块
-     */
-    private String module;
-
 
 
     public String getName() {
@@ -112,13 +105,6 @@ public class FileBO extends BaseBO {
         this.dir = dir;
     }
 
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
 
     public String getCreateTime() {
         return createTime;
@@ -128,13 +114,6 @@ public class FileBO extends BaseBO {
         this.createTime = createTime;
     }
 
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 
     public String getBigPicture() {
         return bigPicture;
@@ -152,11 +131,19 @@ public class FileBO extends BaseBO {
         this.minPicture = minPicture;
     }
 
-    public String getModule() {
-        return module;
+    public Long getLength() {
+        return length;
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public void setLength(Long length) {
+        this.length = length;
+    }
+
+    public String getParentPath() {
+        return parentPath;
+    }
+
+    public void setParentPath(String parentPath) {
+        this.parentPath = parentPath;
     }
 }

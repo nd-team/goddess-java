@@ -49,10 +49,6 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Group> groups = super.findByCis(dto);
-        if (null != groups) {
-            throw new SerException(JSON.toJSONString(groups));
-        }
-
         return BeanTransform.copyProperties(groups, GroupBO.class);
     }
 

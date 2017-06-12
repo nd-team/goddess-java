@@ -333,8 +333,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 fileBO.setFileType(FileUtils.getFileType(file));
                 if (file.isFile()) {
                     fileBO.setSize(FileUtils.getFileSize(file));
+                    fileBO.setLength(file.length());
                 }
-
                 if (root.equals(file.getParent())) {
                     fileBO.setParentPath(null);
                 } else {
@@ -343,7 +343,6 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 fileBO.setPath(StringUtils.substringAfter(file.getPath(), rootPath));
                 fileBO.setDir(file.isDirectory());
                 fileBO.setName(file.getName());
-                fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
                 fileBOS.add(fileBO);
             }
 

@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
  * @Copy: [ com.bjike ]
  */
 public class FileVO {
-
     /**
      * 文件名
      */
@@ -34,26 +33,22 @@ public class FileVO {
      * 文件大小
      */
     private String size;
+    /**
+     * 文件长度
+     */
+    private Long length;
 
     /**
      * 是否为目录
      */
     private Boolean dir;
 
-    /**
-     * 父目录
-     */
-    private String parentPath;
 
     /**
      * 创建时间
      */
     private String createTime;
 
-    /**
-     * 更新时间
-     */
-    private String modifyTime;
 
     /**
      * 大图
@@ -64,7 +59,6 @@ public class FileVO {
      * 小图
      */
     private String minPicture;
-
 
     public String getName() {
         return name;
@@ -98,6 +92,14 @@ public class FileVO {
         this.size = size;
     }
 
+    public Long getLength() {
+        return length;
+    }
+
+    public void setLength(Long length) {
+        this.length = length;
+    }
+
     public Boolean getDir() {
         return dir;
     }
@@ -106,28 +108,12 @@ public class FileVO {
         this.dir = dir;
     }
 
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
-
     public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 
     public String getBigPicture() {
