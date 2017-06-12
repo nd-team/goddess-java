@@ -15,6 +15,11 @@ import com.bjike.goddess.recruit.type.Gender;
 public class InterviewInforVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 电访日期
      */
     private String date;
@@ -203,6 +208,14 @@ public class InterviewInforVO {
      * 是否服从调动安排
      */
     private Boolean whetherObeyTransfer;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDate() {
         return date;

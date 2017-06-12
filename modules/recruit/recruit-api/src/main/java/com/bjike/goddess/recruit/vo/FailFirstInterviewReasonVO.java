@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class FailFirstInterviewReasonVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 未应约初试原因类型
      */
     private String failFirstInterviewReasonType;
@@ -22,6 +27,14 @@ public class FailFirstInterviewReasonVO {
      * 备注
      */
     private String comment;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFailFirstInterviewReasonType() {
         return failFirstInterviewReasonType;

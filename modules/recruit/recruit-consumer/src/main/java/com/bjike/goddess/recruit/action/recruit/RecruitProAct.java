@@ -132,7 +132,7 @@ public class RecruitProAct {
     }
 
     /**
-     * 编辑招聘方案
+     * 补全信息
      *
      * @param to 招聘方案to信息
      * @throws ActException
@@ -157,7 +157,7 @@ public class RecruitProAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/zhOpinion")
+    @PutMapping("v1/zhOpinion/{id}")
     public Result zhOpinion(@PathVariable String id, @RequestParam(value = "zhOpinion") String zhOpinion) throws ActException {
         try {
             recruitProAPI.zhOpinion(id, zhOpinion);
@@ -175,7 +175,7 @@ public class RecruitProAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/yyOpinion")
+    @PutMapping("v1/yyOpinion/{id}")
     public Result yyOpinion(@PathVariable String id, @RequestParam(value = "yyOpinion") String yyOpinion) throws ActException {
         try {
             recruitProAPI.yyOpinion(id, yyOpinion);
@@ -194,7 +194,7 @@ public class RecruitProAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/zjbOpinion")
+    @PutMapping("v1/zjbOpinion/{id}")
     public Result zjbOpinion(@PathVariable String id, @RequestParam(value = "zjbOpinion") String zjbOpinion, @RequestParam(value = "auditType") AuditType auditType) throws ActException {
         try {
             recruitProAPI.zjbOpinion(id, zjbOpinion, auditType);

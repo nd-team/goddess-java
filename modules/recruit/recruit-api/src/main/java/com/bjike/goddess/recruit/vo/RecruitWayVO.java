@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class RecruitWayVO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 招聘渠道
      */
     private String recruitName;
@@ -72,6 +77,14 @@ public class RecruitWayVO {
      * 备注
      */
     private String remarks;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getRecruitName() {
         return recruitName;
