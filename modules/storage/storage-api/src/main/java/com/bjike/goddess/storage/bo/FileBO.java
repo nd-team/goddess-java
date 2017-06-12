@@ -63,7 +63,10 @@ public class FileBO extends BaseBO {
      * 小图
      */
     private String minPicture;
-
+    /**
+     * 更新时间
+     */
+    private String modifyTime;
 
     public String getName() {
         return name;
@@ -145,5 +148,13 @@ public class FileBO extends BaseBO {
 
     public void setParentPath(String parentPath) {
         this.parentPath = parentPath;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

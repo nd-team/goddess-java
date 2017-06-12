@@ -59,6 +59,10 @@ public class FileVO {
      * 小图
      */
     private String minPicture;
+    /**
+     * 更新时间
+     */
+    private String modifyTime;
 
     public String getName() {
         return name;
@@ -130,5 +134,13 @@ public class FileVO {
 
     public void setMinPicture(String minPicture) {
         this.minPicture = minPicture;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

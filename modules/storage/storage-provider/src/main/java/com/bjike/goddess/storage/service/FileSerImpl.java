@@ -343,6 +343,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 fileBO.setPath(StringUtils.substringAfter(file.getPath(), rootPath));
                 fileBO.setDir(file.isDirectory());
                 fileBO.setName(file.getName());
+                fileBO.setModifyTime(DateUtil.dateToString(DateUtil.parseTime(file.lastModified())));
                 fileBOS.add(fileBO);
             }
 
