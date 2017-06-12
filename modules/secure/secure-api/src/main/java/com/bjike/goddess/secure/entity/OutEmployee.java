@@ -36,7 +36,7 @@ public class OutEmployee extends BaseEntity {
      * 是否继续购买
      */
     @Column(name = "is_again", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '是否继续购买'")
-    private boolean isAgain;
+    private Boolean isAgain;
 
     /**
      * 意见
@@ -74,11 +74,11 @@ public class OutEmployee extends BaseEntity {
         this.endTime = endTime;
     }
 
-    public boolean getIsAgain() {
+    public Boolean getIsAgain() {
         return isAgain;
     }
 
-    public void setIsAgain(boolean isAgain) {
+    public void setIsAgain(Boolean isAgain) {
         this.isAgain = isAgain;
     }
 

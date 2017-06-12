@@ -104,8 +104,8 @@ public class AttachedTO extends BaseTO {
     /**
      * 审批意见
      */
-    @NotNull(groups = {EDIT.class}, message = "审批意见不能为空")
-    private boolean advice;
+    @NotBlank(groups = {EDIT.class}, message = "审批意见不能为空")
+    private String advice;
 
     /**
      * 挂靠的缴费金
@@ -245,11 +245,11 @@ public class AttachedTO extends BaseTO {
         this.company = company;
     }
 
-    public boolean getAdvice() {
+    public String getAdvice() {
         return advice;
     }
 
-    public void setAdvice(boolean advice) {
+    public void setAdvice(String advice) {
         this.advice = advice;
     }
 

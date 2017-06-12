@@ -1,5 +1,6 @@
 package com.bjike.goddess.communicatemeeting.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -9,12 +10,14 @@ import com.bjike.goddess.communicatemeeting.dto.OrganizeContentDTO;
 import com.bjike.goddess.communicatemeeting.entity.OrganizeContent;
 import com.bjike.goddess.communicatemeeting.to.MeetingSummaryTO;
 import com.bjike.goddess.communicatemeeting.to.OrganizeContentTO;
+import com.bjike.goddess.communicatemeeting.utils.ChineseCharToEn;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -48,9 +51,40 @@ public class OrganizeContentSerImpl extends ServiceImpl<OrganizeContent, Organiz
         entity.setOrganization(name);
         entity.setHost(name);
         //todo: entity.setHost(综合素养模块负责人);
-        String time = DateUtil.dateToString(entity.getPlanTime());
-        String number = desginSer.findNumber(entity.getMeetingLevel()) + "-" + time;
-        entity.setMeetingNumber(number);
+        String meetingNumber = ChineseCharToEn.getAllFirstLetter(entity.getMeetingLevel());
+        LocalDateTime planTime = entity.getPlanTime();
+        String year = String.valueOf(planTime.getYear());
+        String month = String.valueOf(planTime.getMonthValue());
+        if (month.length() < 2) {
+            month = "0" + month;
+        }
+        String day = String.valueOf(planTime.getDayOfMonth());
+        if (day.length() < 2) {
+            day = "0" + day;
+        }
+        String num = String.valueOf(findNum(planTime) + 1);
+        meetingNumber = "JL-" + meetingNumber + "-" + year + month + day + "-" + num;
+        entity.setMeetingNumber(meetingNumber);
+        String[] jobs = to.getPlanJobs();
+        String[] attends = to.getPlanPeoples();
+        StringBuilder sb1 = new StringBuilder();
+        for (int i = 0; i < jobs.length; i++) {
+            if (i != jobs.length - 1) {
+                sb1.append(jobs[i] + "、");
+            } else {
+                sb1.append(jobs[i]);
+            }
+        }
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < attends.length; i++) {
+            if (i != attends.length - 1) {
+                sb2.append(attends[i] + "、");
+            } else {
+                sb2.append(attends[i]);
+            }
+        }
+        entity.setPlanJob(sb1.toString());
+        entity.setPlanPeople(sb2.toString());
         super.save(entity);
         MeetingSummaryTO meetingSummaryTO = new MeetingSummaryTO();
         meetingSummaryTO.setOrganizeContentId(entity.getId());
@@ -67,15 +101,48 @@ public class OrganizeContentSerImpl extends ServiceImpl<OrganizeContent, Organiz
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        String time = DateUtil.dateToString(entity.getPlanTime());
-        String number = desginSer.findNumber(entity.getMeetingLevel()) + "-" + time;
         LocalDateTime a = entity.getCreateTime();
+        String number = entity.getMeetingNumber();
         String host = entity.getHost();
         entity = BeanTransform.copyProperties(to, OrganizeContent.class, true);
+        String meetingNumber = ChineseCharToEn.getAllFirstLetter(entity.getMeetingLevel());
+        LocalDateTime planTime = entity.getPlanTime();
+        String year = String.valueOf(planTime.getYear());
+        String month = String.valueOf(planTime.getMonthValue());
+        if (month.length() < 2) {
+            month = "0" + month;
+        }
+        String day = String.valueOf(planTime.getDayOfMonth());
+        if (day.length() < 2) {
+            day = "0" + day;
+        }
+        String num = number.substring(number.length() - 1);
+        meetingNumber = "JL-" + meetingNumber + "-" + year + month + day + "-" + num;
+        entity.setMeetingNumber(meetingNumber);
         entity.setCreateTime(a);
         entity.setMeetingType("交流会");
         entity.setOrganization(name);
         entity.setHost(host);
+        String[] jobs = to.getPlanJobs();
+        String[] attends = to.getPlanPeoples();
+        StringBuilder sb1 = new StringBuilder();
+        for (int i = 0; i < jobs.length; i++) {
+            if (i != jobs.length - 1) {
+                sb1.append(jobs[i] + "、");
+            } else {
+                sb1.append(jobs[i]);
+            }
+        }
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < attends.length; i++) {
+            if (i != attends.length - 1) {
+                sb2.append(attends[i] + "、");
+            } else {
+                sb2.append(attends[i]);
+            }
+        }
+        entity.setPlanJob(sb1.toString());
+        entity.setPlanPeople(sb2.toString());
         entity.setMeetingNumber(number);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -145,5 +212,20 @@ public class OrganizeContentSerImpl extends ServiceImpl<OrganizeContent, Organiz
         set.add("线上");
         set.add("线下");
         return set;
+    }
+
+    /**
+     * 查看计划会议当天有几个会议
+     *
+     * @param planTime 计划会议时间
+     * @return
+     * @throws SerException
+     */
+    private Long findNum(LocalDateTime planTime) throws SerException {
+        OrganizeContentDTO dto = new OrganizeContentDTO();
+        LocalDate time = DateUtil.parseDate(DateUtil.dateToString(planTime).substring(0, 10));
+        LocalDate[] times = new LocalDate[]{time, time};
+        dto.getConditions().add(Restrict.between("planTime", times));
+        return super.count(dto);
     }
 }

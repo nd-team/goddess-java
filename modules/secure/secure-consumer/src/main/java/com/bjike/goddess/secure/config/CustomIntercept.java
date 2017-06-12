@@ -29,11 +29,11 @@ public class CustomIntercept implements Interceptor {
 
     @Override
     public List<HIInfo> customerInterceptors() {
-        /**
-         * 添加限流器
-         */
-        SmoothBurstyInterceptor smoothInterceptor = new SmoothBurstyInterceptor(100, SmoothBurstyInterceptor.LimitType.DROP);
-        HIInfo smoothInfo = new HIInfo(smoothInterceptor, "/**");
+//        /**
+//         * 添加限流器
+//         */
+//        SmoothBurstyInterceptor smoothInterceptor = new SmoothBurstyInterceptor(100, SmoothBurstyInterceptor.LimitType.DROP);
+//        HIInfo smoothInfo = new HIInfo(smoothInterceptor, "/**");
 
         /**
          * 登录拦截器
@@ -59,6 +59,6 @@ public class CustomIntercept implements Interceptor {
         /**
          * 顺序
          */
-        return Arrays.asList(smoothInfo, loginInfo);
+        return Arrays.asList(loginInfo);
     }
 }

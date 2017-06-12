@@ -62,22 +62,49 @@ public class MeetingSummarySerImpl extends ServiceImpl<MeetingSummary, MeetingSu
 //        } catch (Exception e) {
 //            throw new SerException("输入的时间格式不正确");
 //        }
-        String id=entity.getOrganizeContentId();
-        LocalDateTime a=entity.getCreateTime();
-        entity=BeanTransform.copyProperties(to,MeetingSummary.class,true);
+        String id = entity.getOrganizeContentId();
+        LocalDateTime a = entity.getCreateTime();
+        entity = BeanTransform.copyProperties(to, MeetingSummary.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
         entity.setOrganizeContentId(id);
+        String[] actualAttends = to.getActualPeoples();
+        String[] addAttends = to.getAddPeoples();
+        String[] notAttends = to.getNotAttends();
+        StringBuilder sb1 = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        StringBuilder sb3 = new StringBuilder();
+        for (int i = 0; i < actualAttends.length; i++) {
+            if (i != actualAttends.length - 1) {
+                sb1.append(actualAttends[i] + "、");
+            }
+            sb1.append(actualAttends[i]);
+        }
+        for (int i = 0; i < addAttends.length; i++) {
+            if (i != actualAttends.length - 1) {
+                sb2.append(addAttends[i] + "、");
+            }
+            sb2.append(addAttends[i]);
+        }
+        for (int i = 0; i < notAttends.length; i++) {
+            if (i != notAttends.length - 1) {
+                sb3.append(notAttends[i] + "、");
+            }
+            sb3.append(notAttends[i]);
+        }
+        entity.setActualPeople(sb1.toString());
+        entity.setAddPeople(sb2.toString());
+        entity.setNotAttend(sb3.toString());
         super.update(entity);
         NoticeTemplateBO bo = new NoticeTemplateBO();
         BeanUtils.copyProperties(entity, bo);
         String organizeContentId = entity.getOrganizeContentId();
         OrganizeContent organizeContent = findByOrganizeContentId(organizeContentId);
-        String time1 = DateUtil.dateToString(entity.getActualTime());
-        String s = organizeContent.getMeetingNumber().substring(0, 6);
-        organizeContentSer.updateNumer(organizeContentId, s + time1);
-        bo.setMeetingType(organizeContent.getMeetingType());
-        bo.setMeetingNumber(s + time1);
+//        String time1 = DateUtil.dateToString(entity.getActualTime());
+//        String s = organizeContent.getMeetingNumber().substring(0, 6);
+//        organizeContentSer.updateNumer(organizeContentId, s + time1);
+//        bo.setMeetingType(organizeContent.getMeetingType());
+        bo.setMeetingNumber(organizeContent.getMeetingNumber());
         OrganizeContentBO bo1 = BeanTransform.copyProperties(organizeContent, OrganizeContentBO.class);
         bo.setPlanTime(bo1.getPlanTime());
         bo.setActualTime(to.getActualTime());

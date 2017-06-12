@@ -78,7 +78,7 @@ public class BeforeAddVO {
     /**
      * 是否增员
      */
-    private boolean increase;
+    private Boolean increase;
 
 
     public String getId() {
@@ -185,11 +185,11 @@ public class BeforeAddVO {
         this.description = description;
     }
 
-    public boolean getIncrease() {
+    public Boolean getIncrease() {
         return increase;
     }
 
-    public void setIncrease(boolean increase) {
+    public void setIncrease(Boolean increase) {
         this.increase = increase;
     }
 }

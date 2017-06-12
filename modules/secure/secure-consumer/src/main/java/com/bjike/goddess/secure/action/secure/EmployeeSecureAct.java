@@ -30,7 +30,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("employee-secure")
+@RequestMapping("employeesecure")
 public class EmployeeSecureAct {
     @Autowired
     private EmployeeSecureAPI employeeSecureAPI;
@@ -84,7 +84,7 @@ public class EmployeeSecureAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/employee-secure/{id}")
+    @GetMapping("v1/employeesecure/{id}")
     public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             EmployeeSecureBO employeeSecureBO = employeeSecureAPI.findByID(id);

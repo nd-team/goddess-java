@@ -53,7 +53,7 @@ public class BuyVO {
     /**
      * 审批状态
      */
-    private boolean examine;
+    private Boolean examine;
 
     public String getId() {
         return id;
@@ -119,11 +119,11 @@ public class BuyVO {
         this.status = status;
     }
 
-    public boolean isExamine() {
+    public Boolean isExamine() {
         return examine;
     }
 
-    public void setExamine(boolean examine) {
+    public void setExamine(Boolean examine) {
         this.examine = examine;
     }
 }

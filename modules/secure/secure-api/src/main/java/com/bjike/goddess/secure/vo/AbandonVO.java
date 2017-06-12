@@ -39,7 +39,7 @@ public class AbandonVO {
     /**
      * 是否签署协议
      */
-    private boolean sign;
+    private Boolean sign;
 
 
     public String getId() {
@@ -82,11 +82,11 @@ public class AbandonVO {
         this.reason = reason;
     }
 
-    public boolean getSign() {
+    public Boolean getSign() {
         return sign;
     }
 
-    public void setSign(boolean sign) {
+    public void setSign(Boolean sign) {
         this.sign = sign;
     }
 }

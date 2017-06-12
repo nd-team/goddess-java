@@ -41,16 +41,16 @@ public class OrganizeContentTO extends BaseTO {
     private String meetingContent;
 
     /**
-     * 计划参会岗位
+     * 计划参会岗位数组
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划参会岗位不能为空")
-    private String planJob;
+    private String[] planJobs;
 
     /**
-     * 计划参会人员
+     * 计划参会人员数组
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "计划参会人员不能为空")
-    private String planPeople;
+    private String[] planPeoples;
 
     /**
      * 计划会议时间
@@ -102,20 +102,20 @@ public class OrganizeContentTO extends BaseTO {
         this.meetingContent = meetingContent;
     }
 
-    public String getPlanJob() {
-        return planJob;
+    public String[] getPlanJobs() {
+        return planJobs;
     }
 
-    public void setPlanJob(String planJob) {
-        this.planJob = planJob;
+    public void setPlanJobs(String[] planJobs) {
+        this.planJobs = planJobs;
     }
 
-    public String getPlanPeople() {
-        return planPeople;
+    public String[] getPlanPeoples() {
+        return planPeoples;
     }
 
-    public void setPlanPeople(String planPeople) {
-        this.planPeople = planPeople;
+    public void setPlanPeoples(String[] planPeoples) {
+        this.planPeoples = planPeoples;
     }
 
     public String getPlanTime() {

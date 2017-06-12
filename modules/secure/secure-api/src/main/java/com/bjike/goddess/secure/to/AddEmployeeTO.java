@@ -133,7 +133,7 @@ public class AddEmployeeTO extends BaseTO {
     /**
      * 运营商务部意见
      */
-    @NotBlank(groups = {AddEmployeeTO.AUDIT.class,EDIT.class}, message = "运营商务部意见不能为空")
+    @NotBlank(groups = {AddEmployeeTO.AUDIT.class}, message = "运营商务部意见不能为空")
     private String businessAdvice;
 
     /**

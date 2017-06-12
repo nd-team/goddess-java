@@ -30,7 +30,7 @@ public class OutEmployeeTO extends BaseTO {
      * 是否继续购买
      */
     @NotNull(groups = {EDIT.class}, message = "是否继续购买不能为空")
-    private boolean isAgain;
+    private Boolean isAgain;
 
     /**
      * 意见
@@ -55,11 +55,11 @@ public class OutEmployeeTO extends BaseTO {
         this.endTime = endTime;
     }
 
-    public boolean getIsAgain() {
+    public Boolean getIsAgain() {
         return isAgain;
     }
 
-    public void setIsAgain(boolean isAgain) {
+    public void setIsAgain(Boolean isAgain) {
         this.isAgain = isAgain;
     }
 
