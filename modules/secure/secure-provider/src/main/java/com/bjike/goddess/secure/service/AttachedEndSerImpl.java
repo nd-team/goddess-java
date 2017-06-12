@@ -52,19 +52,19 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void quartz() throws SerException {
-        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
-        scheduleJobGroupTO.setName("定时查找挂靠即将到期人员工作组");
-        scheduleJobGroupTO.setEnable(true);
-        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
+//        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
+//        scheduleJobGroupTO.setName("定时查找挂靠即将到期人员工作组");
+//        scheduleJobGroupTO.setEnable(true);
+//        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
         ScheduleJobTO scheduleJobTO = new ScheduleJobTO();
-        scheduleJobTO.setClazz("com.bjike.goddess.secure.api.AttachedAPI");
+        scheduleJobTO.setClazz("com.bjike.goddess.secure.api.AttachedEndAPI");
         scheduleJobTO.setName("定时查找挂靠即将到期人员");
         scheduleJobTO.setMethod("send");
-        scheduleJobTO.setExpression("0 */24 * * * ");   //每24个小时执行一次
+        scheduleJobTO.setExpression("0 0/1440 * * * ?");   //每24个小时执行一次
         scheduleJobTO.setDescription("查找挂靠即将到期人员，并通知综合资源部");
         scheduleJobTO.setEnable(true);
         scheduleJobTO.setAddress("localhost:51101");
-        scheduleJobTO.setScheduleJobGroupId(scheduleJobGroupBO.getId());
+        scheduleJobTO.setScheduleJobGroupId("eb33c9b6-ed33-4596-be70-b3eb6aa81f1d");
         scheduleJobAPI.add(scheduleJobTO);
     }
 
@@ -103,6 +103,9 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
     @Transactional(rollbackFor = {SerException.class})
     public AttachedEndBO is_Again(AttachedEndTO to) throws SerException {
         AttachedEnd attachedEnd = super.findById(to.getId());
+        if (attachedEnd==null){
+            throw new SerException("该对象不存在");
+        }
 //        LocalDateTime a = attachedEnd.getCreateTime();
 //        attachedEnd = BeanTransform.copyProperties(to, AttachedEnd.class, true);
 //        attachedEnd.setCreateTime(a);

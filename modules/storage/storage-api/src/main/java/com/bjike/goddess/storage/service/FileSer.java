@@ -55,10 +55,10 @@ public interface FileSer extends Ser<File, FileDTO> {
     /**
      * 删除文件
      *
-     * @param path         文件或者文件夹路径
+     * @param paths         文件或者文件夹路径
      * @param storageToken 登录令牌
      */
-    default void delFile(String path, String storageToken) throws SerException {
+    default void delFile(String[] paths, String storageToken) throws SerException {
 
     }
 

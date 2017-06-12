@@ -94,7 +94,7 @@ public class BeforeAdd extends BaseEntity {
      * 是否增员
      */
     @Column(name = "increase", columnDefinition = "TINYINT(1) COMMENT '是否增员'")
-    private boolean increase;
+    private Boolean increase;
 
     public String getIntelligence() {
         return intelligence;
@@ -192,11 +192,11 @@ public class BeforeAdd extends BaseEntity {
         this.description = description;
     }
 
-    public boolean getIncrease() {
+    public Boolean getIncrease() {
         return increase;
     }
 
-    public void setIncrease(boolean increase) {
+    public void setIncrease(Boolean increase) {
         this.increase = increase;
     }
 }

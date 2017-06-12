@@ -20,4 +20,5 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.quartz.api.ScheduleJobAPI" id="scheduleJobApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.quartz.api.ScheduleJobGroupAPI" id="scheduleJobGroupApiImpl"/>
 
+	<dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 </beans>

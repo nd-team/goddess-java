@@ -103,7 +103,7 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                         super.update(myFile);
                     }
                 }
-                files.add(file) ;
+                files.add(file);
                 infoCount += 2;
                 fileCount += 2;
             }
@@ -128,40 +128,43 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
     }
 
     @Override
-    public void delFile(String path, String storageToken) throws SerException {
-        String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
-        String savePath = getRealPath(path, storageToken);
-        java.io.File file = new java.io.File(savePath);
-        if (file.exists()) {
-            if (file.isFile()) {
-                FileDTO dto = new FileDTO();
-                path = getDbFilePath(file);
-                dto.getConditions().add(Restrict.eq("path", path));
-                dto.getConditions().add(Restrict.eq("module", module));
-                dto.getConditions().add(Restrict.eq("fileType", FileUtils.getFileType(file).getCode()));
-                File db_file = super.findOne(dto);
-                if (null != db_file) {
-                    file.delete();
-                    super.remove(db_file);
-                }
-            } else {
-                try {
+    public void delFile(String[] paths, String storageToken) throws SerException {
+        for (String path : paths) {
+            String module = storageUserAPI.getCurrentModule(storageToken); //网盘登录用户
+            String savePath = getRealPath(path, storageToken);
+            java.io.File file = new java.io.File(savePath);
+            if (file.exists()) {
+                if (file.isFile()) {
                     FileDTO dto = new FileDTO();
                     path = getDbFilePath(file);
-                    List<Condition> conditions = dto.getConditions();
-                    conditions.add(Restrict.eq("module", module));
-                    conditions.add(Restrict.like("path", path)); //以该路径开头的文件全部删除
-                    List<File> fileList = super.findByCis(dto);
-                    org.apache.commons.io.FileUtils.deleteDirectory(file); //删除目录及目录下的所有文件
-                    super.remove(fileList); //删除所有文件
-                } catch (IOException e) {
-                    throw new SerException(e.getMessage());
+                    dto.getConditions().add(Restrict.eq("path", path));
+                    dto.getConditions().add(Restrict.eq("module", module));
+                    dto.getConditions().add(Restrict.eq("fileType", FileUtils.getFileType(file).getCode()));
+                    File db_file = super.findOne(dto);
+                    if (null != db_file) {
+                        file.delete();
+                        super.remove(db_file);
+                    }
+                } else {
+                    try {
+                        FileDTO dto = new FileDTO();
+                        path = getDbFilePath(file);
+                        List<Condition> conditions = dto.getConditions();
+                        conditions.add(Restrict.eq("module", module));
+                        conditions.add(Restrict.like("path", path)); //以该路径开头的文件全部删除
+                        List<File> fileList = super.findByCis(dto);
+                        org.apache.commons.io.FileUtils.deleteDirectory(file); //删除目录及目录下的所有文件
+                        super.remove(fileList); //删除所有文件
+                    } catch (IOException e) {
+                        throw new SerException(e.getMessage());
+                    }
                 }
-            }
 
-        } else {
-            throw new SerException("该文件目录不存在！");
+            } else {
+                throw new SerException("该文件目录不存在！");
+            }
         }
+
     }
 
 
@@ -333,8 +336,8 @@ public class FileSerImpl extends ServiceImpl<File, FileDTO> implements FileSer {
                 fileBO.setFileType(FileUtils.getFileType(file));
                 if (file.isFile()) {
                     fileBO.setSize(FileUtils.getFileSize(file));
+                    fileBO.setLength(file.length());
                 }
-
                 if (root.equals(file.getParent())) {
                     fileBO.setParentPath(null);
                 } else {

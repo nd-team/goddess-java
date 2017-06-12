@@ -66,7 +66,7 @@ public class Buy extends BaseEntity {
      * 审批状态
      */
     @Column(name = "examine", columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '审批状态'")
-    private boolean examine;
+    private Boolean examine;
 
     public String getName() {
         return name;
@@ -124,11 +124,11 @@ public class Buy extends BaseEntity {
         this.status = status;
     }
 
-    public boolean isExamine() {
+    public Boolean isExamine() {
         return examine;
     }
 
-    public void setExamine(boolean examine) {
+    public void setExamine(Boolean examine) {
         this.examine = examine;
     }
 }

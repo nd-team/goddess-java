@@ -146,7 +146,7 @@ public class AttachedEnd extends BaseEntity {
      * 是否继续挂靠
      */
     @Column(name = "isAttachedAgin", columnDefinition = "TINYINT(1)   COMMENT '是否继续挂靠'")
-    private boolean isAttachedAgin;
+    private Boolean isAttachedAgin;
 
     public String getAttachedName() {
         return attachedName;
@@ -308,11 +308,11 @@ public class AttachedEnd extends BaseEntity {
         this.decription = decription;
     }
 
-    public boolean getAttachedAgin() {
+    public Boolean getAttachedAgin() {
         return isAttachedAgin;
     }
 
-    public void setIsAttachedAgin(boolean isAttachedAgin) {
+    public void setIsAttachedAgin(Boolean isAttachedAgin) {
         this.isAttachedAgin = isAttachedAgin;
     }
 }

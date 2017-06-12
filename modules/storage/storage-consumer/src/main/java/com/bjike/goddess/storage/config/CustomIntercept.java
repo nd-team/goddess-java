@@ -32,11 +32,11 @@ public class CustomIntercept implements Interceptor {
         String username = "ike";
         String password = "123456";
         String moduleName = "storage";
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, username, password, moduleName), "/**");
+//        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, username, password, moduleName), "/**");
         /**
          * 直接访问须手动登录
          */
-       // HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, false), "/**");
+        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, false), "/**");
         /**
          * 暂时不加权限
          */

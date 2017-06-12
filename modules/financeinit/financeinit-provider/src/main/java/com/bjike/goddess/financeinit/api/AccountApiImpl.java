@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 账户来源业务接口实现
@@ -27,14 +28,14 @@ public class AccountApiImpl implements AccountAPI {
 
     @Override
     public Long countAccount(AccountDTO accountDTO) throws SerException {
-        return accountSer.countAccount( accountDTO );
+        return accountSer.countAccount(accountDTO);
     }
 
     @Override
     public AccountBO getOneById(String id) throws SerException {
         return accountSer.getOneById(id);
     }
-    
+
     @Override
     public List<AccountBO> listAccount(AccountDTO accountDTO) throws SerException {
         return accountSer.listAccount(accountDTO);
@@ -58,17 +59,27 @@ public class AccountApiImpl implements AccountAPI {
     @Override
     public List<String> getSecondSubject(AccountDTO accountDTO) throws SerException {
 
-        return accountSer.getSecondSubject(accountDTO );
+        return accountSer.getSecondSubject(accountDTO);
     }
 
     @Override
     public List<String> getThirdSubject(AccountDTO accountDTO) throws SerException {
-        return accountSer.getThirdSubject(accountDTO );
+        return accountSer.getThirdSubject(accountDTO);
     }
 
 
     @Override
     public List<String> listAccountOrigin() throws SerException {
         return accountSer.listAccountOrigin();
+    }
+
+    @Override
+    public Set<String> allNames(AccountDTO accountDTO) throws SerException {
+        return accountSer.allNames(accountDTO);
+    }
+
+    @Override
+    public String findByName(String name) throws SerException {
+        return accountSer.findByName(name);
     }
 }

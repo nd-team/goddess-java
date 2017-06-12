@@ -77,7 +77,9 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     }
 
     @Override
-    public RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException {
+    public RemoveEmployeeBO findByNameAndId(RemoveEmployeeTO to) throws SerException {
+        String removeName=to.getRemoveName();
+        String employeeId=to.getEmployeeId();
         String[] names = new String[]{removeName};
         List<RemoveEmployeeBO> list = null;
         if ((removeName != null) && (employeeId != null) && (StringUtils.isNotBlank(employeeId))) {

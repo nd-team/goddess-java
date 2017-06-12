@@ -46,7 +46,7 @@ public class Abandon extends BaseEntity {
      * 是否签署协议
      */
     @Column(name = "is_sign", columnDefinition = "TINYINT(1)  COMMENT '是否签署协议'")
-    private boolean sign;
+    private Boolean sign;
 
     public String getName() {
         return name;
@@ -80,11 +80,11 @@ public class Abandon extends BaseEntity {
         this.reason = reason;
     }
 
-    public boolean getSign() {
+    public Boolean getSign() {
         return sign;
     }
 
-    public void setSign(boolean sign) {
+    public void setSign(Boolean sign) {
         this.sign = sign;
     }
 }

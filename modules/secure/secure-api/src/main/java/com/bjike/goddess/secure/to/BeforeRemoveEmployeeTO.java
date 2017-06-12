@@ -94,7 +94,7 @@ public class BeforeRemoveEmployeeTO extends BaseTO {
      * 是否减员
      */
 //    @NotNull(groups = {AUDIT.class},message = "是否减员不能为空")
-    private boolean isRemove;
+    private Boolean isRemove;
 
     public String getEmployeeId() {
         return employeeId;
@@ -184,11 +184,11 @@ public class BeforeRemoveEmployeeTO extends BaseTO {
         this.description = description;
     }
 
-    public boolean getIs_remove() {
+    public Boolean getIs_remove() {
         return isRemove;
     }
 
-    public void setIs_remove(boolean isRemove) {
+    public void setIs_remove(Boolean isRemove) {
         this.isRemove = isRemove;
     }
 }

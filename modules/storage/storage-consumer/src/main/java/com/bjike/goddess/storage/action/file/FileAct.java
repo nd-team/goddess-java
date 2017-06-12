@@ -142,13 +142,13 @@ public class FileAct extends BaseFileAction {
     /**
      * 删除文件、文件夹
      *
-     * @param fileInfo 文件信息
+     * @param storageToken 登录令牌
+     * @param paths    文件路径
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delFile(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, BindingResult result) throws SerException {
-        handlerToken(fileInfo);
-        fileAPI.delFile(fileInfo);
+    public Result delFile(@RequestParam String storageToken, @RequestParam String[] paths) throws SerException {
+        fileAPI.delFile(storageToken, paths);
         return new ActResult("delFile success");
     }
 
@@ -257,6 +257,7 @@ public class FileAct extends BaseFileAction {
 
     /**
      * 获取storageToken
+     *
      * @param fileInfo
      */
     private void handlerToken(FileInfo fileInfo) {
