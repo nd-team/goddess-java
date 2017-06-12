@@ -113,7 +113,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken( userToken );
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee && flagAdd ){
+        if( flagSee || flagAdd ){
             return true;
         }else{
             return false;
