@@ -48,9 +48,10 @@ public interface FileAPI {
     /**
      * 删除文件
      *
-     * @param fileInfo 文件信息
+     * @param paths 文件路径
+     * @param storageToken 登录令牌
      */
-    default void delFile(FileInfo fileInfo) throws SerException {
+    default void delFile(String storageToken,String[] paths) throws SerException {
 
     }
 

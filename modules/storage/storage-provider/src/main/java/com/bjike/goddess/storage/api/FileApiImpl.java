@@ -51,10 +51,8 @@ public class FileApiImpl implements FileAPI {
     }
 
     @Override
-    public void delFile(FileInfo fileInfo) throws SerException {
-        String path = fileInfo.getPath();
-        String token = fileInfo.getStorageToken();
-        fileSer.delFile(path, token);
+    public void delFile(String storageToken,String[] paths) throws SerException {
+        fileSer.delFile(paths, storageToken);
     }
 
 
