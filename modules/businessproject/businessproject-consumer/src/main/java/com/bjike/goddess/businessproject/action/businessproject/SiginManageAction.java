@@ -9,6 +9,7 @@ import com.bjike.goddess.businessproject.enums.SiginStatus;
 import com.bjike.goddess.businessproject.excel.SiginManageExcel;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.businessproject.vo.SiginManageVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -367,13 +368,16 @@ public class SiginManageAction extends BaseFileAction {
     /**
      * 删除文件或文件夹
      *
-     * @param paths 多文件信息路径
+     * @param siginManageDeleteFileTO 多文件信息路径
      * @version v1
      */
-    @DeleteMapping("v1/deleteFile")
-    public Result delFile(@RequestParam String[] paths, HttpServletRequest request) throws SerException {
-        Object storageToken = request.getAttribute("storageToken");
-        fileAPI.delFile(storageToken.toString(),paths);
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+        if(null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length>=0 ){
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(),siginManageDeleteFileTO.getPaths());
+        }
         return new ActResult("delFile success");
     }
 
