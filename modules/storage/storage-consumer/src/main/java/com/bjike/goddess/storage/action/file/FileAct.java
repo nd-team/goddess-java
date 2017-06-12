@@ -147,7 +147,7 @@ public class FileAct extends BaseFileAction {
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delFile(@RequestParam String storageToken, BindingResult result, @RequestParam String[] paths) throws SerException {
+    public Result delFile(@RequestParam String storageToken, @RequestParam String[] paths) throws SerException {
         fileAPI.delFile(storageToken, paths);
         return new ActResult("delFile success");
     }
