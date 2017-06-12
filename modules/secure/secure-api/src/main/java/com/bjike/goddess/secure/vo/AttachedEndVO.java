@@ -112,7 +112,7 @@ public class AttachedEndVO {
     /**
      * 是否继续挂靠
      */
-    private boolean isAttachedAgin;
+    private Boolean isAttachedAgin;
 
 
     public String getId() {
@@ -267,11 +267,11 @@ public class AttachedEndVO {
         this.decription = decription;
     }
 
-    public boolean getIsAttachedAgin() {
+    public Boolean getIsAttachedAgin() {
         return isAttachedAgin;
     }
 
-    public void setIs_attached_agin(boolean isAttachedAgin) {
+    public void setIs_attached_agin(Boolean isAttachedAgin) {
         this.isAttachedAgin = isAttachedAgin;
     }
 }

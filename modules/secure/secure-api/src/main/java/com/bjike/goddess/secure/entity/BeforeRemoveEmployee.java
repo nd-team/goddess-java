@@ -88,7 +88,7 @@ public class BeforeRemoveEmployee extends BaseEntity {
      * 是否减员
      */
     @Column(name = "isRemove",columnDefinition = "TINYINT(1)  DEFAULT 0   COMMENT '是否减员'")
-    private boolean isRemove;
+    private Boolean isRemove;
 
     public String getEmployeeId() {
         return employeeId;
@@ -178,11 +178,11 @@ public class BeforeRemoveEmployee extends BaseEntity {
         this.description = description;
     }
 
-    public boolean getIs_remove() {
+    public Boolean getIs_remove() {
         return isRemove;
     }
 
-    public void setIs_remove(boolean isRemove) {
+    public void setIs_remove(Boolean isRemove) {
         this.isRemove = isRemove;
     }
 }

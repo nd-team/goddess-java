@@ -73,9 +73,9 @@ public class RemoveEmployeeBO extends BaseBO {
     /**
      * 确认是否减员
      */
-    private boolean confirmRemove;
+    private Boolean confirmRemove;
 
-    public boolean getConfirmRemove() {
+    public Boolean getConfirmRemove() {
         return confirmRemove;
     }
 
@@ -87,7 +87,7 @@ public class RemoveEmployeeBO extends BaseBO {
         this.employeeId = employeeId;
     }
 
-    public void setConfirmRemove(boolean confirmRemove) {
+    public void setConfirmRemove(Boolean confirmRemove) {
         this.confirmRemove = confirmRemove;
     }
 

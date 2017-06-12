@@ -28,18 +28,18 @@ public class MeetingSummaryTO extends BaseTO {
      * 实际参会人员
      */
     @NotBlank(groups = {EDIT.class}, message = "实际参会人员不能为空")
-    private String actualPeople;
+    private String[] actualPeoples;
 
     /**
      * 新增参会人员
      */
     @NotBlank(groups = {EDIT.class}, message = "新增参会人员不能为空")
-    private String addPeople;
+    private String[] addPeoples;
 
     /**
      * 未参会人员
      */
-    private String notAttend;
+    private String[] notAttends;
 
     /**
      * 参会人数
@@ -111,28 +111,28 @@ public class MeetingSummaryTO extends BaseTO {
         this.actualTime = actualTime;
     }
 
-    public String getActualPeople() {
-        return actualPeople;
+    public String[] getActualPeoples() {
+        return actualPeoples;
     }
 
-    public void setActualPeople(String actualPeople) {
-        this.actualPeople = actualPeople;
+    public void setActualPeoples(String[] actualPeoples) {
+        this.actualPeoples = actualPeoples;
     }
 
-    public String getAddPeople() {
-        return addPeople;
+    public String[] getAddPeoples() {
+        return addPeoples;
     }
 
-    public void setAddPeople(String addPeople) {
-        this.addPeople = addPeople;
+    public void setAddPeoples(String[] addPeoples) {
+        this.addPeoples = addPeoples;
     }
 
-    public String getNotAttend() {
-        return notAttend;
+    public String[] getNotAttends() {
+        return notAttends;
     }
 
-    public void setNotAttend(String notAttend) {
-        this.notAttend = notAttend;
+    public void setNotAttends(String[] notAttends) {
+        this.notAttends = notAttends;
     }
 
     public Integer getAmount() {
