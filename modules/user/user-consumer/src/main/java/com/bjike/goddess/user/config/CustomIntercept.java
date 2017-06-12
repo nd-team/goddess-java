@@ -53,11 +53,10 @@ public class CustomIntercept implements Interceptor {
                 "public/version/key"
         };
         HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
-
         /**
          * 暂时不加权限
          */
-       return Arrays.asList(smoothInfo, loginInfo);
+        return Arrays.asList(smoothInfo, loginInfo);
 
 //     return Arrays.asList(smoothInfo, authInfo,loginInfo);
     }

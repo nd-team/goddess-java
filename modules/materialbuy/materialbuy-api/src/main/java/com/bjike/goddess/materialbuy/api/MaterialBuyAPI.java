@@ -1,6 +1,7 @@
 package com.bjike.goddess.materialbuy.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
@@ -94,4 +95,13 @@ public interface MaterialBuyAPI {
      * @throws SerException
      */
     List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException;
+
+    /**
+     * 地区购买情况汇总
+     *
+     * @return class AreaBuyStatusDayCollectBO
+     * @throws SerException
+     */
+    List<AreaBuyStatusDayCollectBO> areaBuyStatusDaySum() throws SerException;
+
 }

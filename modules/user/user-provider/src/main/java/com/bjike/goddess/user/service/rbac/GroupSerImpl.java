@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.service.rbac;
 
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -48,7 +49,6 @@ public class GroupSerImpl extends ServiceImpl<Group, GroupDTO> implements GroupS
         dto.getConditions().add(Restrict.eq(SYS_NO, userSer.currentSysNO()));
 
         List<Group> groups = super.findByCis(dto);
-
         return BeanTransform.copyProperties(groups, GroupBO.class);
     }
 

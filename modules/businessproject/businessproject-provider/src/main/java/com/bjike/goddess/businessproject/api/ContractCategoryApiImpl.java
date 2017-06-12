@@ -29,6 +29,10 @@ public class ContractCategoryApiImpl implements ContractCategoryAPI {
     private ContractCategorySer contractCategorySer;
 
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return contractCategorySer.sonPermission();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {

@@ -2,6 +2,7 @@ package com.bjike.goddess.materialbuy.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
@@ -87,5 +88,13 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      * @throws SerException
      */
     List<MaterialBuyBO> findWaitPay(MaterialBuyDTO dto) throws SerException;
+
+    /**
+     * 地区购买情况汇总
+     *
+     * @return class AreaBuyStatusDayCollectBO
+     * @throws SerException
+     */
+    List<AreaBuyStatusDayCollectBO> areaBuyStatusDaySum() throws SerException;
 
 }

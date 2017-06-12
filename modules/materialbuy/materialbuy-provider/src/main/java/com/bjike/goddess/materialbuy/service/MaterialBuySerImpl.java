@@ -4,19 +4,25 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.DeviceType;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
 import com.bjike.goddess.materialbuy.vo.MaterialBuyVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,12 @@ import java.util.Map;
 @CacheConfig(cacheNames = "materialbuySerCache")
 @Service
 public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO> implements MaterialBuySer {
+
+    @Autowired
+    private DeviceTypeSer deviceTypeSer;
+
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 分页查询物资购买
@@ -162,5 +174,52 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         }
         List<MaterialBuyBO> listBO = BeanTransform.copyProperties(list, MaterialBuyBO.class);
         return listBO;
+    }
+
+    /**
+     * 地区购买情况汇总
+     *
+     * @return class AreaBuyStatusDayCollectBO
+     * @throws SerException
+     */
+    @Override
+    public List<AreaBuyStatusDayCollectBO> areaBuyStatusDaySum() throws SerException {
+        //查询所有部门
+        List<OpinionBO> listBO = departmentDetailAPI.findAllOpinion();
+        if (CollectionUtils.isEmpty(listBO)) {
+            return null;
+        }
+        List<String> listDepartments = new ArrayList<>(0);
+        for (OpinionBO opinionBO : listBO) {
+            if (StringUtils.isNotBlank(opinionBO.getValue())) {
+                listDepartments.add(opinionBO.getValue());
+            }
+        }
+        List<String> listDeviceTypes = deviceTypeSer.findAllDeviceNames();
+        List<AreaBuyStatusDayCollectBO> areaCollectBO = new ArrayList<>(0);
+        for (String department : listDepartments) {
+            for (String deviceType : listDeviceTypes) {
+                MaterialBuyDTO dto = new MaterialBuyDTO();
+                dto.getConditions().add(Restrict.eq("subscribeDate", LocalDate.now()));
+                dto.getConditions().add(Restrict.eq("projectTeam", department));
+                dto.getConditions().add(Restrict.eq("deviceType", deviceType));
+                dto.getSorts().add("subscribeDate=desc");
+                List<MaterialBuy> list = super.findByCis(dto);
+                String area = null;
+                Integer totalQty = 0;//总数量
+                Double totalAmount = 0d;//总金额
+                for (MaterialBuy materialBuy : list) {
+                    Integer quantity = materialBuy.getQuantity() == null?0:(materialBuy.getQuantity());
+                    Double unitPrice = materialBuy.getUnitPrice() == null?0:(materialBuy.getUnitPrice());
+                    Double amount = quantity * unitPrice;
+                    totalQty += quantity;
+                    totalAmount += amount;
+                }
+
+            }
+
+        }
+
+        return null;
     }
 }

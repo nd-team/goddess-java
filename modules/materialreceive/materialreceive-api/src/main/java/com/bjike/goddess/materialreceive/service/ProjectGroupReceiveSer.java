@@ -10,18 +10,18 @@ import com.bjike.goddess.materialreceive.to.ProjectGroupReceiveTO;
 import java.util.List;
 
 /**
- * 项目组领用归还业务接口
+ * 项目组领用归还登记业务接口
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:52 ]
- * @Description: [ 项目组领用归还业务接口 ]
+ * @Description: [ 项目组领用归还登记业务接口 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, ProjectGroupReceiveDTO> {
 
     /**
-     * 分页查询项目组领用归还
+     * 分页查询项目组领用归还登记
      *
      * @return class ProjectGroupReceiveBO
      * @throws SerException
@@ -29,18 +29,18 @@ public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, Project
     List<ProjectGroupReceiveBO> list(ProjectGroupReceiveDTO dto) throws SerException;
 
     /**
-     * 保存项目组领用归还
+     * 保存项目组领用归还登记
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @return class ProjectGroupReceiveBO
      * @throws SerException
      */
     ProjectGroupReceiveBO save(ProjectGroupReceiveTO to) throws SerException;
 
     /**
-     * 根据id删除项目组领用归还
+     * 根据id删除项目组领用归还登记
      *
-     * @param id 项目组领用归还唯一标识
+     * @param id 项目组领用归还登记唯一标识
      * @throws SerException
      */
     void remove(String id) throws SerException;
@@ -48,15 +48,15 @@ public interface ProjectGroupReceiveSer extends Ser<ProjectGroupReceive, Project
     /**
      * 归还物资
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @throws SerException
      */
     void returnMaterial(ProjectGroupReceiveTO to) throws SerException;
 
     /**
-     * 更新更新项目组领用归还
+     * 更新更新项目组领用归还登记
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @throws SerException
      */
     ProjectGroupReceive update(ProjectGroupReceiveTO to) throws SerException;

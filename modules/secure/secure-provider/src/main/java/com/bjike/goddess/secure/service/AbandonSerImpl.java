@@ -39,12 +39,12 @@ public class AbandonSerImpl extends ServiceImpl<Abandon, AbandonDTO> implements 
     //填写放弃原因，点击放弃购买按钮
     public AbandonBO save(AbandonTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        String eNum = userAPI.currentUser().getEmployeeNumber();
-        String groupName = userDetailAPI.findByUserId(userAPI.currentUser().getId()).getGroupName();
+//        String eNum = userAPI.currentUser().getEmployeeNumber();
+//        String groupName = userDetailAPI.findByUserId(userAPI.currentUser().getId()).getGroupName();
         Abandon abandon = BeanTransform.copyProperties(to, Abandon.class, true);
         abandon.setName(name);
-        abandon.setEmployeeNum(eNum);
-        abandon.setGroup1(groupName);
+//        abandon.setEmployeeNum(eNum);
+//        abandon.setGroup1(groupName);
         abandon.setSign(true);
         super.save(abandon);
         return BeanTransform.copyProperties(abandon, AbandonBO.class);

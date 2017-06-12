@@ -39,7 +39,6 @@ public class StorageUserAct {
      * @param storageUserTO 存储用户传输对象
      * @version v1
      */
-    @LoginAuth
     @PostMapping("v1/register")
     public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result, HttpServletRequest request) throws ActException {
         try {

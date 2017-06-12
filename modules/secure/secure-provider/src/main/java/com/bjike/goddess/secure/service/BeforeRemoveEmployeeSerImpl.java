@@ -61,19 +61,19 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void quartz() throws SerException {
-        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
-        scheduleJobGroupTO.setName("定时查找离职员工工作组");
-        scheduleJobGroupTO.setEnable(true);
-        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
+//        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
+//        scheduleJobGroupTO.setName("定时查找离职员工工作组");
+//        scheduleJobGroupTO.setEnable(true);
+//        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
         ScheduleJobTO scheduleJobTO = new ScheduleJobTO();
         scheduleJobTO.setClazz("com.bjike.goddess.secure.api.BeforeRemoveEmployeeAPI");
         scheduleJobTO.setName("定时查找离职员工");
         scheduleJobTO.setMethod("send");
-        scheduleJobTO.setExpression("0 */12 * * * ");   //每12个小时执行一次
+        scheduleJobTO.setExpression("0 0 */12 * * ?");   //每12个小时执行一次
         scheduleJobTO.setDescription("查找离职员工，并通知综合资源部");
         scheduleJobTO.setEnable(true);
         scheduleJobTO.setAddress("localhost:51101");
-        scheduleJobTO.setScheduleJobGroupId(scheduleJobGroupBO.getId());
+        scheduleJobTO.setScheduleJobGroupId("eb33c9b6-ed33-4596-be70-b3eb6aa81f1d");
         scheduleJobAPI.add(scheduleJobTO);
     }
 
@@ -178,7 +178,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = entity.getCreateTime();
-        entity = BeanTransform.copyProperties(to, BeforeAdd.class, true);
+        entity = BeanTransform.copyProperties(to, BeforeRemoveEmployee.class, true);
         entity.setCreateTime(a);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);

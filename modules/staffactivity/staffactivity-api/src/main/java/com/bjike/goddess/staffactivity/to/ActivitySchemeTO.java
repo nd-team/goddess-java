@@ -51,11 +51,13 @@ public class ActivitySchemeTO extends BaseTO {
     /**
      * 总活动经费
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "总活动经费不能为空")
     private Double totalActivityFund;
 
     /**
      * 活动费用明细
      */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "活动费用明细不能为空")
     private String chargeDetails;
 
     /**

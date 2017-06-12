@@ -21,11 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 项目组领用归还
+ * 项目组领用归还登记
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:52 ]
- * @Description: [ 项目组领用归还 ]
+ * @Description: [ 项目组领用归还登记 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -37,9 +37,9 @@ public class ProjectGroupReceiveAct {
     private ProjectGroupReceiveAPI projectGroupReceiveAPI;
 
     /**
-     * 根据id查询项目组领用归还
+     * 根据id查询项目组领用归还登记
      *
-     * @param id 项目组领用归还唯一标识
+     * @param id 项目组领用归还登记唯一标识
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -58,7 +58,7 @@ public class ProjectGroupReceiveAct {
     /**
      * 计算总数量
      *
-     * @param dto 项目组领用归还dto
+     * @param dto 项目组领用归还登记dto
      * @throws ActException
      * @version v1
      */
@@ -73,9 +73,9 @@ public class ProjectGroupReceiveAct {
     }
 
     /**
-     * 分页查询项目组领用归还
+     * 分页查询项目组领用归还登记
      *
-     * @param dto 项目组领用归还dto
+     * @param dto 项目组领用归还登记dto
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -92,9 +92,9 @@ public class ProjectGroupReceiveAct {
     }
 
     /**
-     * 添加项目组领用归还
+     * 添加项目组领用归还登记
      *
-     * @param to 项目组领用归还to
+     * @param to 项目组领用归还登记to
      * @return class ProjectGroupReceiveVO
      * @throws ActException
      * @version v1
@@ -111,9 +111,9 @@ public class ProjectGroupReceiveAct {
     }
 
     /**
-     * 根据id删除项目组领用归还
+     * 根据id删除项目组领用归还登记
      *
-     * @param id 项目组领用归还唯一标识
+     * @param id 项目组领用归还登记唯一标识
      * @throws ActException
      * @version v1
      */

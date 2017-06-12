@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,11 +50,11 @@ public class StorageSession {
     /**
      * 根据令牌删除验证码会话信息
      *
-     * @param account 用户名,手机,昵称
+     * @param token 用户名,手机,昵称
      */
-    public static void remove(String account) {
-        if (StringUtils.isNotBlank(account)) {
-            STORAGE_SESSION.invalidate(account);
+    public static void remove(String token) {
+        if (StringUtils.isNotBlank(token)) {
+            STORAGE_SESSION.invalidate(token);
         } else {
 
             throw TOKEN_NOT_NULL;
@@ -60,10 +62,10 @@ public class StorageSession {
     }
 
 
-    public static LoginUser get(String account) {
+    public static LoginUser get(String token) {
         try {
-            if (StringUtils.isNotBlank(account)) {
-                return STORAGE_SESSION.get(account);
+            if (StringUtils.isNotBlank(token)) {
+                return STORAGE_SESSION.get(token);
             }
         } catch (Exception e) {
             return null;
@@ -72,4 +74,21 @@ public class StorageSession {
         throw TOKEN_NOT_NULL;
     }
 
+    public static String getToken(String account) {
+        try {
+            if (StringUtils.isNotBlank(account)) {
+                ConcurrentMap<String, LoginUser> map = STORAGE_SESSION.asMap();
+                for (Map.Entry<String, LoginUser> entry : map.entrySet()) {
+                    if (entry.getValue().getAccount().equals(account)) {
+                        return entry.getKey();
+                    }
+                }
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        throw TOKEN_NOT_NULL;
+    }
 }

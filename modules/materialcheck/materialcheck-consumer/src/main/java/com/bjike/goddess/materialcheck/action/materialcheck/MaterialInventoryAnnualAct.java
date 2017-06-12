@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialcheck.api.MaterialInventoryAPI;
@@ -23,30 +24,29 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 物资分析-年盘
+ * 物资盘点年盘
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-05-08 04:00 ]
- * @Description: [ 物资分析-年盘 ]
+ * @Description: [  ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("materialinventory_annual")
+@RequestMapping("materialinventoryAnnual")
 public class MaterialInventoryAnnualAct {
 
     @Autowired
     private MaterialInventoryAPI materialInventoryAPI;
 
     /**
-     * 根据id查询物资分析-年盘
+     * 根据id查询物资盘点年盘
      *
-     * @param id 物资分析-年盘唯一标识
+     * @param id 物资盘点年盘唯一标识
      * @return class MaterialInventoryVO
-     * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/devicerepair/{id}")
+    @GetMapping("v1/materialinventoryAnnual/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             MaterialInventoryBO bo = materialInventoryAPI.findById(id);
@@ -60,13 +60,13 @@ public class MaterialInventoryAnnualAct {
     /**
      * 计算总数量
      *
-     * @param dto 物资分析-年盘dto
-     * @throws ActException
+     * @param dto 物资盘点年盘dto
      * @version v1
      */
     @GetMapping("v1/count")
     public Result count(@Validated MaterialInventoryDTO dto, BindingResult result) throws ActException {
         try {
+            dto.getConditions().add(Restrict.eq("inventoryType", 2));
             Long count = materialInventoryAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
@@ -77,15 +77,14 @@ public class MaterialInventoryAnnualAct {
     /**
      * 获取列表
      *
-     * @param dto 物资分析-年盘dto
+     * @param dto 物资盘点年盘dto
      * @return class MaterialInventoryVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(@Validated MaterialInventoryDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            dto.getConditions().add(Restrict.eq("inventoryType", InventoryType.ANNUAL_INVENTORY));
+            dto.getConditions().add(Restrict.eq("inventoryType", 2));
             List<MaterialInventoryBO> boList = materialInventoryAPI.list(dto);
             List<MaterialInventoryVO> voList = BeanTransform.copyProperties(boList, MaterialInventoryVO.class, request);
             return ActResult.initialize(voList);
@@ -95,17 +94,16 @@ public class MaterialInventoryAnnualAct {
     }
 
     /**
-     * 添加物资分析-年盘
+     * 添加物资盘点年盘
      *
-     * @param to 物资分析-年盘to信息
+     * @param to 物资盘点年盘to信息
      * @return class MaterialInventoryVO
-     * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) MaterialInventoryTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) MaterialInventoryTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            to.setInventoryType(InventoryType.ANNUAL_INVENTORY);
             MaterialInventoryBO bo = materialInventoryAPI.save(to);
             MaterialInventoryVO vo = BeanTransform.copyProperties(bo, MaterialInventoryVO.class, request);
             return ActResult.initialize(vo);
@@ -115,12 +113,12 @@ public class MaterialInventoryAnnualAct {
     }
 
     /**
-     * 根据id删除物资分析-年盘
+     * 根据id删除物资盘点年盘
      *
-     * @param id 物资分析-年盘唯一标识
-     * @throws ActException
+     * @param id 物资盘点年盘唯一标识
      * @version v1
      */
+    @LoginAuth
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
@@ -132,14 +130,14 @@ public class MaterialInventoryAnnualAct {
     }
 
     /**
-     * 编辑物资分析-年盘
+     * 编辑物资盘点年盘
      *
-     * @param to 物资分析-年盘to信息
-     * @throws ActException
+     * @param to 物资盘点年盘to信息
      * @version v1
      */
+    @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) MaterialInventoryTO to, BindingResult result) throws ActException {
+    public Result edit(@Validated(value = {EDIT.class}) MaterialInventoryTO to, BindingResult result) throws ActException {
         try {
             materialInventoryAPI.update(to);
             return new ActResult("edit success!");
@@ -151,12 +149,11 @@ public class MaterialInventoryAnnualAct {
     /**
      * 经办人确认情况
      *
-     * @param id             物资分析-年盘唯一标识
+     * @param id             物资盘点年盘唯一标识
      * @param operatorStatus 经办人确认情况
-     * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/operatorStatus/{id}")
+    @PutMapping("v1/operatorStatus/{id}")
     public Result operatorConfirm(@PathVariable String id, @RequestParam(value = "operatorStatus") String operatorStatus) throws ActException {
         try {
             materialInventoryAPI.operatorConfirm(id, operatorStatus);
@@ -169,13 +166,12 @@ public class MaterialInventoryAnnualAct {
     /**
      * 账务模块核实
      *
-     * @param id            物资分析-年盘唯一标识
+     * @param id            物资盘点年盘唯一标识
      * @param accountStatus 账务模块核实情况
-     * @throws ActException
      * @version v1
      */
-    @PatchMapping("v1/accountModuleConfirm/{id}")
-    public Result accountModuleConfirm(@PathVariable final String id, @RequestParam(value = "accountStatus") String accountStatus) throws ActException {
+    @PutMapping("v1/accountModuleConfirm/{id}")
+    public Result accountModuleConfirm(@PathVariable String id, @RequestParam(value = "accountStatus") String accountStatus) throws ActException {
         try {
             materialInventoryAPI.accountModuleConfirm(id, accountStatus);
             return new ActResult("accountModuleConfirm success!");
@@ -187,12 +183,11 @@ public class MaterialInventoryAnnualAct {
     /**
      * 总经办审核
      *
-     * @param id        物资分析-年盘唯一标识
+     * @param id        物资盘点年盘唯一标识
      * @param zjbStatus 总经办审核意见
-     * @throws ActException
      * @version v1
      */
-    @PatchMapping
+    @PutMapping("v1/zjbConfirm/{id}")
     public Result zjbConfirm(@PathVariable String id, @RequestParam(value = "zjbStatus") String zjbStatus) throws ActException {
         try {
             materialInventoryAPI.zjbConfirm(id, zjbStatus);

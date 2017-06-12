@@ -1,7 +1,8 @@
 package com.bjike.goddess.common.consumer.interceptor.login;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.constant.RpcCommon;
+import com.bjike.goddess.common.consumer.http.ResponseContext;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.storage.api.StorageUserAPI;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 /**
@@ -25,40 +25,74 @@ import java.lang.reflect.Method;
  * @Copy: [com.bjike]
  */
 public class StorageIntercept extends HandlerInterceptorAdapter {
-    public StorageIntercept(StorageUserAPI storageUserAPI) {
-        this.storageUserAPI = storageUserAPI;
-    }
 
     private StorageUserAPI storageUserAPI;
+    /**
+     * 自动登录账户
+     */
+    private String account;
+    /**
+     * 自动登录密码
+     */
+    private String password;
+    /**
+     * 自动登录模块
+     */
+    private String moduleName;
+    /**
+     * 自动登录
+     */
+    private boolean autoLogin = true;
+
+    /**
+     * 自动登录
+     *
+     * @param storageUserAPI
+     * @param account
+     * @param password
+     * @param moduleName
+     */
+    public StorageIntercept(StorageUserAPI storageUserAPI, String account, String password, String moduleName) {
+        this.storageUserAPI = storageUserAPI;
+        this.moduleName = moduleName;
+        this.account = account;
+        this.password = password;
+    }
+
+    /**
+     * 手动登录
+     *
+     * @param storageUserAPI
+     * @param autoLogin
+     */
+    public StorageIntercept(StorageUserAPI storageUserAPI, boolean autoLogin) {
+        this.storageUserAPI = storageUserAPI;
+        this.autoLogin = autoLogin;
+
+    }
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-            validatePath(request, response);
-            return validateLogin(request, response);
-        }
-        Method method = ((HandlerMethod) handler).getMethod();
-        Class<?> clazz = method.getDeclaringClass();
-        //该类或者方法上是否有登录安全认证注解
-        if (clazz.isAnnotationPresent(StorageAuth.class) || method.isAnnotationPresent(StorageAuth.class)) {
-            validatePath(request, response);
-            return validateLogin(request, response);
+        if (autoLogin) {
+
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+            String token = storageUserAPI.getStorageToken(account, password, moduleName, userToken);
+            request.setAttribute(RpcCommon.STORAGE_TOKEN, token);
+            RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
+        } else {
+            if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+                return validateLogin(request, response);
+            }
+            Method method = ((HandlerMethod) handler).getMethod();
+            Class<?> clazz = method.getDeclaringClass();
+            //该类或者方法上是否有登录安全认证注解
+            if (clazz.isAnnotationPresent(StorageAuth.class) || method.isAnnotationPresent(StorageAuth.class)) {
+                return validateLogin(request, response);
+            }
         }
 
         return true;
-    }
-
-    private void validatePath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (StringUtils.isBlank(request.getParameter("path"))) {
-            PrintWriter out = response.getWriter();
-            out.flush();
-            response.setContentType("text/html; charset=UTF-8"); //转码
-            response.setStatus(200);
-            ActResult result = new ActResult();
-            result.setMsg("path 不能为空!");
-            result.setCode(1);
-            out.println(JSON.toJSONString(result));
-        }
     }
 
 
@@ -72,7 +106,6 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     }
 
-
     private boolean validateLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Object obj = request.getParameter(RpcCommon.STORAGE_TOKEN);
 
@@ -85,9 +118,10 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
         }
         try {
             if (StringUtils.isNotBlank(token) && null != storageUserAPI.getCurrentUser(token)) {
+                RpcContext.getContext().setAttachment(RpcCommon.STORAGE_TOKEN, token);
                 return true;
             } else {
-                handlerNotHasLogin(response, "用户未登录！");
+                handlerNotHasLogin(response, "存储用户未登录！");
                 return false;
             }
         } catch (Exception e) {
@@ -104,13 +138,12 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
      * @throws IOException
      */
     private void handlerNotHasLogin(HttpServletResponse response, String msg) throws IOException {
-        PrintWriter out = response.getWriter();
-        out.flush();
-        response.setContentType("text/html; charset=UTF-8"); //转码
+        ActResult actResult = new ActResult();
+        response.setContentType("text/html;charset=utf-8");
+        actResult.setCode(403);
+        actResult.setMsg(msg);
         response.setStatus(200);
-        ActResult result = new ActResult();
-        result.setMsg(msg);
-        result.setCode(403);
-        out.println(JSON.toJSONString(result));
+        ResponseContext.writeData(actResult);
     }
+
 }

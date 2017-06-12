@@ -14,6 +14,11 @@ import java.io.Serializable;
 public class ProjectMeasureVO implements Serializable {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 地区
      */
     private String area;
@@ -61,6 +66,14 @@ public class ProjectMeasureVO implements Serializable {
      * 测评结果为亏损项目数量
      */
     private Integer testDeficitProjectCount;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getArea() {
         return area;

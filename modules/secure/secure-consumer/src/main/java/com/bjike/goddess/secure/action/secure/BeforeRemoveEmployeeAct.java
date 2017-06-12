@@ -31,7 +31,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("before-remove-employee")
+@RequestMapping("beforeremoveemployee")
 public class BeforeRemoveEmployeeAct {
     @Autowired
     private BeforeRemoveEmployeeAPI beforeRemoveEmployeeAPI;
@@ -100,7 +100,7 @@ public class BeforeRemoveEmployeeAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/before-remove-employee/{id}")
+    @GetMapping("v1/beforeremoveemployee/{id}")
     public Result findByID(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             BeforeRemoveEmployeeBO beforeRemoveEmployeeBO = beforeRemoveEmployeeAPI.findByID(id);

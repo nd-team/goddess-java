@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 物资领用业务接口实现
+ * 物资领用归还登记业务接口实现
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用业务接口实现 ]
+ * @Description: [ 物资领用归还登记业务接口实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -30,9 +30,9 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     private MaterialReceiveSer materialReceiveSer;
 
     /**
-     * 根据id查询物资领用
+     * 根据id查询物资领用归还登记
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @return class MaterialReceiveBO
      * @throws SerException
      */
@@ -43,9 +43,9 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
-     * 查询物资领用记录条数
+     * 查询物资领用归还登记记录条数
      *
-     * @param dto 物资领用dto
+     * @param dto 物资领用归还登记dto
      * @throws SerException
      */
     @Override
@@ -54,7 +54,7 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
-     * 分页查询物资领用
+     * 分页查询物资领用归还登记
      *
      * @return class MaterialReceiveBO
      * @throws SerException
@@ -65,9 +65,9 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
-     * 保存物资领用
+     * 保存物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @return class MaterialReceiveBO
      * @throws SerException
      */
@@ -77,9 +77,9 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
-     * 根据id删除物资领用
+     * 根据id删除物资领用归还登记
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @throws SerException
      */
     @Override
@@ -88,9 +88,9 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     }
 
     /**
-     * 更新物资领用
+     * 更新物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws SerException
      */
     @Override
@@ -101,7 +101,7 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     /**
      * 审核
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @param auditState 审核状态
      * @param auditOpinion 审核意见
      * @throws SerException
@@ -114,7 +114,7 @@ public class MaterialReceiveApiImpl implements MaterialReceiveAPI {
     /**
      * 领用完成
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws SerException
      */
     @Override

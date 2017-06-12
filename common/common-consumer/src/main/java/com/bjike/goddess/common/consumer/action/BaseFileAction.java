@@ -1,8 +1,11 @@
 package com.bjike.goddess.common.consumer.action;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -19,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,7 +37,7 @@ import java.util.regex.Pattern;
  * @Copy: [com.bjike]
  */
 public abstract class BaseFileAction {
-    private static final String[] SUFFIX = new String[]{"xls","xlsx","docx","dotx","pptx","xlsm","xlt"};
+    private static final String[] SUFFIX = new String[]{"xls", "xlsx", "docx", "dotx", "pptx", "xlsm", "xlt"};
 
     /**
      * 生成预览url
@@ -55,12 +57,12 @@ public abstract class BaseFileAction {
         } else {
             validatedSuffix(fileInfo[1]);
         }
-        if(isContainChinese(fileName)||fileName.length()<=3){
-            fileName+=LocalDate.now().toString();
+        if (isContainChinese(fileName) || fileName.length() <= 3) {
+            fileName += LocalDate.now().toString();
         }
         String url = null;
         try {
-            File file = File.createTempFile(fileName, "."+fileInfo[1]);
+            File file = File.createTempFile(fileName, "." + fileInfo[1]);
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
             bos.write(bytes);
@@ -174,7 +176,16 @@ public abstract class BaseFileAction {
     private List<InputStream> initInputStreams(HttpServletRequest request, String path) throws SerException {
         List<MultipartFile> multipartFiles = getMultipartFile(request);
         List<InputStream> inputStreams = null;
-        String token = request.getParameter("storageToken");
+        String token = request.getParameter(RpcCommon.STORAGE_TOKEN);
+        if (StringUtils.isBlank(token)) {
+            Object obj = request.getAttribute(RpcCommon.STORAGE_TOKEN);
+            if (null != obj) {
+                token = obj.toString();
+            }else {
+                token =  RpcContext.getContext().getAttachment(RpcCommon.STORAGE_TOKEN);
+            }
+
+        }
         if (null != multipartFiles) {
             inputStreams = new ArrayList<>(multipartFiles.size() * 2);
             try {
@@ -232,26 +243,28 @@ public abstract class BaseFileAction {
 
     /**
      * 格式验证
+     *
      * @param suffix
      */
     private void validatedSuffix(String suffix) {
         boolean exists = false;
-        for(String str :SUFFIX){
-            if(str.equalsIgnoreCase(suffix)){
+        for (String str : SUFFIX) {
+            if (str.equalsIgnoreCase(suffix)) {
                 exists = true;
             }
         }
-        if(!exists){
-            throw  new RuntimeException("不支持该格式文件:"+suffix);
+        if (!exists) {
+            throw new RuntimeException("不支持该格式文件:" + suffix);
         }
     }
 
     /**
      * 是否包含中文
+     *
      * @param str
      * @return
      */
-    private   boolean isContainChinese(String str) {
+    private boolean isContainChinese(String str) {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(str);
         if (m.find()) {

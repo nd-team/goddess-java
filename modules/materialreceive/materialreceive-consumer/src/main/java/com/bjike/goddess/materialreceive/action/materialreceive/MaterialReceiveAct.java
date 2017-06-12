@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 物资领用
+ * 物资领用归还登记
  *
  * @Author: [ sunfengtao ]
  * @Date: [ 2017-04-24 05:41 ]
- * @Description: [ 物资领用 ]
+ * @Description: [ 物资领用归还登记 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -39,9 +39,9 @@ public class MaterialReceiveAct {
     private MaterialReceiveAPI materialReceiveAPI;
 
     /**
-     * 根据id查询物资领用
+     * 根据id查询物资领用归还登记
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
@@ -60,7 +60,7 @@ public class MaterialReceiveAct {
     /**
      * 计算总数量
      *
-     * @param dto 物资领用dto
+     * @param dto 物资领用归还登记dto
      * @throws ActException
      * @version v1
      */
@@ -75,9 +75,9 @@ public class MaterialReceiveAct {
     }
 
     /**
-     * 分页查询物资领用
+     * 分页查询物资领用归还登记
      *
-     * @param dto 物资领用dto
+     * @param dto 物资领用归还登记dto
      * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
@@ -94,9 +94,9 @@ public class MaterialReceiveAct {
     }
 
     /**
-     * 添加物资领用
+     * 添加物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @return class MaterialReceiveVO
      * @throws ActException
      * @version v1
@@ -113,9 +113,9 @@ public class MaterialReceiveAct {
     }
 
     /**
-     * 根据id删除物资领用
+     * 根据id删除物资领用归还登记
      *
-     * @param id 物资领用唯一标识
+     * @param id 物资领用归还登记唯一标识
      * @throws ActException
      * @version v1
      */
@@ -130,9 +130,9 @@ public class MaterialReceiveAct {
     }
 
     /**
-     * 编辑物资领用
+     * 编辑物资领用归还登记
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws ActException
      * @version v1
      */
@@ -149,7 +149,7 @@ public class MaterialReceiveAct {
     /**
      * 审核
      *
-     * @param id           物资领用id
+     * @param id           物资领用归还登记id
      * @param auditState   审核状态
      * @param auditOpinion 审核意见
      * @throws ActException
@@ -168,7 +168,7 @@ public class MaterialReceiveAct {
     /**
      * 领用完成
      *
-     * @param to 物资领用to
+     * @param to 物资领用归还登记to
      * @throws ActException
      * @version v1
      */
@@ -183,7 +183,7 @@ public class MaterialReceiveAct {
     }
 
     /**
-     * 物资领用后归还
+     * 物资领用归还登记后归还
      *
      * @param to 物资归还to
      * @throws ActException

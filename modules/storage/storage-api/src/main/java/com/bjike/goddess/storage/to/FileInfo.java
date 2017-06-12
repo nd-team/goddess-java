@@ -41,7 +41,6 @@ public class FileInfo implements Serializable {
     /**
      * 登录令牌
      */
-    @NotBlank(message = "登录令牌不能为空", groups = {FileInfo.COMMON.class})
     private String storageToken;
 
     /**

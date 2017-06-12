@@ -29,6 +29,10 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     private DispatchSheetSer dispatchSheetSer;
 
 
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return dispatchSheetSer.sonPermission();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {

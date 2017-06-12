@@ -52,19 +52,19 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void quartz() throws SerException {
-        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
-        scheduleJobGroupTO.setName("定时查看今天是否为16号工作组");
-        scheduleJobGroupTO.setEnable(true);
-        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
+//        ScheduleJobGroupTO scheduleJobGroupTO = new ScheduleJobGroupTO();
+//        scheduleJobGroupTO.setName("定时查看今天是否为16号工作组");
+//        scheduleJobGroupTO.setEnable(true);
+//        ScheduleJobGroupBO scheduleJobGroupBO = scheduleJobGroupAPI.add(null, scheduleJobGroupTO);
         ScheduleJobTO scheduleJobTO = new ScheduleJobTO();
         scheduleJobTO.setClazz("com.bjike.goddess.secure.api.SecureCartAPI");
         scheduleJobTO.setName("定时查看今天是否为16号");
         scheduleJobTO.setMethod("send");
-        scheduleJobTO.setExpression("0 */12 * * * ");   //每12个小时执行一次
+        scheduleJobTO.setExpression("0 0 */12 * * ?");   //每12个小时执行一次
         scheduleJobTO.setDescription("查看今天是否为16号，并通知综合资源部福利模块");
         scheduleJobTO.setEnable(true);
         scheduleJobTO.setAddress("localhost:51101");
-        scheduleJobTO.setScheduleJobGroupId(scheduleJobGroupBO.getId());
+        scheduleJobTO.setScheduleJobGroupId("eb33c9b6-ed33-4596-be70-b3eb6aa81f1d");
         scheduleJobAPI.add(scheduleJobTO);
     }
 

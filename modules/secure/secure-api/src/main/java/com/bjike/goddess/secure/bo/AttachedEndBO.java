@@ -110,7 +110,7 @@ public class AttachedEndBO extends BaseBO {
     /**
      * 是否继续挂靠
      */
-    private boolean isAttachedAgin;
+    private Boolean isAttachedAgin;
 
 
     public String getReason() {
@@ -257,11 +257,11 @@ public class AttachedEndBO extends BaseBO {
         this.decription = decription;
     }
 
-    public boolean getIsAttachedAgin() {
+    public Boolean getIsAttachedAgin() {
         return isAttachedAgin;
     }
 
-    public void setIsAttachedAgin(boolean isAttachedAgin) {
+    public void setIsAttachedAgin(Boolean isAttachedAgin) {
         this.isAttachedAgin = isAttachedAgin;
     }
 }

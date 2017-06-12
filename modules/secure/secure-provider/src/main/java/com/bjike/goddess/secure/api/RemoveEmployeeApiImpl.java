@@ -55,8 +55,8 @@ public class RemoveEmployeeApiImpl implements RemoveEmployeeAPI {
     }
 
     @Override
-    public RemoveEmployeeBO findByNameAndId(String removeName, String employeeId) throws SerException {
-        return removeEmployeeSer.findByNameAndId(removeName, employeeId);
+    public RemoveEmployeeBO findByNameAndId(RemoveEmployeeTO to) throws SerException {
+        return removeEmployeeSer.findByNameAndId(to);
     }
 
     @Override

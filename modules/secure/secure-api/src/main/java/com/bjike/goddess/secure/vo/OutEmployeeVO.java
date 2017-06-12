@@ -28,7 +28,7 @@ public class OutEmployeeVO {
     /**
      * 是否继续购买
      */
-    private boolean isAgain;
+    private Boolean isAgain;
 
     /**
      * 意见
@@ -60,11 +60,11 @@ public class OutEmployeeVO {
         this.endTime = endTime;
     }
 
-    public boolean getIsAgain() {
+    public Boolean getIsAgain() {
         return isAgain;
     }
 
-    public void setIsAgain(boolean isAgain) {
+    public void setIsAgain(Boolean isAgain) {
         this.isAgain = isAgain;
     }
 
