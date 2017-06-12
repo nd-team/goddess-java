@@ -8,6 +8,7 @@ import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.SiginManageExport;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -20,6 +21,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,33 +52,68 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
+    private DispatchSheetSer dispatchSheetSer;
+    @Autowired
+    private ContractCategorySer contractCategorySer;
+    @Autowired
+    private CollectEmailSer collectEmailSer;
+    @Autowired
+    private BaseInfoManageSer baseInfoManageSer;
+    @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
     /**
      * 核对查看权限（部门级别）
      */
     private void checkSeeIdentity() throws SerException {
-        Boolean flag = cusPermissionSer.getCusPermission("1");
-        if (!flag) {
-            throw new SerException("您不是相应部门的人员，不可以查看");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
+
     }
 
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
     private void checkAddIdentity() throws SerException {
-        Boolean flag = cusPermissionSer.busCusPermission("2");
-        if (!flag) {
-            throw new SerException("您不是相应部门的人员，不可以操作");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
+
     }
 
     /**
      * 导航栏核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
-        Boolean flag = cusPermissionSer.getCusPermission("1");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
         return flag;
     }
 
@@ -84,8 +121,102 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
      * 导航栏核对添加修改删除审核权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException {
-        Boolean flag = cusPermissionSer.busCusPermission("2");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+        } else {
+            flag = true;
+        }
         return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("siginmanage");
+        obj.setDescribesion("商务项目合同签订与立项");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = dispatchSheetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("dispatchsheet");
+        obj.setDescribesion("商务项目派工单信息管理");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = contractCategorySer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("contractcategory");
+        obj.setDescribesion("商务项目合同类型");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = collectEmailSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectemail");
+        obj.setDescribesion("商务项目合同邮件发送");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase = baseInfoManageSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("baseinfomanage");
+        obj.setDescribesion("商务项目合同基本信息");
+        if (flagSeeBase) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeSet = userSetPermissionAPI.checkSetPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("cuspermission");
+        obj.setDescribesion("设置");
+        if (flagSeeSet) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
     }
 
     @Override
@@ -130,6 +261,12 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
             case DOWNLOAD:
                 flag = guideAddIdentity();
                 break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
             default:
                 flag = true;
                 break;
@@ -150,13 +287,14 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能呢为空");
         }
+
         SiginManage siginManage = super.findById(id);
         return BeanTransform.copyProperties(siginManage, SiginManageBO.class);
     }
 
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
-//        checkSeeIdentity();
+        checkSeeIdentity();
 
         searchCondition(siginManageDTO);
         List<SiginManage> list = super.findByPage(siginManageDTO);

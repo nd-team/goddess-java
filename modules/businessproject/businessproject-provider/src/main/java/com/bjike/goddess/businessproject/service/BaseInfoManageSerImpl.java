@@ -18,6 +18,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,8 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -71,7 +75,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
      * 核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.getCusPermission("1");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.getCusPermission("1");
+        }else{
+            flag = true;
+        }
         return flag;
     }
 
@@ -79,8 +92,30 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
      * 核对添加修改删除审核权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission("2");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.busCusPermission("2");
+        }else{
+            flag = true;
+        }
         return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee && flagAdd ){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -124,6 +159,12 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
                 break;
             case DOWNLOAD:
                 flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
                 break;
             default:
                 flag = true;
@@ -248,6 +289,21 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     public void searchCondition(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
         /**
+         * 内部项目名称
+         */
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getInnerProject())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("innerProject", baseInfoManageDTO.getInnerProject()));
+        }/**
+         * 合同外部项目编号
+         */
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getOutProjectNum())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("outProjectNum", baseInfoManageDTO.getOutProjectNum()));
+        }/**
+         * 对应销售合同编号
+         */
+        if (StringUtils.isNotBlank(baseInfoManageDTO.getSaleContractNum())) {
+            baseInfoManageDTO.getConditions().add(Restrict.like("saleContractNum", baseInfoManageDTO.getSaleContractNum()));
+        }/**
          * 业务类型
          */
         if (baseInfoManageDTO.getBusinessType() != null) {

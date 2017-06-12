@@ -12,7 +12,7 @@ package com.bjike.goddess.businessproject.enums;
 public enum GuideAddrStatus {
 
     /**
-     * 查看或列表
+     * 列表
      */
     LIST(0),
     /**
@@ -58,7 +58,15 @@ public enum GuideAddrStatus {
     /**
      * 导出
      */
-    EXPORT(11);
+    EXPORT(11),
+    /**
+     * 查看
+     */
+    SEE(12),
+    /**
+     * 查看附件
+     */
+    SEEFILE(13);
 
     private int code;
 

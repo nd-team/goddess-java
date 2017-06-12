@@ -24,6 +24,13 @@ import java.util.Set;
 public interface ContractCategorySer extends Ser<ContractCategory, ContractCategoryDTO> {
 
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
     /**
      * 导航权限
      */

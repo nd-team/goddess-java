@@ -13,6 +13,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -66,7 +70,16 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
      * 导航蓝核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.getCusPermission("1");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.getCusPermission("1");
+        }else{
+            flag = true;
+        }
         return flag;
     }
 
@@ -75,8 +88,30 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
      * 导航蓝核对添加修改删除审核权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission("2");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = cusPermissionSer.busCusPermission("2");
+        }else{
+            flag = true;
+        }
         return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee && flagAdd ){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -120,6 +155,12 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
                 break;
             case DOWNLOAD:
                 flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
                 break;
             default:
                 flag = true;

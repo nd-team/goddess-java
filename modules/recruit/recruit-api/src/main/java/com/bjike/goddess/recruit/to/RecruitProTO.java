@@ -77,21 +77,6 @@ public class RecruitProTO extends BaseTO {
     private String applyReason;
 
     /**
-     * 综合资源部意见
-     */
-    private String zhOpinion;
-
-    /**
-     * 运营商务部意见
-     */
-    private String yyOpinion;
-
-    /**
-     * 总经办审核意见
-     */
-    private String zjbOpnion;
-
-    /**
      * 审核类型
      */
     private AuditType auditType;
@@ -219,30 +204,6 @@ public class RecruitProTO extends BaseTO {
 
     public void setApplyReason(String applyReason) {
         this.applyReason = applyReason;
-    }
-
-    public String getZhOpinion() {
-        return zhOpinion;
-    }
-
-    public void setZhOpinion(String zhOpinion) {
-        this.zhOpinion = zhOpinion;
-    }
-
-    public String getYyOpinion() {
-        return yyOpinion;
-    }
-
-    public void setYyOpinion(String yyOpinion) {
-        this.yyOpinion = yyOpinion;
-    }
-
-    public String getZjbOpnion() {
-        return zjbOpnion;
-    }
-
-    public void setZjbOpnion(String zjbOpnion) {
-        this.zjbOpnion = zjbOpnion;
     }
 
     public AuditType getAuditType() {

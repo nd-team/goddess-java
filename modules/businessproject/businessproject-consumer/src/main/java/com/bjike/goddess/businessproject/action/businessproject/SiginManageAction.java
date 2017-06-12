@@ -1,11 +1,13 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.enums.MakeProjectStatus;
 import com.bjike.goddess.businessproject.enums.SiginStatus;
 import com.bjike.goddess.businessproject.excel.SiginManageExcel;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.businessproject.vo.SiginManageVO;
@@ -14,6 +16,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.interceptor.login.StorageAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.bean.DataTypeUtils;
@@ -55,6 +58,7 @@ public class SiginManageAction extends BaseFileAction {
     private SiginManageAPI siginManageAPI;
     @Autowired
     private FileAPI fileAPI;
+
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
@@ -81,8 +85,27 @@ public class SiginManageAction extends BaseFileAction {
         }
     }
 
+
     /**
-     * 导航权限
+     * 下拉导航权限
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission( ) throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = siginManageAPI.sonPermission( );
+            return new ActResult(0,"有权限",hasPermissionList );
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -269,12 +292,13 @@ public class SiginManageAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/uploadFile")
-    public Result uploadFile(HttpServletRequest request, @Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult bindingResult) throws ActException {
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id , HttpServletRequest request ) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            List<InputStream> inputStreams = getInputStreams(request);
+            String paths = "/businessproject/siginmanage/"+id;
+            List<InputStream> inputStreams = getInputStreams(request,paths);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
         } catch (SerException e) {
@@ -285,14 +309,20 @@ public class SiginManageAction extends BaseFileAction {
     /**
      * 文件附件列表
      *
-     * @param fileInfo 文件信息
+     * @param id 签订与立项id
+     * @return class FileVO
      * @version v1
      */
-    @GetMapping("v1/listFile")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /businessproject/id/....
+            String path = "/businessproject/siginmanage/"+id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath( path );
+            Object storageToken =  request.getAttribute("storageToken");
+            fileInfo.setStorageToken( storageToken.toString() );
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -303,13 +333,19 @@ public class SiginManageAction extends BaseFileAction {
     /**
      * 文件下载
      *
-     * @param fileInfo 文件信息
+     * @param path 文件信息路径
      * @version v1
      */
     @GetMapping("v1/downloadFile")
-    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo, HttpServletResponse response, BindingResult result) throws ActException {
+    public Result download( @RequestParam String path  , HttpServletRequest request ,HttpServletResponse response ) throws ActException {
         try {
+
+
             //该文件的路径
+            Object storageToken =  request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath( path );
+            fileInfo.setStorageToken( storageToken.toString() );
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
@@ -318,6 +354,22 @@ public class SiginManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
 
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @DeleteMapping("v1/deleteFile")
+    public Result delFile(@RequestParam String path , HttpServletRequest request) throws SerException {
+        Object storageToken =  request.getAttribute("storageToken");
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setPath( path );
+        fileInfo.setStorageToken( storageToken.toString() );
+        fileAPI.delFile(fileInfo);
+        return new ActResult("delFile success");
     }
 
     /**
@@ -356,6 +408,9 @@ public class SiginManageAction extends BaseFileAction {
 
     private String convertSiginStatus(SiginStatus siginStatus) throws ActException {
         String status = "";
+        if( null == siginStatus ){
+            throw new ActException("签订状态填写不正确,导入失败,正确填写方式（已签订/未签订）");
+        }
         switch (siginStatus) {
             case HASSIGN:
                 status = "已签订";
@@ -370,6 +425,9 @@ public class SiginManageAction extends BaseFileAction {
     }
     private String convertMakeProject(MakeProjectStatus makeProjectStatus) throws ActException {
         String status = "";
+        if( null == makeProjectStatus ){
+            throw new ActException("立项情况填写不正确,导入失败,正确填写方式（已立项/未立项）");
+        }
         switch (makeProjectStatus) {
             case  SIGN:
                 status = "已立项";
@@ -394,7 +452,7 @@ public class SiginManageAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/export")
+    @GetMapping("v1/export")
     public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "项目签订与立项.xlsx";
