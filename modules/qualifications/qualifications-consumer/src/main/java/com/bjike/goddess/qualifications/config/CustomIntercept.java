@@ -32,7 +32,7 @@ public class CustomIntercept implements Interceptor {
     public List<HIInfo> customerInterceptors() {
         List<HIInfo> hiInfos = new ArrayList<>(0);
         hiInfos.add(new HIInfo(new LoginIntercept(userAPI), "/**"));
-        hiInfos.add(new HIInfo(new StorageIntercept(storageUserAPI), "/**"));
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"lgqhhh","123456","test"), "/**");
         return hiInfos;
     }
 }

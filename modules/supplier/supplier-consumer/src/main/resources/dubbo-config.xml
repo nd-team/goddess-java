@@ -28,6 +28,7 @@
     <dubbo:reference interface="com.bjike.goddess.supplier.api.SupPermissionOperateAPI"
                      id="supPermissionOperateApiImpl"/>
     <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
 </beans>

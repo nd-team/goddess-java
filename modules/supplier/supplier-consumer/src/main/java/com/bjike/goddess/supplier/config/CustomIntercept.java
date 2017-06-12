@@ -25,7 +25,7 @@ public class CustomIntercept implements Interceptor {
     @Override
     public List<HIInfo> customerInterceptors() {
         List<HIInfo> list = new ArrayList<>(0);
-        list.add(new HIInfo(new StorageIntercept(storageUserAPI), "/**"));
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI, "lgqhhh", "123456", "test"), "/**");
         list.add(new HIInfo(new LoginIntercept(userAPI), "/**"));
         return list;
     }

@@ -212,13 +212,13 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         dto.getSorts().add("area=asc");
         List<SupplierInformation> list = super.findByCis(dto);
         List<EnterpriseQualificationBO> qualificationBOs = new ArrayList<>(0);
-        List<SupplierInfoCollectTitleBO> totalList = new ArrayList<>(0);
         List<String> typeList = new ArrayList<>(0), qualificationList = new ArrayList<>(0);
         String tempArea = "", qualification = "";
+        //过滤地区生成供应商汇总数据
         for (SupplierInformation entity : list) {
             qualificationBOs.addAll(enterpriseQualificationSer.findByInformation(entity.getId()));
             if (typeList.stream().filter(s -> s.equals(entity.getType())).count() == 0)
-                typeList.add(entity.getType());
+                typeList.add(entity.getType());//过滤重复供应商类型
             if (!tempArea.equals(entity.getArea())) {
                 SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
                 bo.setArea(entity.getArea());
@@ -226,6 +226,7 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
                 collectBOs.add(bo);
             }
         }
+        //过滤公司资质资质等级
         for (EnterpriseQualificationBO bo : qualificationBOs.stream()
                 .sorted(Comparator.comparing(EnterpriseQualificationBO::getAptitude))
                 .collect(Collectors.toList())) {
@@ -239,7 +240,6 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
                             .map(SupplierInformation::getId).collect(Collectors.toList()).toArray(new String[0])),
                     list.stream().filter(s -> s.getArea().equals(bo.getArea())).collect(Collectors.toList()),
                     typeList, qualificationList);
-            totalList.addAll(bo.getTitleBOs());
         }
         SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
         bo.setArea("合计");
@@ -249,6 +249,16 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         return collectBOs;
     }
 
+    /**
+     * 统计汇总数据
+     *
+     * @param bo                供应商汇总传输对象
+     * @param count             公司资质汇总数据
+     * @param list              供应商信息数据
+     * @param typeList          供应商类型数据
+     * @param qualificationList 资质等级数据
+     * @throws SerException
+     */
     private void countCollect(SupplierInfoCollectBO bo, List<EnterpriseQualificationBO> count, List<SupplierInformation> list,
                               List<String> typeList, List<String> qualificationList) throws SerException {
         for (String type : typeList) {
