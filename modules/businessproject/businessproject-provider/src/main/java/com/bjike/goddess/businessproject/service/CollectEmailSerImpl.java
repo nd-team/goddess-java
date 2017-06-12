@@ -108,6 +108,19 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
     @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee && flagAdd ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
@@ -148,6 +161,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 break;
             case DOWNLOAD:
                 flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
                 break;
             default:
                 flag = true;

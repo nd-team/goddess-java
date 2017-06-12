@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.service.SiginManageSer;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
@@ -28,6 +29,10 @@ public class SiginManageApiImpl implements SiginManageAPI {
     private SiginManageSer siginManageSer;
 
 
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return siginManageSer.sonPermission();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {

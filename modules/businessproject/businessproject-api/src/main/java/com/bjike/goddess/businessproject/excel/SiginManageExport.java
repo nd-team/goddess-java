@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
  * 商务项目合同签订与立项导出
@@ -19,96 +20,115 @@ public class SiginManageExport extends BaseBO {
     /**
      * 业务类型
      */
+    @ExcelHeader(name = "业务类型",notNull = true)
     private String businessType;
 
     /**
      * 业务方向科目
      */
+    @ExcelHeader(name = "业务方向科目",notNull = true)
     private String businessSubject;
 
     /**
      * 合作方式
      */
+    @ExcelHeader(name = "合作方式",notNull = true)
     private String businessCooperate;
 
     /**
      * 外部项目名称
      */
+    @ExcelHeader(name = "外部项目名称",notNull = true)
     private String outerProject;
 
     /**
      * 甲方公司名称
      */
+    @ExcelHeader(name = "甲方公司名称",notNull = true)
     private String firstCompany;
 
     /**
      * 乙方公司名称
      */
+    @ExcelHeader(name = "乙方公司名称",notNull = true)
     private String secondCompany;
 
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 合同金额
      */
+    @ExcelHeader(name = "合同金额",notNull = true)
     private Double money;
 
     /**
      * 开工时间
      */
+    @ExcelHeader(name = "开工时间",notNull = true)
     private String startProjectTime;
 
     /**
      * 完工时间
      */
+    @ExcelHeader(name = "完工时间",notNull = true)
     private String endProjectTime;
 
     /**
      * 签订状态
      */
+    @ExcelHeader(name = "签订状态",notNull = true)
     private String siginStatus;
 
     /**
      * 合同属性
      */
+    @ExcelHeader(name = "合同属性",notNull = true)
     private String contractProperty;
 
     /**
      * 立项情况
      */
+    @ExcelHeader(name = "立项情况",notNull = true)
     private String makeProject;
 
     /**
      * 内部项目名称
      */
+    @ExcelHeader(name = "内部项目名称",notNull = true)
     private String innerProject;
 
     /**
      * 项目组
      */
+    @ExcelHeader(name = "项目组",notNull = true)
     private String projectGroup;
 
     /**
      * 项目负责人
      */
+    @ExcelHeader(name = "项目负责人",notNull = true)
     private String projectCharge;
 
     /**
      * 备注
      */
+    @ExcelHeader(name = "备注" )
     private String remark;
 
     /**
      * 总经办
      */
+    @ExcelHeader(name = "总经办" )
     private String manager;
 
     /**
      * 审核意见
      */
+    @ExcelHeader(name = "审核意见" )
     private String auditAdvice;
 
 
