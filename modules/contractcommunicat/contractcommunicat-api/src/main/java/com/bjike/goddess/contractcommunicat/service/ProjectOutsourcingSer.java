@@ -7,9 +7,7 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 
 import java.util.List;
@@ -76,8 +74,11 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
     /**
      * 导出excel
      *
-     * @param to 导出条件
-     * @throws SerException
+     * @param contractInProject 导出条件
+     * @param startDate         开始时间
+     * @param endDate           结束时间
      */
-    byte[] exportExcel(ExportExcelTO to) throws SerException;
+    byte[] exportExcel(String contractInProject, String startDate, String endDate) throws SerException;
+
+    List<ProjectOutsourcingBO> prjects() throws SerException;
 }
