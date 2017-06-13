@@ -89,4 +89,9 @@ public class CollectEmailApiImpl implements CollectEmailAPI {
     public List<CollectEmailBO> collectDispatchEmail(String[] area) throws SerException {
         return collectEmailSer.collectDispatchEmail(area);
     }
+
+    @Override
+    public void checkSendEmail() throws SerException {
+         collectEmailSer.checkSendEmail();
+    }
 }

@@ -2,15 +2,10 @@ package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.CollectEmailBO;
 import com.bjike.goddess.businessproject.dto.CollectEmailDTO;
-import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.CollectEmail;
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.to.CollectEmailTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -22,11 +17,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -52,25 +50,43 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private DispatchSheetSer dispatchSheetAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private CollectEmailSer collectEmailSer;
 
     /**
      * 核对查看权限（部门级别）
      */
-    private void checkSeeIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.getCusPermission("1");
-        if( !flag ){
-            throw new SerException("您不是相应部门的人员，不可以查看");
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
     }
 
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission("2");
-        if( !flag ){
-            throw new SerException("您不是岗位的人员，不可以操作");
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
     }
 
     /**
@@ -79,12 +95,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -96,12 +112,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -111,11 +127,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -184,11 +200,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     @Override
     public CollectEmailBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空哦");
         }
         CollectEmail selfCapability = super.findById(id);
-        return BeanTransform.copyProperties(selfCapability,CollectEmailBO.class);
+        return BeanTransform.copyProperties(selfCapability, CollectEmailBO.class);
 
     }
 
@@ -202,13 +218,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
 
-
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CollectEmailBO addCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
         String useToken = RpcTransmit.getUserToken();
         checkAddIdentity();
-        RpcTransmit.transmitUserToken( useToken );
+        RpcTransmit.transmitUserToken(useToken);
 
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
@@ -223,16 +238,29 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         collectEmail.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置发送间隔
-        if(null == collectEmail.getCollectSendUnit()){
+        if (null == collectEmail.getCollectSendUnit()) {
             throw new SerException("发送单位不能为空");
         }
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
         collectEmail.setSendNumAndUnit(collectEmail.getSendNum() + unit);
 
+        //设置汇总条件
+        StringBuffer condiSb = new StringBuffer("");
+        String[] condis = collectEmailTO.getCondis();
+        if (condis != null && condis.length >= 0) {
+            for (String condiStr : condis) {
+                condiSb.append(condiStr + ";");
+            }
+            collectEmail.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
+        } else {
+            throw new SerException("发送条件不能为空");
+        }
+
         //设置发送对象
         collectEmail.setSendObject(String.valueOf(emails));
         //设置上次发送时间
         collectEmail.setLastSendTime(LocalDateTime.now());
+
 
         super.save(collectEmail);
 
@@ -244,7 +272,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     public CollectEmailBO editCollectEmail(CollectEmailTO collectEmailTO) throws SerException {
         String useToken = RpcTransmit.getUserToken();
         checkAddIdentity();
-        RpcTransmit.transmitUserToken( useToken );
+        RpcTransmit.transmitUserToken(useToken);
 
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
@@ -253,16 +281,29 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 emails.append(emailStr + ";");
             }
         }
-        CollectEmail temp = super.findById( collectEmailTO.getId() );
+        CollectEmail temp = super.findById(collectEmailTO.getId());
         CollectEmail collectEmail = BeanTransform.copyProperties(collectEmailTO, CollectEmail.class, true);
 
-        BeanUtils.copyProperties( collectEmail,temp ,"id","createTime","createPersion","lastSendTime","status");
+        BeanUtils.copyProperties(collectEmail, temp, "id", "createTime", "createPersion", "lastSendTime", "status");
         temp.setModifyTime(LocalDateTime.now());
         temp.setCreatePersion(userAPI.currentUser().getUsername());
 
         //设置发送间隔
         String unit = sendUnitConverse(collectEmail.getCollectSendUnit().getCode());
         temp.setSendNumAndUnit(collectEmail.getSendNum() + unit);
+
+        //设置汇总条件
+        StringBuffer condiSb = new StringBuffer("");
+        String[] condis = collectEmailTO.getCondis();
+        if (condis != null && condis.length >= 0) {
+            for (String condiStr : condis) {
+                condiSb.append(condiStr + ";");
+            }
+            temp.setCondi(StringUtils.substringBeforeLast(condiSb.toString(), ";"));
+        } else {
+            throw new SerException("发送条件不能为空");
+        }
+
 
         //设置发送对象
         temp.setSendObject(String.valueOf(emails));
@@ -301,7 +342,6 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
 
-    
     @Override
     public List<CollectEmailBO> collectCollectEmail(String[] area) throws SerException {
         List<CollectEmailBO> collectEmailBOList = new ArrayList<>();
@@ -317,33 +357,33 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<Integer> busType = Arrays.asList(BusinessType.MOBILECOMMUNICATION.getCode(), BusinessType.SOFTDEVELOP.getCode()
                 , BusinessType.INTELLIGENCESYSTEM.getCode(), BusinessType.ADVERT.getCode());
         StringBuffer busTypeStr = new StringBuffer("");
-        for(Integer type : busType){
-            busTypeStr.append( type+",");
+        for (Integer type : busType) {
+            busTypeStr.append(type + ",");
         }
         //再获取合作方式
         List<Integer> cooperStatus = Arrays.asList(BusinessCooperate.RENTCONTRACT.getCode(),
                 BusinessCooperate.CHARCONTRACT.getCode(), BusinessCooperate.DISTRIBUTECONTRACT.getCode(), BusinessCooperate.SALECONTRACT.getCode());
         StringBuffer cooperStr = new StringBuffer("");
-        for(Integer type : cooperStatus){
-            cooperStr.append( type+",");
+        for (Integer type : cooperStatus) {
+            cooperStr.append(type + ",");
         }
         //再获合同属性
         List<Integer> distribute = Arrays.asList(ContractProperty.FRAMECONTRACT.getCode(), ContractProperty.SINGLECONTRACT.getCode());
         StringBuffer distributeStr = new StringBuffer("");
-        for(Integer type : distribute){
-            distributeStr.append( type+",");
+        for (Integer type : distribute) {
+            distributeStr.append(type + ",");
         }
         //立项情况
         List<String> makeProjects = Arrays.asList("已立项", "未立项");
         StringBuffer makeProjectsStr = new StringBuffer("");
-        for(String type : makeProjects){
-            makeProjectsStr.append( "'"+type+"'"+",");
+        for (String type : makeProjects) {
+            makeProjectsStr.append("'" + type + "'" + ",");
         }
         //签订合同情况
         List<String> signConditions = Arrays.asList("已签订", "未签订");
         StringBuffer signStr = new StringBuffer("");
-        for(String type : signConditions){
-            signStr.append( "'"+type+"'"+",");
+        for (String type : signConditions) {
+            signStr.append("'" + type + "'" + ",");
         }
 
         for (String areaStr : areas) {
@@ -354,7 +394,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取业务类型
              */
             String sql = "select count(*) as counts , area as type ,businessType as enumConvert  from  businessproject_siginmanage " +
-                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ") and area = '" + areaStr + "' group by area , businessType order by businessType asc  ";
+                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr + "", ",") + ") and area = '" + areaStr + "' group by area , businessType order by businessType asc  ";
             List<Map<String, String>> busTypeMapList = new ArrayList<>();
             List<CollectEmailBO> collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -363,7 +403,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取合作方式
              */
             sql = "select count(*) as counts , area as type ,businessCooperate as enumConvert  from  businessproject_siginmanage " +
-                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ") and area = '" + areaStr + "' group by area , businessCooperate order by businessCooperate asc  ";
+                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr + "", ",") + ") and area = '" + areaStr + "' group by area , businessCooperate order by businessCooperate asc  ";
             List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -372,7 +412,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获合同属性
              */
             sql = "select count(*) as counts , area as type ,contractProperty as enumConvert  from  businessproject_siginmanage " +
-                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"",",") + ") and area = '" + areaStr + "' group by area , contractProperty order by contractProperty asc  ";
+                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr + "", ",") + ") and area = '" + areaStr + "' group by area , contractProperty order by contractProperty asc  ";
             List<Map<String, String>> propertyMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
@@ -382,7 +422,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 立项情况
              */
             sql = "select count(*) as counts , area as type ,makeProject as remark  from  businessproject_siginmanage " +
-                    "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr+"",",") + ") and area = '" + areaStr + "' group by makeProject , area order by makeProject asc  ";
+                    "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr + "", ",") + ") and area = '" + areaStr + "' group by makeProject , area order by makeProject asc  ";
             List<Map<String, String>> makeProjectMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             makeProjectMapList = sqlQueryString(makeProjects, collectEmailBOS, makeProjectMapList);
@@ -390,7 +430,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 签订合同情况
              */
             sql = "select count(*) as counts , area as type ,siginStatus as remark  from  businessproject_siginmanage " +
-                    "where siginStatus in (" + StringUtils.substringBeforeLast(signStr+"",",") + ") and area = '" + areaStr + "' group by siginStatus , area order by siginStatus asc  ";
+                    "where siginStatus in (" + StringUtils.substringBeforeLast(signStr + "", ",") + ") and area = '" + areaStr + "' group by siginStatus , area order by siginStatus asc  ";
             List<Map<String, String>> signMapList = new ArrayList<>();
             collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -407,7 +447,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         }
 
         //合计计算合同签订与立项每个业务类型等总数
-        collectEmailBOList = calcuteSiginCount(areas,busType, cooperStatus, distribute, makeProjects, signConditions, collectEmailBOList);
+        collectEmailBOList = calcuteSiginCount(areas, busType, cooperStatus, distribute, makeProjects, signConditions, collectEmailBOList);
 
         return collectEmailBOList;
     }
@@ -421,28 +461,28 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<Integer> busType = Arrays.asList(BusinessType.MOBILECOMMUNICATION.getCode(), BusinessType.SOFTDEVELOP.getCode()
                 , BusinessType.INTELLIGENCESYSTEM.getCode(), BusinessType.ADVERT.getCode());
         StringBuffer busTypeStr = new StringBuffer("");
-        for(Integer type : busType){
-            busTypeStr.append( type+",");
+        for (Integer type : busType) {
+            busTypeStr.append(type + ",");
         }
         //再获取合作方式
         List<Integer> cooperStatus = Arrays.asList(BusinessCooperate.RENTCONTRACT.getCode(),
                 BusinessCooperate.CHARCONTRACT.getCode(), BusinessCooperate.DISTRIBUTECONTRACT.getCode(), BusinessCooperate.SALECONTRACT.getCode());
         StringBuffer cooperStr = new StringBuffer("");
-        for(Integer type : cooperStatus){
-            cooperStr.append( type+",");
+        for (Integer type : cooperStatus) {
+            cooperStr.append(type + ",");
         }
         //再获合同属性
         List<Integer> distribute = Arrays.asList(ContractProperty.FRAMECONTRACT.getCode(), ContractProperty.SINGLECONTRACT.getCode());
         StringBuffer distributeStr = new StringBuffer("");
-        for(Integer type : distribute){
-            distributeStr.append( type+",");
+        for (Integer type : distribute) {
+            distributeStr.append(type + ",");
         }
 
         //合同归档情况
         List<String> signConditions = Arrays.asList("已归档", "未归档");
         StringBuffer signStr = new StringBuffer("");
-        for(String type : signConditions){
-            signStr.append( "'"+type+"',");
+        for (String type : signConditions) {
+            signStr.append("'" + type + "',");
         }
 
         for (String firstCompanyStr : firstCompanys) {
@@ -453,7 +493,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取业务类型
              */
             String sql = "select count(*) as counts , firstCompany as type ,businessType as enumConvert  from  businessproject_baseinfomanage " +
-                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"" ,",")+ ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , businessType order by businessType asc  ";
+                    "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr + "", ",") + ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , businessType order by businessType asc  ";
             List<Map<String, String>> busTypeMapList = new ArrayList<>();
             List<CollectEmailBO> collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -462,7 +502,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获取合作方式
              */
             sql = "select count(*) as counts , firstCompany as type ,businessCooperate as enumConvert  from  businessproject_baseinfomanage " +
-                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"" ,",") + ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , businessCooperate order by businessCooperate asc  ";
+                    "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr + "", ",") + ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , businessCooperate order by businessCooperate asc  ";
             List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -471,7 +511,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 再获合同属性
              */
             sql = "select count(*) as counts , firstCompany as type ,contractProperty as enumConvert  from  businessproject_baseinfomanage " +
-                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"" ,",") + ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , contractProperty order by contractProperty asc  ";
+                    "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr + "", ",") + ") and firstCompany = '" + firstCompanyStr + "' group by firstCompany , contractProperty order by contractProperty asc  ";
             List<Map<String, String>> propertyMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
@@ -481,7 +521,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
              * 合同归档情况
              */
             sql = "select count(*) as counts , firstCompany as type ,fileCondition as remark  from  businessproject_baseinfomanage " +
-                    "where fileCondition in (" + StringUtils.substringBeforeLast(signStr+"" ,",") + ") and firstCompany = '" + firstCompanyStr + "' group by fileCondition , firstCompany order by fileCondition asc  ";
+                    "where fileCondition in (" + StringUtils.substringBeforeLast(signStr + "", ",") + ") and firstCompany = '" + firstCompanyStr + "' group by fileCondition , firstCompany order by fileCondition asc  ";
             List<Map<String, String>> signMapList = new ArrayList<>();
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
             signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -493,7 +533,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             sql = "select sum(money) as money  from  businessproject_baseinfomanage " +
                     "where  firstCompany = '" + firstCompanyStr + "' group by  firstCompany   ";
             collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
-            Double money = collectEmailBOS.stream().filter(str->null !=str.getMoney()).mapToDouble(CollectEmailBO::getMoney).sum();
+            Double money = collectEmailBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(CollectEmailBO::getMoney).sum();
 
 
             CollectEmailBO collectEmailBO = new CollectEmailBO();
@@ -502,12 +542,12 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectEmailBO.setCooperWaysMap(cooperStatusMapList);
             collectEmailBO.setContractPropertyMap(propertyMapList);
             collectEmailBO.setSignMap(signMapList);
-            collectEmailBO.setMoney( money );
+            collectEmailBO.setMoney(money);
             collectEmailBOList.add(collectEmailBO);
         }
 
         //合计计算合同基本信息每个业务类型等总数
-        collectEmailBOList = calcuteBaseInfoCount( firstCompanys,busType, cooperStatus, distribute,  signConditions, collectEmailBOList);
+        collectEmailBOList = calcuteBaseInfoCount(firstCompanys, busType, cooperStatus, distribute, signConditions, collectEmailBOList);
 
         return collectEmailBOList;
     }
@@ -517,13 +557,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         List<CollectEmailBO> collectEmailBOList = new ArrayList<>();
 
         String[] fields = new String[]{"counts", "type", "remark"};
-        for(String areaStr :area ){
-            String sql = "select count(*) as counts  , area as type , dispatchProject as remark from  businessproject_dispatchsheet " +
-                    "where  area = '" + areaStr + "' group by dispatchProject   ";
+        for (String areaStr : area) {
+            String sql = "select count(*) as counts  , area as type , 1 as remark from  businessproject_dispatchsheet " +
+                    "where  area = '" + areaStr + "' group by type   ";
 
             List<CollectEmailBO> collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countDispatchName = 0;
-            if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
+            if (collectEmailBOS != null && collectEmailBOS.size() > 0) {
                 countDispatchName = collectEmailBOS.get(0).getCounts();
             }
 
@@ -532,7 +572,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     "where  area = '" + areaStr + "' and completeProject ='已完工'   ";
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countComplete = 0;
-            if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
+            if (collectEmailBOS != null && collectEmailBOS.size() > 0) {
                 countComplete = collectEmailBOS.get(0).getCounts();
             }
 
@@ -541,28 +581,28 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     "where  area = '" + areaStr + "' and completeProject ='未完工'   ";
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fields);
             Integer countNotComplete = 0;
-            if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
+            if (collectEmailBOS != null && collectEmailBOS.size() > 0) {
                 countNotComplete = collectEmailBOS.get(0).getCounts();
             }
 
             String[] fieldMoney = new String[]{"money", "type"};
             //金额
             sql = "select sum(money) as money , area as type  from  businessproject_dispatchsheet " +
-                    " where  area = '" + areaStr+"'" ;
+                    " where  area = '" + areaStr + "'";
             collectEmailBOS = dispatchSheetAPI.findBySql(sql, CollectEmailBO.class, fieldMoney);
             Double money = 0d;
-            if( collectEmailBOS != null && collectEmailBOS.size() >0 ){
+            if (collectEmailBOS != null && collectEmailBOS.size() > 0) {
                 money = collectEmailBOS.get(0).getMoney();
             }
 
             CollectEmailBO cbo = new CollectEmailBO();
-            cbo.setType( areaStr );
-            cbo.setDispatchProjectCount( countDispatchName );
-            cbo.setComplete(  countComplete );
-            cbo.setNotComplete( countNotComplete );
-            cbo.setMoney( null == money ? 0d:money);
+            cbo.setType(areaStr);
+            cbo.setDispatchProjectCount(countDispatchName);
+            cbo.setComplete(countComplete);
+            cbo.setNotComplete(countNotComplete);
+            cbo.setMoney(null == money ? 0d : money);
 
-            collectEmailBOList.add( cbo );
+            collectEmailBOList.add(cbo);
         }
 
         //计算合计
@@ -572,19 +612,20 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         Double sumMoneyAll = collectEmailBOList.stream().mapToDouble(CollectEmailBO::getMoney).sum();
 
         CollectEmailBO cbo = new CollectEmailBO();
-        cbo.setType( "合计" );
-        cbo.setDispatchProjectCount( sumProjectAll );
-        cbo.setComplete(  sumCompleteAll );
-        cbo.setNotComplete( sumNotCompleteAll );
-        cbo.setMoney( sumMoneyAll );
+        cbo.setType("合计");
+        cbo.setDispatchProjectCount(sumProjectAll);
+        cbo.setComplete(sumCompleteAll);
+        cbo.setNotComplete(sumNotCompleteAll);
+        cbo.setMoney(sumMoneyAll);
 
-        collectEmailBOList.add( cbo );
+        collectEmailBOList.add(cbo);
 
-        return  collectEmailBOList;
+        return collectEmailBOList;
     }
 
     /**
      * 合计计算合同基本信息每个业务类型等总数
+     *
      * @param busType
      * @param cooperStatus
      * @param distribute
@@ -593,28 +634,28 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @return
      * @throws SerException
      */
-    public List<CollectEmailBO> calcuteBaseInfoCount(List<String> firstCompanys,List<Integer> busType, List<Integer> cooperStatus,
+    public List<CollectEmailBO> calcuteBaseInfoCount(List<String> firstCompanys, List<Integer> busType, List<Integer> cooperStatus,
                                                      List<Integer> distribute, List<String> signConditions,
                                                      List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer companyStr = new StringBuffer("");
-        for(String type : firstCompanys){
-            companyStr.append( "'"+type+"',");
+        for (String type : firstCompanys) {
+            companyStr.append("'" + type + "',");
         }
         StringBuffer busTypeStr = new StringBuffer("");
-        for(Integer type : busType){
-            busTypeStr.append( type+",");
+        for (Integer type : busType) {
+            busTypeStr.append(type + ",");
         }
         StringBuffer cooperStr = new StringBuffer("");
-        for(Integer type : cooperStatus){
-            cooperStr.append( type+",");
+        for (Integer type : cooperStatus) {
+            cooperStr.append(type + ",");
         }
         StringBuffer distributeStr = new StringBuffer("");
-        for(Integer type : distribute){
-            distributeStr.append( type+",");
+        for (Integer type : distribute) {
+            distributeStr.append(type + ",");
         }
         StringBuffer signStr = new StringBuffer("");
-        for(String type : signConditions){
-            signStr.append( "'"+type+"',");
+        for (String type : signConditions) {
+            signStr.append("'" + type + "',");
         }
 
         String[] fields = new String[]{"counts", "enumConvert"};
@@ -623,7 +664,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取业务类型
          */
         String sql = "select count(*) as counts , businessType as enumConvert  from  businessproject_baseinfomanage " +
-                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ") and firstCompany in("+StringUtils.substringBeforeLast(companyStr+"",",") +") group by businessType order by businessType asc  ";
+                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr + "", ",") + ") and firstCompany in(" + StringUtils.substringBeforeLast(companyStr + "", ",") + ") group by businessType order by businessType asc  ";
         List<Map<String, String>> busTypeMapList = new ArrayList<>();
         List<CollectEmailBO> collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -632,7 +673,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取合作方式
          */
         sql = "select count(*) as counts , businessCooperate as enumConvert  from  businessproject_baseinfomanage " +
-                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ") and firstCompany in("+StringUtils.substringBeforeLast(companyStr+"",",") +") group by  businessCooperate order by businessCooperate asc  ";
+                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr + "", ",") + ") and firstCompany in(" + StringUtils.substringBeforeLast(companyStr + "", ",") + ") group by  businessCooperate order by businessCooperate asc  ";
         List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -642,7 +683,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获合同属性
          */
         sql = "select count(*) as counts  ,contractProperty as enumConvert  from  businessproject_baseinfomanage " +
-                "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr+"",",") + ") and firstCompany in("+StringUtils.substringBeforeLast(companyStr+"",",") +") group by  contractProperty order by contractProperty asc  ";
+                "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr + "", ",") + ") and firstCompany in(" + StringUtils.substringBeforeLast(companyStr + "", ",") + ") group by  contractProperty order by contractProperty asc  ";
         List<Map<String, String>> propertyMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
@@ -652,7 +693,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 合同归档情况
          */
         sql = "select count(*) as counts , fileCondition as remark  from  businessproject_baseinfomanage " +
-                "where fileCondition in (" + StringUtils.substringBeforeLast(signStr+"",",") + ") and firstCompany in("+StringUtils.substringBeforeLast(companyStr+"",",") +") group by fileCondition  order by fileCondition asc  ";
+                "where fileCondition in (" + StringUtils.substringBeforeLast(signStr + "", ",") + ") and firstCompany in(" + StringUtils.substringBeforeLast(companyStr + "", ",") + ") group by fileCondition  order by fileCondition asc  ";
         List<Map<String, String>> signMapList = new ArrayList<>();
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -662,9 +703,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          */
         fields = new String[]{"money"};
         sql = "select sum(money) as money  from  businessproject_baseinfomanage " +
-                "where  firstCompany in("+StringUtils.substringBeforeLast(companyStr+"",",") +")     ";
+                "where  firstCompany in(" + StringUtils.substringBeforeLast(companyStr + "", ",") + ")     ";
         collectEmailBOS = baseInfoManageAPI.findBySql(sql, CollectEmailBO.class, fields);
-        Double money = collectEmailBOS.stream().filter(str->null !=str.getMoney()).mapToDouble(CollectEmailBO::getMoney).sum();
+        Double money = collectEmailBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(CollectEmailBO::getMoney).sum();
 
 
         CollectEmailBO collectEmailBO = new CollectEmailBO();
@@ -682,6 +723,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     /**
      * 合计计算合同签订与立项每个业务类型等总数
+     *
      * @param busType
      * @param cooperStatus
      * @param distribute
@@ -691,32 +733,33 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
      * @return
      * @throws SerException
      */
-    public List<CollectEmailBO> calcuteSiginCount(List<String> areas,List<Integer> busType, List<Integer> cooperStatus,
+    public List<CollectEmailBO> calcuteSiginCount(List<String> areas, List<Integer> busType, List<Integer> cooperStatus,
                                                   List<Integer> distribute, List<String> makeProjects,
                                                   List<String> signConditions,
                                                   List<CollectEmailBO> collectEmailBOList) throws SerException {
         StringBuffer areaStr = new StringBuffer("");
-        for(String type : areas){
-            areaStr.append( "'"+type+"',");
+        for (String type : areas) {
+            areaStr.append("'" + type + "',");
         }
         StringBuffer busTypeStr = new StringBuffer("");
-        for(Integer type : busType){
-            busTypeStr.append( type+",");
+        for (Integer type : busType) {
+            busTypeStr.append(type + ",");
         }
         StringBuffer cooperStr = new StringBuffer("");
-        for(Integer type : cooperStatus){
-            cooperStr.append( type+",");
+        for (Integer type : cooperStatus) {
+            cooperStr.append(type + ",");
         }
         StringBuffer distributeStr = new StringBuffer("");
-        for(Integer type : distribute){
-            distributeStr.append( type+",");
+        for (Integer type : distribute) {
+            distributeStr.append(type + ",");
         }
         StringBuffer makeProjectsStr = new StringBuffer("");
-        for(String type : makeProjects){
-            makeProjectsStr.append( "'"+type+"',");
-        }StringBuffer signStr = new StringBuffer("");
-        for(String type : signConditions){
-            signStr.append( "'"+type+"',");
+        for (String type : makeProjects) {
+            makeProjectsStr.append("'" + type + "',");
+        }
+        StringBuffer signStr = new StringBuffer("");
+        for (String type : signConditions) {
+            signStr.append("'" + type + "',");
         }
         String[] fields = new String[]{"counts", "enumConvert"};
 
@@ -724,7 +767,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取业务类型
          */
         String sql = "select count(*) as counts , businessType as enumConvert  from  businessproject_siginmanage " +
-                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr+"",",") + ") and area in("+StringUtils.substringBeforeLast(areaStr+"",",") +") group by  businessType order by businessType asc  ";
+                "where businessType in (" + StringUtils.substringBeforeLast(busTypeStr + "", ",") + ") and area in(" + StringUtils.substringBeforeLast(areaStr + "", ",") + ") group by  businessType order by businessType asc  ";
         List<Map<String, String>> busTypeMapList = new ArrayList<>();
         List<CollectEmailBO> collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         busTypeMapList = sqlQueryInt("BusinessType", busType, collectEmailBOS, busTypeMapList);
@@ -733,7 +776,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获取合作方式
          */
         sql = "select count(*) as counts , businessCooperate as enumConvert  from  businessproject_siginmanage " +
-                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr+"",",") + ") and area in("+StringUtils.substringBeforeLast(areaStr+"",",") +") group by  businessCooperate order by businessCooperate asc  ";
+                "where businessCooperate in (" + StringUtils.substringBeforeLast(cooperStr + "", ",") + ") and area in(" + StringUtils.substringBeforeLast(areaStr + "", ",") + ") group by  businessCooperate order by businessCooperate asc  ";
         List<Map<String, String>> cooperStatusMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         cooperStatusMapList = sqlQueryInt("BusinessCooperate", cooperStatus, collectEmailBOS, cooperStatusMapList);
@@ -743,7 +786,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 再获合同属性
          */
         sql = "select count(*) as counts  ,contractProperty as enumConvert  from  businessproject_siginmanage " +
-                "where contractProperty in (" +  StringUtils.substringBeforeLast(distributeStr+"",",")  + ") and area in("+StringUtils.substringBeforeLast(areaStr+"",",") +") group by  contractProperty order by contractProperty asc  ";
+                "where contractProperty in (" + StringUtils.substringBeforeLast(distributeStr + "", ",") + ") and area in(" + StringUtils.substringBeforeLast(areaStr + "", ",") + ") group by  contractProperty order by contractProperty asc  ";
         List<Map<String, String>> propertyMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         propertyMapList = sqlQueryInt("ContractProperty", distribute, collectEmailBOS, propertyMapList);
@@ -753,7 +796,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 立项情况
          */
         sql = "select count(*) as counts , makeProject as remark  from  businessproject_siginmanage " +
-                "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr+"",",") + ") and area in("+StringUtils.substringBeforeLast(areaStr+"",",") +") group by makeProject  order by makeProject asc  ";
+                "where makeProject in (" + StringUtils.substringBeforeLast(makeProjectsStr + "", ",") + ") and area in(" + StringUtils.substringBeforeLast(areaStr + "", ",") + ") group by makeProject  order by makeProject asc  ";
         List<Map<String, String>> makeProjectMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         makeProjectMapList = sqlQueryString(makeProjects, collectEmailBOS, makeProjectMapList);
@@ -761,7 +804,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
          * 签订合同情况
          */
         sql = "select count(*) as counts , siginStatus as remark  from  businessproject_siginmanage " +
-                "where siginStatus in (" + StringUtils.substringBeforeLast(signStr+"",",")  + ") and area in("+StringUtils.substringBeforeLast(areaStr+"",",") +") group by siginStatus  order by siginStatus asc  ";
+                "where siginStatus in (" + StringUtils.substringBeforeLast(signStr + "", ",") + ") and area in(" + StringUtils.substringBeforeLast(areaStr + "", ",") + ") group by siginStatus  order by siginStatus asc  ";
         List<Map<String, String>> signMapList = new ArrayList<>();
         collectEmailBOS = siginManageAPI.findBySql(sql, CollectEmailBO.class, fields);
         signMapList = sqlQueryString(signConditions, collectEmailBOS, signMapList);
@@ -822,7 +865,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 for (CollectEmailBO cbo : collectEmailBOS) {
                     Map<String, String> areaMap = new HashMap<>();
                     areaMap.put("remark", cbo.getRemark());
-                    areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
+                    areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (collectEmailBOS.size() < obj.size()) {
@@ -846,7 +889,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
-                for(String dif: diffrent){
+                for (String dif : diffrent) {
                     Map<String, String> areaMap = new HashMap<>();
                     areaMap.put("remark", dif);
                     areaMap.put("count", String.valueOf(0));
@@ -883,7 +926,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     } else if (enumStr.equals("ContractProperty")) {
                         areaMap.put("remark", ContractProperty.getStrConvert(cbo.getEnumConvert()));
                     }
-                    areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
+                    areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
             } else if (collectEmailBOS.size() < obj.size()) {
@@ -910,13 +953,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     } else if (enumStr.equals("ContractProperty")) {
                         areaMap.put("remark", ContractProperty.getStrConvert(cbo.getEnumConvert()));
                     }
-                    areaMap.put("count", String.valueOf(cbo.getCounts()==null?0:cbo.getCounts()));
+                    areaMap.put("count", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
                     mapList.add(areaMap);
                 }
-                for(Integer dif: diffrent){
+                for (Integer dif : diffrent) {
                     Map<String, String> areaMap = new HashMap<>();
                     if (enumStr.equals("BusinessType")) {
-                        areaMap.put("remark", BusinessType.getStrConvert(dif ));
+                        areaMap.put("remark", BusinessType.getStrConvert(dif));
                     } else if (enumStr.equals("BusinessCooperate")) {
                         areaMap.put("remark", BusinessCooperate.getStrConvert(dif));
                     } else if (enumStr.equals("ContractProperty")) {
@@ -939,4 +982,265 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     }
 
 
+    @Override
+    public void checkSendEmail() throws SerException {
+        List<CollectEmail> allEmails = new ArrayList<>();
+        List<CollectEmail> signEmails = new ArrayList<>();
+        List<CollectEmail> dispatchEmails = new ArrayList<>();
+        List<CollectEmail> baseInfoEmails = new ArrayList<>();
+
+        //检测有哪些需要发送的
+        //上次发送时间
+        //现在时间
+        //发送间隔
+        //发送单位
+        //发送类型
+        //发送对象
+        CollectEmailDTO dto = new CollectEmailDTO();
+        List<CollectEmail> list = super.findByCis(dto);
+        LocalDateTime nowTime = LocalDateTime.now();
+        for (CollectEmail str : list) {
+            //上次发送时间
+            LocalDateTime lastTime = str.getLastSendTime();
+            //发送间隔
+            Double sendNum = str.getSendNum();
+            //发送单位
+            CollectSendUnit collectSendUnit = str.getCollectSendUnit();
+            //发送类型
+            String type = str.getType();
+            //发送对象;隔开
+            String sendObject = str.getSendObject();
+
+            Long mis = nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    - lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            Double temp_sendNum = 0d;
+            Boolean flag = false;
+            switch (collectSendUnit) {
+                case MINUTE:
+                    //毫秒数
+                    temp_sendNum = sendNum * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case HOURS:
+                    temp_sendNum = sendNum * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case DAY:
+                    temp_sendNum = sendNum * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case WEEK:
+                    temp_sendNum = sendNum * 7 * 24 * 60 * 60 * 1000;
+                    if (temp_sendNum <= mis.doubleValue()) {
+                        flag = true;
+                    }
+                    break;
+                case MONTH:
+                    if (nowTime.minusMonths(1).isEqual(lastTime) || nowTime.minusMonths(1).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case QUARTER:
+                    if (nowTime.minusMonths(3).isEqual(lastTime) || nowTime.minusMonths(3).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+                case YEAR:
+                    if (nowTime.minusYears(1).isEqual(lastTime) || nowTime.minusYears(1).isAfter(lastTime)) {
+                        flag = true;
+                    }
+                    break;
+            }
+
+            if (flag && type.equals("合同签订与立项汇总")) {
+                signEmails.add(str);
+                allEmails.add(str);
+            } else if (flag && type.equals("派工单信息汇总")) {
+                dispatchEmails.add(str);
+                allEmails.add(str);
+            } else if (flag && type.equals("项目合同基本信息汇总")) {
+                baseInfoEmails.add(str);
+                allEmails.add(str);
+            }
+
+
+        }
+
+        //调用发邮件
+        allEmails = sendObject(signEmails, dispatchEmails, baseInfoEmails);
+
+        //修改上次发送时间
+        super.update(allEmails);
+
+    }
+
+    private String htmlSign(List<CollectEmailBO> signBOList) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        if( signBOList != null && signBOList.size()>0 ){
+            sb = new StringBuffer("<h4>项目签订与立项汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            CollectEmailBO title = signBOList.get(signBOList.size()-1);
+            sb.append("<tr>");
+            sb.append("<td>地区</td>");
+            for(Map<String,String> map : title.getBusTypeMap()){
+                sb.append("<td>"+map.get("count")+"</td>");
+            }
+            for(Map<String,String> map : title.getCooperWaysMap()){
+                sb.append("<td>"+map.get("count")+"</td>");
+            }
+            for(Map<String,String> map : title.getContractPropertyMap()){
+                sb.append("<td>"+map.get("count")+"</td>");
+            }
+            for(Map<String,String> map : title.getMakeProjectMap()){
+                sb.append("<td>"+map.get("count")+"</td>");
+            }
+            for(Map<String,String> map : title.getSignMap()){
+                sb.append("<td>"+map.get("count")+"</td>");
+            }
+            sb.append("<tr>");
+
+            //拼body部分
+            for(CollectEmailBO bo : signBOList){
+                sb.append("<tr>");
+                sb.append("<td>"+bo.getType()+"</td>");
+                for(Map<String,String> map : bo.getBusTypeMap()){
+                    sb.append("<td>"+map.get("count")+"</td>");
+                }
+                for(Map<String,String> map : bo.getCooperWaysMap()){
+                    sb.append("<td>"+map.get("count")+"</td>");
+                }
+                for(Map<String,String> map : bo.getContractPropertyMap()){
+                    sb.append("<td>"+map.get("count")+"</td>");
+                }
+                for(Map<String,String> map : bo.getMakeProjectMap()){
+                    sb.append("<td>"+map.get("count")+"</td>");
+                }
+                for(Map<String,String> map : bo.getSignMap()){
+                    sb.append("<td>"+map.get("count")+"</td>");
+                }
+                sb.append("<tr>");
+            }
+
+            //结束
+            sb.append("</table>");
+        }
+        return sb.toString();
+    }
+
+
+    private String htmlDispatch(List<CollectEmailBO> dispatchEmails) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        if( dispatchEmails != null && dispatchEmails.size()>0 ){
+            sb = new StringBuffer("<h4>派工单信息合同汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            CollectEmailBO title = dispatchEmails.get(dispatchEmails.size()-1);
+            sb.append("<tr>");
+            sb.append("<td>地区</td>");
+            sb.append("<td>派工单名称</td>");
+            sb.append("<td>派工单金额(元)</td>");
+            sb.append("<td>已完工</td>");
+            sb.append("<td>未完工</td>");
+            sb.append("<tr>");
+
+            //拼body部分
+            for(CollectEmailBO bo : dispatchEmails){
+                sb.append("<tr>");
+                sb.append("<td>"+bo.getType()+"</td>");
+                sb.append("<td>"+bo.getSignMap()+"</td>");
+                sb.append("<td>"+bo.getType()+"</td>");
+                sb.append("<td>"+bo.getType()+"</td>");
+                sb.append("<td>"+bo.getType()+"</td>");
+
+                sb.append("<tr>");
+            }
+
+            //结束
+            sb.append("</table>");
+        }
+        return sb.toString();
+    }
+
+
+    private List<CollectEmail> sendObject(List<CollectEmail> signEmails, List<CollectEmail> dispatchEmails, List<CollectEmail> baseInfoEmails) throws SerException {
+        List<CollectEmail> allEmails = new ArrayList<>();
+        //签订与立项汇总
+        //基本信息汇总
+        //派工单汇总
+        if (signEmails != null && signEmails.size() > 0) {
+            for (CollectEmail sign : signEmails) {
+                String[] condis = sign.getCondi().split(";");
+                List<CollectEmailBO> signBOList = collectEmailSer.collectCollectEmail(condis);
+                //TODO 发送邮件
+                //拼表格
+                String content = htmlSign(signBOList);
+
+                sign.setLastSendTime(LocalDateTime.now());
+                sign.setModifyTime(LocalDateTime.now());
+                allEmails.add(sign);
+            }
+        }
+        if (dispatchEmails != null && dispatchEmails.size() > 0) {
+            for (CollectEmail dispa : dispatchEmails) {
+                String[] condis = dispa.getCondi().split(";");
+                collectEmailSer.collectCollectEmail(condis);
+                //TODO 发送邮件
+                //拼表格
+
+                dispa.setLastSendTime(LocalDateTime.now());
+                dispa.setModifyTime(LocalDateTime.now());
+                allEmails.add(dispa);
+            }
+        }
+        if (baseInfoEmails != null && baseInfoEmails.size() > 0) {
+            for (CollectEmail baseinfo : baseInfoEmails) {
+                String[] condis = baseinfo.getCondi().split(";");
+                collectEmailSer.collectBaseInfoEmail(condis);
+                //TODO 发送邮件
+                //拼表格
+
+                baseinfo.setLastSendTime(LocalDateTime.now());
+                baseinfo.setModifyTime(LocalDateTime.now());
+                allEmails.add(baseinfo);
+            }
+        }
+
+        return allEmails;
+
+    }
+
+//    public static void main(String[] args) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime nowTime = LocalDateTime.parse("2017-06-07 12:13:34", formatter);
+//        LocalDateTime lastTime = LocalDateTime.parse("2017-06-07 12:14:18", formatter);
+//        System.out.println(nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+//        System.out.println(lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+//        Long l = lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+//        System.out.println("相差：" + l);
+//        System.out.println("相差：" + l / (60 * 1000));
+//
+//        System.out.println(lastTime.minusMinutes(1));
+//
+//        //1*24*60*60*1000
+//
+//        Date d = new Date();
+//        d.setTime(l);
+//        Instant instant = d.toInstant();
+//        ZoneId zoneId = ZoneId.systemDefault();
+//        System.out.println(LocalDateTime.ofInstant(instant, zoneId));
+////        LocalDateTime time = lastTime.minus(TemporanowTime);
+////        System.out.println( lastTime - nowTime );
+//
+//        Double data = 1.6;
+//        System.out.println(data.longValue());
+//        Duration period = Duration.between(nowTime, lastTime);
+//        System.out.println(period.getSeconds());
+//    }
 }

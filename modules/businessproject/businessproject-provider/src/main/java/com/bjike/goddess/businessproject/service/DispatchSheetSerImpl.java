@@ -54,20 +54,36 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
      * 核对查看权限（部门级别）
      */
     private void checkSeeIdentity() throws SerException {
-        Boolean flag = cusPermissionSer.getCusPermission("1");
-        if (!flag) {
-            throw new SerException("您不是相应部门的人员，不可以查看");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
     }
 
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
     private void checkAddIdentity() throws SerException{
-        Boolean flag = cusPermissionSer.busCusPermission("2");
-        if (!flag) {
-            throw new SerException("您不是岗位的人员，不可以操作");
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
         }
+        RpcTransmit.transmitUserToken(userToken);
     }
 
 
