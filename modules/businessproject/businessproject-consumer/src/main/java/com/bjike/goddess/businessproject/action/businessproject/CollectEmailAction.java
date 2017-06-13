@@ -42,12 +42,9 @@ public class CollectEmailAction {
     private CollectEmailAPI collectEmailAPI;
 
 
-
-
-
-
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -57,11 +54,11 @@ public class CollectEmailAction {
         try {
 
             Boolean isHasPermission = collectEmailAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -89,8 +86,8 @@ public class CollectEmailAction {
      * 一个项目合同邮件
      *
      * @param id 项目项目合同邮件信息id
+     * @return class CollectEmailVO
      * @des 根据id获取项目项目合同邮件信息
-     * @return  class CollectEmailVO
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -232,11 +229,11 @@ public class CollectEmailAction {
     public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
-        if( areas == null || areas.length<= 0 ){
+        if (areas == null || areas.length <= 0) {
             return ActResult.initialize(collectEmailVOList);
         }
         try {
-             collectEmailVOList = BeanTransform.copyProperties(
+            collectEmailVOList = BeanTransform.copyProperties(
                     collectEmailAPI.collectCollectEmail(areas), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
@@ -256,7 +253,7 @@ public class CollectEmailAction {
     public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO) throws ActException {
         String[] firstCompany = collectEmailDTO.getFirstCompany();
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
-        if( firstCompany == null || firstCompany.length<= 0 ){
+        if (firstCompany == null || firstCompany.length <= 0) {
             return ActResult.initialize(collectEmailVOList);
         }
         try {
@@ -289,6 +286,21 @@ public class CollectEmailAction {
     }
 
 
+    /**
+     * 检测
+     *
+     * @des 商务邮件汇总汇总派工合同
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail(   ) throws ActException {
+        try {
+            collectEmailAPI.checkSendEmail( );
+            return ActResult.initialize("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

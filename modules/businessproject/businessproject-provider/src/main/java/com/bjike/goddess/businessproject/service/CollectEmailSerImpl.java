@@ -11,6 +11,12 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.entity.Message;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +58,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private CollectEmailSer collectEmailSer;
+
+    @Autowired
+    private MessageAPI messageAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -1082,49 +1091,116 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     private String htmlSign(List<CollectEmailBO> signBOList) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if( signBOList != null && signBOList.size()>0 ){
-            sb = new StringBuffer("<h4>项目签订与立项汇总:</h4>");
+        if (signBOList != null && signBOList.size() > 0) {
+            sb = new StringBuffer("<h4>商务合同项目签订与立项汇总:</h4>");
             sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
             //拼表头
-            CollectEmailBO title = signBOList.get(signBOList.size()-1);
+            CollectEmailBO title = signBOList.get(signBOList.size() - 1);
             sb.append("<tr>");
             sb.append("<td>地区</td>");
-            for(Map<String,String> map : title.getBusTypeMap()){
-                sb.append("<td>"+map.get("count")+"</td>");
+            for (Map<String, String> map : title.getBusTypeMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
             }
-            for(Map<String,String> map : title.getCooperWaysMap()){
-                sb.append("<td>"+map.get("count")+"</td>");
+            for (Map<String, String> map : title.getCooperWaysMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
             }
-            for(Map<String,String> map : title.getContractPropertyMap()){
-                sb.append("<td>"+map.get("count")+"</td>");
+            for (Map<String, String> map : title.getContractPropertyMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
             }
-            for(Map<String,String> map : title.getMakeProjectMap()){
-                sb.append("<td>"+map.get("count")+"</td>");
+            for (Map<String, String> map : title.getMakeProjectMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
             }
-            for(Map<String,String> map : title.getSignMap()){
-                sb.append("<td>"+map.get("count")+"</td>");
+            for (Map<String, String> map : title.getSignMap()) {
+                sb.append("<td>" + map.get("remark") + "</td>");
             }
             sb.append("<tr>");
 
             //拼body部分
-            for(CollectEmailBO bo : signBOList){
+            for (CollectEmailBO bo : signBOList) {
                 sb.append("<tr>");
-                sb.append("<td>"+bo.getType()+"</td>");
-                for(Map<String,String> map : bo.getBusTypeMap()){
-                    sb.append("<td>"+map.get("count")+"</td>");
+                sb.append("<td>" + bo.getType() + "</td>");
+                for (Map<String, String> map : bo.getBusTypeMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
                 }
-                for(Map<String,String> map : bo.getCooperWaysMap()){
-                    sb.append("<td>"+map.get("count")+"</td>");
+                for (Map<String, String> map : bo.getCooperWaysMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
                 }
-                for(Map<String,String> map : bo.getContractPropertyMap()){
-                    sb.append("<td>"+map.get("count")+"</td>");
+                for (Map<String, String> map : bo.getContractPropertyMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
                 }
-                for(Map<String,String> map : bo.getMakeProjectMap()){
-                    sb.append("<td>"+map.get("count")+"</td>");
+                for (Map<String, String> map : bo.getMakeProjectMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
                 }
-                for(Map<String,String> map : bo.getSignMap()){
-                    sb.append("<td>"+map.get("count")+"</td>");
+                for (Map<String, String> map : bo.getSignMap()) {
+                    sb.append("<td>" + map.get("count") + "</td>");
                 }
+                sb.append("<tr>");
+            }
+
+            //结束
+            sb.append("</table>");
+        }
+        return sb.toString();
+    }
+
+
+    private String htmlBaseInfo(List<CollectEmailBO> baseinfoBOList) throws SerException {
+        StringBuffer sb = new StringBuffer("");
+        if (baseinfoBOList != null && baseinfoBOList.size() > 0) {
+            sb = new StringBuffer("<h4>商务合同基本信息汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            CollectEmailBO title = baseinfoBOList.get(baseinfoBOList.size() - 1);
+            sb.append("<tr>");
+            sb.append("<td>甲方公司名称</td>");
+            if (title.getBusTypeMap() != null && title.getBusTypeMap().size() > 0) {
+                for (Map<String, String> map : title.getBusTypeMap()) {
+                    sb.append("<td>" + map.get("remark") + "</td>");
+                }
+            }
+            if (title.getCooperWaysMap() != null && title.getCooperWaysMap().size() > 0) {
+                for (Map<String, String> map : title.getCooperWaysMap()) {
+                    sb.append("<td>" + map.get("remark") + "</td>");
+                }
+            }
+            if (title.getContractPropertyMap() != null && title.getContractPropertyMap().size() > 0) {
+                for (Map<String, String> map : title.getContractPropertyMap()) {
+                    sb.append("<td>" + map.get("remark") + "</td>");
+                }
+            }
+            if (title.getSignMap() != null && title.getSignMap().size() > 0) {
+                for (Map<String, String> map : title.getSignMap()) {
+                    sb.append("<td>" + map.get("remark") + "</td>");
+                }
+            }
+            sb.append( title.getMoney() );
+            sb.append("<tr>");
+
+            //拼body部分
+            for (CollectEmailBO bo : baseinfoBOList) {
+                sb.append("<tr>");
+                sb.append("<td>" + bo.getType() + "</td>");
+                if (bo.getBusTypeMap() != null && bo.getBusTypeMap().size() > 0) {
+                    for (Map<String, String> map : bo.getBusTypeMap()) {
+                        sb.append("<td>" + map.get("count") + "</td>");
+                    }
+                }
+                if (bo.getCooperWaysMap() != null && bo.getCooperWaysMap().size() > 0) {
+                    for (Map<String, String> map : bo.getCooperWaysMap()) {
+                        sb.append("<td>" + map.get("count") + "</td>");
+                    }
+                }
+                if (bo.getContractPropertyMap() != null && bo.getContractPropertyMap().size() > 0) {
+                    for (Map<String, String> map : bo.getContractPropertyMap()) {
+                        sb.append("<td>" + map.get("count") + "</td>");
+                    }
+                }
+                if (bo.getSignMap() != null && bo.getSignMap().size() > 0) {
+                    for (Map<String, String> map : bo.getSignMap()) {
+                        sb.append("<td>" + map.get("count") + "</td>");
+                    }
+                }
+                sb.append( bo.getMoney() );
                 sb.append("<tr>");
             }
 
@@ -1137,11 +1213,11 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     private String htmlDispatch(List<CollectEmailBO> dispatchEmails) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        if( dispatchEmails != null && dispatchEmails.size()>0 ){
-            sb = new StringBuffer("<h4>派工单信息合同汇总:</h4>");
+        if (dispatchEmails != null && dispatchEmails.size() > 0) {
+            sb = new StringBuffer("<h4>商务合同派工单信息合同汇总:</h4>");
             sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
             //拼表头
-            CollectEmailBO title = dispatchEmails.get(dispatchEmails.size()-1);
+            CollectEmailBO title = dispatchEmails.get(dispatchEmails.size() - 1);
             sb.append("<tr>");
             sb.append("<td>地区</td>");
             sb.append("<td>派工单名称</td>");
@@ -1151,13 +1227,13 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             sb.append("<tr>");
 
             //拼body部分
-            for(CollectEmailBO bo : dispatchEmails){
+            for (CollectEmailBO bo : dispatchEmails) {
                 sb.append("<tr>");
-                sb.append("<td>"+bo.getType()+"</td>");
-                sb.append("<td>"+bo.getSignMap()+"</td>");
-                sb.append("<td>"+bo.getType()+"</td>");
-                sb.append("<td>"+bo.getType()+"</td>");
-                sb.append("<td>"+bo.getType()+"</td>");
+                sb.append("<td>" + bo.getType() + "</td>");
+                sb.append("<td>" + bo.getDispatchProjectCount() + "</td>");
+                sb.append("<td>" + bo.getMoney() + "</td>");
+                sb.append("<td>" + bo.getComplete() + "</td>");
+                sb.append("<td>" + bo.getNotComplete() + "</td>");
 
                 sb.append("<tr>");
             }
@@ -1170,6 +1246,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
 
     private List<CollectEmail> sendObject(List<CollectEmail> signEmails, List<CollectEmail> dispatchEmails, List<CollectEmail> baseInfoEmails) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         List<CollectEmail> allEmails = new ArrayList<>();
         //签订与立项汇总
         //基本信息汇总
@@ -1178,40 +1255,69 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             for (CollectEmail sign : signEmails) {
                 String[] condis = sign.getCondi().split(";");
                 List<CollectEmailBO> signBOList = collectEmailSer.collectCollectEmail(condis);
-                //TODO 发送邮件
                 //拼表格
                 String content = htmlSign(signBOList);
+
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent( content );
+                messageTO.setTitle("定时发送商务合同签订与立项汇总");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType( SendType.EMAIL);
+                messageTO.setRangeType( RangeType.SPECIFIED);
+
+                messageTO.setReceivers(sign.getSendObject().split(";") );
+                messageAPI.send(  messageTO );
 
                 sign.setLastSendTime(LocalDateTime.now());
                 sign.setModifyTime(LocalDateTime.now());
                 allEmails.add(sign);
             }
         }
-        if (dispatchEmails != null && dispatchEmails.size() > 0) {
-            for (CollectEmail dispa : dispatchEmails) {
-                String[] condis = dispa.getCondi().split(";");
-                collectEmailSer.collectCollectEmail(condis);
-                //TODO 发送邮件
-                //拼表格
 
-                dispa.setLastSendTime(LocalDateTime.now());
-                dispa.setModifyTime(LocalDateTime.now());
-                allEmails.add(dispa);
-            }
-        }
+        RpcTransmit.transmitUserToken( userToken );
         if (baseInfoEmails != null && baseInfoEmails.size() > 0) {
             for (CollectEmail baseinfo : baseInfoEmails) {
                 String[] condis = baseinfo.getCondi().split(";");
-                collectEmailSer.collectBaseInfoEmail(condis);
-                //TODO 发送邮件
+                List<CollectEmailBO> baseinfoBOList = collectEmailSer.collectBaseInfoEmail(condis);
                 //拼表格
+                String content = htmlBaseInfo(baseinfoBOList);
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent( content );
+                messageTO.setTitle("定时发送商务合同基本信息汇总");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType( SendType.EMAIL);
+                messageTO.setRangeType( RangeType.SPECIFIED);
+
+                messageTO.setReceivers(baseinfo.getSendObject().split(";") );
+                messageAPI.send(  messageTO );
 
                 baseinfo.setLastSendTime(LocalDateTime.now());
                 baseinfo.setModifyTime(LocalDateTime.now());
                 allEmails.add(baseinfo);
             }
         }
+        RpcTransmit.transmitUserToken( userToken );
+        if (dispatchEmails != null && dispatchEmails.size() > 0) {
+            for (CollectEmail dispa : dispatchEmails) {
+                String[] condis = dispa.getCondi().split(";");
+                List<CollectEmailBO> dispatchBOList = collectEmailSer.collectDispatchEmail(condis);
+                //拼表格
+                String content = htmlDispatch(dispatchBOList);
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent( content );
+                messageTO.setTitle("定时发送商务合同派工单信息汇总");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType( SendType.EMAIL);
+                messageTO.setRangeType( RangeType.SPECIFIED);
 
+                messageTO.setReceivers(dispa.getSendObject().split(";") );
+                messageAPI.send(  messageTO );
+
+                dispa.setLastSendTime(LocalDateTime.now());
+                dispa.setModifyTime(LocalDateTime.now());
+                allEmails.add(dispa);
+            }
+        }
         return allEmails;
 
     }
