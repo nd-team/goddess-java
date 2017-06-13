@@ -1,12 +1,11 @@
 package com.bjike.goddess.bankrecords.api;
 
-import com.bjike.goddess.bankrecords.bo.BankRecordAnalyzeBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordCollectBO;
+import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.service.BankRecordSer;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class BankRecordApiImpl implements BankRecordAPI {
     private BankRecordSer bankRecordSer;
 
     @Override
-    public List<String> check(List<InputStream> inputStreams) throws SerException {
+    public List<ExcelTitleBO> check(List<InputStream> inputStreams) throws SerException {
         return bankRecordSer.check(inputStreams);
     }
 
@@ -39,7 +38,7 @@ public class BankRecordApiImpl implements BankRecordAPI {
     }
 
     @Override
-    public BankRecordBO findById(String id) throws SerException {
+    public BankRecordBO find(String id) throws SerException {
         return bankRecordSer.find(id);
     }
 
@@ -66,6 +65,26 @@ public class BankRecordApiImpl implements BankRecordAPI {
     @Override
     public BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException {
         return bankRecordSer.analyze(year, month, accountName);
+    }
+
+    @Override
+    public BankRecordCompareBO compare(Integer year, Integer month) throws SerException {
+        return bankRecordSer.compare(year, month);
+    }
+
+    @Override
+    public List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException {
+        return bankRecordSer.findByCondition(year, month, number);
+    }
+
+    @Override
+    public List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException {
+        return bankRecordSer.collectByCondition(year, month, number);
+    }
+
+    @Override
+    public BankRecordPageListBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(bankRecordSer.find(id),BankRecordPageListBO.class);
     }
 
 

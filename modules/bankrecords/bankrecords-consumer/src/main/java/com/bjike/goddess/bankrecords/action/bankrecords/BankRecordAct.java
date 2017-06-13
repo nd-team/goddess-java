@@ -1,6 +1,5 @@
 package com.bjike.goddess.bankrecords.action.bankrecords;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.bankrecords.api.BankAccountInfoAPI;
 import com.bjike.goddess.bankrecords.api.BankRecordAPI;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
@@ -13,9 +12,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.storage.api.FileAPI;
-import com.bjike.goddess.storage.to.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,7 @@ import java.util.List;
  * 银行流水
  *
  * @Author: [ Jason ]
- * @Date: [ 2017-04-22 05:35 ]a
+ * @Date: [ 2017-04-22 05:35 ]
  * @Description: [ 银行流水 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
@@ -63,12 +60,13 @@ public class BankRecordAct extends BaseFileAction {
     /**
      * 检查导入的Excel标题
      *
+     * @return class ExcelTitleVO
      * @version v1
      */
     @PostMapping("v1/check")
     public Result check(HttpServletRequest request) throws ActException {
         try {
-            List<String> list = bankRecordAPI.check(super.getInputStreams(request));
+            List<ExcelTitleVO> list = BeanTransform.copyProperties(bankRecordAPI.check(super.getInputStreams(request)), ExcelTitleVO.class);
             return ActResult.initialize(list);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
@@ -82,7 +80,7 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/upload")
-    public Result upload(@Validated({BankRecordTO.Upload.class}) BankRecordTO to, HttpServletRequest request, BindingResult bindingResult) throws ActException {
+    public Result upload(@Validated({BankRecordTO.Upload.class}) BankRecordTO to,BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             String path = "/upload";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
@@ -90,7 +88,7 @@ public class BankRecordAct extends BaseFileAction {
             to.setInputStreams(inputStreams);
             bankRecordAPI.upload(to);
             //由于协议，必须在action处理上传到服务器
-            fileAPI.upload(streams);
+//            fileAPI.upload(streams);
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -123,7 +121,7 @@ public class BankRecordAct extends BaseFileAction {
     @GetMapping("v1/find/{id}")
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            BankRecordInfoVO vo = BeanTransform.copyProperties(bankRecordAPI.findById(id), BankRecordInfoVO.class, request);
+            BankRecordInfoVO vo = BeanTransform.copyProperties(bankRecordAPI.find(id), BankRecordInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -167,7 +165,7 @@ public class BankRecordAct extends BaseFileAction {
     }
 
     /**
-     * 汇总
+     * 分析
      *
      * @param year        年份
      * @param month       月份
@@ -201,16 +199,22 @@ public class BankRecordAct extends BaseFileAction {
         }
     }
 
-
-    //通过流获取文件信息
-    private String getFileInfo(Object obj) {
-        String json_info = new String((byte[]) obj);
-        if (!StringUtils.isEmpty(json_info)) {
-            json_info = json_info.replaceAll("\\\\", "");
-            json_info = json_info.substring(1, json_info.length() - 1);
-            FileInfo fileInfo = JSON.parseObject(json_info, FileInfo.class);
-            return fileInfo.getFileName();
+    /**
+     * 对比
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class BankRecordCompareVO
+     * @version v1
+     */
+    @GetMapping("v1/compare")
+    public Result compare(@RequestParam Integer year, @RequestParam Integer month, HttpServletRequest request) throws ActException {
+        try {
+            BankRecordCompareVO vo = BeanTransform.copyProperties(bankRecordAPI.compare(year, month), BankRecordCompareVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
-        return null;
     }
+
 }
