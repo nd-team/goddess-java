@@ -27,6 +27,12 @@ public class CollectEmailTO extends BaseTO {
     private String type;
 
     /**
+     * 汇总条件
+     */
+    @NotNull
+    private String[] condis;
+
+    /**
      * 备注
      */
     private String remark;
@@ -99,6 +105,14 @@ public class CollectEmailTO extends BaseTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String[] getCondis() {
+        return condis;
+    }
+
+    public void setCondis(String[] condis) {
+        this.condis = condis;
     }
 
     public String getRemark() {

@@ -26,7 +26,10 @@ public class CollectEmailVO {
      * 行业
      */
     private String type;
-
+    /**
+     * 汇总条件
+     */
+    private String condi;
     /**
      * 备注
      */
@@ -155,6 +158,14 @@ public class CollectEmailVO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCondi() {
+        return condi;
+    }
+
+    public void setCondi(String condi) {
+        this.condi = condi;
     }
 
     public String getRemark() {

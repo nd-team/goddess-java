@@ -30,6 +30,13 @@ public class CollectEmail extends BaseEntity {
     @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '汇总类型'")
     private String type;
 
+
+    /**
+     * 汇总条件
+     */
+    @Column(name = "condi", nullable = false, columnDefinition = "TEXT   COMMENT '汇总条件'")
+    private String condi;
+
     /**
      * 备注
      */
@@ -63,7 +70,7 @@ public class CollectEmail extends BaseEntity {
     /**
      * 发送对象
      */
-    @Column(name = "sendObject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发送对象'")
+    @Column(name = "sendObject", nullable = false, columnDefinition = "MEDIUMTEXT   COMMENT '发送对象'")
     private String sendObject;
 
     /**
@@ -91,6 +98,14 @@ public class CollectEmail extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCondi() {
+        return condi;
+    }
+
+    public void setCondi(String condi) {
+        this.condi = condi;
     }
 
     public String getRemark() {
