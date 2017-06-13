@@ -68,9 +68,15 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             messageTO.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
         }
         if (StringUtils.isBlank(messageTO.getSenderId())) {
-            UserBO userBO = userAPI.currentUser();
-            messageTO.setSenderId(userBO.getId());
-            messageTO.setSenderName(userBO.getUsername());
+            try {//如果经过action调用,必须登录用户
+                UserBO userBO = userAPI.currentUser();
+                messageTO.setSenderId(userBO.getId());
+                messageTO.setSenderName(userBO.getUsername());
+            }catch (SerException e){ //定时器自动调用没有登录用户
+                messageTO.setSenderId("sys");
+                messageTO.setSenderName("admin");
+            }
+
         }
         messageTO.setMsgType(null != messageTO.getMsgType() ? messageTO.getMsgType() : MsgType.SYS);
         messageTO.setSendType(null != messageTO.getSendType() ? messageTO.getSendType() : SendType.MSG);
