@@ -24,7 +24,7 @@ public class ExportExcelTO extends BaseTO {
     private String startDate;
 
     /**
-     * 开始日期
+     * 结束日期
      */
     private String endDate;
 
