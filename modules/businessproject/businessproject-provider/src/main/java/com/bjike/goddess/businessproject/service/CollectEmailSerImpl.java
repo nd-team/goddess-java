@@ -6,6 +6,7 @@ import com.bjike.goddess.businessproject.entity.CollectEmail;
 import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.to.CollectEmailTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -31,6 +32,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 /**
@@ -234,6 +237,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         checkAddIdentity();
         RpcTransmit.transmitUserToken(useToken);
 
+        if( collectEmailTO.getSendNum()<0 ){
+            throw new SerException("发送间隔不能小于0");
+        }
+        if( collectEmailTO.getSendNum()<30 && collectEmailTO.getCollectSendUnit().equals(CollectSendUnit.MINUTE) ){
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if( collectEmailTO.getSendNum()>  collectEmailTO.getSendNum().longValue() &&  collectEmailTO.getSendNum() <(collectEmailTO.getSendNum().longValue()+1) ){
+            throw new SerException("发送间隔不能为小数");
+        }
+
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -282,6 +296,18 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         String useToken = RpcTransmit.getUserToken();
         checkAddIdentity();
         RpcTransmit.transmitUserToken(useToken);
+
+        if( collectEmailTO.getSendNum()<0 ){
+            throw new SerException("发送间隔不能小于0");
+        }
+
+        if( collectEmailTO.getSendNum()<30 && collectEmailTO.getCollectSendUnit().equals(CollectSendUnit.MINUTE) ){
+            throw new SerException("发送间隔单位为分钟的间隔数不能小于30分钟");
+        }
+
+        if( collectEmailTO.getSendNum()>  collectEmailTO.getSendNum().longValue() &&  collectEmailTO.getSendNum() <(collectEmailTO.getSendNum().longValue()+1) ){
+            throw new SerException("发送间隔不能为小数");
+        }
 
         List<String> sendObjectList = collectEmailTO.getSendObjectList();
         StringBuffer emails = new StringBuffer("");
@@ -1006,6 +1032,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         //发送类型
         //发送对象
         CollectEmailDTO dto = new CollectEmailDTO();
+        dto.getConditions().add(Restrict.eq("status",Status.THAW));
         List<CollectEmail> list = super.findByCis(dto);
         LocalDateTime nowTime = LocalDateTime.now();
         for (CollectEmail str : list) {
@@ -1051,17 +1078,17 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                     }
                     break;
                 case MONTH:
-                    if (nowTime.minusMonths(1).isEqual(lastTime) || nowTime.minusMonths(1).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
                     }
                     break;
                 case QUARTER:
-                    if (nowTime.minusMonths(3).isEqual(lastTime) || nowTime.minusMonths(3).isAfter(lastTime)) {
+                    if (nowTime.minusMonths(3*sendNum.longValue()).isEqual(lastTime) || nowTime.minusMonths(3*sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
                     }
                     break;
                 case YEAR:
-                    if (nowTime.minusYears(1).isEqual(lastTime) || nowTime.minusYears(1).isAfter(lastTime)) {
+                    if (nowTime.minusYears(sendNum.longValue()).isEqual(lastTime) || nowTime.minusYears(sendNum.longValue()).isAfter(lastTime)) {
                         flag = true;
                     }
                     break;
@@ -1088,6 +1115,8 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         super.update(allEmails);
 
     }
+
+
 
     private String htmlSign(List<CollectEmailBO> signBOList) throws SerException {
         StringBuffer sb = new StringBuffer("");
@@ -1264,6 +1293,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
 
                 messageTO.setReceivers(sign.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
@@ -1287,6 +1319,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
 
                 messageTO.setReceivers(baseinfo.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
@@ -1309,6 +1344,9 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType( SendType.EMAIL);
                 messageTO.setRangeType( RangeType.SPECIFIED);
+                //定时发送必须写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
 
                 messageTO.setReceivers(dispa.getSendObject().split(";") );
                 messageAPI.send(  messageTO );
