@@ -1,8 +1,6 @@
 package com.bjike.goddess.bankrecords.api;
 
-import com.bjike.goddess.bankrecords.bo.BankRecordAnalyzeBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordCollectBO;
+import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -26,7 +24,7 @@ public interface BankRecordAPI {
      *
      * @version v1
      */
-    List<String> check(List<InputStream> inputStreams) throws SerException;
+    List<ExcelTitleBO> check(List<InputStream> inputStreams) throws SerException;
 
     /**
      * 导入银行流水
@@ -37,12 +35,12 @@ public interface BankRecordAPI {
     void upload(BankRecordTO to) throws SerException;
 
     /**
-     * 根据id查询银行流水
+     * 根据id汇总银行流水
      *
      * @param id 银行流水id
      * @return 银行流水信息
      */
-    BankRecordBO findById(String id) throws SerException;
+    BankRecordBO find(String id) throws SerException;
 
     /**
      * 查询记录总条数
@@ -86,4 +84,42 @@ public interface BankRecordAPI {
      * @return 汇总结果集
      */
     BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
+
+    /**
+     * 对比
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return 对比结果
+     */
+    BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
+
+    /**
+     * 根据条件查询列表信息
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param number 账号
+     * @version v1
+     */
+    List<BankRecordBO> findByCondition(Integer year,Integer month ,String number) throws SerException;
+
+    /**
+     * 根据条件汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param number 账号
+     * @version v1
+     */
+    List<BankRecordCollectBO> collectByCondition(Integer year,Integer month ,String number) throws SerException;
+
+    /**
+     * 根据id查询银行流水
+     *
+     * @param id 银行流水id
+     * @return 银行流水信息
+     */
+    BankRecordPageListBO findById(String id) throws SerException;
+
 }
