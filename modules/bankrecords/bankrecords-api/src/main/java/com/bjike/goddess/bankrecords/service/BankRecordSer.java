@@ -1,8 +1,6 @@
 package com.bjike.goddess.bankrecords.service;
 
-import com.bjike.goddess.bankrecords.bo.BankRecordAnalyzeBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordBO;
-import com.bjike.goddess.bankrecords.bo.BankRecordCollectBO;
+import com.bjike.goddess.bankrecords.bo.*;
 import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.entity.BankRecord;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
@@ -28,7 +26,7 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      *
      * @version v1
      */
-    List<String> check(List<InputStream> streamList) throws SerException;
+    List<ExcelTitleBO> check(List<InputStream> streamList) throws SerException;
 
     /**
      * 导入银行流水
@@ -80,4 +78,10 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
      * @return 分析结果
      */
     BankRecordAnalyzeBO analyze(Integer year, Integer month, String accountName) throws SerException;
+
+    BankRecordCompareBO compare(Integer year, Integer month) throws SerException;
+
+    List<BankRecordBO> findByCondition(Integer year, Integer month, String number) throws SerException;
+
+    List<BankRecordCollectBO> collectByCondition(Integer year, Integer month, String number) throws SerException;
 }

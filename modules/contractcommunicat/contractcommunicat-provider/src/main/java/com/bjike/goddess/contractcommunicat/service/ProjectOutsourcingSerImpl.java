@@ -248,19 +248,19 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
-    public byte[] exportExcel(ExportExcelTO to) throws SerException {
+    public byte[] exportExcel(String contractInProject, String startDate, String endDate) throws SerException {
 
         getCusPermission();
 
         ProjectOutsourcingDTO dto = new ProjectOutsourcingDTO();
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
+        if (!StringUtils.isEmpty(contractInProject)) {
+            dto.getConditions().add(Restrict.eq("contractInProject", contractInProject));
         }
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.gt("communicateDate", to.getStartDate()));
+        if (!StringUtils.isEmpty(startDate)) {
+            dto.getConditions().add(Restrict.gt("communicateDate", startDate));
         }
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.lt("communicateDate", to.getEndDate()));
+        if (!StringUtils.isEmpty(endDate)) {
+            dto.getConditions().add(Restrict.lt("communicateDate", endDate));
         }
         List<ProjectOutsourcing> list = super.findByCis(dto);
         List<ProjectOutsourcingExcel> toList = new ArrayList<ProjectOutsourcingExcel>();
@@ -272,6 +272,14 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public List<ProjectOutsourcingBO> prjects() throws SerException {
+        String sql = "select distinct contractInProject from contractcommunicate_projectoutsourcing ";
+        List<ProjectOutsourcingBO> list = super.findBySql(sql, ProjectOutsourcingBO.class, new String[]{"contractInProject"});
+
+        return list;
     }
 
     //设置汇总字段

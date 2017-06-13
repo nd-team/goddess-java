@@ -24,10 +24,12 @@
     <!-- 银行流水API -->
     <dubbo:service interface="com.bjike.goddess.bankrecords.api.BankRecordAPI" ref="bankRecordApiImpl"/>
 
+
     <!--注册模块接口 -->
 
     <!-- 存储API -->
     <dubbo:reference  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 
-
+    <!-- 资金流水API -->
+    <dubbo:reference interface="com.bjike.goddess.fundrecords.api.FundRecordAPI" id="fundRecordApiImpl"/>
 </beans>
