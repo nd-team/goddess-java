@@ -1322,31 +1322,4 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     }
 
-//    public static void main(String[] args) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        LocalDateTime nowTime = LocalDateTime.parse("2017-06-07 12:13:34", formatter);
-//        LocalDateTime lastTime = LocalDateTime.parse("2017-06-07 12:14:18", formatter);
-//        System.out.println(nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-//        System.out.println(lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-//        Long l = lastTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-//        System.out.println("相差：" + l);
-//        System.out.println("相差：" + l / (60 * 1000));
-//
-//        System.out.println(lastTime.minusMinutes(1));
-//
-//        //1*24*60*60*1000
-//
-//        Date d = new Date();
-//        d.setTime(l);
-//        Instant instant = d.toInstant();
-//        ZoneId zoneId = ZoneId.systemDefault();
-//        System.out.println(LocalDateTime.ofInstant(instant, zoneId));
-////        LocalDateTime time = lastTime.minus(TemporanowTime);
-////        System.out.println( lastTime - nowTime );
-//
-//        Double data = 1.6;
-//        System.out.println(data.longValue());
-//        Duration period = Duration.between(nowTime, lastTime);
-//        System.out.println(period.getSeconds());
-//    }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.bo.MessageBO;
 import com.bjike.goddess.message.bo.MessageRead;
 import com.bjike.goddess.message.dto.MessageDTO;
@@ -74,7 +75,6 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         messageTO.setMsgType(null != messageTO.getMsgType() ? messageTO.getMsgType() : MsgType.SYS);
         messageTO.setSendType(null != messageTO.getSendType() ? messageTO.getSendType() : SendType.MSG);
         messageTO.setRangeType(null != messageTO.getRangeType() ? messageTO.getRangeType() : RangeType.SPECIFIED);
-        List<UserBO> userBOS = getReceivers(messageTO);
 
         Message message = BeanTransform.copyProperties(messageTO, Message.class, true);
         super.save(message);
@@ -82,14 +82,26 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         messageTO.setId(message.getId());
         String[] receivers = null;
         String[] receiversEmail = null;
-        if (null != userBOS && userBOS.size() > 0) {
-            receivers = new String[userBOS.size()];
-            receiversEmail = new String[userBOS.size()];
-            for (int i = 0; i < userBOS.size(); i++) {
-                receivers[i] = userBOS.get(i).getId();
-                receiversEmail[i] = userBOS.get(i).getEmail();
+        boolean isEmail = true;
+        for (String email : messageTO.getReceivers()) {
+            if (!Validator.isEmail(email)) {
+                isEmail = false;
             }
         }
+        if (!isEmail) {
+            List<UserBO> userBOS = getReceivers(messageTO);
+            if (null != userBOS && userBOS.size() > 0) {
+                receivers = new String[userBOS.size()];
+                receiversEmail = new String[userBOS.size()];
+                for (int i = 0; i < userBOS.size(); i++) {
+                    receivers[i] = userBOS.get(i).getId();
+                    receiversEmail[i] = userBOS.get(i).getEmail();
+                }
+            }
+        } else {//receivers 直接为邮箱方式
+            receiversEmail = messageTO.getReceivers();
+        }
+
         SendType sendType = messageTO.getSendType();
 
         switch (sendType) {
