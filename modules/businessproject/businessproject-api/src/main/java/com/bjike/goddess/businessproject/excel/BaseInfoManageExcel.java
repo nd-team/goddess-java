@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 
 /**
@@ -213,6 +214,20 @@ public class BaseInfoManageExcel extends BaseTO {
      */
     @ExcelHeader(name = "备注", notNull = true)
     private String remark;
+
+    /**
+     * 临时合同编号
+     */
+    @ExcelHeader(name = "临时合同编号", notNull = true)
+    private String tempContractNum;
+
+    public String getTempContractNum() {
+        return tempContractNum;
+    }
+
+    public void setTempContractNum(String tempContractNum) {
+        this.tempContractNum = tempContractNum;
+    }
 
     public String getContractNum() {
         return contractNum;
