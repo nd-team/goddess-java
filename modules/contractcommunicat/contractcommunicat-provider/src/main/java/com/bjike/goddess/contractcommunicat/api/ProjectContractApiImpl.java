@@ -76,7 +76,12 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     }
 
     @Override
-    public byte[] exportExcel(ExportExcelTO to) throws SerException {
-        return projectContractSer.exportExcel(to);
+    public byte[] exportExcel(String contractInProject, String startDate, String endDate) throws SerException {
+        return projectContractSer.exportExcel(contractInProject, startDate, endDate);
+    }
+
+    @Override
+    public List<ProjectContractBO> projects() throws SerException {
+        return projectContractSer.projects();
     }
 }

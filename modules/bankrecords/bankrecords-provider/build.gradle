@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:bankrecords:bankrecords-api")
+    compile project(":modules:fundrecords:fundrecords-api")
     compile project(":modules:storage:storage-api")
     compile project(":common:common-utils")
     // https://mvnrepository.com/artifact/org.apache.poi/poi

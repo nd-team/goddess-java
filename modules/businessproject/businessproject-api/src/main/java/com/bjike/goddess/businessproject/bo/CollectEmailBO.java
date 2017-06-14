@@ -23,8 +23,12 @@ public class CollectEmailBO extends BaseBO {
     /**
      * 汇总类型
      */
-    @NotBlank
     private String type;
+
+    /**
+     * 汇总条件
+     */
+    private String condi;
 
     /**
      * 备注
@@ -34,7 +38,6 @@ public class CollectEmailBO extends BaseBO {
     /**
      * 发送间隔
      */
-    @NotBlank
     private Double sendNum;
 
     /**
@@ -149,6 +152,14 @@ public class CollectEmailBO extends BaseBO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCondi() {
+        return condi;
+    }
+
+    public void setCondi(String condi) {
+        this.condi = condi;
     }
 
     public String getRemark() {

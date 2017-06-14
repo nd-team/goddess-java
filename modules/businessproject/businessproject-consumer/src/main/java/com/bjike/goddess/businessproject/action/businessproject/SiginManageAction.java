@@ -72,7 +72,7 @@ public class SiginManageAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
+    public Result i() throws ActException {
         List<SonPermissionObject> list = new ArrayList<>();
         try {
             SonPermissionObject obj = new SonPermissionObject();

@@ -147,5 +147,16 @@ public interface CollectEmailAPI {
 
     ;
 
+    /**
+     * 定时器检测要发送的邮件
+     *
+     */
+    default void checkSendEmail( ) throws SerException {
+        return ;
+    }
+
+    ;
+
+
 
 }

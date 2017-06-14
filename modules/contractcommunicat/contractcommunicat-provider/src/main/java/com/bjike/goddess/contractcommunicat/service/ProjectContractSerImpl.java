@@ -14,7 +14,6 @@ import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectContractExcel;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +85,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部项目名称已经存在!";
                 if (row == null) {
-                    if(list.get(0).getId().equals(to.getId())){
+                    if (list.get(0).getId().equals(to.getId())) {
 
-                    }else{
+                    } else {
                         throw new SerException(msg);
                     }
                 } else {
@@ -104,9 +103,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "合同外部编号已经存在!";
                 if (row == null) {
-                    if(list.get(0).getId().equals(to.getId())){
+                    if (list.get(0).getId().equals(to.getId())) {
 
-                    }else{
+                    } else {
                         throw new SerException(msg);
                     }
                 } else {
@@ -121,9 +120,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目名称已经存在!";
                 if (row == null) {
-                    if(list.get(0).getId().equals(to.getId())){
+                    if (list.get(0).getId().equals(to.getId())) {
 
-                    }else{
+                    } else {
                         throw new SerException(msg);
                     }
                 } else {
@@ -138,9 +137,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             if (list != null && !list.isEmpty()) {
                 String msg = "内部项目编号已经存在!";
                 if (row == null) {
-                    if(list.get(0).getId().equals(to.getId())){
+                    if (list.get(0).getId().equals(to.getId())) {
 
-                    }else{
+                    } else {
                         throw new SerException(msg);
                     }
                 } else {
@@ -212,19 +211,19 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     }
 
     @Override
-    public byte[] exportExcel(ExportExcelTO to) throws SerException {
+    public byte[] exportExcel(String contractInProject, String startDate, String endDate) throws SerException {
 
         getCusPermission();
 
         ProjectContractDTO dto = new ProjectContractDTO();
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.eq("contractInProject", to.getContractInProject()));
+        if (!StringUtils.isEmpty(contractInProject)) {
+            dto.getConditions().add(Restrict.eq("contractInProject", contractInProject));
         }
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.gt("communicateDate", to.getStartDate()));
+        if (!StringUtils.isEmpty(startDate)) {
+            dto.getConditions().add(Restrict.gt("communicateDate", startDate));
         }
-        if (!StringUtils.isEmpty(to.getContractInProject())) {
-            dto.getConditions().add(Restrict.lt("communicateDate", to.getEndDate()));
+        if (!StringUtils.isEmpty(endDate)) {
+            dto.getConditions().add(Restrict.lt("communicateDate", endDate));
         }
         List<ProjectContract> list = super.findByCis(dto);
         List<ProjectContractExcel> toList = new ArrayList<ProjectContractExcel>();
@@ -236,6 +235,16 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    //查询内部项目名称
+    @Override
+    public List<ProjectContractBO> projects() throws SerException {
+
+        String sql = "select distinct contractInProject from contractcommunicate_projectcontract ";
+        List<ProjectContractBO> list = super.findBySql(sql, ProjectContractBO.class, new String[]{"contractInProject"});
+
+        return list;
     }
 
     //设置汇总字段
@@ -263,7 +272,7 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
                 }
             }
             totalCostBudget = returnBoList.stream().mapToDouble(p -> p.getCostBudget()).sum();
-        }else{
+        } else {
             returnBoList = new ArrayList<ProjectContractCollectBO>();
         }
 

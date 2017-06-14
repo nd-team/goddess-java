@@ -20,11 +20,19 @@ import java.util.List;
  */
 public class CollectEmailTO extends BaseTO {
 
+    public interface TestAdd{}
+
     /**
      * 汇总类型
      */
-    @NotBlank
+    @NotBlank(groups = {CollectEmailTO.TestAdd.class}, message = "汇总类型不能为空")
     private String type;
+
+    /**
+     * 汇总条件
+     */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "汇总条件不能为空")
+    private String[] condis;
 
     /**
      * 备注
@@ -34,7 +42,7 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 发送间隔
      */
-    @NotNull(message = "发送间隔不能为空，且是数字")
+    @NotNull(groups = {CollectEmailTO.TestAdd.class},message = "发送间隔不能为空，且是数字")
     private Double sendNum;
 
     /**
@@ -45,11 +53,13 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 发送单位
      */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "发送单位不能为空")
     private CollectSendUnit collectSendUnit;
 
     /**
      * 汇总间隔
      */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "汇总间隔不能为空")
     private CollectUnit collectUnit;
 
     /**
@@ -60,6 +70,7 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 发送对象数组
      */
+    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "发送对象数组不能为空")
     private List<String> sendObjectList;
 
     /**
@@ -99,6 +110,14 @@ public class CollectEmailTO extends BaseTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String[] getCondis() {
+        return condis;
+    }
+
+    public void setCondis(String[] condis) {
+        this.condis = condis;
     }
 
     public String getRemark() {
