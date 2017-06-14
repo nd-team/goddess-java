@@ -85,15 +85,15 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     /**
      * 导航蓝核对查看权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException{
+    private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -103,15 +103,15 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     /**
      * 导航蓝核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideAddIdentity() throws SerException{
+    private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -121,11 +121,11 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
         if( flagSee || flagAdd ){
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -263,7 +263,7 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
     public byte[] exportExcel(ContractCategoryDTO dto) throws SerException {
         String[] contractNames = dto.getContractNames();
         List<ContractCategoryExcel> toList = new ArrayList<ContractCategoryExcel>();
-        if ((contractNames != null) && (contractNames.length>0)) {
+        if ((contractNames != null) && (contractNames.length > 0)) {
             List<ContractCategory> list = super.findByCis(dto);
             for (String s : contractNames) {
                 if (StringUtils.isNotBlank(s)) {
