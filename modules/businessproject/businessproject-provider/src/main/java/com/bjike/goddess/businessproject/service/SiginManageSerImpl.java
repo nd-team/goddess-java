@@ -59,8 +59,6 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     private CollectEmailSer collectEmailSer;
     @Autowired
     private BaseInfoManageSer baseInfoManageSer;
-    @Autowired
-    private UserSetPermissionAPI userSetPermissionAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -204,17 +202,6 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         }
         list.add(obj);
 
-//        Boolean flagSeeSet = userSetPermissionAPI.checkSetPermission();
-//        RpcTransmit.transmitUserToken(userToken);
-//        obj = new SonPermissionObject();
-//        obj.setName("cuspermission");
-//        obj.setDescribesion("设置");
-//        if (flagSeeSet) {
-//            obj.setFlag(true);
-//        } else {
-//            obj.setFlag(false);
-//        }
-//        list.add(obj);
 
         return list;
     }
