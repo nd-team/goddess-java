@@ -140,12 +140,17 @@ public class StaffRecordsAct extends BaseFileAction {
      * @param paths 多文件信息路径
      * @version v1
      */
-    @DeleteMapping("v1/deleteFile")
-    public Result delFile(@RequestParam String[] paths, HttpServletRequest request) throws SerException {
-        Object storageToken = request.getAttribute("storageToken");
-        fileAPI.delFile(storageToken.toString(), paths);
-        return new ActResult("delFile success");
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@RequestParam String[] paths, HttpServletRequest request) throws ActException {
+        try {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), paths);
+            return new ActResult("delFile success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
+
     /**
      * 列表
      *

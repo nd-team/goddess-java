@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketMeasureSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class MarketMeasureApiImpl implements MarketMeasureAPI {
     @Override
     public Integer getTotal() throws SerException {
         return marketMeasureSer.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return marketMeasureSer.exportExcel(to);
     }
 }

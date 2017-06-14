@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.DayPlanSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,4 +68,8 @@ public class DayPlanApiImpl implements DayPlanAPI {
         return dayPlanSer.findAll().size();
     }
 
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return dayPlanSer.exportExcel(to);
+    }
 }

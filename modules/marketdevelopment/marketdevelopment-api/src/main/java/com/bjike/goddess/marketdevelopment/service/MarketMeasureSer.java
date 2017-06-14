@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 
 import java.util.List;
@@ -84,6 +85,18 @@ public interface MarketMeasureSer extends Ser<MarketMeasure, MarketMeasureDTO> {
      * @throws SerException
      */
     default List<MarketMeasureBO> findByCourseType(String type, String course) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
         return null;
     }
 }

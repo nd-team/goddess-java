@@ -168,9 +168,7 @@ public class CommerceConferenceAction extends BaseFileAction {
             String fileName = "商务会议.xlsx";
             super.writeOutFile(response, commerceConferenceAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
-        } catch (IOException e) {
-            throw new ActException(e.getMessage());
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

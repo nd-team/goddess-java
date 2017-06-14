@@ -4,9 +4,15 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketChannelExcelBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketResearchExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
+import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +48,7 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketChannelBO save(MarketChannelTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(channelManage))
+        if (!marPermissionSer.getMarPermission(channelManage))
             throw new SerException("您的帐号没有权限");
         MarketChannel entity = BeanTransform.copyProperties(to, MarketChannel.class);
         super.save(entity);
@@ -110,5 +116,20 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         if (!marPermissionSer.getMarPermission(channelManage))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(channelManage))
+            throw new SerException("您的帐号没有权限");
+        MarketChannelDTO dto = new MarketChannelDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("createTime=desc");
+        List<MarketChannel> list = super.findByCis(dto);
+        List<MarketChannelExcelBO> boList = BeanTransform.copyProperties(list, MarketChannelExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
     }
 }

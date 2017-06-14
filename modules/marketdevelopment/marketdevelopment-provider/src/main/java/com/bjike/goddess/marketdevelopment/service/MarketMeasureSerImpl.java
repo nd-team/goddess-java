@@ -4,10 +4,17 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureExcelBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketResearchExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
+import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -104,5 +111,20 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
         if (!marPermissionSer.getMarPermission(marketCheck))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        MarketMeasureDTO dto = new MarketMeasureDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("createTime=desc");
+        List<MarketMeasure> list = super.findByCis(dto);
+        List<MarketMeasureExcelBO> boList = BeanTransform.copyProperties(list, MarketMeasureExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
     }
 }

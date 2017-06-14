@@ -5,10 +5,12 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.YearPlanAPI;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanChoiceVO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanVO;
@@ -18,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 年计划
@@ -30,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("yearplan")
-public class YearPlanAct {
+public class YearPlanAct extends BaseFileAction {
 
     @Autowired
     private YearPlanAPI yearPlanAPI;
@@ -176,5 +179,21 @@ public class YearPlanAct {
         }
     }
 
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(CollectTO to, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "年计划.xlsx";
+            super.writeOutFile(response, yearPlanAPI.exportExcel(to), fileName);
+            return new ActResult("导出成功");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketdevelopment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
  * 周计划业务传输对象
@@ -11,96 +12,79 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class WeekPlanBO extends BaseBO {
-
-    /**
-     * 月计划 id
-     */
-    private String monthId;
+public class WeekPlanExcelBO extends BaseBO {
 
     /**
      * 年份
      */
+    @ExcelHeader(name = "年份")
     private Integer year;
-
-    /**
-     * 月份值
-     */
-    private Integer monthValue;
 
     /**
      * 月份
      */
+    @ExcelHeader(name = "月份")
     private String type;
 
     /**
      * 业务方向科目
      */
+    @ExcelHeader(name = "业务方向科目")
     private String course;
 
     /**
      * 总任务量
      */
+    @ExcelHeader(name = "总任务量")
     private Double monthTotal;
 
     /**
      * 周期
      */
+    @ExcelHeader(name = "周期")
     private String cycle;
-
-    /**
-     * 周期(开始日期)
-     */
-    private String startCycle;
-
-    /**
-     * 周期(结束日期)
-     */
-    private String endCycle;
 
     /**
      * 各周工作量在整月占比
      */
+    @ExcelHeader(name = "各周工作量在整月占比")
     private Double accounted;
 
     /**
      * 查询
      */
+    @ExcelHeader(name = "查询")
     private Double inquire;
 
     /**
      * 了解
      */
+    @ExcelHeader(name = "了解")
     private Double know;
 
     /**
      * 接触
      */
+    @ExcelHeader(name = "接触")
     private Double contact;
 
     /**
      * 拜访
      */
+    @ExcelHeader(name = "拜访")
     private Double visit;
 
     /**
      * 活动
      */
+    @ExcelHeader(name = "活动")
     private Double activity;
 
     /**
      * 合计
      */
+    @ExcelHeader(name = "合计")
     private Double total;
-
-
-    public String getMonthId() {
-        return monthId;
-    }
-
-    public void setMonthId(String monthId) {
-        this.monthId = monthId;
-    }
 
     public String getCourse() {
         return course;
@@ -116,22 +100,6 @@ public class WeekPlanBO extends BaseBO {
 
     public void setMonthTotal(Double monthTotal) {
         this.monthTotal = monthTotal;
-    }
-
-    public String getStartCycle() {
-        return startCycle;
-    }
-
-    public void setStartCycle(String startCycle) {
-        this.startCycle = startCycle;
-    }
-
-    public String getEndCycle() {
-        return endCycle;
-    }
-
-    public void setEndCycle(String endCycle) {
-        this.endCycle = endCycle;
     }
 
     public Double getAccounted() {
@@ -212,13 +180,5 @@ public class WeekPlanBO extends BaseBO {
 
     public void setCycle(String cycle) {
         this.cycle = cycle;
-    }
-
-    public Integer getMonthValue() {
-        return monthValue;
-    }
-
-    public void setMonthValue(Integer monthValue) {
-        this.monthValue = monthValue;
     }
 }

@@ -4,9 +4,13 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
+import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.entity.DemandAnalysis;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +114,20 @@ public class DemandAnalysisSerImpl extends ServiceImpl<DemandAnalysis, DemandAna
         if (!marPermissionSer.getMarPermission(demandManage))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(demandManage))
+            throw new SerException("您的帐号没有权限");
+        DemandAnalysisDTO dto = new DemandAnalysisDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("createTime=desc");
+        List<DemandAnalysis> list = super.findByCis(dto);
+        List<DemandAnalysisExcelBO> boList = BeanTransform.copyProperties(list, DemandAnalysisExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
     }
 }

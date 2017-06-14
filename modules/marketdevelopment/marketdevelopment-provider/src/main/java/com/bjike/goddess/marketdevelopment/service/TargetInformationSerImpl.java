@@ -4,9 +4,13 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
+import com.bjike.goddess.marketdevelopment.bo.TargetInformationExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO save(TargetInformationTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         TargetInformation entity = BeanTransform.copyProperties(to, TargetInformation.class);
         super.save(entity);
         return BeanTransform.copyProperties(entity, TargetInformationBO.class);
@@ -48,6 +54,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO update(TargetInformationTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 TargetInformation entity = super.findById(to.getId());
@@ -65,6 +73,8 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
     @Transactional(rollbackFor = SerException.class)
     @Override
     public TargetInformationBO delete(TargetInformationTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketManage))
+            throw new SerException("您的帐号没有权限");
         TargetInformation entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
@@ -103,5 +113,28 @@ public class TargetInformationSerImpl extends ServiceImpl<TargetInformation, Tar
         dto.getConditions().add(Restrict.eq("area", area));
         List<TargetInformation> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, TargetInformationBO.class);
+    }
+
+    @Override
+    public List<TargetInformation> findByPage(TargetInformationDTO dto) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        return super.findByPage(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        TargetInformationDTO dto = new TargetInformationDTO();
+        if (StringUtils.isNotBlank(to.getArea()))
+            dto.getConditions().add(Restrict.eq("area", to.getArea()));
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        List<TargetInformation> list = super.findByCis(dto);
+        List<TargetInformationExcelBO> boList = BeanTransform.copyProperties(list, TargetInformationExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
     }
 }

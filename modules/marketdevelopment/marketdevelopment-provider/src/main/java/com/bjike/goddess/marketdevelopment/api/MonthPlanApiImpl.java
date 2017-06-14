@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.MonthPlanSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,15 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
     @Override
     public List<MonthPlanChoiceBO> getChoice() throws SerException {
         return monthPlanSer.getChoice();
+    }
+
+    @Override
+    public List<MonthPlanBO> findByType(String type) throws SerException {
+        return monthPlanSer.findByType(type);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return monthPlanSer.exportExcel(to);
     }
 }

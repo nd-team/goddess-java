@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 
 import java.util.List;
@@ -95,6 +96,18 @@ public interface TargetInformationSer extends Ser<TargetInformation, TargetInfor
      * @throws SerException
      */
     default List<TargetInformationBO> findByArea(String area) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
         return null;
     }
 }

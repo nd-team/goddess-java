@@ -4,9 +4,14 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.WeekPlanExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.WeekPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 周计划业务实现
@@ -51,6 +58,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         bo.setMonthId(entity.getMonth().getId());
         bo.setMonthTotal(entity.getMonth().getTotal());
         bo.setYear(entity.getMonth().getYear().getYear());
+        bo.setMonthValue(entity.getMonth().getMonth().getCode());
         bo.setType(entity.getMonth().getMonth().getValueString());
         bo.setCycle(entity.getStartCycle().toString() + "至" + entity.getEndCycle().toString());
         return bo;
@@ -128,8 +136,7 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public WeekPlanBO getById(String id) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         try {
             return this.transformBO(super.findById(id));
@@ -140,10 +147,56 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
 
     @Override
     public List<WeekPlanBO> maps(WeekPlanDTO dto) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage) && !marPermissionSer.getMarPermission(marketCheck)
-                && !marPermissionSer.getMarPermission(planManage) && !marPermissionSer.getMarPermission(planCheck))
+        if (!marPermissionSer.getMarPermission(planCheck))
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("startCycle=desc");
         return this.transformBOList(super.findByPage(dto));
+    }
+
+    @Override
+    public List<WeekPlanBO> findByMonthIds(String... ids) throws SerException {
+        if (ids == null && ids.length == 0)
+            return new ArrayList<>(0);
+        WeekPlanDTO dto = new WeekPlanDTO();
+        dto.getConditions().add(Restrict.in("month.id", ids));
+        dto.getSorts().add("startCycle=desc");
+        return this.transformBOList(super.findByCis(dto));
+    }
+
+    @Override
+    public List<WeekPlanBO> findByType(String type) throws SerException {
+        if (StringUtils.isBlank(type))
+            return new ArrayList<>(0);
+        List<MonthPlanBO> monthPlanBOs = monthPlanSer.findByType(type);
+        if (monthPlanBOs.size() == 0)
+            return new ArrayList<>(0);
+        List<WeekPlanBO> weekPlanBOs = this.findByMonthIds(monthPlanBOs.stream()
+                .map(MonthPlanBO::getId)
+                .collect(Collectors.toList())
+                .toArray(new String[0]));
+        return weekPlanBOs;
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
+        List<WeekPlanBO> list;
+        if (StringUtils.isBlank(to.getType())) {
+            list = this.transformBOList(super.findAll().stream()
+                    .sorted(Comparator.comparing(WeekPlan::getStartCycle).reversed())
+                    .collect(Collectors.toList()));
+        } else {
+            list = this.findByType(to.getType());
+        }
+        List<WeekPlanExcelBO> boList = new ArrayList<>(0);
+        for (WeekPlanBO bo : list) {
+            WeekPlanExcelBO excelBO = new WeekPlanExcelBO();
+            BeanTransform.copyProperties(bo, excelBO, true);
+            boList.add(excelBO);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
     }
 }

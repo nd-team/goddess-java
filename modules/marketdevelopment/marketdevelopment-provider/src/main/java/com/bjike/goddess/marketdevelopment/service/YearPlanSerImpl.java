@@ -4,10 +4,14 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +143,35 @@ public class YearPlanSerImpl extends ServiceImpl<YearPlan, YearPlanDTO> implemen
     @Override
     public Integer getTotal() throws SerException {
         return super.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
+        YearPlanDTO dto = new YearPlanDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("year=desc");
+        List<YearPlan> list = super.findByCis(dto);
+        List<YearPlanExcelBO> boList = new ArrayList<>(0);
+        for (YearPlan entity : list) {
+            YearPlanExcelBO bo = new YearPlanExcelBO();
+            BeanTransform.copyProperties(entity, bo, true);
+            boList.add(bo);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
+    }
+
+    @Override
+    public List<YearPlanBO> findByType(String type) throws SerException {
+        YearPlanDTO dto = new YearPlanDTO();
+        if (StringUtils.isNotBlank(type))
+            dto.getConditions().add(Restrict.eq("type", type));
+        dto.getSorts().add("year=desc");
+        List<YearPlan> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, YearPlanBO.class);
     }
 }

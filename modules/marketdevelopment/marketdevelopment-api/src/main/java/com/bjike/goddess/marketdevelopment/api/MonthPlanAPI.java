@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 
 import java.util.List;
@@ -116,4 +117,25 @@ public interface MonthPlanAPI {
         return null;
     }
 
+    /**
+     * 根据业务类型查询月计划
+     *
+     * @param type 业务类型
+     * @return
+     * @throws SerException
+     */
+    default List<MonthPlanBO> findByType(String type) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
 }

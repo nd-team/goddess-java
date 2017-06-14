@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 
 import java.util.List;
@@ -106,4 +107,38 @@ public interface WeekPlanAPI {
     default Integer getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 根据月计划id查询周计划数据
+     *
+     * @param ids 月计划id
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> findByMonthIds(String... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务类型查询周计划数据
+     *
+     * @param type 业务类型
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> findByType(String type) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
 }
