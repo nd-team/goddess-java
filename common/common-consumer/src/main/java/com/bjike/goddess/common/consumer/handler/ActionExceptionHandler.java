@@ -41,7 +41,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         }
         if ("expire".equals(e.getMessage())) {
             actResult.setCode(401);
-            actResult.setMsg("登录已失效!");
+            actResult.setMsg("登录已过期!");
         } else if ("notLogin".equals(e.getMessage())) {
             actResult.setCode(403);
             actResult.setMsg("用户未登录!");
