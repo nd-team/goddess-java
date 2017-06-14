@@ -130,7 +130,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addCollectEmail(@Validated CollectEmailTO collectEmailTO) throws ActException {
+    public Result addCollectEmail(@Validated(CollectEmailTO.TestAdd.class) CollectEmailTO collectEmailTO,BindingResult bindingResult) throws ActException {
         try {
             CollectEmailBO collectEmailBO1 = collectEmailAPI.addCollectEmail(collectEmailTO);
             return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1, CollectEmailVO.class, true));
@@ -150,7 +150,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @PostMapping("v1/edit")
-    public Result editCollectEmail(@Validated CollectEmailTO collectEmailTO) throws ActException {
+    public Result editCollectEmail(@Validated(CollectEmailTO.TestAdd.class) CollectEmailTO collectEmailTO,BindingResult bindingResult) throws ActException {
         try {
             CollectEmailBO collectEmailBO1 = collectEmailAPI.editCollectEmail(collectEmailTO);
             return ActResult.initialize(BeanTransform.copyProperties(collectEmailBO1, CollectEmailVO.class, true));
@@ -168,7 +168,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteCollectEmail(@PathVariable String id) throws ActException {
+    public Result deleteCollectEmail(@PathVariable String id,BindingResult bindingResult) throws ActException {
         try {
             collectEmailAPI.deleteCollectEmail(id);
             return new ActResult("delete success!");
