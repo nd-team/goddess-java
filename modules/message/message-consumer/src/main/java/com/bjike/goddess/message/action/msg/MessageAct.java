@@ -40,16 +40,6 @@ import java.util.List;
 public class MessageAct {
     @Autowired
     private MessageAPI messageAPI;
-    @Autowired
-    private EmailAPI emailAPI;
-    @Autowired
-    private Environment env;
-
-    @PostConstruct
-    public void init() {
-        KafkaConsumer.emailAPI = emailAPI;
-        KafkaConsumer.env = env;
-    }
 
     /**
      * 发送消息

@@ -54,14 +54,14 @@ public class KafkaConsumer {
 
         ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(config);
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put("messages", new Integer(1));
+        topicCountMap.put("logs", new Integer(1));
 
         StringDecoder keyDecoder = new StringDecoder(new VerifiableProperties());
         StringDecoder valueDecoder = new StringDecoder(new VerifiableProperties());
 
         Map<String, List<KafkaStream<String, String>>> consumerMap =
                 consumer.createMessageStreams(topicCountMap, keyDecoder, valueDecoder);
-        KafkaStream<String, String> stream = consumerMap.get("messages").get(0);
+        KafkaStream<String, String> stream = consumerMap.get("logs").get(0);
         ConsumerIterator<String, String> it = stream.iterator();
         while (it.hasNext()) {
             String msg = new String(it.next().message());
