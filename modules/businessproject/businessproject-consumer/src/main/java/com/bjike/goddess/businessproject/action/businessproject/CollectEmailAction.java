@@ -168,7 +168,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteCollectEmail(@PathVariable String id,BindingResult bindingResult) throws ActException {
+    public Result deleteCollectEmail(@PathVariable String id ) throws ActException {
         try {
             collectEmailAPI.deleteCollectEmail(id);
             return new ActResult("delete success!");
@@ -206,7 +206,7 @@ public class CollectEmailAction {
      */
     @LoginAuth
     @DeleteMapping("v1/thaw/{id}")
-    public Result thaw(@PathVariable String id) throws ActException {
+    public Result thaw(@PathVariable String id ) throws ActException {
         try {
             collectEmailAPI.thawCollectEmail(id);
             return new ActResult("thaw success!");
@@ -226,7 +226,7 @@ public class CollectEmailAction {
      */
 
     @GetMapping("v1/collectSign")
-    public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
+    public Result collectSign(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
         if (areas == null || areas.length <= 0) {
@@ -250,7 +250,7 @@ public class CollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/collectBaseInfo")
-    public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO) throws ActException {
+    public Result CollectBaseInfo(@Validated(CollectEmailDTO.TestFirstCompany.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
         String[] firstCompany = collectEmailDTO.getFirstCompany();
         List<CollectEmailVO> collectEmailVOList = new ArrayList<>();
         if (firstCompany == null || firstCompany.length <= 0) {
@@ -274,7 +274,7 @@ public class CollectEmailAction {
      * @version v1
      */
     @GetMapping("v1/collectDispatch")
-    public Result CollectDispatch(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO) throws ActException {
+    public Result CollectDispatch(@Validated(CollectEmailDTO.TestArea.class) CollectEmailDTO collectEmailDTO, BindingResult bindingResult) throws ActException {
         String[] areas = collectEmailDTO.getAreas();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(

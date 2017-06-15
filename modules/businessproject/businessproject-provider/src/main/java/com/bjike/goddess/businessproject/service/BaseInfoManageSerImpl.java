@@ -232,19 +232,12 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         return baseInfoManageBOList;
     }
 
-    public static void main(String[] args) {
-        ;
-        System.out.println(StringUtils.isNumeric("1230.0"));
-    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
         checkAddIdentity();
         checkDate(baseInfoManageTO);
-//        if(StringUtils.isNumeric(baseInfoManageTO.getMoney())){
-//
-//        }
 
         //签订年份
         String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime()) ? "0000" : baseInfoManageTO.getSiginTime().substring(0, 4);
