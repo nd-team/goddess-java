@@ -44,9 +44,11 @@ public class PassAuditSerImpl extends ServiceImpl<PassAudit, PassAuditDTO> imple
         List<PassAudit> list = super.findByCis(dto, true);
         List<PassAuditBO> boList = new ArrayList<PassAuditBO>();
         for (PassAudit entity : list) {
-            BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(entity.getId());
+            BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(entity.getBankReconciliationId());
             PassAuditBO bo = BeanTransform.copyProperties(bankReconciliationBO, PassAuditBO.class);
             bo.setAuditStatus(entity.getAuditStatus());
+            bo.setId(entity.getId());
+            bo.setBankReconciliationId(entity.getBankReconciliationId());
             boList.add(bo);
         }
         return boList;

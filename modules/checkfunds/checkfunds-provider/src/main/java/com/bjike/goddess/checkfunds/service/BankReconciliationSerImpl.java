@@ -7,6 +7,8 @@ import com.bjike.goddess.bankrecords.bo.BankRecordCollectBO;
 import com.bjike.goddess.bankrecords.bo.BankRecordPageListBO;
 import com.bjike.goddess.checkfunds.bo.*;
 import com.bjike.goddess.checkfunds.dto.BankReconciliationDTO;
+import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
+import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.entity.BankReconciliation;
 import com.bjike.goddess.checkfunds.to.BankReconciliationTO;
@@ -28,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         entity.setAduitStatus("已经办，未提交");
         entity.setHandleTime(LocalDateTime.now());
         entity.setHandler(name);
+        String account = findAccountByNfame(entity.getName());
+        if (account == null) {
+            throw new SerException("没有该用户名对应的账号");
+        }
         super.save(entity);
         return BeanTransform.copyProperties(entity, BankReconciliationBO.class);
     }
@@ -102,6 +107,12 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Transactional(rollbackFor = SerException.class)
     public void aduitPass(String id) throws SerException {
         aduit(id);
+        PassAuditDTO dto = new PassAuditDTO();
+        dto.getConditions().add(Restrict.eq("bankReconciliationId", id));
+        List<PassAuditBO> list = passAuditSer.list(dto);
+        if ((list != null) && (!list.isEmpty())) {
+            throw new SerException("您已审批过该记录");
+        }
         PassAuditTO passAuditTO = new PassAuditTO();
         passAuditTO.setAuditStatus("已完成");
         passAuditTO.setBankReconciliationId(id);
@@ -112,6 +123,12 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Transactional(rollbackFor = SerException.class)
     public void aduitNotPass(String id) throws SerException {
         aduit(id);
+        NotPassAuditDTO dto = new NotPassAuditDTO();
+        dto.getConditions().add(Restrict.eq("bankReconciliationId", id));
+        List<NotPassAuditBO> list = notPassAuditSer.list(dto);
+        if ((list != null) && (!list.isEmpty())) {
+            throw new SerException("您已审批过该记录");
+        }
         NotPassAuditTO notPassAuditTO = new NotPassAuditTO();
         notPassAuditTO.setAuditStatus("审批不通过");
         notPassAuditTO.setBankReconciliationId(id);
@@ -125,6 +142,13 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        if (!"已提交，待审批".equals(entity.getAduitStatus())) {
+            throw new SerException("您还没提交，不能进行审批");
+        }
+        if (entity.getHaveExamine()){
+            throw new SerException("您已审批过该记录");
+        }
+        entity.setHaveExamine(true);
         entity.setExamine(name);
         entity.setExamineTime(LocalDateTime.now());
         entity.setModifyTime(LocalDateTime.now());
@@ -166,7 +190,9 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         Integer year = entity.getYear();
         Integer month = entity.getMonth();
         RemainAdjustDTO dto = new RemainAdjustDTO();
-        dto.getSorts().add("type=asc");
+        dto.getSorts().add("type=desc");
+        dto.getSorts().add("bankType=asc");
+        dto.getSorts().add("fundType=asc");
         dto.getConditions().add(Restrict.eq("year", year));
         dto.getConditions().add(Restrict.eq("month", month));
         List<RemainAdjustBO> list = remainAdjustSer.findByDTO(dto);
@@ -181,9 +207,19 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         boolean b2 = true;
         boolean b3 = true;
         boolean b4 = true;
+//        boolean b5 = true;
+//        boolean b6 = true;
         List<RemainAdjustBO> boList = new ArrayList<RemainAdjustBO>();
         for (RemainAdjustBO remainAdjustBO : list) {
             if ("jia".equals(remainAdjustBO.getFundType())) {   //jia为识别资金流水加的项目
+//                if ("jian".equals(remainAdjustBO.getBankType())) {
+//                    if (b5) {
+//                        RemainAdjustBO addBO = new RemainAdjustBO();
+//                        addBO.setBankWaterProject("减：");
+//                        boList.add(addBO);
+//                        b5 = false;
+//                    }
+//                }
                 if (b1) {
                     RemainAdjustBO addBO = new RemainAdjustBO();
                     addBO.setMoneyWaterProject("加：");
@@ -192,6 +228,14 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                 }
                 addFund += remainAdjustBO.getMoneyWaterSum();
             } else if ("jian".equals(remainAdjustBO.getFundType())) {   //jian为识别资金流水减的项目
+//                if ("jia".equals(remainAdjustBO.getBankType())) {
+//                    if (b6) {
+//                        RemainAdjustBO addBO = new RemainAdjustBO();
+//                        addBO.setBankWaterProject("加：");
+//                        boList.add(addBO);
+//                        b6 = false;
+//                    }
+//                }
                 if (b2) {
                     RemainAdjustBO addBO = new RemainAdjustBO();
                     addBO.setMoneyWaterProject("减：");
@@ -213,6 +257,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
                     addBO.setBankWaterProject("减：");
                     boList.add(addBO);
                     b4 = false;
+
                 }
                 removeBank += remainAdjustBO.getBankWaterSum();
             }
@@ -279,10 +324,12 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         bo.setDebtorDiffer(debtorDiffer);
         bo.setCreditorDiffer(creditorDiffer);
         bo.setBalanceDiffer(balanceDiffer);
-        if (balanceDiffer == 0) {
-            bo.setRemainAduitStatus("余额相符");
-        } else {
-            bo.setRemainAduitStatus("余额不符");
+        if (bo.getRemainAduitStatus() == null) {
+            if (balanceDiffer == 0) {
+                bo.setRemainAduitStatus("余额相符");
+            } else {
+                bo.setRemainAduitStatus("余额不符");
+            }
         }
         return bo;
     }
@@ -398,5 +445,4 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         }
         return creditorDifferBOs;
     }
-
 }

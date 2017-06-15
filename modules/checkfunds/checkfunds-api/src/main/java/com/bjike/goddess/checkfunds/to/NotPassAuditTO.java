@@ -1,7 +1,6 @@
 package com.bjike.goddess.checkfunds.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-
 /**
  * 审批不通过记录
  *
@@ -39,3 +38,4 @@ public class NotPassAuditTO extends BaseTO {
         this.auditStatus = auditStatus;
     }
 }
+

@@ -1,9 +1,8 @@
 package com.bjike.goddess.checkfunds.api;
 
+
 import com.bjike.goddess.checkfunds.bo.PassAuditBO;
-import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
-import com.bjike.goddess.checkfunds.entity.PassAudit;
 import com.bjike.goddess.checkfunds.to.PassAuditTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -46,3 +45,4 @@ public interface PassAuditAPI {
      */
     Long countNum(PassAuditDTO dto) throws SerException;
 }
+

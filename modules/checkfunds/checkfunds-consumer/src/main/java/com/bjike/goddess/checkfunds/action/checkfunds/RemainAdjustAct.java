@@ -5,7 +5,6 @@ import com.bjike.goddess.checkfunds.bo.RemainAdjustBO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
 import com.bjike.goddess.checkfunds.vo.RemainAdjustVO;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -153,8 +152,8 @@ public class RemainAdjustAct {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/confirmAdjust/{fundBalance}/{bankBalance}")
-    public Result confirmAdjust(@PathVariable Double fundBalance, @PathVariable Double bankBalance, HttpServletRequest request) throws ActException {
+    @PutMapping("v1/confirmAdjust")
+    public Result confirmAdjust(@RequestParam Double fundBalance, @RequestParam Double bankBalance, HttpServletRequest request) throws ActException {
         String id = (String) request.getSession().getAttribute("id");   //获取银企对账id
         if (id == null) {
             throw new ActException("您还没进行余额调节，不能进行确认余额调节");

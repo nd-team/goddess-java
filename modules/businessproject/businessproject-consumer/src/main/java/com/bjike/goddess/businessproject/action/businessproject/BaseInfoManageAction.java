@@ -4,6 +4,7 @@ import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
+import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageDeleteFileTO;
@@ -351,11 +352,10 @@ public class BaseInfoManageAction extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<BaseInfoManageExcel> toList = ExcelUtil.excelToClazz(is, BaseInfoManageExcel.class, excel);
+            List<BaseInfoManageLeadExcel> toList = ExcelUtil.excelToClazz(is, BaseInfoManageLeadExcel.class, excel);
             List<BaseInfoManageTO> tos = new ArrayList<BaseInfoManageTO>();
-            for (BaseInfoManageExcel to : toList) {
+            for (BaseInfoManageLeadExcel to : toList) {
                 BaseInfoManageTO baseInfoManageTO = BeanTransform.copyProperties(to, BaseInfoManageTO.class);
-                ;
                 baseInfoManageTO.setSiginTime(String.valueOf(to.getSiginTime()));
                 baseInfoManageTO.setStartProjectTime(String.valueOf(to.getStartProjectTime()));
                 baseInfoManageTO.setEndProjectTime(String.valueOf(to.getEndProjectTime()));
