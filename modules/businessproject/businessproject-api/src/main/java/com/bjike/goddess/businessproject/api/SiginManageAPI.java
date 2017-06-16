@@ -142,6 +142,12 @@ public interface SiginManageAPI {
      */
     byte[] exportExcel(SiginManageDTO dto ) throws SerException;
 
+    /**
+     * 导出Excel导入模板
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
 
     /**
      * 获取所有内部项目名称

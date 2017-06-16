@@ -491,26 +491,28 @@ public class SiginManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-//    /**
-//     * 下载模板
-//     *
-//     * @param dto 项目签订与立项
-//     * @des 下载模板项目签订与立项
-//     * @version v1
-//     */
-//    @LoginAuth
-//    @PostMapping("v1/export")
-//    public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
-//        try {
-//            String fileName = "项目签订与立项.xlsx";
-//            super.writeOutFile(response, siginManageAPI.exportExcel(dto), fileName);
-//            return new ActResult("导出成功");
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        } catch (IOException e1) {
-//            throw new ActException(e1.getMessage());
-//        }
-//    }
+
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板项目签订与立项
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目签订与立项导入模板.xlsx";
+            super.writeOutFile(response, siginManageAPI.templateExport( ), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
 
 
 }
