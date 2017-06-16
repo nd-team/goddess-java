@@ -1,4 +1,4 @@
-package com.bjike.goddess.common.jpa.utils;
+package com.bjike.goddess.common.utils.string;
 
 /**
  * @Author: [liguiqin]
@@ -34,12 +34,6 @@ public class CharacterUtil {
             return String.valueOf(cs);
         }
        return  val;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(CharacterUtil.upperCaseFirst("aaa"));
-        System.out.println(CharacterUtil.lowerCaseFirst("AAA"));
-        System.out.println( Character.isLowerCase("Aa".charAt(0)));
     }
 
 }

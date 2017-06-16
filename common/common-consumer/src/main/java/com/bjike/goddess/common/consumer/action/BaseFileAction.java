@@ -37,6 +37,9 @@ import java.util.regex.Pattern;
  * @Copy: [com.bjike]
  */
 public abstract class BaseFileAction {
+    /**
+     * 支持预览的文件类型
+     */
     private static final String[] SUFFIX = new String[]{"xls", "xlsx", "docx", "dotx", "pptx", "xlsm", "xlt"};
 
     /**

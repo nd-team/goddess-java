@@ -13,111 +13,153 @@ public enum RestrictionType {
     /**
      * 相等
      */
-    EQ,//相等
+    EQ,
 
     /**
      * 在什么之间
      */
-    BETWEEN,//在什么区间
+    BETWEEN,
     /**
      * 模糊
      */
-    LIKE,//相似
+    LIKE,
     /**
      * 在什么范围之间
      */
-    IN,//在什么范围之间
+    IN,
 
     /**
      * 大于
      */
-    GT,//大于
+    GT,
     /**
-     * 少于
+     * 小于
      */
-    LT,//少于
+    LT,
     /**
      * 或者
      */
-    OR,//或者
+    OR,
     /**
      * 不等于
      */
-    NE,//不等于
-
-    GTEQ,//大于等于
-
-    LTEQ,//小于等于
-
-    ISNULL,//为空
-
-    ISNOTNULL,//不为空
+    NE,
+    /**
+     * 大于等于
+     */
+    GTEQ,
+    /**
+     * 小于等于
+     */
+    LTEQ,
+    /**
+     * 为空
+     */
+    ISNULL,
+    /**
+     * 不为空
+     */
+    ISNOTNULL,
+    /**
+     * 不在xx范围
+     */
     NOTIN;
 
 
     public static RestrictionType valueOf(Object val) {
-        String vv = String.valueOf(val);
-        switch (vv) {
+        String value = String.valueOf(val);
+        RestrictionType type = null;
+        switch (value) {
             case "EQ":
-                return RestrictionType.EQ;
+                type = RestrictionType.EQ;
+                break;
             case "BETWEEN":
-                return RestrictionType.BETWEEN;
+                type = RestrictionType.BETWEEN;
+                break;
             case "LIKE":
-                return RestrictionType.LIKE;
+                type = RestrictionType.LIKE;
+                break;
             case "IN":
-                return RestrictionType.IN;
+                type = RestrictionType.IN;
+                break;
             case "GT":
-                return RestrictionType.GT;
+                type = RestrictionType.GT;
+                break;
             case "LT":
-                return RestrictionType.LT;
+                type = RestrictionType.LT;
+                break;
             case "GTEQ":
-                return RestrictionType.GTEQ;
+                type = RestrictionType.GTEQ;
+                break;
             case "LTEQ":
-                return RestrictionType.LTEQ;
+                type = RestrictionType.LTEQ;
+                break;
             case "OR":
-                return RestrictionType.OR;
+                type = RestrictionType.OR;
+                break;
             case "NE":
-                return RestrictionType.NE;
+                type = RestrictionType.NE;
+                break;
             case "ISNULL":
-                return RestrictionType.ISNULL;
+                type = RestrictionType.ISNULL;
+                break;
             case "ISNOTNULL":
-                return RestrictionType.ISNOTNULL;
+                type = RestrictionType.ISNOTNULL;
+                break;
             case "NOTIN":
-                return RestrictionType.NOTIN;
+                type = RestrictionType.NOTIN;
+                break;
             default:
-                return RestrictionType.EQ;
+                type = RestrictionType.EQ;
+                break;
         }
+        return type;
     }
 
     public static String getRestrict(RestrictionType type) {
+        String typeStr;
         switch (type) {
             case EQ:
-                return "equal";
+                typeStr = "equal";
+                break;
             case BETWEEN:
-                return "between";
+                typeStr = "between";
+                break;
             case LIKE:
-                return "like";
+                typeStr = "like";
+                break;
             case IN:
-                return "in";
+                typeStr = "in";
+                break;
             case GT:
-                return "greaterThan";
+                typeStr = "greaterThan";
+                break;
             case LT:
-                return "lessThan";
+                typeStr = "lessThan";
+                break;
             case GTEQ:
-                return "greaterThanOrEqualTo";
+                typeStr = "greaterThanOrEqualTo";
+                break;
             case LTEQ:
-                return "lessThanOrEqualTo";
+                typeStr = "lessThanOrEqualTo";
+                break;
             case OR:
-                return "or";
+                typeStr = "or";
+                break;
             case NE:
-                return "notEqual";
+                typeStr = "notEqual";
+                break;
             case ISNULL:
-                return "isNull";
+                typeStr = "isNull";
+                break;
             case ISNOTNULL:
-                return "isNotNull";
+                typeStr = "isNotNull";
+                break;
             default:
-                return "equal";
+                typeStr = "equal";
+                break;
         }
+        return typeStr;
     }
 
 }
