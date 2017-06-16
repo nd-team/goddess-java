@@ -188,7 +188,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         jpql.append("SELECT MAX ( ");
         jpql.append(field);
         jpql.append(") FROM ");
-        jpql.append(getTableName(clazz));
+        jpql.append(clazz.getName());
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
         return obj != null ? obj.toString() : null;
     }
@@ -199,7 +199,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         jpql.append("SELECT MIN (");
         jpql.append(field);
         jpql.append(")FROM ");
-        jpql.append(getTableName(clazz));
+        jpql.append(clazz.getName());
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
         return obj != null ? obj.toString() : null;
     }
