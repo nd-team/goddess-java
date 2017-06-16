@@ -19,7 +19,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +58,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     private CollectEmailSer collectEmailSer;
     @Autowired
     private BaseInfoManageSer baseInfoManageSer;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -201,7 +201,6 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
             obj.setFlag(false);
         }
         list.add(obj);
-
 
         return list;
     }

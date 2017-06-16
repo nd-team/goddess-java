@@ -64,7 +64,7 @@ public class CollectEmail extends BaseEntity {
     /**
      * 汇总间隔
      */
-    @Column(columnDefinition = "TINYINT(2)  COMMENT '汇总间隔'", nullable = false )
+    @Column(columnDefinition = "TINYINT(2)  COMMENT '汇总间隔'"  )
     private CollectUnit collectUnit;
 
     /**

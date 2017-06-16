@@ -222,7 +222,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList = new ArrayList<>();
             String[] fields = new String[]{"counts","remark"};
             //专业资质认证数量
-            String sql = "select count(professionAuthen) as counts , '专业资质认证数量' as remark from capability_companycapability where company = '"+str+"'  ";
+            String sql = "select count(DISTINCT professionAuthen) as counts , '专业资质认证数量' as remark from capability_companycapability where company = '"+str+"'  ";
             List<CollectEmailBO> collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             CollectData collectData = new CollectData();
             collectData.setName("专业资质认证数量");
@@ -230,7 +230,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList.add( collectData );
 
             //管理资质认证数量
-            sql = "select count(manageAuthen) as counts , '管理资质认证数量' as remark from capability_companycapability where company = '"+str+"'  ";
+            sql = "select count(DISTINCT manageAuthen) as counts , '管理资质认证数量' as remark from capability_companycapability where company = '"+str+"'  ";
             collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("管理资质认证数量");
@@ -238,7 +238,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList.add( collectData );
 
             //公司荣誉证书数量
-            sql = "select count(companyCertificate) as counts , '公司荣誉证书数量' as remark from capability_companycapability where company = '"+str+"'  ";
+            sql = "select count(DISTINCT companyCertificate) as counts , '公司荣誉证书数量' as remark from capability_companycapability where company = '"+str+"'  ";
             collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("公司荣誉证书数量");
@@ -246,7 +246,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList.add( collectData );
 
             //公司人员组成
-            sql = "select count(personForm) as counts , '公司人员组成' as remark from capability_companycapability where company = '"+str+"'  ";
+            sql = "select count(DISTINCT personForm) as counts , '公司人员组成' as remark from capability_companycapability where company = '"+str+"'  ";
             collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("公司人员组成");
@@ -254,7 +254,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList.add( collectData );
 
             //公司已完成项目数量
-            sql = "select count(completePro) as counts , '公司已完成项目数量' as remark from capability_companycapability where company = '"+str+"'  ";
+            sql = "select count(DISTINCT completePro) as counts , '公司已完成项目数量' as remark from capability_companycapability where company = '"+str+"'  ";
             collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("公司已完成项目数量");
@@ -262,7 +262,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList.add( collectData );
 
             //公司正在进行中项目数量
-            sql = "select count(inProjct) as counts , '公司正在进行中项目数量' as remark from capability_companycapability where company = '"+str+"'  ";
+            sql = "select count(DISTINCT inProjct) as counts , '公司正在进行中项目数量' as remark from capability_companycapability where company = '"+str+"'  ";
             collectEmailBOS = companyCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("公司正在进行中项目数量");
@@ -300,7 +300,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0 ? collectEmailBOS.get(0).getCounts():0 );
             collectDataList.add( collectData );
             //个人社交资源数量
-            sql = "select count(contactName) as counts , '个人社交资源数量' as remark from capability_selfcapability where name = '"+str+"'  ";
+            sql = "select count(a.selfCapabilityId) as counts , '个人社交资源数量' as remark from capability_selfcapability self , capability_selfcapabilitysocial a  where self.id = a.selfCapabilityId and  self.name = '"+str+"'  ";
             collectEmailBOS = selfCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("个人社交资源数量");
@@ -324,21 +324,21 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
             collectDataList = new ArrayList<>();
             String[] fields = new String[]{"counts", "remark"};
             //专业资质认证数量
-            String sql = "select count(professionAuthen) as counts , '专业资质认证数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
+            String sql = "select count(DISTINCT professionAuthen) as counts , '专业资质认证数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
             List<CollectEmailBO> collectEmailBOS = cooperCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             CollectData collectData = new CollectData();
             collectData.setName("专业资质认证数量");
             collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0 ? collectEmailBOS.get(0).getCounts():0 );
             collectDataList.add( collectData );
             //管理资质认证数量
-            sql = "select count(manageAuthen) as counts , '管理资质认证数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
+            sql = "select count(DISTINCT manageAuthen) as counts , '管理资质认证数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
             collectEmailBOS = cooperCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("管理资质认证数量");
             collectData.setCounts( collectEmailBOS!=null && collectEmailBOS.size()>0 ? collectEmailBOS.get(0).getCounts():0 );
             collectDataList.add( collectData );
             //公司参与项目数量
-            sql = "select count(companyProject) as counts , '公司参与项目数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
+            sql = "select count(DISTINCT companyProject) as counts , '公司参与项目数量' as remark from capability_coopercapability where companyName = '"+str+"'  ";
             collectEmailBOS = cooperCapabilityAPI.findBySql(sql, CollectEmailBO.class, fields);
             collectData = new CollectData();
             collectData.setName("公司参与项目数量");

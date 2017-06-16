@@ -141,7 +141,7 @@ public class DispatchSheetAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addDispatchSheet(@Validated(DispatchSheetTO.TestAdd.class) DispatchSheetTO dispatchSheetTO) throws ActException {
+    public Result addDispatchSheet(@Validated(DispatchSheetTO.TestAdd.class) DispatchSheetTO dispatchSheetTO ,BindingResult bindingResult) throws ActException {
         try {
             DispatchSheetBO dispatchSheetBO1 = dispatchSheetAPI.addDispatchSheet(dispatchSheetTO);
             return ActResult.initialize(BeanTransform.copyProperties(dispatchSheetBO1, DispatchSheetVO.class, true));

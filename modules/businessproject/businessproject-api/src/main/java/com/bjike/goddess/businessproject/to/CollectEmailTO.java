@@ -59,7 +59,6 @@ public class CollectEmailTO extends BaseTO {
     /**
      * 汇总间隔
      */
-    @NotNull(groups = {CollectEmailTO.TestAdd.class}, message = "汇总间隔不能为空")
     private CollectUnit collectUnit;
 
     /**

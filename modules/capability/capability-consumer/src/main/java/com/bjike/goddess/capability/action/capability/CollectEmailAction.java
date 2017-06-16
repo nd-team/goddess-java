@@ -239,7 +239,7 @@ public class CollectEmailAction {
         String[] companys = collectEmailDTO.getCompanys();
         try {
             List<CollectEmailVO> collectEmailVOList = BeanTransform.copyProperties(
-                    collectEmailAPI.collectCompanyEmail(companys), CollectEmailVO.class, true);
+                    collectEmailAPI.collectCooperEmail(companys), CollectEmailVO.class, true);
             return ActResult.initialize(collectEmailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

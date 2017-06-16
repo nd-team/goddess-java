@@ -124,7 +124,7 @@ public class DispatchSheet extends BaseEntity {
     /**
      * 派工内容
      */
-    @Column(name = "dispatchText",  columnDefinition = "VARCHAR(255)   COMMENT '派工内容'")
+    @Column(name = "dispatchText",  columnDefinition = "MEDIUMTEXT   COMMENT '派工内容'")
     private String dispatchText;
 
     /**
@@ -166,7 +166,7 @@ public class DispatchSheet extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark",  columnDefinition = "MEDIUMTEXT   COMMENT '备注'")
     private String remark;
 
     /**
