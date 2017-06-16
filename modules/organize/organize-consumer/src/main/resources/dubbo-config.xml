@@ -16,35 +16,39 @@
     <dubbo:registry address="${dubbo.registry.address}"/>
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
-    <dubbo:reference id="angleApiImpl" interface="com.bjike.goddess.organize.api.AngleAPI"/>
-    <dubbo:reference id="arrangementApiImpl"
+    <dubbo:reference validation="true" id="angleApiImpl" interface="com.bjike.goddess.organize.api.AngleAPI"/>
+    <dubbo:reference validation="true" id="arrangementApiImpl"
                      interface="com.bjike.goddess.organize.api.ArrangementAPI"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"
                      id="departmentDetailApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.DesignNumberInfoAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DesignNumberInfoAPI"
                      id="designNumberInfoApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.DimensionAPI" id="dimensionApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.InstructionClassifyAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DimensionAPI" id="dimensionApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.InstructionClassifyAPI"
                      id="instructionClassifyApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.OperateAPI" id="operateApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.OperateAPI" id="operateApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI"
                      id="positionDetailApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionInstructionAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionInstructionAPI"
                      id="positionInstructionApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionInstructionsLogAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionInstructionsLogAPI"
                      id="positionInstructionsLogApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionWorkDetailAPI"
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionWorkDetailAPI"
                      id="positionWorkDetailApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.ReflectAPI" id="reflectApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.WorkRangeAPI" id="workRangeApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ReflectAPI" id="reflectApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.WorkRangeAPI" id="workRangeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"
+                     id="positionDetailUserApiImpl"/>
 
-    <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-    <dubbo:reference  validation="true" id="userSetPermissionOperateApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionOperateAPI" />
-    <dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-    <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+    <dubbo:reference validation="true" id="userSetPermissionApiImpl"
+                     interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+    <dubbo:reference validation="true" id="userSetPermissionOperateApiImpl"
+                     interface="com.bjike.goddess.organize.api.UserSetPermissionOperateAPI"/>
+    <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
+    <dubbo:reference validation="true" id="permissionApiImpl"
+                     interface="com.bjike.goddess.user.api.rbac.PermissionAPI"/>
 
 
 </beans>

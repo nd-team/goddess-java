@@ -27,9 +27,9 @@ public class MarketChannel extends BaseEntity {
     private String type;
 
     /**
-     * 业务方向科目
+     * 业务对象
      */
-    @Column(name = "course", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
+    @Column(name = "course", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务对象'")
     private String course;
 
     /**

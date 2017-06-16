@@ -76,4 +76,12 @@ public interface RewardSituationSer extends Ser<RewardSituation, RewardSituation
         return null;
     }
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
 }

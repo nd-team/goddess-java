@@ -3,11 +3,17 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
+import com.bjike.goddess.marketdevelopment.bo.DayPlanExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.DayPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -119,5 +125,38 @@ public class DayPlanSerImpl extends ServiceImpl<DayPlan, DayPlanDTO> implements 
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("time=desc");
         return BeanTransform.copyProperties(super.findByPage(dto), DayPlanBO.class);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(planCheck))
+            throw new SerException("您的帐号没有权限");
+        DayPlanDTO dto = new DayPlanDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
+            LocalDate[] time = {LocalDate.parse(to.getStart()), LocalDate.parse(to.getEnd())};
+            dto.getConditions().add(Restrict.between("time", time));
+        }
+        dto.getSorts().add("time=desc");
+        List<DayPlan> list = super.findByCis(dto);
+        List<DayPlanExcelBO> boList = BeanTransform.copyProperties(list, DayPlanExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(planCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(planManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

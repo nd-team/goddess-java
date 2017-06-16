@@ -100,7 +100,7 @@ public class CarCostAct {
     }
 
     /**
-     * 修改实际人工工时
+     * 修改实际车次
      *
      * @param to 车辆费用传输对象
      * @return class CarCostVO

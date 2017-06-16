@@ -1,12 +1,19 @@
 package com.bjike.goddess.supplier.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.supplier.bo.EnterpriseQualificationBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectTitleBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.entity.SupplierInformation;
+import com.bjike.goddess.supplier.to.CollectTo;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,10 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 供应商基本信息业务实现
@@ -43,9 +49,17 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
     @Autowired
     private EnterpriseQualificationSer enterpriseQualificationSer;
     @Autowired
+    private CollectSendSer collectSendSer;
+    @Autowired
+    private SupplierTypeSer supplierTypeSer;
+    @Autowired
     private SupPermissionSer supPermissionSer;
 
     private static final String idFlag = "supplier-01";
+
+    private static final String format = "%s供应商数量";
+
+    private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -182,5 +196,194 @@ public class SupplierInformationSerImpl extends ServiceImpl<SupplierInformation,
         if (null == entity)
             throw new SerException("数据对象不能为空");
         return BeanTransform.copyProperties(entity, SupplierInformationBO.class);
+    }
+
+    @Override
+    public void changeEnclosure(String id) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
+        SupplierInformation entity = super.findById(id);
+        if (null == entity)
+            throw new SerException("数据对象不能为空");
+        entity.isEnclosure(Boolean.TRUE);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public List<SupplierInfoCollectBO> collect(CollectTo to) throws SerException {
+        if (!supPermissionSer.getSupPermission(idFlag))
+            throw new SerException("您的帐号没有权限");
+        List<SupplierInfoCollectBO> collectBOs = new ArrayList<>(0);
+        SupplierInformationDTO dto = new SupplierInformationDTO();
+        if (to.getArea() != null && to.getArea().length != 0) {
+            dto.getConditions().add(Restrict.in("area", to.getArea()));
+        }
+        if (StringUtils.isNotBlank(to.getStart()) && StringUtils.isNotBlank(to.getEnd())) {
+            try {
+                LocalDateTime[] times = {LocalDateTime.parse(to.getStart(), timeFormat), LocalDateTime.parse(to.getEnd(), timeFormat)};
+                dto.getConditions().add(Restrict.between("createTime", times));
+            } catch (Exception e) {
+                throw new SerException("汇总时间格式不正确,正确格式为:yyyy-MM-dd HH:mm:ss");
+            }
+        }
+        dto.getSorts().add("area=asc");
+        dto.getSorts().add("createTime=desc");
+        List<SupplierInformation> list = super.findByCis(dto);
+        List<EnterpriseQualificationBO> qualificationBOs = new ArrayList<>(0);
+        List<String> typeList = new ArrayList<>(0), qualificationList = new ArrayList<>(0);
+        String tempArea = "", qualification = "";
+        //过滤地区生成供应商汇总数据
+        for (SupplierInformation entity : list) {
+            qualificationBOs.addAll(enterpriseQualificationSer.findByInformation(entity.getId()));
+            if (typeList.stream().filter(s -> s.equals(entity.getType())).count() == 0)
+                typeList.add(entity.getType());//过滤重复供应商类型
+            if (!tempArea.equals(entity.getArea())) {
+                SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
+                bo.setArea(entity.getArea());
+                bo.setTitleBOs(new ArrayList<>(0));
+                collectBOs.add(bo);
+            }
+        }
+        //过滤公司资质资质等级
+        for (EnterpriseQualificationBO bo : qualificationBOs.stream()
+                .sorted(Comparator.comparing(EnterpriseQualificationBO::getAptitude))
+                .collect(Collectors.toList())) {
+            if (!qualification.equals(bo.getAptitude()))
+                qualificationList.add(bo.getAptitude());
+        }
+        for (SupplierInfoCollectBO bo : collectBOs) {
+            this.countCollect(bo,
+                    enterpriseQualificationSer.findByInformationIds(list.stream()
+                            .filter(s -> s.getArea().equals(bo.getArea()))
+                            .map(SupplierInformation::getId).collect(Collectors.toList()).toArray(new String[0])),
+                    list.stream().filter(s -> s.getArea().equals(bo.getArea())).collect(Collectors.toList()),
+                    typeList, qualificationList);
+        }
+        SupplierInfoCollectBO bo = new SupplierInfoCollectBO();
+        bo.setArea("合计");
+        bo.setTitleBOs(new ArrayList<>(0));
+        this.countCollect(bo, qualificationBOs, list, typeList, qualificationList);
+        collectBOs.add(bo);
+        return collectBOs;
+    }
+
+    /**
+     * 统计汇总数据
+     *
+     * @param bo                供应商汇总传输对象
+     * @param count             公司资质汇总数据
+     * @param list              供应商信息数据
+     * @param typeList          供应商类型数据
+     * @param qualificationList 资质等级数据
+     * @throws SerException
+     */
+    private void countCollect(SupplierInfoCollectBO bo, List<EnterpriseQualificationBO> count, List<SupplierInformation> list,
+                              List<String> typeList, List<String> qualificationList) throws SerException {
+        for (String type : typeList) {
+            Long number = list.stream().filter(s -> s.getType().equals(type)).count();
+            bo.getTitleBOs().add(new SupplierInfoCollectTitleBO(number.intValue(), String.format(format, type)));
+        }
+        for (String q : qualificationList) {
+            Long number = count.stream().filter(e -> e.getAptitude().equals(q)).count();
+            bo.getTitleBOs().add(new SupplierInfoCollectTitleBO(number.intValue(), String.format(format, q)));
+        }
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = supPermissionSer.getSupPermission(idFlag);
+        SonPermissionObject obj;
+
+        obj = new SonPermissionObject();
+        obj.setName("supplierinformation");
+        obj.setDescribesion("供应商基本信息");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSee = supplierTypeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("suppliertype");
+        obj.setDescribesion("供应商类型管理");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = contactSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("contactsituation");
+        obj.setDescribesion("联系情况");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = cooperationSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("cooperationsituation");
+        obj.setDescribesion("合作情况");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        flagSee = enterpriseQualificationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("enterprisequalification");
+        obj.setDescribesion("企业资质");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = rewardSituationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("rewardsituation");
+        obj.setDescribesion("获奖情况");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        flagSee = collectSendSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("collectsend");
+        obj.setDescribesion("供应商汇总");
+        if (flagSee) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
     }
 }

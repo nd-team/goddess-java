@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
@@ -153,6 +154,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     public List<BusinessCourseBO> findThaw() throws SerException {
         BusinessCourseDTO dto = new BusinessCourseDTO();
         dto.getConditions().add(Restrict.eq(STATUS, Status.THAW));
+        dto.getSorts().add("course=asc");
         List<BusinessCourse> list = super.findByCis(dto);
         return this.transformBOList(list);
     }
@@ -173,6 +175,21 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         if (!marPermissionSer.getMarPermission(marketCheck))
             throw new SerException("您的帐号没有权限");
         dto.getSorts().add("typeId=desc");
+        dto.getSorts().add("course=asc");
         return this.transformBOList(super.findByPage(dto));
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -75,4 +75,12 @@ public interface CooperationSituationSer extends Ser<CooperationSituation, Coope
         return null;
     }
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
 }

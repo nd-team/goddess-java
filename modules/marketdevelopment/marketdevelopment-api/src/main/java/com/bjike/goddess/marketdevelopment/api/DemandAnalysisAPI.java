@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
 import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 
 import java.util.List;
@@ -114,6 +115,17 @@ public interface DemandAnalysisAPI {
      * @throws SerException
      */
     default Integer getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
         return null;
     }
 }

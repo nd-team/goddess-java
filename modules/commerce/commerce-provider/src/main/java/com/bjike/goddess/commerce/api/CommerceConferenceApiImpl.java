@@ -6,6 +6,7 @@ import com.bjike.goddess.commerce.service.CommerceConferenceSer;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,10 @@ public class CommerceConferenceApiImpl implements CommerceConferenceAPI {
     @Override
     public CommerceConferenceBO findByNumber(String serialNumber) throws SerException {
         return commerceConferenceSer.findByNumber(serialNumber);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return commerceConferenceSer.sonPermission();
     }
 }

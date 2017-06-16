@@ -100,7 +100,7 @@ public class ArtificialCostAct {
     }
 
     /**
-     * 修改实际人工工时
+     * 修改实际时数
      *
      * @param to 人工费用传输对象
      * @return class ArtificialCostVO

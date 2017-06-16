@@ -3,10 +3,10 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
-import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
-import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 
 import java.util.List;
@@ -90,4 +90,21 @@ public interface MarketResearchSer extends Ser<MarketResearch, MarketResearchDTO
     }
 
 
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

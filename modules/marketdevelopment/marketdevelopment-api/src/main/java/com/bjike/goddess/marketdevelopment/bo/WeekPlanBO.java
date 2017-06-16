@@ -24,6 +24,11 @@ public class WeekPlanBO extends BaseBO {
     private Integer year;
 
     /**
+     * 月份值
+     */
+    private Integer monthValue;
+
+    /**
      * 月份
      */
     private String type;
@@ -207,5 +212,13 @@ public class WeekPlanBO extends BaseBO {
 
     public void setCycle(String cycle) {
         this.cycle = cycle;
+    }
+
+    public Integer getMonthValue() {
+        return monthValue;
+    }
+
+    public void setMonthValue(Integer monthValue) {
+        this.monthValue = monthValue;
     }
 }

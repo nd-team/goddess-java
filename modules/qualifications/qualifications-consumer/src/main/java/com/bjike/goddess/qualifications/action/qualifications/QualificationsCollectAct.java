@@ -10,12 +10,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.qualifications.api.QualificationsCollectAPI;
-import com.bjike.goddess.qualifications.bo.QualificationsCollectBO;
 import com.bjike.goddess.qualifications.dto.QualificationsCollectDTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectFilterTO;
 import com.bjike.goddess.qualifications.to.QualificationsCollectTO;
 import com.bjike.goddess.qualifications.vo.QualificationsCollectVO;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * 通信系统集成资质进度汇总
@@ -158,27 +162,83 @@ public class QualificationsCollectAct extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @param request 上传请求
-     * @param id      通信系统集成资质进度汇总数据id
+     * @param id 通信系统集成资质进度汇总数据id
      * @version v1
      */
+    @LoginAuth
     @PostMapping("v1/uploadEnclosure/{id}")
-    public Result uploadEnclosure(HttpServletRequest request, @PathVariable String id) throws ActException {
+    public Result uploadEnclosure(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            QualificationsCollectBO collectBO = qualificationsCollectAPI.getById(id);
-            if (null == collectBO)
-                throw new SerException("数据id错误");
-            StringBuilder path = new StringBuilder(0);
-            if (StringUtils.isNotBlank(collectBO.getCertificate()))
-                path.append("/").append(collectBO.getCertificate());
-            if (StringUtils.isNotBlank(collectBO.getCertificate()))
-                path.append("/").append(collectBO.getCompany());
-
-            fileAPI.upload(this.getInputStreams(request, path.toString()));
-            return new ActResult("上传成功");
-        } catch (Exception e) {
+            String path = "/qualifications/collect/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 文件附件列表
+     *
+     * @param id 通信系统集成资质进度汇总数据id
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            String path = "/qualifications/collect/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param paths 多文件信息路径
+     * @version v1
+     */
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@RequestParam String[] paths, HttpServletRequest request) throws ActException {
+        try {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), paths);
+            return new ActResult("delFile success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

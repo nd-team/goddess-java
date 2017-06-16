@@ -176,6 +176,10 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         entity.setModule(moduleTypeSer.findById(to.getModuleId()));
         if (null == entity.getModule())
             throw new SerException("模块类型不存在");
+        if (this.findByNumber(to.getSerialNumber()) != null)
+            throw new SerException("编号已存在,无法保存");
+        if (this.findByPosition(to.getPosition()) != null)
+            throw new SerException("岗位已存在,无法保存");
         entity.setStatus(entity.getDepartment().getStatus());
         super.save(entity);
         return this.transformationToBO(entity);
