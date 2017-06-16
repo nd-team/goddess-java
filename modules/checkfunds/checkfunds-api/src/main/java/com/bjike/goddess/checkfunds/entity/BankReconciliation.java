@@ -24,7 +24,7 @@ public class BankReconciliation extends BaseEntity {
     /**
      * 核对状态
      */
-    @Column(name = "aduitStatus",columnDefinition = "VARCHAR(255)   COMMENT '核对状态'")
+    @Column(name = "aduitStatus", columnDefinition = "VARCHAR(255)   COMMENT '核对状态'")
     private String aduitStatus;
 
     /**
@@ -48,13 +48,13 @@ public class BankReconciliation extends BaseEntity {
     /**
      * 余额核对状态
      */
-    @Column(name = "remainAduitStatus",columnDefinition = "VARCHAR(255)   COMMENT '余额核对状态'")
+    @Column(name = "remainAduitStatus", columnDefinition = "VARCHAR(255)   COMMENT '余额核对状态'")
     private String remainAduitStatus;
 
     /**
      * 余额调节后
      */
-    @Column(name = "afterReconciliation", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '余额调节后'")
+    @Column(name = "afterReconciliation", columnDefinition = "VARCHAR(255)   COMMENT '余额调节后'")
     private String afterReconciliation;
 
     /**
@@ -78,8 +78,22 @@ public class BankReconciliation extends BaseEntity {
     /**
      * 审批人
      */
-    @Column(name = "examine",columnDefinition = "VARCHAR(255)   COMMENT '审批人'")
+    @Column(name = "examine", columnDefinition = "VARCHAR(255)   COMMENT '审批人'")
     private String examine;
+
+    /**
+     * 是否审批过
+     */
+    @Column(name = "haveExamine", columnDefinition = "TINYINT(1)   COMMENT '是否审批过'")
+    private Boolean haveExamine;
+
+    public Boolean getHaveExamine() {
+        return haveExamine;
+    }
+
+    public void setHaveExamine(Boolean haveExamine) {
+        this.haveExamine = haveExamine;
+    }
 
     public String getAduitStatus() {
         return aduitStatus;

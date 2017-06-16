@@ -407,6 +407,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void leadExcel(List<DispatchSheetTO> toList) throws SerException {
+        checkAddIdentity();
         for (DispatchSheetTO to : toList) {
             DispatchSheet baseInfoManage = new DispatchSheet();
             BeanUtils.copyProperties(to, baseInfoManage);

@@ -6,7 +6,8 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import java.time.LocalDate;
 
 /**
- * @Author: [yewenbo]
+ * 商务项目派工单信息管理excel
+ * @Author: [chenjunhao]
  * @Date: [2017-06-08 14:52]
  * @Description: [ ]
  * @Version: [1.0.0]
@@ -16,7 +17,7 @@ public class DispatchSheetExcel extends BaseTO {
     /**
      * 内部项目编号
      */
-    @ExcelHeader(name = "内部项目编号", notNull = true)
+    @ExcelHeader(name = "内部项目编号")
     private String innerProjectNum;
 
     /**
@@ -160,13 +161,13 @@ public class DispatchSheetExcel extends BaseTO {
     /**
      * 备注
      */
-    @ExcelHeader(name = "备注", notNull = true)
+    @ExcelHeader(name = "备注")
     private String remark;
 
     /**
      * 临时合同编号
      */
-    @ExcelHeader(name = "临时合同编号", notNull = true)
+    @ExcelHeader(name = "临时合同编号")
     private String tempContractNum;
 
     public String getTempContractNum() {

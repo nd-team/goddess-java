@@ -4,3 +4,4 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:bankrecords:bankrecords-api")
 }
+

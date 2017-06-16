@@ -286,3 +286,4 @@ public class NotPassAuditBO extends BaseBO {
         this.examine = examine;
     }
 }
+

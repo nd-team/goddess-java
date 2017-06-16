@@ -1,7 +1,6 @@
 package com.bjike.goddess.checkfunds.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-
 /**
  * 已完成核对记录
  *

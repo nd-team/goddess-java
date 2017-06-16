@@ -46,4 +46,3 @@ public interface NotPassAuditSer extends Ser<NotPassAudit, NotPassAuditDTO> {
      */
     Long countNum(NotPassAuditDTO dto) throws SerException;
 }
-

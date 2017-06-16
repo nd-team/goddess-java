@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkfunds.service;
 
+
 import com.bjike.goddess.checkfunds.bo.BankReconciliationBO;
 import com.bjike.goddess.checkfunds.bo.NotPassAuditBO;
 import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
@@ -44,9 +45,11 @@ public class NotPassAuditSerImpl extends ServiceImpl<NotPassAudit, NotPassAuditD
         List<NotPassAudit> list = super.findByCis(dto, true);
         List<NotPassAuditBO> boList = new ArrayList<NotPassAuditBO>();
         for (NotPassAudit entity : list) {
-            BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(entity.getId());
+            BankReconciliationBO bankReconciliationBO = bankReconciliationSer.findByID(entity.getBankReconciliationId());
             NotPassAuditBO bo = BeanTransform.copyProperties(bankReconciliationBO, NotPassAuditBO.class);
             bo.setAuditStatus(entity.getAuditStatus());
+            bo.setId(entity.getId());
+            bo.setBankReconciliationId(entity.getBankReconciliationId());
             boList.add(bo);
         }
         return boList;
@@ -57,3 +60,4 @@ public class NotPassAuditSerImpl extends ServiceImpl<NotPassAudit, NotPassAuditD
         return super.count(dto);
     }
 }
+

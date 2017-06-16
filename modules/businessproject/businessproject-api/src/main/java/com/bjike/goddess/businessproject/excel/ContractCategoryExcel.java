@@ -22,7 +22,7 @@ public class ContractCategoryExcel extends BaseTO {
     /**
      * 备注
      */
-    @ExcelHeader(name = "备注", notNull = true)
+    @ExcelHeader(name = "备注")
     private String remark;
 
     public String getContractName() {

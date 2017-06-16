@@ -44,3 +44,4 @@ public interface NotPassAuditAPI {
      */
     Long countNum(NotPassAuditDTO dto) throws SerException;
 }
+

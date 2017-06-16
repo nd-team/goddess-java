@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         mavenCentral()
@@ -6,7 +7,6 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
     }
 }
-
 apply plugin: 'org.springframework.boot'
 jar {
     String buildDir = project.buildDir

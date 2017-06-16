@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkfunds.api;
 
+
 import com.bjike.goddess.checkfunds.bo.NotPassAuditBO;
 import com.bjike.goddess.checkfunds.dto.NotPassAuditDTO;
 import com.bjike.goddess.checkfunds.service.NotPassAuditSer;
@@ -39,3 +40,4 @@ public class NotPassAuditApiImpl implements NotPassAuditAPI {
         return notPassAuditSer.countNum(dto);
     }
 }
+

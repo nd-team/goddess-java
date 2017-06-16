@@ -1,5 +1,6 @@
 package com.bjike.goddess.checkfunds.api;
 
+
 import com.bjike.goddess.checkfunds.bo.RemainAdjustBO;
 import com.bjike.goddess.checkfunds.dto.RemainAdjustDTO;
 import com.bjike.goddess.checkfunds.to.RemainAdjustTO;
@@ -93,3 +94,4 @@ public interface RemainAdjustAPI {
      */
     Long countNum(RemainAdjustDTO dto) throws SerException;
 }
+

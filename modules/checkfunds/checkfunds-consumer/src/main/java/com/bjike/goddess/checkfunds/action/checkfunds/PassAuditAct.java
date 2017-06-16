@@ -3,8 +3,8 @@ package com.bjike.goddess.checkfunds.action.checkfunds;
 import com.bjike.goddess.checkfunds.api.BankReconciliationAPI;
 import com.bjike.goddess.checkfunds.api.PassAuditAPI;
 import com.bjike.goddess.checkfunds.dto.PassAuditDTO;
-import com.bjike.goddess.checkfunds.vo.BankReconciliationVO;
 import com.bjike.goddess.checkfunds.vo.PassAuditVO;
+import com.bjike.goddess.checkfunds.vo.RemainAdjustVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -77,7 +77,7 @@ public class PassAuditAct {
      * 查看余额调节列表
      *
      * @param id 银企对账id
-     * @return class BankReconciliationVO
+     * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
@@ -85,8 +85,8 @@ public class PassAuditAct {
     @GetMapping("v1/listAdjust/{id}")
     public Result listAdjust(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<BankReconciliationVO> VOS = BeanTransform.copyProperties
-                    (bankReconciliationAPI.adjust(id), BankReconciliationVO.class, request);
+            List<RemainAdjustVO> VOS = BeanTransform.copyProperties
+                    (bankReconciliationAPI.adjust(id), RemainAdjustVO.class, request);
             return ActResult.initialize(VOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

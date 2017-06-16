@@ -114,7 +114,7 @@ public class BankReconciliationAct {
      * 余额调节
      *
      * @param id 银企对账id
-     * @return class BankReconciliationVO
+     * @return class RemainAdjustVO
      * @throws ActException
      * @version v1
      */
@@ -123,8 +123,8 @@ public class BankReconciliationAct {
     public Result adjust(@PathVariable String id, HttpServletRequest request) throws ActException {
         request.getSession().setAttribute("id", id);   //将银企对账id存进session的属性中
         try {
-            List<BankReconciliationVO> VOS = BeanTransform.copyProperties
-                    (bankReconciliationAPI.adjust(id), BankReconciliationVO.class, request);
+            List<RemainAdjustVO> VOS = BeanTransform.copyProperties
+                    (bankReconciliationAPI.adjust(id), RemainAdjustVO.class, request);
             return ActResult.initialize(VOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

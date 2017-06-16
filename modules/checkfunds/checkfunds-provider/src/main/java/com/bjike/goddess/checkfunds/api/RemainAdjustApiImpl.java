@@ -64,3 +64,4 @@ public class RemainAdjustApiImpl implements RemainAdjustAPI {
         return remainAdjustSer.countNum(dto);
     }
 }
+

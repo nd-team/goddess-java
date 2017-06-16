@@ -76,3 +76,4 @@ public class RemainAdjustVO {
         this.bankWaterSum = bankWaterSum;
     }
 }
+
