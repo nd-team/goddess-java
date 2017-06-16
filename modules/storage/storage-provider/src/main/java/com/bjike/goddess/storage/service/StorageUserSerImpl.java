@@ -86,7 +86,7 @@ public class StorageUserSerImpl extends ServiceImpl<StorageUser, StorageUserDTO>
     }
 
     private String login(StorageUser storageUser) throws SerException {
-        String token = TokenUtil.create("192.168.0.1", storageUser.getAccount());
+        String token = TokenUtil.create("192.168.0.1");
         LoginUser loginUser = BeanTransform.copyProperties(storageUser, LoginUser.class);
         StorageSession.put(token, loginUser);
         String str_loginUser = JSON.toJSONString(loginUser);
