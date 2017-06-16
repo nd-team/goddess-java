@@ -3,7 +3,9 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.service.YearPlanSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
@@ -80,5 +82,15 @@ public class YearPlanApiImpl implements YearPlanAPI {
     @Override
     public List<YearPlanBO> findByType(String type) throws SerException {
         return yearPlanSer.findByType(type);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return yearPlanSer.sonPermission();
+    }
+
+    @Override
+    public List<YearPlanCollectBO> collect() throws SerException {
+        return yearPlanSer.collect();
     }
 }

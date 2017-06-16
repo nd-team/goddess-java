@@ -413,7 +413,6 @@ public class DimissionInfoAct extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 离职信息数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")

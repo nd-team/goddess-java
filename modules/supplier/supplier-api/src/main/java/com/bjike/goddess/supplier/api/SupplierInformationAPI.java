@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
+import com.bjike.goddess.supplier.to.CollectTo;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -116,11 +118,19 @@ public interface SupplierInformationAPI {
     /**
      * 汇总
      *
-     * @param area 汇总地区
+     * @param to 供应商汇总传输对象
      * @return
      * @throws SerException
      */
-    default List<SupplierInfoCollectBO> collect(String... area) throws SerException {
+    default List<SupplierInfoCollectBO> collect(CollectTo to) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
 

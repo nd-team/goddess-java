@@ -2,6 +2,7 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
@@ -126,6 +127,16 @@ public interface MarketMeasureAPI {
      * @throws SerException
      */
     default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 市场测算汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MarketMeasureCollectBO> collect() throws SerException {
         return null;
     }
 }

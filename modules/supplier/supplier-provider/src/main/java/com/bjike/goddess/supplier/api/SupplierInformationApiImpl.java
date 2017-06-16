@@ -5,7 +5,9 @@ import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.service.SupplierInformationSer;
+import com.bjike.goddess.supplier.to.CollectTo;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +75,12 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     }
 
     @Override
-    public List<SupplierInfoCollectBO> collect(String... area) throws SerException {
-        return supplierInformationSer.collect(area);
+    public List<SupplierInfoCollectBO> collect(CollectTo to) throws SerException {
+        return supplierInformationSer.collect(to);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return supplierInformationSer.sonPermission();
     }
 }

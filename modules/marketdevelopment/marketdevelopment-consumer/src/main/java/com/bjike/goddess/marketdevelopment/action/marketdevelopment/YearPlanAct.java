@@ -6,14 +6,18 @@ import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.YearPlanAPI;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanChoiceVO;
+import com.bjike.goddess.marketdevelopment.vo.YearPlanCollectVO;
 import com.bjike.goddess.marketdevelopment.vo.YearPlanVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 年计划
@@ -37,6 +43,55 @@ public class YearPlanAct extends BaseFileAction {
 
     @Autowired
     private YearPlanAPI yearPlanAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+            List<SonPermissionObject> hasPermissionList = yearPlanAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存年计划数据
@@ -192,6 +247,22 @@ public class YearPlanAct extends BaseFileAction {
             super.writeOutFile(response, yearPlanAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 年计划汇总
+     *
+     * @return class YearPlanCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(yearPlanAPI.collect(), YearPlanCollectVO.class));
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

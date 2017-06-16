@@ -74,4 +74,12 @@ public interface ContactSituationSer extends Ser<ContactSituation, ContactSituat
     default ContactSituationBO getById(String id) throws SerException {
         return null;
     }
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 
@@ -100,5 +101,10 @@ public interface MarketResearchSer extends Ser<MarketResearch, MarketResearchDTO
         return null;
     }
 
-
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

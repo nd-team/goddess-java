@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
@@ -97,6 +98,23 @@ public interface MarketMeasureSer extends Ser<MarketMeasure, MarketMeasureDTO> {
      * @throws SerException
      */
     default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 市场测算汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<MarketMeasureCollectBO> collect() throws SerException {
         return null;
     }
 }

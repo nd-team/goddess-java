@@ -213,7 +213,6 @@ public class MarketChannelAct extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 市场挖掘数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")

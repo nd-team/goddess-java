@@ -1,7 +1,7 @@
 package com.bjike.goddess.supplier.bo;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @Author: [dengjunren]
@@ -20,7 +20,7 @@ public class SupplierInfoCollectBO implements Serializable {
     /**
      * 汇总数据
      */
-    private Set<SupplierInfoCollectTitleBO> titleBOs;
+    private List<SupplierInfoCollectTitleBO> titleBOs;
 
     public String getArea() {
         return area;
@@ -30,11 +30,11 @@ public class SupplierInfoCollectBO implements Serializable {
         this.area = area;
     }
 
-    public Set<SupplierInfoCollectTitleBO> getTitleBOs() {
+    public List<SupplierInfoCollectTitleBO> getTitleBOs() {
         return titleBOs;
     }
 
-    public void setTitleBOs(Set<SupplierInfoCollectTitleBO> titleBOs) {
+    public void setTitleBOs(List<SupplierInfoCollectTitleBO> titleBOs) {
         this.titleBOs = titleBOs;
     }
 }

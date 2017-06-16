@@ -127,4 +127,10 @@ public class MarketResearchSerImpl extends ServiceImpl<MarketResearch, MarketRes
         byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
         return bytes;
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return marPermissionSer.getMarPermission(researchManage);
+    }
+
 }

@@ -13,6 +13,7 @@ import com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
+import com.bjike.goddess.marketdevelopment.vo.MarketMeasureCollectVO;
 import com.bjike.goddess.marketdevelopment.vo.MarketMeasureVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -213,7 +214,6 @@ public class MarketMeasureAct extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 市场测算数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")
@@ -286,6 +286,21 @@ public class MarketMeasureAct extends BaseFileAction {
             super.writeOutFile(response, marketMeasureAPI.exportExcel(to), fileName);
             return new ActResult("导出成功");
         } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 市场测算汇总
+     *
+     * @return class MarketMeasureCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(marketMeasureAPI.collect(), MarketMeasureCollectVO.class));
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

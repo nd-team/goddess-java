@@ -99,4 +99,11 @@ public interface MarketChannelSer extends Ser<MarketChannel, MarketChannelDTO> {
     default byte[] exportExcel(CollectTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

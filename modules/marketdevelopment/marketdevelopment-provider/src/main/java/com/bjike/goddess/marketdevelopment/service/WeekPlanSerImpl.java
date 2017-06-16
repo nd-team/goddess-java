@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -198,5 +199,18 @@ public class WeekPlanSerImpl extends ServiceImpl<WeekPlan, WeekPlanDTO> implemen
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
         return bytes;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(planCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(planManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

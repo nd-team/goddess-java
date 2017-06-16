@@ -8,10 +8,8 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelExcelBO;
-import com.bjike.goddess.marketdevelopment.bo.MarketResearchExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
-import com.bjike.goddess.marketdevelopment.entity.MarketResearch;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.apache.commons.lang3.StringUtils;
@@ -132,4 +130,11 @@ public class MarketChannelSerImpl extends ServiceImpl<MarketChannel, MarketChann
         byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
         return bytes;
     }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return marPermissionSer.getMarPermission(channelManage);
+    }
+
 }

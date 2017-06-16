@@ -182,7 +182,6 @@ public class QualificationsCollectAct extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 通信系统集成资质进度汇总数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")

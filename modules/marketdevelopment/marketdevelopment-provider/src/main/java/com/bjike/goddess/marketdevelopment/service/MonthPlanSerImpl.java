@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -68,6 +69,7 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         MonthPlanBO bo = BeanTransform.copyProperties(entity, MonthPlanBO.class);
         bo.setYearId(entity.getYear().getId());
         bo.setYearNumber(entity.getYear().getYear());
+        bo.setMonthValue(entity.getMonth().getValueString());
         bo.setType(entity.getYear().getType());
         bo.setWorkloadWeight(entity.getYear().getWorkloadWeight());
         bo.setCourse(entity.getYear().getCourse());
@@ -252,4 +254,18 @@ public class MonthPlanSerImpl extends ServiceImpl<MonthPlan, MonthPlanDTO> imple
         byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
         return bytes;
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(planCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(planManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

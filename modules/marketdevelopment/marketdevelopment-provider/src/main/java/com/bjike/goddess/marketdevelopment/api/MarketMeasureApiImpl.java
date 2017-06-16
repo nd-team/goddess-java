@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketMeasureSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
@@ -75,5 +76,10 @@ public class MarketMeasureApiImpl implements MarketMeasureAPI {
     @Override
     public byte[] exportExcel(CollectTO to) throws SerException {
         return marketMeasureSer.exportExcel(to);
+    }
+
+    @Override
+    public List<MarketMeasureCollectBO> collect() throws SerException {
+        return marketMeasureSer.collect();
     }
 }

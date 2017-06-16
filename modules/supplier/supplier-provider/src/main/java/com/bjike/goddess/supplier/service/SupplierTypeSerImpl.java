@@ -133,4 +133,10 @@ public class SupplierTypeSerImpl extends ServiceImpl<SupplierType, SupplierTypeD
             throw new SerException("数据对象不能为空");
         return BeanTransform.copyProperties(entity, SupplierTypeBO.class);
     }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return supPermissionSer.getSupPermission(idFlag);
+    }
+
 }

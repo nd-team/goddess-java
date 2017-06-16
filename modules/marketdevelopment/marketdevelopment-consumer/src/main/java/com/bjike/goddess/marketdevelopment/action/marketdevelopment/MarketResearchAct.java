@@ -213,7 +213,6 @@ public class MarketResearchAct extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 市场调研数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")

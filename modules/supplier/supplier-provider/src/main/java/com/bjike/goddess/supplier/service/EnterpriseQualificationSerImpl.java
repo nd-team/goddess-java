@@ -52,8 +52,6 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
 
     @Override
     public List<EnterpriseQualificationBO> findByInformation(String info_id) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
         EnterpriseQualificationDTO dto = new EnterpriseQualificationDTO();
         dto.getConditions().add(Restrict.eq("information.id", info_id));
         List<EnterpriseQualification> list = super.findByCis(dto);
@@ -120,8 +118,6 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
 
     @Override
     public List<EnterpriseQualificationBO> findByInformationIds(String... ids) throws SerException {
-        if (!supPermissionSer.getSupPermission(idFlag))
-            throw new SerException("您的帐号没有权限");
         EnterpriseQualificationDTO dto = new EnterpriseQualificationDTO();
         dto.getConditions().add(Restrict.in("information.id", ids));
         List<EnterpriseQualification> list = super.findByCis(dto);
@@ -129,5 +125,10 @@ public class EnterpriseQualificationSerImpl extends ServiceImpl<EnterpriseQualif
         for (EnterpriseQualification entity : list)
             bos.add(this.transformBO(entity));
         return bos;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return supPermissionSer.getSupPermission(idFlag);
     }
 }

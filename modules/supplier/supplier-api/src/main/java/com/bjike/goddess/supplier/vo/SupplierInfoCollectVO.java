@@ -1,6 +1,6 @@
 package com.bjike.goddess.supplier.vo;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @Author: [dengjunren]
@@ -19,7 +19,7 @@ public class SupplierInfoCollectVO {
     /**
      * 汇总数据
      */
-    private Set<SupplierInfoCollectTitleVO> titleVOs;
+    private List<SupplierInfoCollectTitleVO> titleVOs;
 
     public String getArea() {
         return area;
@@ -29,11 +29,11 @@ public class SupplierInfoCollectVO {
         this.area = area;
     }
 
-    public Set<SupplierInfoCollectTitleVO> getTitleVOs() {
+    public List<SupplierInfoCollectTitleVO> getTitleVOs() {
         return titleVOs;
     }
 
-    public void setTitleVOs(Set<SupplierInfoCollectTitleVO> titleVOs) {
+    public void setTitleVOs(List<SupplierInfoCollectTitleVO> titleVOs) {
         this.titleVOs = titleVOs;
     }
 }

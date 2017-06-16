@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessTypeDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessType;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.BusinessTypeTO;
 
 import java.util.List;
@@ -82,6 +83,13 @@ public interface BusinessTypeSer extends Ser<BusinessType, BusinessTypeDTO> {
      * @throws SerException
      */
     default List<BusinessTypeBO> findThaw() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 

@@ -6,10 +6,12 @@ import com.bjike.goddess.commerce.entity.CommerceConference;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
@@ -178,5 +180,27 @@ public class CommerceConferenceSerImpl extends ServiceImpl<CommerceConference, C
             return null;
         else
             return BeanTransform.copyProperties(entity, CommerceConferenceBO.class);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = cusPermissionSer.getCusPermission(check);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = cusPermissionSer.getCusPermission(manage);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj.setName("commerceconference");
+        obj.setDescribesion("商务会议");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
     }
 }

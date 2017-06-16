@@ -282,7 +282,6 @@ public class ContractManageAction extends BaseFileAction {
      * 文件附件列表
      *
      * @param id 合同管理数据id
-     * @return class FileVO
      * @version v1
      */
     @GetMapping("v1/listFile/{id}")

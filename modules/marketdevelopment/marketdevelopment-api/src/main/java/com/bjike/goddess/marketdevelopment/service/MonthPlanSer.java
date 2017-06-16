@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MonthPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.MonthPlan;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 
@@ -142,5 +143,12 @@ public interface MonthPlanSer extends Ser<MonthPlan, MonthPlanDTO> {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
+    
 }

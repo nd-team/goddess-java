@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanBO;
 import com.bjike.goddess.marketdevelopment.bo.YearPlanChoiceBO;
+import com.bjike.goddess.marketdevelopment.bo.YearPlanCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.YearPlanDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.entity.YearPlan;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.YearPlanTO;
@@ -137,6 +139,23 @@ public interface YearPlanSer extends Ser<YearPlan, YearPlanDTO> {
      * @throws SerException
      */
     default List<YearPlanBO> findByType(String type) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 年计划汇总
+     * @return
+     * @throws SerException
+     */
+    default List<YearPlanCollectBO> collect() throws SerException{
         return null;
     }
 }

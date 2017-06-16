@@ -86,4 +86,10 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }
