@@ -2,7 +2,9 @@ package com.bjike.goddess.bidding.action.bidding;
 
 import com.bjike.goddess.bidding.api.TenderInfoAPI;
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
+import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
+import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
 import com.bjike.goddess.bidding.vo.TenderInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -10,15 +12,23 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -32,9 +42,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("tenderinfo")
-public class TenderInfoAction {
+public class TenderInfoAction extends BaseFileAction{
     @Autowired
     private TenderInfoAPI tenderInfoAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
     /**
      * 标书资料列表总条数
@@ -148,53 +160,110 @@ public class TenderInfoAction {
     }
 
     /**
-     * 标书资料导出
-     *
-     * @param projectName 项目名称
-     * @version v1
-     */
-    @PostMapping("v1/exportExcel")
-    public Result exportExcel(String projectName) throws ActException {
-        String excel = null;
-        try {
-            excel = tenderInfoAPI.exportExcel(projectName);
-            return new ActResult(excel);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-
-    }
-
-    /**
-     * 上传
-     *
-     * @version v1
-     */
-    @PostMapping("v1/upload")
-    public Result upload() throws ActException {
-        try {
-            tenderInfoAPI.upload();
-            return new ActResult("upload success!");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-
-    }
-
-    /**
      * 上传附件
      *
+     * @des 标书资料
      * @version v1
      */
-    @PostMapping("v1/uploadAttachments")
-    public Result uploadAttachments() throws ActException {
+    @LoginAuth
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            tenderInfoAPI.uploadAttachments();
-            return new ActResult("uploadAttachments success!");
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String paths = "/bidding/tenderinfo/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 文件附件列表
+     *
+     * @param id 标书资料id
+     * @return class FileVO
+     * @version v1
+     */
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /bidding/id/....
+            String path = "/bidding/tenderinfo/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param path 文件信息路径
+     * @version v1
+     */
+    @GetMapping("v1/downloadFile")
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
+        try {
+
+
+            //该文件的路径
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param biddingDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(BiddingDeleteFileTO.TestDEL.class) BiddingDeleteFileTO biddingDeleteFileTO, HttpServletRequest request) throws SerException {
+        if(null != biddingDeleteFileTO.getPaths() && biddingDeleteFileTO.getPaths().length>=0 ){
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(),biddingDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
+    }
+    /**
+     * 导出excel
+     *
+     * @param dto 标书资料
+     * @des 导出标书资料
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(TenderInfoDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "标书资料.xlsx";
+            super.writeOutFile(response, tenderInfoAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 
 }

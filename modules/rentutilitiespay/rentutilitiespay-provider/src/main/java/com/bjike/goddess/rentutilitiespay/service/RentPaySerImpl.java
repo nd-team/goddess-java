@@ -57,7 +57,21 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     public RentPayBO insertRentPay(RentPayTO rentPayTO) throws SerException {
         RentPay rentPay = BeanTransform.copyProperties(rentPayTO, RentPay.class, true);
         rentPay.setCreateTime(LocalDateTime.now());
-        rentPay = count(rentPay);
+        //用水量（水费期末数目-水费初期数目）
+        Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
+        rentPay.setWater(water);
+        //水费缴纳金额（水费计价金额（元/吨）*用水量）
+        Double waterPayMoney = rentPay.getWaterValuationMoney() * water;
+        rentPay.setWaterPayMoney(waterPayMoney);
+        //用电量（电费期末数目-电费初期数目）
+        Double energy = rentPay.getEnergyEndNum() - rentPay.getEnergyBeginNum();
+        rentPay.setEnergy(energy);
+        //电费缴纳金额（电费计价金额（元/吨）*用电量）
+        Double energyPayMoney = rentPay.getEnergyValuationMoney() * energy;
+        rentPay.setEnergyPayMoney(energyPayMoney);
+        //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
+        Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + waterPayMoney + energyPayMoney + rentPay.getGasRechargeLines();
+        rentPay.setPayMoneyCollect(payMoneyCollect);
         super.save(rentPay);
         return BeanTransform.copyProperties(rentPay, RentPayBO.class);
     }
@@ -68,9 +82,23 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         RentPay rentPay = super.findById(rentPayTO.getId());
         BeanTransform.copyProperties(rentPayTO, rentPay, true);
         rentPay.setModifyTime(LocalDateTime.now());
-        rentPay = count(rentPay);
+        //用水量（水费期末数目-水费初期数目）
+        Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
+        rentPay.setWater(water);
+        //水费缴纳金额（水费计价金额（元/吨）*用水量）
+        Double waterPayMoney = rentPay.getWaterValuationMoney() * water;
+        rentPay.setWaterPayMoney(waterPayMoney);
+        //用电量（电费期末数目-电费初期数目）
+        Double energy = rentPay.getEnergyEndNum() - rentPay.getEnergyBeginNum();
+        rentPay.setEnergy(energy);
+        //电费缴纳金额（电费计价金额（元/吨）*用电量）
+        Double energyPayMoney = rentPay.getEnergyValuationMoney() * energy;
+        rentPay.setEnergyPayMoney(energyPayMoney);
+        //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
+        Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + waterPayMoney + energyPayMoney + rentPay.getGasRechargeLines();
+        rentPay.setPayMoneyCollect(payMoneyCollect);
         super.update(rentPay);
-        return BeanTransform.copyProperties(rentPayTO, RentPay.class);
+        return BeanTransform.copyProperties(rentPayTO, RentPayBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -82,27 +110,27 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         super.remove(id);
     }
 
-    /**
-     * 计算方法
-     */
-    public RentPay count(RentPay rentPay) throws SerException {
-        //水费缴纳金额（水费计价金额（元/吨）*用水量）
-        Double waterPayMoney = rentPay.getWaterValuationMoney() * rentPay.getWater();
-        rentPay.setWaterPayMoney(waterPayMoney);
-        //用水量（水费期末数目-水费初期数目）
-        Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
-        rentPay.setWater(water);
-        //电费缴纳金额（电费计价金额（元/吨）*用电量）
-        Double energyPayMoney = rentPay.getEnergyPayMoney() * rentPay.getEnergy();
-        rentPay.setEnergyPayMoney(energyPayMoney);
-        //用电量（电费期末数目-电费初期数目）
-        Double energy = rentPay.getEnergyEndNum() - rentPay.getEnergyBeginNum();
-        rentPay.setEnergy(energy);
-        //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
-        Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + rentPay.getWaterPayMoney() + rentPay.getEnergyPayMoney() + rentPay.getGasRechargeLines();
-        rentPay.setPayMoneyCollect(payMoneyCollect);
-        return rentPay;
-    }
+//    /**
+//     * 计算方法
+//     */
+//    public RentPay count(RentPay rentPay) throws SerException {
+//        //水费缴纳金额（水费计价金额（元/吨）*用水量）
+//        Double waterPayMoney = rentPay.getWaterValuationMoney() * rentPay.getWater();
+//        rentPay.setWaterPayMoney(waterPayMoney);
+//        //用水量（水费期末数目-水费初期数目）
+//        Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
+//        rentPay.setWater(water);
+//        //电费缴纳金额（电费计价金额（元/吨）*用电量）
+//        Double energyPayMoney = rentPay.getEnergyPayMoney() * rentPay.getEnergy();
+//        rentPay.setEnergyPayMoney(energyPayMoney);
+//        //用电量（电费期末数目-电费初期数目）
+//        Double energy = rentPay.getEnergyEndNum() - rentPay.getEnergyBeginNum();
+//        rentPay.setEnergy(energy);
+//        //缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
+//        Double payMoneyCollect = rentPay.getRent() + rentPay.getFee() + rentPay.getWaterPayMoney() + rentPay.getEnergyPayMoney() + rentPay.getGasRechargeLines();
+//        rentPay.setPayMoneyCollect(payMoneyCollect);
+//        return rentPay;
+//    }
 
     /**
      * 上传附件

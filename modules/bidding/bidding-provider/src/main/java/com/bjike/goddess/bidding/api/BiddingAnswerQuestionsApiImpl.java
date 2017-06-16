@@ -54,14 +54,9 @@ public class BiddingAnswerQuestionsApiImpl implements BiddingAnswerQuestionsAPI 
     }
 
     @Override
-    public String exportExcel(String projectName) throws SerException {
-        return biddingAnswerQuestionsSer.exportExcel(projectName);
+    public byte[] exportExcel(BiddingAnswerQuestionsDTO dto) throws SerException {
+        return biddingAnswerQuestionsSer.exportExcel(dto);
     }
 
-    @Override
-    public void upload() throws SerException {
-        biddingAnswerQuestionsSer.upload();
-
-    }
 
 }

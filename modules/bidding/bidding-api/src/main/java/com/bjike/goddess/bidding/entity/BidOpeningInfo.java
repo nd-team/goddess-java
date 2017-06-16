@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -36,8 +37,8 @@ public class BidOpeningInfo extends BaseEntity {
     /**
      * 开标时间
      */
-    @Column(name = "bidOpeningTime", columnDefinition = "DATETIME   COMMENT '开标时间'")
-    private LocalDateTime bidOpeningTime;
+    @Column(name = "bidOpeningTime", columnDefinition = "DATE   COMMENT '开标时间'")
+    private LocalDate bidOpeningTime;
     /**
      * 开标地点
      */
@@ -97,11 +98,11 @@ public class BidOpeningInfo extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public LocalDateTime getBidOpeningTime() {
+    public LocalDate getBidOpeningTime() {
         return bidOpeningTime;
     }
 
-    public void setBidOpeningTime(LocalDateTime bidOpeningTime) {
+    public void setBidOpeningTime(LocalDate bidOpeningTime) {
         this.bidOpeningTime = bidOpeningTime;
     }
 

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -24,14 +25,14 @@ public class WorkJoin extends BaseEntity {
     /**
      * 工作交接开始时间
      */
-    @Column(name = "workJoinStartTime", columnDefinition = "DATETIME   COMMENT '工作交接开始时间'")
-    private LocalDateTime workJoinStartTime;
+    @Column(name = "workJoinStartTime", columnDefinition = "DATE   COMMENT '工作交接开始时间'")
+    private LocalDate workJoinStartTime;
 
     /**
      * 工作交接结束时间
      */
-    @Column(name = "workJoinendTime",  columnDefinition = "DATETIME   COMMENT '工作交接结束时间'")
-    private LocalDateTime workJoinendTime;
+    @Column(name = "workJoinendTime",  columnDefinition = "DATE   COMMENT '工作交接结束时间'")
+    private LocalDate workJoinendTime;
 
     /**
      * 所属模块/组别
@@ -78,7 +79,7 @@ public class WorkJoin extends BaseEntity {
     /**
      * 交接人确认(是/否)
      */
-    @Column(name = "is_heir",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '交接人确认(是/否)'", insertable = false)
+    @Column(name = "is_heir",  columnDefinition = "TINYINT(2) COMMENT '交接人确认(是/否)'")
     private Boolean heir;
 
     /**
@@ -90,7 +91,7 @@ public class WorkJoin extends BaseEntity {
     /**
      * 接手人确认(是/否)
      */
-    @Column(name = "is_inheritor", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '接手人确认(是/否)'", insertable = false)
+    @Column(name = "is_inheritor", columnDefinition = "TINYINT(2)   COMMENT '接手人确认(是/否)'")
     private Boolean inheritor;
 
     /**
@@ -102,23 +103,23 @@ public class WorkJoin extends BaseEntity {
     /**
      * 负责人确认(是/否)
      */
-    @Column(name = "is_head", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '负责人确认(是/否)'", insertable = false)
+    @Column(name = "is_head", columnDefinition = "TINYINT(2) COMMENT '负责人确认(是/否)'")
     private Boolean head;
 
 
-    public LocalDateTime getWorkJoinStartTime() {
+    public LocalDate getWorkJoinStartTime() {
         return workJoinStartTime;
     }
 
-    public void setWorkJoinStartTime(LocalDateTime workJoinStartTime) {
+    public void setWorkJoinStartTime(LocalDate workJoinStartTime) {
         this.workJoinStartTime = workJoinStartTime;
     }
 
-    public LocalDateTime getWorkJoinendTime() {
+    public LocalDate getWorkJoinendTime() {
         return workJoinendTime;
     }
 
-    public void setWorkJoinendTime(LocalDateTime workJoinendTime) {
+    public void setWorkJoinendTime(LocalDate workJoinendTime) {
         this.workJoinendTime = workJoinendTime;
     }
 

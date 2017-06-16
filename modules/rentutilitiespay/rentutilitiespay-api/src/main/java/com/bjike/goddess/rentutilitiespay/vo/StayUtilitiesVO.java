@@ -1,5 +1,7 @@
 package com.bjike.goddess.rentutilitiespay.vo;
 
+import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
+
 /**
  * 员工住宿水电费表现层对象
  *
@@ -123,7 +125,7 @@ public class StayUtilitiesVO {
     /**
      * 员工核实（确认/有误）
      */
-    private String staffVerify;
+    private StaffVerify staffVerify;
 
     /**
      * 综合资源部核实情况（是否需要修改）
@@ -317,11 +319,11 @@ public class StayUtilitiesVO {
         this.staffPayCollect = staffPayCollect;
     }
 
-    public String getStaffVerify() {
+    public StaffVerify getStaffVerify() {
         return staffVerify;
     }
 
-    public void setStaffVerify(String staffVerify) {
+    public void setStaffVerify(StaffVerify staffVerify) {
         this.staffVerify = staffVerify;
     }
 

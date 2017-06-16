@@ -17,7 +17,10 @@ import com.bjike.goddess.projectissuehandle.enums.ProjectType;
  * @Copy: [ com.bjike ]
  */
 public class ProblemHandlingResultBO extends BaseBO {
-
+    /**
+     * 项目问题编号
+     */
+    private String projectNum;
     /**
      * 年份
      */
@@ -96,7 +99,27 @@ public class ProblemHandlingResultBO extends BaseBO {
      * 问题总结
      */
     private String problemConclusion;
+    /**
+     * 项目执行中的问题受理
+     */
+   // private ProblemAcceptBO problemAcceptBO;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -224,5 +247,29 @@ public class ProblemHandlingResultBO extends BaseBO {
 
     public void setProblemConclusion(String problemConclusion) {
         this.problemConclusion = problemConclusion;
+    }
+
+//    public ProblemAcceptBO getProblemAcceptBO() {
+//        return problemAcceptBO;
+//    }
+//
+//    public void setProblemAcceptBO(ProblemAcceptBO problemAcceptBO) {
+//        this.problemAcceptBO = problemAcceptBO;
+//    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

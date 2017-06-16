@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -48,8 +49,8 @@ public class TaskJoin extends BaseEntity {
     /**
      * 任务时间
      */
-    @Column(name = "taskTime", columnDefinition = "DATETIME   COMMENT '任务时间'")
-    private LocalDateTime taskTime;
+    @Column(name = "taskTime", columnDefinition = "DATE   COMMENT '任务时间'")
+    private LocalDate taskTime;
 
     /**
      * 文件名称
@@ -108,11 +109,11 @@ public class TaskJoin extends BaseEntity {
         this.completion = completion;
     }
 
-    public LocalDateTime getTaskTime() {
+    public LocalDate getTaskTime() {
         return taskTime;
     }
 
-    public void setTaskTime(LocalDateTime taskTime) {
+    public void setTaskTime(LocalDate taskTime) {
         this.taskTime = taskTime;
     }
 

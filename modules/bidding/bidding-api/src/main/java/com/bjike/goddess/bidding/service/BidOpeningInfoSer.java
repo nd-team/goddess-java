@@ -2,6 +2,7 @@ package com.bjike.goddess.bidding.service;
 
 import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
+import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -86,24 +87,6 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
         return null;
     }
 
-
-    /**
-     * 导出
-     *
-     * @param projectName
-     * @throws SerException
-     */
-    default String exportExcel(String projectName) throws SerException {
-        return null;
-    }
-    /**
-     * 发送邮件
-     *
-     * @return class String
-     */
-    default BidOpeningInfoBO sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
-        return null;
-    }
     /**
      * 汇总
      *
@@ -122,5 +105,11 @@ public interface BidOpeningInfoSer extends Ser<BidOpeningInfo, BidOpeningInfoDTO
     default List<String> getBidOpeningInfoCities() throws SerException {
         return null;
     }
-
+    /**
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(BidOpeningInfoDTO dto) throws SerException;
 }

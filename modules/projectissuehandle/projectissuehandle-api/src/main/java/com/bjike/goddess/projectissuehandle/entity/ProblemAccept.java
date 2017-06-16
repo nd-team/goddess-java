@@ -1,10 +1,14 @@
 package com.bjike.goddess.projectissuehandle.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.projectissuehandle.enums.*;
+import com.bjike.goddess.projectissuehandle.enums.AffectedDepartment;
+import com.bjike.goddess.projectissuehandle.enums.NoticeWay;
+import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingTime;
+import com.bjike.goddess.projectissuehandle.enums.ProblemTypes;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 
 /**
@@ -19,7 +23,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "projectissuehandle_problemaccept")
 public class ProblemAccept extends BaseEntity {
-
+    /**
+     * 项目问题编号
+     */
+    @Column(name = "projectNum", columnDefinition = "VARCHAR(255)   COMMENT '项目问题编号'")
+    private String projectNum;
     /**
      * 年份
      */
@@ -59,19 +67,19 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 工程类型
      */
-    @Column(name = "projectType",  columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
+    @Column(name = "projectType", columnDefinition = "VARCHAR(255)   COMMENT '工程类型'")
     private String projectType;
 
     /**
      * 通知方式
      */
-    @Column(name = "noticeWay",  columnDefinition = "TINYINT(2)   COMMENT '通知方式'")
+    @Column(name = "noticeWay", columnDefinition = "TINYINT(2)   COMMENT '通知方式'")
     private NoticeWay noticeWay;
 
     /**
      * 问题具体内容
      */
-    @Column(name = "problemSpecificContent",  columnDefinition = "VARCHAR(255)   COMMENT '问题具体内容'")
+    @Column(name = "problemSpecificContent", columnDefinition = "VARCHAR(255)   COMMENT '问题具体内容'")
     private String problemSpecificContent;
 
     /**
@@ -83,14 +91,14 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 解决方式
      */
-    @Column(name = "solution",  columnDefinition = "VARCHAR(255)   COMMENT '解决方式'")
+    @Column(name = "solution", columnDefinition = "VARCHAR(255)   COMMENT '解决方式'")
     private String solution;
 
     /**
      * 问题紧急程度
      */
-    @Column(name = "problemEmergencyDegree", columnDefinition = "TINYINT(2)   COMMENT '问题紧急程度'")
-    private ProblemEmergencyDegree problemEmergencyDegree;
+    @Column(name = "problemEmergencyDegree", columnDefinition = "VARCHAR(255)   COMMENT '问题紧急程度'")
+    private String problemEmergencyDegree;
 
     /**
      * 问题处理时间
@@ -101,8 +109,16 @@ public class ProblemAccept extends BaseEntity {
     /**
      * 受影响部门
      */
-    @Column(name = "affectedDepartment",  columnDefinition = "TINYINT(2)   COMMENT '受影响部门'")
+    @Column(name = "affectedDepartment", columnDefinition = "TINYINT(2)   COMMENT '受影响部门'")
     private AffectedDepartment affectedDepartment;
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -192,11 +208,11 @@ public class ProblemAccept extends BaseEntity {
         this.solution = solution;
     }
 
-    public ProblemEmergencyDegree getProblemEmergencyDegree() {
+    public String getProblemEmergencyDegree() {
         return problemEmergencyDegree;
     }
 
-    public void setProblemEmergencyDegree(ProblemEmergencyDegree problemEmergencyDegree) {
+    public void setProblemEmergencyDegree(String problemEmergencyDegree) {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
@@ -215,4 +231,5 @@ public class ProblemAccept extends BaseEntity {
     public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
     }
+
 }

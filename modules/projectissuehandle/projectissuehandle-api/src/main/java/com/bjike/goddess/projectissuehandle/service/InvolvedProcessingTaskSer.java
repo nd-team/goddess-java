@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.entity.InvolvedProcessingTask;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
 
 import java.util.List;
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, InvolvedProcessingTaskDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 参与处理人员的任务分配列表总条数
      */
@@ -78,14 +91,6 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
 
     }
 
-    /**
-     * 导出
-     *
-     * @throws SerException
-     */
-    default String exportExcel(String internalProjectName, String handler) throws SerException {
-        return null;
-    }
 
     /**
      * 搜索
@@ -97,11 +102,12 @@ public interface InvolvedProcessingTaskSer extends Ser<InvolvedProcessingTask, I
     }
 
     /**
-     * 上传
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
      */
-    default void upload() throws SerException {
-        return;
+    byte[] exportExcel(InvolvedProcessingTaskDTO dto) throws SerException;
 
-    }
 
 }

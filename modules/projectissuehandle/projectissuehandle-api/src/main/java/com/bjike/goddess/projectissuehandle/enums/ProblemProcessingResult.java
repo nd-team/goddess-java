@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectissuehandle.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 问题处理结果枚举
  *
@@ -13,10 +15,12 @@ public enum ProblemProcessingResult {
     /**
      * 完成
      */
+    @ExcelValue(name = "完成")
     COMPLETE(0),
     /**
      * 未完成
      */
+    @ExcelValue(name = "未完成")
     UNFINISHED(1),;
 
     private int code;
@@ -48,6 +52,16 @@ public enum ProblemProcessingResult {
         }
         if (code == ProblemProcessingResult.UNFINISHED.getCode()) {
             name = "未完成";
+        }
+        return name;
+    }
+    public static String exportStrConvert(ProblemProcessingResult problemProcessingResult) {
+        String name = "";
+        if (problemProcessingResult.equals(ProblemProcessingResult.COMPLETE)) {
+            name = "完成";
+        }
+        if (problemProcessingResult.equals(ProblemProcessingResult.UNFINISHED)) {
+            name = "4-未完成";
         }
         return name;
     }

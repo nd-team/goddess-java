@@ -31,6 +31,9 @@ dependencies {
     compile project(":modules:quartz:quartz-api")
     compile project(":modules:user:user-api")
     compile project(":modules:businessproject:businessproject-api")
+    compile project(":modules:projectissuehandle:projectissuehandle-api")
+    compile project(":modules:bidding:bidding-api")
+    compile project(":modules:market:market-api")
     compile project(":common:common-utils")
 }
 

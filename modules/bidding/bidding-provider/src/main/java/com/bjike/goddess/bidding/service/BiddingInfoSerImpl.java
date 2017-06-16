@@ -4,11 +4,17 @@ import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
+import com.bjike.goddess.bidding.enums.BiddingType;
+import com.bjike.goddess.bidding.enums.BusinessType;
+import com.bjike.goddess.bidding.excel.BiddingInfoExport;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +41,20 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    /**
+     * 核对时间格式(年月日)
+     */
+    private void checkDate(BiddingInfoTO biddingInfoTO) throws SerException{
+        try {
+            DateUtil.parseDate(biddingInfoTO.getRegistrationTime());
+            DateUtil.parseDate(biddingInfoTO.getBiddingTime());
+            DateUtil.parseDate(biddingInfoTO.getBuyTenderTime());
+            DateUtil.parseDate(biddingInfoTO.getMarginTime());
+            DateUtil.parseDate(biddingInfoTO.getBackTimeDeposit());
+        }catch (Exception e){
+            throw new SerException("输入的日期格式有误");
+        }
+    }
     @Override
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         biddingInfoDTO.getSorts().add("createTime=desc");
@@ -65,6 +86,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         if ( !permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
+        checkDate(biddingInfoTO);
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true);
         biddingInfo.setId(biddingInfoTO.getId());
         super.save(biddingInfo);
@@ -82,6 +104,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
         BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true);
+        checkDate(biddingInfoTO);
         biddingInfo.setModifyTime(LocalDateTime.now());
         super.update(biddingInfo);
         return BeanTransform.copyProperties(biddingInfoTO, BiddingInfoBO.class);
@@ -97,12 +120,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             throw new SerException("id不能为空");
         }
         super.remove(id);
-    }
-
-    @Override
-    public String exportExcel(String projectName) throws SerException {
-        //TODO: xiazhili 2017-03-10 未做导出明细
-        return null;
     }
 
     @Override
@@ -137,18 +154,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         List<BiddingInfo> biddingInfos = super.findByCis(biddingInfoDTO,true);
         List<BiddingInfoBO> biddingInfoBOS = BeanTransform.copyProperties(biddingInfos, BiddingInfoBO.class);
         return biddingInfoBOS;
-    }
-
-    @Override
-    public void upload() throws SerException {
-        //TODO: xiazhili 2017-03-17 未做上传
-        return;
-
-    }
-    @Override
-    public BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        //TODO: xiazhili 2017-03-17 未做发送邮件
-        return null;
     }
 
     @Override
@@ -208,6 +213,25 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
         return citiesList;
     }
+    @Override
+    public byte[] exportExcel(BiddingInfoDTO dto) throws SerException{
+        if(StringUtils.isNotBlank(dto.getProjectName())){
+            dto.getConditions().add(Restrict.eq("projectName",dto.getProjectName()));
+        }
+        List<BiddingInfo> list = super.findByCis(dto);
+
+        List<BiddingInfoExport> biddingInfoExports = new ArrayList<>();
+        list.stream().forEach(str->{
+            BiddingInfoExport export = BeanTransform.copyProperties(str,BiddingInfoExport.class,"biddingType","businessType");
+            export.setBiddingType(BiddingType.exportStrConvert(str.getBiddingType()));
+            export.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
+            biddingInfoExports.add(export);
+        });
+        Excel excel = new Excel(0,2);
+        byte [] bytes = ExcelUtil.clazzToExcel(biddingInfoExports,excel);
+        return bytes;
+    }
+
 
 
 }

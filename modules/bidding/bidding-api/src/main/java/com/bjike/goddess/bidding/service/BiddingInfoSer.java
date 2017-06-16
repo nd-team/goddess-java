@@ -80,16 +80,6 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     }
 
     /**
-     * 导出
-     *
-     * @param projectName
-     * @throws SerException
-     */
-    default String exportExcel(String projectName) throws SerException {
-        return null;
-    }
-
-    /**
      * 搜索
      *
      * @throws SerException
@@ -98,13 +88,6 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
         return null;
     }
 
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
 
     /**
      * 汇总
@@ -127,13 +110,13 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     }
 
     /**
-     * 发送邮件
+     * 导出Excel
      *
-     * @return class String
+     * @param dto
+     * @throws SerException
      */
-    default BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        return null;
-    }
+    byte[] exportExcel(BiddingInfoDTO dto) throws SerException;
+
 
 
 }

@@ -1,11 +1,13 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
-import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
+import com.bjike.goddess.projectissuehandle.enums.AffectedDepartment;
+import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingTime;
+import com.bjike.goddess.projectissuehandle.excel.SonPermissionObject;
 import com.bjike.goddess.projectissuehandle.service.ProblemAcceptSer;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,19 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     @Autowired
     private ProblemAcceptSer problemAcceptSer;
     @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return problemAcceptSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return problemAcceptSer.guidePermission( guidePermissionTO );
+    }
+    @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return problemAcceptSer.countProblemAccept(problemAcceptDTO);
     }
+
     @Override
     public ProblemAcceptBO getOne(String id) throws SerException {
         return problemAcceptSer.getOne(id);
@@ -54,20 +66,26 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
         problemAcceptSer.removeProblemAccept(id);
     }
 
-    @Override
-    public String exportExcel(String internalProjectName, String projectType) throws SerException {
-        return problemAcceptSer.exportExcel(internalProjectName, projectType);
-    }
 
     @Override
     public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return problemAcceptSer.searchProblemAccept(problemAcceptDTO);
     }
-
     @Override
-    public void upload() throws SerException {
-        problemAcceptSer.upload();
-
+    public ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
+        return problemAcceptSer.getProjectNum(projectNum);
+    }
+    @Override
+    public List<String> getProjectNum() throws SerException {
+        return problemAcceptSer.getProjectNum();
     }
 
+    @Override
+    public String degree(ProblemProcessingTime problemProcessingTime, AffectedDepartment affectedDepartment) throws SerException {
+        return problemAcceptSer.degree(problemProcessingTime, affectedDepartment);
+    }
+    @Override
+    public byte[] exportExcel(ProblemAcceptDTO dto) throws SerException {
+        return problemAcceptSer.exportExcel(dto);
+    }
 }

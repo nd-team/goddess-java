@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
+import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BidOpeningInfo;
 import com.bjike.goddess.bidding.service.BidOpeningInfoSer;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
@@ -63,16 +64,16 @@ public class BidOpeningInfoApiImpl implements BidOpeningInfoAPI {
         return bidOpeningInfoSer.searchBidOpeningInfo(bidOpeningInfoDTO);
     }
     @Override
-    public BidOpeningInfoBO sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws SerException {
-        return bidOpeningInfoSer.sendBidOpeningInfo(bidOpeningInfoTO);
-    }
-    @Override
     public List<BidOpeningCollectBO> collectBidOpening(String[] cities) throws SerException {
         return bidOpeningInfoSer.collectBidOpening(cities);
     }
     @Override
     public List<String> getBidOpeningInfoCities() throws SerException {
         return bidOpeningInfoSer.getBidOpeningInfoCities();
+    }
+    @Override
+    public byte[] exportExcel(BidOpeningInfoDTO dto) throws SerException{
+        return bidOpeningInfoSer.exportExcel(dto);
     }
 
 }

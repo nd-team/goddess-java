@@ -72,4 +72,20 @@ public enum BusinessType {
         return name;
     }
 
+    public static String exportStrConvert(BusinessType businessType) {
+        String name = "";
+        if (businessType.equals(BusinessType.MOBILECOMMUNICATION)) {
+            name = "移动通信";
+        }
+        if (businessType.equals(BusinessType.SOFTWAREDEVELOPMENT)) {
+            name = "软件开发";
+        }
+        if (businessType.equals(BusinessType.INTELLIGENTSYSTEMINTEGRATION)) {
+            name = "智能系统集成";
+        }
+        if (businessType.equals(BusinessType.PLANNINGMARKETINGSOLUTIONS)) {
+            name = "策划与营销方案";
+        }
+        return name;
+    }
 }

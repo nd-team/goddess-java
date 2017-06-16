@@ -34,17 +34,18 @@ public class CollectBO extends BaseBO {
      */
     private Object person;
     /**
-     * 进度类
-     */
-    private Object progress;
-    /**
-     * 交付类
-     */
-    private Object deliver;
-    /**
      * 设备类
      */
     private Object device;
+    /**
+     * 派工类
+     */
+    private Object dispartch;
+    /**
+     * 结算类
+     */
+    private Object settlement;
+
     /**
      * 初级
      */
@@ -118,20 +119,20 @@ public class CollectBO extends BaseBO {
         this.person = person;
     }
 
-    public Object getProgress() {
-        return progress;
+    public Object getDispartch() {
+        return dispartch;
     }
 
-    public void setProgress(Object progress) {
-        this.progress = progress;
+    public void setDispartch(Object dispartch) {
+        this.dispartch = dispartch;
     }
 
-    public Object getDeliver() {
-        return deliver;
+    public Object getSettlement() {
+        return settlement;
     }
 
-    public void setDeliver(Object deliver) {
-        this.deliver = deliver;
+    public void setSettlement(Object settlement) {
+        this.settlement = settlement;
     }
 
     public Object getDevice() {

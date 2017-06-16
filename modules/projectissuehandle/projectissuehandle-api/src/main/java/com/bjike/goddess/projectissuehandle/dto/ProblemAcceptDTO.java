@@ -23,6 +23,7 @@ public class ProblemAcceptDTO extends BaseDTO {
      */
     private String projectType;
 
+
     public String getInternalProjectName() {
         return internalProjectName;
     }

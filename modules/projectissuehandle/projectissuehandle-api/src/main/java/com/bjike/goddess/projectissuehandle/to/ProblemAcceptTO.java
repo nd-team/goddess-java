@@ -18,25 +18,33 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class ProblemAcceptTO extends BaseTO {
+    /**
+     * 项目问题编号
+     */
+    private String projectNum;
 
     /**
      * 年份
      */
+    @NotBlank(message = "年份不能为空",groups = {ADD.class, EDIT.class})
     private String year;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 合同外部编号
      */
+    @NotBlank(message = "合同外部编号不能为空",groups = {ADD.class, EDIT.class})
     private String externalContractNum;
 
     /**
      * 合同外部项目名称
      */
+    @NotBlank(message = "合同外部项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String externalContractProjectName;
 
     /**
@@ -48,6 +56,7 @@ public class ProblemAcceptTO extends BaseTO {
     /**
      * 内部项目编号
      */
+    @NotBlank(message = "内部项目编号不能为空",groups = {ADD.class, EDIT.class})
     private String internalNum;
 
     /**
@@ -59,38 +68,61 @@ public class ProblemAcceptTO extends BaseTO {
     /**
      * 通知方式
      */
+    @NotNull(message = "通知方式不能为空",groups = {ADD.class, EDIT.class})
     private NoticeWay noticeWay;
 
     /**
      * 问题具体内容
      */
+    @NotBlank(message = "问题具体内容不能为空",groups = {ADD.class, EDIT.class})
     private String problemSpecificContent;
 
     /**
      * 问题类型
      */
+    @NotNull(message = "问题类型不能为空",groups = {ADD.class, EDIT.class})
     private ProblemTypes problemTypes;
 
     /**
      * 解决方式
      */
+    @NotBlank(message = "解决方式不能为空",groups = {ADD.class, EDIT.class})
     private String solution;
-
-    /**
-     * 问题紧急程度
-     */
-    private ProblemEmergencyDegree problemEmergencyDegree;
 
     /**
      * 问题处理时间
      */
+    @NotNull(message = "问题处理时间不能为空",groups = {ADD.class, EDIT.class})
     private ProblemProcessingTime problemProcessingTime;
 
     /**
      * 受影响部门
      */
+    @NotNull(message = "受影响部门不能为空",groups = {ADD.class, EDIT.class})
     private AffectedDepartment affectedDepartment;
+    /**
+     * 问题紧急程度
+     */
+    private String problemEmergencyDegree;
 
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -180,11 +212,11 @@ public class ProblemAcceptTO extends BaseTO {
         this.solution = solution;
     }
 
-    public ProblemEmergencyDegree getProblemEmergencyDegree() {
+    public String getProblemEmergencyDegree() {
         return problemEmergencyDegree;
     }
 
-    public void setProblemEmergencyDegree(ProblemEmergencyDegree problemEmergencyDegree) {
+    public void setProblemEmergencyDegree(String problemEmergencyDegree) {
         this.problemEmergencyDegree = problemEmergencyDegree;
     }
 
@@ -202,5 +234,21 @@ public class ProblemAcceptTO extends BaseTO {
 
     public void setAffectedDepartment(AffectedDepartment affectedDepartment) {
         this.affectedDepartment = affectedDepartment;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

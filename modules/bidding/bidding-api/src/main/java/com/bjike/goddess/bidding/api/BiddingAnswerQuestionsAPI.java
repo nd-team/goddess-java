@@ -76,21 +76,11 @@ public interface BiddingAnswerQuestionsAPI {
     }
 
     /**
-     * 导出
+     * 导出Excel
      *
-     * @param projectName
+     * @param dto
      * @throws SerException
      */
-    default String exportExcel(String projectName) throws SerException {
-        return null;
-    }
-
-    /**
-     * 上传
-     */
-    default void upload() throws SerException {
-        return;
-
-    }
+    byte[] exportExcel(BiddingAnswerQuestionsDTO dto) throws SerException;
 
 }
