@@ -93,6 +93,10 @@ public class SiginManageApiImpl implements SiginManageAPI {
     public byte[] exportExcel(SiginManageDTO dto) throws SerException {
         return siginManageSer.exportExcel( dto );
     }
+    @Override
+    public byte[] templateExport( ) throws SerException {
+        return siginManageSer.templateExport(   );
+    }
 
     @Override
     public List<String> listInnerProject() throws SerException {

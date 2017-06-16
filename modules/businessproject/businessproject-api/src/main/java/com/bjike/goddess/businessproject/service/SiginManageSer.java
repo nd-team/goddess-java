@@ -134,6 +134,12 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      */
     byte[] exportExcel(SiginManageDTO dto ) throws SerException;
 
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport(  ) throws SerException;
+
 
     /**
      * 获取所有内部项目名称

@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessproject.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
@@ -8,6 +9,7 @@ import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.SiginManageExport;
+import com.bjike.goddess.businessproject.excel.SiginManageTemplateExport;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
@@ -28,6 +30,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -470,6 +473,46 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, excel);
         return bytes;
     }
+
+
+    @Override
+    public byte[] templateExport() throws SerException {
+//        getCusPermission();
+
+        List<SiginManageTemplateExport> siginManageExports = new ArrayList<>();
+
+        SiginManageTemplateExport excel = new SiginManageTemplateExport();
+        excel.setBusinessType("移动通信类");
+        excel.setBusinessSubject( "test" );
+        excel.setBusinessCooperate("租赁合同");
+        excel.setOuterProject("test");
+        excel.setFirstCompany("test");
+        excel.setSecondCompany( "test");
+        excel.setArea("test");
+        excel.setMoney( 12.0d );
+        excel.setStartProjectTime(LocalDate.now() );
+        excel.setEndProjectTime( LocalDate.now() );
+        excel.setSiginStatus("已签订" );
+        excel.setContractProperty( "框架合同");
+        excel.setMakeProject( "已立项");
+        excel.setInnerProject("test");
+        excel.setProjectGroup( "test");
+        excel.setProjectCharge("test");
+        excel.setRemark("");
+        siginManageExports.add( excel );
+
+        SiginManageTemplateExport excel2 = new SiginManageTemplateExport();
+        BeanUtils.copyProperties( excel , excel2);
+        excel.setSiginStatus("未签订" );
+        excel.setMakeProject( "未立项");
+        siginManageExports.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, exce);
+        return bytes;
+    }
+
+
 
     @Override
     public List<String> listInnerProject() throws SerException {

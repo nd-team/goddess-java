@@ -14,6 +14,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.rmi.ServerException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -284,6 +285,8 @@ public class ExcelUtil {
                                     val = DateUtil.dateToString((LocalDateTime) val);
                                 } else if (null != val && field.getType().isEnum()) {
                                     val = fieldToEnum(field, val);
+                                }else if (null != val && field.getType().getTypeName().equals(LocalDate.class.getTypeName())) { //处理时间
+                                    val = DateUtil.dateToString((LocalDate) val);
                                 }
                                 break;
                             }

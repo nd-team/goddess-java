@@ -76,7 +76,7 @@ public class CollectEmail extends BaseEntity {
     /**
      * 上次发送时间
      */
-    @Column(name = "lastSendTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '上次发送时间'")
+    @Column(name = "lastSendTime", nullable = false, columnDefinition = "DATETIME   COMMENT '上次发送时间'")
     private LocalDateTime lastSendTime;
 
     /**
