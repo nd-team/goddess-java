@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.service.TargetInformationSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,5 +76,10 @@ public class TargetInformationApiImpl implements TargetInformationAPI {
     @Override
     public Integer getTotal() throws SerException {
         return targetInformationSer.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return targetInformationSer.exportExcel(to);
     }
 }

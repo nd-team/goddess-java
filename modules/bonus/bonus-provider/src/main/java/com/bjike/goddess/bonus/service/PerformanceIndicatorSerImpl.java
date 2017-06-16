@@ -85,7 +85,7 @@ public class PerformanceIndicatorSerImpl extends ServiceImpl<PerformanceIndicato
     @Override
     public List<PerformanceIndicatorBO> findByStatus(Boolean status) throws SerException {
         PerformanceIndicatorDTO dto = new PerformanceIndicatorDTO();
-        dto.getConditions().add(Restrict.eq("status", false));
+        dto.getConditions().add(Restrict.eq("status", !status));
         List<PerformanceIndicator> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, PerformanceIndicatorBO.class);
     }

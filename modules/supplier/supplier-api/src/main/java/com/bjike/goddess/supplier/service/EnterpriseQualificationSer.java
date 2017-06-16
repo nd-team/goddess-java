@@ -75,4 +75,21 @@ public interface EnterpriseQualificationSer extends Ser<EnterpriseQualification,
         return null;
     }
 
+    /**
+     * 根据供应商基本信息ID查询企业资质
+     *
+     * @param ids 供应商基本信息ID
+     * @return
+     * @throws SerException
+     */
+    default List<EnterpriseQualificationBO> findByInformationIds(String... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

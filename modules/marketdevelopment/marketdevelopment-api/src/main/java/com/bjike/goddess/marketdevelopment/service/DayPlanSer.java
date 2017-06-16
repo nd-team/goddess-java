@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.DayPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.entity.DayPlan;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
 
 import java.util.List;
@@ -87,5 +89,22 @@ public interface DayPlanSer extends Ser<DayPlan, DayPlanDTO> {
         return null;
     }
 
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 
 }

@@ -353,13 +353,13 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
 
     @Override
     public List<DisciplineRecordBO> rewardMaps(DisciplineRecordDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.eq("status", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("status", !Boolean.TRUE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }
 
     @Override
     public List<DisciplineRecordBO> pushMaps(DisciplineRecordDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.eq("status", Boolean.FALSE));
+        dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return BeanTransform.copyProperties(super.findByPage(dto), DisciplineRecordBO.class);
     }
 
@@ -374,14 +374,14 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
     @Override
     public Long getRewardTotal() throws SerException {
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
-        dto.getConditions().add(Restrict.eq("status", Boolean.TRUE));
+        dto.getConditions().add(Restrict.eq("status", !Boolean.TRUE));
         return super.count(dto);
     }
 
     @Override
     public Long getPushTotal() throws SerException {
         DisciplineRecordDTO dto = new DisciplineRecordDTO();
-        dto.getConditions().add(Restrict.eq("status", Boolean.FALSE));
+        dto.getConditions().add(Restrict.eq("status", !Boolean.FALSE));
         return super.count(dto);
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.commerce.dto.CommerceConferenceDTO;
 import com.bjike.goddess.commerce.to.CollectTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceExcelTO;
 import com.bjike.goddess.commerce.to.CommerceConferenceTO;
+import com.bjike.goddess.commerce.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -127,4 +128,10 @@ public interface CommerceConferenceAPI {
         return null;
     }
 
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
 }

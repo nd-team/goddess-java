@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.marketdevelopment.bo.WeekPlanBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekPlanDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.entity.WeekPlan;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.WeekPlanTO;
 
 import java.util.List;
@@ -78,6 +80,7 @@ public interface WeekPlanSer extends Ser<WeekPlan, WeekPlanDTO> {
 
     /**
      * 根据id获取周计划id
+     *
      * @param id 周计划数据id
      * @return
      * @throws SerException
@@ -97,4 +100,43 @@ public interface WeekPlanSer extends Ser<WeekPlan, WeekPlanDTO> {
         return null;
     }
 
+    /**
+     * 根据月计划id查询周计划数据
+     *
+     * @param ids 月计划id
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> findByMonthIds(String... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务类型查询周计划数据
+     *
+     * @param type 业务类型
+     * @return
+     * @throws SerException
+     */
+    default List<WeekPlanBO> findByType(String type) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出
+     *
+     * @param to 导出查询条件传输对象
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(CollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
 }

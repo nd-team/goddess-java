@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 调研实施记录
+ * 实施记录
  *
  * @Author: [ dengjunren ]
  * @Date: [ 2017-04-06 10:58 ]
@@ -40,6 +40,7 @@ public class SurveyActualizeAct {
      * @param to 调研实施记录传输对象
      * @return class SurveyActualizeVO
      * @version v1
+     * @des 需求文档中与调研计划的调研实施为同一接口
      */
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) SurveyActualizeTO to, BindingResult result) throws ActException {

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
 import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.service.DemandAnalysisSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class DemandAnalysisApiImpl implements DemandAnalysisAPI {
     @Override
     public Integer getTotal() throws SerException {
         return demandAnalysisSer.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return demandAnalysisSer.exportExcel(to);
     }
 }

@@ -130,8 +130,17 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetail entity = super.findById(to.getId());
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (!entity.getSerialNumber().equals(to.getSerialNumber()) || !entity.getDepartment().equals(to.getDepartment()))
-            this.checkUnique(to);
+        if (!entity.getSerialNumber().equals(to.getSerialNumber())) {
+            DepartmentDetailDTO dto = new DepartmentDetailDTO();
+            dto.getConditions().add(Restrict.eq("serialNumber", to.getSerialNumber()));
+            if (super.count(dto) != 0)
+                throw new SerException("编号已存在,无法保存");
+        } else if (!entity.getDepartment().equals(to.getDepartment())) {
+            DepartmentDetailDTO dto = new DepartmentDetailDTO();
+            dto.getConditions().add(Restrict.eq("department", to.getDepartment()));
+            if (super.count(dto) != 0)
+                throw new SerException("部门已存在,无法保存");
+        }
         BeanTransform.copyProperties(to, entity, true);
         entity.setHierarchy(hierarchySer.findById(to.getHierarchyId()));
         if (entity.getHierarchy() == null)

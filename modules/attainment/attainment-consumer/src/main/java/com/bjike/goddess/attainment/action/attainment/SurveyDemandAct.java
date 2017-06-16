@@ -87,7 +87,7 @@ public class SurveyDemandAct {
     }
 
     /**
-     * 关闭
+     * 清除需求
      *
      * @param to 关闭需求传输对象
      * @return class SurveyDemandVO

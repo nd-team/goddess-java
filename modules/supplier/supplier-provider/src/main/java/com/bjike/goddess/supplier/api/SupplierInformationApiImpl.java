@@ -1,10 +1,13 @@
 package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.supplier.bo.SupplierInfoCollectBO;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.supplier.dto.SupplierInformationDTO;
 import com.bjike.goddess.supplier.service.SupplierInformationSer;
+import com.bjike.goddess.supplier.to.CollectTo;
 import com.bjike.goddess.supplier.to.SupplierInformationTO;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +67,20 @@ public class SupplierInformationApiImpl implements SupplierInformationAPI {
     public Long getTotal() throws SerException {
         SupplierInformationDTO dto = new SupplierInformationDTO();
         return supplierInformationSer.count(dto);
+    }
+
+    @Override
+    public void changeEnclosure(String id) throws SerException {
+        supplierInformationSer.changeEnclosure(id);
+    }
+
+    @Override
+    public List<SupplierInfoCollectBO> collect(CollectTo to) throws SerException {
+        return supplierInformationSer.collect(to);
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return supplierInformationSer.sonPermission();
     }
 }

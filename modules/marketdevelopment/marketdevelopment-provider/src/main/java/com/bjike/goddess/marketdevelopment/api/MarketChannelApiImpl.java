@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketChannelSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,10 @@ public class MarketChannelApiImpl implements MarketChannelAPI {
     @Override
     public Integer getTotal() throws SerException {
         return marketChannelSer.findAll().size();
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return marketChannelSer.exportExcel(to);
     }
 }

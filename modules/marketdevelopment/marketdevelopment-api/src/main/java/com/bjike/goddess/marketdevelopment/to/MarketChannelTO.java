@@ -24,9 +24,9 @@ public class MarketChannelTO extends BaseTO {
     private String type;
 
     /**
-     * 业务方向科目
+     * 业务对象
      */
-    @NotNull(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "业务对象不能为空",groups = {ADD.class, EDIT.class})
     private String course;
 
     /**

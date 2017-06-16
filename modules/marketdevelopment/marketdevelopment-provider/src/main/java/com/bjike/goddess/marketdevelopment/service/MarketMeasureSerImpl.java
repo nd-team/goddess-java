@@ -3,18 +3,27 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
+import com.bjike.goddess.marketdevelopment.bo.MarketMeasureExcelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketMeasure;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 市场测算业务实现
@@ -104,5 +113,75 @@ public class MarketMeasureSerImpl extends ServiceImpl<MarketMeasure, MarketMeasu
         if (!marPermissionSer.getMarPermission(marketCheck))
             throw new SerException("您的帐号没有权限");
         return super.findByPage(dto);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        if (!marPermissionSer.getMarPermission(marketCheck))
+            throw new SerException("您的帐号没有权限");
+        MarketMeasureDTO dto = new MarketMeasureDTO();
+        if (StringUtils.isNotBlank(to.getType()))
+            dto.getConditions().add(Restrict.eq("type", to.getType()));
+        dto.getSorts().add("createTime=desc");
+        List<MarketMeasure> list = super.findByCis(dto);
+        List<MarketMeasureExcelBO> boList = BeanTransform.copyProperties(list, MarketMeasureExcelBO.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(boList, excel);
+        return bytes;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @Override
+    public List<MarketMeasureCollectBO> collect() throws SerException {
+        MarketMeasureDTO dto = new MarketMeasureDTO();
+        dto.getSorts().add("type=desc");
+        List<MarketMeasure> list = super.findByCis(dto);
+        List<MarketMeasureCollectBO> collectBOs = new ArrayList<>(0);
+        String type = "";
+        int number = 1;
+        for (MarketMeasure entity : list) {
+            if (!type.equals(entity.getType())) {
+                type = entity.getType();
+                MarketMeasureCollectBO bo = new MarketMeasureCollectBO();
+                List<MarketMeasure> count = list.stream()
+                        .filter(m -> m.getType().equals(entity.getType()))
+                        .collect(Collectors.toList());
+                bo.setNumber(number++);
+                bo.setType(type);
+                bo.setCapital(count.stream().mapToDouble(MarketMeasure::getCapital).sum());
+                bo.setStaff(count.stream().mapToDouble(MarketMeasure::getStaff).sum());
+                bo.setEquipment(count.stream().mapToDouble(MarketMeasure::getEquipment).sum());
+                bo.setCar(count.stream().mapToDouble(MarketMeasure::getCar).sum());
+                bo.setStaffCost(count.stream().mapToDouble(MarketMeasure::getStaffCost).sum());
+                bo.setCarCost(count.stream().mapToDouble(MarketMeasure::getCarCost).sum());
+                bo.setEquipmentCost(count.stream().mapToDouble(MarketMeasure::getEquipmentCost).sum());
+                collectBOs.add(bo);
+            }
+        }
+        MarketMeasureCollectBO bo = new MarketMeasureCollectBO();
+        bo.setType("总计");
+        bo.setCapital(list.stream().mapToDouble(MarketMeasure::getCapital).sum());
+        bo.setStaff(list.stream().mapToDouble(MarketMeasure::getStaff).sum());
+        bo.setEquipment(list.stream().mapToDouble(MarketMeasure::getEquipment).sum());
+        bo.setCar(list.stream().mapToDouble(MarketMeasure::getCar).sum());
+        bo.setStaffCost(list.stream().mapToDouble(MarketMeasure::getStaffCost).sum());
+        bo.setCarCost(list.stream().mapToDouble(MarketMeasure::getCarCost).sum());
+        bo.setEquipmentCost(list.stream().mapToDouble(MarketMeasure::getEquipmentCost).sum());
+        collectBOs.add(bo);
+        return collectBOs;
     }
 }

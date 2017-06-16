@@ -29,11 +29,11 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:quartz:quartz-api")
-    compile project(":modules:user:user-api")
     compile project(":modules:businessproject:businessproject-api")
     compile project(":modules:projectissuehandle:projectissuehandle-api")
     compile project(":modules:bidding:bidding-api")
     compile project(":modules:market:market-api")
+    compile project(":modules:supplier:supplier-api")
     compile project(":common:common-utils")
 }
 

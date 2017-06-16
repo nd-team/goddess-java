@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.bo.MarketResearchBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketResearchDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketResearchSer;
+import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.MarketResearchTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,4 +72,8 @@ public class MarketResearchApiImpl implements MarketResearchAPI {
         return marketResearchSer.findAll().size();
     }
 
+    @Override
+    public byte[] exportExcel(CollectTO to) throws SerException {
+        return marketResearchSer.exportExcel(to);
+    }
 }

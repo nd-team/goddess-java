@@ -65,6 +65,11 @@ public class MonthPlanBO extends BaseBO {
     private MonthType month;
 
     /**
+     * 月份
+     */
+    private String monthValue;
+
+    /**
      * 各科目年度任务量
      */
     private Double quota;
@@ -207,5 +212,13 @@ public class MonthPlanBO extends BaseBO {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public String getMonthValue() {
+        return monthValue;
+    }
+
+    public void setMonthValue(String monthValue) {
+        this.monthValue = monthValue;
     }
 }
