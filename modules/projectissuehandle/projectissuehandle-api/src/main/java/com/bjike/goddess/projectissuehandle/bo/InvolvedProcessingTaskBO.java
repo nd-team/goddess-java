@@ -13,7 +13,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class InvolvedProcessingTaskBO extends BaseBO {
-
+    /**
+     * 项目问题编号
+     */
+    private String projectNum;
     /**
      * 内部项目名称
      */
@@ -38,7 +41,23 @@ public class InvolvedProcessingTaskBO extends BaseBO {
      * 实际完成情况
      */
     private String actualCompletion;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getInternalProjectName() {
         return internalProjectName;
@@ -78,5 +97,21 @@ public class InvolvedProcessingTaskBO extends BaseBO {
 
     public void setActualCompletion(String actualCompletion) {
         this.actualCompletion = actualCompletion;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

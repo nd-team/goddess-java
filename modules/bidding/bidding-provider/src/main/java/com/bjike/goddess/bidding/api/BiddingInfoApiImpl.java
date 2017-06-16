@@ -63,25 +63,8 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     }
 
     @Override
-    public String exportExcel(String projectName) throws SerException {
-        return biddingInfoSer.exportExcel(projectName);
-    }
-
-    @Override
     public List<BiddingInfoBO> searchBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.searchBiddingInfo(biddingInfoDTO);
-    }
-
-    @Override
-    public void upload() throws SerException {
-        biddingInfoSer.upload();
-
-    }
-
-    @Override
-    public BiddingInfoBO sendBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
-        return biddingInfoSer.sendBiddingInfo(biddingInfoTO);
-
     }
 
     @Override
@@ -92,5 +75,8 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public List<String> getBiddingInfoCities() throws SerException {
         return biddingInfoSer.getBiddingInfoCities();
     }
-
+    @Override
+    public byte[] exportExcel(BiddingInfoDTO dto) throws SerException{
+        return biddingInfoSer.exportExcel(dto);
+    }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectissuehandle.bo.InvolvedProcessingTaskBO;
 import com.bjike.goddess.projectissuehandle.dto.InvolvedProcessingTaskDTO;
 import com.bjike.goddess.projectissuehandle.service.InvolvedProcessingTaskSer;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.InvolvedProcessingTaskTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,15 @@ import java.util.List;
 public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI {
     @Autowired
     private InvolvedProcessingTaskSer involvedProcessingTaskSer;
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return involvedProcessingTaskSer.sonPermission();
+    }
 
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return involvedProcessingTaskSer.guidePermission( guidePermissionTO );
+    }
     @Override
     public Long countInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return involvedProcessingTaskSer.countInvolvedProcessingTask(involvedProcessingTaskDTO);
@@ -55,19 +64,12 @@ public class InvolvedProcessingTaskApiImpl implements InvolvedProcessingTaskAPI 
     }
 
     @Override
-    public String exportExcel(String internalProjectName, String handler) throws SerException {
-        return involvedProcessingTaskSer.exportExcel(internalProjectName, handler);
-    }
-
-    @Override
     public List<InvolvedProcessingTaskBO> searchInvolvedProcessingTask(InvolvedProcessingTaskDTO involvedProcessingTaskDTO) throws SerException {
         return involvedProcessingTaskSer.searchInvolvedProcessingTask(involvedProcessingTaskDTO);
     }
-
     @Override
-    public void upload() throws SerException {
-        involvedProcessingTaskSer.upload();
-
+    public byte[] exportExcel(InvolvedProcessingTaskDTO dto) throws SerException {
+        return involvedProcessingTaskSer.exportExcel(dto);
     }
 
 }

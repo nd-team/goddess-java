@@ -3,19 +3,34 @@ package com.bjike.goddess.projectissuehandle.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.projectissuehandle.bo.CollectBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemHandlingResultBO;
+import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemHandlingResultDTO;
+import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
 import com.bjike.goddess.projectissuehandle.entity.ProblemHandlingResult;
+import com.bjike.goddess.projectissuehandle.enums.GuideAddrStatus;
+import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
+import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
+import com.bjike.goddess.projectissuehandle.excel.ProblemHandlingResultExport;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemHandlingResultTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,19 +46,173 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "projectissuehandleSerCache")
 @Service
 public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingResult, ProblemHandlingResultDTO> implements ProblemHandlingResultSer {
-
     @Autowired
     private ProPermissionSer proPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = proPermissionSer.getProPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = proPermissionSer.busProPermission("2");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException{
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = proPermissionSer.getProPermission("1");
+        }else{
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException{
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( !"admin".equals( userName.toLowerCase())){
+            flag = proPermissionSer.busProPermission("2");
+        }else{
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken( userToken );
+        Boolean flagAdd = guideAddIdentity();
+        if( flagSee || flagAdd ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    /**
+     * 时间格式（年月日）
+     */
+    private void checkDate(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
+        try {
+            DateUtil.parseDate(problemHandlingResultTO.getProblemAcceptTime());
+            DateUtil.parseDate(problemHandlingResultTO.getProblemOccurrenceTime());
+            DateUtil.parseDate(problemHandlingResultTO.getProblemSolveTime());
+        } catch (Exception e) {
+            throw new SerException("输入的日期格式不对");
+        }
+    }
+
     @Override
     public Long countProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
-        problemHandlingResultDTO.getSorts().add("createTime=desc");
+        searchProblemHandlingResult(problemHandlingResultDTO);
         Long counts = super.count(problemHandlingResultDTO);
         return counts;
     }
 
     @Override
     public ProblemHandlingResultBO getOne(String id) throws SerException {
-        if(StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         ProblemHandlingResult problemHandlingResult = super.findById(id);
@@ -52,49 +221,92 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     @Override
     public List<ProblemHandlingResultBO> findListProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if ( !permission) {
-            throw new SerException("您的帐号没有权限");
-        }
-        List<ProblemHandlingResult> problemHandlingResults = super.findByCis(problemHandlingResultDTO, true);
-        List<ProblemHandlingResultBO> problemHandlingResultBOS = BeanTransform.copyProperties(problemHandlingResults, ProblemHandlingResultBO.class);
-        return problemHandlingResultBOS;
+        checkSeeIdentity();
+        List<ProblemHandlingResult> list = super.findByCis(problemHandlingResultDTO, true);
+//        List<ProblemHandlingResultBO> problemHandlingResultBOS = new ArrayList<>();
+//        list.stream().forEach(str ->{
+//            ProblemAcceptBO bo = BeanTransform.copyProperties(str.getProblemAccept(),ProblemAcceptBO.class);
+//            ProblemHandlingResultBO problemHandlingResultBO = BeanTransform.copyProperties(str,ProblemHandlingResultBO.class);
+//            problemHandlingResultBO.setProblemAcceptBO(bo);
+//            problemHandlingResultBOS.add(problemHandlingResultBO);
+//        });
+//
+//        List<ProblemHandlingResultBO> boList = BeanTransform.copyProperties(problemHandlingResultBOS, ProblemHandlingResultBO.class);
+        List<ProblemHandlingResultBO> boList = BeanTransform.copyProperties(list, ProblemHandlingResultBO.class);
+
+//        for (int i = 0; i < list.size(); i++) {
+//            ProblemHandlingResult temp = list.get(i);
+//            ProblemAcceptBO pbo = BeanTransform.copyProperties(temp.getProblemAccept(), ProblemAcceptBO.class);
+//            boList.get(i).setProblemAcceptBO(pbo);
+//        }
+
+        return boList;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemHandlingResultBO insertProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
+
         Boolean permission = proPermissionSer.getProPermission("1");
-        if ( !permission) {
+        if (!permission) {
             throw new SerException("您不是商务人员，没有权限");
         }
+        checkDate(problemHandlingResultTO);
         ProblemHandlingResult problemHandlingResult = BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResult.class, true);
         problemHandlingResult.setCreateTime(LocalDateTime.now());
         super.save(problemHandlingResult);
-        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
+
+
+       ProblemHandlingResultBO bo = BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
+        return bo;
+
+
+//        String projectNum = problemHandlingResultTO.getProjectNum();
+//        ProblemAcceptDTO dto = new ProblemAcceptDTO();
+//        dto.getConditions().add(Restrict.eq("projectNum",projectNum));
+//        ProblemAccept problemAccept = problemAcceptSer.findOne(dto);
+//        problemHandlingResult.setProblemAccept(problemAccept);
+
+//        ProblemAcceptDTO dto = new ProblemAcceptDTO();
+//        dto.getConditions().add(Restrict.eq("projectNum", ProblemAccept.class));
+//        List<ProblemAccept> problemAccepts = problemAcceptSer.findByCis(dto);
+        //List<ProblemHandlingResult> problemHandlingResult = super.findByCis();
+        //String a = super.findByMaxField("projectNum",ProblemAccept.class);
+//        for (int i = 0 ;i < problemAccepts.size();i++) {
+//            for (int j = 0 ; j <problemHandlingResults.size();j++){
+//                if (problemAccepts != null && problemAccepts.size() > 0) {
+//                    ProblemAccept p = problemAccepts.get(0);
+//                    problemAccepts.add(p);
+//                    }
+//                }
+
+//        ProblemAccept p = problemAccepts.get(0);
+//        ProblemHandlingResult problemHandlingResult = new ProblemHandlingResult();
+//        problemHandlingResult.setYear(p.getYear());
+//        problemHandlingResult.setArea(p.getArea());
+//        problemHandlingResult.setExternalContractProjectName(p.getExternalContractProjectName());
+//        problemHandlingResult.setInternalProjectName(p.getInternalProjectName());
+//        problemHandlingResult.setProjectType(p.getProjectType());
     }
 
     @Override
     public ProblemHandlingResultBO editProblemHandlingResult(ProblemHandlingResultTO problemHandlingResultTO) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
-        if(StringUtils.isBlank(problemHandlingResultTO.getId())){
+        checkAddIdentity();
+        if (StringUtils.isBlank(problemHandlingResultTO.getId())) {
             throw new SerException("id不能为空");
         }
         ProblemHandlingResult problemHandlingResult = super.findById(problemHandlingResultTO.getId());
-        BeanTransform.copyProperties(problemHandlingResultTO, problemHandlingResult, true);
+        checkDate(problemHandlingResultTO);
+        BeanUtils.copyProperties(problemHandlingResultTO, problemHandlingResult);
+
         problemHandlingResult.setModifyTime(LocalDateTime.now());
         super.update(problemHandlingResult);
-        return BeanTransform.copyProperties(problemHandlingResultTO, ProblemHandlingResultBO.class);
+        return BeanTransform.copyProperties(problemHandlingResult, ProblemHandlingResultBO.class);
     }
 
     @Override
     public void removeProblemHandlingResult(String id) throws SerException {
-        Boolean permission = proPermissionSer.getProPermission("1");
-        if ( !permission) {
-            throw new SerException("您不是商务人员，没有权限");
-        }
+        checkAddIdentity();
         try {
             super.remove(id);
         } catch (SerException e) {
@@ -103,11 +315,6 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
 
     }
 
-    @Override
-    public String exportExcel(String internalProjectName, String projectType) throws SerException {
-        //TODO: xiazhili 2017-03-25 未做导出
-        return null;
-    }
 
     @Override
     public List<ProblemHandlingResultBO> searchProblemHandlingResult(ProblemHandlingResultDTO problemHandlingResultDTO) throws SerException {
@@ -140,158 +347,32 @@ public class ProblemHandlingResultSerImpl extends ServiceImpl<ProblemHandlingRes
         return problemHandlingResultBOList;
     }
 
-    @Override
-    public List<CollectBO> collect(String[] areas) throws SerException {
-        if (areas == null || areas.length <= 0) {
-            throw new SerException("汇总失败，请选择地区");
-        }
-        String[] areasTemp = new String[areas.length];
-        for(int i = 0;i<areas.length;i++){
-            areasTemp[i] = "'"+areas[i]+"'";
-        }
-        String areaStr = StringUtils.join(areasTemp, ",");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT * from(select A.*,B.person ,B.progress,B.deliver,B.device,C.elementary,C.emergency,C.intermediate,D.operator ");
-        sb.append(" ,D.vender,D.intergrator,D.goverment,D.innerstaff,E.complete,E.uncomplete ");
-        sb.append(" from ( ");
-        sb.append(" select area as area , externalContractProjectName as externalContractProjectName ,internalProjectName as internalProjectName ");
-        sb.append(" from projectissuehandle_problemaccept ");
-        sb.append(" a WHERE area in(%s) ");
-        sb.append(" GROUP BY externalContractProjectName,internalProjectName ,area ORDER BY area ");
-        sb.append(" )A,( ");
-        sb.append(" SELECT area ,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemTypes=0 THEN problemTypeCounts END ) AS person, ");
-        sb.append(" MAX( CASE WHEN problemTypes=1 THEN problemTypeCounts END ) AS progress, ");
-        sb.append(" MAX( CASE WHEN problemTypes=2 THEN problemTypeCounts END ) AS deliver, ");
-        sb.append(" MAX( CASE WHEN problemTypes=3 THEN problemTypeCounts END ) AS device FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemTypeCounts , problemTypes as problemTypes ,area as area,externalContractProjectName,internalProjectName ");
-        sb.append(" from  projectissuehandle_problemaccept a WHERE area in(%s) ");
-        sb.append(" GROUP BY externalContractProjectName,internalProjectName ,problemTypes,area ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area,externalContractProjectName,internalProjectName)B, ");
-        sb.append(" (SELECT area ,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=0 THEN problemEmergencyDegreeCounts END ) AS elementary, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=1 THEN problemEmergencyDegreeCounts END ) AS intermediate, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=2 THEN problemEmergencyDegreeCounts END ) AS emergency FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemEmergencyDegreeCounts , problemEmergencyDegree as problemEmergencyDegree ,area as area,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemaccept a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemEmergencyDegree,area,internalProjectName,externalContractProjectName ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area ,internalProjectName,externalContractProjectName)C, ");
-        sb.append(" (SELECT  area,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemObject=0 THEN problemObjectCounts END ) AS operator, ");
-        sb.append(" MAX( CASE WHEN problemObject=1 THEN problemObjectCounts END ) AS vender, ");
-        sb.append(" MAX( CASE WHEN problemObject=2 THEN problemObjectCounts END ) AS intergrator, ");
-        sb.append(" MAX( CASE WHEN problemObject=3 THEN problemObjectCounts END ) AS goverment , ");
-        sb.append(" MAX( CASE WHEN problemObject=4 THEN problemObjectCounts END ) AS innerstaff FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemObjectCounts , problemObject as problemObject ,area as area ,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemhandlingresult a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemObject,area ,internalProjectName,externalContractProjectName ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area ,problemObject,internalProjectName,externalContractProjectName)D, ");
-        sb.append(" (SELECT area,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemProcessingResult=0 THEN problemProcessingResultCounts END ) AS complete, ");
-        sb.append(" MAX( CASE WHEN problemProcessingResult=1 THEN problemProcessingResultCounts END ) AS uncomplete FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemProcessingResultCounts , problemProcessingResult as problemProcessingResult ,area as area,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemhandlingresult a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemProcessingResult,internalProjectName,externalContractProjectName,area ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area,internalProjectName,externalContractProjectName,problemProcessingResult)E ");
-        sb.append(" where A.area=B.area and A.externalContractProjectName= B.externalContractProjectName and A.externalContractProjectName=C.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=B.internalProjectName and C.internalProjectName=A.internalProjectName and  A.area=C.area and ");
-        sb.append(" A.area=D.area and A.externalContractProjectName=D.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=D.internalProjectName and A.area=E.area and A.externalContractProjectName=E.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=E.internalProjectName ");
-        sb.append(" order by area)F ");
-        sb.append(" UNION ");
-        sb.append(" SELECT '合计' AS area,NULL as externalContractProjectName,NULL as internalProjectName, ");
-        sb.append(" sum(person) AS person,sum(progress)AS progress,sum(deliver)AS deliver, ");
-        sb.append(" sum(device)AS device,sum(elementary)as elementary,sum(emergency)as emergency, ");
-        sb.append(" sum(intermediate)as intermediate,sum(operator)as operator,sum(vender)as vender, ");
-        sb.append(" sum(intergrator)as intergrator,sum(goverment)as goverment,sum(innerstaff)as innerstaff, ");
-        sb.append(" sum(complete)as complete,sum(uncomplete)AS uncomplete ");
-        sb.append(" FROM (select A.*,B.person ,B.progress,B.deliver,B.device,C.elementary,C.emergency,C.intermediate,D.operator ");
-        sb.append(" ,D.vender,D.intergrator,D.goverment,D.innerstaff,E.complete,E.uncomplete ");
-        sb.append(" from ( ");
-        sb.append(" select area as area , externalContractProjectName as externalContractProjectName ,internalProjectName as internalProjectName ");
-        sb.append(" from projectissuehandle_problemaccept ");
-        sb.append(" a WHERE area in(%s) ");
-        sb.append(" GROUP BY externalContractProjectName,internalProjectName ,area ORDER BY area ");
-        sb.append(" )A,( ");
-        sb.append(" SELECT area ,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemTypes=0 THEN problemTypeCounts END ) AS person, ");
-        sb.append(" MAX( CASE WHEN problemTypes=1 THEN problemTypeCounts END ) AS progress, ");
-        sb.append(" MAX( CASE WHEN problemTypes=2 THEN problemTypeCounts END ) AS deliver, ");
-        sb.append(" MAX( CASE WHEN problemTypes=3 THEN problemTypeCounts END ) AS device FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemTypeCounts , problemTypes as problemTypes ,area as area,externalContractProjectName,internalProjectName ");
-        sb.append(" from  projectissuehandle_problemaccept a WHERE area in(%s) ");
-        sb.append(" GROUP BY externalContractProjectName,internalProjectName ,problemTypes,area ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area,externalContractProjectName,internalProjectName)B, ");
-        sb.append(" (SELECT area ,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=0 THEN problemEmergencyDegreeCounts END ) AS elementary, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=1 THEN problemEmergencyDegreeCounts END ) AS intermediate, ");
-        sb.append(" MAX( CASE WHEN problemEmergencyDegree=2 THEN problemEmergencyDegreeCounts END ) AS emergency FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemEmergencyDegreeCounts , problemEmergencyDegree as problemEmergencyDegree ,area as area,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemaccept a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemEmergencyDegree,area,internalProjectName,externalContractProjectName ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area ,internalProjectName,externalContractProjectName)C, ");
-        sb.append(" (SELECT  area,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemObject=0 THEN problemObjectCounts END ) AS operator, ");
-        sb.append(" MAX( CASE WHEN problemObject=1 THEN problemObjectCounts END ) AS vender, ");
-        sb.append(" MAX( CASE WHEN problemObject=2 THEN problemObjectCounts END ) AS intergrator, ");
-        sb.append(" MAX( CASE WHEN problemObject=3 THEN problemObjectCounts END ) AS goverment , ");
-        sb.append(" MAX( CASE WHEN problemObject=4 THEN problemObjectCounts END ) AS innerstaff FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemObjectCounts , problemObject as problemObject ,area as area ,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemhandlingresult a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemObject,area ,internalProjectName,externalContractProjectName ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area ,problemObject,internalProjectName,externalContractProjectName)D, ");
-        sb.append(" (SELECT area,internalProjectName,externalContractProjectName, ");
-        sb.append(" MAX( CASE WHEN problemProcessingResult=0 THEN problemProcessingResultCounts END ) AS complete, ");
-        sb.append(" MAX( CASE WHEN problemProcessingResult=1 THEN problemProcessingResultCounts END ) AS uncomplete FROM ");
-        sb.append(" ( ");
-        sb.append(" select count(*) as problemProcessingResultCounts , problemProcessingResult as problemProcessingResult ,area as area,internalProjectName,externalContractProjectName ");
-        sb.append(" from  projectissuehandle_problemhandlingresult a WHERE area in(%s) ");
-        sb.append(" GROUP BY problemProcessingResult,internalProjectName,externalContractProjectName,area ORDER BY area ");
-        sb.append(" )a ");
-        sb.append(" GROUP BY area,internalProjectName,externalContractProjectName,problemProcessingResult)E ");
-        sb.append(" where A.area=B.area and A.externalContractProjectName= B.externalContractProjectName and A.externalContractProjectName=C.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=B.internalProjectName and C.internalProjectName=A.internalProjectName and  A.area=C.area and ");
-        sb.append(" A.area=D.area and A.externalContractProjectName=D.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=D.internalProjectName and A.area=E.area and A.externalContractProjectName=E.externalContractProjectName ");
-        sb.append(" and A.internalProjectName=E.internalProjectName ");
-        sb.append(" order by area)F ");
-
-        String sql = sb.toString();
-        sql = String.format(sql, areaStr, areaStr, areaStr, areaStr, areaStr, areaStr, areaStr, areaStr, areaStr, areaStr);
-        String[] fields = new String[]{"area","externalContractProjectName","internalProjectName",
-                "person","progress","deliver","device","elementary","emergency","intermediate",
-                "operator","vender","intergrator","goverment","innerstaff" ,"complete","uncomplete"};
-        List<CollectBO> collectBOS = super.findBySql(sql, CollectBO.class, fields);
-        return collectBOS;
-    }
 
     @Override
-    public List<String> getArea() throws SerException {
-        String [] fields = new String[]{"area"};
-        List<ProblemHandlingResultBO> problemHandlingResultBOS = super.findBySql("select distinct area from projectissuehandle_problemhandlingresult group by area order by area asc ",ProblemHandlingResultBO.class,fields);
+    public byte[] exportExcel(ProblemHandlingResultDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getInternalProjectName())) {
+            dto.getConditions().add(Restrict.eq("internalProjectName", dto.getInternalProjectName()));
+        }
+        if (StringUtils.isNotBlank(dto.getProjectType())) {
+            dto.getConditions().add(Restrict.eq("projectType", dto.getProjectType()));
+        }
+        if (StringUtils.isNotBlank(dto.getProblemObject())) {
+            dto.getConditions().add(Restrict.eq("problemObject", dto.getProblemObject()));
+        }
+        List<ProblemHandlingResult> list = super.findByCis(dto);
 
-        List<String> collectList = problemHandlingResultBOS.stream().map(ProblemHandlingResultBO::getArea)
-                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
-
-
-        return collectList;
+        List<ProblemHandlingResultExport> problemHandlingResultExports = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ProblemHandlingResultExport export = BeanTransform.copyProperties(str, ProblemHandlingResultExport.class, "problemRelevantDepartment", "problemProcessingResult");
+            export.setProblemRelevantDepartment(ProblemRelevantDepartment.exportStrConvert(str.getProblemRelevantDepartment()));
+            export.setProblemProcessingResult(ProblemProcessingResult.exportStrConvert(str.getProblemProcessingResult()));
+            problemHandlingResultExports.add(export);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(problemHandlingResultExports, excel);
+        return bytes;
     }
+
 
 }
 

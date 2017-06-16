@@ -3,6 +3,7 @@ package com.bjike.goddess.projectissuehandle.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.enums.ProblemObject;
 import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingResult;
 import com.bjike.goddess.projectissuehandle.enums.ProblemRelevantDepartment;
@@ -22,7 +23,10 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class ProblemHandlingResultTO extends BaseTO {
-
+    /**
+     * 项目问题编号
+     */
+    private String projectNum;
     /**
      * 年份
      */
@@ -40,23 +44,23 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 内部项目名称
      */
-    @NotBlank(message = "内部项目名称不能为空", groups = {ADD.class, EDIT.class})
     private String internalProjectName;
 
     /**
      * 工程类型
      */
-    @NotBlank(message = "工程类型不能为空", groups = {ADD.class, EDIT.class})
     private String projectType;
 
     /**
      * 问题受理时间
      */
+    @NotBlank(message = "问题受理时间不能为空",groups = {ADD.class, EDIT.class})
     private String problemAcceptTime;
 
     /**
      * 问题具体情况
      */
+    @NotBlank(message = "问题具体情况不能为空",groups = {ADD.class, EDIT.class})
     private String problemSpecificSituation;
 
     /**
@@ -68,43 +72,70 @@ public class ProblemHandlingResultTO extends BaseTO {
     /**
      * 问题责任人员
      */
+    @NotBlank(message = "问题责任人员不能为空",groups = {ADD.class, EDIT.class})
     private String problemResponsible;
 
     /**
      * 问题处理人员
      */
+    @NotBlank(message = "问题处理人员不能为空",groups = {ADD.class, EDIT.class})
     private String problemHandler;
 
     /**
      * 问题相关部门
      */
+    @NotNull(message = "问题相关部门不能为空",groups = {ADD.class, EDIT.class})
     private ProblemRelevantDepartment problemRelevantDepartment;
 
     /**
      * 问题发生时间
      */
+    @NotBlank(message = "问题发生时间不能为空",groups = {ADD.class, EDIT.class})
     private String problemOccurrenceTime;
 
     /**
      * 问题发生地点
      */
+    @NotBlank(message = "问题发生地点不能为空",groups = {ADD.class, EDIT.class})
     private String problemOccurrencePlace;
 
     /**
      * 问题解决时间
      */
+    @NotBlank(message = "问题解决时间不能为空",groups = {ADD.class, EDIT.class})
     private String problemSolveTime;
 
     /**
      * 问题处理结果
      */
+    @NotNull(message = "问题处理结果不能为空",groups = {ADD.class, EDIT.class})
     private ProblemProcessingResult problemProcessingResult;
 
     /**
      * 问题总结
      */
     private String problemConclusion;
+    /**
+     * 项目执行中的问题受理
+     */
+    //private String problemAcceptId;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
 
     public String getYear() {
         return year;
@@ -232,5 +263,29 @@ public class ProblemHandlingResultTO extends BaseTO {
 
     public void setProblemConclusion(String problemConclusion) {
         this.problemConclusion = problemConclusion;
+    }
+
+//    public String getProblemAcceptId() {
+//        return problemAcceptId;
+//    }
+//
+//    public void setProblemAcceptId(String problemAcceptId) {
+//        this.problemAcceptId = problemAcceptId;
+//    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

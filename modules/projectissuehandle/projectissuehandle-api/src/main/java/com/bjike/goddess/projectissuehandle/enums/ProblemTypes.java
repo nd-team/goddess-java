@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectissuehandle.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 问题类型枚举
  *
@@ -13,19 +15,23 @@ public enum ProblemTypes {
     /**
      * 人员类
      */
+    @ExcelValue(name = "人员类")
     PERSONNERCLASS(0),
-    /**
-     * 进度类
-     */
-    PROGRESSCLASS(1),
-    /**
-     * 交付类
-     */
-    DELIVERCLASS(2),
     /**
      * 设备类
      */
-    DEVICECLASS(3),;
+    @ExcelValue(name = "设备类")
+    DEVICECLASS(1),
+    /**
+     * 派工类
+     */
+    @ExcelValue(name = "派工类")
+    DISPATCHINGCLASS(2),
+    /**
+     * 结算类
+     */
+    @ExcelValue(name = "结算类")
+    SETTLEMENTCLASS(3),;
 
     private int code;
 
@@ -43,15 +49,16 @@ public enum ProblemTypes {
         if (code == ProblemTypes.PERSONNERCLASS.getCode()) {
             problemTypes = ProblemTypes.PERSONNERCLASS;
         }
-        if (code == ProblemTypes.PROGRESSCLASS.getCode()) {
-            problemTypes = ProblemTypes.PROGRESSCLASS;
-        }
-        if (code == ProblemTypes.DELIVERCLASS.getCode()) {
-            problemTypes = ProblemTypes.DELIVERCLASS;
-        }
         if (code == ProblemTypes.DEVICECLASS.getCode()) {
             problemTypes = ProblemTypes.DEVICECLASS;
         }
+        if (code == ProblemTypes.DISPATCHINGCLASS.getCode()) {
+            problemTypes = ProblemTypes.DISPATCHINGCLASS;
+        }
+        if (code == ProblemTypes.SETTLEMENTCLASS.getCode()) {
+            problemTypes = ProblemTypes.SETTLEMENTCLASS;
+        }
+
         return problemTypes;
     }
 
@@ -60,14 +67,31 @@ public enum ProblemTypes {
         if (code == ProblemTypes.PERSONNERCLASS.getCode()) {
             name = "人员类";
         }
-        if (code == ProblemTypes.PROGRESSCLASS.getCode()) {
-            name = "进度类";
-        }
-        if (code == ProblemTypes.DELIVERCLASS.getCode()) {
-            name = "交付类";
-        }
         if (code == ProblemTypes.DEVICECLASS.getCode()) {
             name = "设备类";
+        }
+        if (code == ProblemTypes.DISPATCHINGCLASS.getCode()) {
+            name = "派工类";
+        }
+        if (code == ProblemTypes.SETTLEMENTCLASS.getCode()) {
+            name = "结算类";
+        }
+
+        return name;
+    }
+    public static String exportStrConvert(ProblemTypes problemTypes) {
+        String name = "";
+        if (problemTypes.equals(ProblemTypes.PERSONNERCLASS)) {
+            name = "人员类";
+        }
+        if (problemTypes.equals(ProblemTypes.DEVICECLASS)) {
+            name = "设备类";
+        }
+        if (problemTypes.equals(ProblemTypes.DISPATCHINGCLASS)) {
+            name = "派工类";
+        }
+        if (problemTypes.equals(ProblemTypes.SETTLEMENTCLASS)) {
+            name = "结算类";
         }
         return name;
     }

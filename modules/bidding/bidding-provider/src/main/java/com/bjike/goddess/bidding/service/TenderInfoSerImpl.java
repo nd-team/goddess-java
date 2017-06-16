@@ -3,12 +3,16 @@ package com.bjike.goddess.bidding.service;
 import com.alibaba.druid.sql.visitor.functions.If;
 import com.bjike.goddess.bidding.bo.TenderInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
+import com.bjike.goddess.bidding.excel.TenderInfoExport;
 import com.bjike.goddess.bidding.to.TenderInfoTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.entity.TenderInfo;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,21 +103,18 @@ public class TenderInfoSerImpl extends ServiceImpl<TenderInfo, TenderInfoDTO> im
         super.remove(id);
     }
     @Override
-    public String exportExcel(String projectName) throws SerException {
-        //TODO: xiazhili 2017-03-17 未做导出
-        return null;
-    }
-
-    @Override
-    public void upload() throws SerException {
-        //TODO: xiazhili 2017-03-17 未做上传
-        return;
-
-    }
-
-    @Override
-    public void uploadAttachments() throws SerException {
-        //TODO: xiazhili 2017-03-17 未做上传附件
-        return;
+    public byte[] exportExcel(TenderInfoDTO dto) throws SerException{
+        if(StringUtils.isNotBlank(dto.getProjectName())){
+            dto.getConditions().add(Restrict.eq("projectName",dto.getProjectName()));
+        }
+        List<TenderInfo> list = super.findByCis(dto);
+        List<TenderInfoExport> tenderInfoExports = new ArrayList<>();
+        list.stream().forEach(str->{
+            TenderInfoExport export = BeanTransform.copyProperties(str,TenderInfoExport.class);
+            tenderInfoExports.add(export);
+        });
+        Excel excel = new Excel(0,2);
+        byte [] bytes = ExcelUtil.clazzToExcel(tenderInfoExports,excel);
+        return bytes;
     }
 }

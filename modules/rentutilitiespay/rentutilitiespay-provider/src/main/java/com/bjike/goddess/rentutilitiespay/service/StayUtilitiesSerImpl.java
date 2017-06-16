@@ -50,25 +50,27 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
 
     @Override
     public List<StayUtilitiesBO> findListStayUtilities(StayUtilitiesDTO stayUtilitiesDTO) throws SerException {
-        List<StayUtilities> stayUtilities = super.findByCis(stayUtilitiesDTO, true);
-        return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
+        List<StayUtilities> stayUtilities = super.findByPage(stayUtilitiesDTO);
+        List<StayUtilitiesBO> stayUtilitiesBOS = BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
+        return stayUtilitiesBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public StayUtilitiesBO insertStayUtilities(StayUtilitiesTO stayUtilitiesTO) throws SerException {
         StayUtilities stayUtilities = BeanTransform.copyProperties(stayUtilitiesTO, StayUtilities.class, true);
-        //是否需要修改
-        if (stayUtilities.getComprehensiveVerifySituation()) {
-            stayUtilities.setStaffVerify(StaffVerify.ERROR);
-        } else {
-            stayUtilities.setComprehensiveVerifySituation(true);
-            stayUtilities.setStaffVerify(StaffVerify.CONFIRM);
-            stayUtilities.setCreateTime(LocalDateTime.now());
-            stayUtilities = count(stayUtilities);
-            super.save(stayUtilities);
-        }
-
+//        //是否需要修改
+//        if (stayUtilities.getComprehensiveVerifySituation()) {
+//            stayUtilities.setStaffVerify(StaffVerify.ERROR);
+//        } else {
+//            stayUtilities.setComprehensiveVerifySituation(true);
+//            stayUtilities.setStaffVerify(StaffVerify.CONFIRM);
+//            stayUtilities.setCreateTime(LocalDateTime.now());
+//            stayUtilities = count(stayUtilities);
+//            super.save(stayUtilities);
+//        }
+        stayUtilities = count(stayUtilities);
+        super.save(stayUtilities);
         return BeanTransform.copyProperties(stayUtilities, StayUtilitiesBO.class);
     }
 
@@ -79,7 +81,14 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         BeanTransform.copyProperties(stayUtilitiesTO, stayUtilities, true);
         stayUtilities.setModifyTime(LocalDateTime.now());
         stayUtilities = count(stayUtilities);
-        super.update(stayUtilities);
+        //是否需要修改
+        if (stayUtilities.getStaffVerify().equals(StaffVerify.ERROR)) {
+            stayUtilities.setComprehensiveVerifySituation(true);
+        } else if(stayUtilities.getStaffVerify().equals(StaffVerify.CONFIRM)){
+            stayUtilities.setComprehensiveVerifySituation(false);
+            stayUtilities.setCreateTime(LocalDateTime.now());
+            super.update(stayUtilities);
+        }
         return BeanTransform.copyProperties(stayUtilitiesTO, StayUtilitiesBO.class);
     }
 
@@ -89,13 +98,15 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     public StayUtilities count(StayUtilities stayUtilities) throws SerException {
         //同一住宿地址员工住宿天数总和
         String[] fields = new String[]{"sumDays", "address"};
-        String sql = "select sum(stayDay) as sumDays ,address from rentutilitiespay_stayutilities group by address ";
+        String sql = " select cast(sum(stayDay)as SIGNED )as sumDays ,address from rentutilitiespay_stayutilities group by address ";
         List<StayUtilities> sum = super.findBySql(sql, StayUtilities.class, fields);
         Integer sumDays = sum.get(0).getSumDays();
 
         //个人员工住宿天数
-        fields = new String[]{"personalDays"};
-        sql = "select sum(stayDay) as personalDays from rentutilitiespay_stayutilities where name = '' ";
+        fields = new String[]{"personalDays","name"};
+        //String name = stayUtilities.getName();
+        //sql = "select cast(sum(stayDay)as SIGNED ) as personalDays from rentutilitiespay_stayutilities where name = '"+name+"' ";
+        sql = "select cast(sum(stayDay)as SIGNED ) as personalDays,name from rentutilitiespay_stayutilities group by name ";
         List<StayUtilities> num = super.findBySql(sql, StayUtilities.class, fields);
         Integer personalDays = num.get(0).getPersonalDays();
         //水费员工缴纳（(当月应缴水费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）

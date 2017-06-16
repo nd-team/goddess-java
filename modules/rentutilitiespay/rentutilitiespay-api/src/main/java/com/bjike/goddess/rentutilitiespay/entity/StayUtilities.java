@@ -3,7 +3,9 @@ package com.bjike.goddess.rentutilitiespay.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 
@@ -149,7 +151,7 @@ public class StayUtilities extends BaseEntity {
     /**
      * 员工核实
      */
-    @Column(name = "staffVerify",  columnDefinition = "INT(2)   COMMENT '员工核实'")
+    @Column(name = "staffVerify", columnDefinition = "INT(2)   COMMENT '员工核实'")
     private StaffVerify staffVerify;
     /**
      * 综合资源部核实情况（是否需要修改）
@@ -166,7 +168,7 @@ public class StayUtilities extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
     private Integer sumDays;//天数总和

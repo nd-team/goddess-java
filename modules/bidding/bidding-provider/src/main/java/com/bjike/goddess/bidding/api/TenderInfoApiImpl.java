@@ -54,19 +54,8 @@ public class TenderInfoApiImpl implements TenderInfoAPI {
     }
 
     @Override
-    public String exportExcel(String projectName) throws SerException {
-        return tenderInfoSer.exportExcel(projectName);
-    }
-
-    @Override
-    public void upload() throws SerException {
-        tenderInfoSer.upload();
-
-    }
-
-    @Override
-    public void uploadAttachments() throws SerException {
-        tenderInfoSer.uploadAttachments();
+    public byte[] exportExcel(TenderInfoDTO dto) throws SerException{
+        return tenderInfoSer.exportExcel(dto);
     }
 
 }

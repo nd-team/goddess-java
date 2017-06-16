@@ -5,7 +5,9 @@ import com.bjike.goddess.bidding.bo.BidOpeningInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BidOpeningInfoDTO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.dto.TenderInfoDTO;
 import com.bjike.goddess.bidding.to.BidOpeningInfoTO;
+import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.vo.BidOpeningCollectVO;
 import com.bjike.goddess.bidding.vo.BidOpeningInfoVO;
@@ -16,15 +18,22 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -38,7 +47,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("bidopeninginfo")
-public class BidOpeningInfoAction {
+public class BidOpeningInfoAction extends BaseFileAction{
     @Autowired
     private BidOpeningInfoAPI bidOpeningInfoAPI;
     /**
@@ -171,23 +180,6 @@ public class BidOpeningInfoAction {
     }
 
     /**
-     * 开标信息导出
-     *
-     * @param projectName 项目名称
-     * @version v1
-     */
-    @PostMapping("v1/exportExcel")
-    public Result exportExcel(String projectName) throws ActException {
-        String excel = null;
-        try {
-            excel = bidOpeningInfoAPI.exportExcel(projectName);
-            return new ActResult(excel);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-
-    }
-    /**
      * 汇总开标信息
      *
      * @param cities 地市
@@ -221,22 +213,24 @@ public class BidOpeningInfoAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
     /**
-     * 发送邮件
+     * 导出excel
      *
+     * @param dto 开标信息
+     * @des 导出开标信息
      * @version v1
      */
-    @PostMapping("v1/send")
-    public Result sendBidOpeningInfo(BidOpeningInfoTO bidOpeningInfoTO) throws ActException {
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(BidOpeningInfoDTO dto, HttpServletResponse response) throws ActException {
         try {
-            BidOpeningInfoBO bidOpeningInfoBO = bidOpeningInfoAPI.sendBidOpeningInfo(bidOpeningInfoTO);
-            return ActResult.initialize(bidOpeningInfoBO);
+            String fileName = "开标信息.xlsx";
+            super.writeOutFile(response, bidOpeningInfoAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
-
     }
-
 }

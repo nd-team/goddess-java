@@ -37,8 +37,8 @@ public class BiddingAnswerQuestions extends BaseEntity {
     /**
      * 答疑时间
      */
-    @Column(name = "officeHour", columnDefinition = "DATETIME   COMMENT '答疑时间'")
-    private LocalDateTime officeHour;
+    @Column(name = "officeHour", columnDefinition = "DATE   COMMENT '答疑时间'")
+    private LocalDate officeHour;
 
     /**
      * 解答单位
@@ -75,11 +75,11 @@ public class BiddingAnswerQuestions extends BaseEntity {
         this.peopleAnswerQuestions = peopleAnswerQuestions;
     }
 
-    public LocalDateTime getOfficeHour() {
+    public LocalDate getOfficeHour() {
         return officeHour;
     }
 
-    public void setOfficeHour(LocalDateTime officeHour) {
+    public void setOfficeHour(LocalDate officeHour) {
         this.officeHour = officeHour;
     }
 

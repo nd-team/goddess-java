@@ -5,6 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
+import com.bjike.goddess.projectissuehandle.enums.AffectedDepartment;
+import com.bjike.goddess.projectissuehandle.enums.ProblemProcessingTime;
+import com.bjike.goddess.projectissuehandle.excel.SonPermissionObject;
+import com.bjike.goddess.projectissuehandle.to.GuidePermissionTO;
 import com.bjike.goddess.projectissuehandle.to.ProblemAcceptTO;
 
 import java.util.List;
@@ -19,6 +23,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 项目执行中的问题受理列表总条数
      */
@@ -77,14 +95,6 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
 
     }
 
-    /**
-     * 导出
-     *
-     * @throws SerException
-     */
-    default String exportExcel(String internalProjectName, String projectType) throws SerException {
-        return null;
-    }
 
     /**
      * 搜索
@@ -94,14 +104,24 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return null;
     }
-
     /**
-     * 上传
+     * 根据项目问题编号查找项目执行中的问题受理
+     *
+     * @param projectNum 项目问题编号
+     * @return class ProblemAcceptBO
      */
-    default void upload() throws SerException {
-        return;
-
+    default ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
+        return null;
     }
+    /**
+     * 获取内部项目编号
+     *
+     * @return class String
+     */
+    default List<String> getProjectNum() throws SerException {
+        return null;
+    }
+
 
     /**
      * 获取地区
@@ -129,6 +149,22 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default List<String> getProblemAcceptInternalProjectName() throws SerException {
         return null;
     }
+
+    /**
+     * 问题紧急程度
+     *
+     * @return class String
+     */
+    default String degree(ProblemProcessingTime problemProcessingTime, AffectedDepartment affectedDepartment) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(ProblemAcceptDTO dto ) throws SerException;
 
 
 }

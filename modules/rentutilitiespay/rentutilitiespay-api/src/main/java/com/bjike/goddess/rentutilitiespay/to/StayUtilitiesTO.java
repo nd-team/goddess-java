@@ -3,6 +3,7 @@ package com.bjike.goddess.rentutilitiespay.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.rentutilitiespay.enums.StaffVerify;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -141,7 +142,7 @@ public class StayUtilitiesTO extends BaseTO {
     /**
      * 员工核实（确认/有误）
      */
-    private String staffVerify;
+    private StaffVerify staffVerify;
 
     /**
      * 综合资源部核实情况（是否需要修改）
@@ -327,11 +328,11 @@ public class StayUtilitiesTO extends BaseTO {
         this.staffPayCollect = staffPayCollect;
     }
 
-    public String getStaffVerify() {
+    public StaffVerify getStaffVerify() {
         return staffVerify;
     }
 
-    public void setStaffVerify(String staffVerify) {
+    public void setStaffVerify(StaffVerify staffVerify) {
         this.staffVerify = staffVerify;
     }
 

@@ -19,6 +19,10 @@ public class ProblemHandlingResultVO {
      */
     private String id;
     /**
+     * 项目问题编号
+     */
+    private String projectNum;
+    /**
      * 年份
      */
     private String year;
@@ -97,7 +101,27 @@ public class ProblemHandlingResultVO {
      * 问题总结
      */
     private String problemConclusion;
+    /**
+     * 项目执行中的问题受理
+     */
+    //private ProblemAcceptVO problemAcceptVO;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
+    }
+
+    public String getProjectNum() {
+        return projectNum;
+    }
 
     public String getId() {
         return id;
@@ -233,5 +257,29 @@ public class ProblemHandlingResultVO {
 
     public void setProblemConclusion(String problemConclusion) {
         this.problemConclusion = problemConclusion;
+    }
+
+//    public ProblemAcceptVO getProblemAcceptVO() {
+//        return problemAcceptVO;
+//    }
+//
+//    public void setProblemAcceptVO(ProblemAcceptVO problemAcceptVO) {
+//        this.problemAcceptVO = problemAcceptVO;
+//    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

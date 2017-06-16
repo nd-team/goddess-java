@@ -16,6 +16,10 @@ public class InvolvedProcessingTaskVO {
      */
     private String id;
     /**
+     * 项目问题编号
+     */
+    private String projectNum;
+    /**
      * 内部项目名称
      */
     private String internalProjectName;
@@ -39,6 +43,15 @@ public class InvolvedProcessingTaskVO {
      * 实际完成情况
      */
     private String actualCompletion;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
 
 
     public String getId() {
@@ -47,6 +60,14 @@ public class InvolvedProcessingTaskVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(String projectNum) {
+        this.projectNum = projectNum;
     }
 
     public String getInternalProjectName() {
@@ -87,5 +108,21 @@ public class InvolvedProcessingTaskVO {
 
     public void setActualCompletion(String actualCompletion) {
         this.actualCompletion = actualCompletion;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }
