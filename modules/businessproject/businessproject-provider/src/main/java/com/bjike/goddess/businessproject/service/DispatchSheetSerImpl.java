@@ -89,15 +89,16 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
     /**
      * 导航栏核对查看权限（部门级别）
-     */private Boolean guideSeeIdentity() throws SerException{
+     */
+    private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -107,11 +108,11 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
         if( flagSee || flagAdd ){
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -119,15 +120,15 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideAddIdentity() throws SerException{
+    private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -406,6 +407,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void leadExcel(List<DispatchSheetTO> toList) throws SerException {
+        checkAddIdentity();
         for (DispatchSheetTO to : toList) {
             DispatchSheet baseInfoManage = new DispatchSheet();
             BeanUtils.copyProperties(to, baseInfoManage);
@@ -420,6 +422,9 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
             }
             if ((!"未归档".equals(fileCondition)) && (!"已归档".equals(fileCondition))) {
                 throw new SerException("合同是否已归档只能为未归档或已归档");
+            }
+            if (innerProjectNum == null || StringUtils.isBlank(innerProjectNum)) {
+                baseInfoManage.setInnerProjectNum("无");
             }
             super.save(baseInfoManage);
         }

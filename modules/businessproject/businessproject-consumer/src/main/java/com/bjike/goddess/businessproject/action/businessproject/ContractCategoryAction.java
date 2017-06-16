@@ -6,6 +6,7 @@ import com.bjike.goddess.businessproject.dto.ContractCategoryDTO;
 import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.to.ContractCategoryTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businessproject.vo.ContractCategoryVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -231,7 +232,7 @@ public class ContractCategoryAction extends BaseFileAction {
      * @param dto 商务项目合同类型信息
      * @version v1
      */
-//    @LoginAuth
+    @LoginAuth
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ContractCategoryDTO dto, HttpServletResponse response) throws ActException {
         try {
@@ -248,17 +249,16 @@ public class ContractCategoryAction extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @des 商务项目合同类型
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/uploadFile")
-    public Result uploadFile(HttpServletRequest request) throws ActException {
+    @PostMapping("v1/uploadFile/{id}")
+    public Result uploadFile(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-//            String path = "/businessproject";
-            List<InputStream> inputStreams = getInputStreams(request);
+            String path = "/businessproject/contractcategory/" + id;
+            List<InputStream> inputStreams = getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("upload success");
         } catch (SerException e) {
@@ -269,14 +269,19 @@ public class ContractCategoryAction extends BaseFileAction {
     /**
      * 文件附件列表
      *
-     * @param fileInfo 文件信息
+     * @param id id
+     * @return class FileVO
      * @version v1
      */
-    @GetMapping("v1/listFile")
-    public Result list(@Validated(FileInfo.COMMON.class) FileInfo fileInfo, BindingResult result, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/listFile/{id}")
+    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            // /id/....
+            String path = "/businessproject/contractcategory/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
             List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
             return ActResult.initialize(files);
         } catch (SerException e) {
@@ -287,13 +292,17 @@ public class ContractCategoryAction extends BaseFileAction {
     /**
      * 文件下载
      *
-     * @param fileInfo 文件信息
+     * @param path 文件路径
      * @version v1
      */
     @GetMapping("v1/downloadFile")
-    public Result download(@Validated({FileInfo.COMMON.class}) FileInfo fileInfo,BindingResult result, HttpServletResponse response) throws ActException {
+    public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
             //该文件的路径
+            FileInfo fileInfo = new FileInfo();
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            fileInfo.setPath(path);
             String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
             byte[] buffer = fileAPI.download(fileInfo);
             writeOutFile(response, buffer, filename);
@@ -302,5 +311,21 @@ public class ContractCategoryAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
 
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param siginManageDeleteFileTO 多文件信息路径
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/deleteFile")
+    public Result delFile(@Validated(SiginManageDeleteFileTO.TestDEL.class) SiginManageDeleteFileTO siginManageDeleteFileTO,HttpServletRequest request) throws SerException {
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
+        }
+        return new ActResult("delFile success");
     }
 }

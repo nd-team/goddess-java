@@ -40,7 +40,6 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
-        if(true)return  true;
         boolean pass = false;
         if (null != excludes) {
             for (String exclude : excludes) { //过滤请求资源
@@ -104,19 +103,13 @@ public class AuthIntercept extends HandlerInterceptorAdapter {
         if (pass) {
             return super.preHandle(request, response, handler);
         }
-        throw new SerException("该权限资源受限:" + uri);
+        throw new SerException("该资源权限受限:" + uri);
 
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
-    }
-
-    public static void main(String[] args) {
-        String a = StringUtils.substringBeforeLast("/aa/xx", "/*");
-        System.out.println(StringUtils.substringBeforeLast("/aa/xx", "/*"));
-        System.out.println("/aa".indexOf(a));
     }
 
     @Override

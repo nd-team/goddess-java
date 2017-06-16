@@ -30,7 +30,7 @@ public class CustomIntercept implements Interceptor {
          * 自动登录
          */
         String username = "ike";
-        String password = "123456";
+        String password = "storage";
         String moduleName = "storage";
 //        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, username, password, moduleName), "/**");
         /**

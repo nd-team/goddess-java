@@ -24,13 +24,12 @@ public final class TokenUtil {
     }
 
     /**
-     * 根据IP地址与用户名生成token令牌
+     * 根据IP地址生成token令牌
      *
      * @param ip       地扯
-     * @param username 用户名
      * @return token令牌(ip反转.uuid后.用户名哈希.生成时间)
      */
-    public static String create(String ip, String username) {
+    public static String create(String ip) {
         long lip = IpUtil.ipToLong(ip);
         String uuid = UUID.randomUUID().toString();
         StringBuffer token = new StringBuffer(uuid.replace("-", ""));

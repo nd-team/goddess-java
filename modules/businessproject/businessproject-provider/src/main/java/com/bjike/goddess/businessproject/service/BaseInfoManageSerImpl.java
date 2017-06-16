@@ -87,18 +87,19 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         }
         RpcTransmit.transmitUserToken(userToken);
     }
+
     /**
      * 核对查看权限（部门级别）
      */
-    private Boolean guideSeeIdentity() throws SerException{
+    private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -107,15 +108,15 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private Boolean guideAddIdentity() throws SerException{
+    private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( !"admin".equals( userName.toLowerCase())){
+        if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.busCusPermission("2");
-        }else{
+        } else {
             flag = true;
         }
         return flag;
@@ -125,11 +126,11 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken( userToken );
+        RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
         if( flagSee || flagAdd ){
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -231,19 +232,12 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         return baseInfoManageBOList;
     }
 
-    public static void main(String[] args) {
-        ;
-        System.out.println(StringUtils.isNumeric("1230.0"));
-    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BaseInfoManageBO addBaseInfoManage(BaseInfoManageTO baseInfoManageTO) throws SerException {
         checkAddIdentity();
         checkDate(baseInfoManageTO);
-//        if(StringUtils.isNumeric(baseInfoManageTO.getMoney())){
-//
-//        }
 
         //签订年份
         String tempTime = StringUtils.isBlank(baseInfoManageTO.getSiginTime()) ? "0000" : baseInfoManageTO.getSiginTime().substring(0, 4);
@@ -456,11 +450,58 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     @Transactional(rollbackFor = SerException.class)
     public void leadExcel(List<BaseInfoManageTO> toList) throws SerException {
         for (BaseInfoManageTO to : toList) {
-            BaseInfoManage baseInfoManage = new BaseInfoManage();
-            BeanUtils.copyProperties(to, baseInfoManage);
-            baseInfoManage.setSiginTime(DateUtil.parseDate(to.getSiginTime()));
-            baseInfoManage.setStartProjectTime(DateUtil.parseDate(to.getStartProjectTime()));
-            baseInfoManage.setEndProjectTime(DateUtil.parseDate(to.getEndProjectTime()));
+            checkAddIdentity();
+            checkDate(to);
+//        if(StringUtils.isNumeric(baseInfoManageTO.getMoney())){
+//
+//        }
+
+            //签订年份
+            String tempTime = StringUtils.isBlank(to.getSiginTime()) ? "0000" : to.getSiginTime().substring(0, 4);
+            to.setSiginYear(tempTime);
+            //生成合同档案编号
+            generateContractNum(to);
+            //生成内部项目编码
+            generateInnerProjectNum(to);
+
+            BaseInfoManage baseInfoManage = BeanTransform.copyProperties(to, BaseInfoManage.class, true);
+            baseInfoManage.setCreateTime(LocalDateTime.now());
+
+//            super.save(baseInfoManage);
+//
+//            BaseInfoManage baseInfoManage = new BaseInfoManage();
+//            BeanUtils.copyProperties(to, baseInfoManage);
+//            baseInfoManage.setSiginTime(DateUtil.parseDate(to.getSiginTime()));
+//            baseInfoManage.setStartProjectTime(DateUtil.parseDate(to.getStartProjectTime()));
+//            baseInfoManage.setEndProjectTime(DateUtil.parseDate(to.getEndProjectTime()));
+//            List<BaseInfoManage> list = super.findAll();
+//            for (BaseInfoManage b : list) {
+//                if (baseInfoManage.getInnerProjectNum().equals(b.getInnerProjectNum())) {
+//                    throw new SerException("该内部项目编号已存在");
+//                }
+//                if (baseInfoManage.getContractNum().equals(b.getContractNum())) {
+//                    throw new SerException("该合同档案编号已存在");
+//                }
+//            }
+            String fileCondition = baseInfoManage.getFileCondition();
+            if ((!"未归档".equals(fileCondition)) && (!"已归档".equals(fileCondition))) {
+                throw new SerException("合同是否已归档只能为未归档或已归档");
+            }
+            if (baseInfoManage.getBusinessType() == null) {
+                throw new SerException("业务类型只能为移动通信类，软件开发类，智能系统集成类，广告策划营销类的其中一种");
+            }
+            if (baseInfoManage.getBusinessCooperate() == null) {
+                throw new SerException("合作方式只能为租赁合同，承包的项目合同，分包项目合同，销售合同的其中一种");
+            }
+            if (baseInfoManage.getContractProperty() == null) {
+                throw new SerException("合同属性只能为框架合同，单次合同的其中一种");
+            }
+            if (baseInfoManage.getPayWays() == null) {
+                throw new SerException("支付方式只能为现金，银行汇兑，电汇，转账的其中一种");
+            }
+            if (baseInfoManage.getPayFeeOrigin() == null) {
+                throw new SerException("结算费用来源只能为预付，背靠背，垫付的其中一种");
+            }
             super.save(baseInfoManage);
         }
     }

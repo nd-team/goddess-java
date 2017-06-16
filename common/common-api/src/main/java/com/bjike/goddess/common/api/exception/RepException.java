@@ -24,6 +24,9 @@ public class RepException extends Exception {
         super(msg);
         this.type = repExceptionType;
     }
+    public RepException( String msg) {
+        super(msg);
+    }
 
     public RepException getRepException() {
         return repException;

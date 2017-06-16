@@ -188,7 +188,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         jpql.append("SELECT MAX ( ");
         jpql.append(field);
         jpql.append(") FROM ");
-        jpql.append(clazz.getSimpleName());
+        jpql.append(getTableName(clazz));
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
         return obj != null ? obj.toString() : null;
     }
@@ -199,7 +199,7 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
         jpql.append("SELECT MIN (");
         jpql.append(field);
         jpql.append(")FROM ");
-        jpql.append(clazz.getSimpleName());
+        jpql.append(getTableName(clazz));
         Object obj = entityManager.createQuery(jpql.toString()).getSingleResult();
         return obj != null ? obj.toString() : null;
     }
@@ -254,9 +254,16 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw repExceptionHandler(new RepException(e.getMessage()));
         }
 
         return list;
+    }
+
+    @Override
+    public List<Object> findBySql(String sql) throws SerException {
+        Query nativeQuery = entityManager.createNativeQuery(sql);
+        return nativeQuery.getResultList();
     }
 
     @Override
@@ -310,7 +317,6 @@ public class ServiceImpl<BE extends BaseEntity, BD extends BaseDTO> extends Fina
                 case "Long":
                     obj = Long.parseLong(val);
                     break;
-
                 case "BigDecimal":
                     obj = Double.parseDouble(val);
                     break;

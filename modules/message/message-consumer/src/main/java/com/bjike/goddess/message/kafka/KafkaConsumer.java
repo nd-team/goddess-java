@@ -71,7 +71,7 @@ public class KafkaConsumer {
                     Email email = new Email(to.getTitle(), to.getContent());
                     email.setReceiver(to.getReceivers());
                         emailAPI.send(email);
-                    System.out.println("收到消息：" + msg);
+                    LOGGER.info("收到消息:"+msg);
                 } catch (SerException e) {
                     LOGGER.error(e.getMessage());
                 }

@@ -169,7 +169,7 @@ public class BaseInfoManage extends BaseEntity {
     /**
      * 合同内容
      */
-    @Column(name = "contractText", columnDefinition = "VARCHAR(255)   COMMENT '合同内容'")
+    @Column(name = "contractText", columnDefinition = "MEDIUMTEXT  COMMENT '合同内容'")
     private String contractText;
 
     /**
@@ -217,7 +217,7 @@ public class BaseInfoManage extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", columnDefinition = "MEDIUMTEXT   COMMENT '备注'")
     private String remark;
 
     /**

@@ -30,31 +30,31 @@ public class CompanyCapability extends BaseEntity {
     /**
      * 专业资质认证
      */
-    @Column(name = "professionAuthen",  columnDefinition = "VARCHAR(255)   COMMENT '专业资质认证'")
+    @Column(name = "professionAuthen",  columnDefinition = "MEDIUMTEXT   COMMENT '专业资质认证'")
     private String professionAuthen;
 
     /**
      * 管理资质认证
      */
-    @Column(name = "manageAuthen",  columnDefinition = "VARCHAR(255)   COMMENT '管理资质认证'")
+    @Column(name = "manageAuthen",  columnDefinition = "MEDIUMTEXT   COMMENT '管理资质认证'")
     private String manageAuthen;
 
     /**
      * 公司荣誉证书
      */
-    @Column(name = "companyCertificate",  columnDefinition = "VARCHAR(255)   COMMENT '公司荣誉证书'")
+    @Column(name = "companyCertificate",  columnDefinition = "MEDIUMTEXT   COMMENT '公司荣誉证书'")
     private String companyCertificate;
 
     /**
      * 公司发展规划
      */
-    @Column(name = "companyDevelop",  columnDefinition = "VARCHAR(255)   COMMENT '公司发展规划'")
+    @Column(name = "companyDevelop",  columnDefinition = "MEDIUMTEXT   COMMENT '公司发展规划'")
     private String companyDevelop;
 
     /**
      * 项目发展规划
      */
-    @Column(name = "projectDevelop",  columnDefinition = "VARCHAR(255)   COMMENT '项目发展规划'")
+    @Column(name = "projectDevelop",  columnDefinition = "MEDIUMTEXT   COMMENT '项目发展规划'")
     private String projectDevelop;
 
     /**
@@ -72,37 +72,37 @@ public class CompanyCapability extends BaseEntity {
     /**
      * 人员组成
      */
-    @Column(name = "personForm",  columnDefinition = "VARCHAR(255)   COMMENT '人员组成'")
+    @Column(name = "personForm",  columnDefinition = "MEDIUMTEXT   COMMENT '人员组成'")
     private String personForm;
 
     /**
      * 配置
      */
-    @Column(name = "config",  columnDefinition = "VARCHAR(255)   COMMENT '配置'")
+    @Column(name = "config",  columnDefinition = "MEDIUMTEXT   COMMENT '配置'")
     private String config;
 
     /**
      * 设备
      */
-    @Column(name = "device",  columnDefinition = "VARCHAR(255)   COMMENT '设备'")
+    @Column(name = "device",  columnDefinition = "MEDIUMTEXT   COMMENT '设备'")
     private String device;
 
     /**
      * 公司占地面积
      */
-    @Column(name = "companyArea",  columnDefinition = "VARCHAR(255)   COMMENT '公司占地面积'")
+    @Column(name = "companyArea",  columnDefinition = "MEDIUMTEXT   COMMENT '公司占地面积'")
     private String companyArea;
 
     /**
      * 公司业务
      */
-    @Column(name = "companyBusiness",  columnDefinition = "VARCHAR(255)   COMMENT '公司业务'")
+    @Column(name = "companyBusiness",  columnDefinition = "MEDIUMTEXT  COMMENT '公司业务'")
     private String companyBusiness;
 
     /**
      * 公司合作对象
      */
-    @Column(name = "cooperate",  columnDefinition = "VARCHAR(255)   COMMENT '公司合作对象'")
+    @Column(name = "cooperate",  columnDefinition = "MEDIUMTEXT   COMMENT '公司合作对象'")
     private String cooperate;
 
     /**
@@ -114,25 +114,25 @@ public class CompanyCapability extends BaseEntity {
     /**
      * 尚在进行中项目
      */
-    @Column(name = "inProjct",  columnDefinition = "VARCHAR(255)   COMMENT '尚在进行中项目'")
+    @Column(name = "inProjct",  columnDefinition = "MEDIUMTEXT   COMMENT '尚在进行中项目'")
     private String inProjct;
 
     /**
      * 公司文化体系交流
      */
-    @Column(name = "culture",  columnDefinition = "VARCHAR(255)   COMMENT '公司文化体系交流'")
+    @Column(name = "culture",  columnDefinition = "MEDIUMTEXT   COMMENT '公司文化体系交流'")
     private String culture;
 
     /**
      * 员工节假日活动
      */
-    @Column(name = "holidayActive",  columnDefinition = "VARCHAR(255)   COMMENT '员工节假日活动'")
+    @Column(name = "holidayActive",  columnDefinition = "MEDIUMTEXT   COMMENT '员工节假日活动'")
     private String holidayActive;
 
     /**
      * 公司公告栏
      */
-    @Column(name = "bulletinBoard",  columnDefinition = "VARCHAR(255)   COMMENT '公司公告栏'")
+    @Column(name = "bulletinBoard",  columnDefinition = "MEDIUMTEXT   COMMENT '公司公告栏'")
     private String bulletinBoard;
 
 

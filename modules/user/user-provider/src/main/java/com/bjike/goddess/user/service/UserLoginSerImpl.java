@@ -156,7 +156,7 @@ public class UserLoginSerImpl implements UserLoginSer {
      * @return
      */
     private String createToken(User persistUser, UserLoginTO loginTO) throws SerException {
-        String token = TokenUtil.create(loginTO.getIp(), persistUser.getUsername());
+        String token = TokenUtil.create(loginTO.getIp());
         saveToSessionAndRedis(persistUser, token);
         PwdErrSession.remove(loginTO.getAccount());//删除密码验证错误次数统计
         return token;

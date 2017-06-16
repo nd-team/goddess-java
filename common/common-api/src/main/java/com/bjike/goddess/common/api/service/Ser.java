@@ -218,6 +218,18 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
     }
 
     /**
+     * sql原生查询,执行结果需要自己解析
+     *
+     * @param sql sql语句
+     * @return
+     * @throws SerException
+     */
+    default List<Object> findBySql(String sql) throws SerException {
+        return null;
+    }
+
+
+    /**
      * 执行sql语句
      *
      * @param sql
@@ -227,7 +239,7 @@ public interface Ser<BE extends BaseEntity, BD extends BaseDTO> {
     }
 
     /**
-     * 获取
+     * 获取表名
      *
      * @param clazz
      * @return

@@ -48,6 +48,10 @@ public class ScheduleJobBO extends BaseBO {
      */
     private Boolean enable;
 
+    /**
+     * 远程服务地址
+     */
+    private String address;
 
 
 
@@ -107,5 +111,11 @@ public class ScheduleJobBO extends BaseBO {
         this.enable = enable;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
