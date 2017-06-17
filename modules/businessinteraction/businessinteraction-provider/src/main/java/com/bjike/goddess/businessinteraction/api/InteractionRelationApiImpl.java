@@ -3,6 +3,7 @@ package com.bjike.goddess.businessinteraction.api;
 import com.bjike.goddess.businessinteraction.bo.InteractionRelationBO;
 import com.bjike.goddess.businessinteraction.dto.InteractionRelationDTO;
 import com.bjike.goddess.businessinteraction.service.InteractionRelationSer;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.InteractionRelationTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,15 @@ public class InteractionRelationApiImpl implements InteractionRelationAPI {
     @Override
     public List<InteractionRelationBO> searchInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {
         return interactionRelationSer.searchInteractionRelation(interactionRelationDTO);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return interactionRelationSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return interactionRelationSer.guidePermission(guidePermissionTO);
     }
 }

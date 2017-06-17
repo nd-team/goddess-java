@@ -2,6 +2,7 @@ package com.bjike.goddess.businessinteraction.api;
 
 import com.bjike.goddess.businessinteraction.bo.LeavingMessageBO;
 import com.bjike.goddess.businessinteraction.dto.LeavingMessageDTO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.LeavingMessageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -56,4 +57,17 @@ public interface LeavingMessageAPI {
      * @param id id
      */
     default void deleteLeavingMessage(String id ) throws SerException {return;};
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.businessinteraction.action.businessinteraction;
 import com.bjike.goddess.businessinteraction.api.TalkDetailAPI;
 import com.bjike.goddess.businessinteraction.bo.TalkDetailBO;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.businessinteraction.to.TalkDetailTO;
 import com.bjike.goddess.businessinteraction.vo.ContactObjectVO;
 import com.bjike.goddess.businessinteraction.vo.TalkDetailVO;
@@ -35,6 +36,29 @@ import java.util.List;
 public class TalkDetailAction {
     @Autowired
     private TalkDetailAPI talkDetailAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = talkDetailAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      *  列表总条数
@@ -162,7 +186,7 @@ public class TalkDetailAction {
     public Result getContactWays(@Validated({TalkDetailDTO.TESTTalkDetailDTO.class}) TalkDetailDTO talkDetailDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ContactObjectVO> talkDetailVOList = BeanTransform.copyProperties(
-                    talkDetailAPI.getContactWays(talkDetailDTO), TalkDetailVO.class);
+                    talkDetailAPI.getContactWays(talkDetailDTO), ContactObjectVO.class);
             return ActResult.initialize(talkDetailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

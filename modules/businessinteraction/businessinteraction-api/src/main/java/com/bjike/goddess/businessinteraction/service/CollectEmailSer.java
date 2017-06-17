@@ -4,6 +4,7 @@ import com.bjike.goddess.businessinteraction.bo.CollectEmailBO;
 import com.bjike.goddess.businessinteraction.dto.CollectEmailDTO;
 import com.bjike.goddess.businessinteraction.entity.CollectEmail;
 import com.bjike.goddess.businessinteraction.to.CollectEmailTO;
+import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -22,16 +23,19 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
     /**
      * 汇总邮件列表总条数
-     *
      */
     default Long countInter(CollectEmailDTO collectEmailDTO) throws SerException {
         return null;
     }
+
     /**
      * 互动联系列表id
+     *
      * @return class CollectEmailBO
      */
-    default CollectEmailBO getOneById (String id) throws SerException {return null;}
+    default CollectEmailBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -112,13 +116,30 @@ public interface CollectEmailSer extends Ser<CollectEmail, CollectEmailDTO> {
 
     /**
      * 地区数组
-     *
      */
-    default List<String> areaList( ) throws SerException {
+    default List<String> areaList() throws SerException {
         return null;
     }
 
     ;
 
+    /**
+     * 定时器检测要发送的邮件
+     *
+     * @throws SerException
+     */
+    void checkSendEmail() throws SerException;
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }
