@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 
 import java.util.List;
@@ -18,6 +19,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarketChannelAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存市场挖掘数据

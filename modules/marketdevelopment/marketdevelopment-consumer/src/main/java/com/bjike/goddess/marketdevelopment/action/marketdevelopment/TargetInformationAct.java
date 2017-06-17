@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.TargetInformationAPI;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 import com.bjike.goddess.marketdevelopment.vo.AreaVO;
 import com.bjike.goddess.marketdevelopment.vo.TargetInformationVO;
@@ -50,6 +51,29 @@ public class TargetInformationAct extends BaseFileAction {
 
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = targetInformationAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表

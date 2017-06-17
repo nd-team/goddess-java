@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.DemandAnalysisBO;
 import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DemandAnalysisAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存市场需求分析数据

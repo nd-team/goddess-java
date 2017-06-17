@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MonthPlanChoiceBO;
 import com.bjike.goddess.marketdevelopment.dto.MonthPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.MonthPlanSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MonthPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class MonthPlanApiImpl implements MonthPlanAPI {
 
     @Autowired
     private MonthPlanSer monthPlanSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return monthPlanSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MonthPlanBO save(MonthPlanTO to) throws SerException {

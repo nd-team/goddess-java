@@ -8,6 +8,7 @@ import com.bjike.goddess.marketdevelopment.entity.DemandAnalysis;
 import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -105,6 +106,14 @@ public interface DemandAnalysisSer extends Ser<DemandAnalysis, DemandAnalysisDTO
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

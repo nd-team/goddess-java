@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BusinessCourseAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存业务方向科目数据

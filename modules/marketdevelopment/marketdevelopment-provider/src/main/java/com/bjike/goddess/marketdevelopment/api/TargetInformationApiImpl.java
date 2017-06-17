@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.service.TargetInformationSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class TargetInformationApiImpl implements TargetInformationAPI {
 
     @Autowired
     private TargetInformationSer targetInformationSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return targetInformationSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public TargetInformationBO save(TargetInformationTO to) throws SerException {

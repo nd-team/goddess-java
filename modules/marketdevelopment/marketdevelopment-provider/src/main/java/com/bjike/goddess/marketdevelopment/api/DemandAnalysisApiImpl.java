@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.dto.DemandAnalysisDTO;
 import com.bjike.goddess.marketdevelopment.service.DemandAnalysisSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DemandAnalysisTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,11 @@ public class DemandAnalysisApiImpl implements DemandAnalysisAPI {
 
     @Autowired
     private DemandAnalysisSer demandAnalysisSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return demandAnalysisSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DemandAnalysisBO save(DemandAnalysisTO to) throws SerException {

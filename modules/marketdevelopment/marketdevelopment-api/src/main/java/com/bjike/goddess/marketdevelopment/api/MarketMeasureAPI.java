@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketMeasureBO;
 import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketMeasureDTO;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketMeasureTO;
 
 import java.util.List;
@@ -19,6 +20,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface MarketMeasureAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存市场测算数据

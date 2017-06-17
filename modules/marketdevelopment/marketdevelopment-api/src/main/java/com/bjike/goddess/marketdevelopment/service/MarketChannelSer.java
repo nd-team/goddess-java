@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.entity.MarketChannel;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 
 import java.util.List;
@@ -104,6 +105,14 @@ public interface MarketChannelSer extends Ser<MarketChannel, MarketChannelDTO> {
      * 下拉导航权限
      */
     default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

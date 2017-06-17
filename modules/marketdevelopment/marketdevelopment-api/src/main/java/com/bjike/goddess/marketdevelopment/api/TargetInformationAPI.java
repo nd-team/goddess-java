@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.TargetInformationBO;
 import com.bjike.goddess.marketdevelopment.dto.TargetInformationDTO;
 import com.bjike.goddess.marketdevelopment.entity.TargetInformation;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.TargetInformationTO;
 
 import java.util.List;
@@ -20,6 +21,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TargetInformationAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 保存确定目标信息数据

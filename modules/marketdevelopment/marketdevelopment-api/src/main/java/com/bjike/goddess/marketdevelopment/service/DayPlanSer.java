@@ -8,6 +8,7 @@ import com.bjike.goddess.marketdevelopment.entity.DayPlan;
 import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -107,4 +108,10 @@ public interface DayPlanSer extends Ser<DayPlan, DayPlanDTO> {
         return null;
     }
 
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 }

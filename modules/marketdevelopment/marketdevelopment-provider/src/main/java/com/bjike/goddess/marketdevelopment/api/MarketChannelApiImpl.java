@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.MarketChannelBO;
 import com.bjike.goddess.marketdevelopment.dto.MarketChannelDTO;
 import com.bjike.goddess.marketdevelopment.service.MarketChannelSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.MarketChannelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class MarketChannelApiImpl implements MarketChannelAPI {
 
     @Autowired
     private MarketChannelSer marketChannelSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return marketChannelSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public MarketChannelBO save(MarketChannelTO to) throws SerException {

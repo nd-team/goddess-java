@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.dto.DayPlanDTO;
 import com.bjike.goddess.marketdevelopment.service.DayPlanSer;
 import com.bjike.goddess.marketdevelopment.to.CollectTO;
 import com.bjike.goddess.marketdevelopment.to.DayPlanTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,11 @@ public class DayPlanApiImpl implements DayPlanAPI {
 
     @Autowired
     private DayPlanSer dayPlanSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return dayPlanSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public DayPlanBO save(DayPlanTO to) throws SerException {
